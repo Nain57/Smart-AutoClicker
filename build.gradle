@@ -40,6 +40,7 @@ allprojects {
 
 ext {
     androidxAppCompatVersion = "1.2.0"
+    androidxRoomVersion = "2.2.5"
 }
 
 task clean (type: Delete) {

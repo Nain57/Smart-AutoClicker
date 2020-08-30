@@ -18,6 +18,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -38,9 +39,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
+
+    android {
+        kotlinOptions {
+            jvmTarget = '1.8'
+        }
+    }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
+
+    implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
+    implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
+    kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
 }
