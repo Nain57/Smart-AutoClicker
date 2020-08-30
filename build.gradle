@@ -40,6 +40,8 @@ allprojects {
 
 ext {
     androidxAppCompatVersion = "1.2.0"
+    androidxCoreVersion = "1.3.1"
+    androidxLifecycleVersion = "2.2.0"
     androidxRoomVersion = "2.2.5"
 }
 
