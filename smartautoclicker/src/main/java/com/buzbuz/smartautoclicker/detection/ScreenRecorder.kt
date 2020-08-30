@@ -36,6 +36,8 @@ import android.view.Display
 import androidx.annotation.GuardedBy
 import androidx.annotation.WorkerThread
 
+import com.buzbuz.smartautoclicker.clicks.ClickInfo
+
 /**
  * Record the screen and provide screen capture and click detection on it.
  *
@@ -69,6 +71,11 @@ class ScreenRecorder(display: Display)  {
     private val displayDensityDpi: Int
     /** Handler on the main thread. Used to post processing results callbacks. */
     private val mainHandler = Handler()
+    /**
+     * Process the [Image] from the virtual display to capture screenshots/detect clicks.
+     * Should only be accessed through [processingThread] or methods annotated [WorkerThread].
+     */
+    private val imageProcessor = ImageProcessor(displaySize)
 
     /**
      * The token granting applications the ability to capture screen contents by creating a [VirtualDisplay].
@@ -82,6 +89,39 @@ class ScreenRecorder(display: Display)  {
     private var imageReader: ImageReader? = null
     /** Virtual display capturing the content of the screen. */
     private var virtualDisplay: VirtualDisplay? = null
+    /**
+     * The image currently processed.
+     * Used as a cache to avoid allocating a new one at each frame. Should only be accessed from [processingThread].
+     */
+    private var currentImage: Image? = null
+
+    /**
+     * Information about the current screen capture.
+     * The Rect is the area on the screen to be capture and the lambda is the callback to be called once the capture is
+     * complete.
+     */
+    @GuardedBy("mainHandler")
+    private var captureInfo: Pair<Rect, (Bitmap) -> Unit>? = null
+        get() = synchronized(mainHandler) { field }
+        set(value) = synchronized(mainHandler) { field = value }
+    /**
+     * Information about the current detection session.
+     * The list contains the clicks to be detected and the lambda is the callback to be called once a detection occurs.
+     */
+    @GuardedBy("mainHandler")
+    private var detectionInfo: Pair<List<ClickInfo>, (ClickInfo) -> Unit>? = null
+        get() = synchronized(mainHandler) { field }
+        set(value) = synchronized(mainHandler) { field = value }
+
+    /** True if a click is detected and we are waiting its delay before next processing. */
+    @GuardedBy("mainHandler")
+    private var isAreaFound = false
+        get() = synchronized(mainHandler) { field }
+        set(value) = synchronized(mainHandler) { field = value }
+
+    /** True if we are currently detecting clicks, false if not. */
+    val isDetecting: Boolean
+        get() { return synchronized(mainHandler) { detectionInfo != null } }
 
     /** Initialize the display metrics. */
     init {
@@ -157,10 +197,53 @@ class ScreenRecorder(display: Display)  {
             projection = null
         }
 
+        detectionInfo = null
+
         processingThread?.let {
+            Handler(it.looper).post { imageProcessor.releaseCache() }
             it.quitSafely()
         }
         processingThread = null
+    }
+
+    /**
+     * Capture the provided area on the next [Image] of the screen.
+     *
+     * After calling this method, the next [Image] processed by the [imageReader] will be cropped to the provided area
+     * and a bitmap will be generated from it, then notified through the provided callback.
+     * Calling [stopScreenRecord] will drop any capture info provided here.
+     *
+     * @param area the area of the screen to be captured.
+     * @param callback the object to notify upon capture completion.
+     */
+    fun captureArea(area: Rect, callback: (Bitmap) -> Unit) {
+        captureInfo = area to callback
+    }
+
+    /**
+     * Start the screen detection.
+     *
+     * After calling this method, all [Image] displayed on the screen will be checked for the provided clicks conditions
+     * fulfillment. For each image, the first click in the list that is detected will be notified through the provided
+     * callback.
+     * Detection can be stopped with [stopDetection] or [stopScreenRecord].
+     *
+     * @param clicks the list of clicks to be detected on the screen.
+     * @param callback the object to notify upon click detection.
+     */
+    fun startDetection(clicks: List<ClickInfo>, callback: (ClickInfo) -> Unit) {
+        detectionInfo = clicks to callback
+    }
+
+    /**
+     * Stop the screen detection started with [startDetection].
+     *
+     * After a call to this method, the clicks provided in the start method will no longer be checked on the current
+     * image. Note that this will not stop the screen recording, you should still call [stopScreenRecord] to completely
+     * release the [ScreenRecorder] resources.
+     */
+    fun stopDetection() {
+        detectionInfo = null
     }
 
     /**
@@ -175,7 +258,67 @@ class ScreenRecorder(display: Display)  {
      */
     @WorkerThread
     private fun onImageAvailable(reader: ImageReader) {
+        currentImage = reader.acquireLatestImage()
 
+        currentImage?.use { image ->
+            // An area has been found and we are waiting its clicks delay before detecting something else or
+            // no capture to do and no click list to detect ? We have nothing to do.
+            if (isAreaFound || captureInfo == null && detectionInfo == null) {
+                return
+            }
+
+            captureInfo?.let { capture ->
+                notifyCapture(imageProcessor.captureArea(image, capture.first))
+                return
+            }
+
+            detectionInfo?.let { detectionInfo ->
+                imageProcessor.detect(image, detectionInfo.first)?.let {
+                    notifyClickDetection(it)
+                }
+            }
+        }
+    }
+
+    /**
+     * Notify the [captureInfo] callback for capture completion.
+     *
+     * Executed on the thread handled by [processingThread], this method will clear the [captureInfo] values and
+     * notifies the capture listener contained in it with the provided capture bitmap value. The callback will be
+     * executed on the main thread.
+     *
+     * @param bitmap the bitmap captured to be propagated through the callback.
+     */
+    @WorkerThread
+    private fun notifyCapture(bitmap: Bitmap) {
+        val captureCallback = captureInfo!!.second
+        captureInfo = null
+        mainHandler.post {
+            captureCallback.invoke(bitmap)
+        }
+    }
+
+    /**
+     * Notify the [detectionInfo] callback for click detection.
+     *
+     * Executed on the thread handled by [processingThread], this method will notifies the detection listener with the
+     * provided click. The callback will be executed on the main thread.
+     * Also, it will set the [isAreaFound] value to true until the [ClickInfo.delayAfterMs] is elapsed, allowing to
+     * skip the [Image] processing phase to avoid detecting clicks during this waiting delay.
+     *
+     * @param click the click detected on the screen to be propagated through the callback.
+     */
+    @WorkerThread
+    private fun notifyClickDetection(click: ClickInfo) {
+        isAreaFound = true
+
+        mainHandler.post {
+            detectionInfo?.second?.invoke(click)
+        }
+
+        mainHandler.postDelayed({
+            isAreaFound = false
+        }, click.delayAfterMs)
     }
 
     // TODO: do something
