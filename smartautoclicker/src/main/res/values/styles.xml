@@ -24,6 +24,12 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
+    <style name="Separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@android:drawable/divider_horizontal_bright</item>
+    </style>
+
     <style name="DialogTitle" parent="@android:style/TextAppearance.Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/item_height</item>
