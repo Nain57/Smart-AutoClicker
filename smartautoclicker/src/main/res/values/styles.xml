@@ -24,4 +24,31 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="OverlayCardView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardBackgroundColor">@color/overlayMenuBackground</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">10dp</item>
+    </style>
+
+    <style name="OverlayButtonsLayout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_mini</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_mini</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_small</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_small</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="OverlayButton">
+        <item name="android:layout_width">@dimen/overlay_menu_btn_size</item>
+        <item name="android:layout_height">@dimen/overlay_menu_btn_size</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:tint">@color/overlayMenuButtons</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
 </resources>

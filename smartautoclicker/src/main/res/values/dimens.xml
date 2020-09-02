@@ -16,10 +16,15 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
 
-    <color name="overlayMenuBackground">#77000000</color>
-    <color name="overlayMenuButtons">#FFFFFF</color>
+    <dimen name="margin_horizontal_large">24dp</dimen>
+    <dimen name="margin_horizontal_default">16dp</dimen>
+    <dimen name="margin_horizontal_small">8dp</dimen>
+    <dimen name="margin_horizontal_mini">4dp</dimen>
+    <dimen name="margin_vertical_large">12dp</dimen>
+    <dimen name="margin_vertical_default">8dp</dimen>
+    <dimen name="margin_vertical_small">4dp</dimen>
+
+    <dimen name="overlay_menu_btn_size">48dp</dimen>
+
 </resources>

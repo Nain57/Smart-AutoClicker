@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2020 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverlayCardView">
+
+    <LinearLayout
+        android:id="@+id/layout_buttons"
+        style="@style/OverlayButtonsLayout">
+
+            <ImageButton
+                android:id="@+id/btn_confirm"
+                style="@style/OverlayButton"
+                android:src="@drawable/ic_confirm"/>
+
+            <ImageButton
+                android:id="@+id/btn_cancel"
+                style="@style/OverlayButton"
+                android:src="@drawable/ic_cancel"/>
+
+            <ImageButton
+                android:id="@+id/btn_hide_overlay"
+                style="@style/OverlayButton"
+                android:src="@drawable/ic_click_small"/>
+
+            <ImageButton
+                android:id="@+id/btn_move"
+                style="@style/OverlayButton"
+                android:src="@drawable/ic_move"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
