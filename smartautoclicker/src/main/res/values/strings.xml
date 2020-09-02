@@ -18,6 +18,17 @@
 <resources>
     <string name="app_name">Smart Auto Clicker</string>
 
+    <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
+
+    <string name="dialog_click_list_title">Click list</string>
+    <string name="dialog_click_list_add">New…</string>
+    <string name="dialog_click_list_reorder">Reorder</string>
+    <string name="dialog_click_list_no_clicks">No clicks.\nClick on \'New…\' to create one. </string>
+
+    <string name="dialog_click_add_title">Add new click</string>
+    <string name="dialog_click_add_create">Create</string>
+    <string name="dialog_click_add_copy">Copy from existing</string>
+
     <string name="dialog_click_config_title">Click info</string>
     <string name="dialog_click_config_name_title">Name</string>
     <string name="dialog_click_config_name_default">Default click</string>
