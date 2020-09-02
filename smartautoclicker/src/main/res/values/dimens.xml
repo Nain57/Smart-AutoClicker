@@ -29,5 +29,8 @@
     <dimen name="overlay_selector_thickness">6dp</dimen>
     <dimen name="overlay_selector_innerThickness">2dp</dimen>
     <dimen name="overlay_click_selector_radius">28dp</dimen>
+    <dimen name="overlay_condition_selector_width">230dp</dimen>
+    <dimen name="overlay_condition_selector_height">130dp</dimen>
+    <dimen name="overlay_condition_selector_resize_handle_size">50dp</dimen>
 
 </resources>

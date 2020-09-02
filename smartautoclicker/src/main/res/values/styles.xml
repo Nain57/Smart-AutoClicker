@@ -63,4 +63,10 @@
         <item name="radius">@dimen/overlay_click_selector_radius</item>
     </style>
 
+    <style name="OverlaySelectorView.Condition">
+        <item name="defaultWidth">@dimen/overlay_condition_selector_width</item>
+        <item name="defaultHeight">@dimen/overlay_condition_selector_height</item>
+        <item name="resizeHandleSize">@dimen/overlay_condition_selector_resize_handle_size</item>
+    </style>
+
 </resources>

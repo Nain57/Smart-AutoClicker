@@ -39,4 +39,18 @@
         <attr name="radius" format="dimension" />
     </declare-styleable>
 
+    <!-- Styleable attributes for the ConditionSelectorView. -->
+    <declare-styleable name="ConditionSelectorView" >
+        <attr name="colorInner"/>
+        <attr name="colorOutlinePrimary" />
+        <attr name="colorOutlineSecondary"/>
+        <attr name="thickness" />
+        <attr name="innerThickness" />
+        <!-- The default width of the selector when displayed. -->
+        <attr name="defaultWidth" format="dimension" />
+        <!-- The default height of the selector when displayed. -->
+        <attr name="defaultHeight" format="dimension" />
+        <!-- The size of the handles around the selector allowing the resize of one edge of the selector. -->
+        <attr name="resizeHandleSize" format="dimension"/>
+    </declare-styleable>
 </resources>
