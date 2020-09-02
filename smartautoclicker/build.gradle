@@ -25,7 +25,7 @@ android {
 
     defaultConfig {
         applicationId "com.buzbuz.smartautoclicker"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -56,6 +56,7 @@ dependencies {
 
     implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
+    implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
 
     implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
@@ -65,4 +66,6 @@ dependencies {
     implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
     kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
+
+    implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 }
