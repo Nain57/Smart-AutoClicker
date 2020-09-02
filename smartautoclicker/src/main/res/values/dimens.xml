@@ -16,6 +16,7 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <dimen name="text_size_list_item_text">16sp</dimen>
     <dimen name="text_size_dialog_title">20sp</dimen>
 
     <dimen name="margin_horizontal_large">24dp</dimen>

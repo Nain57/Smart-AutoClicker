@@ -24,6 +24,14 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
+    <style name="ItemView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_default</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="Separator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -39,6 +47,15 @@
         <item name="android:textColor">@color/textTitle</item>
         <item name="android:textSize">@dimen/text_size_dialog_title</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+
+    <style name="DialogChoiceItemTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_size_list_item_text</item>
+        <item name="android:drawableEnd">@drawable/ic_chevron</item>
+        <item name="android:drawablePadding">@dimen/margin_horizontal_small</item>
     </style>
 
     <style name="OverlayCardView">
