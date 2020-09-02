@@ -19,9 +19,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="OverlayCardView">
@@ -49,6 +49,18 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:tint">@color/overlayMenuButtons</item>
         <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="OverlaySelectorView">
+        <item name="colorInner">@color/overlayViewPrimary</item>
+        <item name="colorOutlinePrimary">@color/overlayViewAccentPrimary</item>
+        <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
+        <item name="thickness">@dimen/overlay_selector_thickness</item>
+        <item name="innerThickness">@dimen/overlay_selector_innerThickness</item>
+    </style>
+
+    <style name="OverlaySelectorView.Click">
+        <item name="radius">@dimen/overlay_click_selector_radius</item>
     </style>
 
 </resources>

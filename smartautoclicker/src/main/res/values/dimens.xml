@@ -26,5 +26,8 @@
     <dimen name="margin_vertical_small">4dp</dimen>
 
     <dimen name="overlay_menu_btn_size">48dp</dimen>
+    <dimen name="overlay_selector_thickness">6dp</dimen>
+    <dimen name="overlay_selector_innerThickness">2dp</dimen>
+    <dimen name="overlay_click_selector_radius">28dp</dimen>
 
 </resources>

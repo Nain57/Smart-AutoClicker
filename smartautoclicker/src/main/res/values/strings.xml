@@ -17,4 +17,8 @@
 -->
 <resources>
     <string name="app_name">Smart Auto Clicker</string>
+
+    <string name="toast_configure_single_click">Touch the position to click on.</string>
+    <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
+    <string name="toast_configure_swipe_to">Touch the position to end the swipe to.</string>
 </resources>

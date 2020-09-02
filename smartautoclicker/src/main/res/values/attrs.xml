@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2020 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Color for the inner part of an overlay selector. -->
+    <attr name="colorInner" format="color" />
+    <!-- Primary color for the outline part of an overlay selector. -->
+    <attr name="colorOutlinePrimary" format="color" />
+    <!-- Secondary color for the outline part of an overlay selector. -->
+    <attr name="colorOutlineSecondary" format="color" />
+    <!-- The total thickness in dp of an overlay selector. -->
+    <attr name="thickness" format="dimension" />
+    <!-- The thickness in dp of the inner part of an overlay selector. -->
+    <attr name="innerThickness" format="dimension" />
+
+    <!-- Styleable attributes for the ClickSelectorView. -->
+    <declare-styleable name="ClickSelectorView" >
+        <attr name="colorInner" />
+        <attr name="colorOutlinePrimary" />
+        <attr name="colorOutlineSecondary" />
+        <attr name="thickness" />
+        <attr name="innerThickness" />
+        <!-- The radius of the selector circle, in dp. -->
+        <attr name="radius" format="dimension" />
+    </declare-styleable>
+
+</resources>

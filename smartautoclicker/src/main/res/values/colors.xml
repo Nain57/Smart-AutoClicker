@@ -16,10 +16,13 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="primary">#4CAF50</color>
+    <color name="primaryDark">#388E3C</color>
+    <color name="accent">#448AFF</color>
 
     <color name="overlayMenuBackground">#77000000</color>
     <color name="overlayMenuButtons">#FFFFFF</color>
+    <color name="overlayViewPrimary">#FFFFFF</color>
+    <color name="overlayViewAccentPrimary">@color/primary</color>
+    <color name="overlayViewAccentSecondary">@color/accent</color>
 </resources>
