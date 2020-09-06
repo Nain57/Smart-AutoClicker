@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.ui.base.DialogController
 import com.buzbuz.smartautoclicker.ui.base.DualChoiceDialogController
 
@@ -331,7 +332,7 @@ class ClickListDialog(
             val click = clicks!![position]
             holder.itemView.name.text = click.name
             val drawable = if (click.type == ClickInfo.SINGLE) R.drawable.ic_click else R.drawable.ic_swipe
-            holder.itemView.name.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0)
+            holder.itemView.name.setLeftCompoundDrawable(drawable)
 
             when (mode) {
                 EDITION -> {

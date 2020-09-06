@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.ui.base.DialogController
 import com.buzbuz.smartautoclicker.ui.base.DualChoiceDialogController
 import com.buzbuz.smartautoclicker.ui.overlays.ClickSelectorMenu
@@ -197,19 +198,16 @@ class ClickConfigDialog(
                         ClickInfo.SINGLE -> {
                             text = context.getString(R.string.dialog_click_config_type_single, click.from?.x,
                                 click.from?.y)
-                            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_click, 0,
-                                R.drawable.ic_chevron, 0)
+                            setLeftRightCompoundDrawables(R.drawable.ic_click, R.drawable.ic_chevron)
                         }
                         ClickInfo.SWIPE -> {
                             text = context.getString(R.string.dialog_click_config_type_swipe, click.from?.x,
                                 click.from?.y, click.to!!.x, click.to!!.y)
-                            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_swipe, 0,
-                                R.drawable.ic_chevron, 0)
+                            setLeftRightCompoundDrawables(R.drawable.ic_swipe, R.drawable.ic_chevron)
                         }
                         else -> {
                             text = context.getString(R.string.dialog_click_config_type_none)
-                            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_add, 0,
-                                R.drawable.ic_chevron, 0)
+                            setLeftRightCompoundDrawables(R.drawable.ic_add, R.drawable.ic_chevron)
                         }
                     }
                 }
