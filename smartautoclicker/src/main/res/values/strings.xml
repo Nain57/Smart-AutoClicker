@@ -20,6 +20,9 @@
 
     <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
 
+    <string name="notification_channel_name">Smart Auto Clicker</string>
+    <string name="notification_title">Click scenario: %1s</string>
+
     <string name="dialog_click_list_title">Click list</string>
     <string name="dialog_click_list_add">New…</string>
     <string name="dialog_click_list_reorder">Reorder</string>
