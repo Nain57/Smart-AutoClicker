@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -23,8 +24,11 @@ import android.media.Image
 import android.util.LruCache
 import androidx.annotation.WorkerThread
 
+import com.buzbuz.smartautoclicker.clicks.BitmapManager
+import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
 
+import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 /**
@@ -36,10 +40,11 @@ import kotlin.math.abs
  *
  * Once you are done with this object, ensure calling [releaseCache] to free all intermediates detection resources.
  *
+ * @param context the Android context.
  * @param displaySize the size of the display of the phone.
  */
 @WorkerThread
-class ImageProcessor(private val displaySize: Point) {
+class ImageProcessor(context: Context, private val displaySize: Point) {
 
     private companion object {
         /** Threshold, in percent (0-100%) for the differences between the conditions and the screen content. */
@@ -50,6 +55,8 @@ class ImageProcessor(private val displaySize: Point) {
 
     /** Cached values avoiding unnecessary allocation at each processing. */
     private val cache = Cache(CACHE_SIZE_RATIO)
+    /** The bitmap manager storing all click condition bitmaps. */
+    private val bitmapManager = BitmapManager.getInstance(context)
 
     /**
      * Capture the content of an image at a specified area and creates a bitmap from it.
@@ -57,11 +64,16 @@ class ImageProcessor(private val displaySize: Point) {
      * @param image the image to capture from.
      * @param area the area on the image to be captured.
      *
-     * @return the bitmap representing the capture.
+     * @return the newly created click condition.
      */
-    fun captureArea(image: Image, area: Rect) : Bitmap {
+    fun captureArea(image: Image, area: Rect) : ClickCondition {
         refreshProcessedImage(image)
-        return Bitmap.createBitmap(cache.screenBitmap!!, area.left, area.top, area.width(), area.height())
+
+        return runBlocking {
+            val conditionPath = bitmapManager.saveBitmap(
+                Bitmap.createBitmap(cache.screenBitmap!!, area.left, area.top, area.width(), area.height()))
+            ClickCondition(area, conditionPath)
+        }
     }
 
     /**
@@ -137,7 +149,7 @@ class ImageProcessor(private val displaySize: Point) {
      */
     private fun verifyConditions(
         @ClickInfo.Companion.Operator operator: Int,
-        conditions: List<Pair<Rect, Bitmap>>
+        conditions: List<ClickCondition>
     ) : Boolean {
 
         for (condition in conditions) {
@@ -167,17 +179,20 @@ class ImageProcessor(private val displaySize: Point) {
      *
      * @return true if the currently processed [Image] contains the condition bitmap at the condition area.
      */
-    private fun checkCondition(condition: Pair<Rect, Bitmap>) : Boolean {
+    private fun checkCondition(condition: ClickCondition) : Boolean {
         // If we have no cache for this condition, create it.
         cache.pixelsCache.get(condition) ?: run {
             // Pixels of the condition. Size and content never changes during detection.
-            val conditionPixels = IntArray(condition.second.height * condition.second.width)
-            condition.second.getPixels(conditionPixels, 0, condition.second.width, 0, 0,
-                condition.second.width, condition.second.height)
+            val conditionPixels = IntArray(condition.area.height() * condition.area.width())
+            runBlocking {
+                bitmapManager.loadBitmap(condition.path, condition.area.width(), condition.area.height())
+                    .getPixels(conditionPixels, 0, condition.area.width(), 0, 0,
+                        condition.area.width(), condition.area.height())
+            }
 
             // Pixels of the part of the screen currently checked. Size never changes during detection (as the
             // condition size won't change), but content will be updated for each [Image].
-            val checkCache = IntArray(condition.second.height * condition.second.width)
+            val checkCache = IntArray(condition.area.height() * condition.area.width())
 
             cache.pixelsCache.put(condition, conditionPixels to checkCache)
         }
@@ -185,7 +200,7 @@ class ImageProcessor(private val displaySize: Point) {
         // Now we have a condition cache, so let's detect !
         cache.pixelsCache.get(condition)?.let { pixels ->
             // Get the pixels of the part of the [Image] that will be compared.
-            getCroppedPixels(pixels.second, condition.first)
+            getCroppedPixels(pixels.second, condition.area)
 
             // For each pixel, compare the RGB values of the condition pixels and the cropped image pixels and keep
             // the difference.
@@ -253,12 +268,12 @@ class ImageProcessor(private val displaySize: Point) {
          * of the key, and [Pair.second] is the instance of the array that will contains the pixels of the currently
          * checked image.
          */
-        val pixelsCache: LruCache<Pair<Rect, Bitmap>, Pair<IntArray, IntArray>> = object
-            : LruCache<Pair<Rect, Bitmap>, Pair<IntArray, IntArray>>(
+        val pixelsCache: LruCache<ClickCondition, Pair<IntArray, IntArray>> = object
+            : LruCache<ClickCondition, Pair<IntArray, IntArray>>(
             ((Runtime.getRuntime().maxMemory() / 1024).toInt() * pixelsCacheSizeRatio).toInt()
         ) {
 
-            override fun sizeOf(key: Pair<Rect, Bitmap>, arrays: Pair<IntArray, IntArray>): Int {
+            override fun sizeOf(key: ClickCondition, arrays: Pair<IntArray, IntArray>): Int {
                 // The cache size will be measured in kilobytes rather than number of items.
                 return arrays.first.size * 2 * 32 / 1024
             }

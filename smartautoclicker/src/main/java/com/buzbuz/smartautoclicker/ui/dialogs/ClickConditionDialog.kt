@@ -18,16 +18,21 @@ package com.buzbuz.smartautoclicker.ui.dialogs
 
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Bitmap
-import android.graphics.Rect
 import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.clicks.BitmapManager
+import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.ui.base.DialogController
 
 import kotlinx.android.synthetic.main.dialog_click_condition.image_condition
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_1
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_2
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * [DialogController] implementation for displaying a click condition and providing a button to delete it.
@@ -38,9 +43,12 @@ import kotlinx.android.synthetic.main.dialog_click_condition.text_area_2
  */
 class ClickConditionDialog(
     context: Context,
-    private val condition: Pair<Pair<Rect, Bitmap>, Int>,
+    private val condition: Pair<ClickCondition, Int>,
     private val onDeleteClicked: (Int) -> Unit
 ) : DialogController() {
+
+    /** The coroutine job fetching asynchronously the condition bitmap from the [BitmapManager]. */
+    private var bitmapJob: Job? = null
 
     override val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
         .setView(R.layout.dialog_click_condition)
@@ -52,12 +60,24 @@ class ClickConditionDialog(
     override fun onDialogShown(dialog: AlertDialog) {
         dialog.apply {
             condition.first.let {
-                image_condition.setImageBitmap(it.second)
-                text_area_1.text = context.getString(R.string.dialog_click_condition_area,
-                    it.first.left, it.first.top)
-                text_area_2.text = context.getString(R.string.dialog_click_condition_area,
-                    it.first.right, it.first.bottom)
+                bitmapJob = CoroutineScope(Dispatchers.IO).launch {
+                    val conditionBitmap = BitmapManager.getInstance(context).loadBitmap(
+                        it.path, it.area.width(), it.area.height())
+
+                    withContext(Dispatchers.Main) {
+                        image_condition.setImageBitmap(conditionBitmap)
+                        bitmapJob = null
+                    }
+                }
+
+                text_area_1.text = context.getString(R.string.dialog_click_condition_area, it.area.left, it.area.top)
+                text_area_2.text = context.getString(R.string.dialog_click_condition_area, it.area.right, it.area.bottom)
             }
         }
+    }
+
+    override fun onDialogDismissed(dialog: AlertDialog) {
+        bitmapJob?.cancel()
+        bitmapJob = null
     }
 }

@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.detection
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.graphics.Rect
@@ -35,6 +34,7 @@ import android.util.Log
 import android.view.Display
 import androidx.annotation.GuardedBy
 import androidx.annotation.WorkerThread
+import com.buzbuz.smartautoclicker.clicks.ClickCondition
 
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
 
@@ -52,9 +52,10 @@ import com.buzbuz.smartautoclicker.clicks.ClickInfo
  * before any other action on this object. Once the recording isn't necessary anymore, you must stop it by calling
  * [stopScreenRecord] in order to release all resources associated with this object.
  *
+ * @param context the Android context.
  * @param display the display to be recorded.
  */
-class ScreenRecorder(display: Display)  {
+class ScreenRecorder(private val context: Context, display: Display)  {
 
     private companion object {
         /** Tag for logs. */
@@ -75,7 +76,7 @@ class ScreenRecorder(display: Display)  {
      * Process the [Image] from the virtual display to capture screenshots/detect clicks.
      * Should only be accessed through [processingThread] or methods annotated [WorkerThread].
      */
-    private val imageProcessor = ImageProcessor(displaySize)
+    private val imageProcessor = ImageProcessor(context, displaySize)
 
     /**
      * The token granting applications the ability to capture screen contents by creating a [VirtualDisplay].
@@ -101,7 +102,7 @@ class ScreenRecorder(display: Display)  {
      * complete.
      */
     @GuardedBy("mainHandler")
-    private var captureInfo: Pair<Rect, (Bitmap) -> Unit>? = null
+    private var captureInfo: Pair<Rect, (ClickCondition) -> Unit>? = null
         get() = synchronized(mainHandler) { field }
         set(value) = synchronized(mainHandler) { field = value }
     /**
@@ -146,13 +147,12 @@ class ScreenRecorder(display: Display)  {
      *
      * If the screen record was already started, this method will have no effect.
      *
-     * @param context the Android context.
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param data the data intent provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      */
-    fun startScreenRecord(context: Context, resultCode: Int, data: Intent) {
+    fun startScreenRecord(resultCode: Int, data: Intent) {
         if (processingThread != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
@@ -216,7 +216,7 @@ class ScreenRecorder(display: Display)  {
      * @param area the area of the screen to be captured.
      * @param callback the object to notify upon capture completion.
      */
-    fun captureArea(area: Rect, callback: (Bitmap) -> Unit) {
+    fun captureArea(area: Rect, callback: (ClickCondition) -> Unit) {
         captureInfo = area to callback
     }
 
@@ -287,14 +287,14 @@ class ScreenRecorder(display: Display)  {
      * notifies the capture listener contained in it with the provided capture bitmap value. The callback will be
      * executed on the main thread.
      *
-     * @param bitmap the bitmap captured to be propagated through the callback.
+     * @param clickCondition the clickCondition captured to be propagated through the callback.
      */
     @WorkerThread
-    private fun notifyCapture(bitmap: Bitmap) {
+    private fun notifyCapture(clickCondition: ClickCondition) {
         val captureCallback = captureInfo!!.second
         captureInfo = null
         mainHandler.post {
-            captureCallback.invoke(bitmap)
+            captureCallback.invoke(clickCondition)
         }
     }
 

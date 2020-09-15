@@ -92,7 +92,7 @@ class ClickRepository(database: ClickDatabase, context: Context) {
     fun loadScenario(coroutineContext: CoroutineContext, scenarioId: Long) : LiveData<List<ClickInfo>> {
         currentScenario.value = scenarioId
         return Transformations.switchMap(clicks) { clicksWithConditions ->
-            liveData(coroutineContext) { emit(ClickInfo.fromEntities(clicksWithConditions, bitmapManager)) }
+            liveData(coroutineContext) { emit(ClickInfo.fromEntities(clicksWithConditions)) }
         }
     }
 
@@ -137,7 +137,7 @@ class ClickRepository(database: ClickDatabase, context: Context) {
      */
     suspend fun addClick(click: ClickInfo) {
         currentScenario.value?.let { scenarioId ->
-            clickDao.addClickWithConditions(click.toEntity(scenarioId, clicks.value!!.size, bitmapManager))
+            clickDao.addClickWithConditions(click.toEntity(scenarioId, clicks.value!!.size))
             Log.d(TAG, "Added click: $click")
         } ?: Log.w(TAG, "Can't add click $click without a current scenario")
     }
@@ -157,7 +157,7 @@ class ClickRepository(database: ClickDatabase, context: Context) {
                 return
             }
 
-            clickDao.updateClickWithConditions(click.toEntity(scenarioId, index, bitmapManager))
+            clickDao.updateClickWithConditions(click.toEntity(scenarioId, index))
             Log.d(TAG, "Updated click: $click")
         } ?: Log.w(TAG, "Can't update click $click without a current scenario")
     }
@@ -184,7 +184,7 @@ class ClickRepository(database: ClickDatabase, context: Context) {
             if (priority < newList.size) {
                 updateClicksEntitiesPriority(newList.subList(priority, newList.size - 1))
             }
-            clickDao.deleteClick(click.toEntity(scenarioId, priority, bitmapManager).click)
+            clickDao.deleteClick(click.toEntity(scenarioId, priority).click)
 
             Log.d(TAG, "Deleted click: $click")
         } ?: Log.w(TAG, "Can't delete click $click without a current scenario")
@@ -199,7 +199,7 @@ class ClickRepository(database: ClickDatabase, context: Context) {
     suspend fun updateClicksPriority(newClicks: List<ClickInfo>) {
         currentScenario.value?.let { scenarioId ->
             updateClicksEntitiesPriority(newClicks.map { clickInfo ->
-                clickInfo.toEntity(scenarioId, 0, bitmapManager)
+                clickInfo.toEntity(scenarioId, 0)
             })
         } ?: Log.w(TAG, "Can't update click priority without a current scenario")
     }

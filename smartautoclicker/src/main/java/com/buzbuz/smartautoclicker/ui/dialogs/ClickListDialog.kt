@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.ui.dialogs
 
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Bitmap
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +29,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
 import com.buzbuz.smartautoclicker.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.ui.base.DialogController
@@ -60,7 +60,7 @@ import java.util.Collections
 class ClickListDialog(
     context: Context,
     private val clicks: List<ClickInfo>,
-    private val captureSupplier: (Rect, ((Bitmap) -> Unit)) -> Unit,
+    private val captureSupplier: (Rect, ((ClickCondition) -> Unit)) -> Unit,
     private val onClickAddedListener: (ClickInfo) -> Unit,
     private val onClickEditedListener: (ClickInfo) -> Unit,
     private val onClickDeletedListener: (ClickInfo) -> Unit,

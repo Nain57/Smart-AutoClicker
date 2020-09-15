@@ -16,21 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.clicks
 
-import android.graphics.Bitmap
 import android.graphics.Point
-import android.graphics.Rect
 import androidx.annotation.IntDef
 
 import com.buzbuz.smartautoclicker.clicks.database.ClickEntity
 import com.buzbuz.smartautoclicker.clicks.database.ClickWithConditions
-import com.buzbuz.smartautoclicker.clicks.database.ConditionEntity
 
 /**
  * Object defining a click in a click scenario.
  *
  * This is basically a holder of the data of click contained in database. It handles to conversion between the simple
- * types that a database can contains into more complex types easier to use in the application code. It also load/save
- * the bitmap for the click conditions automatically.
+ * types that a database can contains into more complex types easier to use in the application code.
  *
  * @param name the name of the click.
  * @param type the type of the click.
@@ -48,7 +44,7 @@ data class ClickInfo(
     var from: Point? = null,
     var to: Point? = null,
     @Operator var conditionOperator: Int = AND,
-    var conditionList: List<Pair<Rect, Bitmap>> = emptyList(),
+    var conditionList: List<ClickCondition> = emptyList(),
     var id: Long = 0,
     var delayAfterMs: Long = 50
 ) {
@@ -80,11 +76,10 @@ data class ClickInfo(
          * Convert a list of [ClickEntity] into a list of [ClickInfo].
          *
          * @param entities the clicks to be converted.
-         * @param bitmapManager the bitmap manager loading the conditions from the persistent memory.
          *
          * @return the list of corresponding click info.
          */
-        suspend fun fromEntities(entities: List<ClickWithConditions>?, bitmapManager: BitmapManager) : List<ClickInfo> {
+        fun fromEntities(entities: List<ClickWithConditions>?) : List<ClickInfo> {
             return entities?.map { entity ->
                 ClickInfo(
                     entity.click.name,
@@ -92,31 +87,12 @@ data class ClickInfo(
                     Point(entity.click.fromX, entity.click.fromY),
                     Point(entity.click.toX, entity.click.toY),
                     entity.click.conditionOperator,
-                    fromConditionEntities(entity.conditions, bitmapManager),
+                    ClickCondition.fromEntities(entity.conditions),
                     entity.click.clickId,
                     entity.click.delayAfter
                 )
             } ?: emptyList()
         }
-
-        /**
-         * Convert a list of [ConditionEntity] into a Pair of area [Rect] to conditions [Bitmap].
-         *
-         * @param conditionEntities the conditions to be converted.
-         * @param bitmapManager the bitmap manager loading the conditions from the persistent memory.
-         *
-         * @return the list of corresponding conditions.
-         */
-        private suspend fun fromConditionEntities(
-            conditionEntities: List<ConditionEntity>,
-            bitmapManager: BitmapManager
-        ) : List<Pair<Rect, Bitmap>> =
-            conditionEntities.map {
-                Pair(
-                    Rect(it.areaLeft, it.areaTop, it.areaRight, it.areaBottom),
-                    bitmapManager.loadBitmap(it.path, it.width, it.height)
-                )
-            }
     }
 
     /**
@@ -124,11 +100,10 @@ data class ClickInfo(
      *
      * @param scenarioId the scenario containing this click.
      * @param priority the priority of the click within the scenario.
-     * @param bitmapManager the bitmap manager saving the conditions to the persistent memory.
      *
      * @return the click, ready to be inserted.
      */
-    suspend fun toEntity(scenarioId: Long, priority: Int, bitmapManager: BitmapManager) : ClickWithConditions {
+    fun toEntity(scenarioId: Long, priority: Int) : ClickWithConditions {
         val toXPos: Int
         val toYPos: Int
         if (type == SINGLE) {
@@ -153,27 +128,7 @@ data class ClickInfo(
                 delayAfterMs,
                 priority
             ),
-            getConditionsEntities(bitmapManager)
+            ClickCondition.toEntities(conditionList)
         )
-    }
-
-    /**
-     * Convert the list of click conditions into a list of [ConditionEntity] ready to be inserted into the database.
-     *
-     * @param bitmapManager the bitmap manager saving the conditions to the persistent memory.
-     *
-     * @return the list of conditions, ready to be inserted.
-     */
-    private suspend fun getConditionsEntities(bitmapManager: BitmapManager) : List<ConditionEntity> {
-        return conditionList.map { condition ->
-            ConditionEntity(
-                bitmapManager.saveBitmap(condition.second),
-                condition.first.left,
-                condition.first.top,
-                condition.first.right,
-                condition.first.bottom,
-                condition.second.width,
-                condition.second.height
-            ) }
     }
 }
