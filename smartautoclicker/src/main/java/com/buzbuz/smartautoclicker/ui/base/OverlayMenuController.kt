@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.ui.base
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
@@ -57,6 +58,8 @@ import kotlinx.android.synthetic.main.overlay_menu.view.layout_buttons
 abstract class OverlayMenuController(protected val context: Context) {
 
     private companion object {
+        /** Tag for logs. */
+        private const val TAG = "OverlayMenuController"
         /** Name of the preference file. */
         private const val PREFERENCE_NAME = "OverlayMenuController"
         /** Preference key referring to the X position of the menu during the last call to [dismiss]. */
@@ -118,6 +121,8 @@ abstract class OverlayMenuController(protected val context: Context) {
     fun show(onDismissListener: (() -> Unit)? = null) {
         dismissListener = onDismissListener
 
+        Log.d(TAG, "create overlay: $this")
+
         // First add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
         screenOverlayView?.let {
             windowManager.addView(it, overlayLayoutParams)
@@ -143,8 +148,9 @@ abstract class OverlayMenuController(protected val context: Context) {
                 }
             }
         windowManager.addView(menuLayout, menuLayoutParams)
-
         setMenuItemViewEnabled(R.id.btn_hide_overlay, false , true)
+
+        Log.d(TAG, "overlay shown: $this")
         onMenuShown()
     }
 
@@ -153,6 +159,8 @@ abstract class OverlayMenuController(protected val context: Context) {
      * Once dismissed, [onMenuDismissed] will be called, then the listener provided with the previous [show] call.
      */
     fun dismiss() {
+        Log.d(TAG, "dismiss overlay: $this")
+
         sharedPreferences.edit()
             .putInt(PREFERENCE_MENU_X_KEY, menuLayoutParams.x)
             .putInt(PREFERENCE_MENU_Y_KEY, menuLayoutParams.y)

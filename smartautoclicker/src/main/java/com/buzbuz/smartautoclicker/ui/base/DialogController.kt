@@ -230,14 +230,14 @@ abstract class DialogController {
      * @param hide true to hide the dialog, true to show it.
      */
     private fun hideDialog(hide: Boolean = true) {
-        dialog?.apply {
-            if (hide && isShowing) {
+        dialog?.let {
+            if (hide && it.isShowing) {
                 Log.d(TAG, "hide dialog: $this")
-                hide()
+                it.hide()
                 onVisibilityChanged(false)
-            } else if (!hide && !isShowing) {
+            } else if (!hide && !it.isShowing) {
                 Log.d(TAG, "show dialog again: $this")
-                show()
+                it.show()
                 onVisibilityChanged(true)
             }
         }
