@@ -129,11 +129,10 @@ abstract class OverlayMenuController(protected val context: Context) {
         }
 
         // Restore the last menu position, if any.
+        menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         if (sharedPreferences.contains(PREFERENCE_MENU_X_KEY) && sharedPreferences.contains(PREFERENCE_MENU_Y_KEY)) {
             menuLayoutParams.x = sharedPreferences.getInt(PREFERENCE_MENU_X_KEY, 0)
             menuLayoutParams.y = sharedPreferences.getInt(PREFERENCE_MENU_Y_KEY, 0)
-        } else {
-            menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         }
 
         // Inflate the menu
@@ -161,6 +160,7 @@ abstract class OverlayMenuController(protected val context: Context) {
     fun dismiss() {
         Log.d(TAG, "dismiss overlay: $this")
 
+        Log.i("KEVIN", "saving at ${menuLayoutParams.x} : ${menuLayoutParams.y}")
         sharedPreferences.edit()
             .putInt(PREFERENCE_MENU_X_KEY, menuLayoutParams.x)
             .putInt(PREFERENCE_MENU_Y_KEY, menuLayoutParams.y)
