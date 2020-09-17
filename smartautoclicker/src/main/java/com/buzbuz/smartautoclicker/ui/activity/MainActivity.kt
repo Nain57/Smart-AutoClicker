@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
  * states, as well as the list of available scenarios, if any. Upon selection of a scenario, this activity will be
  * automatically closed, and the overlay menu will be shown.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioClickedListener {
 
     companion object {
         /** Tag for logs. */
@@ -73,16 +73,7 @@ class MainActivity : AppCompatActivity() {
         SmartAutoClickerService.getLocalService(null)
     }
 
-    /**
-     * Start the requested scenario on the [SmartAutoClickerService].
-     *
-     * In order for a scenario to be started, the media projection permission must be requested. Once the user have
-     * granted/rejected this permission, the [onActivityResult] method will be called, handling the start (or not, if
-     * the permission is denied) of the [SmartAutoClickerService] overlay menu for the requested scenario.
-     *
-     * @param scenario the click scenario to be loaded into the [SmartAutoClickerService].
-     */
-    fun playScenario(scenario: ScenarioEntity) {
+    override fun onClicked(scenario: ScenarioEntity) {
         if (!configViewController.isConfigurationValid()) {
             // TODO show error
             return
