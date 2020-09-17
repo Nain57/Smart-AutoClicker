@@ -160,7 +160,6 @@ abstract class OverlayMenuController(protected val context: Context) {
     fun dismiss() {
         Log.d(TAG, "dismiss overlay: $this")
 
-        Log.i("KEVIN", "saving at ${menuLayoutParams.x} : ${menuLayoutParams.y}")
         sharedPreferences.edit()
             .putInt(PREFERENCE_MENU_X_KEY, menuLayoutParams.x)
             .putInt(PREFERENCE_MENU_Y_KEY, menuLayoutParams.y)
