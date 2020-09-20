@@ -54,8 +54,9 @@ import com.buzbuz.smartautoclicker.clicks.ClickInfo
  *
  * @param context the Android context.
  * @param display the display to be recorded.
+ * @param stoppedListener notified when the screen record has been stopped by the user.
  */
-class ScreenRecorder(private val context: Context, display: Display)  {
+class ScreenRecorder(private val context: Context, display: Display, private val stoppedListener: () -> Unit)  {
 
     private companion object {
         /** Tag for logs. */
@@ -321,10 +322,13 @@ class ScreenRecorder(private val context: Context, display: Display)  {
         }, click.delayAfterMs)
     }
 
-    // TODO: do something
+    /** Called when the user have stopped the projection by clicking on the 'Cast' icon in the status bar. */
     private val projectionCallback = object : MediaProjection.Callback() {
+
         override fun onStop() {
-            super.onStop()
+            Log.i(TAG, "Projection stopped by the user")
+            // We only notify, we let the detector take care of calling stopScreenRecord
+            stoppedListener.invoke()
         }
     }
 }
