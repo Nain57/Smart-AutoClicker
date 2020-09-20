@@ -22,6 +22,7 @@ import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Path
 import android.media.projection.MediaProjectionManager
@@ -32,6 +33,7 @@ import androidx.core.app.NotificationCompat
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
+import com.buzbuz.smartautoclicker.ui.activity.MainActivity
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -159,8 +161,12 @@ class SmartAutoClickerService : AccessibilityService() {
                 getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT)
         )
 
+        val intent = Intent(this, MainActivity::class.java)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title, scenarioName))
+            .setContentText(getString(R.string.notification_message))
+            .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+            .setSmallIcon(R.drawable.ic_notification)
             .build()
     }
 
