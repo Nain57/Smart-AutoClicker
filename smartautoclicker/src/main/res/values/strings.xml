@@ -74,4 +74,8 @@
     <string name="toast_configure_single_click">Touch the position to click on.</string>
     <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
     <string name="toast_configure_swipe_to">Touch the position to end the swipe to.</string>
+
+    <string name="accessibility_service_description">This application needs this service to inject the clicks you have
+        created into the other applications once the conditions have been detected.\n\nNo data will be collected from
+        this application. Feel free to visit our github, the code is open source !</string>
 </resources>

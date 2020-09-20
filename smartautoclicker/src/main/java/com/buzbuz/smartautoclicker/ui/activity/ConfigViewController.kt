@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
+import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.TextView
@@ -41,6 +42,13 @@ class ConfigViewController(
     private val configView: View,
     private val localServiceSupplier: () -> SmartAutoClickerService.LocalService?
 ) : LifecycleObserver {
+
+    private companion object {
+        /** Intent extra bundle key for the Android settings app. */
+        private const val EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key"
+        /** Intent extra bundle key for the Android settings app. */
+        private const val EXTRA_SHOW_FRAGMENT_ARGUMENTS = ":settings:show_fragment_args"
+    }
 
     /** View for the state of the overlay permission. */
     private lateinit var overlayView: TextView
@@ -99,6 +107,13 @@ class ConfigViewController(
     private fun onAccessibilityClicked() {
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY)
+
+        val bundle = Bundle()
+        val showArgs = context.packageName + "/" + SmartAutoClickerService::class.java.name
+        bundle.putString(EXTRA_FRAGMENT_ARG_KEY, showArgs)
+        intent.putExtra(EXTRA_FRAGMENT_ARG_KEY, showArgs)
+        intent.putExtra(EXTRA_SHOW_FRAGMENT_ARGUMENTS, bundle)
+
         context.startActivity(intent)
     }
 
