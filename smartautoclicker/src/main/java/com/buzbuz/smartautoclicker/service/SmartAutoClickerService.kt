@@ -158,7 +158,7 @@ class SmartAutoClickerService : AccessibilityService() {
         val manager = getSystemService(NotificationManager::class.java)
         manager!!.createNotificationChannel(
             NotificationChannel(NOTIFICATION_CHANNEL_ID,
-                getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT)
+                getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_LOW)
         )
 
         val intent = Intent(this, MainActivity::class.java)
