@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.clicks.BitmapManager
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
@@ -69,7 +70,7 @@ class ImageProcessor(context: Context, private val displaySize: Point) {
     fun captureArea(image: Image, area: Rect) : ClickCondition {
         refreshProcessedImage(image)
 
-        return runBlocking {
+        return runBlocking(Dispatchers.IO) {
             val conditionPath = bitmapManager.saveBitmap(
                 Bitmap.createBitmap(cache.screenBitmap!!, area.left, area.top, area.width(), area.height()))
             ClickCondition(area, conditionPath)
@@ -184,7 +185,7 @@ class ImageProcessor(context: Context, private val displaySize: Point) {
         cache.pixelsCache.get(condition) ?: run {
             // Pixels of the condition. Size and content never changes during detection.
             val conditionPixels = IntArray(condition.area.height() * condition.area.width())
-            runBlocking {
+            runBlocking(Dispatchers.IO) {
                 bitmapManager.loadBitmap(condition.path, condition.area.width(), condition.area.height())
                     .getPixels(conditionPixels, 0, condition.area.width(), 0, 0,
                         condition.area.width(), condition.area.height())
