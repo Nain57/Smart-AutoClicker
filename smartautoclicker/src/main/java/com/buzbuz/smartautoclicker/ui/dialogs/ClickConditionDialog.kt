@@ -74,14 +74,13 @@ class ClickConditionDialog(
                     withContext(Dispatchers.Main) {
                         if (conditionBitmap != null) {
                             image_condition.setImageBitmap(conditionBitmap)
-                            changeButtonState(getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE)
                         } else {
                             image_condition.setImageDrawable(
                                 ContextCompat.getDrawable(context, R.drawable.ic_cancel)?.apply {
                                     setTint(Color.RED)
                                 }
                             )
-                            changeButtonState(getButton(AlertDialog.BUTTON_POSITIVE), View.INVISIBLE)
+                            getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
                             text_area_1.setText(R.string.dialog_click_condition_error)
                             text_area_2.text = null
                             text_area_at.visibility = View.INVISIBLE
