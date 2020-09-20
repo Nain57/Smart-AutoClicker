@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.ui.base
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.util.Log
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
@@ -75,7 +76,8 @@ abstract class OverlayMenuController(protected val context: Context) {
         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
         PixelFormat.TRANSLUCENT)
     /** The layout parameters of the overlay view. */
     private val overlayLayoutParams:  WindowManager.LayoutParams = WindowManager.LayoutParams(
@@ -99,6 +101,8 @@ abstract class OverlayMenuController(protected val context: Context) {
     private var moveInitialMenuPosition = 0 to 0
     /** The initial position of the touch event that as initiated the move of the overlay menu. */
     private var moveInitialTouchPosition = 0 to 0
+    /** The display size. Used for avoiding moving the menu outside the screen. */
+    private var displaySize = Point()
 
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     protected val windowManager = context.getSystemService(WindowManager::class.java)!!
@@ -111,6 +115,10 @@ abstract class OverlayMenuController(protected val context: Context) {
      * button will have no effect.
      */
     protected abstract val screenOverlayView: View?
+
+    init {
+        windowManager.defaultDisplay.getSize(displaySize)
+    }
 
     /**
      * Show the overlay menu and view, if defined.
@@ -246,12 +254,25 @@ abstract class OverlayMenuController(protected val context: Context) {
                 true
             }
             MotionEvent.ACTION_MOVE -> {
-                menuLayoutParams.x = moveInitialMenuPosition.first + (event.rawX.toInt() - moveInitialTouchPosition.first)
-                menuLayoutParams.y = moveInitialMenuPosition.second + (event.rawY.toInt() - moveInitialTouchPosition.second)
+                setMenuLayoutPosition(
+                    moveInitialMenuPosition.first + (event.rawX.toInt() - moveInitialTouchPosition.first),
+                    moveInitialMenuPosition.second + (event.rawY.toInt() - moveInitialTouchPosition.second)
+                )
                 windowManager.updateViewLayout(menuLayout, menuLayoutParams)
                 true
             }
             else -> false
         }
+    }
+
+    /**
+     * Safe setter for the position of the overlay menu ensuring it will not be displayed outside the screen.
+     *
+     * @param x the horizontal position.
+     * @param y the vertical position.
+     */
+    private fun setMenuLayoutPosition(x: Int, y: Int) {
+        menuLayoutParams.x = x.coerceIn(0, displaySize.x - menuLayout!!.width)
+        menuLayoutParams.y = y.coerceIn(0, displaySize.y - menuLayout!!.height)
     }
 }
