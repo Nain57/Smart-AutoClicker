@@ -185,11 +185,12 @@ class ImageProcessor(context: Context, private val displaySize: Point) {
         cache.pixelsCache.get(condition) ?: run {
             // Pixels of the condition. Size and content never changes during detection.
             val conditionPixels = IntArray(condition.area.height() * condition.area.width())
-            runBlocking(Dispatchers.IO) {
+            val bitmap = runBlocking(Dispatchers.IO) {
                 bitmapManager.loadBitmap(condition.path, condition.area.width(), condition.area.height())
-                    .getPixels(conditionPixels, 0, condition.area.width(), 0, 0,
-                        condition.area.width(), condition.area.height())
             }
+            bitmap?.getPixels(conditionPixels, 0, condition.area.width(), 0, 0,
+                condition.area.width(), condition.area.height())
+                ?: return false
 
             // Pixels of the part of the screen currently checked. Size never changes during detection (as the
             // condition size won't change), but content will be updated for each [Image].

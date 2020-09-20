@@ -17,12 +17,14 @@
 package com.buzbuz.smartautoclicker.ui.dialogs
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
@@ -231,8 +233,8 @@ class ClickConfigDialog(
 
                 changeButtonState(
                     getButton(AlertDialog.BUTTON_POSITIVE),
-                    if (click.type != null && conditionsAdapter.conditions!!.isNotEmpty()) View.VISIBLE else View.INVISIBLE,
-                    -1) {
+                    if (click.type != null && conditionsAdapter.conditions!!.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+                ) {
                     onOkClicked()
                 }
             }
@@ -336,7 +338,16 @@ class ClickConfigDialog(
                     condition.path, condition.area.width(), condition.area.height())
 
                 withContext(Dispatchers.Main) {
-                    itemView.image_condition.setImageBitmap(conditionBitmap)
+                    if (conditionBitmap != null) {
+                        itemView.image_condition.setImageBitmap(conditionBitmap)
+                    } else {
+                        itemView.image_condition.setImageDrawable(
+                            ContextCompat.getDrawable(itemView.context, R.drawable.ic_cancel)?.apply {
+                                setTint(Color.RED)
+                            }
+                        )
+                    }
+
                     bitmapJob = null
                 }
             }

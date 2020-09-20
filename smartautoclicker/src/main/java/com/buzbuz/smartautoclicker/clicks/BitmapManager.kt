@@ -114,9 +114,9 @@ class BitmapManager(private val appDataDir: File) {
      * @param width the width of the bitmap.
      * @param height the height of the bitmap.
      *
-     * @return the loaded bitmap.
+     * @return the loaded bitmap, or null if the path is invalid
      */
-    suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap {
+    suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap? {
         var cachedBitmap = memoryCache.get(path)
         if (cachedBitmap != null) {
             return cachedBitmap
@@ -124,7 +124,8 @@ class BitmapManager(private val appDataDir: File) {
 
         val file = File(appDataDir, path)
         if (!file.exists()) {
-            // TODO Handle this error
+            Log.e(TAG, "Invalid path $path, bitmap file can't be found.")
+            return null
         }
 
         return withContext(context = Dispatchers.IO) {

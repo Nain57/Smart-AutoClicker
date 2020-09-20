@@ -18,7 +18,10 @@ package com.buzbuz.smartautoclicker.ui.dialogs
 
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Color
+import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.BitmapManager
@@ -28,6 +31,7 @@ import com.buzbuz.smartautoclicker.ui.base.DialogController
 import kotlinx.android.synthetic.main.dialog_click_condition.image_condition
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_1
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_2
+import kotlinx.android.synthetic.main.dialog_click_condition.text_area_at
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -60,18 +64,32 @@ class ClickConditionDialog(
     override fun onDialogShown(dialog: AlertDialog) {
         dialog.apply {
             condition.first.let {
+                text_area_1.text = context.getString(R.string.dialog_click_condition_area, it.area.left, it.area.top)
+                text_area_2.text = context.getString(R.string.dialog_click_condition_area, it.area.right, it.area.bottom)
+
                 bitmapJob = CoroutineScope(Dispatchers.IO).launch {
                     val conditionBitmap = BitmapManager.getInstance(context).loadBitmap(
                         it.path, it.area.width(), it.area.height())
 
                     withContext(Dispatchers.Main) {
-                        image_condition.setImageBitmap(conditionBitmap)
+                        if (conditionBitmap != null) {
+                            image_condition.setImageBitmap(conditionBitmap)
+                            changeButtonState(getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE)
+                        } else {
+                            image_condition.setImageDrawable(
+                                ContextCompat.getDrawable(context, R.drawable.ic_cancel)?.apply {
+                                    setTint(Color.RED)
+                                }
+                            )
+                            changeButtonState(getButton(AlertDialog.BUTTON_POSITIVE), View.INVISIBLE)
+                            text_area_1.setText(R.string.dialog_click_condition_error)
+                            text_area_2.text = null
+                            text_area_at.visibility = View.INVISIBLE
+                        }
+
                         bitmapJob = null
                     }
                 }
-
-                text_area_1.text = context.getString(R.string.dialog_click_condition_area, it.area.left, it.area.top)
-                text_area_2.text = context.getString(R.string.dialog_click_condition_area, it.area.right, it.area.bottom)
             }
         }
     }

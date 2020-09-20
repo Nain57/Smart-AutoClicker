@@ -69,6 +69,7 @@
     <string name="dialog_click_condition_delete">Delete</string>
     <string name="dialog_click_condition_area">[%1d,%2d]</string>
     <string name="dialog_click_condition_at">at</string>
+    <string name="dialog_click_condition_error">The condition image can\'t be found.</string>
 
     <string name="toast_configure_single_click">Touch the position to click on.</string>
     <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
