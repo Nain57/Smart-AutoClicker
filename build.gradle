@@ -44,7 +44,7 @@ ext {
     androidxLifecycleVersion = "2.2.0"
     androidxRecyclerViewVersion = "1.1.0"
     androidxRoomVersion = "2.2.5"
-    googleMaterialVersion = "1.2.0"
+    googleMaterialVersion = "1.2.1"
 }
 
 task clean (type: Delete) {
