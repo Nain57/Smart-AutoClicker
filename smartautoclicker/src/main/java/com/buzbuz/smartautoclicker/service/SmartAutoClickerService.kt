@@ -26,6 +26,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Path
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import androidx.core.app.NotificationCompat
 
@@ -154,10 +155,14 @@ class SmartAutoClickerService : AccessibilityService() {
      */
     private fun createNotification(scenarioName: String): Notification {
         val manager = getSystemService(NotificationManager::class.java)
-        manager!!.createNotificationChannel(
-            NotificationChannel(NOTIFICATION_CHANNEL_ID,
-                getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_LOW)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager!!.createNotificationChannel(
+                NotificationChannel(
+                    NOTIFICATION_CHANNEL_ID,
+                    getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_LOW
+                )
+            )
+        }
 
         val intent = Intent(this, MainActivity::class.java)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
