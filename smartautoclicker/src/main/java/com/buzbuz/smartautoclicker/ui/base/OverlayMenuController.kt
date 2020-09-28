@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.ui.base
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.Point
@@ -152,6 +153,7 @@ abstract class OverlayMenuController(protected val context: Context) {
         menuLayout = context.getSystemService(LayoutInflater::class.java)!!
             .inflate(menuLayoutRes, null).apply {
                 for (view in layout_buttons.children) {
+                    @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
                     when (view.id) {
                         R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
                         R.id.btn_hide_overlay -> view.setOnClickListener { onHideOverlayClicked() }

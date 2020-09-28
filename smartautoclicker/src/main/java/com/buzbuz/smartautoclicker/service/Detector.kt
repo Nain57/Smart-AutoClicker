@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.view.ContextThemeWrapper
-import android.view.Display
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 
@@ -42,13 +41,11 @@ import kotlinx.coroutines.launch
  * and the detector.
  *
  * @param context the Android context.
- * @param display the display on which the detection will occur.
  * @param detectionCallback the object notified upon detection of a click to be performed.
  * @param stoppedCallback the object notified upon request to stop the detection.
  */
 class Detector(
     private val context: Context,
-    private val display: Display,
     private val detectionCallback: (ClickInfo) -> Unit,
     private val stoppedCallback: () -> Unit
 ) {

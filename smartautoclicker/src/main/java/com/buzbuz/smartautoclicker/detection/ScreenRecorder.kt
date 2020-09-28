@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
@@ -176,6 +177,7 @@ class ScreenRecorder(private val context: Context, private val stoppedListener: 
         projection = projectionManager.getMediaProjection(resultCode, data).apply {
             registerCallback(projectionCallback, null)
         }
+        @SuppressLint("WrongConstant")
         imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2).apply {
             setOnImageAvailableListener(::onImageAvailable, Handler(processingThread!!.looper))
         }

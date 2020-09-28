@@ -26,7 +26,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Path
 import android.media.projection.MediaProjectionManager
-import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import androidx.core.app.NotificationCompat
 
@@ -131,8 +130,7 @@ class SmartAutoClickerService : AccessibilityService() {
 
     override fun onCreate() {
         super.onCreate()
-        detector = Detector(this, getSystemService(WindowManager::class.java)!!.defaultDisplay,
-            ::performClick) { stopForeground(true) }
+        detector = Detector(this, ::performClick) { stopForeground(true) }
     }
 
     override fun onServiceConnected() {

@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.extensions
 
-import android.graphics.drawable.Drawable
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes

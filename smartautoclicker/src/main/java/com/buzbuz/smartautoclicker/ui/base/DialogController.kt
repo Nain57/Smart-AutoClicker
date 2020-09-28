@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.ui.base
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -95,6 +96,7 @@ abstract class DialogController {
 
         Log.d(TAG, "create dialog: $this")
 
+        @SuppressLint("InflateParams") // Dialog views have no parent at inflation time
         val titleView = dialogBuilder.context.getSystemService(LayoutInflater::class.java)!!
             .inflate(R.layout.view_dialog_title, null)
         titleView.findViewById<TextView>(R.id.title).setText(dialogTitle)

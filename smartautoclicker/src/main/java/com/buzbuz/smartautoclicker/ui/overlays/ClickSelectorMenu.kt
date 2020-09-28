@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.ui.overlays
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -208,6 +209,7 @@ class ClickSelectorMenu(
             }
         }
 
+        @SuppressLint("ClickableViewAccessibility") // You can't click on this view
         override fun onTouchEvent(event: MotionEvent): Boolean {
             if (event.action != MotionEvent.ACTION_DOWN || event.action != MotionEvent.ACTION_MOVE) {
                 super.onTouchEvent(event)
