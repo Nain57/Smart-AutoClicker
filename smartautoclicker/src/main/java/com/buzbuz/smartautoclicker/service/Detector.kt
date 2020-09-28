@@ -107,7 +107,7 @@ class Detector(
             clicks!!.observeForever(clicksObserver)
         }
 
-        screenRecorder = ScreenRecorder(context, display, ::onStopClicked).apply {
+        screenRecorder = ScreenRecorder(context, ::onStopClicked).apply {
             startScreenRecord(resultCode, data)
         }
         overlayMenu = MainMenu(context, ::onOpenListClicked, ::onPlayPauseClicked, ::onStopClicked).apply {

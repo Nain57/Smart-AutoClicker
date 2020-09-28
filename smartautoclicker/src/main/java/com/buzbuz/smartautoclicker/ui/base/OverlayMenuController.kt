@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.ui.base
 import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.Point
+import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
@@ -32,6 +33,7 @@ import androidx.annotation.IdRes
 import androidx.core.view.children
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.extensions.size
 
 import kotlinx.android.synthetic.main.overlay_menu.view.layout_buttons
 
@@ -101,11 +103,18 @@ abstract class OverlayMenuController(protected val context: Context) {
     private var moveInitialMenuPosition = 0 to 0
     /** The initial position of the touch event that as initiated the move of the overlay menu. */
     private var moveInitialTouchPosition = 0 to 0
-    /** The display size. Used for avoiding moving the menu outside the screen. */
-    private var displaySize = Point()
-
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     protected val windowManager = context.getSystemService(WindowManager::class.java)!!
+
+    /** The display size. Used for avoiding moving the menu outside the screen. */
+    private val displaySize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        windowManager.currentWindowMetrics.bounds.size()
+    } else {
+        val size = Point()
+        @Suppress("DEPRECATION")
+        windowManager.defaultDisplay.getSize(size)
+        size
+    }
 
     /** The layout id of the overlay menu to be inflated. Must be a [androidx.annotation.LayoutRes]. */
     protected abstract val menuLayoutRes: Int
@@ -115,10 +124,6 @@ abstract class OverlayMenuController(protected val context: Context) {
      * button will have no effect.
      */
     protected abstract val screenOverlayView: View?
-
-    init {
-        windowManager.defaultDisplay.getSize(displaySize)
-    }
 
     /**
      * Show the overlay menu and view, if defined.

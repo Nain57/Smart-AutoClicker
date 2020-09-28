@@ -27,16 +27,18 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.DisplayMetrics
+import android.os.Looper
 import android.util.Log
-import android.view.Display
+import android.view.WindowManager
 import androidx.annotation.GuardedBy
 import androidx.annotation.WorkerThread
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.extensions.size
 
 /**
  * Record the screen and provide screen capture and click detection on it.
@@ -53,10 +55,9 @@ import com.buzbuz.smartautoclicker.clicks.ClickInfo
  * [stopScreenRecord] in order to release all resources associated with this object.
  *
  * @param context the Android context.
- * @param display the display to be recorded.
  * @param stoppedListener notified when the screen record has been stopped by the user.
  */
-class ScreenRecorder(private val context: Context, display: Display, private val stoppedListener: () -> Unit)  {
+class ScreenRecorder(private val context: Context, private val stoppedListener: () -> Unit)  {
 
     private companion object {
         /** Tag for logs. */
@@ -68,16 +69,16 @@ class ScreenRecorder(private val context: Context, display: Display, private val
     }
 
     /** Size of the device. We keep a 1:1 ratio with the virtual display so it's also the size of the [Image] */
-    private val displaySize = Point()
+    private val displaySize : Point
     /** Screen DPI density. */
     private val displayDensityDpi: Int
     /** Handler on the main thread. Used to post processing results callbacks. */
-    private val mainHandler = Handler()
+    private val mainHandler = Handler(Looper.getMainLooper())
     /**
      * Process the [Image] from the virtual display to capture screenshots/detect clicks.
      * Should only be accessed through [processingThread] or methods annotated [WorkerThread].
      */
-    private val imageProcessor = ImageProcessor(context, displaySize)
+    private val imageProcessor : ImageProcessor
 
     /**
      * The token granting applications the ability to capture screen contents by creating a [VirtualDisplay].
@@ -125,13 +126,20 @@ class ScreenRecorder(private val context: Context, display: Display, private val
     val isDetecting: Boolean
         get() { return synchronized(mainHandler) { detectionInfo != null } }
 
-    /** Initialize the display metrics. */
+    /** Initialize the display metrics and the image processor. */
     init {
-        display.getSize(displaySize)
+        val windowManager = context.getSystemService(WindowManager::class.java)
+        displaySize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            windowManager.currentWindowMetrics.bounds.size()
+        } else {
+            val size = Point()
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.getSize(size)
+            size
+        }
 
-        val displayMetrics = DisplayMetrics()
-        display.getMetrics(displayMetrics)
-        displayDensityDpi = displayMetrics.densityDpi
+        displayDensityDpi = context.resources.configuration.densityDpi
+        imageProcessor = ImageProcessor(context, displaySize)
     }
 
     /**
