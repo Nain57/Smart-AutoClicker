@@ -21,12 +21,12 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.extensions.TYPE_COMPAT_OVERLAY
 
 import kotlin.IllegalStateException
 
@@ -107,7 +107,7 @@ abstract class DialogController {
             .setCancelable(false)
             .create()
             .also {
-                it.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
+                it.window!!.setType(TYPE_COMPAT_OVERLAY)
                 Log.d(TAG, "show dialog: $this")
                 it.show()
             }

@@ -21,18 +21,16 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Build
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.extensions.scale
-import com.buzbuz.smartautoclicker.extensions.size
 import com.buzbuz.smartautoclicker.extensions.translate
 import com.buzbuz.smartautoclicker.ui.base.OverlayMenuController
 
@@ -95,14 +93,7 @@ class ConditionSelectorMenu(
             }
 
         init {
-            val screenSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                windowManager.currentWindowMetrics.bounds.size()
-            } else {
-                val size = Point()
-                @Suppress("DEPRECATION")
-                windowManager.defaultDisplay.getSize(size)
-                size
-            }
+            val screenSize = windowManager.displaySize
             maxArea = RectF(0f, 0f, screenSize.x.toFloat(), screenSize.y.toFloat())
         }
 

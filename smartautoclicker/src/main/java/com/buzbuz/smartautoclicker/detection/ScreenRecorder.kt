@@ -28,7 +28,6 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
-import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -39,7 +38,7 @@ import androidx.annotation.WorkerThread
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
-import com.buzbuz.smartautoclicker.extensions.size
+import com.buzbuz.smartautoclicker.extensions.displaySize
 
 /**
  * Record the screen and provide screen capture and click detection on it.
@@ -129,16 +128,7 @@ class ScreenRecorder(private val context: Context, private val stoppedListener: 
 
     /** Initialize the display metrics and the image processor. */
     init {
-        val windowManager = context.getSystemService(WindowManager::class.java)
-        displaySize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            windowManager.currentWindowMetrics.bounds.size()
-        } else {
-            val size = Point()
-            @Suppress("DEPRECATION")
-            windowManager.defaultDisplay.getSize(size)
-            size
-        }
-
+        displaySize = context.getSystemService(WindowManager::class.java).displaySize
         displayDensityDpi = context.resources.configuration.densityDpi
         imageProcessor = ImageProcessor(context, displaySize)
     }

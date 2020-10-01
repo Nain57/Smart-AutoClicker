@@ -19,8 +19,6 @@ package com.buzbuz.smartautoclicker.ui.base
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
-import android.graphics.Point
-import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
@@ -34,7 +32,8 @@ import androidx.annotation.IdRes
 import androidx.core.view.children
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.extensions.size
+import com.buzbuz.smartautoclicker.extensions.TYPE_COMPAT_OVERLAY
+import com.buzbuz.smartautoclicker.extensions.displaySize
 
 import kotlinx.android.synthetic.main.overlay_menu.view.layout_buttons
 
@@ -76,7 +75,7 @@ abstract class OverlayMenuController(protected val context: Context) {
     private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
-        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+        TYPE_COMPAT_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
@@ -86,7 +85,7 @@ abstract class OverlayMenuController(protected val context: Context) {
     private val overlayLayoutParams:  WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.MATCH_PARENT,
-        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+        TYPE_COMPAT_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
@@ -108,14 +107,7 @@ abstract class OverlayMenuController(protected val context: Context) {
     protected val windowManager = context.getSystemService(WindowManager::class.java)!!
 
     /** The display size. Used for avoiding moving the menu outside the screen. */
-    private val displaySize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        windowManager.currentWindowMetrics.bounds.size()
-    } else {
-        val size = Point()
-        @Suppress("DEPRECATION")
-        windowManager.defaultDisplay.getSize(size)
-        size
-    }
+    private val displaySize = windowManager.displaySize
 
     /** The layout id of the overlay menu to be inflated. Must be a [androidx.annotation.LayoutRes]. */
     protected abstract val menuLayoutRes: Int
