@@ -34,9 +34,9 @@ import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
 
 import kotlinx.android.synthetic.main.dialog_add_scenario.edit_name
 import kotlinx.android.synthetic.main.fragment_scenarios.add
-import kotlinx.android.synthetic.main.include_loadable_list.empty
-import kotlinx.android.synthetic.main.include_loadable_list.list
-import kotlinx.android.synthetic.main.include_loadable_list.loading
+import kotlinx.android.synthetic.main.merge_loadable_list.empty
+import kotlinx.android.synthetic.main.merge_loadable_list.list
+import kotlinx.android.synthetic.main.merge_loadable_list.loading
 
 /**
  * Fragment displaying the list of click scenario and the creation dialog.

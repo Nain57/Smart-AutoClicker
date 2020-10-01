@@ -35,9 +35,9 @@ import com.buzbuz.smartautoclicker.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.ui.base.DialogController
 import com.buzbuz.smartautoclicker.ui.base.DualChoiceDialogController
 
-import kotlinx.android.synthetic.main.include_loadable_list.empty
-import kotlinx.android.synthetic.main.include_loadable_list.list
-import kotlinx.android.synthetic.main.include_loadable_list.loading
+import kotlinx.android.synthetic.main.merge_loadable_list.empty
+import kotlinx.android.synthetic.main.merge_loadable_list.list
+import kotlinx.android.synthetic.main.merge_loadable_list.loading
 import kotlinx.android.synthetic.main.item_click.view.btn_action
 import kotlinx.android.synthetic.main.item_click.view.name
 

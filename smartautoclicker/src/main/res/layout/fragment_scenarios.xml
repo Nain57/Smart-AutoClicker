@@ -36,7 +36,13 @@
 
         <include layout="@layout/include_view_separator"/>
 
-        <include layout="@layout/include_loadable_list"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/merge_loadable_list"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 

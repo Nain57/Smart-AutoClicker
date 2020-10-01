@@ -20,6 +20,6 @@
     android:layout_width="@dimen/dialog_width"
     android:layout_height="@dimen/dialog_height">
 
-    <include layout="@layout/include_loadable_list"/>
+    <include layout="@layout/merge_loadable_list"/>
 
 </FrameLayout>
