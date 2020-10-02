@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.ui.activity
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -97,6 +98,7 @@ class ScenarioListFragment : Fragment() {
      * Called when the user clicks on the add scenario button.
      * Create and show the [createDialog].
      */
+    @SuppressLint("InflateParams") // Dialog views have no parent at inflation time
     private fun onAddClicked() {
         val titleView = context!!.getSystemService(LayoutInflater::class.java)!!
             .inflate(R.layout.view_dialog_title, null)

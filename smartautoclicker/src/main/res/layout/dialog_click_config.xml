@@ -130,11 +130,11 @@
                     <TextView
                         android:id="@+id/text_condition_operator_desc"
                         style="@style/ItemView.Small"
-                        android:drawableEnd="@drawable/ic_chevron"
                         android:drawablePadding="@dimen/margin_horizontal_small"
                         android:gravity="center_vertical"
                         android:text="@string/condition_operator_or_desc"
-                        android:textSize="@dimen/text_size_list_item_text" />
+                        android:textSize="@dimen/text_size_list_item_text"
+                        app:drawableEndCompat="@drawable/ic_chevron" />
 
                 </LinearLayout>
 

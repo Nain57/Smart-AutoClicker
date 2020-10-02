@@ -47,11 +47,7 @@
     <string name="dialog_click_config_type_none">No click defined</string>
     <string name="dialog_click_config_type_single">Single click at %1$d, %2$d</string>
     <string name="dialog_click_config_type_swipe">Swipe from %1$d, %2$d to %3$d, %4$d</string>
-    <string name="dialog_click_config_area_content_title">When containing</string>
     <string name="dialog_click_config_condition_title">Only if</string>
-    <string name="dialog_click_config_condition_at">at</string>
-    <string name="dialog_click_config_condition_area">[%1$d,%2$d]</string>
-    <string name="dialog_click_config_delay_before_title">Delay after detecting</string>
     <string name="dialog_click_config_delay_after_title">Delay before next click</string>
     <string name="dialog_click_config_duration_hint">ms</string>
 
