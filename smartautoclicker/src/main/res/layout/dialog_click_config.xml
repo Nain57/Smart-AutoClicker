@@ -171,7 +171,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/dialog_click_config_delay_after_title"
-                    android:labelFor="@+id/edit_delay_after"
                     style="@style/HeaderTitle"/>
 
                 <include layout="@layout/include_view_separator"/>

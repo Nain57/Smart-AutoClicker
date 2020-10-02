@@ -28,6 +28,7 @@
         android:id="@+id/image_condition"
         android:layout_width="@dimen/dialog_item_condition_width"
         android:layout_height="@dimen/dialog_item_condition_height"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/content_desc_image_condition" />
 
 </androidx.cardview.widget.CardView>

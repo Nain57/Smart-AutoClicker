@@ -26,22 +26,26 @@
             <ImageButton
                 android:id="@+id/btn_confirm"
                 style="@style/OverlayButton"
-                android:src="@drawable/ic_confirm"/>
+                android:src="@drawable/ic_confirm"
+                android:contentDescription="@string/content_desc_confirm" />
 
             <ImageButton
                 android:id="@+id/btn_cancel"
                 style="@style/OverlayButton"
-                android:src="@drawable/ic_cancel"/>
+                android:src="@drawable/ic_cancel"
+                android:contentDescription="@string/content_desc_go_back" />
 
             <ImageButton
                 android:id="@+id/btn_hide_overlay"
                 style="@style/OverlayButton"
-                android:src="@drawable/ic_click_small"/>
+                android:src="@drawable/ic_click_small"
+                android:contentDescription="@string/content_desc_enable_click" />
 
             <ImageButton
                 android:id="@+id/btn_move"
                 style="@style/OverlayButton"
-                android:src="@drawable/ic_move"/>
+                android:src="@drawable/ic_move"
+                android:contentDescription="@string/content_desc_move_menu" />
 
     </LinearLayout>
 

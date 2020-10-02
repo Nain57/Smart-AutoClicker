@@ -36,6 +36,7 @@
         android:layout_centerVertical="true"
         android:scaleType="center"
         android:src="@drawable/ic_cancel"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/content_desc_delete_scenario" />
 
 </RelativeLayout>

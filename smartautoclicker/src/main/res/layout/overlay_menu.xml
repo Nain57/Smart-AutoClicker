@@ -26,22 +26,26 @@
         <ImageButton
             android:id="@+id/btn_play"
             style="@style/OverlayButton"
-            android:src="@drawable/ic_play_arrow"/>
+            android:src="@drawable/ic_play_arrow"
+            android:contentDescription="@string/content_desc_play_pause_scenario" />
 
         <ImageButton
             android:id="@+id/btn_stop"
             style="@style/OverlayButton"
-            android:src="@drawable/ic_stop"/>
+            android:src="@drawable/ic_stop"
+            android:contentDescription="@string/content_desc_stop_clicker" />
 
         <ImageButton
             android:id="@+id/btn_click_list"
             style="@style/OverlayButton"
-            android:src="@drawable/ic_click_list"/>
+            android:src="@drawable/ic_click_list"
+            android:contentDescription="@string/content_desc_open_click_list" />
 
         <ImageButton
             android:id="@+id/btn_move"
             style="@style/OverlayButton"
-            android:src="@drawable/ic_move"/>
+            android:src="@drawable/ic_move"
+            android:contentDescription="@string/content_desc_move_menu" />
 
     </LinearLayout>
 

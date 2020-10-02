@@ -37,6 +37,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:scaleType="center"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/content_desc_click_action_btn" />
 
 </RelativeLayout>

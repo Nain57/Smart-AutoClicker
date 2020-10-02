@@ -74,4 +74,15 @@
     <string name="accessibility_service_description">This application needs this service to inject the clicks you have
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from
         this application. Feel free to visit our github, the code is open source !</string>
+
+    <string name="content_desc_image_condition">The image to be detected</string>
+    <string name="content_desc_click_action_btn">Edit this click</string>
+    <string name="content_desc_delete_scenario">Delete scenario</string>
+    <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
+    <string name="content_desc_stop_clicker">Stop Smart Auto Clicker</string>
+    <string name="content_desc_open_click_list">Open the click list</string>
+    <string name="content_desc_move_menu">Move the floating menu</string>
+    <string name="content_desc_confirm">Confirm</string>
+    <string name="content_desc_go_back">Back to dialog</string>
+    <string name="content_desc_enable_click">Enable or disable overlay and allow clicks on applications</string>
 </resources>
