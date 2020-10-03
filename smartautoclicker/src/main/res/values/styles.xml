@@ -108,20 +108,22 @@
     </style>
 
     <style name="OverlaySelectorView">
-        <item name="colorInner">@color/overlayViewPrimary</item>
-        <item name="colorOutlinePrimary">@color/overlayViewAccentPrimary</item>
-        <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
-        <item name="thickness">@dimen/overlay_selector_thickness</item>
-        <item name="innerThickness">@dimen/overlay_selector_innerThickness</item>
+        <item name="colorBackground">@color/overlayClickSelectorBackground</item>
     </style>
 
     <style name="OverlaySelectorView.Click">
         <item name="radius">@dimen/overlay_click_selector_radius</item>
         <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
-        <item name="colorBackground">@color/overlayClickSelectorBackground</item>
+        <item name="thickness">@dimen/overlay_click_selector_thickness</item>
+        <item name="colorInner">@color/overlayViewPrimary</item>
+        <item name="colorOutlinePrimary">@color/overlayViewAccentPrimary</item>
+        <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
     </style>
 
     <style name="OverlaySelectorView.Condition">
+        <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
+        <item name="thickness">@dimen/overlay_condition_selector_thickness</item>
+        <item name="cornerRadius">@dimen/overlay_condition_selector_corner_radius</item>
         <item name="defaultWidth">@dimen/overlay_condition_selector_width</item>
         <item name="defaultHeight">@dimen/overlay_condition_selector_height</item>
         <item name="resizeHandleSize">@dimen/overlay_condition_selector_resize_handle_size</item>

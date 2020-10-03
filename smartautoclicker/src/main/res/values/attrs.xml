@@ -25,19 +25,20 @@
     <attr name="colorOutlineSecondary" format="color" />
     <!-- The total thickness in dp of an overlay selector. -->
     <attr name="thickness" format="dimension" />
+    <!-- The color of the background of the selector -->
+    <attr name="colorBackground" format="color" />
 
     <!-- Styleable attributes for the ClickSelectorView. -->
     <declare-styleable name="ClickSelectorView" >
         <attr name="colorInner" />
         <attr name="colorOutlinePrimary" />
         <attr name="colorOutlineSecondary" />
+        <attr name="colorBackground" />
         <attr name="thickness" />
         <!-- The radius of the selector circle, in dp. -->
         <attr name="radius" format="dimension" />
         <!-- The radius of the small circle at the center of the selector, in dp. -->
         <attr name="innerRadius" format="dimension" />
-        <!-- The color of the background of the circle selector -->
-        <attr name="colorBackground" format="color" />
     </declare-styleable>
 
     <!-- Styleable attributes for the ConditionSelectorView. -->
@@ -45,9 +46,10 @@
         <attr name="colorInner"/>
         <attr name="colorOutlinePrimary" />
         <attr name="colorOutlineSecondary"/>
+        <attr name="colorBackground" />
         <attr name="thickness" />
-        <!-- The thickness in dp of the inner part of an overlay selector. -->
-        <attr name="innerThickness" format="dimension" />
+        <!-- The radius of the selector corners. -->
+        <attr name="cornerRadius" format="dimension" />
         <!-- The default width of the selector when displayed. -->
         <attr name="defaultWidth" format="dimension" />
         <!-- The default height of the selector when displayed. -->

@@ -40,12 +40,13 @@
     <dimen name="dialog_condition_max_width">400dp</dimen>
 
     <dimen name="overlay_menu_btn_size">48dp</dimen>
-    <dimen name="overlay_selector_thickness">6dp</dimen>
-    <dimen name="overlay_selector_innerThickness">2dp</dimen>
+    <dimen name="overlay_click_selector_thickness">6dp</dimen>
     <dimen name="overlay_click_selector_radius">28dp</dimen>
     <dimen name="overlay_click_selector_inner_radius">3dp</dimen>
     <dimen name="overlay_condition_selector_width">230dp</dimen>
     <dimen name="overlay_condition_selector_height">130dp</dimen>
     <dimen name="overlay_condition_selector_resize_handle_size">50dp</dimen>
+    <dimen name="overlay_condition_selector_thickness">5dp</dimen>
+    <dimen name="overlay_condition_selector_corner_radius">2dp</dimen>
 
 </resources>

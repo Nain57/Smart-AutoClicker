@@ -58,7 +58,7 @@ class ConditionSelectorMenu(
 
     /** Confirm the current condition selection, notify the listener and dismiss the overlay. */
     private fun onConfirm() {
-        onConditionSelected.invoke((screenOverlayView as ConditionSelectorView).selectedArea)
+        onConditionSelected.invoke((screenOverlayView as ConditionSelectorView).selectedArea.toRect())
         dismiss()
     }
 
@@ -69,28 +69,20 @@ class ConditionSelectorMenu(
         private val resizeDetector = ResizeGestureDetector(context, this, ::scale, ::moveTo, ::resize)
         /** The maximum size of the selector. */
         private val maxArea: RectF
-        /** Paint for drawing the selector on the Canvas. */
-        private val paint = Paint()
-        /** Paint drawing the outline of the selector on the Canvas. */
-        private val outlinePaint = Paint()
+        /** Paint drawing the selector. */
+        private val selectorPaint = Paint()
+        /** Paint for the background of the selector. */
+        private val backgroundPaint = Paint()
 
+        /** The radius of the corner for the selector. */
+        private var cornerRadius = 0f
         /** The area where the selector should be drawn. */
-        private var area: RectF = RectF()
+        private var selectorArea = RectF()
         /** Difference between the center of the selector and its inner content. */
-        private var selectorAreaOffset: Int = 0
-        /** Area of the inner outline selector. */
-        private var outlineInArea: RectF = RectF()
-        /** Area of the outer outline selector. */
-        private var outlineOutArea: RectF = RectF()
+        private var selectorAreaOffset = 0
 
         /** Area within the selector that represents the zone to be capture to creates a click condition. */
-        val selectedArea
-            get() = area.toRect().apply {
-                left += selectorAreaOffset
-                top += selectorAreaOffset
-                right -= selectorAreaOffset
-                bottom -= selectorAreaOffset
-            }
+        var selectedArea = RectF()
 
         init {
             val screenSize = windowManager.displaySize
@@ -99,25 +91,26 @@ class ConditionSelectorMenu(
 
         init {
             context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
+                cornerRadius = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_cornerRadius, 2)
+                    .toFloat()
                 val xOffset = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_defaultWidth, 100)
                     .toFloat() / 2
                 val yOffset = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_defaultHeight, 100)
                     .toFloat() / 2
-                area = RectF(maxArea.centerX() - xOffset, maxArea.centerY() - yOffset,
+                selectorArea = RectF(maxArea.centerX() - xOffset, maxArea.centerY() - yOffset,
                     maxArea.centerX() + xOffset, maxArea.centerY() + yOffset)
 
                 val thickness = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_thickness, 4).toFloat()
-                val innerThickness = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_innerThickness, 2).toFloat()
-                selectorAreaOffset = kotlin.math.ceil(thickness / 2).toInt() + 1
-                outlinePaint.apply {
+                selectorAreaOffset = kotlin.math.ceil(thickness / 2).toInt()
+                selectorPaint.apply {
                     style = Paint.Style.STROKE
-                    strokeWidth = (thickness - innerThickness) / 2
+                    strokeWidth = thickness
                     color = ta.getColor(R.styleable.ConditionSelectorView_colorOutlinePrimary, Color.RED)
                 }
-                paint.apply {
-                    style = Paint.Style.STROKE
-                    strokeWidth = innerThickness
-                    color = ta.getColor(R.styleable.ConditionSelectorView_colorInner, Color.WHITE)
+                backgroundPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.FILL
+                    color = ta.getColor(R.styleable.ConditionSelectorView_colorBackground, Color.TRANSPARENT)
                 }
 
                 resizeDetector.resizeHandleSize = ta
@@ -130,7 +123,7 @@ class ConditionSelectorMenu(
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouchEvent(event: MotionEvent): Boolean {
-            return resizeDetector.onTouchEvent(event, area)
+            return resizeDetector.onTouchEvent(event, selectorArea)
         }
 
         /**
@@ -140,7 +133,7 @@ class ConditionSelectorMenu(
          * @param factor the scale factor detected.
          */
         private fun scale(factor: Float) {
-            area.scale(factor)
+            selectorArea.scale(factor)
             invalidate()
         }
 
@@ -154,15 +147,15 @@ class ConditionSelectorMenu(
         private fun moveTo(toX: Float, toY: Float) {
             val xPos = when {
                 toX < maxArea.left -> maxArea.left
-                toX + area.width() > maxArea.right -> maxArea.right - area.width()
+                toX + selectorArea.width() > maxArea.right -> maxArea.right - selectorArea.width()
                 else -> toX
             }
             val yPos = when {
                 toY < maxArea.top -> maxArea.top
-                toY + area.height() > maxArea.bottom -> maxArea.bottom - area.height()
+                toY + selectorArea.height() > maxArea.bottom -> maxArea.bottom - selectorArea.height()
                 else -> toY
             }
-            area.translate(xPos, yPos)
+            selectorArea.translate(xPos, yPos)
             invalidate()
         }
 
@@ -173,32 +166,25 @@ class ConditionSelectorMenu(
          * @param newSize the new area of the selector after the resize.
          */
         private fun resize(newSize: RectF) {
-            area = newSize
+            selectorArea = newSize
             invalidate()
         }
 
         override fun invalidate() {
-            area.intersect(maxArea)
-            outlineOutArea.apply {
-                left = area.left - (paint.strokeWidth + outlinePaint.strokeWidth) / 2
-                top = area.top - (paint.strokeWidth + outlinePaint.strokeWidth) / 2
-                right = area.right + (paint.strokeWidth + outlinePaint.strokeWidth) / 2
-                bottom = area.bottom + (paint.strokeWidth + outlinePaint.strokeWidth) / 2
-            }
-            outlineInArea.apply {
-                left = area.left + (paint.strokeWidth + outlinePaint.strokeWidth) / 2
-                top = area.top + (paint.strokeWidth + outlinePaint.strokeWidth) / 2
-                right = area.right - (paint.strokeWidth + outlinePaint.strokeWidth) / 2
-                bottom = area.bottom - (paint.strokeWidth + outlinePaint.strokeWidth) / 2
+            selectorArea.intersect(maxArea)
+            selectedArea.apply {
+                left = selectorArea.left + selectorAreaOffset
+                top = selectorArea.top + selectorAreaOffset
+                right = selectorArea.right - selectorAreaOffset
+                bottom = selectorArea.bottom - selectorAreaOffset
             }
 
             super.invalidate()
         }
 
-        override fun onDraw(canvas: Canvas?) {
-            canvas?.drawRect(outlineOutArea, outlinePaint)
-            canvas?.drawRect(area, paint)
-            canvas?.drawRect(outlineInArea, outlinePaint)
+        override fun onDraw(canvas: Canvas) {
+            canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
+            canvas.drawRect(selectedArea, backgroundPaint)
         }
     }
 }
