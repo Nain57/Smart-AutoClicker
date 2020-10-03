@@ -23,6 +23,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Handler
+import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.res.use
@@ -46,6 +48,11 @@ class ConditionSelectorMenu(
     private val onConditionSelected: (Rect) -> Unit
 ) : OverlayMenuController(context) {
 
+    private companion object {
+        /** Delay before confirming the selection in order to let the time to the selector view to be hide. */
+        private const val SELECTION_DELAY_MS = 200L
+    }
+
     override val menuLayoutRes: Int = R.layout.overlay_validation_menu
     override val screenOverlayView: View? = ConditionSelectorView(context)
 
@@ -58,8 +65,12 @@ class ConditionSelectorMenu(
 
     /** Confirm the current condition selection, notify the listener and dismiss the overlay. */
     private fun onConfirm() {
-        onConditionSelected.invoke((screenOverlayView as ConditionSelectorView).selectedArea.toRect())
-        dismiss()
+        val selectedArea = Rect((screenOverlayView as ConditionSelectorView).selectedArea.toRect())
+        screenOverlayView.hide = true
+        Handler(Looper.getMainLooper()).postDelayed({
+            onConditionSelected.invoke(selectedArea)
+            dismiss()
+        }, SELECTION_DELAY_MS)
     }
 
     /** Overlay view used as [screenOverlayView] showing the area to capture the content as a click condition. */
@@ -83,6 +94,12 @@ class ConditionSelectorMenu(
 
         /** Area within the selector that represents the zone to be capture to creates a click condition. */
         var selectedArea = RectF()
+        /** Tell if the content of this view should be hidden or not. */
+        var hide = false
+            set(value) {
+                field = value
+                invalidate()
+            }
 
         init {
             val screenSize = windowManager.displaySize
@@ -183,6 +200,10 @@ class ConditionSelectorMenu(
         }
 
         override fun onDraw(canvas: Canvas) {
+            if (hide) {
+                return
+            }
+
             canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
             canvas.drawRect(selectedArea, backgroundPaint)
         }
