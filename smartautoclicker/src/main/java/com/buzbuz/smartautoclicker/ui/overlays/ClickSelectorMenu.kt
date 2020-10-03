@@ -162,49 +162,64 @@ class ClickSelectorMenu(
     /** Overlay view used as [screenOverlayView] showing the positions selected by the user. */
     private inner class ClickSelectorView(context: Context) : View(context) {
 
-        /** Paint drawing the inner circle drawn between the outlines. */
-        private val paint = Paint()
-        /** Paint drawing the outline of the [fromPosition] circle. */
-        private val outlineFromPaint = Paint()
-        /** Paint drawing the outline of the [toPosition] circle. */
-        private val outlineToPaint = Paint()
+        /** Paint drawing the outer circle of the [fromPosition]. */
+        private val outerFromPaint = Paint()
+        /** Paint drawing the inner circle of the [fromPosition]. */
+        private val innerFromPaint = Paint()
+        /** Paint drawing the outer circle of the [toPosition]. */
+        private val outerToPaint = Paint()
+        /** Paint drawing the inner circle of the [toPosition]. */
+        private val innerToPaint = Paint()
+        /** Paint for the background of the circles. */
+        private val backgroundPaint = Paint()
 
-        /** The inner circle radius. */
-        private var radius: Float = 0f
-        /** The inner outline circle radius. */
-        private var outlineInRadius: Float = 0f
-        /** The outer outline circle radius. */
-        private var outlineOutRadius: Float = 0f
+        /** The circle radius. */
+        private var outerRadius: Float = 0f
+        /** The inner small circle radius. */
+        private var innerCircleRadius: Float = 0F
+        /** The radius of the transparent background between the inner and outer circle. */
+        private var backgroundCircleRadius: Float = 0F
 
         init {
             context.obtainStyledAttributes(R.style.OverlaySelectorView_Click, R.styleable.ClickSelectorView).use { ta ->
                 val thickness = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_thickness, 4).toFloat()
-                val innerThickness = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_innerThickness, 2).toFloat()
-                val outerThickness = (thickness - innerThickness) / 2
+                outerRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_radius, 30).toFloat()
+                innerCircleRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_innerRadius, 4)
+                    .toFloat()
+                val backgroundCircleStroke = outerRadius - (thickness / 2 + innerCircleRadius)
+                backgroundCircleRadius = outerRadius - thickness / 2 - backgroundCircleStroke / 2
 
-                radius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_radius, 30).toFloat()
-                outlineInRadius = radius - (thickness - outerThickness) / 2
-                outlineOutRadius = radius + (thickness - outerThickness) / 2
-
-                outlineFromPaint.apply {
+                outerFromPaint.apply {
                     isAntiAlias = true
                     style = Paint.Style.STROKE
                     color = ta.getColor(R.styleable.ClickSelectorView_colorOutlinePrimary, Color.RED)
-                    strokeWidth = outerThickness
+                    strokeWidth = thickness
                 }
 
-                outlineToPaint.apply {
+                innerFromPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.FILL
+                    color = ta.getColor(R.styleable.ClickSelectorView_colorInner, Color.WHITE)
+                }
+
+                outerToPaint.apply {
                     isAntiAlias = true
                     style = Paint.Style.STROKE
                     color = ta.getColor(R.styleable.ClickSelectorView_colorOutlineSecondary, Color.GREEN)
-                    strokeWidth = outerThickness
+                    strokeWidth = thickness
                 }
 
-                paint.apply {
+                innerToPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.FILL
+                    color = innerFromPaint.color
+                }
+
+                backgroundPaint.apply {
                     isAntiAlias = true
                     style = Paint.Style.STROKE
-                    color = ta.getColor(R.styleable.ClickSelectorView_colorInner, Color.WHITE)
-                    strokeWidth = innerThickness
+                    color = ta.getColor(R.styleable.ClickSelectorView_colorBackground, Color.TRANSPARENT)
+                    strokeWidth = backgroundCircleStroke
                 }
             }
         }
@@ -226,8 +241,8 @@ class ClickSelectorMenu(
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
 
-            fromPosition?.let { drawSelectorCircle(canvas, it, outlineFromPaint) }
-            toPosition?.let { drawSelectorCircle(canvas, it, outlineToPaint) }
+            fromPosition?.let { drawSelectorCircle(canvas, it, outerFromPaint, innerFromPaint) }
+            toPosition?.let { drawSelectorCircle(canvas, it, outerToPaint, innerToPaint) }
         }
 
         /**
@@ -235,12 +250,13 @@ class ClickSelectorMenu(
          *
          * @param canvas the canvas to draw the circles on.
          * @param position the position of the circle selector.
-         * @param outlinePaint the paint used to draw the circle outline.
+         * @param outerPaint the paint used to draw the big circle.
+         * @param innerPaint the paint used to draw the small inner circle.
          */
-        private fun drawSelectorCircle(canvas: Canvas, position: PointF, outlinePaint: Paint) {
-            canvas.drawCircle(position.x, position.y, radius, paint)
-            canvas.drawCircle(position.x, position.y, outlineOutRadius, outlinePaint)
-            canvas.drawCircle(position.x, position.y, outlineInRadius, outlinePaint)
+        private fun drawSelectorCircle(canvas: Canvas, position: PointF, outerPaint: Paint, innerPaint: Paint) {
+            canvas.drawCircle(position.x, position.y, outerRadius, outerPaint)
+            canvas.drawCircle(position.x, position.y, innerCircleRadius, innerPaint)
+            canvas.drawCircle(position.x, position.y, backgroundCircleRadius, backgroundPaint)
         }
     }
 }

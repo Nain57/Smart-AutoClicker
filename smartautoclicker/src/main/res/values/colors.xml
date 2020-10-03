@@ -27,4 +27,5 @@
     <color name="overlayViewPrimary">#FFFFFF</color>
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>
+    <color name="overlayClickSelectorBackground">#77000000</color>
 </resources>

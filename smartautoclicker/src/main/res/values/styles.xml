@@ -117,6 +117,8 @@
 
     <style name="OverlaySelectorView.Click">
         <item name="radius">@dimen/overlay_click_selector_radius</item>
+        <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
+        <item name="colorBackground">@color/overlayClickSelectorBackground</item>
     </style>
 
     <style name="OverlaySelectorView.Condition">
