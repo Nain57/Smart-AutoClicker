@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.overlays
+package com.buzbuz.smartautoclicker.ui.overlays.condition
 
 import android.content.Context
 import android.graphics.RectF
@@ -49,24 +49,26 @@ class ResizeGestureDetector(
     private val view: View,
     private val onScaleListener: (Float) -> Unit,
     private val onMoveListener: (Float, Float) -> Unit,
-    private val onResizeListener: (RectF) -> Unit
+    private val onResizeListener: (RectF, Int) -> Unit
 ) : ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
     companion object {
 
-        @IntDef(LEFT, TOP, RIGHT, BOTTOM)
+        @IntDef(RESIZE_LEFT, RESIZE_TOP, RESIZE_RIGHT, RESIZE_BOTTOM)
         @Retention(AnnotationRetention.SOURCE)
-        annotation class ResizeDirection
+        annotation class GestureType
         /** The current touch events are for resizing the selector from the left size of the square. */
-        private const val LEFT = 1
+        const val RESIZE_LEFT = 1
         /** The current touch events are for resizing the selector from the top size of the square. */
-        private const val TOP = 2
+        const val RESIZE_TOP = 2
         /** The current touch events are for resizing the selector from the right size of the square. */
-        private const val RIGHT = 3
+        const val RESIZE_RIGHT = 3
         /** The current touch events are for resizing the selector from the bottom size of the square. */
-        private const val BOTTOM = 4
+        const val RESIZE_BOTTOM = 4
+        /** The current touch events are for moving the selector. */
+        const val MOVE = 5
 
-        /** */
+        /** Identifier for no pointer. */
         private const val NO_POINTER_ID = -1
     }
 
@@ -82,7 +84,8 @@ class ResizeGestureDetector(
     /** The touch event pointer identifier when a resize is detected. */
     private var resizePointerId = NO_POINTER_ID
     /** The direction of the view resize. */
-    @ResizeDirection private var resizeType: Int? = null
+    @GestureType
+    private var resizeType: Int? = null
 
     /** The size of the handle around the resizeable view. */
     var resizeHandleSize = 10f
@@ -98,19 +101,20 @@ class ResizeGestureDetector(
             return true
         }
 
-        if (movePointerId != NO_POINTER_ID) {
-            val movePointerIndex = event.findPointerIndex(movePointerId)
-            if (event.actionIndex == movePointerIndex) {
-                onMoveEvent(event, movePointerIndex)
-                return true
+        when (resizeType) {
+            MOVE -> {
+                val movePointerIndex = event.findPointerIndex(movePointerId)
+                if (event.actionIndex == movePointerIndex) {
+                    onMoveEvent(event, movePointerIndex)
+                    return true
+                }
             }
-        }
-
-        if (resizePointerId != NO_POINTER_ID) {
-            val resizePointerIndex = event.findPointerIndex(resizePointerId)
-            if (event.actionIndex == resizePointerIndex) {
-                onResizeEvent(event, resizePointerIndex, selectorArea)
-                return true
+            else -> {
+                val resizePointerIndex = event.findPointerIndex(resizePointerId)
+                if (event.actionIndex == resizePointerIndex) {
+                    onResizeEvent(event, resizePointerIndex, selectorArea)
+                    return true
+                }
             }
         }
 
@@ -130,14 +134,15 @@ class ResizeGestureDetector(
             moveInitialPosition = selectorArea.left to selectorArea.top
             moveInitialEventPosition = event.rawX to event.rawY
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            resizeType = MOVE
             return true
         }
 
         resizeType = when {
-            selectorArea.leftOffsetContains(resizeHandleSize, event.x, event.y) -> LEFT
-            selectorArea.topOffsetContains(resizeHandleSize, event.x, event.y) -> TOP
-            selectorArea.rightOffsetContains(resizeHandleSize, event.x, event.y) -> RIGHT
-            selectorArea.bottomOffsetContains(resizeHandleSize, event.x, event.y) -> BOTTOM
+            selectorArea.leftOffsetContains(resizeHandleSize, event.x, event.y) -> RESIZE_LEFT
+            selectorArea.topOffsetContains(resizeHandleSize, event.x, event.y) -> RESIZE_TOP
+            selectorArea.rightOffsetContains(resizeHandleSize, event.x, event.y) -> RESIZE_RIGHT
+            selectorArea.bottomOffsetContains(resizeHandleSize, event.x, event.y) -> RESIZE_BOTTOM
             else -> null
         }
         if (resizeType != null) {
@@ -182,11 +187,11 @@ class ResizeGestureDetector(
         when (event.action) {
             MotionEvent.ACTION_MOVE -> {
                 onResizeListener(RectF(
-                    if (resizeType!! == LEFT) min(event.getX(pointerIndex), selectorArea.right) else selectorArea.left,
-                    if (resizeType!! == TOP) min(event.getY(pointerIndex), selectorArea.bottom) else selectorArea.top,
-                    if (resizeType!! == RIGHT) max(event.getX(pointerIndex), selectorArea.left) else selectorArea.right,
-                    if (resizeType!! == BOTTOM) max(event.getY(pointerIndex), selectorArea.top) else selectorArea.bottom
-                ))
+                    if (resizeType!! == RESIZE_LEFT) min(event.getX(pointerIndex), selectorArea.right) else selectorArea.left,
+                    if (resizeType!! == RESIZE_TOP) min(event.getY(pointerIndex), selectorArea.bottom) else selectorArea.top,
+                    if (resizeType!! == RESIZE_RIGHT) max(event.getX(pointerIndex), selectorArea.left) else selectorArea.right,
+                    if (resizeType!! == RESIZE_BOTTOM) max(event.getY(pointerIndex), selectorArea.top) else selectorArea.bottom
+                ), resizeType!!)
             }
             MotionEvent.ACTION_UP -> {
                 resizePointerId = NO_POINTER_ID

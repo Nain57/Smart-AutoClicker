@@ -56,5 +56,13 @@
         <attr name="defaultHeight" format="dimension" />
         <!-- The size of the handles around the selector allowing the resize of one edge of the selector. -->
         <attr name="resizeHandleSize" format="dimension"/>
+        <!-- The size of the hints icons. -->
+        <attr name="hintsIconsSize" format="dimension"/>
+        <!-- The margin between two hint icons for hints with two icons. -->
+        <attr name="hintsIconsMargin" format="dimension"/>
+        <!-- The duration of the fade out animation on the hints in milliseconds. -->
+        <attr name="hintsFadeDuration" format="integer"/>
+        <!-- The delay before starting the fade out animation when showing all the hints in milliseconds. -->
+        <attr name="hintsAllFadeDelay" format="integer"/>
     </declare-styleable>
 </resources>

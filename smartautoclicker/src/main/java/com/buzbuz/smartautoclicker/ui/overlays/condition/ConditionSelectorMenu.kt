@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.overlays
+package com.buzbuz.smartautoclicker.ui.overlays.condition
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -27,6 +27,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
@@ -35,6 +36,7 @@ import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.translate
 import com.buzbuz.smartautoclicker.ui.base.OverlayMenuController
+import com.buzbuz.smartautoclicker.ui.overlays.condition.ResizeGestureDetector.Companion.GestureType
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order
@@ -55,6 +57,10 @@ class ConditionSelectorMenu(
 
     override val menuLayoutRes: Int = R.layout.overlay_validation_menu
     override val screenOverlayView: View? = ConditionSelectorView(context)
+
+    override fun onMenuShown() {
+        (screenOverlayView as ConditionSelectorView).showHints()
+    }
 
     override fun onItemClicked(viewId: Int) {
         when (viewId) {
@@ -84,6 +90,8 @@ class ConditionSelectorMenu(
         private val selectorPaint = Paint()
         /** Paint for the background of the selector. */
         private val backgroundPaint = Paint()
+        /** Controls the display of the user hints around the selector. */
+        private val resizeHintsIcons: ResizeHintsController
 
         /** The radius of the corner for the selector. */
         private var cornerRadius = 0f
@@ -107,7 +115,19 @@ class ConditionSelectorMenu(
         }
 
         init {
+            var hintIconsSize = 10
+            var hintIconsMargin = 5
+            @ColorInt var outlineColor = Color.WHITE
+            var hintFadeDuration = 500
+            var hintAllFadeDelay = 1000
+
             context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
+                hintIconsSize = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_hintsIconsSize, hintIconsSize)
+                hintIconsMargin = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_hintsIconsMargin, hintIconsMargin)
+                outlineColor =  ta.getColor(R.styleable.ConditionSelectorView_colorOutlinePrimary, outlineColor)
+                hintFadeDuration = ta.getInteger(R.styleable.ConditionSelectorView_hintsFadeDuration, hintFadeDuration)
+                hintAllFadeDelay = ta.getInteger(R.styleable.ConditionSelectorView_hintsAllFadeDelay, hintAllFadeDelay)
+
                 cornerRadius = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_cornerRadius, 2)
                     .toFloat()
                 val xOffset = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_defaultWidth, 100)
@@ -122,7 +142,7 @@ class ConditionSelectorMenu(
                 selectorPaint.apply {
                     style = Paint.Style.STROKE
                     strokeWidth = thickness
-                    color = ta.getColor(R.styleable.ConditionSelectorView_colorOutlinePrimary, Color.RED)
+                    color = outlineColor
                 }
                 backgroundPaint.apply {
                     isAntiAlias = true
@@ -135,12 +155,19 @@ class ConditionSelectorMenu(
                     .toFloat()
             }
 
+            resizeHintsIcons = ResizeHintsController(context, hintIconsSize, maxArea, hintIconsMargin, outlineColor,
+                hintFadeDuration.toLong(), hintAllFadeDelay.toLong(), this)
             invalidate()
         }
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouchEvent(event: MotionEvent): Boolean {
             return resizeDetector.onTouchEvent(event, selectorArea)
+        }
+
+        /** Displays all the hints for a short duration. */
+        fun showHints() {
+            resizeHintsIcons.showAll()
         }
 
         /**
@@ -173,6 +200,7 @@ class ConditionSelectorMenu(
                 else -> toY
             }
             selectorArea.translate(xPos, yPos)
+            resizeHintsIcons.show(ResizeGestureDetector.MOVE)
             invalidate()
         }
 
@@ -182,8 +210,9 @@ class ConditionSelectorMenu(
          *
          * @param newSize the new area of the selector after the resize.
          */
-        private fun resize(newSize: RectF) {
+        private fun resize(newSize: RectF, @GestureType type: Int) {
             selectorArea = newSize
+            resizeHintsIcons.show(type)
             invalidate()
         }
 
@@ -195,6 +224,7 @@ class ConditionSelectorMenu(
                 right = selectorArea.right - selectorAreaOffset
                 bottom = selectorArea.bottom - selectorAreaOffset
             }
+            resizeHintsIcons.invalidate(selectorArea.toRect())
 
             super.invalidate()
         }
@@ -206,6 +236,7 @@ class ConditionSelectorMenu(
 
             canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
             canvas.drawRect(selectedArea, backgroundPaint)
+            resizeHintsIcons.onDraw(canvas)
         }
     }
 }

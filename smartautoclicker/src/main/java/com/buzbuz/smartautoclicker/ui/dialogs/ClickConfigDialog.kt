@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.ui.base.DialogController
 import com.buzbuz.smartautoclicker.ui.base.DualChoiceDialogController
 import com.buzbuz.smartautoclicker.ui.overlays.ClickSelectorMenu
-import com.buzbuz.smartautoclicker.ui.overlays.ConditionSelectorMenu
+import com.buzbuz.smartautoclicker.ui.overlays.condition.ConditionSelectorMenu
 
 import kotlinx.android.synthetic.main.dialog_click_config.edit_delay_after
 import kotlinx.android.synthetic.main.dialog_click_config.edit_name

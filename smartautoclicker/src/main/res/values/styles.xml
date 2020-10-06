@@ -127,6 +127,10 @@
         <item name="defaultWidth">@dimen/overlay_condition_selector_width</item>
         <item name="defaultHeight">@dimen/overlay_condition_selector_height</item>
         <item name="resizeHandleSize">@dimen/overlay_condition_selector_resize_handle_size</item>
+        <item name="hintsIconsSize">@dimen/overlay_condition_selector_resize_hints_icon_size</item>
+        <item name="hintsIconsMargin">@dimen/overlay_condition_selector_resize_hints_icon_margin</item>
+        <item name="hintsFadeDuration">@integer/duration_hint_fade_ms</item>
+        <item name="hintsAllFadeDelay">@integer/duration_hint_all_fade_delay_ms</item>
     </style>
 
 </resources>
