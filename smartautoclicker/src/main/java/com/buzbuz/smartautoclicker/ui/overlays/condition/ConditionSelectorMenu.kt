@@ -36,7 +36,6 @@ import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.translate
 import com.buzbuz.smartautoclicker.ui.base.OverlayMenuController
-import com.buzbuz.smartautoclicker.ui.overlays.condition.ResizeGestureDetector.Companion.GestureType
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order
@@ -82,8 +81,8 @@ class ConditionSelectorMenu(
     /** Overlay view used as [screenOverlayView] showing the area to capture the content as a click condition. */
     private inner class ConditionSelectorView(context: Context) : View(context) {
 
-        /** Compute the touch events to detect the resize/scale/move gesture to apply to the selector drawn in this view */
-        private val resizeDetector = ResizeGestureDetector(context, this, ::scale, ::moveTo, ::resize)
+        /** The list of gestures applied to this view. */
+        private val gestures: List<Gesture>
         /** The maximum size of the selector. */
         private val maxArea: RectF
         /** Paint drawing the selector. */
@@ -91,7 +90,7 @@ class ConditionSelectorMenu(
         /** Paint for the background of the selector. */
         private val backgroundPaint = Paint()
         /** Controls the display of the user hints around the selector. */
-        private val resizeHintsIcons: ResizeHintsController
+        private val hintsIcons: HintsController
 
         /** The radius of the corner for the selector. */
         private var cornerRadius = 0f
@@ -120,6 +119,7 @@ class ConditionSelectorMenu(
             @ColorInt var outlineColor = Color.WHITE
             var hintFadeDuration = 500
             var hintAllFadeDelay = 1000
+            var resizeHandleSize = 10f
 
             context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
                 hintIconsSize = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_hintsIconsSize, hintIconsSize)
@@ -150,28 +150,41 @@ class ConditionSelectorMenu(
                     color = ta.getColor(R.styleable.ConditionSelectorView_colorBackground, Color.TRANSPARENT)
                 }
 
-                resizeDetector.resizeHandleSize = ta
+                resizeHandleSize = ta
                     .getDimensionPixelSize(R.styleable.ConditionSelectorView_resizeHandleSize, 10)
                     .toFloat()
             }
 
-            resizeHintsIcons = ResizeHintsController(context, hintIconsSize, maxArea, hintIconsMargin, outlineColor,
+            gestures = listOf(
+                MoveGesture(this, resizeHandleSize, ::moveTo),
+                ResizeLeftGesture(this, resizeHandleSize, ::resize),
+                ResizeTopGesture(this, resizeHandleSize, ::resize),
+                ResizeRightGesture(this, resizeHandleSize, ::resize),
+                ResizeBottomGesture(this, resizeHandleSize, ::resize),
+                ScaleGesture(this, resizeHandleSize, context, ::scale)
+            )
+
+            hintsIcons = HintsController(context, hintIconsSize, maxArea, hintIconsMargin, outlineColor,
                 hintFadeDuration.toLong(), hintAllFadeDelay.toLong(), this)
-            invalidate()
         }
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouchEvent(event: MotionEvent): Boolean {
-            return resizeDetector.onTouchEvent(event, selectorArea)
+            gestures.forEach { gesture ->
+                if (gesture.onTouchEvent(event, selectorArea)) {
+                    return true
+                }
+            }
+            return false
         }
 
         /** Displays all the hints for a short duration. */
         fun showHints() {
-            resizeHintsIcons.showAll()
+            hintsIcons.showAll()
         }
 
         /**
-         * Called when the [resizeDetector] detects a scale gesture.
+         * Called when a [Gesture] detects a scale gesture.
          * Apply the scale factor to the selector and invalidate the view to redraw it.
          *
          * @param factor the scale factor detected.
@@ -182,7 +195,7 @@ class ConditionSelectorMenu(
         }
 
         /**
-         * Called when the [resizeDetector] detects a move gesture.
+         * Called when a [Gesture] detects a move gesture.
          * Apply the translation parameters to the selector and invalidate the view to redraw it.
          *
          * @param toX the new x position.
@@ -200,19 +213,19 @@ class ConditionSelectorMenu(
                 else -> toY
             }
             selectorArea.translate(xPos, yPos)
-            resizeHintsIcons.show(ResizeGestureDetector.MOVE)
+            hintsIcons.show(MOVE)
             invalidate()
         }
 
         /**
-         * Called when the [resizeDetector] detects a resize gesture.
+         * Called when a [Gesture] detects a resize gesture.
          * Apply the new size to the selector and invalidate the view to redraw it.
          *
          * @param newSize the new area of the selector after the resize.
          */
         private fun resize(newSize: RectF, @GestureType type: Int) {
             selectorArea = newSize
-            resizeHintsIcons.show(type)
+            hintsIcons.show(type)
             invalidate()
         }
 
@@ -224,7 +237,7 @@ class ConditionSelectorMenu(
                 right = selectorArea.right - selectorAreaOffset
                 bottom = selectorArea.bottom - selectorAreaOffset
             }
-            resizeHintsIcons.invalidate(selectorArea.toRect())
+            hintsIcons.invalidate(selectorArea.toRect())
 
             super.invalidate()
         }
@@ -236,7 +249,7 @@ class ConditionSelectorMenu(
 
             canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
             canvas.drawRect(selectedArea, backgroundPaint)
-            resizeHintsIcons.onDraw(canvas)
+            hintsIcons.onDraw(canvas)
         }
     }
 }

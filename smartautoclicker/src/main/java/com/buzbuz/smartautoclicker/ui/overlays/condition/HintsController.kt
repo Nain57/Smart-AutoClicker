@@ -43,7 +43,7 @@ import java.lang.IllegalArgumentException
  * @param hintAllFadeDelay the delay before starting the fade out animation when showing all the hints in milliseconds.
  * @param view the view the hints are draw in. Used only for invalidation purposes.
  */
-class ResizeHintsController(
+class HintsController(
     context: Context,
     iconsSize: Int,
     maxArea: RectF,
@@ -61,14 +61,14 @@ class ResizeHintsController(
         HintFactory.iconsSize = iconsSize
         HintFactory.maxArea = maxArea.toRect()
         hintsIcons = mapOf(
-            ResizeGestureDetector.MOVE to HintFactory.buildHint(context, R.drawable.ic_hint_move, true),
-            ResizeGestureDetector.RESIZE_BOTTOM to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_up,
+            MOVE to HintFactory.buildHint(context, R.drawable.ic_hint_move, true),
+            RESIZE_BOTTOM to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_up,
                 R.drawable.ic_hint_resize_down), booleanArrayOf(true, false), true),
-            ResizeGestureDetector.RESIZE_TOP to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_up,
+            RESIZE_TOP to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_up,
                 R.drawable.ic_hint_resize_down), booleanArrayOf(false, true), true),
-            ResizeGestureDetector.RESIZE_RIGHT to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_left,
+            RESIZE_RIGHT to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_left,
                 R.drawable.ic_hint_resize_right), booleanArrayOf(true, false), false),
-            ResizeGestureDetector.RESIZE_LEFT to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_left,
+            RESIZE_LEFT to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_left,
                 R.drawable.ic_hint_resize_right), booleanArrayOf(false, true), false)
         )
     }
@@ -130,15 +130,15 @@ class ResizeHintsController(
         iconsShown.forEach { hintType ->
             val hint = hintsIcons[hintType]!!
             when(hintType) {
-                ResizeGestureDetector.MOVE -> hint.invalidate(selectorArea, selectorArea.centerX(),
+                MOVE -> hint.invalidate(selectorArea, selectorArea.centerX(),
                     selectorArea.centerY(), alpha)
-                ResizeGestureDetector.RESIZE_TOP -> hint.invalidate(selectorArea, selectorArea.centerX(),
+                RESIZE_TOP -> hint.invalidate(selectorArea, selectorArea.centerX(),
                     selectorArea.top, alpha, booleanArrayOf(false, allShown))
-                ResizeGestureDetector.RESIZE_BOTTOM -> hint.invalidate(selectorArea, selectorArea.centerX(),
+                RESIZE_BOTTOM -> hint.invalidate(selectorArea, selectorArea.centerX(),
                     selectorArea.bottom, alpha, booleanArrayOf(allShown, false))
-                ResizeGestureDetector.RESIZE_LEFT -> hint.invalidate(selectorArea, selectorArea.left,
+                RESIZE_LEFT -> hint.invalidate(selectorArea, selectorArea.left,
                     selectorArea.centerY(), alpha, booleanArrayOf(false, allShown))
-                ResizeGestureDetector.RESIZE_RIGHT -> hint.invalidate(selectorArea, selectorArea.right,
+                RESIZE_RIGHT -> hint.invalidate(selectorArea, selectorArea.right,
                     selectorArea.centerY(), alpha, booleanArrayOf(allShown, false))
                 else -> throw IllegalArgumentException("Invalid hint type")
             }
