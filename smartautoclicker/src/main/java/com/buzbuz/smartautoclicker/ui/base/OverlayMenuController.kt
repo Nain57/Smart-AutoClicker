@@ -125,9 +125,12 @@ abstract class OverlayMenuController(protected val context: Context) {
      * @param onDismissListener the listener notified open the overlay menu dismissing.
      */
     fun show(onDismissListener: (() -> Unit)? = null) {
-        dismissListener = onDismissListener
-
+        if (menuLayout != null) {
+            return
+        }
         Log.d(TAG, "create overlay: $this")
+
+        dismissListener = onDismissListener
 
         // First add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
         screenOverlayView?.let {
@@ -165,6 +168,9 @@ abstract class OverlayMenuController(protected val context: Context) {
      * Once dismissed, [onMenuDismissed] will be called, then the listener provided with the previous [show] call.
      */
     fun dismiss() {
+        if (menuLayout == null) {
+            return
+        }
         Log.d(TAG, "dismiss overlay: $this")
 
         sharedPreferences.edit()

@@ -92,9 +92,12 @@ abstract class DialogController {
      * @param dismissListener object notified upon the shown dialog dismissing.
      */
     fun showDialog(dismissListener: () -> Unit) {
-        onDismissListener = dismissListener
-
+        if (dialog != null) {
+            return
+        }
         Log.d(TAG, "create dialog: $this")
+
+        onDismissListener = dismissListener
 
         @SuppressLint("InflateParams") // Dialog views have no parent at inflation time
         val titleView = dialogBuilder.context.getSystemService(LayoutInflater::class.java)!!
@@ -118,6 +121,10 @@ abstract class DialogController {
 
     /** Dismiss the dialog, if already shown. */
     fun dismissDialog() {
+        if (dialog == null) {
+            return
+        }
+
         Log.d(TAG, "dismiss dialog: $this")
         dialog?.dismiss()
     }

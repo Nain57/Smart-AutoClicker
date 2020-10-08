@@ -127,10 +127,10 @@ class Detector(
 
         isInitialized = false
 
-        clickListDialog?.dismissDialog()
-        clickListDialog = null
         overlayMenu?.dismiss()
         overlayMenu = null
+        clickListDialog?.dismissDialog()
+        clickListDialog = null
         screenRecorder?.stopScreenRecord()
         screenRecorder = null
 
@@ -192,8 +192,10 @@ class Detector(
      * Release this object and notify the [stoppedCallback].
      */
     private fun onStopClicked() {
-        release()
         stoppedCallback.invoke()
+        if (isInitialized) {
+            release()
+        }
     }
 
     /**
