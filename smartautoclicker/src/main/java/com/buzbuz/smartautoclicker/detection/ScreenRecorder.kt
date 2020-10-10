@@ -158,6 +158,8 @@ class ScreenRecorder(private val context: Context, private val stoppedListener: 
             return
         }
 
+        Log.d(TAG, "Start screen record")
+
         processingThread = HandlerThread(PROCESSING_THREAD_NAME).apply {
             start()
         }
@@ -184,6 +186,8 @@ class ScreenRecorder(private val context: Context, private val stoppedListener: 
      * stopped. If the screen record wasn't started, this method will have no effect.
      */
     fun stopScreenRecord() {
+        Log.d(TAG, "Stop screen record")
+
         virtualDisplay?.apply {
             release()
             virtualDisplay = null
@@ -195,6 +199,7 @@ class ScreenRecorder(private val context: Context, private val stoppedListener: 
         }
         projection?.apply {
             unregisterCallback(projectionCallback)
+            stop()
             projection = null
         }
 
