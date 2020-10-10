@@ -128,7 +128,7 @@ abstract class OverlayMenuController(protected val context: Context) {
         if (menuLayout != null) {
             return
         }
-        Log.d(TAG, "create overlay: $this")
+        Log.d(TAG, "create overlay ${hashCode()}")
 
         dismissListener = onDismissListener
 
@@ -159,7 +159,7 @@ abstract class OverlayMenuController(protected val context: Context) {
         windowManager.addView(menuLayout, menuLayoutParams)
         setMenuItemViewEnabled(R.id.btn_hide_overlay, false , true)
 
-        Log.d(TAG, "overlay shown: $this")
+        Log.d(TAG, "overlay shown ${hashCode()}")
         onMenuShown()
     }
 
@@ -171,7 +171,7 @@ abstract class OverlayMenuController(protected val context: Context) {
         if (menuLayout == null) {
             return
         }
-        Log.d(TAG, "dismiss overlay: $this")
+        Log.d(TAG, "dismiss overlay ${hashCode()}")
 
         sharedPreferences.edit()
             .putInt(PREFERENCE_MENU_X_KEY, menuLayoutParams.x)

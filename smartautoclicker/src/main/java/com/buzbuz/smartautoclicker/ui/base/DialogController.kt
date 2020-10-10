@@ -95,7 +95,7 @@ abstract class DialogController {
         if (dialog != null) {
             return
         }
-        Log.d(TAG, "create dialog: $this")
+        Log.d(TAG, "create dialog ${hashCode()}")
 
         onDismissListener = dismissListener
 
@@ -111,11 +111,11 @@ abstract class DialogController {
             .create()
             .also {
                 it.window!!.setType(TYPE_COMPAT_OVERLAY)
-                Log.d(TAG, "show dialog: $this")
+                Log.d(TAG, "show dialog: ${hashCode()}")
                 it.show()
             }
 
-        Log.d(TAG, "dialog shown: $this")
+        Log.d(TAG, "dialog shown ${hashCode()}")
         onDialogShown(dialog!!)
     }
 
@@ -125,7 +125,7 @@ abstract class DialogController {
             return
         }
 
-        Log.d(TAG, "dismiss dialog: $this")
+        Log.d(TAG, "dismiss dialog ${hashCode()}")
         dialog?.dismiss()
     }
 
@@ -141,7 +141,7 @@ abstract class DialogController {
      * @throws IllegalStateException if the dialog managed by this DialogController isn't shown.
      */
     protected fun showSubDialog(dialogController: DialogController, hideDialog: Boolean = false) {
-        Log.d(TAG, "show sub dialog $dialogController; hide=$hideDialog : $this")
+        Log.d(TAG, "show sub dialog: ${dialogController.hashCode()}; hide=$hideDialog; parent=${hashCode()}")
 
         dialog?.let {
             subDialog = dialogController
@@ -159,7 +159,7 @@ abstract class DialogController {
      * @throws IllegalStateException if the dialog managed by this DialogController isn't shown.
      */
     protected fun showOverlayMenu(overlay: OverlayMenuController) {
-        Log.d(TAG, "show overlay menu $overlay: $this")
+        Log.d(TAG, "show overlay menu: ${overlay.hashCode()}; parent=${hashCode()}")
 
         dialog?.let {
             overlayMenu = overlay
@@ -241,11 +241,11 @@ abstract class DialogController {
     private fun hideDialog(hide: Boolean = true) {
         dialog?.let {
             if (hide && it.isShowing) {
-                Log.d(TAG, "hide dialog: $this")
+                Log.d(TAG, "dialog hide ${hashCode()}")
                 it.hide()
                 onVisibilityChanged(false)
             } else if (!hide && !it.isShowing) {
-                Log.d(TAG, "show dialog again: $this")
+                Log.d(TAG, "dialog shown again ${hashCode()}")
                 it.show()
                 onVisibilityChanged(true)
             }
@@ -257,7 +257,7 @@ abstract class DialogController {
      * Notifies the client listener for the dialog dismiss and close any sub dialog/overlay menu opened from this class.
      */
     private fun dialogDismissed() {
-        Log.d(TAG, "dialog dismissed: $this")
+        Log.d(TAG, "dialog dismissed ${hashCode()}")
 
         val dismissedDialog = dialog
         dialog = null
@@ -275,7 +275,7 @@ abstract class DialogController {
      * @param dismissedDialog the subs dialog dismissed.
      */
     private fun subDialogDismissed(dismissedDialog: DialogController) {
-        Log.d(TAG, "sub dialog dismissed; $dismissedDialog: $this")
+        Log.d(TAG, "sub dialog dismissed: ${dismissedDialog.hashCode()}; parent=${hashCode()}")
 
         if (dismissedDialog == subDialog) {
             if (overlayMenu == null) {
@@ -291,7 +291,7 @@ abstract class DialogController {
      * @param dismissedOverlay the overlay dismissed.
      */
     private fun onOverlayMenuDismissed(dismissedOverlay: OverlayMenuController) {
-        Log.d(TAG, "overlay menu dismissed; $dismissedOverlay: $this")
+        Log.d(TAG, "overlay menu dismissed: ${dismissedOverlay.hashCode()}; parent=${hashCode()}")
 
         if (dismissedOverlay == overlayMenu) {
             if (subDialog == null) {
