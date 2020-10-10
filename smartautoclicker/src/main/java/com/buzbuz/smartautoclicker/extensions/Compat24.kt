@@ -35,7 +35,7 @@ val WindowManager.displaySize : Point
             currentWindowMetrics.bounds.size()
         } else {
             val size = Point()
-            defaultDisplay.getSize(size)
+            defaultDisplay.getRealSize(size)
             size
         }
 
