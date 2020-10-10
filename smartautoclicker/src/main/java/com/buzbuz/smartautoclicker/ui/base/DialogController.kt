@@ -62,6 +62,8 @@ abstract class DialogController {
      * Null if none has been shown, or if a previous overlayMenu has been dismissed.
      */
     private var overlayMenu: OverlayMenuController? = null
+    /** Tells if the dialog is visible. */
+    private var isShowing = false
 
     /**
      * The dialog currently displayed by this controller.
@@ -116,6 +118,7 @@ abstract class DialogController {
             }
 
         Log.d(TAG, "dialog shown ${hashCode()}")
+        isShowing = true
         onDialogShown(dialog!!)
     }
 
@@ -240,13 +243,15 @@ abstract class DialogController {
      */
     private fun hideDialog(hide: Boolean = true) {
         dialog?.let {
-            if (hide && it.isShowing) {
+            if (hide && isShowing) {
                 Log.d(TAG, "dialog hide ${hashCode()}")
                 it.hide()
+                isShowing = false
                 onVisibilityChanged(false)
-            } else if (!hide && !it.isShowing) {
+            } else if (!hide && !isShowing) {
                 Log.d(TAG, "dialog shown again ${hashCode()}")
                 it.show()
+                isShowing = true
                 onVisibilityChanged(true)
             }
         }
@@ -261,6 +266,7 @@ abstract class DialogController {
 
         val dismissedDialog = dialog
         dialog = null
+        isShowing = false
         onDialogDismissed(dismissedDialog!!)
 
         subDialog?.dismissDialog()
