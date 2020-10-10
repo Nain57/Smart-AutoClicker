@@ -41,6 +41,7 @@ import kotlinx.android.synthetic.main.dialog_click_config.edit_delay_after
 import kotlinx.android.synthetic.main.dialog_click_config.edit_name
 import kotlinx.android.synthetic.main.dialog_click_config.layout_condition_operator
 import kotlinx.android.synthetic.main.dialog_click_config.list_conditions
+import kotlinx.android.synthetic.main.dialog_click_config.root_view
 import kotlinx.android.synthetic.main.dialog_click_config.text_click_type
 import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator
 import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator_desc
@@ -85,7 +86,9 @@ class ClickConfigDialog(
     override fun onDialogShown(dialog: AlertDialog) {
         clickInfo.let { click ->
             dialog.apply {
+                root_view.setOnTouchListener(hideSoftInputTouchListener)
                 edit_name.setText(click.name)
+                edit_name.setSelection(click.name.length)
                 edit_delay_after.setText(click.delayAfterMs.toString())
                 text_click_type.setOnClickListener { onConfigureTypeClicked() }
                 layout_condition_operator.setOnClickListener { onConfigureOperatorClicked() }

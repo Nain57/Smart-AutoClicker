@@ -20,7 +20,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -64,7 +67,13 @@ abstract class DialogController {
     private var overlayMenu: OverlayMenuController? = null
     /** Tells if the dialog is visible. */
     private var isShowing = false
-
+    /** The Android InputMethodManger, for ensuring the keyboard dismiss on dialog dismiss. */
+    private var inputMethodManager: InputMethodManager? = null
+    /** Touch listener hiding the software keyboard and propagating the touch event normally. */
+    protected val hideSoftInputTouchListener = { view: View, _: MotionEvent ->
+        hideSoftInput()
+        view.performClick()
+    }
     /**
      * The dialog currently displayed by this controller.
      * Null until [showDialog] is called, or if it has been dismissed.
@@ -105,6 +114,7 @@ abstract class DialogController {
         val titleView = dialogBuilder.context.getSystemService(LayoutInflater::class.java)!!
             .inflate(R.layout.view_dialog_title, null)
         titleView.findViewById<TextView>(R.id.title).setText(dialogTitle)
+        inputMethodManager = dialogBuilder.context.getSystemService(InputMethodManager::class.java)
 
         dialog = dialogBuilder
             .setCustomTitle(titleView)
@@ -112,7 +122,12 @@ abstract class DialogController {
             .setCancelable(false)
             .create()
             .also {
-                it.window!!.setType(TYPE_COMPAT_OVERLAY)
+                it.window?.apply {
+                    setType(TYPE_COMPAT_OVERLAY)
+                    setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+                    decorView.setOnTouchListener(hideSoftInputTouchListener)
+                }
+
                 Log.d(TAG, "show dialog: ${hashCode()}")
                 it.show()
             }
@@ -124,12 +139,11 @@ abstract class DialogController {
 
     /** Dismiss the dialog, if already shown. */
     fun dismissDialog() {
-        if (dialog == null) {
-            return
+        dialog?.let {
+            Log.d(TAG, "dismiss dialog ${hashCode()}")
+            hideSoftInput()
+            it.dismiss()
         }
-
-        Log.d(TAG, "dismiss dialog ${hashCode()}")
-        dialog?.dismiss()
     }
 
     /**
@@ -245,6 +259,7 @@ abstract class DialogController {
         dialog?.let {
             if (hide && isShowing) {
                 Log.d(TAG, "dialog hide ${hashCode()}")
+                hideSoftInput()
                 it.hide()
                 isShowing = false
                 onVisibilityChanged(false)
@@ -304,6 +319,13 @@ abstract class DialogController {
                 hideDialog(false)
             }
             overlayMenu = null
+        }
+    }
+
+    /** Hide the software keyboard. */
+    private fun hideSoftInput() {
+        dialog?.let {
+            inputMethodManager?.hideSoftInputFromWindow(it.window!!.decorView.windowToken, 0)
         }
     }
 }
