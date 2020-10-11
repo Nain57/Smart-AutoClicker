@@ -38,7 +38,7 @@ import androidx.room.RoomDatabase
         ClickConditionCrossRef::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class ClickDatabase : RoomDatabase() {
 
