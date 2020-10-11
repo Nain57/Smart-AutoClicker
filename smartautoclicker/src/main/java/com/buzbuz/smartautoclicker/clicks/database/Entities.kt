@@ -37,7 +37,7 @@ import androidx.room.Relation
 /**
  * Entity defining a scenario of clicks.
  *
- * A scenario has a relation "one to many" with [ClickEntity]
+ * A scenario has a relation "one to many" with [ClickEntity], which is represented by [ScenarioWithClicks].
  *
  * @param id the unique identifier for a scenario.
  * @param name the name of the scenario.
@@ -92,6 +92,24 @@ data class ClickEntity(
     @ColumnInfo(name = "operator") val conditionOperator: Int,
     @ColumnInfo(name = "delay_after") var delayAfter: Long,
     @ColumnInfo(name = "priority") var priority: Int
+)
+
+/**
+ * Entity embedding a scenario and its clicks.
+ *
+ * Automatically do the junction between click_table and scenario using to provide this representation of the one to
+ * many relation between scenario and clicks entity.
+ *
+ * @param scenario the scenario entity.
+ * @param clicks the list of click entity for this scenario.
+ */
+data class ScenarioWithClicks(
+    @Embedded val scenario: ScenarioEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "scenario_id"
+    )
+    val clicks: List<ClickEntity>
 )
 
 /**

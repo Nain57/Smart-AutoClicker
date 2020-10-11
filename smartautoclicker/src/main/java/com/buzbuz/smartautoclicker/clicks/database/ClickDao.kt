@@ -36,12 +36,10 @@ import androidx.room.Update
 abstract class ClickDao {
 
     /**
-     * Get all click scenario from the database.
-     *
-     * @return the list of scenario.
+     * Get all click scenario and their clicks.
      */
-    @Query("SELECT * from scenario_table ORDER BY name ASC")
-    abstract fun getClickScenarios(): LiveData<List<ScenarioEntity>>
+    @Query("SELECT * FROM scenario_table ORDER BY name ASC")
+    abstract fun getClickScenarios(): LiveData<List<ScenarioWithClicks>>
 
     /**
      * Get all clicks and their conditions from the database for a given scenario.

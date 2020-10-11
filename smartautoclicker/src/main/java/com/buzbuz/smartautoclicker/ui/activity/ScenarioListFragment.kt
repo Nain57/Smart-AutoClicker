@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
+import com.buzbuz.smartautoclicker.clicks.database.ScenarioWithClicks
 
 import kotlinx.android.synthetic.main.dialog_add_scenario.edit_name
 import kotlinx.android.synthetic.main.fragment_scenarios.add
@@ -123,7 +124,7 @@ class ScenarioListFragment : Fragment() {
      * Observer upon the list of click scenarios.
      * Will update the list/empty view according to the current click scenarios
      */
-    private val scenariosObserver: Observer<List<ScenarioEntity>> = Observer { scenarios ->
+    private val scenariosObserver: Observer<List<ScenarioWithClicks>> = Observer { scenarios ->
         loading.visibility = View.GONE
         if (scenarios.isNullOrEmpty()) {
             list.visibility = View.GONE
