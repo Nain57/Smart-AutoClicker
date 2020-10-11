@@ -40,6 +40,9 @@
 
     <string name="dialog_add_scenario_title">New scenario</string>
     <string name="dialog_add_scenario_name_hint">Name</string>
+    <string name="dialog_delete_scenario_title">Delete scenario</string>
+    <string name="dialog_delete_scenario_message">This will delete %1$s. Are you sure ?</string>
+    <string name="dialog_rename_scenario_title">Rename scenario</string>
 
     <string name="dialog_click_list_title">Click list</string>
     <string name="dialog_click_list_add">New…</string>

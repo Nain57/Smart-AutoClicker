@@ -88,6 +88,16 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
+     * Rename the selected scenario.
+     *
+     * @param scenario the scenario to be renamed
+     * @param name the new name of the scenario
+     */
+    fun renameScenario(scenario: ScenarioEntity, name: String) {
+        viewModelScope.launch(Dispatchers.IO) { clickRepository.renameScenario(scenario.id, name) }
+    }
+
+    /**
      * Delete a click scenario.
      *
      * This will also delete all clicks associated with the scenario.

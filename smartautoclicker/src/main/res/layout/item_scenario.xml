@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@id/btn_delete"
+        android:layout_toStartOf="@id/btn_rename"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/margin_horizontal_mini"
         android:orientation="vertical">
@@ -36,7 +36,8 @@
             android:layout_marginBottom="@dimen/margin_vertical_mini"
             android:gravity="center_vertical"
             android:textSize="@dimen/text_size_list_item_text_big"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/details"
@@ -49,12 +50,29 @@
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/btn_rename"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@id/btn_delete"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        android:paddingStart="@dimen/margin_horizontal_mini"
+        android:paddingEnd="@dimen/margin_horizontal_mini"
+        android:scaleType="center"
+        android:src="@drawable/ic_rename"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/content_desc_delete_scenario" />
+
+    <ImageButton
         android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_horizontal_mini"
+        android:paddingStart="@dimen/margin_horizontal_mini"
+        android:paddingEnd="@dimen/margin_horizontal_mini"
         android:scaleType="center"
         android:src="@drawable/ic_cancel"
         android:background="?attr/selectableItemBackgroundBorderless"

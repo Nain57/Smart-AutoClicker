@@ -97,6 +97,16 @@ class ClickRepository(database: ClickDatabase, context: Context) {
     }
 
     /**
+     * Rename the selected scenario.
+     *
+     * @param scenarioId the identifier of the scenario to be renamed
+     * @param name the new name of the scenario
+     */
+    suspend fun renameScenario(scenarioId: Long, name: String) {
+        clickDao.renameScenario(scenarioId, name)
+    }
+
+    /**
      * Cleanup the cache of the repository.
      *
      * This will unload the current scenario, and perform a clean on the database and bitmaps for all clicks without

@@ -38,8 +38,18 @@ abstract class ClickDao {
     /**
      * Get all click scenario and their clicks.
      */
+    @Transaction
     @Query("SELECT * FROM scenario_table ORDER BY name ASC")
     abstract fun getClickScenarios(): LiveData<List<ScenarioWithClicks>>
+
+    /**
+     * Rename the selected scenario.
+     *
+     * @param id the identifier of the scenario to be renamed
+     * @param name the new name of the scenario
+     */
+    @Query("UPDATE scenario_table SET name=:name WHERE id=:id")
+    abstract suspend fun renameScenario(id: Long, name: String)
 
     /**
      * Get all clicks and their conditions from the database for a given scenario.

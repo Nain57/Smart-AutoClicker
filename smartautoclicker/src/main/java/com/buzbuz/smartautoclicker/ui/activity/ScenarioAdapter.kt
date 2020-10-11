@@ -24,21 +24,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioWithClicks
+import kotlinx.android.synthetic.main.item_scenario.view.*
 
-import kotlinx.android.synthetic.main.item_scenario.view.btn_delete
-import kotlinx.android.synthetic.main.item_scenario.view.details
-import kotlinx.android.synthetic.main.item_scenario.view.name
-
-/**
- * Adapter for the display of the click scenarios created by the user into a RecyclerView.
- *
- * @param startClickListener listener upon the click on a scenario.
- * @param deleteClickListener listener upon the delete button of a scenario.
- */
-class ScenarioAdapter(
-    private val startClickListener: (ScenarioEntity) -> Unit,
-    private val deleteClickListener: (ScenarioEntity) -> Unit
-) : RecyclerView.Adapter<ScenarioViewHolder>() {
+/** Adapter for the display of the click scenarios created by the user into a RecyclerView. */
+class ScenarioAdapter() : RecyclerView.Adapter<ScenarioViewHolder>() {
 
     /** The list of scenarios to be displayed by this adapter. */
     var scenarios: List<ScenarioWithClicks>? = null
@@ -46,6 +35,12 @@ class ScenarioAdapter(
             field = value
             notifyDataSetChanged()
         }
+    /** Listener upon the click on a scenario. */
+    var startScenarioListener: ((ScenarioEntity) -> Unit)? = null
+    /** Listener upon the rename button of a scenario. */
+    var editClickListener: ((ScenarioEntity) -> Unit)? = null
+    /** Listener upon the delete button of a scenario. */
+    var deleteScenarioListener: ((ScenarioEntity) -> Unit)? = null
 
     override fun getItemCount(): Int = scenarios?.size ?: 0
 
@@ -57,9 +52,22 @@ class ScenarioAdapter(
         holder.itemView.name.text = scenarioWithClicks.scenario.name
         holder.itemView.details.text = holder.itemView.context.resources
             .getQuantityString(R.plurals.scenario_sub_text, scenarioWithClicks.clicks.size, scenarioWithClicks.clicks.size)
-        holder.itemView.setOnClickListener { startClickListener(scenarioWithClicks.scenario) }
-        holder.itemView.btn_delete.setOnClickListener { deleteClickListener(scenarioWithClicks.scenario) }
+        setClickListener(holder.itemView, scenarioWithClicks.scenario, startScenarioListener)
+        setClickListener(holder.itemView.btn_delete, scenarioWithClicks.scenario, deleteScenarioListener)
+        setClickListener(holder.itemView.btn_rename, scenarioWithClicks.scenario, editClickListener)
     }
+
+    /**
+     * Set the provided listener to a view, if any. If none is provided, attach null.
+     *
+     * @param view the view to attach the listener to.
+     * @param scenario the scenario used as argument for the listener lambda
+     * @param listener the listener to notify upon click.
+     */
+    private fun setClickListener(view: View, scenario: ScenarioEntity, listener: ((ScenarioEntity) -> Unit)?) =
+        listener?.let {
+            view.setOnClickListener { it(scenario) }
+        } ?: view.setOnClickListener(null)
 }
 
 /** ViewHolder for the [ScenarioAdapter]. */

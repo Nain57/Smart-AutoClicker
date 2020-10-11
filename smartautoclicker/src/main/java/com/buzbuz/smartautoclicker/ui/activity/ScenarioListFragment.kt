@@ -16,13 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.ui.activity
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -32,8 +32,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioWithClicks
+import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 
-import kotlinx.android.synthetic.main.dialog_add_scenario.edit_name
+import kotlinx.android.synthetic.main.dialog_edit.edit_name
 import kotlinx.android.synthetic.main.fragment_scenarios.add
 import kotlinx.android.synthetic.main.merge_loadable_list.empty
 import kotlinx.android.synthetic.main.merge_loadable_list.list
@@ -45,6 +46,10 @@ import kotlinx.android.synthetic.main.merge_loadable_list.loading
  */
 class ScenarioListFragment : Fragment() {
 
+    private companion object {
+        /** Tag for logs. */
+        private const val TAG = "ScenarioListFragment"
+    }
     /**
      * Listener interface upon user clicks on a scenario displayed by this fragment.
      * Must be implemented by the [androidx.fragment.app.FragmentActivity] attached to this fragment.
@@ -63,8 +68,8 @@ class ScenarioListFragment : Fragment() {
     /** Adapter displaying the click scenarios as a list. */
     private lateinit var scenariosAdapter: ScenarioAdapter
 
-    /** The create new scenario dialog. Null if not displayed. */
-    private var createDialog: AlertDialog? = null
+    /** The current dialog being displayed. Null if not displayed. */
+    private var dialog: AlertDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_scenarios, container, false)
@@ -72,10 +77,11 @@ class ScenarioListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        scenariosAdapter = ScenarioAdapter(
-            (activity as OnScenarioClickedListener)::onClicked,
-            scenarioViewModel::deleteScenario
-        )
+        scenariosAdapter = ScenarioAdapter().apply {
+            startScenarioListener = (activity as OnScenarioClickedListener)::onClicked
+            deleteScenarioListener = ::onDeleteClicked
+            editClickListener = ::onRenameClicked
+        }
         scenarioViewModel.clickScenario.observe(this, scenariosObserver)
     }
 
@@ -85,7 +91,7 @@ class ScenarioListFragment : Fragment() {
         list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         list.adapter = scenariosAdapter
         empty.setText(R.string.no_scenarios)
-        add.setOnClickListener { onAddClicked() }
+        add.setOnClickListener { onCreateClicked() }
     }
 
     override fun onDestroy() {
@@ -94,30 +100,82 @@ class ScenarioListFragment : Fragment() {
     }
 
     /**
-     * Called when the user clicks on the add scenario button.
-     * Create and show the [createDialog].
+     * Show an AlertDialog from this fragment.
+     * This method will ensure that only one dialog is shown at the same time.
+     *
+     * @param newDialog the new dialog to be shown.
      */
-    @SuppressLint("InflateParams") // Dialog views have no parent at inflation time
-    private fun onAddClicked() {
-        val titleView = requireContext().getSystemService(LayoutInflater::class.java)!!
-            .inflate(R.layout.view_dialog_title, null)
-        titleView.findViewById<TextView>(R.id.title).setText(R.string.dialog_add_scenario_title)
+    private fun showDialog(newDialog: AlertDialog) {
+        dialog?.let {
+            Log.w(TAG, "Requesting show dialog while another one is one screen.")
+            it.dismiss()
+            dialog = null
+        }
 
-        createDialog = AlertDialog.Builder(requireContext())
-            .setCustomTitle(titleView)
-            .setView(R.layout.dialog_add_scenario)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int -> onCreateScenarioClicked() }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-        createDialog!!.show()
+        dialog = newDialog
+        newDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        newDialog.setOnDismissListener { dialog = null }
+        newDialog.show()
     }
 
-    /** Called when the user clicks the create button in the [createDialog]. */
-    private fun onCreateScenarioClicked() {
-        val name = createDialog!!.edit_name.text.toString()
-        createDialog?.let {
-            scenarioViewModel.createScenario(name)
+    /**
+     * Called when the user clicks on the add scenario button.
+     * Create and show the [dialog]. Upon Ok press, creates the scenario.
+     */
+    private fun onCreateClicked() {
+        showDialog(AlertDialog.Builder(requireContext())
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_add_scenario_title)
+            .setView(R.layout.dialog_edit)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                dialog?.let {
+                    scenarioViewModel.createScenario(it.edit_name.text.toString())
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create())
+    }
+
+    /**
+     * Called when the user clicks on the delete button of a scenario.
+     * Create and show the [dialog]. Upon Ok press, delete the scenario.
+     *
+     * @param scenario the scenario to delete.
+     */
+    private fun onDeleteClicked(scenario: ScenarioEntity) {
+        showDialog(AlertDialog.Builder(requireContext())
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_delete_scenario_title)
+            .setMessage(resources.getString(R.string.dialog_delete_scenario_message, scenario.name))
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                scenarioViewModel.deleteScenario(scenario)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create())
+    }
+
+    /**
+     * Called when the user clicks on the rename button of a scenario.
+     * Create and show the [dialog]. Upon Ok press, rename the scenario.
+     *
+     * @param scenario the scenario to rename.
+     */
+    private fun onRenameClicked(scenario: ScenarioEntity) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_rename_scenario_title)
+            .setView(R.layout.dialog_edit)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                dialog?.let {
+                    scenarioViewModel.renameScenario(scenario, it.edit_name.text.toString())
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.edit_name.apply {
+                setText(scenario.name)
+                setSelection(0, scenario.name.length)
+            }
         }
+        showDialog(dialog)
     }
 
     /**

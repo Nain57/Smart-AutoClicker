@@ -57,6 +57,7 @@
                     android:inputType="text"
                     android:importantForAutofill="no"
                     android:imeOptions="actionDone"
+                    android:maxLength="@integer/name_max_length"
                     tools:text="@string/dialog_click_config_name_default"/>
 
             </LinearLayout>

@@ -30,6 +30,11 @@
         android:layout_marginBottom="@dimen/margin_vertical_default"
         android:inputType="text"
         android:hint="@string/dialog_add_scenario_name_hint"
-        android:importantForAutofill="no"/>
+        android:maxLength="@integer/name_max_length"
+        android:importantForAutofill="no">
+
+        <requestFocus />
+
+    </EditText>
 
 </FrameLayout>
