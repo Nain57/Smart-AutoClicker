@@ -20,6 +20,11 @@
 
     <string name="activity_scenario_title">Click scenarios</string>
     <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
+    <plurals name="scenario_sub_text">
+        <item quantity="zero">This scenario has no click.</item>
+        <item quantity="other">%d clicks</item>
+    </plurals>
+
     <string name="dialog_permissions_title">Permissions required</string>
     <string name="dialog_permissions_header">The following permissions are required for Smart Auto Clicker:</string>
     <string name="dialog_permission_overlay">Overlay</string>

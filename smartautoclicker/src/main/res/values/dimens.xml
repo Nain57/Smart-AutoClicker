@@ -29,10 +29,12 @@
     <dimen name="margin_vertical_large">12dp</dimen>
     <dimen name="margin_vertical_default">8dp</dimen>
     <dimen name="margin_vertical_small">4dp</dimen>
+    <dimen name="margin_vertical_mini">2dp</dimen>
 
     <dimen name="empty_min_height">100dp</dimen>
     <dimen name="image_button_size">48dp</dimen>
     <dimen name="item_height">48dp</dimen>
+    <dimen name="item_height_big">62dp</dimen>
 
     <dimen name="dialog_width">600dp</dimen>
     <dimen name="dialog_height">1000dp</dimen>

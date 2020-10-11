@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioClicked
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.title = resources.getString(R.string.activity_scenario_title)
         scenarioViewModel.stopScenario()
     }
 

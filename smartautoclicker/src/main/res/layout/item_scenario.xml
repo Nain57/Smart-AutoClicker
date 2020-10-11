@@ -17,16 +17,36 @@
 -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ItemView">
+    style="@style/ItemView.Big">
 
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/btn_delete"
+        android:layout_toStartOf="@id/btn_delete"
         android:layout_centerVertical="true"
-        android:textSize="@dimen/text_size_list_item_text"/>
+        android:layout_marginStart="@dimen/margin_horizontal_mini"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginBottom="@dimen/margin_vertical_mini"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_list_item_text_big"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_vertical_small"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_list_item_text_small"
+            android:textStyle="italic"/>
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/btn_delete"
@@ -34,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_horizontal_mini"
         android:scaleType="center"
         android:src="@drawable/ic_cancel"
         android:background="?attr/selectableItemBackgroundBorderless"

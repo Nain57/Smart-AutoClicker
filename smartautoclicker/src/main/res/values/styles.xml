@@ -59,6 +59,11 @@
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
+    <style name="ItemView.Big">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/item_height_big</item>
+    </style>
+
     <style name="ItemView.Small">
         <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
         <item name="android:paddingEnd">@dimen/margin_horizontal_small</item>

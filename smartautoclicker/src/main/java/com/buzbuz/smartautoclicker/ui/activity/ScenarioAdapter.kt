@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioWithClicks
 
 import kotlinx.android.synthetic.main.item_scenario.view.btn_delete
+import kotlinx.android.synthetic.main.item_scenario.view.details
 import kotlinx.android.synthetic.main.item_scenario.view.name
 
 /**
@@ -54,6 +55,8 @@ class ScenarioAdapter(
     override fun onBindViewHolder(holder: ScenarioViewHolder, position: Int) {
         val scenarioWithClicks = scenarios!![position]
         holder.itemView.name.text = scenarioWithClicks.scenario.name
+        holder.itemView.details.text = holder.itemView.context.resources
+            .getQuantityString(R.plurals.scenario_sub_text, scenarioWithClicks.clicks.size, scenarioWithClicks.clicks.size)
         holder.itemView.setOnClickListener { startClickListener(scenarioWithClicks.scenario) }
         holder.itemView.btn_delete.setOnClickListener { deleteClickListener(scenarioWithClicks.scenario) }
     }

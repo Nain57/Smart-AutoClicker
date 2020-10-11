@@ -15,22 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout
+<androidx.fragment.app.FragmentContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment"
+    android:name="com.buzbuz.smartautoclicker.ui.activity.ScenarioListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/margin_vertical_default"
-    android:layout_marginBottom="@dimen/margin_vertical_default"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context=".ui.activity.MainActivity">
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment"
-        android:name="com.buzbuz.smartautoclicker.ui.activity.ScenarioListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_scenarios"/>
-
-</LinearLayout>
+    tools:layout="@layout/fragment_scenarios"/>
