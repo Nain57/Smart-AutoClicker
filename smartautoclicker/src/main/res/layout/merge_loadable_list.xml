@@ -30,6 +30,7 @@
         android:gravity="center"
         android:minHeight="@dimen/empty_min_height"
         android:visibility="gone"
+        android:textSize="@dimen/text_size_list_item_text_big"
         tools:visibility="visible"
         tools:text="@string/no_scenarios"/>
 
