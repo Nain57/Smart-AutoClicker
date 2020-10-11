@@ -26,50 +26,6 @@
     android:gravity="center"
     tools:context=".ui.activity.MainActivity">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/HeaderCardView">
-
-        <LinearLayout
-            android:id="@+id/layout_config"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_config_title"
-                android:labelFor="@+id/edit_name"
-                style="@style/HeaderTitle"/>
-
-            <include layout="@layout/include_view_separator"/>
-
-            <TextView
-                android:id="@+id/text_config_overlay"
-                style="@style/ItemView"
-                android:gravity="center_vertical"
-                android:text="@string/activity_config_overlay"
-                android:textSize="@dimen/text_size_list_item_text"
-                android:drawablePadding="@dimen/margin_horizontal_small"
-                tools:drawableEnd="@drawable/ic_confirm"/>
-
-            <include layout="@layout/include_view_separator"/>
-
-            <TextView
-                android:id="@+id/text_config_accessibility"
-                style="@style/ItemView"
-                android:gravity="center_vertical"
-                android:text="@string/activity_config_accessibility"
-                android:textSize="@dimen/text_size_list_item_text"
-                android:drawablePadding="@dimen/margin_horizontal_small"
-                tools:drawableEnd="@drawable/ic_cancel"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
         android:name="com.buzbuz.smartautoclicker.ui.activity.ScenarioListFragment"

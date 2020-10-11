@@ -18,11 +18,16 @@
 <resources>
     <string name="app_name">Smart Auto Clicker</string>
 
-    <string name="activity_config_title">Configuration</string>
-    <string name="activity_config_overlay">Overlay</string>
-    <string name="activity_config_accessibility">Accessibility service</string>
     <string name="activity_scenario_title">Click scenarios</string>
     <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
+    <string name="dialog_permissions_title">Permissions required</string>
+    <string name="dialog_permissions_header">The following permissions are required for Smart Auto Clicker:</string>
+    <string name="dialog_permission_overlay">Overlay</string>
+    <string name="dialog_permission_overlay_desc">The overlay permission allows this application to draw the clicker
+                                                  menu over other apps.</string>
+    <string name="dialog_permission_accessibility">Accessibility service</string>
+    <string name="dialog_permission_accessibility_desc">The accessibility service allows this application to clicks on
+                                                        other apps.</string>
 
     <string name="notification_channel_name">Smart Auto Clicker</string>
     <string name="notification_title">Scenario: %1s</string>
@@ -85,4 +90,6 @@
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_go_back">Back to dialog</string>
     <string name="content_desc_enable_click">Enable or disable overlay and allow clicks on applications</string>
+    <string name="content_desc_overlay_state">Overlay permission state</string>
+    <string name="content_desc_accessibility_state">Accessibility service permission state</string>
 </resources>

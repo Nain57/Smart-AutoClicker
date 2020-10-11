@@ -25,12 +25,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.clicks.ScenarioViewModel
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
 
 import kotlinx.android.synthetic.main.dialog_add_scenario.edit_name
@@ -59,7 +58,7 @@ class ScenarioListFragment : Fragment() {
     }
 
     /** ViewModel providing the click scenarios data to the UI. */
-    private lateinit var scenarioViewModel: ScenarioViewModel
+    private val scenarioViewModel: ScenarioViewModel by activityViewModels()
     /** Adapter displaying the click scenarios as a list. */
     private lateinit var scenariosAdapter: ScenarioAdapter
 
@@ -72,7 +71,6 @@ class ScenarioListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        scenarioViewModel = ViewModelProvider(this).get(ScenarioViewModel::class.java)
         scenariosAdapter = ScenarioAdapter(
             (activity as OnScenarioClickedListener)::onClicked,
             scenarioViewModel::deleteScenario
@@ -100,11 +98,11 @@ class ScenarioListFragment : Fragment() {
      */
     @SuppressLint("InflateParams") // Dialog views have no parent at inflation time
     private fun onAddClicked() {
-        val titleView = context!!.getSystemService(LayoutInflater::class.java)!!
+        val titleView = requireContext().getSystemService(LayoutInflater::class.java)!!
             .inflate(R.layout.view_dialog_title, null)
         titleView.findViewById<TextView>(R.id.title).setText(R.string.dialog_add_scenario_title)
 
-        createDialog = AlertDialog.Builder(context!!)
+        createDialog = AlertDialog.Builder(requireContext())
             .setCustomTitle(titleView)
             .setView(R.layout.dialog_add_scenario)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int -> onCreateScenarioClicked() }

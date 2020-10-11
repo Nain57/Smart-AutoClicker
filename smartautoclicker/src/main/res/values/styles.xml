@@ -41,6 +41,16 @@
         <item name="android:textColor">@color/textTitle</item>
     </style>
 
+    <style name="PermissionItemView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_small</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_default</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="ItemView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/item_height</item>
