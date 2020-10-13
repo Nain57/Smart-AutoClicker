@@ -31,9 +31,9 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.core.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.core.overlays.OverlayDialogController
-import com.buzbuz.smartautoclicker.clicks.BitmapManager
-import com.buzbuz.smartautoclicker.clicks.ClickCondition
-import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.BitmapManager
+import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.ui.overlays.ClickSelectorMenu
 import com.buzbuz.smartautoclicker.ui.overlays.ConditionSelectorMenu
 

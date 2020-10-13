@@ -24,9 +24,9 @@ import android.media.Image
 import android.util.LruCache
 import androidx.annotation.WorkerThread
 
-import com.buzbuz.smartautoclicker.clicks.BitmapManager
-import com.buzbuz.smartautoclicker.clicks.ClickCondition
-import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.BitmapManager
+import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.database.ClickInfo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

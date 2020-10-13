@@ -35,7 +35,7 @@ import androidx.core.graphics.toPoint
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.overlays.OverlayMenuController
-import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.database.ClickInfo
 
 /**
  * [OverlayMenuController] implementation for displaying the click area selection menu and its overlay view.

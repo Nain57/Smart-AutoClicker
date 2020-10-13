@@ -31,8 +31,8 @@ import android.view.accessibility.AccessibilityEvent
 import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.clicks.ClickInfo
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
 import com.buzbuz.smartautoclicker.ui.activity.MainActivity
 
 import kotlinx.coroutines.CoroutineScope

@@ -35,9 +35,9 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.annotation.GuardedBy
 import androidx.annotation.WorkerThread
-import com.buzbuz.smartautoclicker.clicks.ClickCondition
+import com.buzbuz.smartautoclicker.database.ClickCondition
 
-import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.core.extensions.displaySize
 
 /**

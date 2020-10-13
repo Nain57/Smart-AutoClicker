@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.clicks
+package com.buzbuz.smartautoclicker.database
 
 import android.content.Context
 import android.util.Log
@@ -23,9 +23,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.liveData
 
-import com.buzbuz.smartautoclicker.clicks.database.ClickDatabase
-import com.buzbuz.smartautoclicker.clicks.database.ClickWithConditions
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.ClickDatabase
+import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
 
 import kotlin.coroutines.CoroutineContext
 
@@ -33,9 +33,8 @@ import kotlin.coroutines.CoroutineContext
  * Repository for accessing the click scenarios and their clicks. Provide methods for creation/edition.
  *
  * @param database the database containing the clicks and scenarios.
- * @param context the Android context.
  */
-class ClickRepository(database: ClickDatabase, context: Context) {
+class ClickRepository(database: ClickDatabase) {
 
     companion object {
 
@@ -56,15 +55,13 @@ class ClickRepository(database: ClickDatabase, context: Context) {
          */
         fun getRepository(context: Context): ClickRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = ClickRepository(ClickDatabase.getDatabase(context), context)
+                val instance = ClickRepository(ClickDatabase.getDatabase(context))
                 INSTANCE = instance
                 instance
             }
         }
     }
 
-    /** Manages the bitmaps of the click conditions. */
-    private val bitmapManager = BitmapManager(context.filesDir)
     /** The Dao for accessing the click database. */
     private val clickDao = database.clickDao()
     /** The identifier of the scenario currently loaded in this repository. */
@@ -115,11 +112,10 @@ class ClickRepository(database: ClickDatabase, context: Context) {
      *
      * After calling this method, you must call [loadScenario] again before calling any click edition method.
      */
-    suspend fun cleanupCache() {
+    fun cleanupCache() {
         currentScenario.postValue(NO_SCENARIO)
-        bitmapManager.deleteBitmaps(clickDao.deleteClicklessConditions())
-        bitmapManager.releaseCache()
     }
+    suspend fun deleteClicklessConditions(): List<String> = clickDao.deleteClicklessConditions()
 
     /**
      * Creates a new click scenario.

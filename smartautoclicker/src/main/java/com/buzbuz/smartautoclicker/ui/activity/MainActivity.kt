@@ -26,7 +26,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
 import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
 
 /**

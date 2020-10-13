@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.clicks
+package com.buzbuz.smartautoclicker
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -88,7 +88,7 @@ class BitmapManager(private val appDataDir: File) {
         bitmap.copyPixelsToBuffer(uncompressedBuffer)
         uncompressedBuffer.position(0)
 
-        val path = "${CLICK_CONDITION_FILE_PREFIX}${uncompressedBuffer.hashCode()}"
+        val path = "$CLICK_CONDITION_FILE_PREFIX${uncompressedBuffer.hashCode()}"
         val file = File(appDataDir, path)
         if (!file.exists()) {
             Log.d(TAG, "Saving $path")

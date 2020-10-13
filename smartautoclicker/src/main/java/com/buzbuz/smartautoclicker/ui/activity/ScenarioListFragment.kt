@@ -30,8 +30,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioWithClicks
+import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
 import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 
 import kotlinx.android.synthetic.main.dialog_edit.edit_name

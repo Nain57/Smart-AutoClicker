@@ -22,8 +22,8 @@ import android.provider.Settings
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.clicks.ClickRepository
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.ClickRepository
+import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
 import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
 
 import kotlinx.coroutines.Dispatchers

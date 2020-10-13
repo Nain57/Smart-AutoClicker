@@ -31,12 +31,6 @@ android {
         versionName "1.0-alpha1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
-        }
     }
 
     buildTypes {
@@ -70,11 +64,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
     kapt "androidx.lifecycle:lifecycle-compiler:${rootProject.ext.androidxLifecycleVersion}"
 
-    implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
-    implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
-    kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
-
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
     implementation project(path: ':core')
+    implementation project(path: ':database')
 }

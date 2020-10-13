@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.clicks
+package com.buzbuz.smartautoclicker.database
 
 import android.graphics.Point
+
 import androidx.annotation.IntDef
 
-import com.buzbuz.smartautoclicker.clicks.database.ClickEntity
-import com.buzbuz.smartautoclicker.clicks.database.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.room.ClickEntity
+import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
 
 /**
  * Object defining a click in a click scenario.

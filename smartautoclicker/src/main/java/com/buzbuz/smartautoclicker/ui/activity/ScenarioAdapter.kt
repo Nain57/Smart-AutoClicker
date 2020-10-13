@@ -22,12 +22,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioWithClicks
+import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
+
 import kotlinx.android.synthetic.main.item_scenario.view.*
 
 /** Adapter for the display of the click scenarios created by the user into a RecyclerView. */
-class ScenarioAdapter() : RecyclerView.Adapter<ScenarioViewHolder>() {
+class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
 
     /** The list of scenarios to be displayed by this adapter. */
     var scenarios: List<ScenarioWithClicks>? = null

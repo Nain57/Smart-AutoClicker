@@ -22,11 +22,12 @@ import android.media.projection.MediaProjectionManager
 import android.view.ContextThemeWrapper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.buzbuz.smartautoclicker.BitmapManager
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.clicks.ClickInfo
-import com.buzbuz.smartautoclicker.clicks.ClickRepository
-import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.ClickRepository
+import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
 import com.buzbuz.smartautoclicker.detection.ScreenRecorder
 import com.buzbuz.smartautoclicker.ui.dialogs.ClickListDialog
 import com.buzbuz.smartautoclicker.ui.overlays.MainMenu
@@ -138,7 +139,12 @@ class Detector(
         clicks = null
 
         clickRepository?.apply {
-            scope!!.launch { cleanupCache() }
+            cleanupCache()
+            scope!!.launch {
+                val bitmapManager = BitmapManager.getInstance(context)
+                bitmapManager.deleteBitmaps(deleteClicklessConditions())
+                bitmapManager.releaseCache()
+            }
         }
         clickRepository = null
         scope = null

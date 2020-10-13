@@ -32,8 +32,8 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.core.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.core.overlays.OverlayDialogController
-import com.buzbuz.smartautoclicker.clicks.ClickCondition
-import com.buzbuz.smartautoclicker.clicks.ClickInfo
+import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.database.ClickInfo
 
 import kotlinx.android.synthetic.main.merge_loadable_list.empty
 import kotlinx.android.synthetic.main.merge_loadable_list.list

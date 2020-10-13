@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.clicks
+package com.buzbuz.smartautoclicker.database
 
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.clicks.database.ConditionEntity
+import com.buzbuz.smartautoclicker.database.room.ConditionEntity
 
 /**
  * Object defining a click condition for a click.
@@ -67,5 +67,13 @@ data class ClickCondition(
      * @return the entity representing this condition.
      */
     private fun toEntity() : ConditionEntity =
-        ConditionEntity(path, area.left, area.top, area.right, area.bottom, area.width(), area.height())
+        ConditionEntity(
+            path,
+            area.left,
+            area.top,
+            area.right,
+            area.bottom,
+            area.width(),
+            area.height()
+        )
 }
