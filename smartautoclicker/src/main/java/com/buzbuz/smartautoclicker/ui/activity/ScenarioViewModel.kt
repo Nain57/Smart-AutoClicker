@@ -23,7 +23,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.database.ClickRepository
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
 
 import kotlinx.coroutines.Dispatchers
@@ -93,7 +93,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * @param scenario the scenario to be renamed
      * @param name the new name of the scenario
      */
-    fun renameScenario(scenario: ScenarioEntity, name: String) {
+    fun renameScenario(scenario: ClickScenario, name: String) {
         viewModelScope.launch(Dispatchers.IO) { clickRepository.renameScenario(scenario.id, name) }
     }
 
@@ -104,7 +104,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      *
      * @param scenario the scenario to be deleted.
      */
-    fun deleteScenario(scenario: ScenarioEntity) {
+    fun deleteScenario(scenario: ClickScenario) {
         viewModelScope.launch(Dispatchers.IO) { clickRepository.deleteScenario(scenario) }
     }
 
@@ -123,7 +123,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * [android.app.Activity.onActivityResult]
      * @param scenario the identifier of the scenario of clicks to be used for detection.
      */
-    fun loadScenario(resultCode: Int, data: Intent, scenario: ScenarioEntity) {
+    fun loadScenario(resultCode: Int, data: Intent, scenario: ClickScenario) {
         clickerService?.start(resultCode, data, scenario)
     }
 

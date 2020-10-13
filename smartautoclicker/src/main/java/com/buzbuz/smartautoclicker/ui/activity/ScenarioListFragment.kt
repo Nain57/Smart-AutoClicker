@@ -30,9 +30,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
-import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
 import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
+import com.buzbuz.smartautoclicker.database.ClickScenario
 
 import kotlinx.android.synthetic.main.dialog_edit.edit_name
 import kotlinx.android.synthetic.main.fragment_scenarios.add
@@ -60,7 +59,7 @@ class ScenarioListFragment : Fragment() {
          * The user has clicked on a scenario.
          * @param scenario the clicked scenario.
          */
-        fun onClicked(scenario: ScenarioEntity)
+        fun onClicked(scenario: ClickScenario)
     }
 
     /** ViewModel providing the click scenarios data to the UI. */
@@ -141,7 +140,7 @@ class ScenarioListFragment : Fragment() {
      *
      * @param scenario the scenario to delete.
      */
-    private fun onDeleteClicked(scenario: ScenarioEntity) {
+    private fun onDeleteClicked(scenario: ClickScenario) {
         showDialog(AlertDialog.Builder(requireContext())
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_delete_scenario_title)
             .setMessage(resources.getString(R.string.dialog_delete_scenario_message, scenario.name))
@@ -158,7 +157,7 @@ class ScenarioListFragment : Fragment() {
      *
      * @param scenario the scenario to rename.
      */
-    private fun onRenameClicked(scenario: ScenarioEntity) {
+    private fun onRenameClicked(scenario: ClickScenario) {
         val dialog = AlertDialog.Builder(requireContext())
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_rename_scenario_title)
             .setView(R.layout.dialog_edit)
@@ -182,7 +181,7 @@ class ScenarioListFragment : Fragment() {
      * Observer upon the list of click scenarios.
      * Will update the list/empty view according to the current click scenarios
      */
-    private val scenariosObserver: Observer<List<ScenarioWithClicks>> = Observer { scenarios ->
+    private val scenariosObserver: Observer<List<ClickScenario>> = Observer { scenarios ->
         loading.visibility = View.GONE
         if (scenarios.isNullOrEmpty()) {
             list.visibility = View.GONE

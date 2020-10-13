@@ -80,7 +80,7 @@ data class ClickInfo(
          *
          * @return the list of corresponding click info.
          */
-        fun fromEntities(entities: List<ClickWithConditions>?) : List<ClickInfo> {
+        internal fun fromEntities(entities: List<ClickWithConditions>?) : List<ClickInfo> {
             return entities?.map { entity ->
                 ClickInfo(
                     entity.click.name,
@@ -104,7 +104,7 @@ data class ClickInfo(
      *
      * @return the click, ready to be inserted.
      */
-    fun toEntity(scenarioId: Long, priority: Int) : ClickWithConditions {
+    internal fun toEntity(scenarioId: Long, priority: Int) : ClickWithConditions {
         val toXPos: Int
         val toYPos: Int
         if (type == SINGLE) {

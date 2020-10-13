@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.BitmapManager
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickRepository
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.detection.ScreenRecorder
 import com.buzbuz.smartautoclicker.ui.dialogs.ClickListDialog
 import com.buzbuz.smartautoclicker.ui.overlays.MainMenu
@@ -94,7 +94,7 @@ class Detector(
      * [android.app.Activity.onActivityResult]
      * @param scenario the identifier of the scenario of clicks to be used for detection.
      */
-    fun init(coroutineScope: CoroutineScope, resultCode: Int, data: Intent, scenario: ScenarioEntity) {
+    fun init(coroutineScope: CoroutineScope, resultCode: Int, data: Intent, scenario: ClickScenario) {
         if (isInitialized) {
             return
         }

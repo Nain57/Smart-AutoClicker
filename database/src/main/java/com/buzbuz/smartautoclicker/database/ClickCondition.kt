@@ -43,7 +43,7 @@ data class ClickCondition(
          *
          * @return the list of corresponding conditions.
          */
-        fun fromEntities(conditionEntities: List<ConditionEntity>) : List<ClickCondition> =
+        internal fun fromEntities(conditionEntities: List<ConditionEntity>) : List<ClickCondition> =
             conditionEntities.map {
                 ClickCondition(
                     Rect(it.areaLeft, it.areaTop, it.areaRight, it.areaBottom),
@@ -58,7 +58,7 @@ data class ClickCondition(
          *
          * @return the list of corresponding entities.
          */
-        fun toEntities(conditions: List<ClickCondition>) : List<ConditionEntity> = conditions.map { it.toEntity() }
+        internal fun toEntities(conditions: List<ClickCondition>) : List<ConditionEntity> = conditions.map { it.toEntity() }
     }
 
     /**

@@ -43,7 +43,7 @@ import androidx.room.Relation
  * @param name the name of the scenario.
  */
 @Entity(tableName = "scenario_table")
-data class ScenarioEntity(
+internal data class ScenarioEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "name") val name: String
 )
@@ -61,7 +61,7 @@ data class ScenarioEntity(
  * @param clickId unique identifier for a click. Also the primary key in the table.
  * @param scenarioId identifier of this click's scenario. Reference the key [ScenarioEntity.id] in scenario_table.
  * @param name name of this click.
- * @param type type of this click. Can be any value of [com.buzbuz.smartautoclicker.clicks.ClickInfo.ClickType].
+ * @param type type of this click. Can be any value of [com.buzbuz.smartautoclicker.database.ClickInfo.ClickType].
  * @param fromX the action x coordinates, or the action start x coordinates for gestures.
  * @param fromY the action y coordinates, or the action start y coordinates for gestures.
  * @param toX the action end x coordinates for gestures. Null if not a gesture.
@@ -80,7 +80,7 @@ data class ScenarioEntity(
         childColumns = ["scenario_id"],
         onDelete = CASCADE
     )])
-data class ClickEntity(
+internal data class ClickEntity(
     @PrimaryKey(autoGenerate = true) val clickId: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
     @ColumnInfo(name = "name") var name: String,
@@ -103,7 +103,7 @@ data class ClickEntity(
  * @param scenario the scenario entity.
  * @param clicks the list of click entity for this scenario.
  */
-data class ScenarioWithClicks(
+internal data class ScenarioWithClicks(
     @Embedded val scenario: ScenarioEntity,
     @Relation(
         parentColumn = "id",
@@ -131,7 +131,7 @@ data class ScenarioWithClicks(
  * @param height the bitmap height. Should be the same as areaTop - areaBottom.
  */
 @Entity(tableName = "condition_table")
-data class ConditionEntity(
+internal data class ConditionEntity(
     @PrimaryKey(autoGenerate = false) @ColumnInfo(name= "path") val path: String,
     @ColumnInfo(name = "area_left") val areaLeft: Int,
     @ColumnInfo(name = "area_top") val areaTop: Int,
@@ -171,7 +171,7 @@ data class ConditionEntity(
             onDelete = CASCADE
         )
     ])
-data class ClickConditionCrossRef(
+internal data class ClickConditionCrossRef(
     val clickId: Long,
     val path: String
 )
@@ -185,7 +185,7 @@ data class ClickConditionCrossRef(
  * @param click the click entity.
  * @param conditions the list of conditions entity for this click.
  */
-data class ClickWithConditions(
+internal data class ClickWithConditions(
     @Embedded val click: ClickEntity,
     @Relation(
         parentColumn = "clickId",

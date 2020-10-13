@@ -40,7 +40,7 @@ import androidx.room.RoomDatabase
     version = 1,
     exportSchema = true
 )
-abstract class ClickDatabase : RoomDatabase() {
+internal abstract class ClickDatabase : RoomDatabase() {
 
     /** The data access object for the click database. */
     abstract fun clickDao(): ClickDao

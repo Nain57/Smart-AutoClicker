@@ -34,7 +34,7 @@ import kotlin.coroutines.CoroutineContext
  *
  * @param database the database containing the clicks and scenarios.
  */
-class ClickRepository(database: ClickDatabase) {
+class ClickRepository private constructor(database: ClickDatabase) {
 
     companion object {
 
@@ -72,7 +72,9 @@ class ClickRepository(database: ClickDatabase) {
     }
 
     /** The list of scenario in the database. */
-    val scenarios = clickDao.getClickScenarios()
+    val scenarios = Transformations.switchMap(clickDao.getClickScenarios()) {
+        liveData { emit(ClickScenario.fromEntities(it)) }
+    }
 
     /**
      * Get the list of clicks for the specified scenario.
@@ -131,8 +133,8 @@ class ClickRepository(database: ClickDatabase) {
      *
      * @param scenario the scenario to be deleted.
      */
-    suspend fun deleteScenario(scenario: ScenarioEntity) {
-        clickDao.deleteClickScenario(scenario)
+    suspend fun deleteScenario(scenario: ClickScenario) {
+        clickDao.deleteClickScenario(scenario.toEntity())
     }
 
     /**

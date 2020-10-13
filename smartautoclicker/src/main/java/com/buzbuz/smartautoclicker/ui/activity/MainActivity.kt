@@ -26,7 +26,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
 
 /**
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioClicked
     private val scenarioViewModel: ScenarioViewModel by viewModels()
 
     /** Scenario clicked by the user. */
-    private var requestedScenario: ScenarioEntity? = null
+    private var requestedScenario: ClickScenario? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioClicked
         SmartAutoClickerService.getLocalService(null)
     }
 
-    override fun onClicked(scenario: ScenarioEntity) {
+    override fun onClicked(scenario: ClickScenario) {
         requestedScenario = scenario
 
         if (!scenarioViewModel.arePermissionsGranted()) {

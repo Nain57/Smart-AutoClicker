@@ -22,8 +22,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
-import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
+import com.buzbuz.smartautoclicker.database.ClickScenario
 
 import kotlinx.android.synthetic.main.item_scenario.view.*
 
@@ -31,17 +30,17 @@ import kotlinx.android.synthetic.main.item_scenario.view.*
 class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
 
     /** The list of scenarios to be displayed by this adapter. */
-    var scenarios: List<ScenarioWithClicks>? = null
+    var scenarios: List<ClickScenario>? = null
         set(value) {
             field = value
             notifyDataSetChanged()
         }
     /** Listener upon the click on a scenario. */
-    var startScenarioListener: ((ScenarioEntity) -> Unit)? = null
+    var startScenarioListener: ((ClickScenario) -> Unit)? = null
     /** Listener upon the rename button of a scenario. */
-    var editClickListener: ((ScenarioEntity) -> Unit)? = null
+    var editClickListener: ((ClickScenario) -> Unit)? = null
     /** Listener upon the delete button of a scenario. */
-    var deleteScenarioListener: ((ScenarioEntity) -> Unit)? = null
+    var deleteScenarioListener: ((ClickScenario) -> Unit)? = null
 
     override fun getItemCount(): Int = scenarios?.size ?: 0
 
@@ -49,13 +48,13 @@ class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
         ScenarioViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_scenario, parent, false))
 
     override fun onBindViewHolder(holder: ScenarioViewHolder, position: Int) {
-        val scenarioWithClicks = scenarios!![position]
-        holder.itemView.name.text = scenarioWithClicks.scenario.name
+        val scenario = scenarios!![position]
+        holder.itemView.name.text = scenario.name
         holder.itemView.details.text = holder.itemView.context.resources
-            .getQuantityString(R.plurals.scenario_sub_text, scenarioWithClicks.clicks.size, scenarioWithClicks.clicks.size)
-        setClickListener(holder.itemView, scenarioWithClicks.scenario, startScenarioListener)
-        setClickListener(holder.itemView.btn_delete, scenarioWithClicks.scenario, deleteScenarioListener)
-        setClickListener(holder.itemView.btn_rename, scenarioWithClicks.scenario, editClickListener)
+            .getQuantityString(R.plurals.scenario_sub_text, scenario.clickCount, scenario.clickCount)
+        setClickListener(holder.itemView, scenario, startScenarioListener)
+        setClickListener(holder.itemView.btn_delete, scenario, deleteScenarioListener)
+        setClickListener(holder.itemView.btn_rename, scenario, editClickListener)
     }
 
     /**
@@ -65,7 +64,7 @@ class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
      * @param scenario the scenario used as argument for the listener lambda
      * @param listener the listener to notify upon click.
      */
-    private fun setClickListener(view: View, scenario: ScenarioEntity, listener: ((ScenarioEntity) -> Unit)?) =
+    private fun setClickListener(view: View, scenario: ClickScenario, listener: ((ClickScenario) -> Unit)?) =
         listener?.let {
             view.setOnClickListener { it(scenario) }
         } ?: view.setOnClickListener(null)

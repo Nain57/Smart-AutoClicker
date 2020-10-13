@@ -32,7 +32,7 @@ import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.ui.activity.MainActivity
 
 import kotlinx.coroutines.CoroutineScope
@@ -103,7 +103,7 @@ class SmartAutoClickerService : AccessibilityService() {
          * [android.app.Activity.onActivityResult]
          * @param scenario the identifier of the scenario of clicks to be used for detection.
          */
-        fun start(resultCode: Int, data: Intent, scenario: ScenarioEntity) {
+        fun start(resultCode: Int, data: Intent, scenario: ClickScenario) {
             if (detector.isInitialized) {
                 return
             }
