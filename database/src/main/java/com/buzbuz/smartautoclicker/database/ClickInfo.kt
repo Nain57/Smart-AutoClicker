@@ -35,12 +35,14 @@ import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
  * @param to the end position for a [SWIPE]. Will always be null for a [SINGLE] click.
  * @param conditionOperator the operator to apply between the conditions in the [conditionList]
  * @param conditionList the list of conditions to fulfill to execute this click.
+ * @param scenarioId the identifier of the scenario.
  * @param id the identifier of the click. Use 0 to save a new click, as the identifier generation is handled by the
  *           room database.
  * @param delayAfterMs the delay to wait after executing this click before executing another one.
  */
 data class ClickInfo(
     var name: String,
+    var scenarioId: Long,
     @ClickType var type: Int? = null,
     var from: Point? = null,
     var to: Point? = null,
@@ -84,6 +86,7 @@ data class ClickInfo(
             return entities?.map { entity ->
                 ClickInfo(
                     entity.click.name,
+                    entity.click.scenarioId,
                     entity.click.type,
                     Point(entity.click.fromX, entity.click.fromY),
                     Point(entity.click.toX, entity.click.toY),
@@ -99,12 +102,11 @@ data class ClickInfo(
     /**
      * Convert this click info into a [ClickWithConditions] ready to be inserted into the database.
      *
-     * @param scenarioId the scenario containing this click.
      * @param priority the priority of the click within the scenario.
      *
      * @return the click, ready to be inserted.
      */
-    internal fun toEntity(scenarioId: Long, priority: Int) : ClickWithConditions {
+    internal fun toEntity(priority: Int) : ClickWithConditions {
         val toXPos: Int
         val toYPos: Int
         if (type == SINGLE) {

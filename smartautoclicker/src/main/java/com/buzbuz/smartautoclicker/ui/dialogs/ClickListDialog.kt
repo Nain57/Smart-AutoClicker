@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.core.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.ClickRepository
 
 import kotlinx.android.synthetic.main.merge_loadable_list.empty
 import kotlinx.android.synthetic.main.merge_loadable_list.list
@@ -259,9 +260,10 @@ class ClickListDialog(
 
     /** Opens the dialog allowing the user to add a new click. */
     private fun addClick() {
+        val scenarioId = ClickRepository.getRepository(context).currentScenario.value
         val configDialog = ClickConfigDialog(
             context,
-            ClickInfo(context.getString(R.string.dialog_click_config_name_default)),
+            ClickInfo(context.getString(R.string.dialog_click_config_name_default), scenarioId!!),
             captureSupplier,
             onClickAddedListener
         )

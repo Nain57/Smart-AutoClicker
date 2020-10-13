@@ -65,7 +65,7 @@ class ClickRepository private constructor(database: ClickDatabase) {
     /** The Dao for accessing the click database. */
     private val clickDao = database.clickDao()
     /** The identifier of the scenario currently loaded in this repository. */
-    private val currentScenario = MutableLiveData<Long>().apply { value = NO_SCENARIO }
+    val currentScenario = MutableLiveData<Long>().apply { value = NO_SCENARIO }
     /** The list of database clicks for the currently loaded scenario. */
     private val clicks: LiveData<List<ClickWithConditions>> = Transformations.switchMap(currentScenario) { scenarioId ->
         clickDao.getClicksWithConditions(scenarioId)
@@ -144,10 +144,8 @@ class ClickRepository private constructor(database: ClickDatabase) {
      * @param click the click to be added.
      */
     suspend fun addClick(click: ClickInfo) {
-        currentScenario.value?.let { scenarioId ->
-            clickDao.addClickWithConditions(click.toEntity(scenarioId, clicks.value!!.size))
-            Log.d(TAG, "Added click: $click")
-        } ?: Log.w(TAG, "Can't add click $click without a current scenario")
+        clickDao.addClickWithConditions(click.toEntity(clicks.value!!.size))
+        Log.d(TAG, "Added click: $click")
     }
 
     /**
@@ -158,16 +156,14 @@ class ClickRepository private constructor(database: ClickDatabase) {
      * @param click the click to be updated.
      */
     suspend fun updateClick(click: ClickInfo) {
-        currentScenario.value?.let { scenarioId ->
-            val index = clicks.value!!.indexOfFirst { it.click.clickId == click.id }
-            if (index == -1) {
-                Log.w(TAG, "Trying to update an unknown click, skipping.")
-                return
-            }
+        val index = clicks.value!!.indexOfFirst { it.click.clickId == click.id }
+        if (index == -1) {
+            Log.w(TAG, "Trying to update an unknown click, skipping.")
+            return
+        }
 
-            clickDao.updateClickWithConditions(click.toEntity(scenarioId, index))
-            Log.d(TAG, "Updated click: $click")
-        } ?: Log.w(TAG, "Can't update click $click without a current scenario")
+        clickDao.updateClickWithConditions(click.toEntity(index))
+        Log.d(TAG, "Updated click: $click")
     }
 
     /**
@@ -178,24 +174,22 @@ class ClickRepository private constructor(database: ClickDatabase) {
      * @param click the click to be deleted.
      */
     suspend fun deleteClick(click: ClickInfo) {
-        currentScenario.value?.let { scenarioId ->
-            val newList = clicks.value!!.toMutableList()
-            val priority = newList.indexOfFirst { it.click.clickId == click.id }
-            if (priority == -1) {
-                Log.w(TAG, "Trying to delete an unknown click, skipping.")
-                return
-            }
+        val newList = clicks.value!!.toMutableList()
+        val priority = newList.indexOfFirst { it.click.clickId == click.id }
+        if (priority == -1) {
+            Log.w(TAG, "Trying to delete an unknown click, skipping.")
+            return
+        }
 
-            newList.removeAt(priority)
+        newList.removeAt(priority)
 
-            // Update priority of all clicks below the deleted one
-            if (priority < newList.size) {
-                updateClicksEntitiesPriority(newList.subList(priority, newList.size - 1))
-            }
-            clickDao.deleteClick(click.toEntity(scenarioId, priority).click)
+        // Update priority of all clicks below the deleted one
+        if (priority < newList.size) {
+            updateClicksEntitiesPriority(newList.subList(priority, newList.size - 1))
+        }
+        clickDao.deleteClick(click.toEntity(priority).click)
 
-            Log.d(TAG, "Deleted click: $click")
-        } ?: Log.w(TAG, "Can't delete click $click without a current scenario")
+        Log.d(TAG, "Deleted click: $click")
     }
 
     /**
@@ -205,11 +199,9 @@ class ClickRepository private constructor(database: ClickDatabase) {
      * @param newClicks the clicks, ordered with their new priority (first is highest, last is lowest).
      */
     suspend fun updateClicksPriority(newClicks: List<ClickInfo>) {
-        currentScenario.value?.let { scenarioId ->
-            updateClicksEntitiesPriority(newClicks.map { clickInfo ->
-                clickInfo.toEntity(scenarioId, 0)
-            })
-        } ?: Log.w(TAG, "Can't update click priority without a current scenario")
+        updateClicksEntitiesPriority(newClicks.map { clickInfo ->
+            clickInfo.toEntity(0)
+        })
     }
 
     /**
@@ -218,18 +210,16 @@ class ClickRepository private constructor(database: ClickDatabase) {
      * @param newClicks the new clicks entities, containing their new priority.
      */
     private suspend fun updateClicksEntitiesPriority(newClicks: List<ClickWithConditions>) {
-        currentScenario.value?.let { _ ->
-            if (clicks.value!!.size < newClicks.size) {
-                Log.e(TAG, "Trying to update priorities with an invalid new list.")
-                return
-            }
+        if (clicks.value!!.size < newClicks.size) {
+            Log.e(TAG, "Trying to update priorities with an invalid new list.")
+            return
+        }
 
-            clickDao.updateClicks(newClicks.mapIndexed { index, entity ->
-                entity.click.priority = index
-                entity.click
-            })
+        clickDao.updateClicks(newClicks.mapIndexed { index, entity ->
+            entity.click.priority = index
+            entity.click
+        })
 
-            Log.d(TAG, "Updated click priorities: $newClicks")
-        } ?: Log.w(TAG, "Can't update click priority without a current scenario")
+        Log.d(TAG, "Updated click priorities: $newClicks")
     }
 }
