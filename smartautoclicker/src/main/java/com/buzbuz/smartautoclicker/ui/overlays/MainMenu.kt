@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.ui.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.overlays.OverlayMenuController
 
 /**
  * [OverlayMenuController] implementation for displaying the main menu overlay.

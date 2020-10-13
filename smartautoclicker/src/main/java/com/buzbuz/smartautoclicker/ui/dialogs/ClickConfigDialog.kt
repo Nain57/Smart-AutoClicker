@@ -30,12 +30,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.core.extensions.setLeftRightCompoundDrawables
-import com.buzbuz.smartautoclicker.core.ui.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.clicks.BitmapManager
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
 import com.buzbuz.smartautoclicker.ui.overlays.ClickSelectorMenu
-import com.buzbuz.smartautoclicker.ui.overlays.condition.ConditionSelectorMenu
+import com.buzbuz.smartautoclicker.ui.overlays.ConditionSelectorMenu
 
 import kotlinx.android.synthetic.main.dialog_click_config.edit_delay_after
 import kotlinx.android.synthetic.main.dialog_click_config.edit_name

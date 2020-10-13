@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.core.extensions.setLeftCompoundDrawable
-import com.buzbuz.smartautoclicker.core.ui.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
 

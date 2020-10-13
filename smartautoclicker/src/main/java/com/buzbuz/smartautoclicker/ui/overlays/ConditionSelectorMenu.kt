@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.overlays.condition
+package com.buzbuz.smartautoclicker.ui.overlays
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -36,9 +36,10 @@ import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.extensions.displaySize
-import com.buzbuz.smartautoclicker.core.ui.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.core.extensions.scale
 import com.buzbuz.smartautoclicker.core.extensions.translate
+import com.buzbuz.smartautoclicker.core.gestures.*
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order

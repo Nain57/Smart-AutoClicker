@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.overlays.condition
+package com.buzbuz.smartautoclicker.ui.overlays
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -28,6 +28,7 @@ import androidx.core.graphics.toRect
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.gestures.*
 
 import java.lang.IllegalArgumentException
 
@@ -62,14 +63,30 @@ class HintsController(
         HintFactory.maxArea = maxArea.toRect()
         hintsIcons = mapOf(
             MOVE to HintFactory.buildHint(context, R.drawable.ic_hint_move, true),
-            RESIZE_BOTTOM to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_up,
-                R.drawable.ic_hint_resize_down), booleanArrayOf(true, false), true),
-            RESIZE_TOP to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_up,
-                R.drawable.ic_hint_resize_down), booleanArrayOf(false, true), true),
-            RESIZE_RIGHT to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_left,
-                R.drawable.ic_hint_resize_right), booleanArrayOf(true, false), false),
-            RESIZE_LEFT to HintFactory.buildHint(context, intArrayOf(R.drawable.ic_hint_resize_left,
-                R.drawable.ic_hint_resize_right), booleanArrayOf(false, true), false)
+            RESIZE_BOTTOM to HintFactory.buildHint(
+                context, intArrayOf(
+                    R.drawable.ic_hint_resize_up,
+                    R.drawable.ic_hint_resize_down
+                ), booleanArrayOf(true, false), true
+            ),
+            RESIZE_TOP to HintFactory.buildHint(
+                context, intArrayOf(
+                    R.drawable.ic_hint_resize_up,
+                    R.drawable.ic_hint_resize_down
+                ), booleanArrayOf(false, true), true
+            ),
+            RESIZE_RIGHT to HintFactory.buildHint(
+                context, intArrayOf(
+                    R.drawable.ic_hint_resize_left,
+                    R.drawable.ic_hint_resize_right
+                ), booleanArrayOf(true, false), false
+            ),
+            RESIZE_LEFT to HintFactory.buildHint(
+                context, intArrayOf(
+                    R.drawable.ic_hint_resize_left,
+                    R.drawable.ic_hint_resize_right
+                ), booleanArrayOf(false, true), false
+            )
         )
     }
 
