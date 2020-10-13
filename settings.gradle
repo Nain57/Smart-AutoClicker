@@ -1,3 +1,4 @@
+include ':detection'
 include ':database'
 include ':core'
 rootProject.name='Smart Auto Clicker'
