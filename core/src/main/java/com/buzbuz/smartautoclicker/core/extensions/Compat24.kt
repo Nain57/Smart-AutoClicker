@@ -16,7 +16,7 @@
  */
 @file:Suppress("DEPRECATION")
 
-package com.buzbuz.smartautoclicker.extensions
+package com.buzbuz.smartautoclicker.core.extensions
 
 import android.graphics.Point
 import android.os.Build

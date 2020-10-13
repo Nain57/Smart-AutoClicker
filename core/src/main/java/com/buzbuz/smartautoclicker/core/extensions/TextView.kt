@@ -14,27 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.extensions
+package com.buzbuz.smartautoclicker.core.extensions
 
 import android.widget.TextView
+
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-
-/**
- * Set the right compound drawable for this TextView.
- * All other compound drawable will be set to null.
- *
- * @param id the drawable to be set.
- * @param tint the tint color to apply to the drawable.
- */
-fun TextView.setRightCompoundDrawable(@DrawableRes id: Int, @ColorInt tint: Int = -1) {
-    setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context, id), null)
-    if (tint != -1) {
-        compoundDrawablesRelative[2].setTint(tint)
-    }
-}
-
 
 /**
  * Set the left compound drawable for this TextView.

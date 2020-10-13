@@ -38,7 +38,7 @@ import androidx.annotation.WorkerThread
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
-import com.buzbuz.smartautoclicker.extensions.displaySize
+import com.buzbuz.smartautoclicker.core.extensions.displaySize
 
 /**
  * Record the screen and provide screen capture and click detection on it.

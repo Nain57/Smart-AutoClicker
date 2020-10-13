@@ -14,28 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.base
+package com.buzbuz.smartautoclicker.core.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
-import android.util.Log
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
+
+import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.core.view.children
 
-import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.extensions.TYPE_COMPAT_OVERLAY
-import com.buzbuz.smartautoclicker.extensions.displaySize
-
-import kotlinx.android.synthetic.main.overlay_menu.view.layout_buttons
+import com.buzbuz.smartautoclicker.core.R
+import com.buzbuz.smartautoclicker.core.extensions.TYPE_COMPAT_OVERLAY
+import com.buzbuz.smartautoclicker.core.extensions.displaySize
 
 /**
  * Controller for a menu displayed as an overlay shown from a service.
@@ -45,24 +45,21 @@ import kotlinx.android.synthetic.main.overlay_menu.view.layout_buttons
  * management and the moving of the menu by pressing the move item. It also provides the management of an overlay view,
  * a view that can be shown/hide as an overlay over the currently displayed activity.
  *
- * The layout being inflated as the menu is defined by the abstract member [menuLayout]. This layout MUST contains a
- * [android.view.ViewGroup] with the id [R.id.layout_buttons] containing all menu items. The two items supported by
- * default are not mandatory and if you not need it, you just have to not declare it in your layout.
- * Two basic menu items management is provided out of the box:
+ * The menu is created by the abstract method [onCreateMenu]. This layout MUST contains a view group within a depth of
+ * 2 that contains all menu items. The two items supported by default are not mandatory and if you not need it, you just
+ * have to not declare it in your layout. Two basic menu items management are provided out of the box:
  * - [R.id.btn_move]: the button allowing the move the overlay menu when drag and drop by the user.
  * - [R.id.btn_hide_overlay]: the button allowing to show/hide the overlay view on the screen. When hidden, the user can
  * click on the activity overlaid.
  *
- * The overlay view is defined by the abstract member [screenOverlayView]. This view can be shown/hidden on a press by
+ * The overlay view is created by the abstract method [onCreateOverlayView]. This view can be shown/hidden on a press by
  * the user on the [R.id.btn_hide_overlay] button.
  *
  * @param context the Android context to be used to display the overlay menu and view.
  */
-abstract class OverlayMenuController(protected val context: Context) {
+abstract class OverlayMenuController(context: Context) : OverlayController(context) {
 
     private companion object {
-        /** Tag for logs. */
-        private const val TAG = "OverlayMenuController"
         /** Name of the preference file. */
         private const val PREFERENCE_NAME = "OverlayMenuController"
         /** Preference key referring to the X position of the menu during the last call to [dismiss]. */
@@ -82,59 +79,68 @@ abstract class OverlayMenuController(protected val context: Context) {
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
         PixelFormat.TRANSLUCENT)
     /** The layout parameters of the overlay view. */
-    private val overlayLayoutParams:  WindowManager.LayoutParams = WindowManager.LayoutParams(
-        WindowManager.LayoutParams.MATCH_PARENT,
-        WindowManager.LayoutParams.MATCH_PARENT,
-        TYPE_COMPAT_OVERLAY,
-        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-        PixelFormat.TRANSLUCENT)
-
+    private val overlayLayoutParams:  WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
+        copyFrom(menuLayoutParams)
+        width = WindowManager.LayoutParams.MATCH_PARENT
+        height = WindowManager.LayoutParams.MATCH_PARENT
+    }
     /** The shared preference storing the position of the menu in order to save/restore the last user position. */
     private val sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-
-    /** The root view of the menu overlay. Inflated from [menuLayoutRes]. */
-    private var menuLayout: View? = null
-    /** Listener notified upon menu overlay dismissing. Provided when [show] is called. */
-    private var dismissListener: (() -> Unit)? = null
-    /** The initial position of the overlay menu when pressing the move menu item. */
-    private var moveInitialMenuPosition = 0 to 0
-    /** The initial position of the touch event that as initiated the move of the overlay menu. */
-    private var moveInitialTouchPosition = 0 to 0
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     protected val windowManager = context.getSystemService(WindowManager::class.java)!!
-
     /** The display size. Used for avoiding moving the menu outside the screen. */
     private val displaySize = windowManager.displaySize
 
-    /** The layout id of the overlay menu to be inflated. Must be a [androidx.annotation.LayoutRes]. */
-    protected abstract val menuLayoutRes: Int
+    /** The root view of the menu overlay. Retrieved from [onCreateMenu] implementation. */
+    private var menuLayout: ViewGroup? = null
     /**
      * The view to be displayed between the current activity and the overlay menu.
      * It can be shown/hidden by pressing on the menu item with the id [R.id.btn_hide_overlay]. If null, pressing this
      * button will have no effect.
      */
-    protected abstract val screenOverlayView: View?
+    protected var screenOverlayView: View? = null
+
+    /** The initial position of the overlay menu when pressing the move menu item. */
+    private var moveInitialMenuPosition = 0 to 0
+    /** The initial position of the touch event that as initiated the move of the overlay menu. */
+    private var moveInitialTouchPosition = 0 to 0
 
     /**
-     * Show the overlay menu and view, if defined.
-     * Once shown, [onMenuShown] will be called.
+     * Creates the root view of the menu overlay.
      *
-     * @param onDismissListener the listener notified open the overlay menu dismissing.
+     * @param layoutInflater the Android layout inflater.
+     *
+     * @return the menu root view. It MUST contains a view group within a depth of 2 that contains all menu items in
+     *         order for move and hide to work as expected.
      */
-    fun show(onDismissListener: (() -> Unit)? = null) {
-        if (menuLayout != null) {
-            return
-        }
-        Log.d(TAG, "create overlay ${hashCode()}")
+    protected abstract fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup
 
-        dismissListener = onDismissListener
+    /**
+     * Creates the view to be displayed between the current activity and the overlay menu.
+     * It can be shown/hidden by pressing on the menu item with the id [R.id.btn_hide_overlay]. If null, pressing this
+     * button will have no effect.
+     *
+     * @return the overlay view, or null if none is required.
+     */
+    protected open fun onCreateOverlayView(): View? = null
 
-        // First add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
-        screenOverlayView?.let {
-            windowManager.addView(it, overlayLayoutParams)
+    @CallSuper
+    override fun onCreate() {
+        // First, call implementation methods to check what we should display
+        menuLayout = onCreateMenu(context.getSystemService(LayoutInflater::class.java))
+        screenOverlayView = onCreateOverlayView()
+
+        // Set the clicks listener on the menu items
+        menuLayout!!.let {
+            val parentLayout: ViewGroup = if (it.childCount == 1) it.getChildAt(0) as ViewGroup else it
+            for (view in parentLayout.children) {
+                @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
+                when (view.id) {
+                    R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
+                    R.id.btn_hide_overlay -> view.setOnClickListener { onHideOverlayClicked() }
+                    else -> view.setOnClickListener { v -> onMenuItemClicked(v.id) }
+                }
+            }
         }
 
         // Restore the last menu position, if any.
@@ -143,49 +149,37 @@ abstract class OverlayMenuController(protected val context: Context) {
             menuLayoutParams.x = sharedPreferences.getInt(PREFERENCE_MENU_X_KEY, 0)
             menuLayoutParams.y = sharedPreferences.getInt(PREFERENCE_MENU_Y_KEY, 0)
         }
-
-        // Inflate the menu
-        menuLayout = context.getSystemService(LayoutInflater::class.java)!!
-            .inflate(menuLayoutRes, null).apply {
-                for (view in layout_buttons.children) {
-                    @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
-                    when (view.id) {
-                        R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
-                        R.id.btn_hide_overlay -> view.setOnClickListener { onHideOverlayClicked() }
-                        else -> view.setOnClickListener { v -> onItemClicked(v.id) }
-                    }
-                }
-            }
-        windowManager.addView(menuLayout, menuLayoutParams)
-        setMenuItemViewEnabled(R.id.btn_hide_overlay, false , true)
-
-        Log.d(TAG, "overlay shown ${hashCode()}")
-        onMenuShown()
     }
 
-    /**
-     * Dismiss the overlay menu and view.
-     * Once dismissed, [onMenuDismissed] will be called, then the listener provided with the previous [show] call.
-     */
-    fun dismiss() {
-        if (menuLayout == null) {
-            return
-        }
-        Log.d(TAG, "dismiss overlay ${hashCode()}")
+    protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit? = null
 
+    @CallSuper
+    override fun onShow() {
+        // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
+        screenOverlayView?.let {
+            windowManager.addView(it, overlayLayoutParams)
+        }
+        windowManager.addView(menuLayout, menuLayoutParams)
+        setMenuItemViewEnabled(R.id.btn_hide_overlay, false , true)
+    }
+
+    override fun onHide() {
+        screenOverlayView?.let {
+            windowManager.removeView(it)
+        }
+
+        windowManager.removeView(menuLayout)
+    }
+
+    final override fun onDismissed() {
+        // Save last user position
         sharedPreferences.edit()
             .putInt(PREFERENCE_MENU_X_KEY, menuLayoutParams.x)
             .putInt(PREFERENCE_MENU_Y_KEY, menuLayoutParams.y)
             .apply()
 
-        screenOverlayView?.let { windowManager.removeView(it) }
-        windowManager.removeView(menuLayout)
-
-        onMenuDismissed()
-
         menuLayout = null
-        dismissListener?.invoke()
-        dismissListener = null
+        screenOverlayView = null
     }
 
     /**
@@ -211,20 +205,6 @@ abstract class OverlayMenuController(protected val context: Context) {
     protected fun setMenuItemViewImageResource(@IdRes viewId: Int, @DrawableRes imageId: Int) {
         (menuLayout?.findViewById<View>(viewId) as ImageView).setImageResource(imageId)
     }
-
-    /** Called once the overlay menu is shown. */
-    protected open fun onMenuShown() {}
-
-    /** Called once the overlay menu is dismissed. */
-    protected open fun onMenuDismissed() {}
-
-    /**
-     * Called when the user has clicked on a menu item.
-     * Will not be called for [R.id.btn_hide_overlay] and [R.id.btn_move].
-     *
-     * @param viewId the identifier of the view clicked.
-     */
-    protected abstract fun onItemClicked(@IdRes viewId: Int)
 
     /**
      * Called when the user clicks on the [R.id.btn_hide_overlay] menu item.

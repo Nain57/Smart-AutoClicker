@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.base
+package com.buzbuz.smartautoclicker.ui.dialogs
 
 import android.content.Context
 import android.view.View
@@ -22,6 +22,8 @@ import androidx.annotation.IntDef
 import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.ui.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 
 import kotlinx.android.synthetic.main.dialog_dual_choice.layout_choice_first
 import kotlinx.android.synthetic.main.dialog_dual_choice.layout_choice_second
@@ -29,7 +31,7 @@ import kotlinx.android.synthetic.main.include_choice_item.view.text_pre
 import kotlinx.android.synthetic.main.include_choice_item.view.text_title
 
 /**
- * [DialogController] implementation for a dialog displaying a list of two choices to the user.
+ * [OverlayDialogController] implementation for a dialog displaying a list of two choices to the user.
  *
  * @param context the Android Context for the dialog shown by this controller.
  * @param title the title of the dialog.
@@ -41,9 +43,9 @@ import kotlinx.android.synthetic.main.include_choice_item.view.text_title
  * @param secondIcon the icon for the second choice. Can be null.
  * @param onChoiceSelected the callback to be notified upon user choice selection.
  */
-class DualChoiceDialogController(
+class DualChoiceDialog(
     context: Context,
-    title: Int,
+    private val title: Int,
     private val firstTitle: Int,
     private val secondTitle: Int,
     private val firstPreText: Int?,
@@ -51,7 +53,7 @@ class DualChoiceDialogController(
     private val secondPreText: Int?,
     private val secondIcon: Int?,
     private val onChoiceSelected: (Int) -> Unit
-) : DialogController() {
+) : OverlayDialogController(context) {
 
     companion object {
         /** Type for the choices in the dialog. */
@@ -64,12 +66,14 @@ class DualChoiceDialogController(
         const val SECOND = 2
     }
 
-    override val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
-        .setView(R.layout.dialog_dual_choice)
-        .setNegativeButton(android.R.string.cancel, null)
-    override val dialogTitle: Int = title
+    override fun onCreateDialog(): AlertDialog.Builder {
+        return AlertDialog.Builder(context)
+            .setCustomTitle(R.layout.view_dialog_title, title)
+            .setView(R.layout.dialog_dual_choice)
+            .setNegativeButton(android.R.string.cancel, null)
+    }
 
-    override fun onDialogShown(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: AlertDialog) {
         dialog.apply {
             layout_choice_first.setOnClickListener{ onChoiceClicked(FIRST) }
             updateChoiceDisplay(layout_choice_first, firstTitle, firstPreText, firstIcon)
@@ -86,7 +90,7 @@ class DualChoiceDialogController(
      */
     private fun onChoiceClicked(@Choice choice: Int) {
         onChoiceSelected.invoke(choice)
-        dismissDialog()
+        dismiss()
     }
 
     /**

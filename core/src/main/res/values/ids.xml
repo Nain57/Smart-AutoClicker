@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  * Copyright (C) 2020 Nain57
  *
  * This program is free software; you can redistribute it and/or
@@ -13,15 +14,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
- */
-package com.buzbuz.smartautoclicker.extensions
-
-import android.graphics.Point
-import android.graphics.Rect
-
-/**
- * Get the width and height of this Rect.
- *
- * @return the size.
- */
-fun Rect.size(): Point = Point(width(), height())
+-->
+<resources>
+    <!-- Id for the move button in the OverlayMenuController -->
+    <item name="btn_move" type="id"/>
+    <!-- Id for the hide button in the OverlayMenuController -->
+    <item name="btn_hide_overlay" type="id"/>
+</resources>

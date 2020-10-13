@@ -75,4 +75,6 @@ dependencies {
     kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+
+    implementation project(path: ':core')
 }

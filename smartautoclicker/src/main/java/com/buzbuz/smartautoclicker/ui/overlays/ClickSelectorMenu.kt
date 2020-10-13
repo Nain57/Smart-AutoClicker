@@ -23,17 +23,19 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.PointF
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+
 import androidx.annotation.IntDef
-import androidx.annotation.LayoutRes
 import androidx.core.content.res.use
 import androidx.core.graphics.toPoint
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.ui.OverlayMenuController
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
-import com.buzbuz.smartautoclicker.ui.base.OverlayMenuController
 
 /**
  * [OverlayMenuController] implementation for displaying the click area selection menu and its overlay view.
@@ -64,9 +66,6 @@ class ClickSelectorMenu(
         /** The user us currently selecting the end position for a swipe. */
         private const val SWIPE_TO = 3
     }
-
-    @LayoutRes override val menuLayoutRes: Int = R.layout.overlay_validation_menu
-    override val screenOverlayView: View? = ClickSelectorView(context)
 
     /**
      * Current [SelectionStep] the user is.
@@ -114,11 +113,17 @@ class ClickSelectorMenu(
             screenOverlayView?.invalidate()
         }
 
-    override fun onMenuShown() {
+    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
+        layoutInflater.inflate(R.layout.overlay_validation_menu, null) as ViewGroup
+
+    override fun onCreateOverlayView(): View? = ClickSelectorView(context)
+
+    override fun onShow() {
+        super.onShow()
         selectionStep = if (type == ClickInfo.SINGLE) SINGLE else SWIPE_FROM
     }
 
-    override fun onItemClicked(viewId: Int) {
+    override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_confirm -> onConfirm()
             R.id.btn_cancel -> onCancel()

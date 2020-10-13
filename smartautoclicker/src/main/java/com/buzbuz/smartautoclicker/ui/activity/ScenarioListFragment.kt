@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioEntity
 import com.buzbuz.smartautoclicker.clicks.database.ScenarioWithClicks
-import com.buzbuz.smartautoclicker.extensions.setCustomTitle
+import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 
 import kotlinx.android.synthetic.main.dialog_edit.edit_name
 import kotlinx.android.synthetic.main.fragment_scenarios.add

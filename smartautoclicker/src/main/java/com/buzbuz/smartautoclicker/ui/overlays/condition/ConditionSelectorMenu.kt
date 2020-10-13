@@ -25,17 +25,20 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
+
 import androidx.annotation.ColorInt
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.extensions.displaySize
-import com.buzbuz.smartautoclicker.extensions.scale
-import com.buzbuz.smartautoclicker.extensions.translate
-import com.buzbuz.smartautoclicker.ui.base.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.extensions.displaySize
+import com.buzbuz.smartautoclicker.core.ui.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.extensions.scale
+import com.buzbuz.smartautoclicker.core.extensions.translate
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order
@@ -54,14 +57,17 @@ class ConditionSelectorMenu(
         private const val SELECTION_DELAY_MS = 200L
     }
 
-    override val menuLayoutRes: Int = R.layout.overlay_validation_menu
-    override val screenOverlayView: View? = ConditionSelectorView(context)
+    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
+        layoutInflater.inflate(R.layout.overlay_validation_menu, null) as ViewGroup
 
-    override fun onMenuShown() {
+    override fun onCreateOverlayView(): View = ConditionSelectorView(context)
+
+    override fun onShow() {
+        super.onShow()
         (screenOverlayView as ConditionSelectorView).showHints()
     }
 
-    override fun onItemClicked(viewId: Int) {
+    override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_confirm -> onConfirm()
             R.id.btn_cancel -> dismiss()
@@ -70,12 +76,14 @@ class ConditionSelectorMenu(
 
     /** Confirm the current condition selection, notify the listener and dismiss the overlay. */
     private fun onConfirm() {
-        val selectedArea = Rect((screenOverlayView as ConditionSelectorView).selectedArea.toRect())
-        screenOverlayView.hide = true
-        Handler(Looper.getMainLooper()).postDelayed({
-            onConditionSelected.invoke(selectedArea)
-            dismiss()
-        }, SELECTION_DELAY_MS)
+        (screenOverlayView as ConditionSelectorView).let {
+            val selectedArea = Rect(it.selectedArea.toRect())
+            it.hide = true
+            Handler(Looper.getMainLooper()).postDelayed({
+                onConditionSelected.invoke(selectedArea)
+                dismiss()
+            }, SELECTION_DELAY_MS)
+        }
     }
 
     /** Overlay view used as [screenOverlayView] showing the area to capture the content as a click condition. */

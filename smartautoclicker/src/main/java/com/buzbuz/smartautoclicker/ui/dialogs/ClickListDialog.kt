@@ -29,11 +29,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
+import com.buzbuz.smartautoclicker.core.extensions.setLeftCompoundDrawable
+import com.buzbuz.smartautoclicker.core.ui.OverlayDialogController
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
-import com.buzbuz.smartautoclicker.extensions.setLeftCompoundDrawable
-import com.buzbuz.smartautoclicker.ui.base.DialogController
-import com.buzbuz.smartautoclicker.ui.base.DualChoiceDialogController
 
 import kotlinx.android.synthetic.main.merge_loadable_list.empty
 import kotlinx.android.synthetic.main.merge_loadable_list.list
@@ -44,7 +44,7 @@ import kotlinx.android.synthetic.main.item_click.view.name
 import java.util.Collections
 
 /**
- * [DialogController] implementation for displaying a list of clicks.
+ * [OverlayDialogController] implementation for displaying a list of clicks.
  *
  * This dialog allows the user to create/copy/edit/reorder the clicks for a scenario. To handle all those cases,
  * several display mode are declared using the [Mode] values. The current mode can be changed through the [mode] member.
@@ -65,7 +65,7 @@ class ClickListDialog(
     private val onClickEditedListener: (ClickInfo) -> Unit,
     private val onClickDeletedListener: (ClickInfo) -> Unit,
     private val onOrderChangedListener: (List<ClickInfo>) -> Unit
-) : DialogController() {
+) : OverlayDialogController(context) {
 
     private companion object {
 
@@ -79,7 +79,7 @@ class ClickListDialog(
          * [ClickConfigDialog]. The dialog buttons actions are:
          *  - [AlertDialog.BUTTON_POSITIVE]: The dialog is dismissed.
          *  - [AlertDialog.BUTTON_NEGATIVE]: Goes to reorder mode.
-         *  - [AlertDialog.BUTTON_NEUTRAL]: Opens the dialog shown by [DualChoiceDialogController] proposing to create
+         *  - [AlertDialog.BUTTON_NEUTRAL]: Opens the dialog shown by [DualChoiceDialog] proposing to create
          *  a new click of copy one. If there is no click on the list, it will directly open the dialog shown by
          *  [ClickConditionDialog] (as you can't copy from nothing).
          */
@@ -121,15 +121,16 @@ class ClickListDialog(
             }
         }
 
-    override val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
-        .setView(R.layout.dialog_click_list)
-        .setPositiveButton(android.R.string.ok, null)
-        .setNegativeButton(R.string.dialog_click_list_reorder, null)
-        .setNeutralButton(R.string.dialog_click_list_add, null)
+    override fun onCreateDialog(): AlertDialog.Builder {
+        return AlertDialog.Builder(context)
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_click_list_title)
+            .setView(R.layout.dialog_click_list)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(R.string.dialog_click_list_reorder, null)
+            .setNeutralButton(R.string.dialog_click_list_add, null)
+    }
 
-    override val dialogTitle: Int = R.string.dialog_click_list_title
-
-    override fun onDialogShown(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: AlertDialog) {
         dialog.apply {
             list.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
@@ -141,12 +142,13 @@ class ClickListDialog(
         mode = EDITION
     }
 
-    override fun onDialogDismissed(dialog: AlertDialog) {
-        mode = null
+    override fun onVisibilityChanged(visible: Boolean) {
+        if (visible) mode = EDITION
     }
 
-    override fun onVisibilityChanged(shown: Boolean) {
-        if (shown) mode = EDITION
+    override fun onDialogDismissed() {
+        super.onDialogDismissed()
+        mode = null
     }
 
     /**
@@ -179,7 +181,7 @@ class ClickListDialog(
         dialog?.apply {
             itemTouchHelper.attachToRecyclerView(null)
             changeButtonState(getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE,
-                android.R.string.ok) { dismissDialog() }
+                android.R.string.ok) { dismiss() }
             changeButtonState(getButton(AlertDialog.BUTTON_NEGATIVE),
                 if (adapter.itemCount > 1) View.VISIBLE else View.INVISIBLE,
                 R.string.dialog_click_list_reorder) { mode = REORDER }
@@ -223,8 +225,8 @@ class ClickListDialog(
      */
     private fun onAddClicked() {
         if (adapter.itemCount > 0) {
-            showSubDialog(DualChoiceDialogController(
-                context!!,
+            showSubOverlay(DualChoiceDialog(
+                context,
                 R.string.dialog_click_add_title,
                 R.string.dialog_click_add_create,
                 R.string.dialog_click_add_copy,
@@ -234,8 +236,8 @@ class ClickListDialog(
                 R.drawable.ic_copy
             ) { choiceClicked ->
                 when (choiceClicked) {
-                    DualChoiceDialogController.FIRST -> addClick()
-                    DualChoiceDialogController.SECOND -> mode = COPY
+                    DualChoiceDialog.FIRST -> addClick()
+                    DualChoiceDialog.SECOND -> mode = COPY
                 }
             })
         } else {
@@ -258,12 +260,12 @@ class ClickListDialog(
     /** Opens the dialog allowing the user to add a new click. */
     private fun addClick() {
         val configDialog = ClickConfigDialog(
-            context!!,
-            ClickInfo(context!!.getString(R.string.dialog_click_config_name_default)),
+            context,
+            ClickInfo(context.getString(R.string.dialog_click_config_name_default)),
             captureSupplier,
             onClickAddedListener
         )
-        showSubDialog(configDialog, true)
+        showSubOverlay(configDialog, true)
     }
 
     /**
@@ -274,7 +276,7 @@ class ClickListDialog(
     private fun copyClick(click: ClickInfo) {
         // Copy the click and set its identifier to 0 in order for the database to handle it as a new click
         val newClick = click.copy().apply { id = 0 }
-        showSubDialog(ClickConfigDialog(context!!, newClick, captureSupplier, onClickAddedListener), true)
+        showSubOverlay(ClickConfigDialog(context, newClick, captureSupplier, onClickAddedListener), true)
     }
 
     /**
@@ -283,7 +285,7 @@ class ClickListDialog(
      * @param click the click item to be edited.
      */
     private fun editClick(click: ClickInfo) {
-        showSubDialog(ClickConfigDialog(context!!, click.copy(), captureSupplier, onClickEditedListener), true)
+        showSubOverlay(ClickConfigDialog(context, click.copy(), captureSupplier, onClickEditedListener), true)
     }
 
     /**

@@ -24,9 +24,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
+import com.buzbuz.smartautoclicker.core.ui.OverlayDialogController
 import com.buzbuz.smartautoclicker.clicks.BitmapManager
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
-import com.buzbuz.smartautoclicker.ui.base.DialogController
 
 import kotlinx.android.synthetic.main.dialog_click_condition.image_condition
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_1
@@ -39,7 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * [DialogController] implementation for displaying a click condition and providing a button to delete it.
+ * [OverlayDialogController] implementation for displaying a click condition and providing a button to delete it.
  *
  * @param context the Android Context for the dialog shown by this controller.
  * @param condition the click condition to be displayed.
@@ -49,19 +50,22 @@ class ClickConditionDialog(
     context: Context,
     private val condition: Pair<ClickCondition, Int>,
     private val onDeleteClicked: (Int) -> Unit
-) : DialogController() {
+) : OverlayDialogController(context) {
 
     /** The coroutine job fetching asynchronously the condition bitmap from the [BitmapManager]. */
     private var bitmapJob: Job? = null
 
-    override val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
-        .setView(R.layout.dialog_click_condition)
-        .setPositiveButton(android.R.string.ok, null)
-        .setNegativeButton(R.string.dialog_click_condition_delete) { _: DialogInterface, _: Int -> onDeleteClicked.invoke(condition.second) }
+    override fun onCreateDialog(): AlertDialog.Builder {
+        return AlertDialog.Builder(context)
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_click_condition_title)
+            .setView(R.layout.dialog_click_condition)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(R.string.dialog_click_condition_delete) { _: DialogInterface, _: Int ->
+                onDeleteClicked.invoke(condition.second)
+            }
+    }
 
-    override val dialogTitle: Int = R.string.dialog_click_condition_title
-
-    override fun onDialogShown(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: AlertDialog) {
         dialog.apply {
             condition.first.let {
                 text_area_1.text = context.getString(R.string.dialog_click_condition_area, it.area.left, it.area.top)
@@ -91,10 +95,5 @@ class ClickConditionDialog(
                 }
             }
         }
-    }
-
-    override fun onDialogDismissed(dialog: AlertDialog) {
-        bitmapJob?.cancel()
-        bitmapJob = null
     }
 }

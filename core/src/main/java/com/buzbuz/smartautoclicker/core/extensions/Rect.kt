@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+/*
  * Copyright (C) 2020 Nain57
  *
  * This program is free software; you can redistribute it and/or
@@ -14,16 +13,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
--->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+ */
+package com.buzbuz.smartautoclicker.core.extensions
 
-    <TextView
-        android:id="@android:id/title"
-        style="@style/DialogTitle"
-        tools:text="Title"/>
+import android.graphics.Point
+import android.graphics.Rect
 
-</FrameLayout>
+/**
+ * Get the width and height of this Rect.
+ *
+ * @return the size.
+ */
+fun Rect.size(): Point = Point(width(), height())

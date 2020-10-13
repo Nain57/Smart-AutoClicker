@@ -17,10 +17,11 @@
 package com.buzbuz.smartautoclicker.ui.overlays
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.ui.base.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.ui.OverlayMenuController
 
 /**
  * [OverlayMenuController] implementation for displaying the main menu overlay.
@@ -47,10 +48,10 @@ class MainMenu(
     /** Tells if the menu should tells if we are playing the scenario to detect or not. */
     private var isPlaying: Boolean = false
 
-    override val menuLayoutRes: Int = R.layout.overlay_menu
-    override val screenOverlayView: View? = null
+    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
+        layoutInflater.inflate(R.layout.overlay_menu, null) as ViewGroup
 
-    override fun onItemClicked(viewId: Int) {
+    override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> {
                 changeDisplayMode(!isPlaying)

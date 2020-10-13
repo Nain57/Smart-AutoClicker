@@ -1,2 +1,3 @@
+include ':core'
 rootProject.name='Smart Auto Clicker'
 include ':smartautoclicker'

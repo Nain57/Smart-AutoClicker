@@ -28,12 +28,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
+import com.buzbuz.smartautoclicker.core.extensions.setLeftRightCompoundDrawables
+import com.buzbuz.smartautoclicker.core.ui.OverlayDialogController
 import com.buzbuz.smartautoclicker.clicks.BitmapManager
 import com.buzbuz.smartautoclicker.clicks.ClickCondition
 import com.buzbuz.smartautoclicker.clicks.ClickInfo
-import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
-import com.buzbuz.smartautoclicker.ui.base.DialogController
-import com.buzbuz.smartautoclicker.ui.base.DualChoiceDialogController
 import com.buzbuz.smartautoclicker.ui.overlays.ClickSelectorMenu
 import com.buzbuz.smartautoclicker.ui.overlays.condition.ConditionSelectorMenu
 
@@ -46,6 +46,7 @@ import kotlinx.android.synthetic.main.dialog_click_config.text_click_type
 import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator
 import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator_desc
 import kotlinx.android.synthetic.main.item_condition.view.image_condition
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -53,7 +54,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * [DialogController] implementation for displaying a click info and allowing the user to edit it.
+ * [OverlayDialogController] implementation for displaying a click info and allowing the user to edit it.
  *
  * Any changes done on the click by the user will be saved only when the user clicks on the positive button of the
  * dialog. If the dialog is dismissed by any other means, no changes will be kept.
@@ -71,19 +72,20 @@ class ClickConfigDialog(
     private val clickInfo: ClickInfo,
     private val captureSupplier: (Rect, ((ClickCondition) -> Unit)) -> Unit,
     private val onConfigurationCompletedCallback: (ClickInfo) -> Unit
-) : DialogController() {
+) : OverlayDialogController(context) {
 
     /** Adapter displaying all condition for the click displayed by this dialog. */
     private val conditionsAdapter = ConditionAdapter(::onAddConditionClicked, ::onConditionClicked)
 
-    override val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
-        .setView(R.layout.dialog_click_config)
-        .setPositiveButton(android.R.string.ok, null)
-        .setNegativeButton(android.R.string.cancel, null)
+    override fun onCreateDialog(): AlertDialog.Builder {
+        return AlertDialog.Builder(context)
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_click_config_title)
+            .setView(R.layout.dialog_click_config)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel, null)
+    }
 
-    override val dialogTitle: Int = R.string.dialog_click_config_title
-
-    override fun onDialogShown(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: AlertDialog) {
         clickInfo.let { click ->
             dialog.apply {
                 root_view.setOnTouchListener(hideSoftInputTouchListener)
@@ -106,8 +108,8 @@ class ClickConfigDialog(
      * the opening of the overlay for the selection of the click/swipe position.
      */
     private fun onConfigureTypeClicked() {
-        val dialogController = DualChoiceDialogController(
-            context!!,
+        val dialogController = DualChoiceDialog(
+            context,
             R.string.dialog_click_type_title,
             R.string.dialog_click_type_single,
             R.string.dialog_click_type_swipe,
@@ -117,9 +119,8 @@ class ClickConfigDialog(
             R.drawable.ic_swipe
         ) { choiceClicked ->
 
-            val clickType =
-                if (choiceClicked == DualChoiceDialogController.FIRST) ClickInfo.SINGLE else ClickInfo.SWIPE
-            showOverlayMenu(ClickSelectorMenu(context!!, clickType) { type, from, to ->
+            val clickType = if (choiceClicked == DualChoiceDialog.FIRST) ClickInfo.SINGLE else ClickInfo.SWIPE
+            showSubOverlay(ClickSelectorMenu(context, clickType) { type, from, to ->
                 clickInfo.apply {
                     this.type = type
                     this.from = from
@@ -127,10 +128,10 @@ class ClickConfigDialog(
                 }
 
                 refreshDialogDisplay()
-            })
+            }, true)
         }
 
-        showSubDialog(dialogController, true)
+        showSubOverlay(dialogController, true)
     }
 
     /**
@@ -138,8 +139,8 @@ class ClickConfigDialog(
      * This will open the dialog allowing the user to select the operator to be applied between the click conditions.
      */
     private fun onConfigureOperatorClicked() {
-        showSubDialog(DualChoiceDialogController(
-            context!!,
+        showSubOverlay(DualChoiceDialog(
+            context,
             R.string.dialog_condition_operator_title,
             R.string.condition_operator_and_desc,
             R.string.condition_operator_or_desc,
@@ -149,7 +150,7 @@ class ClickConfigDialog(
             null
         ) { choiceClicked ->
             clickInfo.conditionOperator =
-                if (choiceClicked == DualChoiceDialogController.FIRST) ClickInfo.AND else ClickInfo.OR
+                if (choiceClicked == DualChoiceDialog.FIRST) ClickInfo.AND else ClickInfo.OR
             refreshDialogDisplay()
         })
     }
@@ -160,12 +161,12 @@ class ClickConfigDialog(
      * selected, the adapter will be refreshed to display the newly selected condition.
      */
     private fun onAddConditionClicked() {
-        showOverlayMenu(ConditionSelectorMenu(context!!) { area ->
+        showSubOverlay(ConditionSelectorMenu(context) { area ->
             captureSupplier.invoke(area) { condition ->
                 conditionsAdapter.addCondition(condition)
                 refreshDialogDisplay()
             }
-        })
+        }, true)
     }
 
     /**
@@ -176,7 +177,7 @@ class ClickConfigDialog(
      * @param index the index of the condition in the list.
      */
     private fun onConditionClicked(condition: ClickCondition, index: Int) {
-        showSubDialog(ClickConditionDialog(context!!, condition to index) {
+        showSubOverlay(ClickConditionDialog(context, condition to index) {
             conditionsAdapter.removeCondition(it)
             refreshDialogDisplay()
         })
@@ -197,7 +198,7 @@ class ClickConfigDialog(
             onConfigurationCompletedCallback.invoke(this)
         }
 
-        dismissDialog()
+        dismiss()
     }
 
     /** Refresh all values displayed by the dialog. Must be called after any changes made by the user on the click. */

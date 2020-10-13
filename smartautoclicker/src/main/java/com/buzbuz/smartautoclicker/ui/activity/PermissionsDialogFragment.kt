@@ -16,22 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.ui.activity
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
 
 /**
@@ -78,13 +76,8 @@ class PermissionsDialogFragment : DialogFragment() {
     private lateinit var accessibilityStateView: ImageView
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        @SuppressLint("InflateParams") // Dialog views have no parent at inflation time
-        val titleView = requireContext().getSystemService(LayoutInflater::class.java)!!
-            .inflate(R.layout.view_dialog_title, null)
-        titleView.findViewById<TextView>(R.id.title).setText(R.string.dialog_permissions_title)
-
         return AlertDialog.Builder(requireContext())
-            .setCustomTitle(titleView)
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_permissions_title)
             .setView(R.layout.dialog_permissions)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 (activity as PermissionDialogListener).onPermissionsGranted()

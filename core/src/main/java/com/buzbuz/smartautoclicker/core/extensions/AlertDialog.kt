@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.extensions
+package com.buzbuz.smartautoclicker.core.extensions
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -22,8 +22,6 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
-
-import com.buzbuz.smartautoclicker.R
 
 /**
  * Set a view as custom title for the dialog and set its title name.
@@ -35,7 +33,7 @@ import com.buzbuz.smartautoclicker.R
 fun AlertDialog.Builder.setCustomTitle(@LayoutRes titleViewRes: Int, @StringRes title: Int): AlertDialog.Builder {
     @SuppressLint("InflateParams") // Dialog views have no parent at inflation time
     val titleView = context.getSystemService(LayoutInflater::class.java)!!.inflate(titleViewRes, null)
-    titleView.findViewById<TextView>(R.id.title).setText(title)
+    titleView.findViewById<TextView>(android.R.id.title).setText(title)
     setCustomTitle(titleView)
     return this
 }

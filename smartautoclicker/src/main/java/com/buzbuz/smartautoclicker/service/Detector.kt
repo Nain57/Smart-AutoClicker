@@ -108,7 +108,7 @@ class Detector(
             startScreenRecord(resultCode, data)
         }
         overlayMenu = MainMenu(context, ::onOpenListClicked, ::onPlayPauseClicked, ::onStopClicked).apply {
-            show()
+            create()
         }
 
         isInitialized = true
@@ -129,7 +129,7 @@ class Detector(
 
         overlayMenu?.dismiss()
         overlayMenu = null
-        clickListDialog?.dismissDialog()
+        clickListDialog?.dismiss()
         clickListDialog = null
         screenRecorder?.stopScreenRecord()
         screenRecorder = null
@@ -153,17 +153,17 @@ class Detector(
             return
         }
 
-        overlayMenu!!.dismiss()
+        overlayMenu!!.hide()
         clickListDialog = ClickListDialog(
             ContextThemeWrapper(this@Detector.context, R.style.AppTheme),
-            clicks!!.value ?: emptyList(),
+            clicks?.value ?: emptyList(),
             { area, callback -> screenRecorder!!.captureArea(area) { callback.invoke(it) } },
             { click -> scope!!.launch { clickRepository!!.addClick(click) } },
             { click -> scope!!.launch { clickRepository!!.updateClick(click) } },
             { click -> scope!!.launch { clickRepository!!.deleteClick(click) } },
             { clicks -> scope!!.launch { clickRepository!!.updateClicksPriority(clicks) } }
         ).apply {
-            showDialog(::onClickListDialogDismissed)
+            create(::onClickListDialogDismissed)
         }
     }
 
