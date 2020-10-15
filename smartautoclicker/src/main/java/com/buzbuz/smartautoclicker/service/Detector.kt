@@ -20,20 +20,25 @@ import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.view.ContextThemeWrapper
+import android.view.WindowManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.buzbuz.smartautoclicker.BitmapManager
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.extensions.displaySize
+import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickRepository
 import com.buzbuz.smartautoclicker.database.ClickScenario
-import com.buzbuz.smartautoclicker.detection.ScreenRecorder
+import com.buzbuz.smartautoclicker.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.ui.dialogs.ClickListDialog
 import com.buzbuz.smartautoclicker.ui.overlays.MainMenu
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * Central class for the background click detection.
@@ -54,10 +59,19 @@ class Detector(
     /** LiveData observer upon the clicks of the currently loaded scenario. */
     private val clicksObserver = Observer<List<ClickInfo>?> { clicks ->
         clickListDialog?.onClickListChanged(clicks)
-        screenRecorder?.apply {
-            if (isDetecting) {
+        screenDetector.apply {
+            if (isDetecting.value!!) {
                 startDetection(clicks ?: emptyList(), detectionCallback)
             }
+        }
+    }
+
+    /** */
+    private val bitmapManager = BitmapManager.getInstance(context)
+    /** Object recording the screen of the display to detect on and trying to match the current [clicks] on it. */
+    private val screenDetector = ScreenDetector(context.getSystemService(WindowManager::class.java).displaySize) { path, width, height ->
+        runBlocking(Dispatchers.IO) {
+            bitmapManager.loadBitmap(path, width, height)
         }
     }
 
@@ -67,8 +81,6 @@ class Detector(
     private var clickRepository: ClickRepository? = null
     /** The list of clicks for the current scenario. */
     private var clicks: LiveData<List<ClickInfo>>? = null
-    /** Object recording the screen of the display to detect on and trying to match the current [clicks] on it. */
-    private var screenRecorder: ScreenRecorder? = null
     /** The overlay menu providing the user interface to control the detection. */
     private var overlayMenu: MainMenu? = null
     /** The dialog providing the user interface for the clicks creation/edition. */
@@ -105,9 +117,7 @@ class Detector(
             clicks!!.observeForever(clicksObserver)
         }
 
-        screenRecorder = ScreenRecorder(context, ::onStopClicked).apply {
-            startScreenRecord(resultCode, data)
-        }
+        screenDetector.startScreenRecord(context, resultCode, data)
         overlayMenu = MainMenu(context, ::onOpenListClicked, ::onPlayPauseClicked, ::onStopClicked).apply {
             create()
         }
@@ -132,8 +142,7 @@ class Detector(
         overlayMenu = null
         clickListDialog?.dismiss()
         clickListDialog = null
-        screenRecorder?.stopScreenRecord()
-        screenRecorder = null
+        screenDetector.stop()
 
         clicks?.removeObserver(clicksObserver)
         clicks = null
@@ -163,7 +172,14 @@ class Detector(
         clickListDialog = ClickListDialog(
             ContextThemeWrapper(this@Detector.context, R.style.AppTheme),
             clicks?.value ?: emptyList(),
-            { area, callback -> screenRecorder!!.captureArea(area) { callback.invoke(it) } },
+            { area, callback -> screenDetector.captureArea(area) {
+                scope!!.launch(Dispatchers.IO) {
+                    val path = bitmapManager.saveBitmap(it)
+                    launch(Dispatchers.Main) {
+                        callback.invoke(ClickCondition(area, path))
+                    }
+                }
+            }},
             { click -> scope!!.launch { clickRepository!!.addClick(click) } },
             { click -> scope!!.launch { clickRepository!!.updateClick(click) } },
             { click -> scope!!.launch { clickRepository!!.deleteClick(click) } },
@@ -184,7 +200,7 @@ class Detector(
             return
         }
 
-        screenRecorder!!.let {
+        screenDetector.let {
             if (isPlaying) {
                 it.startDetection(clicks!!.value ?: emptyList(), detectionCallback)
             } else {
