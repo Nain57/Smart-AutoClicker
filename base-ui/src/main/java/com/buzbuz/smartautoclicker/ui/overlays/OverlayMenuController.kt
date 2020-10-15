@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.overlays
+package com.buzbuz.smartautoclicker.ui.overlays
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -33,8 +33,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.core.view.children
 
-import com.buzbuz.smartautoclicker.core.R
-import com.buzbuz.smartautoclicker.extensions.TYPE_COMPAT_OVERLAY
+import com.buzbuz.smartautoclicker.ui.R
 import com.buzbuz.smartautoclicker.extensions.displaySize
 
 /**

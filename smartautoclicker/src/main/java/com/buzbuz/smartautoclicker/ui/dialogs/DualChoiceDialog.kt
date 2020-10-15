@@ -22,7 +22,7 @@ import androidx.annotation.IntDef
 import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.ui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 
 import kotlinx.android.synthetic.main.dialog_dual_choice.layout_choice_first

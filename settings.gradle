@@ -1,6 +1,6 @@
 include ':extensions'
 include ':detection'
 include ':database'
-include ':core'
+include ':base-ui'
 rootProject.name='Smart Auto Clicker'
 include ':smartautoclicker'

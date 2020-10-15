@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
-import com.buzbuz.smartautoclicker.core.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.ui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.BitmapManager
 import com.buzbuz.smartautoclicker.database.ClickCondition
 

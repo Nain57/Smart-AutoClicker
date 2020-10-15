@@ -36,10 +36,9 @@ import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.displaySize
-import com.buzbuz.smartautoclicker.core.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.translate
-import com.buzbuz.smartautoclicker.core.gestures.*
+import com.buzbuz.smartautoclicker.ui.gestures.*
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order

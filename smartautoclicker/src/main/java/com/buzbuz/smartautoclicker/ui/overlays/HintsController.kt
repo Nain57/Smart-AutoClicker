@@ -28,7 +28,7 @@ import androidx.core.graphics.toRect
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.gestures.*
+import com.buzbuz.smartautoclicker.ui.gestures.*
 
 import java.lang.IllegalArgumentException
 
