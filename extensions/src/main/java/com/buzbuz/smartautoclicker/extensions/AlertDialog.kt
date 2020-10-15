@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.extensions
+package com.buzbuz.smartautoclicker.extensions
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.widget.TextView
+
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog

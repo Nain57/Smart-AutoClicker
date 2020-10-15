@@ -34,8 +34,8 @@ import androidx.annotation.IdRes
 import androidx.core.view.children
 
 import com.buzbuz.smartautoclicker.core.R
-import com.buzbuz.smartautoclicker.core.extensions.TYPE_COMPAT_OVERLAY
-import com.buzbuz.smartautoclicker.core.extensions.displaySize
+import com.buzbuz.smartautoclicker.extensions.TYPE_COMPAT_OVERLAY
+import com.buzbuz.smartautoclicker.extensions.displaySize
 
 /**
  * Controller for a menu displayed as an overlay shown from a service.
@@ -72,7 +72,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
-        TYPE_COMPAT_OVERLAY,
+        com.buzbuz.smartautoclicker.extensions.TYPE_COMPAT_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or

@@ -29,7 +29,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.extensions.setCustomTitle
+import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
 
 /**

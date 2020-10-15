@@ -26,7 +26,7 @@ import androidx.lifecycle.Observer
 import com.buzbuz.smartautoclicker.BitmapManager
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.extensions.displaySize
+import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickRepository

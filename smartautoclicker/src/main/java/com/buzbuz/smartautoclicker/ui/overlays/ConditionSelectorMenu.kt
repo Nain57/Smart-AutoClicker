@@ -35,10 +35,10 @@ import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.extensions.displaySize
+import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.core.overlays.OverlayMenuController
-import com.buzbuz.smartautoclicker.core.extensions.scale
-import com.buzbuz.smartautoclicker.core.extensions.translate
+import com.buzbuz.smartautoclicker.extensions.scale
+import com.buzbuz.smartautoclicker.extensions.translate
 import com.buzbuz.smartautoclicker.core.gestures.*
 
 /**

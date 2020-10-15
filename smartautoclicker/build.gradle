@@ -69,4 +69,5 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':database')
     implementation project(path: ':detection')
+    implementation project(path: ':extensions')
 }

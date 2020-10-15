@@ -1,3 +1,4 @@
+include ':extensions'
 include ':detection'
 include ':database'
 include ':core'
