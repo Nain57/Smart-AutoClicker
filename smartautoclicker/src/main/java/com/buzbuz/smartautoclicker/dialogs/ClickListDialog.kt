@@ -276,9 +276,7 @@ class ClickListDialog(
      * @param click the click item to be copied.
      */
     private fun copyClick(click: ClickInfo) {
-        // Copy the click and set its identifier to 0 in order for the database to handle it as a new click
-        val newClick = click.copy().apply { id = 0 }
-        showSubOverlay(ClickConfigDialog(context, newClick, captureSupplier, onClickAddedListener), true)
+        showSubOverlay(ClickConfigDialog(context, click.copyWithoutId(), captureSupplier, onClickAddedListener), true)
     }
 
     /**

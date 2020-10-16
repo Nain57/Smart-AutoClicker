@@ -48,7 +48,7 @@ data class ClickInfo(
     var to: Point? = null,
     @Operator var conditionOperator: Int = AND,
     var conditionList: List<ClickCondition> = emptyList(),
-    var id: Long = 0,
+    var id: Long = 0L,
     var delayAfterMs: Long = 50
 ) {
 
@@ -134,4 +134,12 @@ data class ClickInfo(
             ClickCondition.toEntities(conditionList)
         )
     }
+
+    /**
+     * Creates an exact copy of this click and reset its id.
+     * Useful for creating a click from another.
+     *
+     * @return the copy.
+     */
+    fun copyWithoutId() = copy().apply { id = 0 }
 }
