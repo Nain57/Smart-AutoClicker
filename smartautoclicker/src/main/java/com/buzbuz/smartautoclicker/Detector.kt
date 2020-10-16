@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.service
+package com.buzbuz.smartautoclicker
 
 import android.content.Context
 import android.content.Intent
@@ -23,17 +23,15 @@ import android.view.ContextThemeWrapper
 import android.view.WindowManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.buzbuz.smartautoclicker.BitmapManager
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickRepository
 import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.detection.ScreenDetector
-import com.buzbuz.smartautoclicker.ui.dialogs.ClickListDialog
-import com.buzbuz.smartautoclicker.ui.overlays.MainMenu
+import com.buzbuz.smartautoclicker.dialogs.ClickListDialog
+import com.buzbuz.smartautoclicker.overlays.MainMenu
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

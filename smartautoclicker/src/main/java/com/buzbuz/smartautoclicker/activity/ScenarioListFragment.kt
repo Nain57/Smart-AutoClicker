@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.activity
+package com.buzbuz.smartautoclicker.activity
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.database.ClickScenario
+import com.buzbuz.smartautoclicker.model.ScenarioViewModel
 
 import kotlinx.android.synthetic.main.dialog_edit.edit_name
 import kotlinx.android.synthetic.main.fragment_scenarios.add

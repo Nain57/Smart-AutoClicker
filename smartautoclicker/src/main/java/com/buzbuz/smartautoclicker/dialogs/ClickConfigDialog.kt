@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.dialogs
+package com.buzbuz.smartautoclicker.dialogs
 
 import android.content.Context
 import android.graphics.Color
@@ -30,12 +30,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
-import com.buzbuz.smartautoclicker.ui.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.BitmapManager
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.ui.overlays.ClickSelectorMenu
-import com.buzbuz.smartautoclicker.ui.overlays.ConditionSelectorMenu
+import com.buzbuz.smartautoclicker.overlays.ClickSelectorMenu
+import com.buzbuz.smartautoclicker.overlays.ConditionSelectorMenu
 
 import kotlinx.android.synthetic.main.dialog_click_config.edit_delay_after
 import kotlinx.android.synthetic.main.dialog_click_config.edit_name

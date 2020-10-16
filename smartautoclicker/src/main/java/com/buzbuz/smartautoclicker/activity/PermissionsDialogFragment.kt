@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.activity
+package com.buzbuz.smartautoclicker.activity
 
 import android.app.Dialog
 import android.content.Intent
@@ -30,7 +30,8 @@ import androidx.fragment.app.activityViewModels
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
-import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.model.ScenarioViewModel
+import com.buzbuz.smartautoclicker.SmartAutoClickerService
 
 /**
  * Displays the state of the permission and provide a way to access their respective settings.

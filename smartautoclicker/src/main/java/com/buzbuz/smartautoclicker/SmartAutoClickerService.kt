@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.service
+package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
@@ -30,10 +30,9 @@ import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import androidx.core.app.NotificationCompat
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickScenario
-import com.buzbuz.smartautoclicker.ui.activity.MainActivity
+import com.buzbuz.smartautoclicker.activity.MainActivity
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,13 +61,13 @@ class SmartAutoClickerService : AccessibilityService() {
         /** The channel identifier for the foreground notification of this service. */
         private const val NOTIFICATION_CHANNEL_ID = "SmartAutoClickerService"
         /** The instance of the [LocalService], providing access for this service to the Activity. */
-        private var LOCAL_SERVICE_INSTANCE: SmartAutoClickerService.LocalService? = null
+        private var LOCAL_SERVICE_INSTANCE: LocalService? = null
             set(value) {
                 field = value
                 LOCAL_SERVICE_CALLBACK?.invoke(field)
             }
         /** Callback upon the availability of the [LOCAL_SERVICE_INSTANCE]. */
-        private var LOCAL_SERVICE_CALLBACK: ((SmartAutoClickerService.LocalService?) -> Unit)? = null
+        private var LOCAL_SERVICE_CALLBACK: ((LocalService?) -> Unit)? = null
             set(value) {
                 field = value
                 value?.invoke(LOCAL_SERVICE_INSTANCE)
@@ -81,7 +80,7 @@ class SmartAutoClickerService : AccessibilityService() {
          *
          * @param stateCallback the object to be notified upon service availability.
          */
-        fun getLocalService(stateCallback: ((SmartAutoClickerService.LocalService?) -> Unit)?) {
+        fun getLocalService(stateCallback: ((LocalService?) -> Unit)?) {
             LOCAL_SERVICE_CALLBACK = stateCallback
         }
     }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.activity
+package com.buzbuz.smartautoclicker.model
 
 import android.app.Application
 import android.content.Intent
@@ -24,7 +24,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.database.ClickRepository
 import com.buzbuz.smartautoclicker.database.ClickScenario
-import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.SmartAutoClickerService
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

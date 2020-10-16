@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.overlays
+package com.buzbuz.smartautoclicker.overlays
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -28,7 +28,7 @@ import androidx.core.graphics.toRect
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.ui.gestures.*
+import com.buzbuz.smartautoclicker.gestures.*
 
 import java.lang.IllegalArgumentException
 

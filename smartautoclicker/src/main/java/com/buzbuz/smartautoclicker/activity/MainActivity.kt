@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.activity
+package com.buzbuz.smartautoclicker.activity
 
 import android.content.Context
 import android.content.Intent
@@ -27,7 +27,8 @@ import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.ClickScenario
-import com.buzbuz.smartautoclicker.service.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.model.ScenarioViewModel
+import com.buzbuz.smartautoclicker.SmartAutoClickerService
 
 /**
  * Entry point activity for the application.

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.ui.overlays
+package com.buzbuz.smartautoclicker.overlays
 
 import android.content.Context
 import android.view.MotionEvent
