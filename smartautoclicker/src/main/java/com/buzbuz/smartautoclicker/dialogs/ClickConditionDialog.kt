@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.dialog_click_condition.image_condition
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_1
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_2
 import kotlinx.android.synthetic.main.dialog_click_condition.text_area_at
+import kotlinx.android.synthetic.main.item_condition.view.image_condition
 import kotlinx.coroutines.Job
 
 /**
@@ -67,6 +68,11 @@ class ClickConditionDialog(
             condition.first.let {
                 text_area_1.text = context.getString(R.string.dialog_click_condition_area, it.area.left, it.area.top)
                 text_area_2.text = context.getString(R.string.dialog_click_condition_area, it.area.right, it.area.bottom)
+
+                it.bitmap?.let {
+                    image_condition.image_condition.setImageBitmap(it)
+                    return
+                }
 
                 bitmapJob = DetectorModel.get().getClickConditionBitmap(it) { bitmap ->
                     if (bitmap != null) {

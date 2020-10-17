@@ -17,20 +17,13 @@
 package com.buzbuz.smartautoclicker.dialogs
 
 import android.content.Context
-import android.graphics.Color
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.OverlayDialogController
-import com.buzbuz.smartautoclicker.model.BitmapManager
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.model.DetectorModel
@@ -45,13 +38,6 @@ import kotlinx.android.synthetic.main.dialog_click_config.root_view
 import kotlinx.android.synthetic.main.dialog_click_config.text_click_type
 import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator
 import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator_desc
-import kotlinx.android.synthetic.main.item_condition.view.image_condition
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * [OverlayDialogController] implementation for displaying a click info and allowing the user to edit it.
@@ -157,8 +143,8 @@ class ClickConfigDialog(
      */
     private fun onAddConditionClicked() {
         showSubOverlay(ConditionSelectorMenu(context) { area ->
-            DetectorModel.get().captureScreenArea(area) { condition ->
-                conditionsAdapter.addCondition(condition)
+            DetectorModel.get().captureScreenArea(area) { bitmap ->
+                conditionsAdapter.addCondition(area, bitmap)
                 refreshDialogDisplay()
             }
         }, true)
@@ -188,7 +174,7 @@ class ClickConfigDialog(
                 name = edit_name.text.toString()
                 delayAfterMs = edit_delay_after.text.toString().toLong()
             }
-            conditionList = conditionsAdapter.conditions!!
+            conditionList = conditionsAdapter.getAllConditions()
 
             if (clickInfo.id == 0L) {
                 DetectorModel.get().addClick(clickInfo)
@@ -241,120 +227,6 @@ class ClickConfigDialog(
                     onOkClicked()
                 }
             }
-        }
-    }
-
-    /**
-     * Adapter displaying the conditions for the click displayed by the dialog.
-     * Also provide a item displayed in the last position to add a new click condition.
-     *
-     * @param addConditionClickedListener the listener called when the user clicks on the add item.
-     * @param conditionClickedListener the listener called when the user clicks on a condition.
-     */
-    private class ConditionAdapter(
-        private val addConditionClickedListener: () -> Unit,
-        private val conditionClickedListener: (ClickCondition, Int) -> Unit
-    ) : RecyclerView.Adapter<ConditionViewHolder>() {
-
-        /** The list of content bitmap to be shown by this adapter. */
-        var conditions: ArrayList<ClickCondition>? = null
-            set(value) {
-                field = value
-                notifyDataSetChanged()
-            }
-
-        /**
-         * Add a click condition for the click displayed by the dialog.
-         *
-         * @param condition the condition to be added.
-         */
-        fun addCondition(condition: ClickCondition) {
-            conditions?.let {
-                it.add(condition)
-                notifyDataSetChanged()
-            }
-        }
-
-        /**
-         * Remove a click condition for the click displayed by the dialog.
-         *
-         * @param index the index in the list of the condition to be removed.
-         */
-        fun removeCondition(index: Int) {
-            conditions?.let {
-                it.removeAt(index)
-                notifyDataSetChanged()
-            }
-        }
-
-        override fun getItemCount(): Int = conditions?.size?.plus(1) ?: 0
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConditionViewHolder =
-            ConditionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_condition, parent, false))
-
-        override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) {
-            // The last item is the add item, allowing the user to add a new condition.
-            if (position == itemCount - 1) {
-                holder.onBindAddCondition(addConditionClickedListener)
-            } else {
-                holder.onBindCondition(conditions!![position], conditionClickedListener)
-            }
-        }
-
-        override fun onViewRecycled(holder: ConditionViewHolder) {
-            holder.onUnbind()
-        }
-    }
-
-    /**
-     * View holder displaying a click condition in the [ConditionAdapter].
-     * @param itemView the root view of the item.
-     */
-    private class ConditionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        /** The coroutine job fetching asynchronously the condition bitmap from the [BitmapManager]. */
-        private var bitmapJob: Job? = null
-
-        /**
-         * Bind this view holder as a 'Add condition' item.
-         *
-         * @param addConditionClickedListener listener notified upon user click on this item.
-         */
-        fun onBindAddCondition(addConditionClickedListener: () -> Unit) {
-            itemView.image_condition.scaleType = ImageView.ScaleType.CENTER
-            itemView.setOnClickListener { addConditionClickedListener.invoke() }
-            itemView.image_condition.setImageResource(R.drawable.ic_add)
-        }
-
-        /**
-         * Bind this view holder as a 'Click condition' item.
-         *
-         * @param condition the click condition to be represented by this item.
-         * @param conditionClickedListener listener notified upon user click on this item.
-         */
-        fun onBindCondition(condition: ClickCondition, conditionClickedListener: (ClickCondition, Int) -> Unit) {
-            itemView.image_condition.scaleType = ImageView.ScaleType.FIT_CENTER
-            itemView.setOnClickListener { conditionClickedListener.invoke(condition, adapterPosition) }
-
-            bitmapJob = DetectorModel.get().getClickConditionBitmap(condition) { bitmap ->
-                if (bitmap != null) {
-                    itemView.image_condition.setImageBitmap(bitmap)
-                } else {
-                    itemView.image_condition.setImageDrawable(
-                        ContextCompat.getDrawable(itemView.context, R.drawable.ic_cancel)?.apply {
-                            setTint(Color.RED)
-                        }
-                    )
-                }
-
-                bitmapJob = null
-            }
-        }
-
-        /** Unbind this view holder for a previously bound data model. */
-        fun onUnbind() {
-            bitmapJob?.cancel()
-            bitmapJob = null
         }
     }
 }

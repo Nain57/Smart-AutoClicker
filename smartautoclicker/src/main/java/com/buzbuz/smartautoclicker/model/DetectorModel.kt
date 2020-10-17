@@ -168,8 +168,10 @@ class DetectorModel private constructor(private val context: Context) {
             return
         }
 
-        // TODO: maybe save the bitmaps now ? But i do need the path to create a condition
-        coroutineScope.launch { clickRepository.addClick(click) }
+        coroutineScope.launch {
+            saveNewConditions(click)
+            clickRepository.addClick(click)
+        }
     }
 
     /**
@@ -185,7 +187,10 @@ class DetectorModel private constructor(private val context: Context) {
             return
         }
 
-        coroutineScope.launch { clickRepository.updateClick(click) }
+        coroutineScope.launch {
+            saveNewConditions(click)
+            clickRepository.updateClick(click)
+        }
     }
 
     /**
@@ -242,21 +247,14 @@ class DetectorModel private constructor(private val context: Context) {
      * @param area the part of the screen that will be in the resulting bitmap.
      * @param callback the callback notified upon screenshot completion.
      */
-    fun captureScreenArea(area: Rect, callback: (ClickCondition) -> Unit) {
+    fun captureScreenArea(area: Rect, callback: (Bitmap) -> Unit) {
         if (!initialized.value!!) {
             Log.w(TAG, "The model is not initialized")
             return
         }
 
         screenDetector.captureArea(area) { bitmap ->
-            coroutineScope.launch {
-                // TODO: is it the right time to save the image ? user can dismiss the clickconfig dialog and don't
-                //  save the condition
-                val path = bitmapManager.saveBitmap(bitmap)
-                withContext(Dispatchers.Main) {
-                    callback.invoke(ClickCondition(area, path))
-                }
-            }
+            callback.invoke(bitmap)
         }
     }
 
@@ -301,6 +299,18 @@ class DetectorModel private constructor(private val context: Context) {
         _scenario.value = null
         screenDetector.stop()
         bitmapManager.releaseCache()
+    }
+
+    /**
+     *
+     */
+    private suspend fun saveNewConditions(click: ClickInfo) {
+        click.conditionList.forEach { condition ->
+            condition.bitmap?.let { conditionBitmap ->
+                condition.path = bitmapManager.saveBitmap(conditionBitmap)
+                condition.bitmap = null
+            }
+        }
     }
 
     /** Ensure this model is not detecting or throw an exception. */

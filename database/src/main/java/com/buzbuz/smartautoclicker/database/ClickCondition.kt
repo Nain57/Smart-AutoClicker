@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.database
 
+import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.database.room.ConditionEntity
@@ -28,11 +29,18 @@ import com.buzbuz.smartautoclicker.database.room.ConditionEntity
  *
  * @param area the area of the screen to detect.
  * @param path the path to the bitmap that should be matched for detection.
+ * @param bitmap
  */
 data class ClickCondition(
     var area: Rect,
-    var path: String
+    var path: String,
+    var bitmap: Bitmap? = null
 ) {
+
+    /**
+     *
+     */
+    constructor(area: Rect, bitmap: Bitmap): this(area, "", bitmap)
 
     companion object {
 
