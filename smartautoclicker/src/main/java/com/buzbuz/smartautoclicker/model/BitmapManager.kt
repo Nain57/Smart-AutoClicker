@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker
+package com.buzbuz.smartautoclicker.model
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -35,6 +35,7 @@ import java.nio.ByteBuffer
  *
  * @param appDataDir the directory where all bitmaps will be saved/loaded.
  */
+@Suppress("BlockingMethodInNonBlockingContext") // All are handled in IO dispatcher
 class BitmapManager(private val appDataDir: File) {
 
     companion object {

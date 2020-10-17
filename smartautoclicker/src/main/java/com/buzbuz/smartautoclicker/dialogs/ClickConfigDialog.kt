@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.OverlayDialogController
-import com.buzbuz.smartautoclicker.BitmapManager
+import com.buzbuz.smartautoclicker.model.BitmapManager
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.model.DetectorModel
@@ -336,23 +336,18 @@ class ClickConfigDialog(
             itemView.image_condition.scaleType = ImageView.ScaleType.FIT_CENTER
             itemView.setOnClickListener { conditionClickedListener.invoke(condition, adapterPosition) }
 
-            bitmapJob = CoroutineScope(Dispatchers.IO).launch {
-                val conditionBitmap = BitmapManager.getInstance(itemView.context).loadBitmap(
-                    condition.path, condition.area.width(), condition.area.height())
-
-                withContext(Dispatchers.Main) {
-                    if (conditionBitmap != null) {
-                        itemView.image_condition.setImageBitmap(conditionBitmap)
-                    } else {
-                        itemView.image_condition.setImageDrawable(
-                            ContextCompat.getDrawable(itemView.context, R.drawable.ic_cancel)?.apply {
-                                setTint(Color.RED)
-                            }
-                        )
-                    }
-
-                    bitmapJob = null
+            bitmapJob = DetectorModel.get().getClickConditionBitmap(condition) { bitmap ->
+                if (bitmap != null) {
+                    itemView.image_condition.setImageBitmap(bitmap)
+                } else {
+                    itemView.image_condition.setImageDrawable(
+                        ContextCompat.getDrawable(itemView.context, R.drawable.ic_cancel)?.apply {
+                            setTint(Color.RED)
+                        }
+                    )
                 }
+
+                bitmapJob = null
             }
         }
 

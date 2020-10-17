@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.model
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.util.Log
 import android.view.WindowManager
@@ -25,7 +26,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 
-import com.buzbuz.smartautoclicker.BitmapManager
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickRepository
@@ -222,6 +222,20 @@ class DetectorModel private constructor(private val context: Context) {
     }
 
     /**
+     * Get the bitmap for a click condition from the internal memory.
+     *
+     * @param condition the condition to get the bitmap of.
+     * @param completionCallback the callback notified once the bitmap is available.
+     */
+    fun getClickConditionBitmap(condition: ClickCondition, completionCallback: (Bitmap?) -> Unit): Job {
+        return coroutineScope.launch {
+            val bitmap = BitmapManager.getInstance(context).loadBitmap(
+                condition.path, condition.area.width(), condition.area.height())
+            withContext(Dispatchers.Main) { completionCallback.invoke(bitmap) }
+        }
+    }
+
+    /**
      * Take a screenshot of a given area on the screen.
      * The model must be initialized.
      *
@@ -286,6 +300,7 @@ class DetectorModel private constructor(private val context: Context) {
         }
         _scenario.value = null
         screenDetector.stop()
+        bitmapManager.releaseCache()
     }
 
     /** Ensure this model is not detecting or throw an exception. */
