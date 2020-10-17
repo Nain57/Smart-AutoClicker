@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
  */
 data class ClickInfo(
     var name: String,
-    var scenarioId: Long,
+    var scenarioId: Long = 0L,
     @ClickType var type: Int? = null,
     var from: Point? = null,
     var to: Point? = null,

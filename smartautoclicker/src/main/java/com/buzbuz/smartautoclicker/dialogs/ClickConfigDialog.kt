@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.dialogs
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +33,7 @@ import com.buzbuz.smartautoclicker.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.BitmapManager
 import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.model.DetectorModel
 import com.buzbuz.smartautoclicker.overlays.ClickSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.ConditionSelectorMenu
 
@@ -63,15 +63,10 @@ import kotlinx.coroutines.withContext
  *
  * @param context the Android Context for the dialog shown by this controller.
  * @param clickInfo the click to be displayed on the dialog.
- * @param captureSupplier the supplier providing a screen capture for creating a new click condition.
- * @param onConfigurationCompletedCallback the callback to be called in order to save the changes made by the user on
- *                                         the provided click info.
  */
 class ClickConfigDialog(
     context: Context,
-    private val clickInfo: ClickInfo,
-    private val captureSupplier: (Rect, ((ClickCondition) -> Unit)) -> Unit,
-    private val onConfigurationCompletedCallback: (ClickInfo) -> Unit
+    private val clickInfo: ClickInfo
 ) : OverlayDialogController(context) {
 
     /** Adapter displaying all condition for the click displayed by this dialog. */
@@ -162,7 +157,7 @@ class ClickConfigDialog(
      */
     private fun onAddConditionClicked() {
         showSubOverlay(ConditionSelectorMenu(context) { area ->
-            captureSupplier.invoke(area) { condition ->
+            DetectorModel.get().captureScreenArea(area) { condition ->
                 conditionsAdapter.addCondition(condition)
                 refreshDialogDisplay()
             }
@@ -195,7 +190,11 @@ class ClickConfigDialog(
             }
             conditionList = conditionsAdapter.conditions!!
 
-            onConfigurationCompletedCallback.invoke(this)
+            if (clickInfo.id == 0L) {
+                DetectorModel.get().addClick(clickInfo)
+            } else {
+                DetectorModel.get().updateClick(clickInfo)
+            }
         }
 
         dismiss()

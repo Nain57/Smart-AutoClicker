@@ -17,10 +17,14 @@
 package com.buzbuz.smartautoclicker.overlays
 
 import android.content.Context
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.dialogs.ClickListDialog
+import com.buzbuz.smartautoclicker.model.DetectorModel
 
 /**
  * [OverlayMenuController] implementation for displaying the main menu overlay.
@@ -33,43 +37,54 @@ import com.buzbuz.smartautoclicker.R
  * Activities displayed below it.
  *
  * @param context the Android Context for the overlay menu shown by this controller.
- * @param clickListClickedListener listener called when the user clicks on the click list menu item.
- * @param playPauseClickedListener listener called when the user clicks on the play/pause menu item.
- * @param stopClickedListener listener called when the user clicks on the stop menu item.
+ * @param detectionListener listener notified upon click detection.
  */
-class MainMenu(
-    context: Context,
-    private val clickListClickedListener: () -> Unit,
-    private val playPauseClickedListener: (Boolean) -> Unit,
-    private val stopClickedListener: () -> Unit
-) : OverlayMenuController(context) {
-
-    /** Tells if the menu should tells if we are playing the scenario to detect or not. */
-    private var isPlaying: Boolean = false
+class MainMenu(context: Context, private val detectionListener: (ClickInfo) -> Unit) : OverlayMenuController(context) {
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
         layoutInflater.inflate(R.layout.overlay_menu, null) as ViewGroup
 
+    override fun onCreate() {
+        super.onCreate()
+        DetectorModel.get().apply {
+            scenarioClicks.observe(this@MainMenu, ::onClickListChanged)
+            detecting.observe(this@MainMenu, ::onDetectionStateChanged)
+        }
+    }
+
+    override fun onDismissed() {
+        super.onDismissed()
+        DetectorModel.get().apply {
+            scenarioClicks.removeObservers(this@MainMenu)
+            detecting.removeObservers(this@MainMenu)
+        }
+    }
+
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> {
-                changeDisplayMode(!isPlaying)
-                playPauseClickedListener.invoke(isPlaying)
+                DetectorModel.get().apply {
+                    if (detecting.value!!) stopDetection() else startDetection(detectionListener)
+                }
             }
-            R.id.btn_click_list -> clickListClickedListener.invoke()
-            R.id.btn_stop -> stopClickedListener.invoke()
+            R.id.btn_click_list -> showSubOverlay(ClickListDialog(ContextThemeWrapper(context, R.style.AppTheme)), true)
+            R.id.btn_stop -> dismiss()
         }
     }
 
     /**
-     * Toggle the display mode between playing/paused.
-     *
-     * @param playing true to go to playing mode, false for paused mode.
+     * Handles changes on the click list.
+     * Refresh the play menu item according to the click count.
      */
-    private fun changeDisplayMode(playing: Boolean) {
-        isPlaying = playing
+    private fun onClickListChanged(clicks: List<ClickInfo>?) =
+        setMenuItemViewEnabled(R.id.btn_play, !clicks.isNullOrEmpty())
 
-        if (playing) {
+    /**
+     *
+     * @param enabled
+     */
+    private fun onDetectionStateChanged(enabled: Boolean) {
+        if (enabled) {
             setMenuItemViewEnabled(R.id.btn_click_list, false)
             setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_pause)
         } else {

@@ -33,18 +33,16 @@ import androidx.core.app.NotificationCompat
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+import com.buzbuz.smartautoclicker.model.DetectorModel
+import com.buzbuz.smartautoclicker.overlays.MainMenu
+import com.buzbuz.smartautoclicker.overlays.OverlayController
 
 /**
  * AccessibilityService implementation for the SmartAutoClicker.
  *
  * Started automatically by Android once the user has defined this service has an accessibility service, it provides
- * an API to start and stop the [Detector] correctly in order to display the overlay UI and record the screen for clicks
- * detection.
+ * an API to start and stop the [DetectorModel] correctly in order to display the overlay UI and record the screen for
+ * clicks detection.
  * This API is offered through the [LocalService] class, which is instantiated in the [LOCAL_SERVICE_INSTANCE] object.
  * This system is used instead of the usual binder interface because an [AccessibilityService] already has its own
  * binder and it can't be changed. To access this local service, use [getLocalService].
@@ -85,6 +83,11 @@ class SmartAutoClickerService : AccessibilityService() {
         }
     }
 
+    /** The root controller for the overlay ui. */
+    private var rootOverlayController: OverlayController? = null
+    /** True if the overlay is started, false if not. */
+    private var isStarted: Boolean = false
+
     /** Local interface providing an API for the [SmartAutoClickerService]. */
     inner class LocalService {
 
@@ -103,34 +106,31 @@ class SmartAutoClickerService : AccessibilityService() {
          * @param scenario the identifier of the scenario of clicks to be used for detection.
          */
         fun start(resultCode: Int, data: Intent, scenario: ClickScenario) {
-            if (detector.isInitialized) {
+            if (isStarted) {
                 return
             }
 
+            isStarted = true
             startForeground(NOTIFICATION_ID, createNotification(scenario.name))
-            detector.init(scope, resultCode, data, scenario)
+            DetectorModel.attach(this@SmartAutoClickerService)
+            DetectorModel.get().init(resultCode, data, scenario)
+            rootOverlayController = MainMenu(this@SmartAutoClickerService, ::performClick).apply {
+                create(::stop)
+            }
         }
 
         /** Stop the overlay UI and release all associated resources. */
         fun stop() {
-            if (!detector.isInitialized) {
+            if (!isStarted) {
                 return
             }
 
+            isStarted = false
+            rootOverlayController?.dismiss()
+            DetectorModel.get().stop()
+            DetectorModel.detach()
             stopForeground(true)
-            detector.release()
         }
-    }
-
-    /** The scope for all coroutines executed for database access. */
-    private val scope = CoroutineScope(Job() + Dispatchers.IO)
-
-    /** The screen detector instantiating the overlay UI and screen recording objects. */
-    private lateinit var detector: Detector
-
-    override fun onCreate() {
-        super.onCreate()
-        detector = Detector(this, ::performClick) { stopForeground(true) }
     }
 
     override fun onServiceConnected() {
@@ -141,7 +141,6 @@ class SmartAutoClickerService : AccessibilityService() {
     override fun onUnbind(intent: Intent?): Boolean {
         LOCAL_SERVICE_INSTANCE?.stop()
         LOCAL_SERVICE_INSTANCE = null
-        scope.cancel()
         return super.onUnbind(intent)
     }
 

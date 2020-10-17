@@ -162,6 +162,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         setMenuItemViewEnabled(R.id.btn_hide_overlay, false , true)
     }
 
+    @CallSuper
     override fun onHide() {
         screenOverlayView?.let {
             windowManager.removeView(it)
@@ -170,7 +171,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         windowManager.removeView(menuLayout)
     }
 
-    final override fun onDismissed() {
+    @CallSuper
+    override fun onDismissed() {
         // Save last user position
         sharedPreferences.edit()
             .putInt(PREFERENCE_MENU_X_KEY, menuLayoutParams.x)

@@ -85,7 +85,7 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      * If the lifecycle doesn't allows it, does nothing.
      */
     fun show() {
-        if (lifecycleRegistry.currentState < Lifecycle.State.CREATED) {
+        if (lifecycleRegistry.currentState != Lifecycle.State.CREATED) {
             return
         }
 

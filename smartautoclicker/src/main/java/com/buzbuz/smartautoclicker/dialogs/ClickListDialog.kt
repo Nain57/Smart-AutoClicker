@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.dialogs
 
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,9 +31,8 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.overlays.OverlayDialogController
-import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.database.ClickRepository
+import com.buzbuz.smartautoclicker.model.DetectorModel
 
 import kotlinx.android.synthetic.main.merge_loadable_list.empty
 import kotlinx.android.synthetic.main.merge_loadable_list.list
@@ -51,22 +49,8 @@ import java.util.Collections
  * several display mode are declared using the [Mode] values. The current mode can be changed through the [mode] member.
  *
  * @param context the Android Context for the dialog shown by this controller.
- * @param clicks the list of clicks displayed by the dialog.
- * @param captureSupplier the supplier providing a screen capture for creating a new click condition.
- * @param onClickAddedListener listener called when a new click must be added to the list.
- * @param onClickEditedListener listener called when a click must be edited.
- * @param onClickDeletedListener listener called when a click from the list must be deleted.
- * @param onOrderChangedListener listener called when the list of clicks has been reordered.
  */
-class ClickListDialog(
-    context: Context,
-    private val clicks: List<ClickInfo>,
-    private val captureSupplier: (Rect, ((ClickCondition) -> Unit)) -> Unit,
-    private val onClickAddedListener: (ClickInfo) -> Unit,
-    private val onClickEditedListener: (ClickInfo) -> Unit,
-    private val onClickDeletedListener: (ClickInfo) -> Unit,
-    private val onOrderChangedListener: (List<ClickInfo>) -> Unit
-) : OverlayDialogController(context) {
+class ClickListDialog(context: Context) : OverlayDialogController(context) {
 
     private companion object {
 
@@ -106,7 +90,7 @@ class ClickListDialog(
     }
 
     /** Adapter displaying the list of clicks. */
-    private val adapter = ClickListAdapter(::onItemClicked, onClickDeletedListener)
+    private lateinit var adapter: ClickListAdapter
     /** TouchHelper applied to [adapter] when in [REORDER] mode allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(ClickReorderTouchHelper())
 
@@ -132,14 +116,17 @@ class ClickListDialog(
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
+        DetectorModel.get().apply {
+            adapter = ClickListAdapter(::onItemClicked, ::deleteClick)
+            scenarioClicks.observe(this@ClickListDialog, ::onClickListChanged)
+        }
+
         dialog.apply {
             list.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
             list.adapter = adapter
             empty.setText(R.string.dialog_click_list_no_clicks)
         }
-
-        onClickListChanged(clicks.toMutableList())
         mode = EDITION
     }
 
@@ -149,6 +136,7 @@ class ClickListDialog(
 
     override fun onDialogDismissed() {
         super.onDialogDismissed()
+        DetectorModel.get().scenarioClicks.removeObservers(this)
         mode = null
     }
 
@@ -157,7 +145,7 @@ class ClickListDialog(
      *
      * @param clicks the new list of clicks.
      */
-    fun onClickListChanged(clicks: List<ClickInfo>?) {
+    private fun onClickListChanged(clicks: List<ClickInfo>?) {
         dialog?.apply {
             loading.visibility = View.GONE
             if (clicks.isNullOrEmpty()) {
@@ -208,7 +196,7 @@ class ClickListDialog(
         dialog?.let {
             itemTouchHelper.attachToRecyclerView(it.list)
             changeButtonState(it.getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE, android.R.string.ok) {
-                onOrderChangedListener.invoke(adapter.clicks!!)
+                DetectorModel.get().updateClicksPriority(adapter.clicks!!)
                 mode = EDITION
             }
             changeButtonState(it.getButton(AlertDialog.BUTTON_NEGATIVE), View.VISIBLE, android.R.string.cancel) {
@@ -260,14 +248,10 @@ class ClickListDialog(
 
     /** Opens the dialog allowing the user to add a new click. */
     private fun addClick() {
-        val scenarioId = ClickRepository.getRepository(context).currentScenario.value
-        val configDialog = ClickConfigDialog(
-            context,
-            ClickInfo(context.getString(R.string.dialog_click_config_name_default), scenarioId!!),
-            captureSupplier,
-            onClickAddedListener
+        showSubOverlay(
+            ClickConfigDialog(context, ClickInfo(context.getString(R.string.dialog_click_config_name_default))),
+            true
         )
-        showSubOverlay(configDialog, true)
     }
 
     /**
@@ -276,7 +260,7 @@ class ClickListDialog(
      * @param click the click item to be copied.
      */
     private fun copyClick(click: ClickInfo) {
-        showSubOverlay(ClickConfigDialog(context, click.copyWithoutId(), captureSupplier, onClickAddedListener), true)
+        showSubOverlay(ClickConfigDialog(context, click.copyWithoutId()), true)
     }
 
     /**
@@ -285,7 +269,7 @@ class ClickListDialog(
      * @param click the click item to be edited.
      */
     private fun editClick(click: ClickInfo) {
-        showSubOverlay(ClickConfigDialog(context, click.copy(), captureSupplier, onClickEditedListener), true)
+        showSubOverlay(ClickConfigDialog(context, click.copy()), true)
     }
 
     /**
