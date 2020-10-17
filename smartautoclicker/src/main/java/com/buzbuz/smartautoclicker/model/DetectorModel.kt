@@ -301,7 +301,6 @@ class DetectorModel private constructor(private val context: Context) {
         if (initialized.value!!) {
             Log.w(TAG, "Clearing the model but it was still started.")
             screenDetector.stop()
-            return
         }
 
         coroutineScope.cancel()
