@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService
  * [PermissionsDialogFragment] will be shown. Once all permissions are granted, the media projection start notification
  * is shown and if the user accept it, this activity is automatically closed, and the overlay menu will is shown.
  */
-class MainActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioClickedListener,
+class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioClickedListener,
     PermissionsDialogFragment.PermissionDialogListener {
 
     companion object {

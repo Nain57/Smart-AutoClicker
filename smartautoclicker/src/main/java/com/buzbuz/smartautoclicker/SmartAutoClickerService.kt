@@ -32,7 +32,7 @@ import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickScenario
-import com.buzbuz.smartautoclicker.activity.MainActivity
+import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -163,7 +163,7 @@ class SmartAutoClickerService : AccessibilityService() {
             )
         }
 
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, ScenarioActivity::class.java)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title, scenarioName))
             .setContentText(getString(R.string.notification_message))

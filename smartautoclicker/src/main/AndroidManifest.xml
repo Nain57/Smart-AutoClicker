@@ -33,7 +33,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.buzbuz.smartautoclicker.activity.MainActivity"
+            android:name="com.buzbuz.smartautoclicker.activity.ScenarioActivity"
             android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
