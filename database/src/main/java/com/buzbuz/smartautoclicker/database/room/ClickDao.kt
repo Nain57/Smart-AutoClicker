@@ -37,10 +37,20 @@ internal abstract class ClickDao {
 
     /**
      * Get all click scenario and their clicks.
+     *
+     * @return the live data on the list of scenarios.
      */
     @Transaction
     @Query("SELECT * FROM scenario_table ORDER BY name ASC")
     abstract fun getClickScenarios(): LiveData<List<ScenarioWithClicks>>
+
+    /**
+     * Add a new scenario to the database.
+     *
+     * @param scenarioEntity the scenario to be added.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun addClickScenario(scenarioEntity: ScenarioEntity)
 
     /**
      * Rename the selected scenario.
@@ -63,12 +73,36 @@ internal abstract class ClickDao {
     abstract fun getClicksWithConditions(scenarioId: Long): LiveData<List<ClickWithConditions>>
 
     /**
-     * Add a new scenario to the database.
+     * Get all clicks and their conditions from the database for a given scenario.
      *
-     * @param scenarioEntity the scenario to be added.
+     * @param scenarioId the identifier of the scenario to get the clicks for.
+     *
+     * @return the list of clicks of the specified scenario.
      */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun addClickScenario(scenarioEntity: ScenarioEntity)
+    @Transaction
+    @Query("SELECT * FROM click_table WHERE scenario_id=:scenarioId ORDER BY priority")
+    abstract suspend fun getClicksWithConditionsList(scenarioId: Long): List<ClickWithConditions>
+
+    /**
+     * Get the count of clicks for a given scenario.
+     *
+     * @param scenarioId the scenario to get the count of clicks.
+     *
+     * @return the count of clicks.
+     */
+    @Query("SELECT COUNT(*) FROM click_table WHERE scenario_id=:scenarioId")
+    abstract suspend fun getClickCount(scenarioId: Long): Int
+
+    /**
+     * Get all the clicks with a lower priority in a scenario.
+     *
+     * @param scenarioId the scenario of the clicks
+     * @param priority the priority, all clicks with a priority value higher than this will be returned.
+     *
+     * @return the corresponding list of clicks.
+     */
+    @Query("SELECT * FROM click_table WHERE scenario_id=:scenarioId AND priority>:priority ORDER BY priority")
+    abstract suspend fun getClicksLessPrioritized(scenarioId: Long, priority: Int): List<ClickEntity>
 
     /**
      * Add a new click with its conditions to the database.

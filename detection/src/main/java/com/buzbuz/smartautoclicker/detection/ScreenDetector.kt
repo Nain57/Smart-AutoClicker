@@ -28,6 +28,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.AnyThread
 
 import androidx.annotation.GuardedBy
 import androidx.annotation.MainThread
@@ -163,7 +164,7 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
      * @param clicks the list of clicks to be detected on the screen.
      * @param callback the object to notify upon click detection.
      */
-    @MainThread
+    @AnyThread
     fun startDetection(clicks: List<ClickInfo>, callback: (ClickInfo) -> Unit) {
         if (!_isScreenRecording.value!!) {
             Log.w(TAG, "captureArea: Screen record is not started.")
@@ -173,7 +174,7 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
             return
         }
 
-        _isDetecting.value = true
+        _isDetecting.postValue(true)
         detectionInfo = clicks to callback
     }
 
@@ -184,9 +185,9 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
      * image. Note that this will not stop the screen recording, you should still call [stop] to completely
      * release the [ScreenDetector] resources.
      */
-    @MainThread
+    @AnyThread
     fun stopDetection() {
-        _isDetecting.value = false
+        _isDetecting.postValue(false)
         detectionInfo = null
     }
 

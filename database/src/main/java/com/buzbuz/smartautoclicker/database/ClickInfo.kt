@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
  * @param id the identifier of the click. Use 0 to save a new click, as the identifier generation is handled by the
  *           room database.
  * @param delayAfterMs the delay to wait after executing this click before executing another one.
+ * @param priority the priority of the click in the scenario.
  */
 data class ClickInfo(
     var name: String,
@@ -49,7 +50,8 @@ data class ClickInfo(
     @Operator var conditionOperator: Int = AND,
     var conditionList: List<ClickCondition> = emptyList(),
     var id: Long = 0L,
-    var delayAfterMs: Long = 50
+    var delayAfterMs: Long = 50,
+    var priority: Int = 0
 ) {
 
     companion object {
@@ -93,7 +95,8 @@ data class ClickInfo(
                     entity.click.conditionOperator,
                     ClickCondition.fromEntities(entity.conditions),
                     entity.click.clickId,
-                    entity.click.delayAfter
+                    entity.click.delayAfter,
+                    entity.click.priority
                 )
             } ?: emptyList()
         }
@@ -102,11 +105,9 @@ data class ClickInfo(
     /**
      * Convert this click info into a [ClickWithConditions] ready to be inserted into the database.
      *
-     * @param priority the priority of the click within the scenario.
-     *
      * @return the click, ready to be inserted.
      */
-    internal fun toEntity(priority: Int) : ClickWithConditions {
+    internal fun toEntity() : ClickWithConditions {
         val toXPos: Int
         val toYPos: Int
         if (type == SINGLE) {

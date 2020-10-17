@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
 import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
 
+import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -77,6 +78,34 @@ class ClickRepository private constructor(database: ClickDatabase) {
     }
 
     /**
+     * Creates a new click scenario.
+     *
+     * @param name the name of the new scenario.
+     */
+    suspend fun createScenario(name: String) {
+        clickDao.addClickScenario(ScenarioEntity(0, name))
+    }
+
+    /**
+     * Rename the selected scenario.
+     *
+     * @param scenarioId the identifier of the scenario to be renamed
+     * @param name the new name of the scenario
+     */
+    suspend fun renameScenario(scenarioId: Long, name: String) {
+        clickDao.renameScenario(scenarioId, name)
+    }
+
+    /**
+     * Delete a click scenario and all related clicks.
+     *
+     * @param scenario the scenario to be deleted.
+     */
+    suspend fun deleteScenario(scenario: ClickScenario) {
+        clickDao.deleteClickScenario(scenario.toEntity())
+    }
+
+    /**
      * Get the list of clicks for the specified scenario.
      *
      * This method is the entry point for the click management for a scenario. All click editions methods (i.e,
@@ -96,15 +125,28 @@ class ClickRepository private constructor(database: ClickDatabase) {
     }
 
     /**
-     * Rename the selected scenario.
+     * Get the list of clicks for a scenario.
      *
-     * @param scenarioId the identifier of the scenario to be renamed
-     * @param name the new name of the scenario
+     * @param scenarioId the identifier of the scenario to get the clicks of.
+     *
+     * @return the livedata on the list of clicks.
      */
-    suspend fun renameScenario(scenarioId: Long, name: String) {
-        clickDao.renameScenario(scenarioId, name)
+    fun getClicks(scenarioId: Long): LiveData<List<ClickInfo>> {
+        return Transformations.switchMap(clickDao.getClicksWithConditions(scenarioId)) { clicks ->
+            liveData(Dispatchers.IO) { emit(ClickInfo.fromEntities(clicks)) }
+        }
     }
 
+    /**
+     * Get the list of clicks for a scenario.
+     *
+     * @param scenarioId the identifier of the scenario to get the clicks of.
+     *
+     * @return the list of clicks.
+     */
+    suspend fun getClickList(scenarioId: Long): List<ClickInfo> {
+        return ClickInfo.fromEntities(clickDao.getClicksWithConditionsList(scenarioId))
+    }
     /**
      * Cleanup the cache of the repository.
      *
@@ -117,107 +159,81 @@ class ClickRepository private constructor(database: ClickDatabase) {
     fun cleanupCache() {
         currentScenario.postValue(NO_SCENARIO)
     }
+
     suspend fun deleteClicklessConditions(): List<String> = clickDao.deleteClicklessConditions()
 
     /**
-     * Creates a new click scenario.
-     *
-     * @param name the name of the new scenario.
-     */
-    suspend fun createScenario(name: String) {
-        clickDao.addClickScenario(ScenarioEntity(0, name))
-    }
-
-    /**
-     * Delete a click scenario and all related clicks.
-     *
-     * @param scenario the scenario to be deleted.
-     */
-    suspend fun deleteScenario(scenario: ClickScenario) {
-        clickDao.deleteClickScenario(scenario.toEntity())
-    }
-
-    /**
      * Add a click to the currently loaded scenario.
-     * If no scenario were previously loaded with [loadScenario], this method will have no effects.
      *
-     * @param click the click to be added.
+     * @param click the click to be added. It must have its id and priority undefined.
      */
     suspend fun addClick(click: ClickInfo) {
-        clickDao.addClickWithConditions(click.toEntity(clicks.value!!.size))
+        if (click.id != 0L || click.priority != 0) {
+            Log.e(TAG, "Can't add this click, the id and priority must be equals to 0. Click=$click")
+            return
+        }
+
+        click.priority = clickDao.getClickCount(click.scenarioId)
+        clickDao.addClickWithConditions(click.toEntity())
         Log.d(TAG, "Added click: $click")
     }
 
     /**
-     * Update an existing click from the currently loaded scenario.
-     * If no scenario were previously loaded with [loadScenario], this method will have no effects. Same if the click
-     * isn't int the current scenario.
+     * Update an existing click.
+     * If the click don't have an id, this method will have no effects.
      *
      * @param click the click to be updated.
      */
     suspend fun updateClick(click: ClickInfo) {
-        val index = clicks.value!!.indexOfFirst { it.click.clickId == click.id }
-        if (index == -1) {
-            Log.w(TAG, "Trying to update an unknown click, skipping.")
+        if (click.id == 0L) {
+            Log.e(TAG, "Can't update this click, the id must be defined. Click=$click")
             return
         }
 
-        clickDao.updateClickWithConditions(click.toEntity(index))
+        clickDao.updateClickWithConditions(click.toEntity())
         Log.d(TAG, "Updated click: $click")
     }
 
     /**
-     * Delete an existing click from the currently loaded scenario.
-     * If no scenario were previously loaded with [loadScenario], this method will have no effects. Same if the click
-     * isn't int the current scenario.
+     * Delete an existing click.
+     * If the click don't have an id, this method will have no effects.
      *
      * @param click the click to be deleted.
      */
     suspend fun deleteClick(click: ClickInfo) {
-        val newList = clicks.value!!.toMutableList()
-        val priority = newList.indexOfFirst { it.click.clickId == click.id }
-        if (priority == -1) {
-            Log.w(TAG, "Trying to delete an unknown click, skipping.")
+        if (click.id == 0L) {
+            Log.e(TAG, "Can't delete this click, the id must be defined. Click=$click")
             return
         }
 
-        newList.removeAt(priority)
+        // All clicks after the deleted one in the list must update their priorities
+        clickDao.updateClicks(clickDao.getClicksLessPrioritized(click.scenarioId, click.priority).map { clickEntity ->
+            clickEntity.priority -= 1
+            clickEntity
+        })
 
-        // Update priority of all clicks below the deleted one
-        if (priority < newList.size) {
-            updateClicksEntitiesPriority(newList.subList(priority, newList.size - 1))
-        }
-        clickDao.deleteClick(click.toEntity(priority).click)
+        // Then, delete the click
+        clickDao.deleteClick(click.toEntity().click)
 
         Log.d(TAG, "Deleted click: $click")
     }
 
     /**
      * Update the priority of the clicks from the currently loaded scenario.
-     * If no scenario were previously loaded with [loadScenario], this method will have no effects.
      *
      * @param newClicks the clicks, ordered with their new priority (first is highest, last is lowest).
      */
     suspend fun updateClicksPriority(newClicks: List<ClickInfo>) {
-        updateClicksEntitiesPriority(newClicks.map { clickInfo ->
-            clickInfo.toEntity(0)
-        })
-    }
-
-    /**
-     * Update the database clicks with their new priority.
-     *
-     * @param newClicks the new clicks entities, containing their new priority.
-     */
-    private suspend fun updateClicksEntitiesPriority(newClicks: List<ClickWithConditions>) {
-        if (clicks.value!!.size < newClicks.size) {
-            Log.e(TAG, "Trying to update priorities with an invalid new list.")
+        if (newClicks.isEmpty()) {
+            return
+        } else if (clickDao.getClickCount(newClicks[0].scenarioId) != newClicks.size) {
+            Log.e(TAG, "Can't update priorities, the click count doesn't match the database one.")
             return
         }
 
-        clickDao.updateClicks(newClicks.mapIndexed { index, entity ->
-            entity.click.priority = index
-            entity.click
+        clickDao.updateClicks(newClicks.mapIndexed { index, click ->
+            click.priority = index
+            click.toEntity().click
         })
 
         Log.d(TAG, "Updated click priorities: $newClicks")
