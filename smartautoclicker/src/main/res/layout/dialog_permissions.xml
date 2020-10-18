@@ -46,7 +46,8 @@
             android:gravity="center_vertical"
             android:text="@string/dialog_permission_overlay"
             android:textSize="@dimen/text_size_list_item_text_big"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            tools:text="@string/dialog_permission_overlay"/>
 
         <TextView
             android:id="@+id/text_config_overlay_desc"
@@ -72,7 +73,8 @@
             android:padding="@dimen/margin_horizontal_small"
             android:scaleType="fitCenter"
             android:contentDescription="@string/content_desc_overlay_state"
-            tools:drawableEnd="@drawable/ic_confirm" />
+            tools:src="@drawable/ic_confirm"
+            tools:tint="@color/primary"/>
 
     </RelativeLayout>
 
@@ -113,12 +115,14 @@
             android:id="@+id/img_config_accessibility_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_small"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:padding="@dimen/margin_horizontal_small"
             android:scaleType="fitCenter"
             android:contentDescription="@string/content_desc_accessibility_state"
-            tools:drawableEnd="@drawable/ic_confirm"/>
+            tools:src="@drawable/ic_cancel"
+            tools:tint="@android:color/holo_red_light"/>
 
     </RelativeLayout>
 
