@@ -17,6 +17,7 @@
 -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/ItemView">
 
     <TextView
@@ -28,7 +29,8 @@
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:textSize="@dimen/text_size_list_item_text"
-        android:drawablePadding="@dimen/margin_horizontal_default"/>
+        android:drawablePadding="@dimen/margin_horizontal_default"
+        tools:text="@string/dialog_click_config_name_default"/>
 
     <ImageButton
         android:id="@+id/btn_action"
@@ -38,6 +40,7 @@
         android:layout_centerVertical="true"
         android:scaleType="center"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/content_desc_click_action_btn" />
+        android:contentDescription="@string/content_desc_click_action_btn"
+        tools:src="@drawable/ic_cancel"/>
 
 </RelativeLayout>

@@ -17,6 +17,7 @@
 -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/margin_horizontal_small"
@@ -29,6 +30,7 @@
         android:layout_width="@dimen/dialog_item_condition_width"
         android:layout_height="@dimen/dialog_item_condition_height"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/content_desc_image_condition" />
+        android:contentDescription="@string/content_desc_image_condition"
+        tools:src="@drawable/ic_add"/>
 
 </androidx.cardview.widget.CardView>

@@ -31,7 +31,7 @@
         android:minHeight="@dimen/empty_min_height"
         android:visibility="gone"
         android:textSize="@dimen/text_size_list_item_text_big"
-        tools:visibility="visible"
+        tools:visibility="gone"
         tools:text="@string/no_scenarios"/>
 
     <ProgressBar
@@ -51,6 +51,7 @@
         android:scrollbars="vertical"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:visibility="gone"/>
+        tools:listitem="@layout/item_scenario"
+        tools:visibility="visible"/>
 
 </merge>

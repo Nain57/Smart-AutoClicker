@@ -17,9 +17,11 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:layout_gravity="center">
 
     <ImageView
         android:id="@+id/image_condition"
@@ -31,7 +33,9 @@
         android:adjustViewBounds="true"
         android:layout_gravity="center_horizontal"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/content_desc_image_condition" />
+        android:contentDescription="@string/content_desc_image_condition"
+        tools:layout_width="150dp"
+        tools:src="@drawable/ic_click"/>
 
     <TextView
         android:id="@+id/text_area_at"
@@ -47,7 +51,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/text_size_list_item_text"/>
+        android:textSize="@dimen/text_size_list_item_text"
+        tools:text="[1145, 154]"/>
 
     <TextView
         android:id="@+id/text_area_2"
@@ -55,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_vertical_small"
         android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/text_size_list_item_text"/>
+        android:textSize="@dimen/text_size_list_item_text"
+        tools:text="[984, 549]"/>
 
 </LinearLayout>

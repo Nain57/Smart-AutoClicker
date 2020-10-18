@@ -154,7 +154,9 @@
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal"
                     android:scrollbars="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_condition"
+                    tools:itemCount="1"/>
 
             </LinearLayout>
 

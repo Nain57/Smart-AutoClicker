@@ -17,6 +17,7 @@
 -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/ItemView.Big">
 
     <LinearLayout
@@ -37,7 +38,8 @@
             android:gravity="center_vertical"
             android:textSize="@dimen/text_size_list_item_text_big"
             android:textStyle="bold"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            tools:text="Default scenario"/>
 
         <TextView
             android:id="@+id/details"
@@ -46,7 +48,8 @@
             android:layout_marginBottom="@dimen/margin_vertical_small"
             android:gravity="center_vertical"
             android:textSize="@dimen/text_size_list_item_text_small"
-            android:textStyle="italic"/>
+            android:textStyle="italic"
+            tools:text="No clicks"/>
     </LinearLayout>
 
     <ImageButton
