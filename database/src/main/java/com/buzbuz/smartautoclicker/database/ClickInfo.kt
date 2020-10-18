@@ -41,18 +41,25 @@ import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
  * @param delayAfterMs the delay to wait after executing this click before executing another one.
  * @param priority the priority of the click in the scenario.
  */
-data class ClickInfo(
+data class ClickInfo internal constructor(
     var name: String,
-    var scenarioId: Long = 0L,
-    @ClickType var type: Int? = null,
-    var from: Point? = null,
-    var to: Point? = null,
-    @Operator var conditionOperator: Int = AND,
-    var conditionList: List<ClickCondition> = emptyList(),
-    var id: Long = 0L,
-    var delayAfterMs: Long = 50,
-    var priority: Int = 0
+    var scenarioId: Long,
+    @ClickType var type: Int?,
+    var from: Point?,
+    var to: Point?,
+    @Operator var conditionOperator: Int,
+    var conditionList: List<ClickCondition>,
+    var id: Long,
+    var delayAfterMs: Long,
+    var priority: Int
 ) {
+
+    /**
+     * Instantiates a new ClickInfo with only a name.
+     *
+     * @param name the name of the new click.
+     */
+    constructor(name: String) : this(name, 0L, null, null, null, AND, emptyList(), 0L, 50, 0)
 
     companion object {
 

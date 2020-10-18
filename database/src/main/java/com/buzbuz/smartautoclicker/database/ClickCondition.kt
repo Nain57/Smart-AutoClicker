@@ -29,16 +29,20 @@ import com.buzbuz.smartautoclicker.database.room.ConditionEntity
  *
  * @param area the area of the screen to detect.
  * @param path the path to the bitmap that should be matched for detection.
- * @param bitmap
  */
-data class ClickCondition(
+data class ClickCondition internal constructor(
     var area: Rect,
     var path: String,
     var bitmap: Bitmap? = null
 ) {
 
     /**
+     * Instantiates a new condition.
+     * For convenience use for a new condition that has not been saved yet. Do no insert it in the database without
+     * setting the path first.
      *
+     * @param area the area of the screen to detect.
+     * @param bitmap the image that should be matched for detection.
      */
     constructor(area: Rect, bitmap: Bitmap): this(area, "", bitmap)
 

@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
  * @param id the unique identifier for the scenario. Use 0 to let the database create the id. Default value is 0.
  * @param clickCount the number of clicks in this scenario. Default value is 0.
  */
-data class ClickScenario(
+data class ClickScenario internal constructor(
     val name: String,
     val id: Long = 0,
     val clickCount: Int = 0
