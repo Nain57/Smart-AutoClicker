@@ -187,7 +187,7 @@ class SmartAutoClickerService : AccessibilityService() {
             }
             ClickInfo.SWIPE -> {
                 clickPath.lineTo(click.to!!.x.toFloat(), click.to!!.y.toFloat())
-                clickBuilder.addStroke(StrokeDescription(clickPath, 0, 500))
+                clickBuilder.addStroke(StrokeDescription(clickPath, 0, 175))
             }
         }
 
