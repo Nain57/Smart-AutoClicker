@@ -140,21 +140,6 @@ internal abstract class ClickDao {
     }
 
     /**
-     * Delete all click condition not related to a click in the database.
-     *
-     * Convenience method for cleaning up all click conditions that are not related to a click (this happen after the
-     * deletion of the last click for a condition). This helps reducing the database size by removing unused conditions.
-     *
-     * @return the list of paths of conditions that has been removed, or empty list if none was.
-     */
-    @Transaction
-    open suspend fun deleteClicklessConditions() : List<String> {
-        val clicklessConditions = getClicklessConditions()
-        deleteClickCondition(clicklessConditions)
-        return clicklessConditions.map { it.path }
-    }
-
-    /**
      * Delete the provided click scenario from the database.
      *
      * Any associated [ClickEntity] will be removed from the database, as well as their related [ClickConditionCrossRef]
@@ -183,6 +168,27 @@ internal abstract class ClickDao {
     abstract suspend fun deleteClick(click: ClickEntity)
 
     /**
+     * Get all conditions without at least one click associated from the database.
+     * Once conditions external data have been cleaned, you must call [deleteClicklessConditions] to remove them from the
+     * database.
+     *
+     * @return the livedata on the list of condition without a click.
+     */
+    @Transaction
+    @Query("SELECT * FROM condition_table WHERE path NOT IN(SELECT path FROM ClickConditionCrossRef)")
+    abstract fun getClicklessConditions(): LiveData<List<ConditionEntity>>
+
+    /**
+     * Delete all click condition without at least one click associated from the database.
+     *
+     * Any associated [ClickConditionCrossRef] will be removed from the database as well due to the
+     * [androidx.room.ForeignKey.CASCADE] deletion of this parent condition.
+     */
+    @Transaction
+    @Query("DELETE FROM condition_table WHERE path NOT IN(SELECT path FROM ClickConditionCrossRef)")
+    abstract suspend fun deleteClicklessConditions()
+
+    /**
      * Get the provided click, with its conditions from the database.
      *
      * @param clickId the identifier of the click to get.
@@ -192,15 +198,6 @@ internal abstract class ClickDao {
     @Transaction
     @Query("SELECT * FROM click_table WHERE clickid=:clickId")
     protected abstract fun getClickConditions(clickId: Long): ClickWithConditions
-
-    /**
-     * Get all conditions without at least one click associated from the database.
-     *
-     * @return the list of condition without a click.
-     */
-    @Transaction
-    @Query("SELECT * FROM condition_table WHERE path NOT IN(SELECT path FROM ClickConditionCrossRef)")
-    protected abstract fun getClicklessConditions(): List<ConditionEntity>
 
     /**
      * Add a click to the database.
@@ -266,14 +263,4 @@ internal abstract class ClickDao {
      */
     @Delete
     protected abstract suspend fun deleteClickConditionsCrossRefs(crossRef: List<ClickConditionCrossRef>)
-
-    /**
-     *
-     * Any associated [ClickConditionCrossRef] will be removed from the database as well due to the
-     * [androidx.room.ForeignKey.CASCADE] deletion of this parent condition.
-     * <p>
-     * @param conditions the conditions to be deleted.
-     */
-    @Delete
-    protected abstract suspend fun deleteClickCondition(conditions: List<ConditionEntity>)
 }

@@ -65,6 +65,14 @@ class ClickRepository private constructor(database: ClickDatabase) {
     val scenarios = Transformations.switchMap(clickDao.getClickScenarios()) {
         liveData { emit(ClickScenario.fromEntities(it)) }
     }
+    /**
+     * The list of conditions without clicks. Kept here to give a chance for the application to remove related resources
+     * before deleting them.
+     * Once your have cleaned the associated resources, you can call [deleteClicklessConditions] to clean this list.
+     */
+    val clicklessConditions = Transformations.switchMap(clickDao.getClicklessConditions()) {
+        liveData { emit(ClickCondition.fromEntities(it)) }
+    }
 
     /**
      * Creates a new click scenario.
@@ -194,4 +202,8 @@ class ClickRepository private constructor(database: ClickDatabase) {
 
         Log.d(TAG, "Updated click priorities: $newClicks")
     }
+
+    /** Delete all conditions without a click. */
+    suspend fun deleteClicklessConditions() = clickDao.deleteClicklessConditions()
+
 }

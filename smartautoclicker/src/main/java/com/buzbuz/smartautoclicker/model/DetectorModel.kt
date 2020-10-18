@@ -24,6 +24,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 
 import com.buzbuz.smartautoclicker.database.ClickCondition
@@ -114,6 +115,19 @@ class DetectorModel private constructor(private val context: Context) {
     }
     /** Backing property for [scenario]. */
     private val _scenario = MutableLiveData<ClickScenario?>()
+    /** Listener upon conditions without clicks. */
+    private val clicklessConditionObserver = object : Observer<List<ClickCondition>> {
+        override fun onChanged(conditions: List<ClickCondition>?) {
+            if (conditions.isNullOrEmpty()) {
+                return
+            }
+
+            coroutineScope.launch {
+                bitmapManager.deleteBitmaps(conditions.map { it.path })
+                clickRepository.deleteClicklessConditions()
+            }
+        }
+    }
 
     /**
      * True if this model is initialized, false if not.
@@ -153,6 +167,7 @@ class DetectorModel private constructor(private val context: Context) {
 
         screenDetector.startScreenRecord(context, resultCode, data)
         _scenario.value = scenario
+        clickRepository.clicklessConditions.observeForever(clicklessConditionObserver)
     }
 
     /**
@@ -163,11 +178,12 @@ class DetectorModel private constructor(private val context: Context) {
      */
     fun addClick(click: ClickInfo) {
         ensureNotDetecting()
-        if (scenario.value == null || scenario.value!!.id != click.scenarioId) {
+        if (scenario.value == null) {
             Log.e(TAG, "Can't add click with scenario id $click.scenarioId, invalid model scenario $scenario")
             return
         }
 
+        click.scenarioId = scenario.value!!.id
         coroutineScope.launch {
             saveNewConditions(click)
             clickRepository.addClick(click)
@@ -296,13 +312,16 @@ class DetectorModel private constructor(private val context: Context) {
         if (detecting.value!!) {
             stopDetection()
         }
+        clickRepository.clicklessConditions.removeObserver(clicklessConditionObserver)
         _scenario.value = null
         screenDetector.stop()
         bitmapManager.releaseCache()
     }
 
     /**
+     * Save the bitmaps of all unsaved click conditions.
      *
+     * @param click the click containing the conditions to be saved.
      */
     private suspend fun saveNewConditions(click: ClickInfo) {
         click.conditionList.forEach { condition ->

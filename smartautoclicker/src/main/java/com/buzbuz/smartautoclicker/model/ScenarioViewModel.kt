@@ -20,11 +20,13 @@ import android.app.Application
 import android.content.Intent
 import android.provider.Settings
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.database.ClickRepository
 import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.database.ClickCondition
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +40,19 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     private val serviceConnection: (SmartAutoClickerService.LocalService?) -> Unit = { localService ->
         clickerService = localService
     }
+    /** Listener upon conditions without clicks. */
+    private val clicklessConditionObserver = object : Observer<List<ClickCondition>> {
+        override fun onChanged(conditions: List<ClickCondition>?) {
+            if (conditions.isNullOrEmpty()) {
+                return
+            }
+
+            viewModelScope.launch(Dispatchers.IO) {
+                BitmapManager.getInstance(application).deleteBitmaps(conditions.map { it.path })
+                clickRepository.deleteClicklessConditions()
+            }
+        }
+    }
 
     /**
      * Reference on the [SmartAutoClickerService].
@@ -50,9 +65,11 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
 
     init {
         SmartAutoClickerService.getLocalService(serviceConnection)
+        clickRepository.clicklessConditions.observeForever(clicklessConditionObserver)
     }
 
     override fun onCleared() {
+        clickRepository.clicklessConditions.removeObserver(clicklessConditionObserver)
         SmartAutoClickerService.getLocalService(null)
         super.onCleared()
     }
