@@ -54,7 +54,7 @@ import java.lang.IllegalStateException
  * To initialize the model with a scenario, use [init]. This will starts the screen record and allows the
  * click creation/edition/deletion as well as screen capture and click detection.
  */
-class DetectorModel private constructor(private val context: Context) {
+class DetectorModel private constructor(context: Context) {
 
     companion object {
         /** Tag for logs */
@@ -153,13 +153,14 @@ class DetectorModel private constructor(private val context: Context) {
     /**
      * Initialize the detector model.
      *
+     * @param context the Android context.
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param data the data intent provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param scenario the scenario of clicks to be used for detection or to be edited.
      */
-    fun init(resultCode: Int, data: Intent, scenario: ClickScenario) {
+    fun init(context: Context, resultCode: Int, data: Intent, scenario: ClickScenario) {
         if (initialized.value!!) {
             Log.w(TAG, "The model is already initialized")
             return
@@ -250,7 +251,7 @@ class DetectorModel private constructor(private val context: Context) {
      */
     fun getClickConditionBitmap(condition: ClickCondition, completionCallback: (Bitmap?) -> Unit): Job {
         return coroutineScope.launch {
-            val bitmap = BitmapManager.getInstance(context).loadBitmap(
+            val bitmap = bitmapManager.loadBitmap(
                 condition.path, condition.area.width(), condition.area.height())
             withContext(Dispatchers.Main) { completionCallback.invoke(bitmap) }
         }

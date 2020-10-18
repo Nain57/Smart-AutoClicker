@@ -113,7 +113,7 @@ class SmartAutoClickerService : AccessibilityService() {
             isStarted = true
             startForeground(NOTIFICATION_ID, createNotification(scenario.name))
             DetectorModel.attach(this@SmartAutoClickerService)
-            DetectorModel.get().init(resultCode, data, scenario)
+            DetectorModel.get().init(this@SmartAutoClickerService, resultCode, data, scenario)
             rootOverlayController = MainMenu(this@SmartAutoClickerService, ::performClick).apply {
                 create(::stop)
             }
