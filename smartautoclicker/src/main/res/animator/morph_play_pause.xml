@@ -18,7 +18,7 @@
 <objectAnimator
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@integer/duration_morph_play_pause_ms"
-    android:interpolator="@android:interpolator/accelerate_decelerate"
+    android:interpolator="@android:interpolator/accelerate_quint"
     android:propertyName="pathData"
     android:valueFrom="@string/path_play"
     android:valueTo="@string/path_pause"
