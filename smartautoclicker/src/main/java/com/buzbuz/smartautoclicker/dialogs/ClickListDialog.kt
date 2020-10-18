@@ -260,7 +260,7 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
      * @param click the click item to be copied.
      */
     private fun copyClick(click: ClickInfo) {
-        showSubOverlay(ClickConfigDialog(context, click.copyWithoutId()), true)
+        showSubOverlay(ClickConfigDialog(context, click.copyAsNew()), true)
     }
 
     /**

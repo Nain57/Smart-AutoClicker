@@ -137,10 +137,13 @@ data class ClickInfo(
     }
 
     /**
-     * Creates an exact copy of this click and reset its id.
+     * Creates an exact copy of this click and reset its id and priority.
      * Useful for creating a click from another.
      *
      * @return the copy.
      */
-    fun copyWithoutId() = copy().apply { id = 0 }
+    fun copyAsNew() = copy().apply {
+        id = 0
+        priority = 0
+    }
 }
