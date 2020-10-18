@@ -222,7 +222,7 @@ class ClickConfigDialog(
 
                 changeButtonState(
                     getButton(AlertDialog.BUTTON_POSITIVE),
-                    if (click.type != null && conditionsAdapter.conditions!!.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+                    if (click.type != null && conditionsAdapter.getAllConditions().isNotEmpty()) View.VISIBLE else View.INVISIBLE
                 ) {
                     onOkClicked()
                 }
