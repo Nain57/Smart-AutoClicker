@@ -20,6 +20,7 @@ import android.content.Context
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.ClickInfo
@@ -40,6 +41,16 @@ import com.buzbuz.smartautoclicker.model.DetectorModel
  * @param detectionListener listener notified upon click detection.
  */
 class MainMenu(context: Context, private val detectionListener: (ClickInfo) -> Unit) : OverlayMenuController(context) {
+
+    /** Animation from play to pause. */
+    private val playToPauseDrawable =
+        AnimatedVectorDrawableCompat.create(context, R.drawable.anim_play_pause)!!
+    /** Animation from pause to play. */
+    private val pauseToPlayDrawable =
+        AnimatedVectorDrawableCompat.create(context, R.drawable.anim_pause_play)!!
+
+    /** Tells if the detecting state have never been updated. Use to skip animation the first time. */
+    private var isFirstStateUpdate = true
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
         layoutInflater.inflate(R.layout.overlay_menu, null) as ViewGroup
@@ -80,16 +91,30 @@ class MainMenu(context: Context, private val detectionListener: (ClickInfo) -> U
         setMenuItemViewEnabled(R.id.btn_play, !clicks.isNullOrEmpty())
 
     /**
+     * Handles the changes in the detection state.
+     * Animate the detection icon according to the new state if that's not the first start.
      *
-     * @param enabled
+     * @param enabled true if we are detecting, false if not.
      */
     private fun onDetectionStateChanged(enabled: Boolean) {
         if (enabled) {
             setMenuItemViewEnabled(R.id.btn_click_list, false)
-            setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_pause)
+            if (isFirstStateUpdate) {
+                setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_pause)
+                isFirstStateUpdate = false
+            } else {
+                setMenuItemViewDrawable(R.id.btn_play, playToPauseDrawable)
+                playToPauseDrawable.start()
+            }
         } else {
             setMenuItemViewEnabled(R.id.btn_click_list, true)
-            setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_play_arrow)
+            if (isFirstStateUpdate) {
+                setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_play_arrow)
+                isFirstStateUpdate = false
+            } else {
+                setMenuItemViewDrawable(R.id.btn_play, pauseToPlayDrawable)
+                pauseToPlayDrawable.start()
+            }
         }
     }
 }

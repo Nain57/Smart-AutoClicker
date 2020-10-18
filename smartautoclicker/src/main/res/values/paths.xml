@@ -16,7 +16,6 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <integer name="duration_hint_fade_ms">750</integer>
-    <integer name="duration_hint_all_fade_delay_ms">1250</integer>
-    <integer name="duration_morph_play_pause_ms">300</integer>
+    <string name="path_play">M 34 22 L 34 64 L 100 64 L 100 64 Z M 34 106 L 34 64 L 100 64 L 100 64 Z</string>
+    <string name="path_pause">M 25 33 L 25 56  L 103 56 L 103 33 Z M 25 95 L 25 72 L 103 72 L 103 95 Z</string>
 </resources>

@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
@@ -205,6 +206,16 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      */
     protected fun setMenuItemViewImageResource(@IdRes viewId: Int, @DrawableRes imageId: Int) {
         (menuLayout?.findViewById<View>(viewId) as ImageView).setImageResource(imageId)
+    }
+
+    /**
+     * Set the drawable of a menu item.
+     *
+     * @param viewId the view identifier of the menu item to change the drawable of.
+     * @param drawable the new drawable.
+     */
+    protected fun setMenuItemViewDrawable(@IdRes viewId: Int, drawable: Drawable) {
+        (menuLayout?.findViewById<View>(viewId) as ImageView).setImageDrawable(drawable)
     }
 
     /**

@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
-    <integer name="duration_hint_fade_ms">750</integer>
-    <integer name="duration_hint_all_fade_delay_ms">1250</integer>
-    <integer name="duration_morph_play_pause_ms">300</integer>
-</resources>
+<objectAnimator
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@integer/duration_morph_play_pause_ms"
+    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+    android:propertyName="rotation"
+    android:valueFrom="0"
+    android:valueTo="90"
+    android:valueType="floatType"/>

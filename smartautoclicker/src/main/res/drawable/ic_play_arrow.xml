@@ -1,20 +1,27 @@
 <vector
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128"
     android:tint="?attr/colorControlNormal">
+
+
   <group
-      android:pivotX="12"
-      android:pivotY="12"
-      android:scaleX="1.2"
-      android:scaleY="1.2">
+      android:name="icon"
+      android:pivotX="64"
+      android:pivotY="64"
+      android:scaleX="1"
+      android:scaleY="1">
 
-    <path
-        android:fillColor="@color/overlayMenuButtons"
-        android:pathData="M8,6.82v10.36c0,0.79 0.87,1.27 1.54,0.84l8.14,-5.18c0.62,-0.39 0.62,-1.29 0,-1.69L9.54,5.98C8.87,5.55 8,6.03 8,6.82z"/>
+      <path
+          android:name="iconPath"
+          android:pathData="@string/path_play"
+          android:fillColor="@android:color/black"
+          android:strokeLineCap="butt"
+          android:strokeLineJoin="miter"
+          android:strokeMiterLimit="10"/>
 
-  </group>
+    </group>
 
 </vector>
