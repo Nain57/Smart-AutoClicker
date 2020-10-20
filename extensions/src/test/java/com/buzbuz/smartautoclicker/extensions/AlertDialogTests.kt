@@ -24,7 +24,6 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
-import junit.framework.Assert.assertEquals
 
 import org.junit.Before
 import org.junit.Test
@@ -37,6 +36,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 import org.robolectric.annotation.Config
+
 import java.lang.NullPointerException
 
 /** Tests for the extensions for [androidx.appcompat.app.AlertDialog]. */
