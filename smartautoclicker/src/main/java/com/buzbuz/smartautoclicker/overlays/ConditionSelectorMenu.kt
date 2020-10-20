@@ -37,7 +37,7 @@ import androidx.core.graphics.toRect
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.extensions.scale
-import com.buzbuz.smartautoclicker.extensions.translate
+import com.buzbuz.smartautoclicker.extensions.move
 import com.buzbuz.smartautoclicker.gestures.*
 
 /**
@@ -206,21 +206,16 @@ class ConditionSelectorMenu(
          * Called when a [Gesture] detects a move gesture.
          * Apply the translation parameters to the selector and invalidate the view to redraw it.
          *
-         * @param toX the new x position.
-         * @param toY the new y position.
+         * @param toCenterX the new x position.
+         * @param toCenterY the new y position.
          */
-        private fun moveTo(toX: Float, toY: Float) {
-            val xPos = when {
-                toX < maxArea.left -> maxArea.left
-                toX + selectorArea.width() > maxArea.right -> maxArea.right - selectorArea.width()
-                else -> toX
-            }
-            val yPos = when {
-                toY < maxArea.top -> maxArea.top
-                toY + selectorArea.height() > maxArea.bottom -> maxArea.bottom - selectorArea.height()
-                else -> toY
-            }
-            selectorArea.translate(xPos, yPos)
+        private fun moveTo(toCenterX: Float, toCenterY: Float) {
+            val halfWidth = selectedArea.width() / 2
+            val halfHeight = selectedArea.height() / 2
+            val xPos = if (toCenterX in maxArea.left + halfWidth .. maxArea.right - halfWidth) toCenterX else selectorArea.centerX()
+            val yPos = if (toCenterY in maxArea.top + halfHeight .. maxArea.bottom - halfHeight) toCenterY else selectorArea.centerY()
+
+            selectorArea.move(xPos, yPos)
             hintsIcons.show(MOVE)
             invalidate()
         }

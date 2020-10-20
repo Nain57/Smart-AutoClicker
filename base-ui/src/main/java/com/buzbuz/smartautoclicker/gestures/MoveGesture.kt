@@ -51,7 +51,7 @@ class MoveGesture(view: View, handleSize: Float, private val moveListener: (Floa
             return false
         }
 
-        moveInitialPosition = viewArea.left to viewArea.top
+        moveInitialPosition = viewArea.centerX() to viewArea.centerY()
         moveInitialEventPosition = event.rawX to event.rawY
         return true
     }

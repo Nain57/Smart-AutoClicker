@@ -35,14 +35,17 @@ fun RectF.scale(scaleFactor: Float) {
 }
 
 /**
- * Translate to the specified position.
+ * Center the rectangle to the specified position.
  *
- * @param toX the new x position.
- * @param toY the new y position.
+ * @param newCenterX the new x position.
+ * @param newCenterY the new y position.
  */
-fun RectF.translate(toX: Float, toY: Float) {
-    right = toX + width()
-    bottom = toY + height()
-    left = toX
-    top = toY
+fun RectF.move(newCenterX: Float, newCenterY: Float) {
+    val halfWidth = width() / 2
+    val halfHeight = height() / 2
+
+    left = newCenterX - halfWidth
+    top = newCenterY - halfHeight
+    right = newCenterX + halfWidth
+    bottom = newCenterY + halfHeight
 }
