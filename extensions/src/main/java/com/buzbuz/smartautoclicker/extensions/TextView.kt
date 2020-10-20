@@ -42,7 +42,7 @@ fun TextView.setLeftCompoundDrawable(@DrawableRes id: Int, @ColorInt tint: Int =
  *
  * @param idLeft the drawable to be set to the left.
  * @param idRight: the drawable to be set to the right.
- * @param tint the tint color to apply to the drawable.
+ * @param tint the tint color to apply to the left drawable.
  */
 fun TextView.setLeftRightCompoundDrawables(@DrawableRes idLeft: Int, @DrawableRes idRight: Int, @ColorInt tint: Int = -1) {
     setCompoundDrawablesRelativeWithIntrinsicBounds(

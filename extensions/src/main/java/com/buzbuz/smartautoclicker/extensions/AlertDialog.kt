@@ -26,7 +26,7 @@ import androidx.appcompat.app.AlertDialog
 
 /**
  * Set a view as custom title for the dialog and set its title name.
- * In order to work correctly, the provided layout must provide a [TextView] with the id [R.id.title].
+ * In order to work correctly, the provided layout must provide a [TextView] with the id [android.R.id.title].
  *
  * @param titleViewRes the resource identifier for the view to inflate as the title.
  * @param title the resource identifier for the text to use as title of the dialog.
