@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.database
 
 import com.buzbuz.smartautoclicker.database.room.ClickEntity
+import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
 import com.buzbuz.smartautoclicker.database.room.ConditionEntity
 import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
 
@@ -44,6 +45,14 @@ internal object TestsData {
     const val CLICK_PRIORITY = 0
     val CLICK_ENTITY = ClickEntity(CLICK_ID, SCENARIO_ID, CLICK_NAME, CLICK_TYPE, CLICK_FROMX, CLICK_FROMY, CLICK_TOX, CLICK_TOY,
         CLICK_CONDITION_OPERATOR, CLICK_DELAY_AFTER, CLICK_PRIORITY)
+    /**
+     * Instantiates a new [ClickWithConditions] based on [CLICK_ENTITY].
+     * @param scenarioId the scenario for this click
+     * @param clickId the id for this click. Use 0 to let the database creates one.
+     * @param conditions the list of conditions for this click.
+     */
+    fun newIdlessClickWithConditionEntity(scenarioId: Long, clickId: Long = 0,conditions: List<ConditionEntity> = emptyList()) =
+        ClickWithConditions(CLICK_ENTITY.copy(clickId = clickId, scenarioId = scenarioId), conditions)
 
     const val CLICK_ID_2 = 1792L
     const val CLICK_SCENARIO_ID_2 = SCENARIO_ID_2
@@ -58,6 +67,14 @@ internal object TestsData {
     const val CLICK_PRIORITY_2 = 1
     val CLICK_ENTITY_2 = ClickEntity(CLICK_ID_2, SCENARIO_ID_2, CLICK_NAME_2, CLICK_TYPE_2, CLICK_FROMX_2, CLICK_FROMY_2,
         CLICK_TOX_2, CLICK_TOY_2, CLICK_CONDITION_OPERATOR_2, CLICK_DELAY_AFTER_2, CLICK_PRIORITY_2)
+    /**
+     * Instantiates a new [ClickWithConditions] based on [CLICK_ENTITY_2].
+     * @param scenarioId the scenario for this click
+     * @param clickId the id for this click. Use 0 to let the database creates one.
+     * @param conditions the list of conditions for this click.
+     */
+    fun newIdlessClickWithConditionEntity2(scenarioId: Long, clickId: Long = 0, conditions: List<ConditionEntity> = emptyList()) =
+        ClickWithConditions(CLICK_ENTITY.copy(clickId = clickId, scenarioId = scenarioId), conditions)
 
     const val CONDITION_PATH = "/toto/tutu/tata"
     const val CONDITION_LEFT = 0
