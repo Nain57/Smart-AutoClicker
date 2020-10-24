@@ -42,6 +42,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -51,4 +55,10 @@ dependencies {
     implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
     kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
+
+    testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
+    testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
+    testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
+    testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
 }
