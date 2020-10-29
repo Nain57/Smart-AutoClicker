@@ -109,6 +109,7 @@ internal abstract class ClickDao {
      *
      * @param entity the click to be added.
      */
+    @Transaction
     open suspend fun addClickWithConditions(entity: ClickWithConditions) {
         val clickId = addClick(entity.click)
         addClickConditions(clickId, entity.conditions)
@@ -219,7 +220,6 @@ internal abstract class ClickDao {
      * @param clickId the identifier of first click related to the conditions
      * @param conditions the list of conditions to be added.
      */
-    @Transaction
     protected open suspend fun addClickConditions(clickId: Long, conditions: List<ConditionEntity>) {
         addConditions(conditions) // Skip the entities already in the base
         addClickConditionsCrossRefs(conditions.map { ClickConditionCrossRef(clickId, it.path) })

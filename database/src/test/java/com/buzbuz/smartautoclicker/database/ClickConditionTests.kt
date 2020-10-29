@@ -22,6 +22,7 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.database.room.ConditionEntity
+import com.buzbuz.smartautoclicker.database.utils.TestsData
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -42,9 +43,11 @@ class ClickConditionTests {
     @Test
     fun fromEntities() {
         val expected = listOf(
-            ClickCondition(Rect(TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
+            ClickCondition(Rect(
+                TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
                 TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
-            ClickCondition(Rect(TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
+            ClickCondition(Rect(
+                TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
                 TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
         )
         val entities = listOf(TestsData.CONDITION_ENTITY, TestsData.CONDITION_ENTITY_2)
@@ -61,9 +64,11 @@ class ClickConditionTests {
     fun toEntities() {
         val expected = listOf(TestsData.CONDITION_ENTITY, TestsData.CONDITION_ENTITY_2)
         val clickConditions = listOf(
-            ClickCondition(Rect(TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
+            ClickCondition(Rect(
+                TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
                 TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
-            ClickCondition(Rect(TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
+            ClickCondition(Rect(
+                TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
                 TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
         )
 

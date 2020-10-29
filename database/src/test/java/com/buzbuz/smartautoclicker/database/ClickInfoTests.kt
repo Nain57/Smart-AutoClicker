@@ -22,6 +22,7 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.utils.TestsData
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -37,7 +38,8 @@ class ClickInfoTests {
 
     @Test
     fun copyAsNew() {
-        val actual = ClickInfo(TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
+        val actual = ClickInfo(
+            TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
             Point(TestsData.CLICK_FROMX, TestsData.CLICK_FROMY), Point(TestsData.CLICK_TOX, TestsData.CLICK_TOY),
             TestsData.CLICK_CONDITION_OPERATOR, emptyList(), TestsData.CLICK_ID, TestsData.CLICK_DELAY_AFTER,
             TestsData.CLICK_PRIORITY).copyAsNew()
@@ -62,11 +64,13 @@ class ClickInfoTests {
     @Test
     fun fromEntities() {
         val expected = listOf(
-            ClickInfo(TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
+            ClickInfo(
+                TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
                 Point(TestsData.CLICK_FROMX, TestsData.CLICK_FROMY), Point(TestsData.CLICK_TOX, TestsData.CLICK_TOY),
                 TestsData.CLICK_CONDITION_OPERATOR, emptyList(), TestsData.CLICK_ID, TestsData.CLICK_DELAY_AFTER,
                 TestsData.CLICK_PRIORITY),
-            ClickInfo(TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
+            ClickInfo(
+                TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
                 Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
                 Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, emptyList(),
                 TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)
@@ -83,18 +87,22 @@ class ClickInfoTests {
     fun fromEntitiesWithConditions() {
         val expectedConditions = listOf(
             ClickCondition(
-                Rect(TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
+                Rect(
+                    TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
                 TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
             ClickCondition(
-                Rect(TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
+                Rect(
+                    TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
                 TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
         )
         val expected = listOf(
-            ClickInfo(TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
+            ClickInfo(
+                TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
                 Point(TestsData.CLICK_FROMX, TestsData.CLICK_FROMY), Point(TestsData.CLICK_TOX, TestsData.CLICK_TOY),
                 TestsData.CLICK_CONDITION_OPERATOR, expectedConditions, TestsData.CLICK_ID, TestsData.CLICK_DELAY_AFTER,
                 TestsData.CLICK_PRIORITY),
-            ClickInfo(TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
+            ClickInfo(
+                TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
                 Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
                 Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, expectedConditions,
                 TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)
@@ -111,7 +119,8 @@ class ClickInfoTests {
     @Test
     fun toEntity() {
         val expected = ClickWithConditions(TestsData.CLICK_ENTITY_2, emptyList())
-        val clickInfo = ClickInfo(TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
+        val clickInfo = ClickInfo(
+            TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
             Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
             Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, emptyList(),
             TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)
@@ -125,13 +134,16 @@ class ClickInfoTests {
 
         val clickConditions = listOf(
             ClickCondition(
-                Rect(TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
+                Rect(
+                    TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
                     TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
             ClickCondition(
-                Rect(TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
+                Rect(
+                    TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
                     TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
         )
-        val clickInfo = ClickInfo(TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
+        val clickInfo = ClickInfo(
+            TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
             Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
             Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, clickConditions,
             TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)

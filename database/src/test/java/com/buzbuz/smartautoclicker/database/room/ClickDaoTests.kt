@@ -18,201 +18,206 @@ package com.buzbuz.smartautoclicker.database.room
 
 import android.os.Build
 import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.buzbuz.smartautoclicker.database.utils.assertScenarioListAreEquals
+import com.buzbuz.smartautoclicker.database.utils.getOrAwaitValue
+import com.buzbuz.smartautoclicker.database.utils.DatabaseExecutorRule
+import com.buzbuz.smartautoclicker.database.utils.TestsData
 
-import com.buzbuz.smartautoclicker.database.TestsData
-
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/** */
-@RunWith(AndroidJUnit4::class)
+/** Tests for the [ClickDao].*/
+@ExperimentalCoroutinesApi
+@RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class ClickDaoTests {
 
+    /**
+     * Rule to swaps the background executor used by the Architecture Components with a different one which executes
+     * each IO task synchronously
+     */
+    @get:Rule val instantExecutorRule = DatabaseExecutorRule()
+
+    /** Coroutine dispatcher for the tests. */
+    private val testDispatcher = TestCoroutineDispatcher()
+    /** Coroutine scope for the tests. */
+    private val testScope = TestCoroutineScope(testDispatcher)
+
+    /** In memory database used to test the dao. */
     private lateinit var database: ClickDatabase
-    private lateinit var scope: CoroutineScope
 
     @Before
     fun setUp() {
-        scope = CoroutineScope(Dispatchers.Main)
-        database = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(),
-            ClickDatabase::class.java).build()
+        Dispatchers.setMain(testDispatcher)
+
+        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, ClickDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
     }
 
     @After
-    fun closeDb() {
+    fun tearDown() {
+        database.clearAllTables()
         database.close()
-        scope.cancel()
+        testScope.cleanupTestCoroutines()
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun addScenario() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+    fun addScenario() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
 
-            assertEquals(ScenarioWithClicks(TestsData.SCENARIO_ENTITY, emptyList()),
-                database.clickDao().getClickScenarios().value!![0])
-        }
+        assertEquals(ScenarioWithClicks(TestsData.SCENARIO_ENTITY, emptyList()),
+            database.clickDao().getClickScenarios().getOrAwaitValue()[0])
     }
 
     @Test
-    fun renameScenario() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+    fun addClick() = runBlocking {
+        val expected = ClickWithConditions(TestsData.CLICK_ENTITY, emptyList())
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickWithConditions(expected)
 
-            assertEquals(ScenarioWithClicks(TestsData.SCENARIO_ENTITY.copy(name = TestsData.SCENARIO_NAME_2), emptyList()),
-                database.clickDao().getClickScenarios().value!![0])
-        }
+        assertEquals(expected, database.clickDao().getClicksWithConditionsList(TestsData.SCENARIO_ENTITY.id)[0])
     }
 
     @Test
-    fun deleteScenario() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().deleteClickScenario(TestsData.SCENARIO_ENTITY)
+    fun addCondition() = runBlocking {
+        val expected = ClickWithConditions(TestsData.CLICK_ENTITY, listOf(TestsData.CONDITION_ENTITY))
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickWithConditions(expected)
 
-            assertTrue(database.clickDao().getClickScenarios().value!!.isEmpty())
-        }
+        assertEquals(expected, database.clickDao().getClicksWithConditionsList(TestsData.SCENARIO_ENTITY.id)[0])
     }
 
     @Test
-    fun addClick() {
-        scope.launch {
-            val expected = ClickWithConditions(TestsData.CLICK_ENTITY, emptyList())
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickWithConditions(expected)
+    fun renameScenario() = runBlocking {
+        val newName = TestsData.SCENARIO_NAME_2
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
 
-            assertEquals(expected, database.clickDao().getClicksWithConditionsList(TestsData.SCENARIO_ENTITY.id)[0])
-        }
+        database.clickDao().renameScenario(TestsData.SCENARIO_ENTITY.id, newName)
+
+        assertEquals(ScenarioWithClicks(TestsData.SCENARIO_ENTITY.copy(name = newName), emptyList()),
+            database.clickDao().getClickScenarios().getOrAwaitValue()[0])
     }
 
     @Test
-    fun updateClick() {
-        scope.launch {
-            val original = ClickWithConditions(TestsData.CLICK_ENTITY, emptyList())
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickWithConditions(original)
+    fun updateClick() = runBlocking {
+        val original = ClickWithConditions(TestsData.CLICK_ENTITY, emptyList())
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickWithConditions(original)
 
-            val newValue = TestsData.CLICK_ENTITY_2.copy(clickId = original.click.clickId)
-            database.clickDao().updateClicks(listOf(newValue))
+        val newValue = TestsData.CLICK_ENTITY_2.copy(clickId = original.click.clickId, scenarioId = original.click.scenarioId)
+        database.clickDao().updateClicks(listOf(newValue))
 
-            assertEquals(newValue, database.clickDao().getClicksWithConditionsList(TestsData.SCENARIO_ENTITY.id)[0])
-        }
+        assertEquals(newValue, database.clickDao().getClicksWithConditionsList(TestsData.SCENARIO_ENTITY.id)[0].click)
     }
 
     @Test
-    fun deleteClick() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, emptyList()))
+    fun updateClickWithConditions() = runBlocking {
+        val original = TestsData.newClickWithConditionEntity(TestsData.SCENARIO_ENTITY.id, 1, listOf(TestsData.CONDITION_ENTITY))
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickWithConditions(original)
 
-            database.clickDao().deleteClick(TestsData.CLICK_ENTITY)
+        val newValue = TestsData.newClickWithConditionEntity2(original.click.scenarioId, original.click.clickId,
+            listOf(TestsData.CONDITION_ENTITY_2))
+        database.clickDao().updateClickWithConditions(newValue)
 
-            assertEquals(0, database.clickDao().getClickCount(TestsData.SCENARIO_ENTITY.id))
-        }
+        assertEquals(newValue, database.clickDao().getClicksWithConditionsList(TestsData.SCENARIO_ENTITY.id)[0])
     }
 
     @Test
-    fun deleteScenarioWithClicks() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, emptyList()))
-            database.clickDao().deleteClickScenario(TestsData.SCENARIO_ENTITY)
+    fun deleteScenario() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().deleteClickScenario(TestsData.SCENARIO_ENTITY)
 
-            assertEquals(0, database.clickDao().getClickCount(TestsData.SCENARIO_ENTITY.id))
-        }
+        assertTrue(database.clickDao().getClickScenarios().getOrAwaitValue().isEmpty())
     }
 
     @Test
-    fun getClickCount() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickWithConditions(TestsData.newIdlessClickWithConditionEntity(TestsData.SCENARIO_ENTITY.id))
-            database.clickDao().addClickWithConditions(TestsData.newIdlessClickWithConditionEntity2(TestsData.SCENARIO_ENTITY.id))
+    fun deleteClick() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, emptyList()))
 
-            assertEquals(2, database.clickDao().getClickCount(TestsData.SCENARIO_ENTITY.id))
-        }
+        database.clickDao().deleteClick(TestsData.CLICK_ENTITY)
+
+        assertEquals(0, database.clickDao().getClickCount(TestsData.SCENARIO_ENTITY.id))
     }
 
     @Test
-    fun addCondition() {
-        scope.launch {
-            database.clickDao()
-                .addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, listOf(TestsData.CONDITION_ENTITY)))
-            database.clickDao().deleteClick(TestsData.CLICK_ENTITY)
+    fun deleteScenarioWithClicks() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, emptyList()))
+        database.clickDao().deleteClickScenario(TestsData.SCENARIO_ENTITY)
 
-            assertEquals(TestsData.CONDITION_ENTITY, database.clickDao().getClicklessConditions().value!![0])
-        }
+        assertEquals(0, database.clickDao().getClickCount(TestsData.SCENARIO_ENTITY.id))
     }
 
     @Test
-    fun deleteClicklessConditions() {
-        scope.launch {
-            database.clickDao()
-                .addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, listOf(TestsData.CONDITION_ENTITY)))
-            database.clickDao().deleteClick(TestsData.CLICK_ENTITY)
-            database.clickDao().deleteClicklessConditions()
+    fun deleteClicklessConditions() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao()
+            .addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, listOf(TestsData.CONDITION_ENTITY)))
+        database.clickDao().deleteClick(TestsData.CLICK_ENTITY)
+        database.clickDao().deleteClicklessConditions()
 
-            assertEquals(0, database.clickDao().getClicklessConditions().value!!.size)
-        }
+        assertEquals(0, database.clickDao().getClicklessConditions().getOrAwaitValue().size)
     }
 
     @Test
-    fun updateClickWithConditions() {
-        scope.launch {
-            val original = TestsData.newIdlessClickWithConditionEntity(TestsData.SCENARIO_ENTITY.id, 1, listOf(TestsData.CONDITION_ENTITY))
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickWithConditions(original)
+    fun getClickCount() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickWithConditions(TestsData.newClickWithConditionEntity(TestsData.SCENARIO_ENTITY.id))
+        database.clickDao().addClickWithConditions(TestsData.newClickWithConditionEntity2(TestsData.SCENARIO_ENTITY.id))
 
-            val newValue = TestsData.newIdlessClickWithConditionEntity2(original.click.scenarioId, original.click.clickId,
-                listOf(TestsData.CONDITION_ENTITY_2))
-            database.clickDao().updateClickWithConditions(newValue)
-
-            assertEquals(newValue, database.clickDao().getClicksWithConditionsList(TestsData.SCENARIO_ENTITY.id)[0])
-        }
+        assertEquals(2, database.clickDao().getClickCount(TestsData.SCENARIO_ENTITY.id))
     }
 
     @Test
-    fun getClickScenarios() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY_2)
+    fun getClickScenarios() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY_2)
 
-            val expected = listOf(
+        assertScenarioListAreEquals(
+            listOf(
                 ScenarioWithClicks(TestsData.SCENARIO_ENTITY, emptyList()),
                 ScenarioWithClicks(TestsData.SCENARIO_ENTITY_2, emptyList())
-            )
-
-            assertEquals(expected, database.clickDao().getClickScenarios().value)
-        }
+            ),
+            database.clickDao().getClickScenarios().getOrAwaitValue()
+        )
     }
 
     @Test
-    fun getClickScenariosWithClicks() {
-        scope.launch {
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
-            database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY_2)
-            database.clickDao().addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY, emptyList()))
-            database.clickDao().addClickWithConditions(ClickWithConditions(TestsData.CLICK_ENTITY_2, emptyList()))
+    fun getClickScenariosWithClicks() = runBlocking {
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
+        database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY_2)
 
-            val expected = listOf(
-                ScenarioWithClicks(TestsData.SCENARIO_ENTITY, listOf(TestsData.CLICK_ENTITY, TestsData.CLICK_ENTITY_2)),
-                ScenarioWithClicks(TestsData.SCENARIO_ENTITY_2, listOf(TestsData.CLICK_ENTITY, TestsData.CLICK_ENTITY_2))
-            )
+        val expectedClick1 = TestsData.newClickWithConditionEntity(TestsData.SCENARIO_ID, TestsData.CLICK_ID)
+        database.clickDao().addClickWithConditions(expectedClick1)
+        val expectedClick2 = TestsData.newClickWithConditionEntity2(TestsData.SCENARIO_ID_2, TestsData.CLICK_ID_2)
+        database.clickDao().addClickWithConditions(expectedClick2)
 
-            assertEquals(expected, database.clickDao().getClickScenarios().value)
-        }
+        assertScenarioListAreEquals(
+            listOf(
+                ScenarioWithClicks(TestsData.SCENARIO_ENTITY, listOf(expectedClick1.click)),
+                ScenarioWithClicks(TestsData.SCENARIO_ENTITY_2, listOf(expectedClick2.click))
+            ),
+            database.clickDao().getClickScenarios().getOrAwaitValue()
+        )
     }
 }
