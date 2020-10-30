@@ -81,6 +81,8 @@ internal object TestsData {
     fun newClickWithConditionEntity2(scenarioId: Long, clickId: Long = 0, conditions: List<ConditionEntity> = emptyList()) =
         ClickWithConditions(CLICK_ENTITY.copy(clickId = clickId, scenarioId = scenarioId), conditions)
 
+    const val CLICK_ID_3 = 1418L
+
     const val CONDITION_PATH = "/toto/tutu/tata"
     const val CONDITION_LEFT = 0
     const val CONDITION_TOP = 45
