@@ -76,7 +76,7 @@ import org.junit.runner.Description
  * }
  * ```
  *
- * * Finally, all your test must be executed in a [] block, such as:
+ * * Finally, all your test must be executed in a [kotlinx.coroutines.runBlocking] block, such as:
  * ```
  * fun myTestFunction() = runBlocking {
  *     // My test code
