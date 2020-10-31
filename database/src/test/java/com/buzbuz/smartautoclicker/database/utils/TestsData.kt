@@ -16,6 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.database.utils
 
+import android.graphics.Point
+import android.graphics.Rect
+
+import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.room.ClickEntity
 import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
@@ -49,6 +53,15 @@ internal object TestsData {
         CLICK_CONDITION_OPERATOR, CLICK_DELAY_AFTER, CLICK_PRIORITY
     )
     /**
+     * Instantiates a new [ClickInfo] based on [CLICK_ENTITY].
+     * @param id the identifier for this click
+     * @param priority the priority in its list.
+     * @param conditions the list of click conditions.
+     */
+    fun newClickInfo(id: Long = CLICK_ID, priority: Int = CLICK_PRIORITY, conditions: List<ClickCondition> = emptyList()) =
+        ClickInfo(CLICK_NAME, CLICK_SCENARIO_ID, CLICK_TYPE, Point(CLICK_FROMX, CLICK_FROMY), Point(0, 0),
+            CLICK_CONDITION_OPERATOR, conditions, id, CLICK_DELAY_AFTER, priority)
+    /**
      * Instantiates a new [ClickWithConditions] based on [CLICK_ENTITY].
      * @param scenarioId the scenario for this click
      * @param clickId the id for this click. Use 0 to let the database creates one.
@@ -73,6 +86,15 @@ internal object TestsData {
         CLICK_TOX_2, CLICK_TOY_2, CLICK_CONDITION_OPERATOR_2, CLICK_DELAY_AFTER_2, CLICK_PRIORITY_2
     )
     /**
+     * Instantiates a new [ClickInfo] based on [CLICK_ENTITY].
+     * @param id the identifier for this click
+     * @param priority the priority in its list.
+     * @param conditions the list of click conditions.
+     */
+    fun newClickInfo2(id: Long = CLICK_ID_2, priority: Int = CLICK_PRIORITY_2, conditions: List<ClickCondition> = emptyList()) =
+        ClickInfo(CLICK_NAME_2, CLICK_SCENARIO_ID_2, CLICK_TYPE_2, Point(CLICK_FROMX_2, CLICK_FROMY_2),
+            Point(CLICK_TOX_2, CLICK_TOY_2), CLICK_CONDITION_OPERATOR_2, conditions, id, CLICK_DELAY_AFTER_2, priority)
+    /**
      * Instantiates a new [ClickWithConditions] based on [CLICK_ENTITY_2].
      * @param scenarioId the scenario for this click
      * @param clickId the id for this click. Use 0 to let the database creates one.
@@ -94,6 +116,7 @@ internal object TestsData {
         CONDITION_PATH, CONDITION_LEFT, CONDITION_TOP, CONDITION_RIGHT,
         CONDITION_BOTTOM, CONDITION_WIDTH, CONDITION_HEIGHT
     )
+    val CONDITION = ClickCondition(Rect(CONDITION_LEFT, CONDITION_TOP, CONDITION_RIGHT, CONDITION_BOTTOM), CONDITION_PATH)
 
     const val CONDITION_PATH_2 = "/titi/tete/tyty"
     const val CONDITION_LEFT_2 = -50
@@ -106,4 +129,5 @@ internal object TestsData {
         CONDITION_PATH_2, CONDITION_LEFT_2, CONDITION_TOP_2, CONDITION_RIGHT_2,
         CONDITION_BOTTOM_2, CONDITION_WIDTH_2, CONDITION_HEIGHT_2
     )
+    val CONDITION_2 = ClickCondition(Rect(CONDITION_LEFT_2, CONDITION_TOP_2, CONDITION_RIGHT_2, CONDITION_BOTTOM_2), CONDITION_PATH_2)
 }

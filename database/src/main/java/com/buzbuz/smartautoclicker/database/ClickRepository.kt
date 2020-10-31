@@ -32,7 +32,7 @@ import kotlinx.coroutines.Dispatchers
  *
  * @param database the database containing the clicks and scenarios.
  */
-class ClickRepository private constructor(database: ClickDatabase) {
+class ClickRepository internal constructor(database: ClickDatabase) {
 
     companion object {
 
