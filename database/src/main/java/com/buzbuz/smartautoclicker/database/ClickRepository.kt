@@ -20,12 +20,9 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.liveData
 
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
-
-import kotlinx.coroutines.Dispatchers
 
 /**
  * Repository for accessing the click scenarios and their clicks. Provide methods for creation/edition.
@@ -62,16 +59,16 @@ class ClickRepository internal constructor(database: ClickDatabase) {
     private val clickDao = database.clickDao()
 
     /** The list of scenario in the database. */
-    val scenarios = Transformations.switchMap(clickDao.getClickScenarios()) {
-        liveData { emit(ClickScenario.fromEntities(it)) }
+    val scenarios = Transformations.map(clickDao.getClickScenarios()) {
+        ClickScenario.fromEntities(it)
     }
     /**
      * The list of conditions without clicks. Kept here to give a chance for the application to remove related resources
      * before deleting them.
      * Once your have cleaned the associated resources, you can call [deleteClicklessConditions] to clean this list.
      */
-    val clicklessConditions = Transformations.switchMap(clickDao.getClicklessConditions()) {
-        liveData { emit(ClickCondition.fromEntities(it)) }
+    val clicklessConditions = Transformations.map(clickDao.getClicklessConditions()) {
+        ClickCondition.fromEntities(it)
     }
 
     /**
@@ -110,8 +107,8 @@ class ClickRepository internal constructor(database: ClickDatabase) {
      * @return the livedata on the list of clicks.
      */
     fun getClicks(scenarioId: Long): LiveData<List<ClickInfo>> {
-        return Transformations.switchMap(clickDao.getClicksWithConditions(scenarioId)) { clicks ->
-            liveData(Dispatchers.IO) { emit(ClickInfo.fromEntities(clicks)) }
+        return Transformations.map(clickDao.getClicksWithConditions(scenarioId)) {
+            ClickInfo.fromEntities(it)
         }
     }
 

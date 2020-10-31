@@ -19,14 +19,18 @@ package com.buzbuz.smartautoclicker.database
 import android.os.Build
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.database.room.ClickDao
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.room.ConditionEntity
 import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 import com.buzbuz.smartautoclicker.database.utils.anyNotNull
+import com.buzbuz.smartautoclicker.database.utils.getOrAwaitValue
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -65,6 +69,10 @@ internal class ClickRepositoryTests {
     /** Coroutine scope for the tests. */
     private val testScope = TestCoroutineScope(testDispatcher)
 
+    /** LiveData returned by the dao containing the tests data scenarios. */
+    private val databaseScenarioList = MutableLiveData<List<ScenarioWithClicks>>()
+    /** LiveData returned by the dao containing the tests data clickless conditions. */
+    private val databaseClicklessConditions = MutableLiveData<List<ConditionEntity>>()
     /** A mocked version of the Dao. */
     private lateinit var mockDao: ClickDao
     /** Object under tests. */
@@ -77,6 +85,9 @@ internal class ClickRepositoryTests {
         val mockDatabase = mock(ClickDatabase::class.java)
         mockDao = mock(ClickDao::class.java)
         mockWhen(mockDatabase.clickDao()).thenReturn(mockDao)
+        mockWhen(mockDao.getClickScenarios()).thenReturn(databaseScenarioList)
+        mockWhen(mockDao.getClicklessConditions()).thenReturn(databaseClicklessConditions)
+
         repository = ClickRepository(mockDatabase)
         clearInvocations(mockDao)
     }
@@ -242,5 +253,42 @@ internal class ClickRepositoryTests {
     fun deleteClicklessConditions() = runBlocking {
         repository.deleteClicklessConditions()
         verify(mockDao).deleteClicklessConditions()
+    }
+
+    @Test
+    fun getScenarios() = runBlocking {
+        val scenarios = listOf(
+            ScenarioWithClicks(TestsData.SCENARIO_ENTITY_2, emptyList()),
+            ScenarioWithClicks(TestsData.SCENARIO_ENTITY, emptyList())
+        )
+        databaseScenarioList.value = scenarios
+
+        val expected = listOf(
+            ClickScenario(TestsData.SCENARIO_ENTITY_2.name, TestsData.SCENARIO_ENTITY_2.id),
+            ClickScenario(TestsData.SCENARIO_ENTITY.name, TestsData.SCENARIO_ENTITY.id)
+        )
+        assertEquals(expected, repository.scenarios.getOrAwaitValue())
+    }
+
+    @Test
+    fun getClicklessConditions() = runBlocking {
+        val conditions = listOf(TestsData.CONDITION_ENTITY, TestsData.CONDITION_ENTITY_2)
+        databaseClicklessConditions.value = conditions
+
+        val expected = listOf(TestsData.CONDITION, TestsData.CONDITION_2)
+        assertEquals(expected, repository.clicklessConditions.getOrAwaitValue())
+    }
+
+    @Test
+    fun getClicks() = runBlocking {
+        val clicks = listOf(
+            TestsData.newClickWithConditionEntity(TestsData.SCENARIO_ID, 0),
+            TestsData.newClickWithConditionEntity(TestsData.SCENARIO_ID, 1)
+        )
+        val databaseClickList = MutableLiveData(clicks)
+        mockWhen(mockDao.getClicksWithConditions(TestsData.SCENARIO_ID)).thenReturn(databaseClickList)
+
+        val expected = listOf(TestsData.newClickInfo(0), TestsData.newClickInfo(1))
+        assertEquals(expected, repository.getClicks(TestsData.SCENARIO_ID).getOrAwaitValue())
     }
 }
