@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.model.DetectorModel
 import com.buzbuz.smartautoclicker.overlays.MainMenu
-import com.buzbuz.smartautoclicker.overlays.OverlayController
+import com.buzbuz.smartautoclicker.baseui.overlays.OverlayController
 
 /**
  * AccessibilityService implementation for the SmartAutoClicker.

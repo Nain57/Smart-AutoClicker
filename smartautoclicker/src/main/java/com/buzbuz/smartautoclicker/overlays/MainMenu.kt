@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.dialogs.ClickListDialog
 import com.buzbuz.smartautoclicker.model.DetectorModel

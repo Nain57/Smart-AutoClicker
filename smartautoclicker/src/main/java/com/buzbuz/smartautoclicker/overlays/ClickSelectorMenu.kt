@@ -34,6 +34,7 @@ import androidx.core.content.res.use
 import androidx.core.graphics.toPoint
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.database.ClickInfo
 
 /**

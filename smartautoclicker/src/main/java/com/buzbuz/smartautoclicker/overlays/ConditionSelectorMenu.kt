@@ -38,7 +38,8 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.move
-import com.buzbuz.smartautoclicker.gestures.*
+import com.buzbuz.smartautoclicker.baseui.gestures.*
+import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order
