@@ -42,6 +42,10 @@ android {
             jvmTarget = '1.8'
         }
     }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -50,4 +54,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
 
     implementation project(path: ':extensions')
+
+    testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
+    testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
+    testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
+    testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
 }
