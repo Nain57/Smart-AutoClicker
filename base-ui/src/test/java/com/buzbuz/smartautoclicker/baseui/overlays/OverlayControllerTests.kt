@@ -26,8 +26,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Answers
-import org.mockito.ArgumentMatchers.any
 
 import org.mockito.Mock
 import org.mockito.Mockito.clearInvocations
@@ -35,7 +33,6 @@ import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import org.mockito.Mockito.`when` as mockWhen
 
 import org.robolectric.annotation.Config
 
