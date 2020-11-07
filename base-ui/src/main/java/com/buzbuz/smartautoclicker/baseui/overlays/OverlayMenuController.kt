@@ -32,7 +32,8 @@ import android.widget.ImageView
 import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
-import androidx.core.view.children
+import androidx.annotation.VisibleForTesting
+import androidx.core.view.forEach
 
 import com.buzbuz.smartautoclicker.ui.R
 import com.buzbuz.smartautoclicker.extensions.displaySize
@@ -59,13 +60,14 @@ import com.buzbuz.smartautoclicker.extensions.displaySize
  */
 abstract class OverlayMenuController(context: Context) : OverlayController(context) {
 
-    private companion object {
+    @VisibleForTesting
+    internal companion object {
         /** Name of the preference file. */
-        private const val PREFERENCE_NAME = "OverlayMenuController"
+        const val PREFERENCE_NAME = "OverlayMenuController"
         /** Preference key referring to the X position of the menu during the last call to [dismiss]. */
-        private const val PREFERENCE_MENU_X_KEY = "Menu_X_Position"
+        const val PREFERENCE_MENU_X_KEY = "Menu_X_Position"
         /** Preference key referring to the Y position of the menu during the last call to [dismiss]. */
-        private const val PREFERENCE_MENU_Y_KEY = "Menu_Y_Position"
+        const val PREFERENCE_MENU_Y_KEY = "Menu_Y_Position"
     }
 
     /** The layout parameters of the menu layout. */
@@ -90,6 +92,9 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     protected val windowManager = context.getSystemService(WindowManager::class.java)!!
     /** The display size. Used for avoiding moving the menu outside the screen. */
     private val displaySize = windowManager.displaySize
+    /** Value of the alpha for a disabled item view in the menu. */
+    @SuppressLint("ResourceType")
+    private val disabledItemAlpha = context.resources.getFraction(R.dimen.alpha_menu_item_disabled, 1, 1)
 
     /** The root view of the menu overlay. Retrieved from [onCreateMenu] implementation. */
     private var menuLayout: ViewGroup? = null
@@ -133,7 +138,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         // Set the clicks listener on the menu items
         menuLayout!!.let {
             val parentLayout: ViewGroup = if (it.childCount == 1) it.getChildAt(0) as ViewGroup else it
-            for (view in parentLayout.children) {
+            parentLayout.forEach { view ->
                 @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
                 when (view.id) {
                     R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
@@ -194,7 +199,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     protected fun setMenuItemViewEnabled(@IdRes viewId: Int, enabled: Boolean, clickable: Boolean = false) {
         menuLayout?.findViewById<View>(viewId)?.apply {
             isEnabled = enabled || clickable
-            alpha = if (enabled) 1.0f else 0.4f
+            alpha = if (enabled) 1.0f else disabledItemAlpha
         }
     }
 
