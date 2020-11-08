@@ -124,9 +124,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
     }
 
     final override fun onDismissed() {
-        if (isShowing) {
-            dialog?.dismiss()
-        }
+        dialog?.dismiss()
     }
 
     /** Handle the dialog dismissing. */
@@ -144,7 +142,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      * @param textId the string resource identifier for the text of the button.
      * @param listener the new click listener of the button. Can be null if none is needed.
      */
-    protected fun changeButtonState(button: Button, visibility: Int, textId: Int = -1, listener: ((View) -> Unit)? = null) {
+    protected fun changeButtonState(button: Button, visibility: Int, textId: Int = -1, listener: View.OnClickListener? = null) {
         button.apply {
             when (visibility) {
                 View.VISIBLE -> {

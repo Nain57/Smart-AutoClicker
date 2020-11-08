@@ -22,6 +22,7 @@ import android.view.WindowManager
 import org.junit.Assert.assertNotNull
 
 import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
@@ -70,3 +71,9 @@ fun captureWindowManagerAddedViews(mockWindowManager: WindowManager) : Pair<WmAd
     return WmAddedView(wmAddViewCaptor.allValues[0], wmAddViewParamsCaptor.allValues[0]) to
             WmAddedView(wmAddViewCaptor.allValues[1], wmAddViewParamsCaptor.allValues[1])
 }
+
+/**
+ * Argument matcher for a nonnull kotlin function argument matching any nonnull value.
+ * @param T the type of the argument.
+ */
+fun <T> anyNotNull(): T = Mockito.any()
