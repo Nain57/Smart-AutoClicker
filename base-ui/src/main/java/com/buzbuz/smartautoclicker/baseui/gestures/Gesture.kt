@@ -60,10 +60,12 @@ abstract class Gesture(
     companion object {
         /** Identifier for no touch pointer. */
         const val NO_POINTER_ID = -1
+        /** Ratio between the handle and the inner handle */
+        const val INNER_HANDLE_RATIO = 3
     }
 
     /** The size of the handle within the view. */
-    protected val innerHandleSize = handleSize / 3
+    protected val innerHandleSize = handleSize / INNER_HANDLE_RATIO
     /**
      * The unique identifier of the pointer that initiated the gesture.
      * Using this value, the index of the pointer in another [MotionEvent] can be found using
@@ -112,9 +114,15 @@ abstract class Gesture(
         }
 
         // Not our business ? leave early
-        currentPointerDownIndex = event.findPointerIndex(firstPointerDownId)
-        if (!ignorePointers && event.actionIndex != currentPointerDownIndex) {
-            return false
+        if (!ignorePointers) {
+            if (firstPointerDownId == NO_POINTER_ID) {
+                return false
+            }
+
+            currentPointerDownIndex = event.findPointerIndex(firstPointerDownId)
+            if (event.actionIndex != currentPointerDownIndex) {
+                return false
+            }
         }
 
         // Not a up ? Let the gesture implementation handle the event
