@@ -29,7 +29,7 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.baseui.anyNotNull
+import com.buzbuz.smartautoclicker.baseui.utils.anyNotNull
 
 import org.junit.Assert.assertEquals
 import org.junit.Before

@@ -34,8 +34,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.baseui.captureWindowManagerAddedMenuView
-import com.buzbuz.smartautoclicker.baseui.captureWindowManagerAddedViews
+import com.buzbuz.smartautoclicker.baseui.utils.captureWindowManagerAddedMenuView
+import com.buzbuz.smartautoclicker.baseui.utils.captureWindowManagerAddedViews
+import com.buzbuz.smartautoclicker.baseui.utils.mockSimpleRawEvent
 import com.buzbuz.smartautoclicker.ui.R
 
 import org.junit.Assert.assertEquals
@@ -155,19 +156,6 @@ class OverlayMenuControllerTests {
      */
     private fun createMockMenuItemView(@IdRes viewId: Int = 0): ImageView = mock(ImageView::class.java).also {
         mockWhen(it.id).thenReturn(viewId)
-    }
-
-    /**
-     * Create a mock touch event with the specified action and position.
-     *
-     * @param action the action. Must be one of the values declared in [MotionEvent].
-     * @param rawXPos the x position for the touch event.
-     * @param rawYPos the y position for the touch event.
-     */
-    private fun createMockTouchEvent(action: Int, rawXPos: Float, rawYPos: Float) = mock(MotionEvent::class.java).also {
-        mockWhen(it.action).thenReturn(action)
-        mockWhen(it.rawX).thenReturn(rawXPos)
-        mockWhen(it.rawY).thenReturn(rawYPos)
     }
 
     /**
@@ -608,14 +596,14 @@ class OverlayMenuControllerTests {
         val touchListener = touchListenerCaptor.value
 
         // Down event
-        touchListener.onTouch(moveItem,
-            createMockTouchEvent(MotionEvent.ACTION_DOWN, TEST_DATA_X_POS.toFloat(), TEST_DATA_Y_POS.toFloat()))
+        touchListener.onTouch(moveItem, mockSimpleRawEvent(MotionEvent.ACTION_DOWN, TEST_DATA_X_POS.toFloat(),
+            TEST_DATA_Y_POS.toFloat()))
         // Move event
         val newX = TEST_DATA_X_POS + 100
         val newY = TEST_DATA_Y_POS - 100
-        touchListener.onTouch(moveItem, createMockTouchEvent(MotionEvent.ACTION_MOVE, newX.toFloat(), newY.toFloat()))
+        touchListener.onTouch(moveItem, mockSimpleRawEvent(MotionEvent.ACTION_MOVE, newX.toFloat(), newY.toFloat()))
         // Up event
-        touchListener.onTouch(moveItem, createMockTouchEvent(MotionEvent.ACTION_UP, 0f, 0f))
+        touchListener.onTouch(moveItem, mockSimpleRawEvent(MotionEvent.ACTION_UP, 0f, 0f))
 
         val paramsCaptor = ArgumentCaptor.forClass(WindowManager.LayoutParams::class.java)
         verify(mockWindowManager).updateViewLayout(eq(menuView), paramsCaptor.capture())

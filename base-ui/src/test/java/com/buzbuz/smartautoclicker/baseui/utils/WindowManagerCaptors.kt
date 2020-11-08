@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui
+package com.buzbuz.smartautoclicker.baseui.utils
 
 import android.view.View
 import android.view.WindowManager
@@ -22,7 +22,6 @@ import android.view.WindowManager
 import org.junit.Assert.assertNotNull
 
 import org.mockito.ArgumentCaptor
-import org.mockito.Mockito
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
@@ -71,9 +70,3 @@ fun captureWindowManagerAddedViews(mockWindowManager: WindowManager) : Pair<WmAd
     return WmAddedView(wmAddViewCaptor.allValues[0], wmAddViewParamsCaptor.allValues[0]) to
             WmAddedView(wmAddViewCaptor.allValues[1], wmAddViewParamsCaptor.allValues[1])
 }
-
-/**
- * Argument matcher for a nonnull kotlin function argument matching any nonnull value.
- * @param T the type of the argument.
- */
-fun <T> anyNotNull(): T = Mockito.any()
