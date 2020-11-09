@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.baseui.utils
 
 import android.view.MotionEvent
+import com.buzbuz.smartautoclicker.baseui.gestures.BaseResizeGestureTests
 
 import org.mockito.Mockito
 import org.mockito.Mockito.`when` as mockWhen
@@ -57,6 +58,8 @@ fun mockEvent(action: Int, xPos: Float, yPos: Float, pointerId: Int, pointerCoun
     mockWhen(it.actionIndex).thenReturn(actionIndex)
     mockWhen(it.x).thenReturn(xPos)
     mockWhen(it.y).thenReturn(yPos)
+    mockWhen(it.getX(pointerIndex)).thenReturn(xPos)
+    mockWhen(it.getY(pointerIndex)).thenReturn(yPos)
     mockWhen(it.rawX).thenReturn(xPos)
     mockWhen(it.rawY).thenReturn(yPos)
 }

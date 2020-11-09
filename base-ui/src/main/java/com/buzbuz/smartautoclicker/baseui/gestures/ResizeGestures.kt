@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.baseui.gestures
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import kotlin.math.max
 import kotlin.math.min
 
@@ -59,7 +60,8 @@ abstract class ResizeGesture(view: View, handleSize: Float, private val onResize
      * @param enoughInnerSpace true if there is enough space to make the handle overlap the view content, or false if
      *                         the view is too small for that.
      */
-    protected abstract fun getHandleArea(viewArea: RectF, enoughInnerSpace: Boolean) : RectF
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    internal abstract fun getHandleArea(viewArea: RectF, enoughInnerSpace: Boolean) : RectF
 
     /**
      * Get the new size of the view according to the new move motion event.
@@ -67,7 +69,8 @@ abstract class ResizeGesture(view: View, handleSize: Float, private val onResize
      * @param event the [MotionEvent.ACTION_MOVE] motion event.
      * @param viewArea the current view bounds.
      */
-    protected abstract fun getNewSize(event: MotionEvent, viewArea: RectF): RectF
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    internal abstract fun getNewSize(event: MotionEvent, viewArea: RectF): RectF
 }
 
 /** Resize gesture for the left side of the view with a rectangle handle on the left side as well. */
