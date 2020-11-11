@@ -32,7 +32,7 @@ import android.view.Surface
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.detection.utils.ShadowImageReader
+import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
 
 import org.junit.After
