@@ -31,10 +31,11 @@ import android.os.Handler
 import android.util.Log
 
 import androidx.annotation.MainThread
+import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 
 /**
- * Record the screen and provide screen capture and click detection on it.
+ * Record the screen and provide [Image] from it.
  *
  * Uses the [MediaProjection] API to create a [VirtualDisplay] not shown to the user and containing a copy of the
  * user device screen content. An [ImageReader] is attached to this display in order to monitor every new frame
@@ -51,13 +52,14 @@ import androidx.annotation.WorkerThread
  * @param imageListener notified when a new image of the screen is available.
  */
 @MainThread
-internal class ScreenRecorder(private val displaySize: Point, private val imageListener: (ImageReader) -> Unit) {
+internal class ScreenRecorder(private val displaySize: Point, private val imageListener: ImageReader.OnImageAvailableListener) {
 
-    private companion object {
+    @VisibleForTesting
+    internal companion object {
         /** Tag for logs. */
         private const val TAG = "ScreenRecorder"
         /** Name of the virtual display generating [Image]. */
-        private const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"
+        const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"
     }
 
     /**
@@ -87,7 +89,7 @@ internal class ScreenRecorder(private val displaySize: Point, private val imageL
      *
      * If the screen record was already started, this method will have no effect.
      *
-     * @param context
+     * @param context the Android context.
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param data the data intent provided by the screen capture intent activity result callback

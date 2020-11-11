@@ -28,8 +28,8 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
-import androidx.annotation.AnyThread
 
+import androidx.annotation.AnyThread
 import androidx.annotation.GuardedBy
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
