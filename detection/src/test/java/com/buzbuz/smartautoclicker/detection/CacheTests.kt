@@ -18,11 +18,13 @@ package com.buzbuz.smartautoclicker.detection
 
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.Rect
 import android.media.Image
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
+import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
 
@@ -30,13 +32,17 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.inOrder
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when` as mockWhen
 import org.mockito.MockitoAnnotations
@@ -57,6 +63,22 @@ class CacheTests {
 
         private const val TEST_DATA_IMAGE_PIXEL_STRIDE = 1
         private const val TEST_DATA_IMAGE_ROW_STRIDE = TEST_DATA_DISPLAY_SIZE_WIDTH
+
+        private const val TEST_DATA_CLICK_CONDITION_PATH = "/this/is/a/path"
+        private const val TEST_DATA_CLICK_CONDITION_WIDTH = 100
+        private const val TEST_DATA_CLICK_CONDITION_HEIGHT = 100
+        private val TEST_DATA_CLICK_CONDITION_AREA = Rect(
+            TEST_DATA_CLICK_CONDITION_WIDTH,
+            TEST_DATA_CLICK_CONDITION_HEIGHT,
+            TEST_DATA_CLICK_CONDITION_WIDTH * 2,
+            TEST_DATA_CLICK_CONDITION_HEIGHT * 2
+        )
+        private val TEST_DATA_CLICK_CONDITION = ClickCondition(
+            TEST_DATA_CLICK_CONDITION_AREA,
+            TEST_DATA_CLICK_CONDITION_PATH
+        )
+        private val TEST_DATA_CLICK_CONDITION_IMAGE_PIXELS =
+            IntArray(TEST_DATA_CLICK_CONDITION_WIDTH * TEST_DATA_CLICK_CONDITION_HEIGHT)
     }
 
     /** Interface to be mocked in order to verify the calls to the bitmap supplier. */
@@ -64,7 +86,8 @@ class CacheTests {
         fun getBitmap(path: String, width: Int, height: Int): Bitmap
     }
 
-    @Mock private lateinit var mockBitmap: Bitmap
+    @Mock private lateinit var mockCreatedBitmap: Bitmap
+    @Mock private lateinit var mockSuppliedBitmap: Bitmap
     @Mock private lateinit var mockImage: Image
     @Mock private lateinit var mockImagePlane: Image.Plane
     @Mock private lateinit var mockImagePlaneBuffer: ByteBuffer
@@ -88,9 +111,20 @@ class CacheTests {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
+        // Mock the bitmaps created by [Bitmap.createBitmap]
         ShadowBitmapCreator.setMockInstance(mockBitmapCreator)
-        mockWhen(mockBitmapCreator.createBitmap(anyInt(), anyInt(), anyNotNull())).thenReturn(mockBitmap)
+        mockWhen(mockBitmapCreator.createBitmap(anyInt(), anyInt(), anyNotNull())).thenReturn(mockCreatedBitmap)
 
+        // Mock the bitmaps supplied by bitmap supplier lambda
+        mockWhen(mockBitmapSupplier.getBitmap(
+            TEST_DATA_CLICK_CONDITION_PATH,
+            TEST_DATA_CLICK_CONDITION_WIDTH,
+            TEST_DATA_CLICK_CONDITION_HEIGHT
+        )).thenReturn(mockSuppliedBitmap)
+        mockWhen(mockSuppliedBitmap.width).thenReturn(TEST_DATA_CLICK_CONDITION_WIDTH)
+        mockWhen(mockSuppliedBitmap.height).thenReturn(TEST_DATA_CLICK_CONDITION_HEIGHT)
+
+        // Mock the image data
         mockWhen(mockImage.planes).thenReturn(arrayOf(mockImagePlane))
         mockWhen(mockImagePlane.pixelStride).thenReturn(TEST_DATA_IMAGE_PIXEL_STRIDE)
         mockWhen(mockImagePlane.rowStride).thenReturn(TEST_DATA_IMAGE_ROW_STRIDE)
@@ -116,7 +150,7 @@ class CacheTests {
 
         verify(mockBitmapCreator)
             .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT, Bitmap.Config.ARGB_8888)
-        assertEquals("Invalid screen bitmap", mockBitmap, cache.screenBitmap)
+        assertEquals("Invalid screen bitmap", mockCreatedBitmap, cache.screenBitmap)
         assertNotNull("Screen pixel cache should be initialized", cache.screenPixels)
         assertEquals(
             "Invalid screen pixels size",
@@ -129,17 +163,67 @@ class CacheTests {
         cache.currentImage = mockImage
         cache.refreshProcessedImage()
 
-        inOrder(mockBitmap).apply {
-            verify(mockBitmap).copyPixelsFromBuffer(mockImagePlaneBuffer)
-            verify(mockBitmap).getPixels(cache.screenPixels, 0, TEST_DATA_IMAGE_ROW_STRIDE, 0, 0,
+        inOrder(mockCreatedBitmap).apply {
+            verify(mockCreatedBitmap).copyPixelsFromBuffer(mockImagePlaneBuffer)
+            verify(mockCreatedBitmap).getPixels(cache.screenPixels, 0, TEST_DATA_IMAGE_ROW_STRIDE, 0, 0,
                 TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT)
         }
+    }
+
+    @Test
+    fun pixelCache_createItem() {
+        val conditionPixelsCaptor = ArgumentCaptor.forClass(IntArray::class.java)
+
+        val result = cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
+
+        verify(mockSuppliedBitmap).getPixels(conditionPixelsCaptor.capture(), eq(0),
+            eq(TEST_DATA_CLICK_CONDITION_WIDTH), eq(0), eq(0), eq(TEST_DATA_CLICK_CONDITION_WIDTH),
+            eq(TEST_DATA_CLICK_CONDITION_HEIGHT))
+        assertNotNull("Result should not be null", result)
+        assertTrue("Invalid pixel cache condition pixels arrays",
+            conditionPixelsCaptor.value.contentEquals(result!!.first))
+        assertTrue("Invalid pixel cache current pixels arrays",
+            TEST_DATA_CLICK_CONDITION_IMAGE_PIXELS.contentEquals(result.second)
+        )
+    }
+
+    @Test
+    fun pixelCache_createItem_noBitmap() {
+        mockWhen(mockBitmapSupplier.getBitmap(
+            TEST_DATA_CLICK_CONDITION_PATH,
+            TEST_DATA_CLICK_CONDITION_WIDTH,
+            TEST_DATA_CLICK_CONDITION_HEIGHT
+        )).thenReturn(null)
+
+        val result = cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
+
+        verify(mockSuppliedBitmap, never()).getPixels(anyNotNull(), eq(0), eq(TEST_DATA_CLICK_CONDITION_WIDTH),
+            eq(0), eq(0), eq(TEST_DATA_CLICK_CONDITION_WIDTH), eq(TEST_DATA_CLICK_CONDITION_HEIGHT))
+        assertNull("Result should be null", result)
     }
 
     @Test
     fun release_bitmapCache() {
         cache.currentImage = mockImage
         cache.refreshProcessedImage()
+        cache.release()
+
+        assertInitialCacheValues()
+    }
+
+    @Test
+    fun release_pixelsCache() {
+        cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
+        cache.release()
+
+        assertInitialCacheValues()
+    }
+
+    @Test
+    fun release_bitmapCache_and_pixelsCache() {
+        cache.currentImage = mockImage
+        cache.refreshProcessedImage()
+        cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
         cache.release()
 
         assertInitialCacheValues()

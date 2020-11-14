@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.database
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.database.room.ConditionEntity
 
@@ -36,6 +37,16 @@ data class ClickCondition internal constructor(
     var bitmap: Bitmap? = null
 ) {
 
+    /**
+     * Instantiates a new condition.
+     * For convenience use for a new condition that has not been saved yet. Do no insert it in the database without
+     * setting the path first.
+     *
+     * @param area the area of the screen to detect.
+     * @param path the path to the bitmap that should be matched for detection.
+     */
+    @VisibleForTesting
+    constructor(area: Rect, path: String): this(area, path, null)
     /**
      * Instantiates a new condition.
      * For convenience use for a new condition that has not been saved yet. Do no insert it in the database without
