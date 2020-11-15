@@ -23,6 +23,7 @@ import android.util.LruCache
 import androidx.annotation.WorkerThread
 
 import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.testing.OpenForTesting
 
 /**
  * Unified cache for the image processing.
@@ -34,6 +35,7 @@ import com.buzbuz.smartautoclicker.database.ClickCondition
  * @param displaySize the size of the display providing the images.
  * @param bitmapSupplier provides the bitmap for the given path, width and height. Will be called on the processing thread.
  */
+@OpenForTesting
 @WorkerThread
 internal class Cache(private val displaySize: Point, private val bitmapSupplier: (String, Int, Int) -> Bitmap?) {
 
