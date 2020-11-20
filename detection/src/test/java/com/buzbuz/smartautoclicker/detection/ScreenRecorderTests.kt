@@ -56,7 +56,7 @@ import org.robolectric.annotation.Config
 /** Test the [ScreenRecorder] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q], shadows = [ ShadowImageReader::class ])
-class ScenarioRecorderTests {
+class ScreenRecorderTests {
 
     private companion object {
         private const val TEST_DATA_RESULT_CODE = 42
