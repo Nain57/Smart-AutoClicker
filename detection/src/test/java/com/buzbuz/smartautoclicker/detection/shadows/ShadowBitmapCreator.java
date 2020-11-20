@@ -34,6 +34,7 @@ public class ShadowBitmapCreator {
     /** Interface to be mocked and provided via {@link #setMockInstance(BitmapCreator)}. */
     public interface BitmapCreator {
         Bitmap createBitmap(int width, int height, @NonNull Bitmap.Config config);
+        Bitmap createBitmap(@NonNull Bitmap source, int x, int y, int width, int height);
     }
 
     /** The current mock for the bitmap. */
@@ -60,6 +61,19 @@ public class ShadowBitmapCreator {
         when(mockBitmap.getWidth()).thenReturn(width);
         when(mockBitmap.getHeight()).thenReturn(height);
         when(mockBitmap.getConfig()).thenReturn(config);
+        return mockBitmap;
+    }
+
+    @NonNull
+    @Implementation
+    public static Bitmap createBitmap(@NonNull Bitmap source, int x, int y, int width, int height) {
+        if (mockBitmapCreator == null) {
+            throw new IllegalStateException("Bitmap is not mocked");
+        }
+
+        Bitmap mockBitmap = mockBitmapCreator.createBitmap(source, x, y, width, height);
+        when(mockBitmap.getWidth()).thenReturn(width);
+        when(mockBitmap.getHeight()).thenReturn(height);
         return mockBitmap;
     }
 

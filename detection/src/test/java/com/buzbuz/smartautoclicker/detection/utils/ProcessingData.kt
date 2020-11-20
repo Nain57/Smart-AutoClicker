@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.detection.utils
 
+import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.database.ClickCondition
@@ -26,8 +28,13 @@ import java.lang.IllegalArgumentException
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-/** Test data and helpers for the ScenarioProcessor. */
+/** Test data and helpers for the detection tests. */
 internal object ProcessingData {
+
+    /** Screen density in dpi. */
+    const val SCREEN_DENSITY_DPI = 180
+    /** Screen configuration from Android context. */
+    val SCREEN_CONFIGURATION = Configuration().apply { densityDpi = SCREEN_DENSITY_DPI }
 
     /** Pixels displayed on the screen. Format is ARGB. */
     val SCREEN_PIXELS = intArrayOf(
