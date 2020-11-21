@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.detection.utils
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Rect
 
@@ -25,7 +24,6 @@ import com.buzbuz.smartautoclicker.database.ClickInfo
 
 import java.lang.IllegalArgumentException
 
-import kotlin.math.pow
 import kotlin.math.sqrt
 
 /** Test data and helpers for the detection tests. */
@@ -81,7 +79,7 @@ internal object ProcessingData {
             throw IllegalArgumentException("Invalid area, it is bigger than the screen")
         }
 
-        val arraysSize = (area.right - area.left + 1).toDouble().pow(2).toInt()
+        val arraysSize = area.width() * area.height()
         return IntArray(arraysSize) to IntArray(arraysSize)
     }
 
@@ -89,9 +87,11 @@ internal object ProcessingData {
     fun newClickInfo(
         name: String,
         @ClickInfo.Companion.Operator operator: Int = ClickInfo.AND,
-        conditions: List<ClickCondition> = emptyList()
+        conditions: List<ClickCondition> = emptyList(),
+        delayMs: Long = 0L
     ) = ClickInfo(name).apply {
         conditionOperator = operator
         conditionList = conditions
+        delayAfterMs = delayMs
     }
 }
