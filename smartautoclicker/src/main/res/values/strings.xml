@@ -16,7 +16,7 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="app_name">Smart Auto Clicker</string>
+    <string name="app_name" translatable="false">Smart Auto Clicker</string>
 
     <string name="activity_scenario_title">Click scenarios</string>
     <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
@@ -76,7 +76,7 @@
 
     <string name="dialog_click_condition_title">Click condition</string>
     <string name="dialog_click_condition_delete">Delete</string>
-    <string name="dialog_click_condition_area">[%1$d,%2$d]</string>
+    <string name="dialog_click_condition_area" translatable="false">[%1$d,%2$d]</string>
     <string name="dialog_click_condition_at">at</string>
     <string name="dialog_click_condition_error">The condition image can\'t be found.</string>
 

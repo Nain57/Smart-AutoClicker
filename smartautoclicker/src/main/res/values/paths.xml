@@ -16,6 +16,6 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="path_play">M 34 22 L 34 64 L 100 64 L 100 64 Z M 34 106 L 34 64 L 100 64 L 100 64 Z</string>
-    <string name="path_pause">M 25 33 L 25 56  L 103 56 L 103 33 Z M 25 95 L 25 72 L 103 72 L 103 95 Z</string>
+    <string name="path_play" translatable="false">M 34 22 L 34 64 L 100 64 L 100 64 Z M 34 106 L 34 64 L 100 64 L 100 64 Z</string>
+    <string name="path_pause" translatable="false">M 25 33 L 25 56  L 103 56 L 103 33 Z M 25 95 L 25 72 L 103 72 L 103 95 Z</string>
 </resources>
