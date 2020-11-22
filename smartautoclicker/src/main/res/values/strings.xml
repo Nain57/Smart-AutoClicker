@@ -16,7 +16,7 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="app_name" translatable="false">Smart Auto Clicker</string>
+    <string name="app_name" translatable="false">Smart AutoClicker</string>
 
     <string name="activity_scenario_title">Click scenarios</string>
     <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
@@ -26,16 +26,16 @@
     </plurals>
 
     <string name="dialog_permissions_title">Permissions required</string>
-    <string name="dialog_permissions_header">The following permissions are required for Smart Auto Clicker:</string>
+    <string name="dialog_permissions_header">The following permissions are required to use Smart AutoClicker:</string>
     <string name="dialog_permission_overlay">Overlay</string>
-    <string name="dialog_permission_overlay_desc">The overlay permission allows this application to draw the clicker
-                                                  menu over other apps.</string>
+    <string name="dialog_permission_overlay_desc">The overlay permission allows this application to display a menu
+                                                  over other apps.</string>
     <string name="dialog_permission_accessibility">Accessibility service</string>
-    <string name="dialog_permission_accessibility_desc">The accessibility service allows this application to clicks on
-                                                        other apps.</string>
+    <string name="dialog_permission_accessibility_desc">The accessibility service allows this application to click on
+                                                        other apps for you.</string>
 
-    <string name="notification_channel_name">Smart Auto Clicker</string>
-    <string name="notification_title">Scenario: %1s</string>
+    <string name="notification_channel_name" translatable="false">Smart AutoClicker</string>
+    <string name="notification_title">Scenario: %1$s</string>
     <string name="notification_message">Press to change the scenario</string>
 
     <string name="dialog_add_scenario_title">New scenario</string>
@@ -51,14 +51,14 @@
 
     <string name="dialog_click_add_title">Add new click</string>
     <string name="dialog_click_add_create">Create</string>
-    <string name="dialog_click_add_copy">Copy from existing</string>
+    <string name="dialog_click_add_copy">Copy from an existing click</string>
 
-    <string name="dialog_click_config_title">Click info</string>
+    <string name="dialog_click_config_title">Click configuration</string>
     <string name="dialog_click_config_name_title">Name</string>
     <string name="dialog_click_config_name_default">Default click</string>
     <string name="dialog_click_config_type_title">Click type</string>
-    <string name="dialog_click_config_type_none">No click defined</string>
-    <string name="dialog_click_config_type_single">Single click at %1$d, %2$d</string>
+    <string name="dialog_click_config_type_none">No click type defined</string>
+    <string name="dialog_click_config_type_single">Single click on %1$d, %2$d</string>
     <string name="dialog_click_config_type_swipe">Swipe from %1$d, %2$d to %3$d, %4$d</string>
     <string name="dialog_click_config_condition_title">Only if</string>
     <string name="dialog_click_config_delay_after_title">Delay before next click</string>
@@ -68,7 +68,7 @@
     <string name="dialog_click_type_single">Single click</string>
     <string name="dialog_click_type_swipe">Swipe</string>
 
-    <string name="dialog_condition_operator_title">Click condition</string>
+    <string name="dialog_condition_operator_title">Conditions type</string>
     <string name="condition_operator_and">ALL</string>
     <string name="condition_operator_or">ONE</string>
     <string name="condition_operator_and_desc">All conditions are fulfilled</string>
@@ -77,7 +77,7 @@
     <string name="dialog_click_condition_title">Click condition</string>
     <string name="dialog_click_condition_delete">Delete</string>
     <string name="dialog_click_condition_area" translatable="false">[%1$d,%2$d]</string>
-    <string name="dialog_click_condition_at">at</string>
+    <string name="dialog_click_condition_at">at position</string>
     <string name="dialog_click_condition_error">The condition image can\'t be found.</string>
 
     <string name="toast_configure_single_click">Touch the position to click on.</string>
@@ -93,7 +93,7 @@
     <string name="content_desc_click_action_btn">Edit this click</string>
     <string name="content_desc_delete_scenario">Delete scenario</string>
     <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
-    <string name="content_desc_stop_clicker">Stop Smart Auto Clicker</string>
+    <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
     <string name="content_desc_open_click_list">Open the click list</string>
     <string name="content_desc_move_menu">Move the floating menu</string>
     <string name="content_desc_confirm">Confirm</string>

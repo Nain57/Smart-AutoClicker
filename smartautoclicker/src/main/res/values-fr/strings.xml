@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="activity_scenario_title">Scenarios</string>
+    <string name="no_scenarios">"Aucun scenario.\nAppuyez sur le button \'+\' pour en créer un."</string>
+    <string name="dialog_permissions_title">Permissions requises</string>
+    <string name="dialog_permissions_header">Les permissions suivantes sont nécessaires pour utiliser Smart AutoClicker :</string>
+    <string name="dialog_permission_overlay">Superposition</string>
+    <string name="dialog_permission_overlay_desc">La permission de superposition permet à cette application d\'afficher
+                                                  un menu au dessus des autres applications.</string>
+    <string name="dialog_permission_accessibility">Service d\'accessibilité</string>
+    <string name="dialog_permission_accessibility_desc">Le service d\'accessibilité permet à cette application de
+                                                        cliquer pour vous sur les autres applications.</string>
+    <string name="notification_title">Scenario : %1$s</string>
+    <string name="notification_message">Appuyez pour changer le scenario</string>
+    <string name="dialog_add_scenario_title">Nouveau scenario</string>
+    <string name="dialog_add_scenario_name_hint">Nom</string>
+    <string name="dialog_delete_scenario_title">Supprimer le scenario</string>
+    <string name="dialog_delete_scenario_message">Le scenario %1$s va être supprimé. Êtes vous sûr ?</string>
+    <string name="dialog_rename_scenario_title">Renommer le scenario</string>
+    <string name="dialog_click_list_title">Liste des clics</string>
+    <string name="dialog_click_list_add">Nouveau…</string>
+    <string name="dialog_click_list_reorder">Réorganiser</string>
+    <string name="dialog_click_list_no_clicks">Aucun clics.\nAppuyez sur \'Nouveau…\' pour en créer un.</string>
+    <string name="dialog_click_add_title">Ajouter un nouveau click</string>
+    <string name="dialog_click_add_create">Créer</string>
+    <string name="dialog_click_add_copy">Copier depuis un autre clic</string>
+    <string name="dialog_click_config_name_title">Nom</string>
+    <string name="dialog_click_config_name_default">Clic par défaut</string>
+    <string name="dialog_click_config_type_title">Type de clic</string>
+    <string name="dialog_click_config_type_none">Aucun type de clic défini</string>
+    <string name="dialog_click_config_type_single">Clic simple sur %1$d, %2$d</string>
+    <string name="dialog_click_config_type_swipe">Glisser de %1$d, %2$d à %3$d, %4$d</string>
+    <string name="dialog_click_config_condition_title">Seulement si</string>
+    <string name="dialog_click_config_delay_after_title">Delai avant le prochain clic</string>
+    <string name="dialog_click_config_duration_hint">ms</string>
+    <string name="dialog_click_type_title">Type de clic</string>
+    <string name="dialog_click_type_single">Clic simple</string>
+    <string name="dialog_click_type_swipe">Glisser</string>
+    <string name="dialog_condition_operator_title">Type de conditions</string>
+    <string name="condition_operator_and">TOUS</string>
+    <string name="condition_operator_or">UN</string>
+    <string name="condition_operator_and_desc">Toutes les conditions sont remplies</string>
+    <string name="condition_operator_or_desc">Au moins une des conditions est remplie</string>
+    <string name="dialog_click_condition_title">Condition de clic</string>
+    <string name="dialog_click_condition_delete">Supprimer</string>
+    <string name="dialog_click_condition_at">à la position</string>
+    <string name="dialog_click_condition_error">L\'image de la condition n\'a pas pu être trouvée.</string>
+    <string name="toast_configure_single_click">Appuyez sur la position à cliquer.</string>
+    <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>
+    <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée.</string>
+    <string name="dialog_click_config_title">Configuration du clic</string>
+    <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
+        que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée
+        n\'est collectée par cette application. N\hésitez pas à visiter notre GitHub, le projet est open source !</string>
+    <string name="content_desc_add_scenario">Créer un nouveau scénario de clics</string>
+    <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
+    <string name="content_desc_click_action_btn">Editer ce clic</string>
+    <string name="content_desc_delete_scenario">Supprimer le scenario</string>
+    <string name="content_desc_play_pause_scenario">Jouer ou arrêter le scenario</string>
+    <string name="content_desc_stop_clicker">Quitter Smart AutoClicker</string>
+    <string name="content_desc_open_click_list">Ouvrir la liste des clics</string>
+    <string name="content_desc_move_menu">Déplacer le menu flottant</string>
+    <string name="content_desc_confirm">Confirmer</string>
+    <string name="content_desc_go_back">Retour au dialog</string>
+    <string name="content_desc_enable_click">Activer ou désactiver la superposition et permettre le clic sur les applications</string>
+    <string name="content_desc_overlay_state">État de la permission de superposition</string>
+    <string name="content_desc_accessibility_state">État du service d\'accessibilité</string>
+</resources>
