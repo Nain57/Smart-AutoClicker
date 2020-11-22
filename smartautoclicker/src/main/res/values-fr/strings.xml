@@ -3,6 +3,10 @@
 
     <string name="activity_scenario_title">Scenarios</string>
     <string name="no_scenarios">"Aucun scenario.\nAppuyez sur le button \'+\' pour en créer un."</string>
+    <plurals name="scenario_sub_text">
+        <item quantity="one">%d clic</item>
+        <item quantity="other">%d clics</item>
+    </plurals>
     <string name="dialog_permissions_title">Permissions requises</string>
     <string name="dialog_permissions_header">Les permissions suivantes sont nécessaires pour utiliser Smart AutoClicker :</string>
     <string name="dialog_permission_overlay">Superposition</string>
