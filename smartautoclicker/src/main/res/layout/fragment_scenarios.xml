@@ -32,6 +32,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/margin_horizontal_default"
         android:tint="@color/textTitle"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add"
+        android:contentDescription="@string/content_desc_add_scenario"/>
 
 </FrameLayout>

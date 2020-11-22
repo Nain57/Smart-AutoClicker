@@ -88,6 +88,7 @@
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from
         this application. Feel free to visit our github, the code is open source !</string>
 
+    <string name="content_desc_add_scenario">Create a new click scenario</string>
     <string name="content_desc_image_condition">The image to be detected</string>
     <string name="content_desc_click_action_btn">Edit this click</string>
     <string name="content_desc_delete_scenario">Delete scenario</string>
