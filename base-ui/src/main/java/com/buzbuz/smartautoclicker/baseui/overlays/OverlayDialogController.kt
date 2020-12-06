@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.baseui.overlays
 
 import android.content.Context
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -77,6 +78,14 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
                 onDialogDismissed()
             }
             .setCancelable(false)
+            .setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                    dismiss()
+                    true
+                } else {
+                    false
+                }
+            }
             .create()
             .also {
                 it.window?.apply {
