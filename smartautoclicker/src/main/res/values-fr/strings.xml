@@ -39,9 +39,9 @@
     <string name="dialog_delete_scenario_message">Le scenario %1$s va être supprimé. Êtes vous sûr ?</string>
     <string name="dialog_rename_scenario_title">Renommer le scenario</string>
     <string name="dialog_click_list_title">Liste des clics</string>
-    <string name="dialog_click_list_add">Nouveau…</string>
+    <string name="dialog_click_list_add">Créer</string>
     <string name="dialog_click_list_reorder">Réorganiser</string>
-    <string name="dialog_click_list_no_clicks">Aucun clics.\nAppuyez sur \'Nouveau…\' pour en créer un.</string>
+    <string name="dialog_click_list_no_clicks">Aucun clics.\nAppuyez sur \'Créer\' pour en créer un.</string>
     <string name="dialog_click_add_title">Ajouter un nouveau click</string>
     <string name="dialog_click_add_create">Créer</string>
     <string name="dialog_click_add_copy">Copier depuis un autre clic</string>
