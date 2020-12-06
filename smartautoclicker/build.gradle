@@ -63,7 +63,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
-    kapt "androidx.lifecycle:lifecycle-compiler:${rootProject.ext.androidxLifecycleVersion}"
+    implementation "androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
