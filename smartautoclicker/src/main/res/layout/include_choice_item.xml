@@ -22,17 +22,6 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/text_pre"
-        android:layout_width="@dimen/item_height"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="@dimen/text_size_list_item_text"
-        android:visibility="gone"
-        tools:text="@string/condition_operator_and"
-        tools:textColor="@android:color/black"
-        tools:visibility="visible"/>
-
-    <TextView
         android:id="@+id/text_title"
         style="@style/DialogChoiceItemTitle"
         tools:text="@string/condition_operator_and_desc"

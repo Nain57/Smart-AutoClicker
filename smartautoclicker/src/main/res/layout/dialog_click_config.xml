@@ -121,23 +121,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/text_condition_operator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/margin_horizontal_default"
-                        android:gravity="center"
-                        android:text="@string/condition_operator_or"
-                        android:textSize="@dimen/text_size_list_item_text" />
-
-                    <TextView
                         android:id="@+id/text_condition_operator_desc"
                         style="@style/ItemView.Small"
-                        android:drawablePadding="@dimen/margin_horizontal_small"
                         android:gravity="center_vertical"
                         android:text="@string/condition_operator_or_desc"
                         android:textSize="@dimen/text_size_list_item_text"
-                        app:drawableEndCompat="@drawable/ic_chevron" />
+                        android:drawablePadding="@dimen/margin_horizontal_small"
+                        app:drawableEndCompat="@drawable/ic_chevron"
+                        tools:drawableStart="@drawable/ic_all_conditions"/>
 
                 </LinearLayout>
 

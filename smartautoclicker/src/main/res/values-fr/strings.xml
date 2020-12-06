@@ -58,8 +58,8 @@
     <string name="dialog_click_type_single">Clic simple</string>
     <string name="dialog_click_type_swipe">Glisser</string>
     <string name="dialog_condition_operator_title">Type de conditions</string>
-    <string name="condition_operator_and">TOUS</string>
-    <string name="condition_operator_or">UN</string>
+    <string name="condition_operator_and">Toutes les conditions</string>
+    <string name="condition_operator_or">Une seule condition</string>
     <string name="condition_operator_and_desc">Toutes les conditions sont remplies</string>
     <string name="condition_operator_or_desc">Au moins une des conditions est remplie</string>
     <string name="dialog_click_condition_title">Condition de clic</string>

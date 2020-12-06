@@ -219,9 +219,7 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
                 R.string.dialog_click_add_title,
                 R.string.dialog_click_add_create,
                 R.string.dialog_click_add_copy,
-                null,
                 R.drawable.ic_add,
-                null,
                 R.drawable.ic_copy
             ) { choiceClicked ->
                 when (choiceClicked) {

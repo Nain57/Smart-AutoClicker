@@ -15,15 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <include layout="@layout/include_choice_item" android:id="@+id/layout_choice_first"/>
+    <TextView
+        android:id="@+id/text_choice_first"
+        style="@style/DialogChoiceItemTitle"
+        tools:text="@string/condition_operator_and_desc"
+        tools:textColor="@android:color/black"/>
+
     <include layout="@layout/include_view_separator"/>
-    <include layout="@layout/include_choice_item" android:id="@+id/layout_choice_second"/>
+
+    <TextView
+        android:id="@+id/text_choice_second"
+        style="@style/DialogChoiceItemTitle"
+        tools:text="@string/condition_operator_or_desc"
+        tools:textColor="@android:color/black"/>
+
     <include layout="@layout/include_view_separator"/>
 
 </LinearLayout>

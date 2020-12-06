@@ -36,7 +36,6 @@ import kotlinx.android.synthetic.main.dialog_click_config.layout_condition_opera
 import kotlinx.android.synthetic.main.dialog_click_config.list_conditions
 import kotlinx.android.synthetic.main.dialog_click_config.root_view
 import kotlinx.android.synthetic.main.dialog_click_config.text_click_type
-import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator
 import kotlinx.android.synthetic.main.dialog_click_config.text_condition_operator_desc
 
 /**
@@ -94,9 +93,7 @@ class ClickConfigDialog(
             R.string.dialog_click_type_title,
             R.string.dialog_click_type_single,
             R.string.dialog_click_type_swipe,
-            null,
             R.drawable.ic_click,
-            null,
             R.drawable.ic_swipe
         ) { choiceClicked ->
 
@@ -125,10 +122,8 @@ class ClickConfigDialog(
             R.string.dialog_condition_operator_title,
             R.string.condition_operator_and_desc,
             R.string.condition_operator_or_desc,
-            R.string.condition_operator_and,
-            null,
-            R.string.condition_operator_or,
-            null
+            R.drawable.ic_all_conditions,
+            R.drawable.ic_one_condition,
         ) { choiceClicked ->
             clickInfo.conditionOperator =
                 if (choiceClicked == DualChoiceDialog.FIRST) ClickInfo.AND else ClickInfo.OR
@@ -211,12 +206,14 @@ class ClickConfigDialog(
 
                 when (click.conditionOperator) {
                     ClickInfo.AND -> {
-                        text_condition_operator.text = context.getString(R.string.condition_operator_and)
-                        text_condition_operator_desc.text = context.getString(R.string.condition_operator_and_desc)
+                        text_condition_operator_desc
+                            .setLeftRightCompoundDrawables(R.drawable.ic_all_conditions, R.drawable.ic_chevron)
+                        text_condition_operator_desc.text = context.getString(R.string.condition_operator_and)
                     }
                     ClickInfo.OR -> {
-                        text_condition_operator.text = context.getString(R.string.condition_operator_or)
-                        text_condition_operator_desc.text = context.getString(R.string.condition_operator_or_desc)
+                        text_condition_operator_desc
+                            .setLeftRightCompoundDrawables(R.drawable.ic_one_condition, R.drawable.ic_chevron)
+                        text_condition_operator_desc.text = context.getString(R.string.condition_operator_or)
                     }
                 }
 

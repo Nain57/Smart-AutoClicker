@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.dialogs
 
 import android.content.Context
-import android.view.View
+import android.widget.TextView
 import androidx.annotation.IntDef
 import androidx.appcompat.app.AlertDialog
 
@@ -25,10 +25,8 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 
-import kotlinx.android.synthetic.main.dialog_dual_choice.layout_choice_first
-import kotlinx.android.synthetic.main.dialog_dual_choice.layout_choice_second
-import kotlinx.android.synthetic.main.include_choice_item.view.text_pre
-import kotlinx.android.synthetic.main.include_choice_item.view.text_title
+import kotlinx.android.synthetic.main.dialog_dual_choice.text_choice_first
+import kotlinx.android.synthetic.main.dialog_dual_choice.text_choice_second
 
 /**
  * [OverlayDialogController] implementation for a dialog displaying a list of two choices to the user.
@@ -37,9 +35,7 @@ import kotlinx.android.synthetic.main.include_choice_item.view.text_title
  * @param title the title of the dialog.
  * @param firstTitle the title for the first choice.
  * @param secondTitle the title for the second choice.
- * @param firstPreText the pre-text (displayed before the title) for the first choice. Can be null.
  * @param firstIcon the icon for the first choice. Can be null.
- * @param secondPreText the pre-text (displayed before the title) for the second choice. Can be null.
  * @param secondIcon the icon for the second choice. Can be null.
  * @param onChoiceSelected the callback to be notified upon user choice selection.
  */
@@ -48,9 +44,7 @@ class DualChoiceDialog(
     private val title: Int,
     private val firstTitle: Int,
     private val secondTitle: Int,
-    private val firstPreText: Int?,
     private val firstIcon: Int?,
-    private val secondPreText: Int?,
     private val secondIcon: Int?,
     private val onChoiceSelected: (Int) -> Unit
 ) : OverlayDialogController(context) {
@@ -75,10 +69,10 @@ class DualChoiceDialog(
 
     override fun onDialogCreated(dialog: AlertDialog) {
         dialog.apply {
-            layout_choice_first.setOnClickListener{ onChoiceClicked(FIRST) }
-            updateChoiceDisplay(layout_choice_first, firstTitle, firstPreText, firstIcon)
-            layout_choice_second.setOnClickListener{ onChoiceClicked(SECOND) }
-            updateChoiceDisplay(layout_choice_second, secondTitle, secondPreText, secondIcon)
+            text_choice_first.setOnClickListener{ onChoiceClicked(FIRST) }
+            updateChoiceDisplay(text_choice_first, firstTitle, firstIcon)
+            text_choice_second.setOnClickListener{ onChoiceClicked(SECOND) }
+            updateChoiceDisplay(text_choice_second, secondTitle, secondIcon)
         }
     }
 
@@ -96,23 +90,14 @@ class DualChoiceDialog(
     /**
      * Update the values displayed for a choice in the dialog.
      *
-     * @param choiceLayout the root layout of the choice.
+     * @param choiceView the view for the choice.
      * @param title the title displayed for the choice.
-     * @param preText the pre-text for the choice (the small text before the title).
-     *                Can be null to hide the pre-text view.
      * @param icon the icon for the choice. Can be null to hide the icon view.
      */
-    private fun updateChoiceDisplay(choiceLayout: View, title: Int, preText: Int? = null, icon: Int ? = null) {
-        choiceLayout.apply {
-            text_title.setText(title)
-            if (preText != null) {
-                text_pre.apply {
-                    setText(preText)
-                    visibility = View.VISIBLE
-                }
-            } else if (icon != null) {
-                text_title.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, R.drawable.ic_chevron, 0)
-            }
+    private fun updateChoiceDisplay(choiceView: TextView, title: Int, icon: Int ? = null) {
+        choiceView.setText(title)
+        if (icon != null) {
+            choiceView.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, R.drawable.ic_chevron, 0)
         }
     }
 }

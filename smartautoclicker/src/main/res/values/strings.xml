@@ -69,8 +69,8 @@
     <string name="dialog_click_type_swipe">Swipe</string>
 
     <string name="dialog_condition_operator_title">Conditions type</string>
-    <string name="condition_operator_and">ALL</string>
-    <string name="condition_operator_or">ONE</string>
+    <string name="condition_operator_and">All conditions</string>
+    <string name="condition_operator_or">Only one condition</string>
     <string name="condition_operator_and_desc">All conditions are fulfilled</string>
     <string name="condition_operator_or_desc">At least one is fulfilled</string>
 
