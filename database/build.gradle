@@ -64,5 +64,4 @@ dependencies {
     testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_version"
     testImplementation "org.hamcrest:hamcrest-library:${rootProject.ext.hamcrestVersion}"
-    implementation 'com.github.pengrad:jdk9-deps:1.0'
 }
