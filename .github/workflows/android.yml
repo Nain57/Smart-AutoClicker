@@ -8,7 +8,7 @@ on:
 
 jobs:
   assembleDebug:
-
+    name: Build debug apk
     runs-on: ubuntu-latest
 
     steps:
@@ -19,9 +19,14 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: ./gradlew assembleDebug
+    - name: Upload APK
+      uses: actions/upload-artifact@v1
+      with:
+        name: smartautoclicker-debug
+        path: smartautoclicker/build/outputs/apk/debug/smartautoclicker-debug.apk
 
   tests:
-
+    name: Run local unit tests
     runs-on: ubuntu-latest
 
     steps:
