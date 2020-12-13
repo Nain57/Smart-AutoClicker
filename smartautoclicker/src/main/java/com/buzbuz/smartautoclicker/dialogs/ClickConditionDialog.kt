@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.dialogs
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -28,13 +29,9 @@ import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.model.BitmapManager
 import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.databinding.DialogClickConditionBinding
 import com.buzbuz.smartautoclicker.model.DetectorModel
 
-import kotlinx.android.synthetic.main.dialog_click_condition.image_condition
-import kotlinx.android.synthetic.main.dialog_click_condition.text_area_1
-import kotlinx.android.synthetic.main.dialog_click_condition.text_area_2
-import kotlinx.android.synthetic.main.dialog_click_condition.text_area_at
-import kotlinx.android.synthetic.main.item_condition.view.image_condition
 import kotlinx.coroutines.Job
 
 /**
@@ -50,13 +47,16 @@ class ClickConditionDialog(
     private val onDeleteClicked: (Int) -> Unit
 ) : OverlayDialogController(context) {
 
+    /** ViewBinding containing the views for this dialog. */
+    private lateinit var viewBinding: DialogClickConditionBinding
     /** The coroutine job fetching asynchronously the condition bitmap from the [BitmapManager]. */
     private var bitmapJob: Job? = null
 
     override fun onCreateDialog(): AlertDialog.Builder {
+        viewBinding = DialogClickConditionBinding.inflate(LayoutInflater.from(context))
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_click_condition_title)
-            .setView(R.layout.dialog_click_condition)
+            .setView(viewBinding.root)
             .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(R.string.dialog_click_condition_delete) { _: DialogInterface, _: Int ->
                 onDeleteClicked.invoke(condition.second)
@@ -64,33 +64,31 @@ class ClickConditionDialog(
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
-        dialog.apply {
-            condition.first.let {
-                text_area_1.text = context.getString(R.string.dialog_click_condition_area, it.area.left, it.area.top)
-                text_area_2.text = context.getString(R.string.dialog_click_condition_area, it.area.right, it.area.bottom)
+        condition.first.let { condition ->
+            viewBinding.textArea1.text = context.getString(R.string.dialog_click_condition_area, condition.area.left, condition.area.top)
+            viewBinding.textArea2.text = context.getString(R.string.dialog_click_condition_area, condition.area.right, condition.area.bottom)
 
-                it.bitmap?.let {
-                    image_condition.image_condition.setImageBitmap(it)
-                    return
+            condition.bitmap?.let {
+                viewBinding.imageCondition.setImageBitmap(it)
+                return
+            }
+
+            bitmapJob = DetectorModel.get().getClickConditionBitmap(condition) { bitmap ->
+                if (bitmap != null) {
+                    viewBinding.imageCondition.setImageBitmap(bitmap)
+                } else {
+                    viewBinding.imageCondition.setImageDrawable(
+                        ContextCompat.getDrawable(context, R.drawable.ic_cancel)?.apply {
+                            setTint(Color.RED)
+                        }
+                    )
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+                    viewBinding.textArea1.setText(R.string.dialog_click_condition_error)
+                    viewBinding.textArea2.text = null
+                    viewBinding.textAreaAt.visibility = View.INVISIBLE
                 }
 
-                bitmapJob = DetectorModel.get().getClickConditionBitmap(it) { bitmap ->
-                    if (bitmap != null) {
-                        image_condition.setImageBitmap(bitmap)
-                    } else {
-                        image_condition.setImageDrawable(
-                            ContextCompat.getDrawable(context, R.drawable.ic_cancel)?.apply {
-                                setTint(Color.RED)
-                            }
-                        )
-                        getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-                        text_area_1.setText(R.string.dialog_click_condition_error)
-                        text_area_2.text = null
-                        text_area_at.visibility = View.INVISIBLE
-                    }
-
-                    bitmapJob = null
-                }
+                bitmapJob = null
             }
         }
     }

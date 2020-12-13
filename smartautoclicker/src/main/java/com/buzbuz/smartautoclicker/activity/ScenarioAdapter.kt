@@ -23,8 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.ClickScenario
-
-import kotlinx.android.synthetic.main.item_scenario.view.*
+import com.buzbuz.smartautoclicker.databinding.ItemScenarioBinding
 
 /** Adapter for the display of the click scenarios created by the user into a RecyclerView. */
 class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
@@ -45,16 +44,16 @@ class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
     override fun getItemCount(): Int = scenarios?.size ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScenarioViewHolder =
-        ScenarioViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_scenario, parent, false))
+        ScenarioViewHolder(ItemScenarioBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ScenarioViewHolder, position: Int) {
         val scenario = scenarios!![position]
-        holder.itemView.name.text = scenario.name
-        holder.itemView.details.text = holder.itemView.context.resources
+        holder.viewBinding.name.text = scenario.name
+        holder.viewBinding.details.text = holder.itemView.context.resources
             .getQuantityString(R.plurals.scenario_sub_text, scenario.clickCount, scenario.clickCount)
-        setClickListener(holder.itemView, scenario, startScenarioListener)
-        setClickListener(holder.itemView.btn_delete, scenario, deleteScenarioListener)
-        setClickListener(holder.itemView.btn_rename, scenario, editClickListener)
+        setClickListener(holder.viewBinding.root, scenario, startScenarioListener)
+        setClickListener(holder.viewBinding.btnDelete, scenario, deleteScenarioListener)
+        setClickListener(holder.viewBinding.btnRename, scenario, editClickListener)
     }
 
     /**
@@ -71,4 +70,4 @@ class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
 }
 
 /** ViewHolder for the [ScenarioAdapter]. */
-class ScenarioViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
+class ScenarioViewHolder(val viewBinding: ItemScenarioBinding) : RecyclerView.ViewHolder(viewBinding.root)

@@ -20,7 +20,6 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -28,10 +27,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.databinding.ItemConditionBinding
 import com.buzbuz.smartautoclicker.model.BitmapManager
 import com.buzbuz.smartautoclicker.model.DetectorModel
 
-import kotlinx.android.synthetic.main.item_condition.view.image_condition
 import kotlinx.coroutines.Job
 
 /**
@@ -103,7 +102,7 @@ class ConditionAdapter(
     override fun getItemCount(): Int = newConditions.size.plus(conditions?.size?.plus(1) ?: 0)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConditionViewHolder =
-        ConditionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_condition, parent, false))
+        ConditionViewHolder(ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) {
         // The last item is the add item, allowing the user to add a new condition.
@@ -127,9 +126,9 @@ class ConditionAdapter(
 
 /**
  * View holder displaying a click condition in the [ConditionAdapter].
- * @param itemView the root view of the item.
+ * @param viewBinding the view binding for this item.
  */
-class ConditionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ConditionViewHolder(private val viewBinding: ItemConditionBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /** The coroutine job fetching asynchronously the condition bitmap from the [BitmapManager]. */
     private var bitmapJob: Job? = null
@@ -140,9 +139,11 @@ class ConditionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @param addConditionClickedListener listener notified upon user click on this item.
      */
     fun onBindAddCondition(addConditionClickedListener: () -> Unit) {
-        itemView.image_condition.scaleType = ImageView.ScaleType.CENTER
+        viewBinding.imageCondition.apply {
+            scaleType = ImageView.ScaleType.CENTER
+            setImageResource(R.drawable.ic_add)
+        }
         itemView.setOnClickListener { addConditionClickedListener.invoke() }
-        itemView.image_condition.setImageResource(R.drawable.ic_add)
     }
 
     /**
@@ -152,17 +153,17 @@ class ConditionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @param conditionClickedListener listener notified upon user click on this item.
      */
     fun onBindCondition(condition: ClickCondition, conditionClickedListener: (ClickCondition, Int) -> Unit) {
-        itemView.image_condition.scaleType = ImageView.ScaleType.FIT_CENTER
+        viewBinding.imageCondition.scaleType = ImageView.ScaleType.FIT_CENTER
         itemView.setOnClickListener { conditionClickedListener.invoke(condition, adapterPosition) }
 
         condition.bitmap?.let {
-            itemView.image_condition.setImageBitmap(it)
+            viewBinding.imageCondition.setImageBitmap(it)
         } ?: let {
             bitmapJob = DetectorModel.get().getClickConditionBitmap(condition) { bitmap ->
                 if (bitmap != null) {
-                    itemView.image_condition.setImageBitmap(bitmap)
+                    viewBinding.imageCondition.setImageBitmap(bitmap)
                 } else {
-                    itemView.image_condition.setImageDrawable(
+                    viewBinding.imageCondition.setImageDrawable(
                         ContextCompat.getDrawable(itemView.context, R.drawable.ic_cancel)?.apply {
                             setTint(Color.RED)
                         }

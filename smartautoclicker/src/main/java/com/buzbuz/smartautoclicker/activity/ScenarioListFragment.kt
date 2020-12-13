@@ -32,13 +32,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.database.ClickScenario
+import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
+import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
+import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
 import com.buzbuz.smartautoclicker.model.ScenarioViewModel
-
-import kotlinx.android.synthetic.main.dialog_edit.edit_name
-import kotlinx.android.synthetic.main.fragment_scenarios.add
-import kotlinx.android.synthetic.main.merge_loadable_list.empty
-import kotlinx.android.synthetic.main.merge_loadable_list.list
-import kotlinx.android.synthetic.main.merge_loadable_list.loading
 
 /**
  * Fragment displaying the list of click scenario and the creation dialog.
@@ -65,14 +62,21 @@ class ScenarioListFragment : Fragment() {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by activityViewModels()
+    /** ViewBinding containing the views for this fragment. */
+    private lateinit var viewBinding: FragmentScenariosBinding
+    /** ViewBinding containing the views for the loadable list merge layout. */
+    private lateinit var listBinding: MergeLoadableListBinding
     /** Adapter displaying the click scenarios as a list. */
     private lateinit var scenariosAdapter: ScenarioAdapter
 
     /** The current dialog being displayed. Null if not displayed. */
     private var dialog: AlertDialog? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_scenarios, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        viewBinding = FragmentScenariosBinding.inflate(inflater, container, false)
+        listBinding = MergeLoadableListBinding.bind(viewBinding.root)
+        return viewBinding.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,10 +92,13 @@ class ScenarioListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        list.adapter = scenariosAdapter
-        empty.setText(R.string.no_scenarios)
-        add.setOnClickListener { onCreateClicked() }
+        listBinding.list.apply {
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = scenariosAdapter
+        }
+
+        listBinding.empty.setText(R.string.no_scenarios)
+        viewBinding.add.setOnClickListener { onCreateClicked() }
     }
 
     override fun onDestroy() {
@@ -123,13 +130,12 @@ class ScenarioListFragment : Fragment() {
      * Create and show the [dialog]. Upon Ok press, creates the scenario.
      */
     private fun onCreateClicked() {
+        val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
         showDialog(AlertDialog.Builder(requireContext())
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_add_scenario_title)
-            .setView(R.layout.dialog_edit)
+            .setView(dialogViewBinding.root)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                dialog?.let {
-                    scenarioViewModel.createScenario(it.edit_name.text.toString())
-                }
+                scenarioViewModel.createScenario(dialogViewBinding.editName.text.toString())
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create())
@@ -159,18 +165,17 @@ class ScenarioListFragment : Fragment() {
      * @param scenario the scenario to rename.
      */
     private fun onRenameClicked(scenario: ClickScenario) {
+        val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
         val dialog = AlertDialog.Builder(requireContext())
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_rename_scenario_title)
-            .setView(R.layout.dialog_edit)
+            .setView(dialogViewBinding.root)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                dialog?.let {
-                    scenarioViewModel.renameScenario(scenario, it.edit_name.text.toString())
-                }
+                scenarioViewModel.renameScenario(scenario, dialogViewBinding.editName.text.toString())
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create()
         dialog.setOnShowListener {
-            dialog.edit_name.apply {
+            dialogViewBinding.editName.apply {
                 setText(scenario.name)
                 setSelection(0, scenario.name.length)
             }
@@ -183,13 +188,15 @@ class ScenarioListFragment : Fragment() {
      * Will update the list/empty view according to the current click scenarios
      */
     private val scenariosObserver: Observer<List<ClickScenario>> = Observer { scenarios ->
-        loading.visibility = View.GONE
-        if (scenarios.isNullOrEmpty()) {
-            list.visibility = View.GONE
-            empty.visibility = View.VISIBLE
-        } else {
-            list.visibility = View.VISIBLE
-            empty.visibility = View.GONE
+        listBinding.apply {
+            loading.visibility = View.GONE
+            if (scenarios.isNullOrEmpty()) {
+                list.visibility = View.GONE
+                empty.visibility = View.VISIBLE
+            } else {
+                list.visibility = View.VISIBLE
+                empty.visibility = View.GONE
+            }
         }
 
         scenariosAdapter.scenarios = scenarios

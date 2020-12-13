@@ -17,7 +17,9 @@
 -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/OverlayCardView">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/OverlayCardView"
+    tools:viewBindingIgnore="true">
 
     <LinearLayout
         android:id="@+id/layout_buttons"

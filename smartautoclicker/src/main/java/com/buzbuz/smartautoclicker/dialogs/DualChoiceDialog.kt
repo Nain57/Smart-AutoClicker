@@ -17,16 +17,15 @@
 package com.buzbuz.smartautoclicker.dialogs
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.annotation.IntDef
 import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.databinding.DialogDualChoiceBinding
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
-
-import kotlinx.android.synthetic.main.dialog_dual_choice.text_choice_first
-import kotlinx.android.synthetic.main.dialog_dual_choice.text_choice_second
 
 /**
  * [OverlayDialogController] implementation for a dialog displaying a list of two choices to the user.
@@ -60,20 +59,22 @@ class DualChoiceDialog(
         const val SECOND = 2
     }
 
+    /** ViewBinding containing the views for this dialog. */
+    private lateinit var viewBinding: DialogDualChoiceBinding
+
     override fun onCreateDialog(): AlertDialog.Builder {
+        viewBinding = DialogDualChoiceBinding.inflate(LayoutInflater.from(context))
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, title)
-            .setView(R.layout.dialog_dual_choice)
+            .setView(viewBinding.root)
             .setNegativeButton(android.R.string.cancel, null)
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
-        dialog.apply {
-            text_choice_first.setOnClickListener{ onChoiceClicked(FIRST) }
-            updateChoiceDisplay(text_choice_first, firstTitle, firstIcon)
-            text_choice_second.setOnClickListener{ onChoiceClicked(SECOND) }
-            updateChoiceDisplay(text_choice_second, secondTitle, secondIcon)
-        }
+        viewBinding.textChoiceFirst.setOnClickListener{ onChoiceClicked(FIRST) }
+        updateChoiceDisplay(viewBinding.textChoiceFirst, firstTitle, firstIcon)
+        viewBinding.textChoiceSecond.setOnClickListener{ onChoiceClicked(SECOND) }
+        updateChoiceDisplay(viewBinding.textChoiceSecond, secondTitle, secondIcon)
     }
 
     /**

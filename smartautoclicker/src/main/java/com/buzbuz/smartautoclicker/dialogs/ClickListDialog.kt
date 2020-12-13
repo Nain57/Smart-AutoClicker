@@ -32,13 +32,10 @@ import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.databinding.DialogClickListBinding
+import com.buzbuz.smartautoclicker.databinding.ItemClickBinding
+import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
 import com.buzbuz.smartautoclicker.model.DetectorModel
-
-import kotlinx.android.synthetic.main.merge_loadable_list.empty
-import kotlinx.android.synthetic.main.merge_loadable_list.list
-import kotlinx.android.synthetic.main.merge_loadable_list.loading
-import kotlinx.android.synthetic.main.item_click.view.btn_action
-import kotlinx.android.synthetic.main.item_click.view.name
 
 import java.util.Collections
 
@@ -89,6 +86,10 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
         private const val REORDER = 3
     }
 
+    /** ViewBinding containing the views for this dialog. */
+    private lateinit var viewBinding: DialogClickListBinding
+    /** ViewBinding containing the views for the loadable list merge layout. */
+    private lateinit var listBinding: MergeLoadableListBinding
     /** Adapter displaying the list of clicks. */
     private lateinit var adapter: ClickListAdapter
     /** TouchHelper applied to [adapter] when in [REORDER] mode allowing to drag and drop the items. */
@@ -107,9 +108,12 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
         }
 
     override fun onCreateDialog(): AlertDialog.Builder {
+        viewBinding = DialogClickListBinding.inflate(LayoutInflater.from(context))
+        listBinding = MergeLoadableListBinding.bind(viewBinding.root)
+
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_click_list_title)
-            .setView(R.layout.dialog_click_list)
+            .setView(viewBinding.root)
             .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(R.string.dialog_click_list_reorder, null)
             .setNeutralButton(R.string.dialog_click_list_add, null)
@@ -121,7 +125,7 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
             scenarioClicks.observe(this@ClickListDialog, ::onClickListChanged)
         }
 
-        dialog.apply {
+        listBinding.apply {
             list.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
             list.adapter = adapter
@@ -146,7 +150,7 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
      * @param clicks the new list of clicks.
      */
     private fun onClickListChanged(clicks: List<ClickInfo>?) {
-        dialog?.apply {
+        listBinding.apply {
             loading.visibility = View.GONE
             if (clicks.isNullOrEmpty()) {
                 list.visibility = View.GONE
@@ -155,13 +159,13 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
                 list.visibility = View.VISIBLE
                 empty.visibility = View.GONE
             }
+        }
 
-            adapter.clicks = clicks?.toMutableList()
+        adapter.clicks = clicks?.toMutableList()
 
-            // In edition, buttons displays depends on the click count, refresh them
-            if (mode == EDITION) {
-                toEditionMode()
-            }
+        // In edition, buttons displays depends on the click count, refresh them
+        if (mode == EDITION) {
+            toEditionMode()
         }
     }
 
@@ -194,7 +198,7 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
     /** Change the Ui mode to [REORDER]. */
     private fun toReorderMode() {
         dialog?.let {
-            itemTouchHelper.attachToRecyclerView(it.list)
+            itemTouchHelper.attachToRecyclerView(listBinding.list)
             changeButtonState(it.getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE, android.R.string.ok) {
                 DetectorModel.get().updateClicksPriority(adapter.clicks!!)
                 mode = EDITION
@@ -310,30 +314,37 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
         override fun getItemCount(): Int = clicks?.size ?: 0
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClickViewHolder =
-            ClickViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_click, parent, false))
+            ClickViewHolder(ItemClickBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
         override fun onBindViewHolder(holder: ClickViewHolder, position: Int) {
             val click = clicks!![position]
-            holder.itemView.name.text = click.name
             val drawable = if (click.type == ClickInfo.SINGLE) R.drawable.ic_click else R.drawable.ic_swipe
-            holder.itemView.name.setLeftCompoundDrawable(drawable)
 
-            when (mode) {
-                EDITION -> {
-                    holder.itemView.setOnClickListener { itemClickedListener.invoke(click) }
-                    holder.itemView.btn_action.visibility = View.VISIBLE
-                    holder.itemView.btn_action.setImageResource(R.drawable.ic_cancel)
-                    holder.itemView.btn_action.setOnClickListener { deleteClickedListener.invoke(click) }
-                }
-                COPY -> {
-                    holder.itemView.setOnClickListener { itemClickedListener.invoke(click) }
-                    holder.itemView.btn_action.visibility = View.GONE
-                }
-                REORDER -> {
-                    holder.itemView.setOnClickListener(null)
-                    holder.itemView.btn_action.visibility = View.VISIBLE
-                    holder.itemView.btn_action.setImageResource(R.drawable.ic_drag)
-                    holder.itemView.btn_action.setOnClickListener(null)
+            holder.holderViewBinding.apply {
+                name.text = click.name
+                name.setLeftCompoundDrawable(drawable)
+
+                when (mode) {
+                    EDITION -> {
+                        root.setOnClickListener { itemClickedListener.invoke(click) }
+                        btnAction.apply {
+                            visibility = View.VISIBLE
+                            setImageResource(R.drawable.ic_cancel)
+                            setOnClickListener { deleteClickedListener.invoke(click) }
+                        }
+                    }
+                    COPY -> {
+                        root.setOnClickListener { itemClickedListener.invoke(click) }
+                        btnAction.visibility = View.GONE
+                    }
+                    REORDER -> {
+                        root.setOnClickListener(null)
+                        btnAction.apply {
+                            visibility = View.VISIBLE
+                            setImageResource(R.drawable.ic_drag)
+                            setOnClickListener(null)
+                        }
+                    }
                 }
             }
         }
@@ -364,9 +375,10 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
 
     /**
      * View holder displaying a click in the [ClickListAdapter].
-     * @param itemView the root view of the item.
+     * @param holderViewBinding the view binding for this item.
      */
-    private class ClickViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    private class ClickViewHolder(val holderViewBinding: ItemClickBinding)
+        : RecyclerView.ViewHolder(holderViewBinding.root)
 
     /**
      * ItemTouchHelper attached to the [adapter] when in [REORDER] mode in order for the user to change the order of
