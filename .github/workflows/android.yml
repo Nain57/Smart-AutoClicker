@@ -18,9 +18,9 @@ jobs:
       with:
         java-version: 1.8
     - name: Restore keystore
-      - run: |
-          echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
-          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch smartautoclicker.jks.asc > smartautoclicker/smartautoclicker.jks
+      run: |
+        echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
+        gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch smartautoclicker.jks.asc > smartautoclicker/smartautoclicker.jks
     - name: Build with Gradle
       run: ./gradlew -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" bundle
     - name: Upload APK
