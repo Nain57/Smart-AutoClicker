@@ -22,12 +22,18 @@ jobs:
         echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
         gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch smartautoclicker.jks.asc > smartautoclicker/smartautoclicker.jks
     - name: Build with Gradle
-      run: ./gradlew -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" bundle
+      run: ./gradlew \
+      -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" \
+      -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" \
+      -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" \
+      assembleRelease bundleRelease
     - name: Upload APK
       uses: actions/upload-artifact@v1
       with:
-        name: smartautoclicker-debug
-        path: smartautoclicker/build/outputs/bundle/release/smartautoclicker-release.aab
+        name: smartautoclicker-release
+        path: |
+          smartautoclicker/build/outputs/bundle/release/smartautoclicker-release.aab
+          smartautoclicker/build/outputs/apk/release/smartautoclicker-release.apk
 
   tests:
     name: Run local unit tests
