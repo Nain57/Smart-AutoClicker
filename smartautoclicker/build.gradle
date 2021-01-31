@@ -19,6 +19,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+// Read signing.properties file to find signing configuration
+def signingProperties = new Properties()
+def signingStoreFile = file('./smartautoclicker.jks')
+def signingPropertiesFile = rootProject.file("signing.properties")
+if (signingPropertiesFile.exists()) {
+    signingProperties.load(new FileInputStream(signingPropertiesFile))
+}
+
 android {
     compileSdkVersion 30
 
@@ -32,8 +40,22 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    if (signingStoreFile.exists()) {
+        signingConfigs {
+            release {
+                storeFile file('./smartautoclicker.jks')
+                storePassword signingProperties['signingStorePassword'] ?: rootProject.signingStorePassword
+                keyAlias signingProperties['signingKeyAlias'] ?: rootProject.signingKeyAlias
+                keyPassword signingProperties['signingKeyPassword'] ?: rootProject.signingKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (signingStoreFile.exists()) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
