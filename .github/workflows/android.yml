@@ -7,8 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  assembleDebug:
-    name: Build debug apk
+  build:
+    name: Build application
     runs-on: ubuntu-latest
 
     steps:
@@ -17,13 +17,17 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Restore keystore
+      - run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch smartautoclicker.jks.asc > smartautoclicker/smartautoclicker.jks
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" bundle
     - name: Upload APK
       uses: actions/upload-artifact@v1
       with:
         name: smartautoclicker-debug
-        path: smartautoclicker/build/outputs/apk/debug/smartautoclicker-debug.apk
+        path: smartautoclicker/build/outputs/bundle/release/smartautoclicker-release.aab
 
   tests:
     name: Run local unit tests
