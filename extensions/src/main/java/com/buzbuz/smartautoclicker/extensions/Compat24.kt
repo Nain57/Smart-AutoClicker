@@ -39,3 +39,14 @@ val WindowManager.displaySize : Point
             size
         }
 
+/** Get the left and top inset of the default display. */
+val WindowManager.leftTopInsets : Point?
+    get() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            defaultDisplay.cutout?.let {
+                Point(it.safeInsetLeft, it.safeInsetTop)
+            }
+        } else {
+            null
+        }
+

@@ -37,6 +37,7 @@ import androidx.core.graphics.toRect
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.extensions.scale
+import com.buzbuz.smartautoclicker.extensions.leftTopInsets
 import com.buzbuz.smartautoclicker.extensions.move
 import com.buzbuz.smartautoclicker.baseui.gestures.*
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
@@ -79,6 +80,13 @@ class ConditionSelectorMenu(
     private fun onConfirm() {
         (screenOverlayView as ConditionSelectorView).let {
             val selectedArea = Rect(it.selectedArea.toRect())
+            windowManager.leftTopInsets?.let { inset ->
+                selectedArea.left += inset.x
+                selectedArea.right += inset.x
+                selectedArea.top += inset.y
+                selectedArea.bottom += inset.y
+            }
+
             it.hide = true
             Handler(Looper.getMainLooper()).postDelayed({
                 onConditionSelected.invoke(selectedArea)
@@ -234,6 +242,7 @@ class ConditionSelectorMenu(
         }
 
         override fun invalidate() {
+
             selectorArea.intersect(maxArea)
             selectedArea.apply {
                 left = selectorArea.left + selectorAreaOffset
@@ -251,6 +260,7 @@ class ConditionSelectorMenu(
                 return
             }
 
+            canvas.drawRect(maxArea, selectorPaint)
             canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
             canvas.drawRect(selectedArea, backgroundPaint)
             hintsIcons.onDraw(canvas)
