@@ -260,7 +260,6 @@ class ConditionSelectorMenu(
                 return
             }
 
-            canvas.drawRect(maxArea, selectorPaint)
             canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
             canvas.drawRect(selectedArea, backgroundPaint)
             hintsIcons.onDraw(canvas)
