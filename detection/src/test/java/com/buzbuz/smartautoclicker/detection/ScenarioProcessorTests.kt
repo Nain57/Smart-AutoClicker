@@ -55,6 +55,7 @@ class ScenarioProcessorTests {
         private const val TEST_DATA_PATH = "/path"
         private const val TEST_DATA_PATH2 = "/root/folder/directory/item"
         private const val TEST_DATA_PATH3 = "AnotherPathWeirdleFormatted"
+        private const val TEST_DATA_THRESHOLD = 12
         private val TEST_DATA_SCREEN_PART = Rect(
             0,
             0,
@@ -80,14 +81,16 @@ class ScenarioProcessorTests {
     /**
      * Create a new click condition and mocks it in the pixels cache.
      *
+     * @param path the path of the condition
      * @param area the area of the condition
+     * @param threshold the difference threshold of the condition
      * @param pixelCacheInScreen state of the pixel cache. True for pixels that are currently displayed on screen, False
      *                           for other pixels, null for cache initialization error.
      *
      * @return the click condition.
      */
-    private fun mockClickCondition(path: String, area: Rect, pixelCacheInScreen: Boolean?): ClickCondition {
-        val condition = ClickCondition(area, path)
+    private fun mockClickCondition(path: String, threshold: Int, area: Rect, pixelCacheInScreen: Boolean?): ClickCondition {
+        val condition = ClickCondition(area, path, threshold)
         mockWhen(mockPixelCache.get(condition))
             .thenReturn(when {
                 pixelCacheInScreen == null -> null
@@ -132,7 +135,7 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_oneCondition_detected_allScreen() {
-        val validCondition = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, true)
+        val validCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_PATH, ClickInfo.AND, listOf(validCondition))
         assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
@@ -140,7 +143,7 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_oneCondition_detected_partOfScreen() {
-        val conditionArea = mockClickCondition(TEST_DATA_PATH, TEST_DATA_SCREEN_PART, true)
+        val conditionArea = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(conditionArea))
         assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
@@ -148,7 +151,7 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_oneCondition_notDetected() {
-        val validCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_SCREEN_PART, false)
+        val validCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(validCondition))
         assertNull(scenarioProcessor.detect(listOf(validClick)))
@@ -156,7 +159,7 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_oneCondition_error() {
-        val validCondition = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, null)
+        val validCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, null)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(validCondition))
         assertNull(scenarioProcessor.detect(listOf(validClick)))
@@ -164,9 +167,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_AND_multipleConditions_noneDetected() {
-        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, false)
-        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, false)
-        val errorCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART, null)
+        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, false)
+        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
+        val errorCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, null)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(errorCondition, otherCondition, onScreenCondition))
@@ -175,9 +178,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_AND_multipleConditions_oneDetected() {
-        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, true)
-        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, false)
-        val errorCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART, null)
+        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
+        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
+        val errorCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, null)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(errorCondition, otherCondition, onScreenCondition))
@@ -186,9 +189,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_AND_multipleConditions_allDetected() {
-        val onScreenCondition1 = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, true)
-        val onScreenCondition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, true)
-        val onScreenCondition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART2, true)
+        val onScreenCondition1 = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
+        val onScreenCondition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
+        val onScreenCondition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, true)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(onScreenCondition1, onScreenCondition2, onScreenCondition3))
@@ -197,9 +200,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_OR_multipleConditions_noneDetected() {
-        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, false)
-        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, false)
-        val errorCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART, null)
+        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, false)
+        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
+        val errorCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, null)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(errorCondition, otherCondition, onScreenCondition))
@@ -208,9 +211,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_OR_multipleConditions_oneDetected() {
-        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, true)
-        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, false)
-        val errorCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, null)
+        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
+        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
+        val errorCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, null)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(errorCondition, otherCondition, onScreenCondition))
@@ -219,9 +222,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun oneClick_OR_multipleConditions_allDetected() {
-        val onScreenCondition1 = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, true)
-        val onScreenCondition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, true)
-        val onScreenCondition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART2, true)
+        val onScreenCondition1 = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
+        val onScreenCondition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
+        val onScreenCondition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, true)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(onScreenCondition1, onScreenCondition2, onScreenCondition3))
@@ -230,9 +233,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun multipleClicks_noneDetected() {
-        val condition1 = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, false)
-        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, false)
-        val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART2, false)
+        val condition1 = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, false)
+        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
+        val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, false)
 
         assertNull(scenarioProcessor.detect(listOf(
             ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(condition1, condition2, condition3)),
@@ -243,9 +246,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun multipleClicks_allError() {
-        val condition1 = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, null)
-        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, null)
-        val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART2, null)
+        val condition1 = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, null)
+        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, null)
+        val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, null)
 
         assertNull(scenarioProcessor.detect(listOf(
             ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(condition1, condition2, condition3)),
@@ -256,9 +259,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun multipleClicks_onlyLastDetected() {
-        val condition1 = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, false)
-        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, false)
-        val validCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART2, true)
+        val condition1 = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, false)
+        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
+        val validCondition = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, true)
         val expectedClick = ProcessingData.newClickInfo(TEST_DATA_NAME3, ClickInfo.OR,
             listOf(condition1, condition2, validCondition))
 
@@ -271,9 +274,9 @@ class ScenarioProcessorTests {
 
     @Test
     fun multipleClicks_allDetected() {
-        val condition1 = mockClickCondition(TEST_DATA_PATH, ProcessingData.SCREEN_AREA, true)
-        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_SCREEN_PART, true)
-        val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_SCREEN_PART2, true)
+        val condition1 = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
+        val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
+        val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, true)
         val expectedClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(condition1, condition2, condition3))
 

@@ -84,6 +84,7 @@ class ScreenDetectorTests {
         private const val CLICK_DELAY = 5000L
 
         private const val VALID_CLICK_CONDITION_PATH = "/this/is/a/path"
+        private const val VALID_CLICK_CONDITION_THRESHOLD = 12
         private val VALID_CLICK_CONDITION_AREA = Rect(
             0,
             0,
@@ -92,10 +93,12 @@ class ScreenDetectorTests {
         )
         private val VALID_CLICK_CONDITION = ClickCondition(
             VALID_CLICK_CONDITION_AREA,
-            VALID_CLICK_CONDITION_PATH
+            VALID_CLICK_CONDITION_PATH,
+            VALID_CLICK_CONDITION_THRESHOLD
         )
 
         private const val INVALID_CLICK_CONDITION_PATH = "/this/is/another/path"
+        private const val INVALID_CLICK_CONDITION_THRESHOLD = 25
         private val INVALID_CLICK_CONDITION_AREA = Rect(
             1,
             0,
@@ -104,7 +107,8 @@ class ScreenDetectorTests {
         )
         private val INVALID_CLICK_CONDITION = ClickCondition(
             INVALID_CLICK_CONDITION_AREA,
-            INVALID_CLICK_CONDITION_PATH
+            INVALID_CLICK_CONDITION_PATH,
+            INVALID_CLICK_CONDITION_THRESHOLD
         )
 
         private const val IMAGE_PIXEL_STRIDE = 1

@@ -67,6 +67,7 @@ class CacheTests {
         private const val TEST_DATA_CLICK_CONDITION_PATH = "/this/is/a/path"
         private const val TEST_DATA_CLICK_CONDITION_WIDTH = 100
         private const val TEST_DATA_CLICK_CONDITION_HEIGHT = 100
+        private const val TEST_DATA_CLICK_CONDITION_THRESHOLD = 12
         private val TEST_DATA_CLICK_CONDITION_AREA = Rect(
             TEST_DATA_CLICK_CONDITION_WIDTH,
             TEST_DATA_CLICK_CONDITION_HEIGHT,
@@ -75,7 +76,8 @@ class CacheTests {
         )
         private val TEST_DATA_CLICK_CONDITION = ClickCondition(
             TEST_DATA_CLICK_CONDITION_AREA,
-            TEST_DATA_CLICK_CONDITION_PATH
+            TEST_DATA_CLICK_CONDITION_PATH,
+            TEST_DATA_CLICK_CONDITION_THRESHOLD
         )
         private val TEST_DATA_CLICK_CONDITION_IMAGE_PIXELS =
             IntArray(TEST_DATA_CLICK_CONDITION_WIDTH * TEST_DATA_CLICK_CONDITION_HEIGHT)
