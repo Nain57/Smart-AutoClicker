@@ -75,9 +75,11 @@
     <string name="condition_operator_or_desc">At least one is fulfilled</string>
 
     <string name="dialog_click_condition_title">Click condition</string>
+    <string name="dialog_click_condition_details_title">Details</string>
     <string name="dialog_click_condition_delete">Delete</string>
-    <string name="dialog_click_condition_area" translatable="false">[%1$d,%2$d]</string>
-    <string name="dialog_click_condition_at">at position</string>
+    <string name="dialog_click_condition_at">at position [%1$d,%2$d] [%3$d,%4$d]</string>
+    <string name="dialog_click_condition_threshold_title">Tolerated difference</string>
+    <string name="dialog_click_condition_threshold_value">Tolerance: %1$d %%</string>
     <string name="dialog_click_condition_error">The condition image can\'t be found.</string>
 
     <string name="toast_configure_single_click">Touch the position to click on.</string>

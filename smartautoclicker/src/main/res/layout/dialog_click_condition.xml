@@ -23,44 +23,94 @@
     android:orientation="vertical"
     tools:layout_gravity="center">
 
-    <ImageView
-        android:id="@+id/image_condition"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical_small"
-        android:maxWidth="@dimen/dialog_condition_max_width"
-        android:maxHeight="@dimen/dialog_condition_max_height"
-        android:adjustViewBounds="true"
-        android:layout_gravity="center_horizontal"
-        android:scaleType="fitCenter"
-        android:contentDescription="@string/content_desc_image_condition"
-        tools:layout_width="150dp"
-        tools:src="@drawable/ic_click"/>
+        style="@style/HeaderCardView">
 
-    <TextView
-        android:id="@+id/text_area_at"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical_small"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/dialog_click_condition_at"
-        android:textSize="@dimen/text_size_list_item_text"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_area_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/text_size_list_item_text"
-        tools:text="[1145, 154]"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_click_condition_details_title"
+                android:labelFor="@+id/edit_name"
+                style="@style/HeaderTitle"/>
 
-    <TextView
-        android:id="@+id/text_area_2"
-        android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/image_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_small"
+                android:layout_marginBottom="@dimen/margin_vertical_small"
+                android:maxWidth="@dimen/dialog_condition_max_width"
+                android:maxHeight="@dimen/dialog_condition_max_height"
+                android:adjustViewBounds="true"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/content_desc_image_condition"
+                tools:layout_width="150dp"
+                tools:src="@drawable/ic_click"/>
+
+            <include layout="@layout/include_view_separator"/>
+
+            <TextView
+                android:id="@+id/text_area_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:layout_marginBottom="@dimen/margin_vertical_default"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/dialog_click_condition_at"
+                android:textSize="@dimen/text_size_list_item_text"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_vertical_small"
-        android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/text_size_list_item_text"
-        tools:text="[984, 549]"/>
+        style="@style/HeaderCardView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_click_condition_threshold_title"
+                style="@style/HeaderTitle"/>
+
+            <TextView
+                android:id="@+id/text_diff_threshold"
+                style="@style/ItemView.Small"
+                android:layout_marginStart="@dimen/margin_horizontal_small"
+                android:layout_marginEnd="@dimen/margin_horizontal_small"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_size_list_item_text"
+                android:text="@string/dialog_click_condition_threshold_value"
+                tools:text="Value: 12%"/>
+
+            <include layout="@layout/include_view_separator"/>
+
+            <SeekBar
+                android:id="@+id/seekbar_diff_threshold"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:layout_marginStart="@dimen/margin_horizontal_small"
+                android:layout_marginEnd="@dimen/margin_horizontal_small"
+                android:inputType="number"
+                android:importantForAutofill="no"/>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

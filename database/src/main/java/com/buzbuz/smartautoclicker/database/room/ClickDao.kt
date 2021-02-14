@@ -132,10 +132,25 @@ internal abstract class ClickDao {
         updateClick(entity.click)
 
         val oldConditions = getClickConditions(entity.click.clickId).conditions
+        val toBeAdded = mutableListOf<ConditionEntity>()
+        val toBeUpdated = mutableListOf<ConditionEntity>()
+        entity.conditions.forEach { new ->
+            if (oldConditions.find { old -> old.path == new.path } != null) {
+                toBeUpdated.add(new)
+            } else {
+                toBeAdded.add(new)
+            }
+        }
+        val toBeRemoved = oldConditions.filter { old ->
+            entity.conditions.find { new -> old.path == new.path } == null
+        }
+
         // Create and add new conditions
-        addClickConditions(entity.click.clickId, entity.conditions.minus(oldConditions))
+        addClickConditions(entity.click.clickId, toBeAdded)
+        // Update existing conditions
+        updateClickConditions(toBeUpdated)
         // Remove old ones
-        deleteClickConditionsCrossRefs(oldConditions.minus(entity.conditions).map {
+        deleteClickConditionsCrossRefs(toBeRemoved.map {
             ClickConditionCrossRef(entity.click.clickId, it.path)
         })
     }
@@ -253,6 +268,14 @@ internal abstract class ClickDao {
      */
     @Update
     protected abstract suspend fun updateClick(click: ClickEntity)
+
+    /**
+     * Update the database value of a all provided conditions.
+     *
+     * @param conditions the conditions to be updated.
+     */
+    @Update
+    protected abstract suspend fun updateClickConditions(conditions: List<ConditionEntity>)
 
     /**
      * Delete a list of conditions to clicks cross reference from the database.

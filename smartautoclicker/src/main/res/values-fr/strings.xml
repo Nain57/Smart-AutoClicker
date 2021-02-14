@@ -64,7 +64,9 @@
     <string name="condition_operator_or_desc">Au moins une des conditions est remplie</string>
     <string name="dialog_click_condition_title">Condition de clic</string>
     <string name="dialog_click_condition_delete">Supprimer</string>
-    <string name="dialog_click_condition_at">à la position</string>
+    <string name="dialog_click_condition_at">à la position [%1$d,%2$d] [%3$d,%4$d]</string>
+    <string name="dialog_click_condition_threshold_title">Différence tolérée</string>
+    <string name="dialog_click_condition_threshold_value">Tolérance: %1$d %%</string>
     <string name="dialog_click_condition_error">L\'image de la condition n\'a pas pu être trouvée.</string>
     <string name="toast_configure_single_click">Appuyez sur la position à cliquer.</string>
     <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>
@@ -86,4 +88,5 @@
     <string name="content_desc_enable_click">Activer ou désactiver la superposition et permettre le clic sur les applications</string>
     <string name="content_desc_overlay_state">État de la permission de superposition</string>
     <string name="content_desc_accessibility_state">État du service d\'accessibilité</string>
+    <string name="dialog_click_condition_details_title">Détails</string>
 </resources>

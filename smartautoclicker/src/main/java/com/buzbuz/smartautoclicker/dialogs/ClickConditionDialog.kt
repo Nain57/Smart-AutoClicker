@@ -20,7 +20,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
+import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 
@@ -47,6 +47,11 @@ class ClickConditionDialog(
     private val onDeleteClicked: (Int) -> Unit
 ) : OverlayDialogController(context) {
 
+    private companion object {
+        /** */
+        private const val MAX_THRESHOLD = 20
+    }
+
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogClickConditionBinding
     /** The coroutine job fetching asynchronously the condition bitmap from the [BitmapManager]. */
@@ -57,16 +62,36 @@ class ClickConditionDialog(
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_click_condition_title)
             .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(R.string.dialog_click_condition_delete) { _: DialogInterface, _: Int ->
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                condition.first.threshold = viewBinding.seekbarDiffThreshold.progress
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .setNeutralButton(R.string.dialog_click_condition_delete) { _: DialogInterface, _: Int ->
                 onDeleteClicked.invoke(condition.second)
             }
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
         condition.first.let { condition ->
-            viewBinding.textArea1.text = context.getString(R.string.dialog_click_condition_area, condition.area.left, condition.area.top)
-            viewBinding.textArea2.text = context.getString(R.string.dialog_click_condition_area, condition.area.right, condition.area.bottom)
+            viewBinding.textAreaAt.text = context.getString(
+                R.string.dialog_click_condition_at,
+                condition.area.left,
+                condition.area.top,
+                condition.area.right,
+                condition.area.bottom
+            )
+            viewBinding.seekbarDiffThreshold.apply {
+                max = MAX_THRESHOLD
+                progress = condition.threshold
+                setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        updateThresholdDisplay(progress)
+                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                })
+            }
+            updateThresholdDisplay(condition.threshold)
 
             condition.bitmap?.let {
                 viewBinding.imageCondition.setImageBitmap(it)
@@ -83,9 +108,7 @@ class ClickConditionDialog(
                         }
                     )
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-                    viewBinding.textArea1.setText(R.string.dialog_click_condition_error)
-                    viewBinding.textArea2.text = null
-                    viewBinding.textAreaAt.visibility = View.INVISIBLE
+                    viewBinding.textAreaAt.setText(R.string.dialog_click_condition_error)
                 }
 
                 bitmapJob = null
@@ -96,5 +119,17 @@ class ClickConditionDialog(
     override fun onDialogDismissed() {
         super.onDialogDismissed()
         bitmapJob?.cancel()
+    }
+
+    /**
+     * Update the display of the difference threshold value.
+     *
+     * @param value the new value to be displayed.
+     */
+    private fun updateThresholdDisplay(value: Int) {
+        viewBinding.textDiffThreshold.text = context.getString(
+            R.string.dialog_click_condition_threshold_value,
+            value
+        )
     }
 }
