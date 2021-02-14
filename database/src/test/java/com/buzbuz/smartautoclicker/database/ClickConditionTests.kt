@@ -45,10 +45,10 @@ class ClickConditionTests {
         val expected = listOf(
             ClickCondition(Rect(
                 TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
-                TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
+                TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH, TestsData.CONDITION_THRESHOLD),
             ClickCondition(Rect(
                 TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
-                TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
+                TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2, TestsData.CONDITION_THRESHOLD_2)
         )
         val entities = listOf(TestsData.CONDITION_ENTITY, TestsData.CONDITION_ENTITY_2)
 
@@ -66,10 +66,10 @@ class ClickConditionTests {
         val clickConditions = listOf(
             ClickCondition(Rect(
                 TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
-                TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
+                TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH, TestsData.CONDITION_THRESHOLD),
             ClickCondition(Rect(
                 TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
-                TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
+                TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2, TestsData.CONDITION_THRESHOLD_2)
         )
 
         assertEquals(expected, ClickCondition.toEntities(clickConditions))

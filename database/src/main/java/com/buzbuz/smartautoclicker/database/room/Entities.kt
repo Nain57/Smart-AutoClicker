@@ -129,6 +129,7 @@ internal data class ScenarioWithClicks(
  * @param areaBottom the bottom coordinate of the rectangle defining the matching area.
  * @param width the bitmap width. Should be the same as areaRight - areaLeft.
  * @param height the bitmap height. Should be the same as areaTop - areaBottom.
+ * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
  */
 @Entity(tableName = "condition_table")
 internal data class ConditionEntity(
@@ -138,7 +139,8 @@ internal data class ConditionEntity(
     @ColumnInfo(name = "area_right") val areaRight: Int,
     @ColumnInfo(name = "area_bottom") val areaBottom: Int,
     @ColumnInfo(name = "width") val width: Int,
-    @ColumnInfo(name = "height") val height: Int
+    @ColumnInfo(name = "height") val height: Int,
+    @ColumnInfo(name = "threshold", defaultValue = "1") val threshold: Int
 )
 
 /**

@@ -30,10 +30,12 @@ import com.buzbuz.smartautoclicker.database.room.ConditionEntity
  *
  * @param area the area of the screen to detect.
  * @param path the path to the bitmap that should be matched for detection.
+ * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
  */
 data class ClickCondition internal constructor(
     var area: Rect,
     var path: String,
+    var threshold: Int,
     var bitmap: Bitmap? = null
 ) {
 
@@ -44,9 +46,10 @@ data class ClickCondition internal constructor(
      *
      * @param area the area of the screen to detect.
      * @param path the path to the bitmap that should be matched for detection.
+     * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
      */
     @VisibleForTesting
-    constructor(area: Rect, path: String): this(area, path, null)
+    constructor(area: Rect, path: String, threshold: Int): this(area, path, threshold, null)
     /**
      * Instantiates a new condition.
      * For convenience use for a new condition that has not been saved yet. Do no insert it in the database without
@@ -55,9 +58,12 @@ data class ClickCondition internal constructor(
      * @param area the area of the screen to detect.
      * @param bitmap the image that should be matched for detection.
      */
-    constructor(area: Rect, bitmap: Bitmap): this(area, "", bitmap)
+    constructor(area: Rect, bitmap: Bitmap): this(area, "", DEFAULT_DIFFERENCE_THRESHOLD, bitmap)
 
     companion object {
+
+        /** Default value for the difference threshold. */
+        private const val DEFAULT_DIFFERENCE_THRESHOLD = 1
 
         /**
          * Convert a list of [ConditionEntity] into a list of [ClickCondition].
@@ -70,7 +76,8 @@ data class ClickCondition internal constructor(
             conditionEntities.map {
                 ClickCondition(
                     Rect(it.areaLeft, it.areaTop, it.areaRight, it.areaBottom),
-                    it.path
+                    it.path,
+                    it.threshold
                 )
             }
 
@@ -97,6 +104,7 @@ data class ClickCondition internal constructor(
             area.right,
             area.bottom,
             area.width(),
-            area.height()
+            area.height(),
+            threshold
         )
 }

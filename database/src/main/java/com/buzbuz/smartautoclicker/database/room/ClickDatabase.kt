@@ -20,6 +20,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
  * Database for the clicks.
@@ -37,7 +39,7 @@ import androidx.room.RoomDatabase
         ConditionEntity::class,
         ClickConditionCrossRef::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 internal abstract class ClickDatabase : RoomDatabase() {
@@ -52,6 +54,16 @@ internal abstract class ClickDatabase : RoomDatabase() {
         private var INSTANCE: ClickDatabase? = null
 
         /**
+         * Migration from database v1 to v2.
+         * Changes: conditions have now a customizable difference threshold.
+         */
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE condition_table ADD COLUMN threshold INTEGER DEFAULT 1 NOT NULL")
+            }
+        }
+
+        /**
          * Get the Room database singleton, or instantiates it if it wasn't yet.
          * <p>
          * @param context the Android context.
@@ -63,8 +75,8 @@ internal abstract class ClickDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ClickDatabase::class.java,
-                    "click_database")
-                    .build()
+                    "click_database"
+                ).addMigrations(MIGRATION_1_2).build()
                 INSTANCE = instance
                 instance
             }

@@ -89,11 +89,11 @@ class ClickInfoTests {
             ClickCondition(
                 Rect(
                     TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
-                TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
+                TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH, TestsData.CONDITION_THRESHOLD),
             ClickCondition(
                 Rect(
                     TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
-                TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
+                TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2, TestsData.CONDITION_THRESHOLD_2)
         )
         val expected = listOf(
             ClickInfo(
@@ -136,11 +136,11 @@ class ClickInfoTests {
             ClickCondition(
                 Rect(
                     TestsData.CONDITION_LEFT, TestsData.CONDITION_TOP, TestsData.CONDITION_RIGHT,
-                    TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH),
+                    TestsData.CONDITION_BOTTOM), TestsData.CONDITION_PATH, TestsData.CONDITION_THRESHOLD),
             ClickCondition(
                 Rect(
                     TestsData.CONDITION_LEFT_2, TestsData.CONDITION_TOP_2, TestsData.CONDITION_RIGHT_2,
-                    TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2)
+                    TestsData.CONDITION_BOTTOM_2), TestsData.CONDITION_PATH_2, TestsData.CONDITION_THRESHOLD_2)
         )
         val clickInfo = ClickInfo(
             TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
