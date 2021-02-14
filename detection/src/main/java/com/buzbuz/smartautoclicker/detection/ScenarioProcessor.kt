@@ -33,11 +33,6 @@ import kotlin.math.abs
 @WorkerThread
 internal class ScenarioProcessor(private val cache: Cache) {
 
-    private companion object {
-        /** Threshold, in percent (0-100%) for the differences between the conditions and the screen content. */
-        private const val DIFFERENCE_THRESHOLD = 1
-    }
-
     /**
      * Find a click with the conditions fulfilled on the provided Image.
      *
@@ -117,7 +112,7 @@ internal class ScenarioProcessor(private val cache: Cache) {
             }
 
             // If the difference % is lower than the threshold, the condition is fulfilled; returns true.
-            return 100.0 * cache.currentDiff / (3L * 255 * pixels.second.size) < DIFFERENCE_THRESHOLD
+            return 100.0 * cache.currentDiff / (3L * 255 * pixels.second.size) < condition.threshold
         }
 
         // The cache could not initialize the pixels for the condition. This can be caused by a corrupted bitmap file.
