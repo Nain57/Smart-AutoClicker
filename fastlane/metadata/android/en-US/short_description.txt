@@ -1,0 +1,1 @@
+Automating clicks based on what is displayed

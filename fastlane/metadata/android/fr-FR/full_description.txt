@@ -1,0 +1,10 @@
+Smart AutoClicker est une application permettant d'automoatiser des taches répétitives sur votre téléphone en cliquant automatiquement pour vous sur l'écran. Contrairement à la plupart des auto clicker, les clics ne sont pas basés sur des timers. A la place, vous pouvez capturer une image depuis votre écran et executer le clics une fois que la même image est détecté à la même position.
+
+Il est possible de:
+* Organiser les clics par scénario
+* Faire des clics ou des swipes
+* Capturer des images de conditions depuis l'écran
+* Modifier la différence toléré entre l'image et le contenu de l'écran
+* Combiner plusieures images de condition
+* Configurer le délai minimum avant le prochain clic
+* Modifier la priorité des clics dans un scénario
