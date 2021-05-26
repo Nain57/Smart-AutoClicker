@@ -16,8 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.baseui.overlays
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Point
 import android.graphics.drawable.Drawable
@@ -48,15 +51,8 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.Mockito.clearInvocations
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.doAnswer
-import org.mockito.Mockito.eq
-import org.mockito.Mockito.inOrder
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when` as mockWhen
 
 import org.robolectric.annotation.Config
@@ -72,6 +68,8 @@ class OverlayMenuControllerTests {
         private const val TEST_DATA_DISPLAY_HEIGHT = 600
         private const val TEST_DATA_X_POS = 250
         private const val TEST_DATA_Y_POS = 142
+        private const val TEST_DATA_X_POS_2 = 85
+        private const val TEST_DATA_Y_POS_2 = 12
     }
 
     /**
@@ -117,6 +115,8 @@ class OverlayMenuControllerTests {
     @Mock private lateinit var mockLayoutInflater: LayoutInflater
     @Mock private lateinit var overlayMenuControllerImpl: OverlayMenuControllerImpl
 
+    /** Configuration used for orientation tests. */
+    private lateinit var testConfiguration: Configuration
     /** The object under tests. */
     private lateinit var overlayMenuController: OverlayMenuControllerTestImpl
 
@@ -173,32 +173,35 @@ class OverlayMenuControllerTests {
      * Mock the menu position in the shared preferences.
      *
      * @param mockSharedPrefs the preferences providing the saved position.
+     * @param orientation the orientation the get the position for.
      * @param x the saved x position.
      * @param y the saved y position.
      */
-    private fun mockSharedPrefsPosition(mockSharedPrefs: SharedPreferences, x: Int, y: Int) {
-        mockWhen(mockSharedPrefs.contains(OverlayMenuController.PREFERENCE_MENU_X_KEY)).thenReturn(true)
-        mockWhen(
-            mockSharedPrefs.getInt(
-                ArgumentMatchers.eq(OverlayMenuController.PREFERENCE_MENU_X_KEY),
-                ArgumentMatchers.eq(0)
-            )
-        ).thenReturn(x)
-        mockWhen(mockSharedPrefs.contains(OverlayMenuController.PREFERENCE_MENU_Y_KEY)).thenReturn(true)
-        mockWhen(
-            mockSharedPrefs.getInt(
-                ArgumentMatchers.eq(OverlayMenuController.PREFERENCE_MENU_Y_KEY),
-                ArgumentMatchers.eq(0)
-            )
-        ).thenReturn(y)
+    private fun mockSharedPrefsPosition(mockSharedPrefs: SharedPreferences, orientation: Int, x: Int, y: Int) {
+        val xKey: String
+        val yKey: String
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            xKey = OverlayMenuController.PREFERENCE_MENU_X_LANDSCAPE_KEY
+            yKey = OverlayMenuController.PREFERENCE_MENU_Y_LANDSCAPE_KEY
+        } else {
+            xKey = OverlayMenuController.PREFERENCE_MENU_X_PORTRAIT_KEY
+            yKey = OverlayMenuController.PREFERENCE_MENU_Y_PORTRAIT_KEY
+        }
+
+        mockWhen(mockSharedPrefs.getInt(ArgumentMatchers.eq(xKey), ArgumentMatchers.eq(0))).thenReturn(x)
+        mockWhen(mockSharedPrefs.getInt(ArgumentMatchers.eq(yKey), ArgumentMatchers.eq(0))).thenReturn(y)
     }
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
+        // Init test configuration with an empty config
+        testConfiguration = Configuration()
+
         // Mock Android managers
         mockWhen(mockContext.resources).thenReturn(mockResources)
+        mockWhen(mockResources.configuration).thenReturn(testConfiguration)
         mockWhen(mockContext.getSystemService(LayoutInflater::class.java)).thenReturn(mockLayoutInflater)
         mockWhen(mockContext.getSystemService(WindowManager::class.java)).thenReturn(mockWindowManager)
         mockWhen(mockContext.getSharedPreferences(OverlayMenuController.PREFERENCE_NAME, Context.MODE_PRIVATE))
@@ -274,9 +277,25 @@ class OverlayMenuControllerTests {
     }
 
     @Test
-    fun getInitialMenuPositionFromSharedPrefs() {
+    fun getInitialMenuPositionFromSharedPrefs_landscape() {
         mockViewsFromImpl()
-        mockSharedPrefsPosition(mockSharedPrefs, TEST_DATA_X_POS, TEST_DATA_Y_POS)
+        testConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
+
+        overlayMenuController.create()
+
+        val wmAddedView = captureWindowManagerAddedMenuView(mockWindowManager)
+        assertEquals("X position should be equals to the value in shared prefs",
+            TEST_DATA_X_POS, wmAddedView.params.x)
+        assertEquals("Y position should be equals to the value in shared prefs",
+            TEST_DATA_Y_POS, wmAddedView.params.y)
+    }
+
+    @Test
+    fun getInitialMenuPositionFromSharedPrefs_portrait() {
+        mockViewsFromImpl()
+        testConfiguration.orientation = Configuration.ORIENTATION_PORTRAIT
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS, TEST_DATA_Y_POS)
 
         overlayMenuController.create()
 
@@ -411,15 +430,38 @@ class OverlayMenuControllerTests {
     }
 
     @Test
-    fun savePositionOnDismiss() {
+    fun savePositionOnDismiss_landscape() {
         mockViewsFromImpl()
-        mockSharedPrefsPosition(mockSharedPrefs, TEST_DATA_X_POS, TEST_DATA_Y_POS)
+        testConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         overlayMenuController.create()
 
         overlayMenuController.dismiss()
 
-        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_X_KEY, TEST_DATA_X_POS)
-        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_Y_KEY, TEST_DATA_Y_POS)
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_X_LANDSCAPE_KEY, TEST_DATA_X_POS)
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_Y_LANDSCAPE_KEY, TEST_DATA_Y_POS)
+        verify(mockSharedPrefsEditor, never())
+            .putInt(OverlayMenuController.PREFERENCE_MENU_X_PORTRAIT_KEY, TEST_DATA_X_POS)
+        verify(mockSharedPrefsEditor, never())
+            .putInt(OverlayMenuController.PREFERENCE_MENU_Y_PORTRAIT_KEY, TEST_DATA_Y_POS)
+        verify(mockSharedPrefsEditor).apply()
+    }
+
+    @Test
+    fun savePositionOnDismiss_portrait() {
+        mockViewsFromImpl()
+        testConfiguration.orientation = Configuration.ORIENTATION_PORTRAIT
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS, TEST_DATA_Y_POS)
+        overlayMenuController.create()
+
+        overlayMenuController.dismiss()
+
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_X_PORTRAIT_KEY, TEST_DATA_X_POS)
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_Y_PORTRAIT_KEY, TEST_DATA_Y_POS)
+        verify(mockSharedPrefsEditor, never())
+            .putInt(OverlayMenuController.PREFERENCE_MENU_X_LANDSCAPE_KEY, TEST_DATA_X_POS)
+        verify(mockSharedPrefsEditor, never())
+            .putInt(OverlayMenuController.PREFERENCE_MENU_Y_LANDSCAPE_KEY, TEST_DATA_Y_POS)
         verify(mockSharedPrefsEditor).apply()
     }
 
@@ -587,7 +629,8 @@ class OverlayMenuControllerTests {
             moveItem,
         ))
         mockViewsFromImpl(menuView)
-        mockSharedPrefsPosition(mockSharedPrefs, TEST_DATA_X_POS, TEST_DATA_Y_POS)
+        testConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         overlayMenuController.create()
 
         // Get the move button touch listener
@@ -609,5 +652,59 @@ class OverlayMenuControllerTests {
         verify(mockWindowManager).updateViewLayout(eq(menuView), paramsCaptor.capture())
         assertEquals("Invalid move X position", newX, paramsCaptor.value.x)
         assertEquals("Invalid move Y position", newY, paramsCaptor.value.y)
+    }
+
+    @Test
+    fun orientationChanged_landscapeToPortrait() {
+        mockViewsFromImpl()
+        testConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS_2, TEST_DATA_Y_POS_2)
+        overlayMenuController.create()
+
+        // Change the orientation and call the broadcast receiver
+        testConfiguration.orientation = Configuration.ORIENTATION_PORTRAIT
+        val configReceiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
+        verify(mockContext).registerReceiver(configReceiverCaptor.capture(), any())
+        configReceiverCaptor.value.onReceive(mockContext, Intent())
+
+        // Verify the correct position save
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_X_LANDSCAPE_KEY, TEST_DATA_X_POS)
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_Y_LANDSCAPE_KEY, TEST_DATA_Y_POS)
+        verify(mockSharedPrefsEditor, never())
+            .putInt(eq(OverlayMenuController.PREFERENCE_MENU_X_PORTRAIT_KEY), anyInt())
+        verify(mockSharedPrefsEditor, never())
+            .putInt(eq(OverlayMenuController.PREFERENCE_MENU_Y_PORTRAIT_KEY), anyInt())
+        verify(mockSharedPrefsEditor).apply()
+        // Verify the load of the position for the new orientation
+        verify(mockSharedPrefs).getInt(eq(OverlayMenuController.PREFERENCE_MENU_X_PORTRAIT_KEY), anyInt())
+        verify(mockSharedPrefs).getInt(eq(OverlayMenuController.PREFERENCE_MENU_Y_PORTRAIT_KEY), anyInt())
+    }
+
+    @Test
+    fun orientationChanged_portraitToLandscape() {
+        mockViewsFromImpl()
+        testConfiguration.orientation = Configuration.ORIENTATION_PORTRAIT
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
+        mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS_2, TEST_DATA_Y_POS_2)
+        overlayMenuController.create()
+
+        // Change the orientation and call the broadcast receiver
+        testConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE
+        val configReceiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
+        verify(mockContext).registerReceiver(configReceiverCaptor.capture(), any())
+        configReceiverCaptor.value.onReceive(mockContext, Intent())
+
+        // Verify the correct position save
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_X_PORTRAIT_KEY, TEST_DATA_X_POS_2)
+        verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_Y_PORTRAIT_KEY, TEST_DATA_Y_POS_2)
+        verify(mockSharedPrefsEditor, never())
+            .putInt(eq(OverlayMenuController.PREFERENCE_MENU_X_LANDSCAPE_KEY), anyInt())
+        verify(mockSharedPrefsEditor, never())
+            .putInt(eq(OverlayMenuController.PREFERENCE_MENU_Y_LANDSCAPE_KEY), anyInt())
+        verify(mockSharedPrefsEditor).apply()
+        // Verify the load of the position for the new orientation
+        verify(mockSharedPrefs).getInt(eq(OverlayMenuController.PREFERENCE_MENU_X_LANDSCAPE_KEY), anyInt())
+        verify(mockSharedPrefs).getInt(eq(OverlayMenuController.PREFERENCE_MENU_Y_LANDSCAPE_KEY), anyInt())
     }
 }
