@@ -45,7 +45,6 @@ import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.detection.utils.ProcessingData
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
 import com.buzbuz.smartautoclicker.detection.utils.getOrAwaitValue
-import org.junit.After
 
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -251,13 +250,6 @@ class ScreenDetectorTests {
         screenDetector = ScreenDetector(mockBitmapSupplier::getBitmap)
     }
 
-    @After
-    fun tearDown() {
-        screenDetector.processingThread?.apply {
-            //shadowOf(looper).reset()
-        }
-    }
-
     /** Setup the mocks for the screen recorder. */
     private fun setUpScreenRecorder() {
         // Setup context mocks and display metrics
@@ -383,7 +375,7 @@ class ScreenDetectorTests {
     fun capture_notStarted() {
         screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockBitmapCreator, mockCaptureCallback)
     }
 
@@ -405,7 +397,7 @@ class ScreenDetectorTests {
         screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
         imageAvailableListener.onImageAvailable(mockImageReader)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // callback is posted on main thread handler.
+        shadowOf(Looper.getMainLooper()).idle() // callback is posted on main thread handler.
         verify(mockCaptureCallback).onCaptured(mockCaptureBitmap)
     }
 
@@ -417,7 +409,7 @@ class ScreenDetectorTests {
         imageAvailableListener.onImageAvailable(mockImageReader)
         imageAvailableListener.onImageAvailable(mockImageReader)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // callback is posted on main thread handler.
+        shadowOf(Looper.getMainLooper()).idle() // callback is posted on main thread handler.
         verify(mockCaptureCallback).onCaptured(mockCaptureBitmap) // must be called only once
     }
 
@@ -425,7 +417,7 @@ class ScreenDetectorTests {
     fun detection_noScreenRecording() {
         screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockDetectionCallback)
     }
 
@@ -436,7 +428,7 @@ class ScreenDetectorTests {
         screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
         imageAvailableListener.onImageAvailable(mockImageReader)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockDetectionCallback)
     }
 
@@ -450,7 +442,7 @@ class ScreenDetectorTests {
         )
         imageAvailableListener.onImageAvailable(mockImageReader)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockDetectionCallback)
     }
 
@@ -465,7 +457,7 @@ class ScreenDetectorTests {
         )
         imageAvailableListener.onImageAvailable(mockImageReader)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockDetectionCallback)
     }
 
@@ -480,7 +472,7 @@ class ScreenDetectorTests {
         )
         imageAvailableListener.onImageAvailable(mockImageReader)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verify(mockDetectionCallback).onDetected(click)
     }
 
@@ -500,6 +492,7 @@ class ScreenDetectorTests {
             shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
         }
 
+        shadowOf(Looper.getMainLooper()).idle()
         verify(mockDetectionCallback, times(imageCount)).onDetected(click)
     }
 
@@ -535,7 +528,7 @@ class ScreenDetectorTests {
         )
         imageAvailableListener.onImageAvailable(mockImageReader)
 
-        shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockDetectionCallback)
     }
 
@@ -598,6 +591,7 @@ class ScreenDetectorTests {
     fun stopScreenRecord_detecting() {
         toStartScreenRecord()
         screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
+        shadowOf(screenDetector.processingThread!!.looper).idle()
         screenDetector.stop(mockContext)
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
