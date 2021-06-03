@@ -104,6 +104,7 @@ class CacheTests {
         assertNull("Initial current image should be null", cache.currentImage)
         assertNull("Initial screen bitmap should be null", cache.screenBitmap)
         assertNull("Initial screen pixels should be null", cache.screenPixels)
+        assertEquals("Initial display size is invalid", Point(), cache.displaySize)
         assertEquals("Initial current diff is invalid", 0L, cache.currentDiff)
         assertEquals("Initial crop index is invalid", 0, cache.cropIndex)
         assertEquals("Initial pixel cache size is invalid", 0, cache.pixelsCache.size())
@@ -132,7 +133,7 @@ class CacheTests {
         mockWhen(mockImagePlane.rowStride).thenReturn(TEST_DATA_IMAGE_ROW_STRIDE)
         mockWhen(mockImagePlane.buffer).thenReturn(mockImagePlaneBuffer)
 
-        cache = Cache(TEST_DATA_DISPLAY_SIZE, mockBitmapSupplier::getBitmap)
+        cache = Cache(mockBitmapSupplier::getBitmap)
     }
 
     @After
@@ -148,7 +149,7 @@ class CacheTests {
     @Test
     fun refresh_bitmapCacheCreation() {
         cache.currentImage = mockImage
-        cache.refreshProcessedImage()
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
 
         verify(mockBitmapCreator)
             .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT, Bitmap.Config.ARGB_8888)
@@ -163,7 +164,7 @@ class CacheTests {
     @Test
     fun refresh_bitmapCaching() {
         cache.currentImage = mockImage
-        cache.refreshProcessedImage()
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
 
         inOrder(mockCreatedBitmap).apply {
             verify(mockCreatedBitmap).copyPixelsFromBuffer(mockImagePlaneBuffer)
@@ -207,7 +208,7 @@ class CacheTests {
     @Test
     fun release_bitmapCache() {
         cache.currentImage = mockImage
-        cache.refreshProcessedImage()
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
         cache.release()
 
         assertInitialCacheValues()
@@ -224,7 +225,7 @@ class CacheTests {
     @Test
     fun release_bitmapCache_and_pixelsCache() {
         cache.currentImage = mockImage
-        cache.refreshProcessedImage()
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
         cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
         cache.release()
 

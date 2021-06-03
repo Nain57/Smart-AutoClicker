@@ -44,15 +44,14 @@ import androidx.annotation.WorkerThread
  * (methods annotated with [WorkerThread]), and all results callbacks are executed on the main thread (the thread that
  * has instantiated this class).
  *
- * To start recording, call [startScreenRecord] (see method documentation for permission management). This must be done
+ * To start recording, call [startProjection] (see method documentation for permission management). This must be done
  * before any other action on this object. Once the recording isn't necessary anymore, you must stop it by calling
- * [stopScreenRecord] in order to release all resources associated with this object.
+ * [stopProjection] in order to release all resources associated with this object.
  *
- * @param displaySize the size of the current display to record the screen of.
  * @param imageListener notified when a new image of the screen is available.
  */
 @MainThread
-internal class ScreenRecorder(private val displaySize: Point, private val imageListener: ImageReader.OnImageAvailableListener) {
+internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvailableListener) {
 
     @VisibleForTesting
     internal companion object {
@@ -76,11 +75,11 @@ internal class ScreenRecorder(private val displaySize: Point, private val imageL
     private var stopListener: (() -> Unit)? = null
 
     /**
-     * Start recording the screen.
+     * Start the media projection.
      *
      * Initialize all values required for screen recording and start the thread managing the processing. This method
      * should be called before anything else in this class. Once you are done with the screen recording, you should
-     * call [stopScreenRecord] in order to release all resources.
+     * call [stopProjection] in order to release all resources.
      *
      * Recording the screen requires the media projection permission code and its data intent, they both can be
      * retrieved using the results of the activity intent provided by [MediaProjectionManager.createScreenCaptureIntent]
@@ -94,17 +93,15 @@ internal class ScreenRecorder(private val displaySize: Point, private val imageL
      * [android.app.Activity.onActivityResult]
      * @param data the data intent provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
-     * @param processingHandler the handler on the thread that will handle the virtual display and the image reader on it.
-     * This should not be the main thread.
      * @param stoppedListener listener called when the projection have been stopped unexpectedly.
      */
-    fun startScreenRecord(context: Context, resultCode: Int, data: Intent, processingHandler: Handler, stoppedListener: () -> Unit) {
+    fun startProjection(context: Context, resultCode: Int, data: Intent, stoppedListener: () -> Unit) {
         if (projection != null) {
-            Log.w(TAG, "Attempting to start screen record while already started.")
+            Log.w(TAG, "Attempting to start media projection while already started.")
             return
         }
 
-        Log.d(TAG, "Start screen record")
+        Log.d(TAG, "Start media projection")
 
         stopListener = stoppedListener
         val projectionManager = context.getSystemService(Context.MEDIA_PROJECTION_SERVICE)
@@ -112,6 +109,25 @@ internal class ScreenRecorder(private val displaySize: Point, private val imageL
         projection = projectionManager.getMediaProjection(resultCode, data).apply {
             registerCallback(projectionCallback, null)
         }
+    }
+
+    /**
+     * Start the screen record.
+     * This method should not be called from the main thread, but the processing thread.
+     *
+     * @param context the Android context.
+     * @param displaySize the size of the display, in pixels.
+     * @param processingHandler the handler on the thread that will handle the virtual display and the image reader on it.
+     * This should not be the main thread.
+     */
+    @WorkerThread
+    fun startScreenRecord(context: Context, displaySize: Point, processingHandler: Handler) {
+        if (projection == null || imageReader != null) {
+            Log.w(TAG, "Attempting to start screen record while already started.")
+            return
+        }
+
+        Log.d(TAG, "Start screen record")
 
         @SuppressLint("WrongConstant")
         imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2).apply {
@@ -124,11 +140,10 @@ internal class ScreenRecorder(private val displaySize: Point, private val imageL
     }
 
     /**
-     * Stop the screen recording previously started with [startScreenRecord].
-     *
-     * This method will free/close any resources related to screen recording. If a detection was started, it will be
-     * stopped. If the screen record wasn't started, this method will have no effect.
+     * Stop the screen recording.
+     * This method should not be called from the main thread, but the processing thread.
      */
+    @WorkerThread
     fun stopScreenRecord() {
         Log.d(TAG, "Stop screen record")
 
@@ -141,6 +156,18 @@ internal class ScreenRecorder(private val displaySize: Point, private val imageL
             close()
             imageReader = null
         }
+    }
+
+    /**
+     * Stop the media projection previously started with [startProjection].
+     *
+     * This method will free/close any resources related to screen recording. If a detection was started, it will be
+     * stopped. If the screen record wasn't started, this method will have no effect.
+     */
+    fun stopProjection() {
+        Log.d(TAG, "Stop media projection")
+
+        stopScreenRecord()
         projection?.apply {
             unregisterCallback(projectionCallback)
             stop()

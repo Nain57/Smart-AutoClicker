@@ -16,8 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -28,15 +31,18 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
+import android.view.WindowManager
 
 import androidx.annotation.AnyThread
 import androidx.annotation.GuardedBy
 import androidx.annotation.MainThread
+import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.extensions.displaySize
 
 /**
  * Detects [ClickInfo] on a display.
@@ -47,12 +53,11 @@ import com.buzbuz.smartautoclicker.database.ClickInfo
  * The states of the recording and the detection are available in [isScreenRecording] and [isDetecting] respectively.
  * Once you no longer needs to capture or detect, call [stopDetection] or [stop] to release all processing resources.
  *
- * @param displaySize the size of the display to be recorded.
  * @param bitmapSupplier provides the bitmap for the given path, width and height. This call will be made on the
  * processing thread, so you can use it directly to perform the loading from the memory, but keep in mind that the more
  * time this thread spend here, the slower the detection will be.
  */
-class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> Bitmap?) {
+class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
 
     private companion object {
         /** Tag for logs. */
@@ -64,9 +69,9 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
     /** Handler on the main thread. Used to post processing results callbacks. */
     private val mainHandler = Handler(Looper.getMainLooper())
     /** Record the screen and provide images of it regularly via [onNewImage]. */
-    private val screenRecorder = ScreenRecorder(displaySize, ::onNewImage)
+    private val screenRecorder = ScreenRecorder(::onNewImage)
     /** The cache for image processing optimization. */
-    private val cache = Cache(displaySize, bitmapSupplier)
+    private val cache = Cache(bitmapSupplier)
     /** The click scenario processing object. */
     private val scenarioProcessor = ScenarioProcessor(cache)
     /** Backing property for [isScreenRecording]. */
@@ -74,6 +79,10 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
     /** Backing property for [isDetecting]. */
     private val _isDetecting = MutableLiveData(false)
 
+    /** The current size of the display, in pixels. */
+    @GuardedBy("mainHandler") private var displaySize: Point = Point()
+        get() = synchronized(mainHandler) { field }
+        set(value) = synchronized(mainHandler) { field = value }
     /**
      * Information about the current screen capture.
      * The Rect is the area on the screen to be capture and the lambda is the callback to be called once the capture is
@@ -93,8 +102,12 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
     @GuardedBy("mainHandler") private var isAreaFound = false
         get() = synchronized(mainHandler) { field }
         set(value) = synchronized(mainHandler) { field = value }
+
     /** Background thread executing the Image processing code. */
-    private var processingThread: HandlerThread? = null
+    @VisibleForTesting
+    var processingThread: HandlerThread? = null
+    /** Handler on the [processingThread]. */
+    private var processingThreadHandler: Handler? = null
 
     /** True if we are currently detecting clicks, false if not. */
     val isDetecting: LiveData<Boolean>
@@ -102,6 +115,25 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
     /** True if we are currently screen recording, false if not. */
     val isScreenRecording: LiveData<Boolean>
         get() = _isScreenRecording
+
+    /** The current orientation of the screen. */
+    private var orientation = Configuration.ORIENTATION_UNDEFINED
+    /** Listen to the configuration changes for orientation change info. */
+    private val configChangedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val newOrientation = context.resources.configuration.orientation
+            if (orientation != newOrientation) {
+                Log.w(TAG, "newDisplaySize: $displaySize")
+
+                processingThreadHandler?.post {
+                    screenRecorder.stopScreenRecord()
+                    displaySize = context.getSystemService(WindowManager::class.java).displaySize
+                    orientation = newOrientation
+                    screenRecorder.startScreenRecord(context, displaySize, processingThreadHandler!!)
+                }
+            }
+        }
+    }
 
     /**
      * Start the screen detection.
@@ -126,11 +158,24 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
             return
         }
 
+        displaySize = context.getSystemService(WindowManager::class.java).displaySize
+        orientation = context.resources.configuration.orientation
+        context.registerReceiver(configChangedReceiver, IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED))
+
         processingThread = HandlerThread(PROCESSING_THREAD_NAME).apply {
             start()
-            screenRecorder.startScreenRecord(context, resultCode, data, Handler(looper), this@ScreenDetector::stop)
-            _isScreenRecording.value = true
+            processingThreadHandler = Handler(looper)
         }
+
+        screenRecorder.apply {
+            startProjection(context, resultCode, data) {
+                stop(context)
+            }
+            processingThreadHandler!!.post {
+                startScreenRecord(context, displaySize, processingThreadHandler!!)
+            }
+        }
+        _isScreenRecording.value = true
     }
 
     /**
@@ -196,9 +241,11 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
      *
      * First, calls [stopDetection] if the detection was active. Then, stop the screen recording and release any related
      * resources.
+     *
+     * @param context the Android context.
      */
     @MainThread
-    fun stop() {
+    fun stop(context: Context) {
         if (!_isScreenRecording.value!!) {
             Log.w(TAG, "stop: Screen record is already stopped.")
             return
@@ -206,11 +253,14 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
             stopDetection()
         }
 
-        screenRecorder.stopScreenRecord()
-        processingThread?.let {
-            Handler(it.looper).post { cache.release() }
-            it.quitSafely()
+        context.unregisterReceiver(configChangedReceiver)
+        processingThreadHandler?.post {
+            screenRecorder.stopProjection()
+            cache.release()
         }
+
+        processingThread!!.quitSafely()
+        processingThreadHandler = null
         processingThread = null
         _isScreenRecording.value = false
     }
@@ -236,7 +286,7 @@ class ScreenDetector(displaySize: Point, bitmapSupplier: (String, Int, Int) -> B
             }
 
             // Refresh cached values on the image, we are going to use it.
-            cache.refreshProcessedImage()
+            cache.refreshProcessedImage(displaySize)
 
             // A screen capture is requested, process it and notify the resulting bitmap.
             captureInfo?.let { capture ->

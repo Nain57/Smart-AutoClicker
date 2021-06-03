@@ -21,7 +21,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.util.Log
-import android.view.WindowManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -32,7 +31,6 @@ import com.buzbuz.smartautoclicker.database.ClickInfo
 import com.buzbuz.smartautoclicker.database.ClickRepository
 import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.detection.ScreenDetector
-import com.buzbuz.smartautoclicker.extensions.displaySize
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,11 +78,14 @@ class DetectorModel private constructor(context: Context) {
             }
         }
 
-        /** Release the detector model instance. */
-        fun detach() {
+        /**
+         * Release the detector model instance.
+         * @param context the Android context.
+         */
+        fun detach(context: Context) {
             INSTANCE?.let { model ->
                 synchronized(this) {
-                    model.clear()
+                    model.clear(context)
                     INSTANCE = null
                 }
             } ?: throw IllegalStateException("Detector model is not attached to a context.")
@@ -107,7 +108,7 @@ class DetectorModel private constructor(context: Context) {
     /** Provides the bitmaps for the click conditions and manages their files on the device. */
     private val bitmapManager = BitmapManager.getInstance(context)
     /** Object recording the screen of the display to detect on and trying to match the clicks from the scenario on it. */
-    private val screenDetector = ScreenDetector(context.getSystemService(WindowManager::class.java).displaySize) { path, width, height ->
+    private val screenDetector = ScreenDetector() { path, width, height ->
         // We can run blocking here, we are on the screen detector thread
         runBlocking(Dispatchers.IO) {
             bitmapManager.loadBitmap(path, width, height)
@@ -303,8 +304,12 @@ class DetectorModel private constructor(context: Context) {
         screenDetector.stopDetection()
     }
 
-    /** Stop this model, releasing the resources for screen recording and the detection, if started. */
-    fun stop() {
+    /**
+     * Stop this model, releasing the resources for screen recording and the detection, if started.
+     *
+     * @param context the Android context.
+     */
+    fun stop(context: Context) {
         if (!initialized.value!!) {
             Log.w(TAG, "Can't stop, the model not initialized.")
             return
@@ -315,7 +320,7 @@ class DetectorModel private constructor(context: Context) {
         }
         clickRepository.clicklessConditions.removeObserver(clicklessConditionObserver)
         _scenario.value = null
-        screenDetector.stop()
+        screenDetector.stop(context)
         bitmapManager.releaseCache()
     }
 
@@ -341,11 +346,13 @@ class DetectorModel private constructor(context: Context) {
     /**
      * Clear this model and cancel the coroutine scope.
      * After a call to this method, you must re create a new model.
+     *
+     * @param context the Android context.
      */
-    private fun clear() {
+    private fun clear(context: Context) {
         if (initialized.value!!) {
             Log.w(TAG, "Clearing the model but it was still started.")
-            screenDetector.stop()
+            screenDetector.stop(context)
         }
 
         coroutineScope.cancel()

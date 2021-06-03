@@ -106,7 +106,7 @@ class ScenarioProcessorTests {
         MockitoAnnotations.openMocks(this)
 
         // Setup cache mocks
-        spiedCache = spy(Cache(Point(ProcessingData.SCREEN_SIZE, ProcessingData.SCREEN_SIZE)) { _, _, _ -> null })
+        spiedCache = spy(Cache() { _, _, _ -> null })
         doReturn(mockPixelCache).`when`(spiedCache).pixelsCache
         doReturn(mockCurrentImage).`when`(spiedCache).currentImage
         doReturn(mockScreenBitmap).`when`(spiedCache).screenBitmap

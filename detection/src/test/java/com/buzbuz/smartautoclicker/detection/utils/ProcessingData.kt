@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.detection.utils
 
 import android.content.res.Configuration
+import android.graphics.Point
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.database.ClickCondition
@@ -45,6 +46,8 @@ internal object ProcessingData {
     val SCREEN_SIZE = sqrt(SCREEN_PIXELS.size.toDouble()).toInt()
     /** The total area of the screen. */
     val SCREEN_AREA = Rect(0, 0, SCREEN_SIZE, SCREEN_SIZE)
+    /** The display size. */
+    val DISPLAY_SIZE = Point(SCREEN_SIZE, SCREEN_SIZE)
 
     /**
      * Get the pixel cache for a given area of the screen.

@@ -116,7 +116,7 @@ class ScreenRecorderTests {
             null)
         ).thenReturn(mockVirtualDisplay)
 
-        screenRecorder = ScreenRecorder(TEST_DATA_DISPLAY_SIZE, mockImageListener)
+        screenRecorder = ScreenRecorder(mockImageListener)
     }
 
     @After
@@ -125,31 +125,49 @@ class ScreenRecorderTests {
     }
 
     @Test
-    fun startScreenRecord() {
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
-            mockHandler, mockStoppedListener::onStopped)
+    fun startProjection() {
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
 
         verify(mockMediaProjection).registerCallback(anyNotNull(), isNull())
+    }
+
+    @Test
+    fun startProjection_alreadyStarted() {
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
+
+        verify(mockMediaProjection, times(1)).registerCallback(anyNotNull(), isNull())
+    }
+
+    @Test
+    fun startScreenRecord() {
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+
         verify(mockImageReader).setOnImageAvailableListener(mockImageListener, mockHandler)
     }
 
     @Test
     fun startScreenRecord_alreadyStarted() {
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
-            mockHandler, mockStoppedListener::onStopped)
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
-            mockHandler, mockStoppedListener::onStopped)
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
 
-        verify(mockMediaProjection, times(1)).registerCallback(anyNotNull(), isNull())
         verify(mockImageReader, times(1)).setOnImageAvailableListener(mockImageListener, mockHandler)
     }
 
     @Test
-    fun stopScreenRecord() {
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
-            mockHandler, mockStoppedListener::onStopped)
+    fun stopProjection() {
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
 
-        screenRecorder.stopScreenRecord()
+        screenRecorder.stopProjection()
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
             verify(mockVirtualDisplay).release()
@@ -161,8 +179,8 @@ class ScreenRecorderTests {
     }
 
     @Test
-    fun stopScreenRecord_notStarted() {
-        screenRecorder.stopScreenRecord()
+    fun stopProjection_notStarted() {
+        screenRecorder.stopProjection()
 
         verify(mockVirtualDisplay, never()).release()
         verify(mockImageReader, never()).setOnImageAvailableListener(null, null)
@@ -172,9 +190,33 @@ class ScreenRecorderTests {
     }
 
     @Test
+    fun stopScreenRecord() {
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+
+        screenRecorder.stopScreenRecord()
+
+        inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
+            verify(mockVirtualDisplay).release()
+            verify(mockImageReader).setOnImageAvailableListener(null, null)
+            verify(mockImageReader).close()
+        }
+    }
+
+    @Test
+    fun stopScreenRecord_notStarted() {
+        screenRecorder.stopScreenRecord()
+
+        verify(mockVirtualDisplay, never()).release()
+        verify(mockImageReader, never()).setOnImageAvailableListener(null, null)
+        verify(mockImageReader, never()).close()
+    }
+
+    @Test
     fun onStoppedCallback() {
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
-            mockHandler, mockStoppedListener::onStopped)
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
 
         val projectionCbCaptor = ArgumentCaptor.forClass(MediaProjection.Callback::class.java)
         verify(mockMediaProjection).registerCallback(projectionCbCaptor.capture(), isNull())
@@ -185,8 +227,9 @@ class ScreenRecorderTests {
 
     @Test
     fun onNewImage() {
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
-            mockHandler, mockStoppedListener::onStopped)
+        screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+            mockStoppedListener::onStopped)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
 
         val imageReaderCbCaptor = ArgumentCaptor.forClass(ImageReader.OnImageAvailableListener::class.java)
         verify(mockImageReader).setOnImageAvailableListener(imageReaderCbCaptor.capture(), eq(mockHandler))

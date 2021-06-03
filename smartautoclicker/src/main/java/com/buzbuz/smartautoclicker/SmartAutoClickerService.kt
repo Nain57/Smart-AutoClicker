@@ -127,8 +127,8 @@ class SmartAutoClickerService : AccessibilityService() {
 
             isStarted = false
             rootOverlayController?.dismiss()
-            DetectorModel.get().stop()
-            DetectorModel.detach()
+            DetectorModel.get().stop(this@SmartAutoClickerService)
+            DetectorModel.detach(this@SmartAutoClickerService)
             stopForeground(true)
         }
     }

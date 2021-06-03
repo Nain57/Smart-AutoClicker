@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -31,7 +32,9 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.view.Display
 import android.view.Surface
+import android.view.WindowManager
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -42,6 +45,7 @@ import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.detection.utils.ProcessingData
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
 import com.buzbuz.smartautoclicker.detection.utils.getOrAwaitValue
+import org.junit.After
 
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -52,6 +56,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.ArgumentMatchers.isNull
@@ -133,6 +138,7 @@ class ScreenDetectorTests {
     // ScreenRecorder
     @Mock private lateinit var mockContext: Context
     @Mock private lateinit var mockResources: Resources
+    @Mock private lateinit var mockWindowManager: WindowManager
     @Mock private lateinit var mockMediaProjectionManager: MediaProjectionManager
     @Mock private lateinit var mockMediaProjection: MediaProjection
     @Mock private lateinit var mockImageReader: ImageReader
@@ -164,6 +170,7 @@ class ScreenDetectorTests {
      */
     private fun toStartScreenRecord(): ImageReader.OnImageAvailableListener {
         screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
+        shadowOf(screenDetector.processingThread!!.looper).idle()
 
         val listenerCaptor = ArgumentCaptor.forClass(ImageReader.OnImageAvailableListener::class.java)
         verify(mockImageReader).setOnImageAvailableListener(listenerCaptor.capture(), anyNotNull())
@@ -241,8 +248,14 @@ class ScreenDetectorTests {
         mockWhen(mockBitmapCreator.createBitmap(eq(mockScreenBitmap), anyInt(), anyInt(), anyInt(), anyInt()))
             .thenReturn(mockCaptureBitmap)
 
-        screenDetector = ScreenDetector(Point(ProcessingData.SCREEN_SIZE, ProcessingData.SCREEN_SIZE),
-            mockBitmapSupplier::getBitmap)
+        screenDetector = ScreenDetector(mockBitmapSupplier::getBitmap)
+    }
+
+    @After
+    fun tearDown() {
+        screenDetector.processingThread?.apply {
+            //shadowOf(looper).reset()
+        }
     }
 
     /** Setup the mocks for the screen recorder. */
@@ -250,7 +263,18 @@ class ScreenDetectorTests {
         // Setup context mocks and display metrics
         mockWhen(mockContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE)).thenReturn(mockMediaProjectionManager)
         mockWhen(mockContext.resources).thenReturn(mockResources)
+        mockWhen(mockContext.getSystemService(WindowManager::class.java)).thenReturn(mockWindowManager)
         mockWhen(mockResources.configuration).thenReturn(ProcessingData.SCREEN_CONFIGURATION)
+
+        // Mock get display size
+        val mockDefaultDisplay = mock(Display::class.java)
+        mockWhen(mockWindowManager.defaultDisplay).thenReturn(mockDefaultDisplay)
+        doAnswer { invocation ->
+            val argument = invocation.arguments[0] as Point
+            argument.x = ProcessingData.DISPLAY_SIZE.x
+            argument.y = ProcessingData.DISPLAY_SIZE.y
+            null
+        }.`when`(mockDefaultDisplay).getRealSize(ArgumentMatchers.any())
 
         // Setup Image reader
         mockWhen(mockImageReader.surface).thenReturn(mockSurface)
@@ -295,6 +319,7 @@ class ScreenDetectorTests {
     @Test
     fun startScreenRecord() {
         screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
+        shadowOf(screenDetector.processingThread!!.looper).idle()
 
         verify(mockImageReader).setOnImageAvailableListener(anyNotNull(), anyNotNull())
         verify(mockMediaProjection).registerCallback(anyNotNull(), isNull())
@@ -304,6 +329,7 @@ class ScreenDetectorTests {
     fun startScreenRecord_twice() {
         screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
         screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
+        shadowOf(screenDetector.processingThread!!.looper).idle()
 
         verify(mockImageReader).setOnImageAvailableListener(anyNotNull(), anyNotNull())
         verify(mockMediaProjection).registerCallback(anyNotNull(), isNull())
@@ -312,6 +338,7 @@ class ScreenDetectorTests {
     @Test
     fun startScreenRecord_threading() {
         screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
+        shadowOf(screenDetector.processingThread!!.looper).idle()
 
         val handlerCaptor = ArgumentCaptor.forClass(Handler::class.java)
         verify(mockImageReader).setOnImageAvailableListener(anyNotNull(), handlerCaptor.capture())
@@ -320,6 +347,25 @@ class ScreenDetectorTests {
         assertNotNull("Processing handler should not be null", handlerCaptor.value)
         assertNotEquals("Processing looper should not be the main one",
             Looper.getMainLooper(), handlerCaptor.value.looper)
+    }
+
+    @Test
+    fun configChangedReceiver_registration() {
+        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
+        shadowOf(screenDetector.processingThread!!.looper).idle()
+
+        verify(mockContext).registerReceiver(ArgumentMatchers.any(), ArgumentMatchers.any())
+    }
+
+    @Test
+    fun configChangedReceiver_unregistration() {
+        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
+        shadowOf(screenDetector.processingThread!!.looper).idle()
+        screenDetector.stop(mockContext)
+
+        val configReceiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
+        verify(mockContext).registerReceiver(configReceiverCaptor.capture(), ArgumentMatchers.any())
+        verify(mockContext).unregisterReceiver(configReceiverCaptor.value)
     }
 
     @Test
@@ -526,7 +572,7 @@ class ScreenDetectorTests {
 
     @Test
     fun stopScreenRecord_notStarted() {
-        screenDetector.stop()
+        screenDetector.stop(mockContext)
 
         assertFalse(screenDetector.isScreenRecording.getOrAwaitValue())
         assertFalse(screenDetector.isDetecting.getOrAwaitValue())
@@ -535,7 +581,7 @@ class ScreenDetectorTests {
     @Test
     fun stopScreenRecord_recording() {
         toStartScreenRecord()
-        screenDetector.stop()
+        screenDetector.stop(mockContext)
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
             verify(mockVirtualDisplay).release()
@@ -552,7 +598,7 @@ class ScreenDetectorTests {
     fun stopScreenRecord_detecting() {
         toStartScreenRecord()
         screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
-        screenDetector.stop()
+        screenDetector.stop(mockContext)
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
             verify(mockVirtualDisplay).release()

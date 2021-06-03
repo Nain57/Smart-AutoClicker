@@ -32,12 +32,11 @@ import com.buzbuz.smartautoclicker.testing.OpenForTesting
  * processing, we use this class to store all values required to process an [Image].
  * This cache is not synchronized and thus, should be accessed from the same thread or safely.
  *
- * @param displaySize the size of the display providing the images.
  * @param bitmapSupplier provides the bitmap for the given path, width and height. Will be called on the processing thread.
  */
 @OpenForTesting
 @WorkerThread
-internal class Cache(private val displaySize: Point, private val bitmapSupplier: (String, Int, Int) -> Bitmap?) {
+internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) {
 
     private companion object {
         /**
@@ -47,6 +46,8 @@ internal class Cache(private val displaySize: Point, private val bitmapSupplier:
         private const val CACHE_SIZE_RATIO = 0.5
     }
 
+    /** The size of the display providing the images. */
+    val displaySize: Point = Point()
     /** The image currently processed. */
     var currentImage: Image? = null
     /** The bitmap of the currently processed [Image] */
@@ -96,8 +97,18 @@ internal class Cache(private val displaySize: Point, private val bitmapSupplier:
      *
      * This method must be called before all condition verification methods in order to ensure the processing on the
      * correct values.
+     *
+     * @param currentDisplaySize the current size of the display.
      */
-    fun refreshProcessedImage() {
+    fun refreshProcessedImage(currentDisplaySize: Point) {
+        if (currentDisplaySize != displaySize) {
+            displaySize.apply {
+                x = currentDisplaySize.x
+                y = currentDisplaySize.y
+            }
+            screenBitmap = null
+        }
+
         currentImage?.let { image ->
             // If this is the first time we process, we need to create the cached bitmap.
             screenBitmap ?: run {
@@ -123,6 +134,10 @@ internal class Cache(private val displaySize: Point, private val bitmapSupplier:
 
     /** Release all cached values. */
     fun release() {
+        displaySize.apply {
+            x = 0
+            y = 0
+        }
         currentImage = null
         screenBitmap = null
         screenPixels = null
