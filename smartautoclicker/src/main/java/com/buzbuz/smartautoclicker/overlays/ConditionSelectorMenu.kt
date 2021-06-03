@@ -111,6 +111,10 @@ class ConditionSelectorMenu(
 
         /** The radius of the corner for the selector. */
         private var cornerRadius = 0f
+        /** Default width of the selector area. */
+        private var defaultWidth = 100f
+        /** Default height of the selector area. */
+        private var defaultHeight = 100f
         /** The area where the selector should be drawn. */
         private var selectorArea = RectF()
         /** Difference between the center of the selector and its inner content. */
@@ -147,12 +151,12 @@ class ConditionSelectorMenu(
 
                 cornerRadius = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_cornerRadius, 2)
                     .toFloat()
-                val xOffset = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_defaultWidth, 100)
+                defaultWidth = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_defaultWidth, 100)
                     .toFloat() / 2
-                val yOffset = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_defaultHeight, 100)
+                defaultHeight = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_defaultHeight, 100)
                     .toFloat() / 2
-                selectorArea = RectF(maxArea.centerX() - xOffset, maxArea.centerY() - yOffset,
-                    maxArea.centerX() + xOffset, maxArea.centerY() + yOffset)
+                selectorArea = RectF(maxArea.centerX() - defaultWidth, maxArea.centerY() - defaultHeight,
+                    maxArea.centerX() + defaultWidth, maxArea.centerY() + defaultHeight)
 
                 val thickness = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_thickness, 4).toFloat()
                 selectorAreaOffset = kotlin.math.ceil(thickness / 2).toInt()
@@ -183,6 +187,24 @@ class ConditionSelectorMenu(
 
             hintsIcons = HintsController(context, hintIconsSize, maxArea, hintIconsMargin, outlineColor,
                 hintFadeDuration.toLong(), hintAllFadeDelay.toLong(), this)
+        }
+
+        override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+            super.onSizeChanged(w, h, oldw, oldh)
+
+            val screenSize = windowManager.displaySize
+            maxArea.apply {
+                right = screenSize.x.toFloat()
+                bottom = screenSize.y.toFloat()
+            }
+            selectorArea.apply {
+                left = maxArea.centerX() - defaultWidth
+                top = maxArea.centerY() - defaultHeight
+                right = maxArea.centerX() + defaultWidth
+                bottom = maxArea.centerY() + defaultHeight
+            }
+            hintsIcons.showAll()
+            invalidate()
         }
 
         @SuppressLint("ClickableViewAccessibility")

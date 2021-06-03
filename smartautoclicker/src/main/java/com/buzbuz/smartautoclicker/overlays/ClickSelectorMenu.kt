@@ -248,6 +248,19 @@ class ClickSelectorMenu(
             }
         }
 
+        override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+            super.onSizeChanged(w, h, oldw, oldh)
+
+            fromPosition?.apply {
+                x = x.coerceIn(outerRadius, w.toFloat() - outerRadius)
+                y = y.coerceIn(outerRadius, h.toFloat() - outerRadius)
+            }
+            toPosition?.apply {
+                x = x.coerceIn(outerRadius, w.toFloat() - outerRadius)
+                y = y.coerceIn(outerRadius, h.toFloat() - outerRadius)
+            }
+        }
+
         @SuppressLint("ClickableViewAccessibility") // You can't click on this view
         override fun onTouchEvent(event: MotionEvent): Boolean {
             if (event.action != MotionEvent.ACTION_DOWN || event.action != MotionEvent.ACTION_MOVE) {
