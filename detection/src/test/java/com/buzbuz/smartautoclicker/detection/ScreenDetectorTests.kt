@@ -164,17 +164,61 @@ class ScreenDetectorTests {
 
     /**
      * Goes to start screen record state and provides to registered image available listener.
+     * This will execute all handlers runnable in order to ensure state correctness.
      *
      * @return the image available listener.
      */
     private fun toStartScreenRecord(): ImageReader.OnImageAvailableListener {
         screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
         shadowOf(screenDetector.processingThread!!.looper).idle()
+        shadowOf(Looper.getMainLooper()).idle()
 
         val listenerCaptor = ArgumentCaptor.forClass(ImageReader.OnImageAvailableListener::class.java)
         verify(mockImageReader).setOnImageAvailableListener(listenerCaptor.capture(), anyNotNull())
 
         return listenerCaptor.value
+    }
+
+    /**
+     * Goes to stop screen record state.
+     * This will execute all handlers runnable in order to ensure state correctness.
+     */
+    private fun toStopScreenRecord() {
+        screenDetector.stop(mockContext)
+
+        screenDetector.processingThread?.let {
+            shadowOf(it.looper).idle()
+        }
+        shadowOf(Looper.getMainLooper()).idle()
+    }
+
+    /**
+     * Execute a capture with the default test data.
+     * This will execute all handlers runnable in order to ensure state correctness.
+     */
+    private fun executeCaptureArea() {
+        screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
+    }
+
+    /**
+     * Goes to detection state.
+     * This will execute all handlers runnable in order to ensure state correctness.
+     *
+     * @param clicks the list of clicks used as tests data.
+     */
+    private fun toStartDetection(clicks: List<ClickInfo>) {
+        screenDetector.startDetection(clicks, mockDetectionCallback::onDetected)
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
+    }
+
+    /**
+     * Goes to detection stopped state.
+     * This will execute all handlers runnable in order to ensure state correctness.
+     */
+    private fun toStopDetection() {
+        screenDetector.stopDetection()
+        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
     }
 
     /**
@@ -310,8 +354,7 @@ class ScreenDetectorTests {
 
     @Test
     fun startScreenRecord() {
-        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
-        shadowOf(screenDetector.processingThread!!.looper).idle()
+        toStartScreenRecord()
 
         verify(mockImageReader).setOnImageAvailableListener(anyNotNull(), anyNotNull())
         verify(mockMediaProjection).registerCallback(anyNotNull(), isNull())
@@ -319,9 +362,8 @@ class ScreenDetectorTests {
 
     @Test
     fun startScreenRecord_twice() {
-        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
-        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
-        shadowOf(screenDetector.processingThread!!.looper).idle()
+        toStartScreenRecord()
+        toStartScreenRecord()
 
         verify(mockImageReader).setOnImageAvailableListener(anyNotNull(), anyNotNull())
         verify(mockMediaProjection).registerCallback(anyNotNull(), isNull())
@@ -329,8 +371,7 @@ class ScreenDetectorTests {
 
     @Test
     fun startScreenRecord_threading() {
-        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
-        shadowOf(screenDetector.processingThread!!.looper).idle()
+        toStartScreenRecord()
 
         val handlerCaptor = ArgumentCaptor.forClass(Handler::class.java)
         verify(mockImageReader).setOnImageAvailableListener(anyNotNull(), handlerCaptor.capture())
@@ -343,17 +384,15 @@ class ScreenDetectorTests {
 
     @Test
     fun configChangedReceiver_registration() {
-        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
-        shadowOf(screenDetector.processingThread!!.looper).idle()
+        toStartScreenRecord()
 
         verify(mockContext).registerReceiver(ArgumentMatchers.any(), ArgumentMatchers.any())
     }
 
     @Test
     fun configChangedReceiver_unregistration() {
-        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
-        shadowOf(screenDetector.processingThread!!.looper).idle()
-        screenDetector.stop(mockContext)
+        toStartScreenRecord()
+        toStopScreenRecord()
 
         val configReceiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
         verify(mockContext).registerReceiver(configReceiverCaptor.capture(), ArgumentMatchers.any())
@@ -373,9 +412,8 @@ class ScreenDetectorTests {
 
     @Test
     fun capture_notStarted() {
-        screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        executeCaptureArea()
 
-        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockBitmapCreator, mockCaptureCallback)
     }
 
@@ -383,7 +421,7 @@ class ScreenDetectorTests {
     fun capture_bitmapCreation() {
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        executeCaptureArea()
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         verify(mockBitmapCreator).createBitmap(mockScreenBitmap, VALID_CLICK_CONDITION_AREA.left,
@@ -394,7 +432,7 @@ class ScreenDetectorTests {
     fun capture_callback() {
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        executeCaptureArea()
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // callback is posted on main thread handler.
@@ -405,7 +443,7 @@ class ScreenDetectorTests {
     fun capture_cleanup() {
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        executeCaptureArea()
         imageAvailableListener.onImageAvailable(mockImageReader)
         imageAvailableListener.onImageAvailable(mockImageReader)
 
@@ -415,9 +453,7 @@ class ScreenDetectorTests {
 
     @Test
     fun detection_noScreenRecording() {
-        screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
-
-        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
+        toStartDetection(emptyList())
         verifyNoInteractions(mockDetectionCallback)
     }
 
@@ -425,7 +461,7 @@ class ScreenDetectorTests {
     fun detection_emptyClickList() {
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
+        toStartDetection(emptyList())
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
@@ -436,10 +472,7 @@ class ScreenDetectorTests {
     fun detection_clickWithoutConditions() {
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.startDetection(
-            listOf(ProcessingData.newClickInfo(CLICK_NAME)),
-            mockDetectionCallback::onDetected
-        )
+        toStartDetection(listOf(ProcessingData.newClickInfo(CLICK_NAME)))
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
@@ -451,10 +484,7 @@ class ScreenDetectorTests {
         val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(INVALID_CLICK_CONDITION))
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.startDetection(
-            listOf(click),
-            mockDetectionCallback::onDetected
-        )
+        toStartDetection(listOf(click))
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
@@ -466,10 +496,7 @@ class ScreenDetectorTests {
         val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(VALID_CLICK_CONDITION))
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.startDetection(
-            listOf(click),
-            mockDetectionCallback::onDetected
-        )
+        toStartDetection(listOf(click))
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
@@ -481,10 +508,7 @@ class ScreenDetectorTests {
         val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(VALID_CLICK_CONDITION))
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.startDetection(
-            listOf(click),
-            mockDetectionCallback::onDetected
-        )
+        toStartDetection(listOf(click))
 
         val imageCount = 5
         for (i in 0 until imageCount) {
@@ -501,10 +525,7 @@ class ScreenDetectorTests {
         val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(VALID_CLICK_CONDITION), CLICK_DELAY)
         val imageAvailableListener = toStartScreenRecord()
 
-        screenDetector.startDetection(
-            listOf(click),
-            mockDetectionCallback::onDetected
-        )
+        toStartDetection(listOf(click))
 
         imageAvailableListener.onImageAvailable(mockImageReader)
         imageAvailableListener.onImageAvailable(mockImageReader) // This one should be skipped due to delay
@@ -521,11 +542,8 @@ class ScreenDetectorTests {
         val imageAvailableListener = toStartScreenRecord()
 
         // Start with an empty list then a valid list, then check that the valid item is never detected
-        screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
-        screenDetector.startDetection(
-            listOf(click),
-            mockDetectionCallback::onDetected
-        )
+        toStartDetection(emptyList())
+        toStartDetection(listOf(click))
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
@@ -541,31 +559,30 @@ class ScreenDetectorTests {
     @Test
     fun isDetecting_detecting() {
         toStartScreenRecord()
-        screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
+        toStartDetection(emptyList())
 
-        shadowOf(Looper.getMainLooper()).idle()
         assertTrue(screenDetector.isDetecting.getOrAwaitValue())
     }
 
     @Test
     fun stopDetecting_notStarted() {
-        screenDetector.stopDetection()
+        toStopDetection()
         assertFalse(screenDetector.isDetecting.getOrAwaitValue())
     }
 
     @Test
     fun stopDetecting_started() {
         toStartScreenRecord()
-        screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
+        toStartDetection(emptyList())
 
-        screenDetector.stopDetection()
+        toStopDetection()
 
         assertFalse(screenDetector.isDetecting.getOrAwaitValue())
     }
 
     @Test
     fun stopScreenRecord_notStarted() {
-        screenDetector.stop(mockContext)
+        toStopScreenRecord()
 
         assertFalse(screenDetector.isScreenRecording.getOrAwaitValue())
         assertFalse(screenDetector.isDetecting.getOrAwaitValue())
@@ -574,7 +591,8 @@ class ScreenDetectorTests {
     @Test
     fun stopScreenRecord_recording() {
         toStartScreenRecord()
-        screenDetector.stop(mockContext)
+
+        toStopScreenRecord()
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
             verify(mockVirtualDisplay).release()
@@ -590,9 +608,9 @@ class ScreenDetectorTests {
     @Test
     fun stopScreenRecord_detecting() {
         toStartScreenRecord()
-        screenDetector.startDetection(emptyList(), mockDetectionCallback::onDetected)
-        shadowOf(screenDetector.processingThread!!.looper).idle()
-        screenDetector.stop(mockContext)
+        toStartDetection(emptyList())
+
+        toStopScreenRecord()
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
             verify(mockVirtualDisplay).release()

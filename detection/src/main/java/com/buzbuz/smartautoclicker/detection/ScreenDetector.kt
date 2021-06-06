@@ -173,9 +173,9 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
             }
             processingThreadHandler!!.post {
                 startScreenRecord(context, displaySize, processingThreadHandler!!)
+                _isScreenRecording.postValue(true)
             }
         }
-        _isScreenRecording.value = true
     }
 
     /**
@@ -257,12 +257,11 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
         processingThreadHandler?.post {
             screenRecorder.stopProjection()
             cache.release()
+            processingThread!!.quitSafely()
+            processingThreadHandler = null
+            processingThread = null
+            _isScreenRecording.postValue(false)
         }
-
-        processingThread!!.quitSafely()
-        processingThreadHandler = null
-        processingThread = null
-        _isScreenRecording.value = false
     }
 
     /**
