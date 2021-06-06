@@ -392,7 +392,10 @@ class ClickListDialog(context: Context) : OverlayDialogController(context) {
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            (recyclerView.adapter as ClickListAdapter).moveClicks(viewHolder.adapterPosition, target.adapterPosition)
+            (recyclerView.adapter as ClickListAdapter).moveClicks(
+                viewHolder.bindingAdapterPosition,
+                target.bindingAdapterPosition
+            )
             return true
         }
 

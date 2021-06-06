@@ -154,7 +154,7 @@ class ConditionViewHolder(private val viewBinding: ItemConditionBinding) : Recyc
      */
     fun onBindCondition(condition: ClickCondition, conditionClickedListener: (ClickCondition, Int) -> Unit) {
         viewBinding.imageCondition.scaleType = ImageView.ScaleType.FIT_CENTER
-        itemView.setOnClickListener { conditionClickedListener.invoke(condition, adapterPosition) }
+        itemView.setOnClickListener { conditionClickedListener.invoke(condition, bindingAdapterPosition) }
 
         condition.bitmap?.let {
             viewBinding.imageCondition.setImageBitmap(it)
