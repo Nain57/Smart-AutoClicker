@@ -24,6 +24,8 @@ import com.buzbuz.smartautoclicker.database.ClickCondition
 import com.buzbuz.smartautoclicker.database.ClickInfo
 
 import java.lang.IllegalArgumentException
+import kotlin.math.max
+import kotlin.math.min
 
 import kotlin.math.sqrt
 
@@ -55,16 +57,12 @@ internal object ProcessingData {
      * @return the pixel cache, with first the screen pixels, second the empty array for processing
      */
     fun getScreenPixelCacheForArea(area: Rect): Pair<IntArray, IntArray> {
-        if (area.width() > SCREEN_SIZE || area.height() > SCREEN_SIZE) {
-            throw IllegalArgumentException("Invalid area, it is bigger than the screen")
-        }
-
         // A rect 0,0,1,1 has a width of 1. We want the count of indexes, se we must add 1.
         val arraysSize = area.width() * area.height()
         val pixels = IntArray(arraysSize)
         var index = 0
-        for (j in area.top until area.bottom) {
-            for (i in area.left until area.right) {
+        for (j in max(area.top, 0) until min(area.bottom, SCREEN_SIZE)) {
+            for (i in max(area.left, 0) until min(area.right, SCREEN_SIZE)) {
                 pixels[index] = SCREEN_PIXELS[j * SCREEN_SIZE + i]
                 index++
             }

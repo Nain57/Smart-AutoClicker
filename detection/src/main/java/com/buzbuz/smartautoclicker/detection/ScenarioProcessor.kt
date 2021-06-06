@@ -99,6 +99,12 @@ internal class ScenarioProcessor(private val cache: Cache) {
     private fun checkCondition(condition: ClickCondition) : Boolean {
         // Now we have a condition cache, so let's detect !
         cache.pixelsCache.get(condition)?.let { pixels ->
+
+            // Check if the condition is contained in the screen
+            if (!cache.displaySize.contains(condition.area)) {
+                return false
+            }
+
             // Get the pixels of the part of the [Image] that will be compared.
             getCroppedPixels(pixels.second, condition.area)
 

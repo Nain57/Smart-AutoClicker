@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.detection
 
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.Rect
 import android.media.Image
 import android.util.LruCache
 import androidx.annotation.WorkerThread
@@ -47,7 +48,7 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
     }
 
     /** The size of the display providing the images. */
-    val displaySize: Point = Point()
+    val displaySize: Rect = Rect()
     /** The image currently processed. */
     var currentImage: Image? = null
     /** The bitmap of the currently processed [Image] */
@@ -101,10 +102,10 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
      * @param currentDisplaySize the current size of the display.
      */
     fun refreshProcessedImage(currentDisplaySize: Point) {
-        if (currentDisplaySize != displaySize) {
+        if (currentDisplaySize.x != displaySize.width() || currentDisplaySize.y != displaySize.height()) {
             displaySize.apply {
-                x = currentDisplaySize.x
-                y = currentDisplaySize.y
+                right = currentDisplaySize.x
+                bottom = currentDisplaySize.y
             }
             screenBitmap = null
         }
@@ -113,11 +114,11 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
             // If this is the first time we process, we need to create the cached bitmap.
             screenBitmap ?: run {
                 val pixelStride = image.planes[0].pixelStride
-                val rowPadding = image.planes[0].rowStride - pixelStride * displaySize.x
+                val rowPadding = image.planes[0].rowStride - pixelStride * displaySize.width()
 
                 // All images should have the same size, as we are detecting on the whole screen, so keep using the same
                 // bitmap to avoid instantiating one every time.
-                screenBitmap = Bitmap.createBitmap(displaySize.x + rowPadding / pixelStride, displaySize.y,
+                screenBitmap = Bitmap.createBitmap(displaySize.width() + rowPadding / pixelStride, displaySize.height(),
                     Bitmap.Config.ARGB_8888)
                 screenPixels = IntArray(screenBitmap!!.width * screenBitmap!!.height)
             }
@@ -135,8 +136,8 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
     /** Release all cached values. */
     fun release() {
         displaySize.apply {
-            x = 0
-            y = 0
+            right = 0
+            bottom = 0
         }
         currentImage = null
         screenBitmap = null

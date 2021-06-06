@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.detection
 
 import android.graphics.Bitmap
-import android.graphics.Point
 import android.graphics.Rect
 import android.media.Image
 import android.os.Build
@@ -68,6 +67,12 @@ class ScenarioProcessorTests {
             ProcessingData.SCREEN_AREA.width(),
             ProcessingData.SCREEN_AREA.height()
         )
+        private val TEST_DATA_SCREEN_PART_OUTSIDE = Rect(
+            -4,
+            -2,
+            ProcessingData.SCREEN_AREA.width() - 1,
+            ProcessingData.SCREEN_AREA.height() - 1
+        )
     }
 
     private lateinit var spiedCache: Cache
@@ -110,6 +115,7 @@ class ScenarioProcessorTests {
         doReturn(mockPixelCache).`when`(spiedCache).pixelsCache
         doReturn(mockCurrentImage).`when`(spiedCache).currentImage
         doReturn(mockScreenBitmap).`when`(spiedCache).screenBitmap
+        doReturn(ProcessingData.SCREEN_AREA).`when`(spiedCache).displaySize
 
         // Setup cache for the image displayed on the screen
         doReturn(ProcessingData.SCREEN_PIXELS).`when`(spiedCache).screenPixels
@@ -147,6 +153,14 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(conditionArea))
         assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+    }
+
+    @Test
+    fun oneClick_oneCondition_detected_outsideOfScreen() {
+        val conditionArea = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART_OUTSIDE, true)
+
+        val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(conditionArea))
+        assertNull(scenarioProcessor.detect(listOf(validClick)))
     }
 
     @Test
@@ -188,6 +202,17 @@ class ScenarioProcessorTests {
     }
 
     @Test
+    fun oneClick_AND_multipleConditions_oneDetected_oneInvalid() {
+        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
+        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
+        val invalidCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART_OUTSIDE, true)
+
+        val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
+            listOf(invalidCondition, otherCondition, onScreenCondition))
+        assertNull(scenarioProcessor.detect(listOf(validClick)))
+    }
+
+    @Test
     fun oneClick_AND_multipleConditions_allDetected() {
         val onScreenCondition1 = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
         val onScreenCondition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
@@ -217,6 +242,17 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(errorCondition, otherCondition, onScreenCondition))
+        assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+    }
+
+    @Test
+    fun oneClick_OR_multipleConditions_oneDetected_oneInvalid() {
+        val onScreenCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
+        val otherCondition = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
+        val invalidCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART_OUTSIDE, true)
+
+        val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
+            listOf(invalidCondition, otherCondition, onScreenCondition))
         assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
     }
 

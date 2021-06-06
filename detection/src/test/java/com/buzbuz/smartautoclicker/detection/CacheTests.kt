@@ -40,7 +40,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
-import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
@@ -60,9 +59,13 @@ class CacheTests {
         private const val TEST_DATA_DISPLAY_SIZE_WIDTH = 800
         private const val TEST_DATA_DISPLAY_SIZE_HEIGHT = 600
         private val TEST_DATA_DISPLAY_SIZE = Point(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT)
+        private const val TEST_DATA_DISPLAY_SIZE_WIDTH_2 = TEST_DATA_DISPLAY_SIZE_HEIGHT
+        private const val TEST_DATA_DISPLAY_SIZE_HEIGHT_2 = TEST_DATA_DISPLAY_SIZE_WIDTH
+        private val TEST_DATA_DISPLAY_SIZE_2 = Point(TEST_DATA_DISPLAY_SIZE_WIDTH_2, TEST_DATA_DISPLAY_SIZE_HEIGHT_2)
 
         private const val TEST_DATA_IMAGE_PIXEL_STRIDE = 1
         private const val TEST_DATA_IMAGE_ROW_STRIDE = TEST_DATA_DISPLAY_SIZE_WIDTH
+        private const val TEST_DATA_IMAGE_ROW_STRIDE_2 = TEST_DATA_DISPLAY_SIZE_WIDTH_2
 
         private const val TEST_DATA_CLICK_CONDITION_PATH = "/this/is/a/path"
         private const val TEST_DATA_CLICK_CONDITION_WIDTH = 100
@@ -89,10 +92,14 @@ class CacheTests {
     }
 
     @Mock private lateinit var mockCreatedBitmap: Bitmap
+    @Mock private lateinit var mockCreatedBitmap2: Bitmap
     @Mock private lateinit var mockSuppliedBitmap: Bitmap
     @Mock private lateinit var mockImage: Image
+    @Mock private lateinit var mockImage2: Image
     @Mock private lateinit var mockImagePlane: Image.Plane
+    @Mock private lateinit var mockImagePlane2: Image.Plane
     @Mock private lateinit var mockImagePlaneBuffer: ByteBuffer
+    @Mock private lateinit var mockImagePlaneBuffer2: ByteBuffer
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
     @Mock private lateinit var mockBitmapCreator: ShadowBitmapCreator.BitmapCreator
 
@@ -104,7 +111,7 @@ class CacheTests {
         assertNull("Initial current image should be null", cache.currentImage)
         assertNull("Initial screen bitmap should be null", cache.screenBitmap)
         assertNull("Initial screen pixels should be null", cache.screenPixels)
-        assertEquals("Initial display size is invalid", Point(), cache.displaySize)
+        assertEquals("Initial display size is invalid", Rect(), cache.displaySize)
         assertEquals("Initial current diff is invalid", 0L, cache.currentDiff)
         assertEquals("Initial crop index is invalid", 0, cache.cropIndex)
         assertEquals("Initial pixel cache size is invalid", 0, cache.pixelsCache.size())
@@ -116,7 +123,16 @@ class CacheTests {
 
         // Mock the bitmaps created by [Bitmap.createBitmap]
         ShadowBitmapCreator.setMockInstance(mockBitmapCreator)
-        mockWhen(mockBitmapCreator.createBitmap(anyInt(), anyInt(), anyNotNull())).thenReturn(mockCreatedBitmap)
+        mockWhen(mockBitmapCreator.createBitmap(
+            eq(TEST_DATA_DISPLAY_SIZE_WIDTH),
+            eq(TEST_DATA_DISPLAY_SIZE_HEIGHT),
+            anyNotNull()
+        )).thenReturn(mockCreatedBitmap)
+        mockWhen(mockBitmapCreator.createBitmap(
+            eq(TEST_DATA_DISPLAY_SIZE_WIDTH_2),
+            eq(TEST_DATA_DISPLAY_SIZE_HEIGHT_2),
+            anyNotNull()
+        )).thenReturn(mockCreatedBitmap2)
 
         // Mock the bitmaps supplied by bitmap supplier lambda
         mockWhen(mockBitmapSupplier.getBitmap(
@@ -132,6 +148,10 @@ class CacheTests {
         mockWhen(mockImagePlane.pixelStride).thenReturn(TEST_DATA_IMAGE_PIXEL_STRIDE)
         mockWhen(mockImagePlane.rowStride).thenReturn(TEST_DATA_IMAGE_ROW_STRIDE)
         mockWhen(mockImagePlane.buffer).thenReturn(mockImagePlaneBuffer)
+        mockWhen(mockImage2.planes).thenReturn(arrayOf(mockImagePlane2))
+        mockWhen(mockImagePlane2.pixelStride).thenReturn(TEST_DATA_IMAGE_PIXEL_STRIDE)
+        mockWhen(mockImagePlane2.rowStride).thenReturn(TEST_DATA_IMAGE_ROW_STRIDE_2)
+        mockWhen(mockImagePlane2.buffer).thenReturn(mockImagePlaneBuffer2)
 
         cache = Cache(mockBitmapSupplier::getBitmap)
     }
@@ -149,6 +169,42 @@ class CacheTests {
     @Test
     fun refresh_bitmapCacheCreation() {
         cache.currentImage = mockImage
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+
+        verify(mockBitmapCreator)
+            .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT, Bitmap.Config.ARGB_8888)
+        assertEquals("Invalid screen bitmap", mockCreatedBitmap, cache.screenBitmap)
+        assertNotNull("Screen pixel cache should be initialized", cache.screenPixels)
+        assertEquals(
+            "Invalid screen pixels size",
+            TEST_DATA_DISPLAY_SIZE_WIDTH * TEST_DATA_DISPLAY_SIZE_HEIGHT,
+            cache.screenPixels!!.size)
+    }
+
+    @Test
+    fun refresh_bitmapCacheCreation_twice_sameDisplay() {
+        cache.currentImage = mockImage
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+
+        cache.currentImage = mockImage2
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE_2)
+
+        verify(mockBitmapCreator)
+            .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT, Bitmap.Config.ARGB_8888)
+        verify(mockBitmapCreator)
+            .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH_2, TEST_DATA_DISPLAY_SIZE_HEIGHT_2, Bitmap.Config.ARGB_8888)
+        assertEquals("Invalid screen bitmap", mockCreatedBitmap2, cache.screenBitmap)
+        assertNotNull("Screen pixel cache should be initialized", cache.screenPixels)
+        assertEquals(
+            "Invalid screen pixels size",
+            TEST_DATA_DISPLAY_SIZE_WIDTH_2 * TEST_DATA_DISPLAY_SIZE_HEIGHT_2,
+            cache.screenPixels!!.size)
+    }
+
+    @Test
+    fun refresh_bitmapCacheCreation_twice_newDisplay() {
+        cache.currentImage = mockImage
+        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
         cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
 
         verify(mockBitmapCreator)
