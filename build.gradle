@@ -51,7 +51,7 @@ ext {
     androidxRoomVersion = "2.3.0"
     googleMaterialVersion = "1.3.0"
 
-    jUnitVersion = "4.13.1"
+    jUnitVersion = "4.13.2"
     androidxArchCoreTestingVersion = "2.1.0"
     androidxTestCoreVersion = "1.3.0"
     androidxTestExtVersion = "1.1.2"
