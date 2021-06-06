@@ -20,8 +20,10 @@ import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 
@@ -50,6 +52,8 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioCli
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by viewModels()
 
+    /** Starts the media projection permission dialog and handle the result. */
+    private lateinit var screenCaptureLauncher: ActivityResultLauncher<Intent>
     /** Scenario clicked by the user. */
     private var requestedScenario: ClickScenario? = null
 
@@ -58,6 +62,15 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioCli
         setContentView(R.layout.activity_scenario)
         supportActionBar?.title = resources.getString(R.string.activity_scenario_title)
         scenarioViewModel.stopScenario()
+
+        screenCaptureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode != RESULT_OK) {
+                Toast.makeText(this, "User denied screen sharing permission", Toast.LENGTH_SHORT).show()
+            } else {
+                scenarioViewModel.loadScenario(it.resultCode, it.data!!, requestedScenario!!)
+                finish()
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -78,24 +91,6 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioCli
 
     override fun onPermissionsGranted() {
         val projectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-        startActivityForResult(
-            projectionManager.createScreenCaptureIntent(),
-            SCREEN_SHARING_PERMISSION_REQUEST_CODE
-        )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SCREEN_SHARING_PERMISSION_REQUEST_CODE) {
-            if (resultCode != RESULT_OK) {
-                Toast.makeText(this, "User denied screen sharing permission", Toast.LENGTH_SHORT).show()
-                return
-            }
-
-            scenarioViewModel.loadScenario(resultCode, data!!, requestedScenario!!)
-            finish()
-        } else {
-            Log.e(TAG, "Invalid request code: $requestCode")
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+        screenCaptureLauncher.launch(projectionManager.createScreenCaptureIntent())
     }
 }

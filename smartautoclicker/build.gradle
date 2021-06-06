@@ -85,7 +85,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
     implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
 
-    implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleVersion}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleExtensionVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}"
