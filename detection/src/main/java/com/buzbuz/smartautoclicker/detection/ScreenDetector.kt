@@ -16,11 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -31,7 +28,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
-import android.view.WindowManager
 
 import androidx.annotation.AnyThread
 import androidx.annotation.GuardedBy
@@ -42,7 +38,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.extensions.displaySize
+import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 
 /**
  * Detects [ClickInfo] on a display.
@@ -53,11 +49,12 @@ import com.buzbuz.smartautoclicker.extensions.displaySize
  * The states of the recording and the detection are available in [isScreenRecording] and [isDetecting] respectively.
  * Once you no longer needs to capture or detect, call [stopDetection] or [stop] to release all processing resources.
  *
+ * @param context the Android context.
  * @param bitmapSupplier provides the bitmap for the given path, width and height. This call will be made on the
  * processing thread, so you can use it directly to perform the loading from the memory, but keep in mind that the more
  * time this thread spend here, the slower the detection will be.
  */
-class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
+class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int, Int) -> Bitmap?) {
 
     private companion object {
         /** Tag for logs. */
@@ -66,6 +63,10 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
         private const val PROCESSING_THREAD_NAME = "SmartAutoClicker.Processing"
     }
 
+    /** Monitors the state of the screen. */
+    private val screenMetrics = ScreenMetrics(context)
+    /** Listener upon the screen orientation changes. */
+    private val orientationListener = ::onOrientationChanged
     /** Handler on the main thread. Used to post processing results callbacks. */
     private val mainHandler = Handler(Looper.getMainLooper())
     /** Record the screen and provide images of it regularly via [onNewImage]. */
@@ -116,25 +117,6 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
     val isScreenRecording: LiveData<Boolean>
         get() = _isScreenRecording
 
-    /** The current orientation of the screen. */
-    private var orientation = Configuration.ORIENTATION_UNDEFINED
-    /** Listen to the configuration changes for orientation change info. */
-    private val configChangedReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val newOrientation = context.resources.configuration.orientation
-            if (orientation != newOrientation) {
-                Log.w(TAG, "newDisplaySize: $displaySize")
-
-                processingThreadHandler?.post {
-                    screenRecorder.stopScreenRecord()
-                    displaySize = context.getSystemService(WindowManager::class.java).displaySize
-                    orientation = newOrientation
-                    screenRecorder.startScreenRecord(context, displaySize, processingThreadHandler!!)
-                }
-            }
-        }
-    }
-
     /**
      * Start the screen detection.
      *
@@ -158,9 +140,8 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
             return
         }
 
-        displaySize = context.getSystemService(WindowManager::class.java).displaySize
-        orientation = context.resources.configuration.orientation
-        context.registerReceiver(configChangedReceiver, IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED))
+        displaySize = screenMetrics.getScreenSize()
+        screenMetrics.registerOrientationListener(orientationListener)
 
         processingThread = HandlerThread(PROCESSING_THREAD_NAME).apply {
             start()
@@ -169,7 +150,7 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
 
         screenRecorder.apply {
             startProjection(context, resultCode, data) {
-                stop(context)
+                stop()
             }
             processingThreadHandler!!.post {
                 startScreenRecord(context, displaySize, processingThreadHandler!!)
@@ -241,11 +222,9 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
      *
      * First, calls [stopDetection] if the detection was active. Then, stop the screen recording and release any related
      * resources.
-     *
-     * @param context the Android context.
      */
     @MainThread
-    fun stop(context: Context) {
+    fun stop() {
         if (!_isScreenRecording.value!!) {
             Log.w(TAG, "stop: Screen record is already stopped.")
             return
@@ -253,14 +232,27 @@ class ScreenDetector(bitmapSupplier: (String, Int, Int) -> Bitmap?) {
             stopDetection()
         }
 
-        context.unregisterReceiver(configChangedReceiver)
+        screenMetrics.unregisterOrientationListener()
         processingThreadHandler?.post {
             screenRecorder.stopProjection()
             cache.release()
-            processingThread!!.quitSafely()
+            processingThread?.quitSafely()
             processingThreadHandler = null
             processingThread = null
             _isScreenRecording.postValue(false)
+        }
+    }
+
+    /**
+     * Called when the orientation of the screen changes.
+     *
+     * As we now have different screen metrics, we need to stop and start the virtual display with the correct one.
+     */
+    private fun onOrientationChanged() {
+        processingThreadHandler?.post {
+            screenRecorder.stopScreenRecord()
+            displaySize = screenMetrics.getScreenSize()
+            screenRecorder.startScreenRecord(context, displaySize, processingThreadHandler!!)
         }
     }
 

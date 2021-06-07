@@ -27,6 +27,8 @@ import android.widget.Button
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
 
+import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
+
 /**
  * Controller for a dialog opened from a service as an overlay.
  *
@@ -89,7 +91,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
             .create()
             .also {
                 it.window?.apply {
-                    setType(com.buzbuz.smartautoclicker.extensions.TYPE_COMPAT_OVERLAY)
+                    setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
                     setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                     decorView.setOnTouchListener(hideSoftInputTouchListener)
                 }

@@ -35,9 +35,7 @@ import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.extensions.displaySize
 import com.buzbuz.smartautoclicker.extensions.scale
-import com.buzbuz.smartautoclicker.extensions.leftTopInsets
 import com.buzbuz.smartautoclicker.extensions.move
 import com.buzbuz.smartautoclicker.baseui.gestures.*
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
@@ -80,7 +78,7 @@ class ConditionSelectorMenu(
     private fun onConfirm() {
         (screenOverlayView as ConditionSelectorView).let {
             val selectedArea = Rect(it.selectedArea.toRect())
-            windowManager.leftTopInsets?.let { inset ->
+            screenMetrics.getLeftTopInset()?.let { inset ->
                 selectedArea.left += inset.x
                 selectedArea.right += inset.x
                 selectedArea.top += inset.y
@@ -130,7 +128,7 @@ class ConditionSelectorMenu(
             }
 
         init {
-            val screenSize = windowManager.displaySize
+            val screenSize = screenMetrics.getScreenSize()
             maxArea = RectF(0f, 0f, screenSize.x.toFloat(), screenSize.y.toFloat())
         }
 
@@ -192,7 +190,7 @@ class ConditionSelectorMenu(
         override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
             super.onSizeChanged(w, h, oldw, oldh)
 
-            val screenSize = windowManager.displaySize
+            val screenSize = screenMetrics.getScreenSize()
             maxArea.apply {
                 right = screenSize.x.toFloat()
                 bottom = screenSize.y.toFloat()

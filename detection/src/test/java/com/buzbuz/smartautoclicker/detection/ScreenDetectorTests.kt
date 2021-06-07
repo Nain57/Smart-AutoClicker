@@ -137,7 +137,9 @@ class ScreenDetectorTests {
     // ScreenRecorder
     @Mock private lateinit var mockContext: Context
     @Mock private lateinit var mockResources: Resources
+    @Mock private lateinit var mockDisplay: Display
     @Mock private lateinit var mockWindowManager: WindowManager
+    @Mock private lateinit var mockDisplayManager: DisplayManager
     @Mock private lateinit var mockMediaProjectionManager: MediaProjectionManager
     @Mock private lateinit var mockMediaProjection: MediaProjection
     @Mock private lateinit var mockImageReader: ImageReader
@@ -184,7 +186,7 @@ class ScreenDetectorTests {
      * This will execute all handlers runnable in order to ensure state correctness.
      */
     private fun toStopScreenRecord() {
-        screenDetector.stop(mockContext)
+        screenDetector.stop()
 
         screenDetector.processingThread?.let {
             shadowOf(it.looper).idle()
@@ -286,12 +288,11 @@ class ScreenDetectorTests {
             INVALID_CLICK_CONDITION_AREA.height()
         )
 
-
         // Mock for the capture
         mockWhen(mockBitmapCreator.createBitmap(eq(mockScreenBitmap), anyInt(), anyInt(), anyInt(), anyInt()))
             .thenReturn(mockCaptureBitmap)
 
-        screenDetector = ScreenDetector(mockBitmapSupplier::getBitmap)
+        screenDetector = ScreenDetector(mockContext, mockBitmapSupplier::getBitmap)
     }
 
     /** Setup the mocks for the screen recorder. */
@@ -300,17 +301,17 @@ class ScreenDetectorTests {
         mockWhen(mockContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE)).thenReturn(mockMediaProjectionManager)
         mockWhen(mockContext.resources).thenReturn(mockResources)
         mockWhen(mockContext.getSystemService(WindowManager::class.java)).thenReturn(mockWindowManager)
+        mockWhen(mockContext.getSystemService(DisplayManager::class.java)).thenReturn(mockDisplayManager)
         mockWhen(mockResources.configuration).thenReturn(ProcessingData.SCREEN_CONFIGURATION)
 
         // Mock get display size
-        val mockDefaultDisplay = mock(Display::class.java)
-        mockWhen(mockWindowManager.defaultDisplay).thenReturn(mockDefaultDisplay)
+        mockWhen(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
         doAnswer { invocation ->
             val argument = invocation.arguments[0] as Point
             argument.x = ProcessingData.DISPLAY_SIZE.x
             argument.y = ProcessingData.DISPLAY_SIZE.y
             null
-        }.`when`(mockDefaultDisplay).getRealSize(ArgumentMatchers.any())
+        }.`when`(mockDisplay).getRealSize(ArgumentMatchers.any())
 
         // Setup Image reader
         mockWhen(mockImageReader.surface).thenReturn(mockSurface)

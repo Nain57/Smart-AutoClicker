@@ -36,7 +36,6 @@ import androidx.core.graphics.toPoint
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.extensions.leftTopInsets
 
 /**
  * [OverlayMenuController] implementation for displaying the click area selection menu and its overlay view.
@@ -162,7 +161,7 @@ class ClickSelectorMenu(
      * @param point the coordinates to transform.
      */
     private fun toScreenCoordinates(point: PointF): Point {
-        return windowManager.leftTopInsets?.let {
+        return screenMetrics.getLeftTopInset()?.let {
             Point(point.x.toInt() + it.x, point.y.toInt() + it.y)
         } ?: point.toPoint()
     }
