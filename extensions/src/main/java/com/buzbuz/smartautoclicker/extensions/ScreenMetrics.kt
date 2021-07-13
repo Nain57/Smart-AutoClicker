@@ -40,7 +40,7 @@ class ScreenMetrics(private val context: Context) {
         @JvmField
         val TYPE_COMPAT_OVERLAY =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-            else WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
+            else WindowManager.LayoutParams.TYPE_PHONE
     }
 
     /** The display to get the value from. It will always be the first one available. */
