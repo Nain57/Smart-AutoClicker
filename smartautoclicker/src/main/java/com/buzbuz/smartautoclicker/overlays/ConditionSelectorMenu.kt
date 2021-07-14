@@ -78,13 +78,6 @@ class ConditionSelectorMenu(
     private fun onConfirm() {
         (screenOverlayView as ConditionSelectorView).let {
             val selectedArea = Rect(it.selectedArea.toRect())
-            screenMetrics.getLeftTopInset()?.let { inset ->
-                selectedArea.left += inset.x
-                selectedArea.right += inset.x
-                selectedArea.top += inset.y
-                selectedArea.bottom += inset.y
-            }
-
             it.hide = true
             Handler(Looper.getMainLooper()).postDelayed({
                 onConditionSelected.invoke(selectedArea)

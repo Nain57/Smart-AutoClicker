@@ -139,8 +139,8 @@ class ClickSelectorMenu(
             SINGLE -> {
                 onClickSelectedListener.invoke(
                     type,
-                    toScreenCoordinates(fromPosition!!),
-                    toPosition?.let { toScreenCoordinates(it) }
+                    fromPosition!!.toPoint(),
+                    toPosition?.toPoint()
                 )
                 dismiss()
             }
@@ -148,22 +148,12 @@ class ClickSelectorMenu(
             SWIPE_TO -> {
                 onClickSelectedListener.invoke(
                     type,
-                    toScreenCoordinates(fromPosition!!),
-                    toScreenCoordinates(toPosition!!)
+                    fromPosition!!.toPoint(),
+                    toPosition!!.toPoint()
                 )
                 dismiss()
             }
         }
-    }
-
-    /**
-     * Transform the provided coordinates from the overlay view into screen coordinates.
-     * @param point the coordinates to transform.
-     */
-    private fun toScreenCoordinates(point: PointF): Point {
-        return screenMetrics.getLeftTopInset()?.let {
-            Point(point.x.toInt() + it.x, point.y.toInt() + it.y)
-        } ?: point.toPoint()
     }
 
     /**

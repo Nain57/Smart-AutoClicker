@@ -77,6 +77,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         const val PREFERENCE_MENU_Y_PORTRAIT_KEY = "Menu_Y_Portrait_Position"
     }
 
+    /** Monitors the state of the screen. */
+    protected val screenMetrics = ScreenMetrics(context)
     /** The layout parameters of the menu layout. */
     private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
@@ -90,8 +92,10 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     /** The layout parameters of the overlay view. */
     private val overlayLayoutParams:  WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
         copyFrom(menuLayoutParams)
-        width = WindowManager.LayoutParams.MATCH_PARENT
-        height = WindowManager.LayoutParams.MATCH_PARENT
+        screenMetrics.getScreenSize().let { size ->
+            width = size.x
+            height = size.y
+        }
     }
     /** The shared preference storing the position of the menu in order to save/restore the last user position. */
     private val sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -117,9 +121,6 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
     /** Listener upon the screen orientation changes. */
     private val orientationListener = ::onOrientationChanged
-
-    /** Monitors the state of the screen. */
-    protected val screenMetrics = ScreenMetrics(context)
 
     /**
      * Creates the root view of the menu overlay.
@@ -161,6 +162,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
+        overlayLayoutParams.gravity = Gravity.TOP or Gravity.START
         loadMenuPosition(screenMetrics.getOrientation())
     }
 

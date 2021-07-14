@@ -102,15 +102,4 @@ class ScreenMetrics(private val context: Context) {
             else -> Configuration.ORIENTATION_UNDEFINED
         }
     }
-
-    /** Get the left and top inset of the screen. */
-    fun getLeftTopInset(): Point? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            display.cutout?.let {
-                Point(it.safeInsetLeft, it.safeInsetTop)
-            }
-        } else {
-            null
-        }
-    }
 }
