@@ -34,8 +34,8 @@ android {
         applicationId "com.buzbuz.smartautoclicker"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 4
-        versionName "1.0-RC3"
+        versionCode 5
+        versionName "1.0-RC4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
