@@ -200,6 +200,11 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         screenOverlayView = null
     }
 
+    /** */
+    protected fun setMenuVisibility(visibility: Int) {
+        menuLayout?.visibility = visibility
+    }
+
     /**
      * Set the enabled state of a menu item.
      *

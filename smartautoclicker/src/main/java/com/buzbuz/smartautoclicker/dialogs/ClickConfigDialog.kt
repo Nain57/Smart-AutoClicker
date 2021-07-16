@@ -137,12 +137,11 @@ class ClickConfigDialog(
      * selected, the adapter will be refreshed to display the newly selected condition.
      */
     private fun onAddConditionClicked() {
-        showSubOverlay(ConditionSelectorMenu(context) { area ->
-            DetectorModel.get().captureScreenArea(area) { bitmap ->
-                conditionsAdapter.addCondition(area, bitmap)
-                refreshDialogDisplay()
-            }
-        }, true)
+        val conditionSelectorMenu = ConditionSelectorMenu(context) { area, bitmap ->
+            conditionsAdapter.addCondition(area, bitmap)
+            refreshDialogDisplay()
+        }
+        showSubOverlay(conditionSelectorMenu, true)
     }
 
     /**

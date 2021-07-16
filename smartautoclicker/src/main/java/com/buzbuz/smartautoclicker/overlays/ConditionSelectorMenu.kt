@@ -18,11 +18,13 @@ package com.buzbuz.smartautoclicker.overlays
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.drawable.BitmapDrawable
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -31,6 +33,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.ColorInt
+import androidx.annotation.IntDef
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
@@ -39,6 +42,7 @@ import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.move
 import com.buzbuz.smartautoclicker.baseui.gestures.*
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
+import com.buzbuz.smartautoclicker.model.DetectorModel
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order
@@ -49,22 +53,57 @@ import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
  */
 class ConditionSelectorMenu(
     context: Context,
-    private val onConditionSelected: (Rect) -> Unit
+    private val onConditionSelected: (Rect, Bitmap) -> Unit
 ) : OverlayMenuController(context) {
 
     private companion object {
         /** Delay before confirming the selection in order to let the time to the selector view to be hide. */
         private const val SELECTION_DELAY_MS = 200L
+
+        /**  */
+        @IntDef(SELECTION, CAPTURE, ADJUST)
+        @Retention(AnnotationRetention.SOURCE)
+        private annotation class ConditionCaptureState
+        /**  */
+        private const val SELECTION = 1
+        /** */
+        private const val CAPTURE = 2
+        /**  */
+        private const val ADJUST = 3
     }
+
+    /** */
+    private val selectorView = ConditionSelectorView(context)
+
+    /** */
+    @ConditionCaptureState
+    private var state: Int = 0
+        set(value) {
+            field = value
+            when (value) {
+                SELECTION -> {
+                    setMenuVisibility(View.VISIBLE)
+                    selectorView.hide = true
+                }
+                CAPTURE -> {
+                    setMenuVisibility(View.GONE)
+                    selectorView.hide = true
+                }
+                ADJUST -> {
+                    setMenuVisibility(View.VISIBLE)
+                    selectorView.hide = false
+                }
+            }
+        }
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
         layoutInflater.inflate(R.layout.overlay_validation_menu, null) as ViewGroup
 
-    override fun onCreateOverlayView(): View = ConditionSelectorView(context)
+    override fun onCreateOverlayView(): View = selectorView
 
     override fun onShow() {
         super.onShow()
-        (screenOverlayView as ConditionSelectorView).showHints()
+        state = SELECTION
     }
 
     override fun onMenuItemClicked(viewId: Int) {
@@ -74,15 +113,24 @@ class ConditionSelectorMenu(
         }
     }
 
-    /** Confirm the current condition selection, notify the listener and dismiss the overlay. */
+    /**  */
     private fun onConfirm() {
-        (screenOverlayView as ConditionSelectorView).let {
-            val selectedArea = Rect(it.selectedArea.toRect())
-            it.hide = true
+        if (state == SELECTION) {
+            state = CAPTURE
             Handler(Looper.getMainLooper()).postDelayed({
-                onConditionSelected.invoke(selectedArea)
-                dismiss()
+                DetectorModel.get().captureScreenArea(Rect(selectorView.maxArea.toRect())) { bitmap ->
+                    selectorView.apply {
+                        screenCapture = BitmapDrawable(resources, bitmap)
+                    }
+                    state = ADJUST
+                }
             }, SELECTION_DELAY_MS)
+        } else {
+            val selectedArea = Rect(selectorView.selectedArea.toRect())
+            val crop = Bitmap.createBitmap(selectorView.screenCapture!!.bitmap, selectedArea.left, selectedArea.top,
+                selectedArea.width(), selectedArea.height())
+            onConditionSelected(selectedArea, crop)
+            dismiss()
         }
     }
 
@@ -91,8 +139,6 @@ class ConditionSelectorMenu(
 
         /** The list of gestures applied to this view. */
         private val gestures: List<Gesture>
-        /** The maximum size of the selector. */
-        private val maxArea: RectF
         /** Paint drawing the selector. */
         private val selectorPaint = Paint()
         /** Paint for the background of the selector. */
@@ -111,12 +157,23 @@ class ConditionSelectorMenu(
         /** Difference between the center of the selector and its inner content. */
         private var selectorAreaOffset = 0
 
+        /** */
+        var screenCapture: BitmapDrawable? = null
+        /** The maximum size of the selector. */
+        val maxArea: RectF
         /** Area within the selector that represents the zone to be capture to creates a click condition. */
         var selectedArea = RectF()
         /** Tell if the content of this view should be hidden or not. */
-        var hide = false
+        var hide = true
             set(value) {
+                if (field == value) {
+                    return
+                }
+
                 field = value
+                if (value) {
+                    hintsIcons.showAll()
+                }
                 invalidate()
             }
 
@@ -208,11 +265,6 @@ class ConditionSelectorMenu(
             return false
         }
 
-        /** Displays all the hints for a short duration. */
-        fun showHints() {
-            hintsIcons.showAll()
-        }
-
         /**
          * Called when a [Gesture] detects a scale gesture.
          * Apply the scale factor to the selector and invalidate the view to redraw it.
@@ -255,7 +307,6 @@ class ConditionSelectorMenu(
         }
 
         override fun invalidate() {
-
             selectorArea.intersect(maxArea)
             selectedArea.apply {
                 left = selectorArea.left + selectorAreaOffset
@@ -271,6 +322,11 @@ class ConditionSelectorMenu(
         override fun onDraw(canvas: Canvas) {
             if (hide) {
                 return
+            }
+
+            screenCapture?.apply {
+                setBounds(0, 0, maxArea.width().toInt(), maxArea.height().toInt())
+                draw(canvas)
             }
 
             canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
