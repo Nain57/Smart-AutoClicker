@@ -57,6 +57,10 @@ class MoveGesture(view: View, handleSize: Float, private val moveListener: (Floa
     }
 
     override fun onEvent(event: MotionEvent, viewArea: RectF): Boolean {
+        if (event.pointerCount != 1) {
+            return false
+        }
+
         moveListener(
             moveInitialPosition.first + event.getX(currentPointerDownIndex) - moveInitialEventPosition.first,
             moveInitialPosition.second + event.getY(currentPointerDownIndex) - moveInitialEventPosition.second
