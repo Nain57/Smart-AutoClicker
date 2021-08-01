@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.overlays
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
@@ -25,6 +27,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.gestures.*
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
@@ -49,6 +52,8 @@ class ConditionSelectorView(
         private const val ZOOM_MINIMUM = 0.8f
         /** The maximum zoom value. */
         private const val ZOOM_MAXIMUM = 3f
+        /** The duration of the capture display animation in milliseconds. */
+        private const val SHOW_CAPTURE_ANIMATION_DURATION = 2000L
     }
 
     /** The list of gestures applied to the selector. */
@@ -61,6 +66,12 @@ class ConditionSelectorView(
     private val backgroundPaint = Paint()
     /** Controls the display of the user hints around the selector. */
     private val hintsIcons: HintsController
+    /** Animator for the scale change when defining the capture. */
+    private val showCaptureAnimator: Animator = ValueAnimator.ofFloat(1f, 0.8f).apply {
+        duration = SHOW_CAPTURE_ANIMATION_DURATION
+        interpolator = FastOutSlowInInterpolator()
+        addUpdateListener { scaleCapture(it.animatedValue as Float) }
+    }
 
     /** The radius of the corner for the selector. */
     private var cornerRadius = 0f
@@ -178,7 +189,7 @@ class ConditionSelectorView(
      */
     fun showCapture(bitmap: Bitmap) {
         screenCapture = BitmapDrawable(resources, bitmap)
-        scaleCapture(0.8f)
+        showCaptureAnimator.start()
     }
 
     /**
@@ -222,6 +233,10 @@ class ConditionSelectorView(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (showCaptureAnimator.isRunning) {
+            return false
+        }
+
         selectorGestures.forEach { gesture ->
             if (gesture.onTouchEvent(event, selectorArea)) {
                 return true
