@@ -77,7 +77,7 @@ class ScaleGestureTests {
         MockitoAnnotations.openMocks(this)
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-        scaleGesture = ScaleGesture(mockView, TEST_DATA_HANDLE_SIZE, context, mockScaleListener::onScale)
+        scaleGesture = ScaleGesture(mockView, TEST_DATA_HANDLE_SIZE, context, true, mockScaleListener::onScale)
         scaleGesture.scaleDetectorSupplier = { listener ->
             gestureDetectorListener = listener
             mockGestureDetector = mock(

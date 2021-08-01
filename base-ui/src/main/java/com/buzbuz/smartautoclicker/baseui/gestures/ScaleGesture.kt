@@ -32,8 +32,13 @@ import androidx.annotation.VisibleForTesting
  * @param onScaleListener the object to notify upon scale gesture results.
  * Move listener parameter is the scale factor to apply to the view.
  */
-class ScaleGesture(view: View, handleSize: Float, context: Context, private val onScaleListener: (Float) -> Unit)
-    : Gesture(view, handleSize, true) {
+class ScaleGesture(
+    view: View,
+    handleSize: Float,
+    context: Context,
+    vibrate: Boolean,
+    private val onScaleListener: (Float) -> Unit
+) : Gesture(view, handleSize, vibrate, true) {
 
     /** Called when the scale gesture is detected and propagate the scale factor to the listener. */
     private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {

@@ -80,7 +80,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.bottom
         )
 
-        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, true)
 
         assertEquals(expected, result)
@@ -95,7 +95,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.bottom
         )
 
-        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, false)
 
         assertEquals(expected, result)
@@ -103,7 +103,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun left_getNewSize() {
-        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.left + 1, TEST_DATA_VIEW_AREA.centerY())
 
         val newXPos = TEST_DATA_VIEW_AREA.left + 10f
@@ -123,7 +123,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun left_getNewSize_corrected() {
-        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeLeftGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.left + 1, TEST_DATA_VIEW_AREA.centerY())
 
         val newXPos = TEST_DATA_VIEW_AREA.right
@@ -150,7 +150,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.top + TEST_DATA_INNER_HANDLE
         )
 
-        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, true)
 
         assertEquals(expected, result)
@@ -165,7 +165,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.top
         )
 
-        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, false)
 
         assertEquals(expected, result)
@@ -173,7 +173,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun top_getNewSize() {
-        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.centerX(), TEST_DATA_VIEW_AREA.top + 1)
 
         val newYPos = TEST_DATA_VIEW_AREA.top + 10f
@@ -193,7 +193,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun top_getNewSize_corrected() {
-        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeTopGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.centerX(), TEST_DATA_VIEW_AREA.top + 1)
 
         val newYPos = TEST_DATA_VIEW_AREA.bottom
@@ -220,7 +220,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.bottom
         )
 
-        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, true)
 
         assertEquals(expected, result)
@@ -235,7 +235,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.bottom
         )
 
-        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, false)
 
         assertEquals(expected, result)
@@ -243,7 +243,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun right_getNewSize() {
-        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.right - 1, TEST_DATA_VIEW_AREA.centerX())
 
         val newXPos = TEST_DATA_VIEW_AREA.right - 10f
@@ -263,7 +263,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun right_getNewSize_corrected() {
-        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeRightGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.right - 1, TEST_DATA_VIEW_AREA.centerX())
 
         val newXPos = TEST_DATA_VIEW_AREA.left
@@ -290,7 +290,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.bottom + TEST_DATA_HANDLE_SIZE
         )
 
-        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, true)
 
         assertEquals(expected, result)
@@ -305,7 +305,7 @@ class ResizeGesturesImplTests {
             TEST_DATA_VIEW_AREA.bottom + TEST_DATA_HANDLE_SIZE
         )
 
-        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         val result = resizeGesture.getHandleArea(TEST_DATA_VIEW_AREA, false)
 
         assertEquals(expected, result)
@@ -313,7 +313,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun bottom_getNewSize() {
-        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.centerX(), TEST_DATA_VIEW_AREA.bottom - 1)
 
         val newYPos = TEST_DATA_VIEW_AREA.bottom - 10f
@@ -333,7 +333,7 @@ class ResizeGesturesImplTests {
 
     @Test
     fun bottom_getNewSize_corrected() {
-        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize)
+        resizeGesture = ResizeBottomGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize)
         mockValidActionDownEvent(TEST_DATA_VIEW_AREA.centerX(), TEST_DATA_VIEW_AREA.bottom - 1)
 
         val newYPos = TEST_DATA_VIEW_AREA.top

@@ -25,13 +25,18 @@ import android.view.View
  *
  * @param view the view to perform the gesture on.
  * @param handleSize the minimum size of the area where the user can interact with a gesture.
+ * @param vibrate true to vibrate when the gesture is triggered, false to do nothing.
  * @param moveListener the object to notify upon move gesture results.
  * Move listener parameters are:
  * * the x position of the center of the view after the move
  * * the y position of the center of the view after the move
  */
-class MoveGesture(view: View, handleSize: Float, private val moveListener: (Float, Float) -> Unit)
-    : Gesture(view, handleSize) {
+class MoveGesture(
+    view: View,
+    handleSize: Float,
+    vibrate: Boolean,
+    private val moveListener: (Float, Float) -> Unit
+) : Gesture(view, handleSize, vibrate) {
 
     /** The initial position of the view when the move gesture starts being detected. */
     private var moveInitialPosition = 0f to 0f

@@ -30,13 +30,18 @@ import kotlin.math.min
  *
  * @param view the view to perform the gesture on.
  * @param handleSize the minimum size of the area where the user can interact with a gesture.
+ * @param vibrate true to vibrate when the gesture is triggered, false to do nothing.
  * @param onResizeListener the object to notify upon resize gesture results.
  * Move listener parameters are:
  * * the new view bounds after the gesture
  * * the type of the gesture that did the resize
  */
-abstract class ResizeGesture(view: View, handleSize: Float, private val onResizeListener: (RectF, Int) -> Unit)
-    : Gesture(view, handleSize) {
+abstract class ResizeGesture(
+    view: View,
+    handleSize: Float,
+    vibrate: Boolean,
+    private val onResizeListener: (RectF, Int) -> Unit
+) : Gesture(view, handleSize, vibrate) {
 
     final override fun onDownEvent(event: MotionEvent, viewArea: RectF): Boolean {
         return getHandleArea(viewArea, viewArea.height() > handleSize && viewArea.width() > handleSize)
@@ -74,8 +79,8 @@ abstract class ResizeGesture(view: View, handleSize: Float, private val onResize
 }
 
 /** Resize gesture for the left side of the view with a rectangle handle on the left side as well. */
-class ResizeLeftGesture(view: View, handleSize: Float, onResizeListener: (RectF, Int) -> Unit)
-    : ResizeGesture(view, handleSize, onResizeListener) {
+class ResizeLeftGesture(view: View, handleSize: Float, vibrate: Boolean, onResizeListener: (RectF, Int) -> Unit)
+    : ResizeGesture(view, handleSize, vibrate, onResizeListener) {
 
     override val gestureType = RESIZE_LEFT
 
@@ -97,8 +102,8 @@ class ResizeLeftGesture(view: View, handleSize: Float, onResizeListener: (RectF,
 }
 
 /** Resize gesture for the top side of the view with a rectangle handle on the top side as well. */
-class ResizeTopGesture(view: View, handleSize: Float, onResizeListener: (RectF, Int) -> Unit)
-    : ResizeGesture(view, handleSize, onResizeListener) {
+class ResizeTopGesture(view: View, handleSize: Float, vibrate: Boolean, onResizeListener: (RectF, Int) -> Unit)
+    : ResizeGesture(view, handleSize, vibrate, onResizeListener) {
 
     override val gestureType = RESIZE_TOP
 
@@ -120,8 +125,8 @@ class ResizeTopGesture(view: View, handleSize: Float, onResizeListener: (RectF, 
 }
 
 /** Resize gesture for the right side of the view with a rectangle handle on the right side as well. */
-class ResizeRightGesture(view: View, handleSize: Float, onResizeListener: (RectF, Int) -> Unit)
-    : ResizeGesture(view, handleSize, onResizeListener) {
+class ResizeRightGesture(view: View, handleSize: Float, vibrate: Boolean, onResizeListener: (RectF, Int) -> Unit)
+    : ResizeGesture(view, handleSize, vibrate, onResizeListener) {
 
     override val gestureType = RESIZE_RIGHT
 
@@ -143,8 +148,8 @@ class ResizeRightGesture(view: View, handleSize: Float, onResizeListener: (RectF
 }
 
 /** Resize gesture for the bottom side of the view with a rectangle handle on the bottom side as well. */
-class ResizeBottomGesture(view: View, handleSize: Float, onResizeListener: (RectF, Int) -> Unit)
-    : ResizeGesture(view, handleSize, onResizeListener) {
+class ResizeBottomGesture(view: View, handleSize: Float, vibrate: Boolean, onResizeListener: (RectF, Int) -> Unit)
+    : ResizeGesture(view, handleSize, vibrate, onResizeListener) {
 
     override val gestureType = RESIZE_BOTTOM
 

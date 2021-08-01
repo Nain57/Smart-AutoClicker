@@ -49,12 +49,14 @@ const val RESIZE_BOTTOM = 6
  *
  * @param view the view to perform the gesture on.
  * @param handleSize the minimum size of the area where the user can interact with a gesture.
+ * @param vibrate true to vibrate when the gesture is triggered, false to do nothing.
  * @param ignorePointers true to ignore the pointer that initiated the gesture, false to use it. Default value is false.
  */
 abstract class Gesture(
     private val view: View,
     protected val handleSize: Float,
-    private val ignorePointers: Boolean = false
+    private val vibrate: Boolean,
+    private val ignorePointers: Boolean = false,
 ) {
 
     companion object {
@@ -108,7 +110,10 @@ abstract class Gesture(
                 if (!ignorePointers ) {
                     firstPointerDownId = event.getPointerId(0)
                 }
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+
+                if (vibrate) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                }
             }
             return handled
         }

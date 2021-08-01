@@ -153,16 +153,16 @@ class ConditionSelectorView(
         }
 
         selectorGestures = listOf(
-            MoveGesture(this, resizeHandleSize, ::moveSelectorTo),
-            ResizeLeftGesture(this, resizeHandleSize, ::resizeSelector),
-            ResizeTopGesture(this, resizeHandleSize, ::resizeSelector),
-            ResizeRightGesture(this, resizeHandleSize, ::resizeSelector),
-            ResizeBottomGesture(this, resizeHandleSize, ::resizeSelector)
+            MoveGesture(this, resizeHandleSize, true, ::moveSelectorTo),
+            ResizeLeftGesture(this, resizeHandleSize, true,  ::resizeSelector),
+            ResizeTopGesture(this, resizeHandleSize, true, ::resizeSelector),
+            ResizeRightGesture(this, resizeHandleSize, true, ::resizeSelector),
+            ResizeBottomGesture(this, resizeHandleSize, true, ::resizeSelector)
         )
 
         captureGestures = listOf(
-            MoveGesture(this, resizeHandleSize, ::moveCaptureTo),
-            ScaleGesture(this, resizeHandleSize, context, ::scaleCapture)
+            MoveGesture(this, resizeHandleSize, false, ::moveCaptureTo),
+            ScaleGesture(this, resizeHandleSize, context, false, ::scaleCapture)
         )
 
         hintsIcons = HintsController(context, hintIconsSize, maxArea, hintIconsMargin, outlineColor,

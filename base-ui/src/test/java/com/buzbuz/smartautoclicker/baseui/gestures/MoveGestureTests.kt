@@ -70,7 +70,7 @@ class MoveGestureTests {
 
     @Test
     fun onDown_eventInArea_withoutInnerHandle() {
-        moveGesture = MoveGesture(mockView, TEST_DATA_BIG_HANDLE_SIZE, mockListener::onMove)
+        moveGesture = MoveGesture(mockView, TEST_DATA_BIG_HANDLE_SIZE, true, mockListener::onMove)
         val result = moveGesture.onTouchEvent(
             mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_IN_EVENT_X_POS, TEST_DATA_IN_EVENT_Y_POS, TEST_DATA_POINTER_ID),
             TEST_DATA_VIEW_AREA
@@ -81,7 +81,7 @@ class MoveGestureTests {
 
     @Test
     fun onDown_eventOutsideArea_withoutInnerHandle() {
-        moveGesture = MoveGesture(mockView, TEST_DATA_BIG_HANDLE_SIZE, mockListener::onMove)
+        moveGesture = MoveGesture(mockView, TEST_DATA_BIG_HANDLE_SIZE, true, mockListener::onMove)
         val result = moveGesture.onTouchEvent(
             mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_OUT_EVENT_X_POS, TEST_DATA_OUT_EVENT_Y_POS, TEST_DATA_POINTER_ID),
             TEST_DATA_VIEW_AREA
@@ -92,7 +92,7 @@ class MoveGestureTests {
 
     @Test
     fun onDown_eventInArea_withInnerHandle() {
-        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, mockListener::onMove)
+        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockListener::onMove)
         val result = moveGesture.onTouchEvent(
             mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_IN_EVENT_X_POS, TEST_DATA_IN_EVENT_Y_POS, TEST_DATA_POINTER_ID),
             TEST_DATA_VIEW_AREA
@@ -103,7 +103,7 @@ class MoveGestureTests {
 
     @Test
     fun onDown_eventOutsideArea_withInnerHandle() {
-        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, mockListener::onMove)
+        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockListener::onMove)
         val result = moveGesture.onTouchEvent(
             mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_OUT_EVENT_X_POS, TEST_DATA_OUT_EVENT_Y_POS, TEST_DATA_POINTER_ID),
             TEST_DATA_VIEW_AREA
@@ -115,7 +115,7 @@ class MoveGestureTests {
     @Test
     fun onMove() {
         // First we need to start the gesture with a down event
-        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, mockListener::onMove)
+        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockListener::onMove)
         moveGesture.onTouchEvent(
             mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_IN_EVENT_X_POS, TEST_DATA_IN_EVENT_Y_POS, TEST_DATA_POINTER_ID),
             TEST_DATA_VIEW_AREA
@@ -136,7 +136,7 @@ class MoveGestureTests {
     @Test
     fun onUp() {
         // First we need to start the gesture with a down event
-        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, mockListener::onMove)
+        moveGesture = MoveGesture(mockView, TEST_DATA_HANDLE_SIZE, true, mockListener::onMove)
         moveGesture.onTouchEvent(
             mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_IN_EVENT_X_POS, TEST_DATA_IN_EVENT_Y_POS, TEST_DATA_POINTER_ID),
             TEST_DATA_VIEW_AREA

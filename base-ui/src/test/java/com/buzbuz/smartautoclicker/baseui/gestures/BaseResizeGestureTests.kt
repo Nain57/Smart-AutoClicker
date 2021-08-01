@@ -65,11 +65,17 @@ class BaseResizeGestureTests {
      * Tested class implementation redirecting the abstract method calls to the provided mock interface.
      * @param view the mocked view to apply the gesture on.
      * @param handleSize the size of the handle.
+     * @param vibrate vibrate or not on gesture detection.
      * @param onResizeListener listener notified upon resize.
      * @param impl the mock called for each abstract method calls.
      */
-    class ResizeGestureTestImpl(view: View, handleSize: Float, onResizeListener: (RectF, Int) -> Unit, private val impl: ResizeGestureImpl)
-        : ResizeGesture(view, handleSize, onResizeListener) {
+    class ResizeGestureTestImpl(
+        view: View,
+        handleSize: Float,
+        vibrate: Boolean,
+        onResizeListener: (RectF, Int) -> Unit,
+        private val impl: ResizeGestureImpl
+    ) : ResizeGesture(view, handleSize, vibrate, onResizeListener) {
 
         override val gestureType = TEST_DATA_GESTURE_TYPE
         override fun getNewSize(event: MotionEvent, viewArea: RectF) = impl.getNewSize(event, viewArea)
@@ -114,7 +120,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onDown_enoughSpace_implCall() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true,  mockResizeListener::onResize,
             mockResizeGestureImpl)
 
         resizeGesture.onTouchEvent(
@@ -127,7 +133,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onDown_enoughSpace_inHandle() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockWhen(mockResizeGestureImpl.getHandleArea(TEST_DATA_VIEW_AREA, true))
             .thenReturn(TEST_DATA_IN_HANDLE_AREA)
@@ -142,7 +148,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onDown_enoughSpace_notInHandle() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockWhen(mockResizeGestureImpl.getHandleArea(TEST_DATA_VIEW_AREA, true))
             .thenReturn(TEST_DATA_OUT_HANDLE_AREA)
@@ -157,7 +163,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onDown_notEnoughSpace_implCall() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_BIG_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_BIG_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
 
         resizeGesture.onTouchEvent(
@@ -170,7 +176,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onDown_notEnoughSpace_inHandle() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_BIG_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_BIG_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockWhen(mockResizeGestureImpl.getHandleArea(TEST_DATA_VIEW_AREA, false))
             .thenReturn(TEST_DATA_IN_HANDLE_AREA)
@@ -185,7 +191,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onDown_notEnoughSpace_notInHandle() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_BIG_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_BIG_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockWhen(mockResizeGestureImpl.getHandleArea(TEST_DATA_VIEW_AREA, false))
             .thenReturn(TEST_DATA_OUT_HANDLE_AREA)
@@ -200,7 +206,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onMove_result() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockFirstValidEvent()
 
@@ -212,7 +218,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onMove_implCall() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockFirstValidEvent()
 
@@ -224,7 +230,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onMove_listenerCall() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockFirstValidEvent()
 
@@ -237,7 +243,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onUp() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockFirstValidEvent()
 
@@ -251,7 +257,7 @@ class BaseResizeGestureTests {
 
     @Test
     fun onOtherEvent() {
-        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, mockResizeListener::onResize,
+        resizeGesture = ResizeGestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, mockResizeListener::onResize,
             mockResizeGestureImpl)
         mockFirstValidEvent()
 
