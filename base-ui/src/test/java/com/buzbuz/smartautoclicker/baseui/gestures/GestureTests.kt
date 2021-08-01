@@ -73,12 +73,18 @@ class GestureTests {
     /**
      * Tested class implementation redirecting the abstract method calls to the provided mock interface.
      * @param view the mocked view to apply the gesture on.
-     * @param handleSize the size of the handle/
+     * @param handleSize the size of the handle.
+     * @param vibrate vibrate or not on gesture detection.
      * @param ignorePointers true to ignore motion events pointers, false to use them.
      * @param impl the mock called for each abstract method calls.
      */
-    class GestureTestImpl(view: View, handleSize: Float, ignorePointers: Boolean = false, private val impl: GestureImpl)
-        : Gesture(view, handleSize, ignorePointers) {
+    class GestureTestImpl(
+        view: View,
+        handleSize: Float,
+        vibrate: Boolean,
+        ignorePointers: Boolean = false,
+        private val impl: GestureImpl
+    ) : Gesture(view, handleSize, vibrate, ignorePointers) {
 
         override val gestureType = TEST_DATA_GESTURE_TYPE
         override fun onDownEvent(event: MotionEvent, viewArea: RectF) = impl.onDownEvent(event, viewArea)
@@ -166,13 +172,13 @@ class GestureTests {
 
     @Test
     fun innerHandleSize() {
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
         assertEquals(TEST_DATA_HANDLE_SIZE / Gesture.INNER_HANDLE_RATIO, gesture.publicInnerHandleSize())
     }
 
     @Test
     fun initialPointers() {
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
         assertEquals(Gesture.NO_POINTER_ID, gesture.publicFirstPointerDownId())
         assertEquals(Gesture.NO_POINTER_ID, gesture.publicCurrentPointerDownIndex())
     }
@@ -183,7 +189,7 @@ class GestureTests {
             TEST_DATA_POINTER_ID, 1, TEST_DATA_POINTER_INDEX)
         val expectedResult = false
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
@@ -197,7 +203,7 @@ class GestureTests {
         val expectedResult = false
         mockWhen(gestureImpl.onDownEvent(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
@@ -211,7 +217,7 @@ class GestureTests {
         val expectedResult = true
         mockWhen(gestureImpl.onDownEvent(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult, TEST_DATA_POINTER_ID)
@@ -223,7 +229,7 @@ class GestureTests {
         val event = mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_EVENT_X_POS, TEST_DATA_EVENT_Y_POS,
             TEST_DATA_POINTER_ID, 2)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, false, actualResult)
@@ -232,7 +238,7 @@ class GestureTests {
 
     @Test
     fun onSecondEventInvalidActionIndex_WithPointers() {
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
 
         // First event, it needs to be handled
         val firstEvent = mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_EVENT_X_POS, TEST_DATA_EVENT_Y_POS,
@@ -253,7 +259,7 @@ class GestureTests {
 
     @Test
     fun onSecondEventNotUpHandled_WithPointers() {
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
 
         // First event, it needs to be handled
         val firstEvent = mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_EVENT_X_POS, TEST_DATA_EVENT_Y_POS,
@@ -275,7 +281,7 @@ class GestureTests {
 
     @Test
     fun onSecondEventUpHandled_WithPointers() {
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, false, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, false, gestureImpl)
 
         // First event, it needs to be handled
         val firstEvent = mockEvent(MotionEvent.ACTION_DOWN, TEST_DATA_EVENT_X_POS, TEST_DATA_EVENT_Y_POS,
@@ -302,7 +308,7 @@ class GestureTests {
         val expectedResult = true
         mockWhen(gestureImpl.onGesturePointerUp(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, true, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
@@ -316,7 +322,7 @@ class GestureTests {
         val expectedResult = false
         mockWhen(gestureImpl.onGesturePointerUp(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, true, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
@@ -330,7 +336,7 @@ class GestureTests {
         val expectedResult = true
         mockWhen(gestureImpl.onEvent(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, true, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
@@ -344,7 +350,7 @@ class GestureTests {
         val expectedResult = false
         mockWhen(gestureImpl.onEvent(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, true, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
@@ -358,7 +364,7 @@ class GestureTests {
         val expectedResult = true
         mockWhen(gestureImpl.onDownEvent(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, true, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
@@ -372,7 +378,7 @@ class GestureTests {
         val expectedResult = false
         mockWhen(gestureImpl.onDownEvent(event, TEST_DATA_VIEW_AREA)).thenReturn(expectedResult)
 
-        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, gestureImpl)
+        gesture = GestureTestImpl(mockView, TEST_DATA_HANDLE_SIZE, true, true, gestureImpl)
         val actualResult = gesture.onTouchEvent(event, TEST_DATA_VIEW_AREA)
 
         assertGestureState(gesture, expectedResult, actualResult)
