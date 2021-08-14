@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays
+package com.buzbuz.smartautoclicker.baseui.selector.condition
 
 import android.content.Context
 import android.graphics.Canvas
@@ -25,7 +25,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.Size
 import androidx.core.content.ContextCompat
 
-import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.ui.R
 
 /** Factory object for creating a [Hint]. */
 object HintFactory {

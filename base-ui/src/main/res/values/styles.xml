@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2021 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <style name="OverlaySelectorView">
+        <item name="colorBackground">@color/overlayClickSelectorBackground</item>
+    </style>
+
+    <style name="OverlaySelectorView.Click">
+        <item name="radius">@dimen/overlay_click_selector_radius</item>
+        <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
+        <item name="thickness">@dimen/overlay_click_selector_thickness</item>
+        <item name="colorInner">@color/overlayViewPrimary</item>
+        <item name="colorOutlinePrimary">@color/overlayViewAccentPrimary</item>
+        <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
+    </style>
+
+    <style name="OverlaySelectorView.Condition">
+        <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
+        <item name="thickness">@dimen/overlay_condition_selector_thickness</item>
+        <item name="cornerRadius">@dimen/overlay_condition_selector_corner_radius</item>
+        <item name="defaultWidth">@dimen/overlay_condition_selector_width</item>
+        <item name="defaultHeight">@dimen/overlay_condition_selector_height</item>
+        <item name="resizeHandleSize">@dimen/overlay_condition_selector_resize_handle_size</item>
+        <item name="hintsIconsSize">@dimen/overlay_condition_selector_resize_hints_icon_size</item>
+        <item name="hintsIconsMargin">@dimen/overlay_condition_selector_resize_hints_icon_margin</item>
+        <item name="hintsFadeDuration">@integer/duration_hint_fade_ms</item>
+        <item name="hintsAllFadeDelay">@integer/duration_hint_all_fade_delay_ms</item>
+    </style>
+
+</resources>

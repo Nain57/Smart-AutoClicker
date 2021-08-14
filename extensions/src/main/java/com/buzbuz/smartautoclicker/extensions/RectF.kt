@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.extensions
 
+import android.graphics.PointF
 import android.graphics.RectF
 
 /**
@@ -32,6 +33,26 @@ fun RectF.scale(scaleFactor: Float) {
     top -= yOffset
     right += xOffset
     bottom += yOffset
+}
+
+fun RectF.scale(scaleFactor: Float, pivot: PointF) {
+    val widthOffset = (width() * scaleFactor - width())
+    val heightOffset = (height() * scaleFactor - height())
+
+    val pivotRatioX = (pivot.x - left) / width()
+    val pivotRatioY = (pivot.y - top) / height()
+
+    left -= widthOffset * pivotRatioX
+    top -= heightOffset * pivotRatioY
+    right += widthOffset * (1 - pivotRatioX)
+    bottom += heightOffset * (1 - pivotRatioY)
+}
+
+fun RectF.translate(translateX: Float, translateY: Float) {
+    left += translateX
+    top += translateY
+    right += translateX
+    bottom += translateY
 }
 
 /**

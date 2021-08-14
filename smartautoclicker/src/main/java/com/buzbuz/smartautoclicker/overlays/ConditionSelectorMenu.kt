@@ -30,6 +30,7 @@ import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
+import com.buzbuz.smartautoclicker.baseui.selector.condition.ConditionSelectorView
 import com.buzbuz.smartautoclicker.model.DetectorModel
 
 /**
@@ -111,7 +112,9 @@ class ConditionSelectorMenu(
         if (state == SELECTION) {
             state = CAPTURE
             Handler(Looper.getMainLooper()).postDelayed({
-                DetectorModel.get().captureScreenArea(Rect(selectorView.maxArea.toRect())) { bitmap ->
+                val screenSize = screenMetrics.getScreenSize()
+                val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
+                DetectorModel.get().captureScreenArea(screenRect) { bitmap ->
                     selectorView.showCapture(bitmap)
                     state = ADJUST
                 }
