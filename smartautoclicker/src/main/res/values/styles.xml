@@ -149,6 +149,11 @@
         <item name="hintsIconsMargin">@dimen/overlay_condition_selector_resize_hints_icon_margin</item>
         <item name="hintsFadeDuration">@integer/duration_hint_fade_ms</item>
         <item name="hintsAllFadeDelay">@integer/duration_hint_all_fade_delay_ms</item>
+        <item name="hintMoveIcon">@drawable/ic_hint_move</item>
+        <item name="hintResizeUpIcon">@drawable/ic_hint_resize_up</item>
+        <item name="hintResizeDownIcon">@drawable/ic_hint_resize_down</item>
+        <item name="hintResizeLeftIcon">@drawable/ic_hint_resize_left</item>
+        <item name="hintResizeRightIcon">@drawable/ic_hint_resize_right</item>
     </style>
 
 </resources>

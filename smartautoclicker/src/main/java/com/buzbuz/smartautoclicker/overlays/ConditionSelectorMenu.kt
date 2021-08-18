@@ -26,11 +26,10 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.IntDef
-import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
-import com.buzbuz.smartautoclicker.baseui.selector.condition.ConditionSelectorView
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.ConditionSelectorView
 import com.buzbuz.smartautoclicker.model.DetectorModel
 
 /**

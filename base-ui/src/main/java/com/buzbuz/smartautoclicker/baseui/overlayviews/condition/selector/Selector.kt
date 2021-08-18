@@ -14,25 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.selector.condition
+package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.RectF
 import android.view.GestureDetector
 import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
-import androidx.core.graphics.contains
 import androidx.core.graphics.toRect
+
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.extensions.translate
+import com.buzbuz.smartautoclicker.ui.R
+
 import kotlin.math.max
 import kotlin.math.min
 
-
 class Selector(
     context: Context,
+    styledAttrs: TypedArray,
     private val screenMetrics: ScreenMetrics,
     private val viewInvalidator: () -> Unit,
 ) {
@@ -62,22 +65,43 @@ class Selector(
     var currentGesture: GestureType? = null
         private set
 
-    /** Default size of the selector area. */
-    private val selectorDefaultSize = PointF()
     /** The maximum size of the selector. */
     private val maxArea: RectF = RectF().apply {
         val screenSize = screenMetrics.getScreenSize()
         right = screenSize.x.toFloat()
         bottom = screenSize.y.toFloat()
     }
-
+    /** Default size of the selector area. */
+    private val selectorDefaultSize = PointF(
+        styledAttrs.getDimensionPixelSize(
+            R.styleable.ConditionSelectorView_defaultWidth,
+            100
+        ).toFloat() / 2f,
+        styledAttrs.getDimensionPixelSize(
+            R.styleable.ConditionSelectorView_defaultHeight,
+            100
+        ).toFloat() / 2f
+    )
     /** */
-    private var handleSize = 0f
+    private val handleSize = styledAttrs.getDimensionPixelSize(
+        R.styleable.ConditionSelectorView_resizeHandleSize,
+        10
+    ).toFloat()
     /** The size of the handle within the view. */
-    private var innerHandleSize = 0f
+    private val innerHandleSize = handleSize / INNER_HANDLE_RATIO
     /** Difference between the center of the selector and its inner content. */
-    private var selectorAreaOffset = 0
+    private var selectorAreaOffset: Int = kotlin.math.ceil(
+        styledAttrs.getDimensionPixelSize(
+            R.styleable.ConditionSelectorView_thickness,
+            4
+        ).toFloat() / 2
+    ).toInt()
 
+    /** The radius of the corner for the selector. */
+    val cornerRadius = styledAttrs.getDimensionPixelSize(
+        R.styleable.ConditionSelectorView_cornerRadius,
+        2
+    ).toFloat()
     /** Area within the selector that represents the zone to be capture to creates a click condition. */
     val selectedArea = RectF()
     /** The area where the selector should be drawn. */
@@ -85,22 +109,6 @@ class Selector(
 
     /** */
     var onSelectorPositionChanged: ((Rect) -> Unit)? = null
-
-    /**
-     *
-     */
-    fun setDefaultValues(defaultWidth: Float, defaultHeight: Float, handle: Float, areaOffset: Int) {
-        selectorDefaultSize.apply {
-            x = defaultWidth
-            y = defaultHeight
-        }
-
-        handleSize = handle
-        innerHandleSize = handleSize / INNER_HANDLE_RATIO
-        selectorAreaOffset = areaOffset
-
-        selectorToDefaultPosition()
-    }
 
     fun onViewSizeChanged(w: Int, h: Int) {
         val screenSize = screenMetrics.getScreenSize()

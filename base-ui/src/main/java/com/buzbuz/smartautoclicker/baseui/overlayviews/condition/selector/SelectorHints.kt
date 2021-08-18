@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.selector.condition
+package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
 
 import android.content.Context
 import android.graphics.Canvas
@@ -30,24 +30,25 @@ import com.buzbuz.smartautoclicker.ui.R
 /** Factory object for creating a [Hint]. */
 object HintFactory {
 
-    /** Size of the hint icons. */
-    var iconsSize = 0
-    /** The area to draw in. Any hint outside this area will be hidden. */
-    var maxArea = Rect()
-    /** The distance between two icons in a Hint. */
-    var iconsMargin = 0
-
     /**
      * Build a single Hint.
      *
      * @param context The Android context.
      * @param iconId The identifier of the drawable resource containing the hint icon.
+     * @param iconsSize The size of the hint icons.
+     * @param maxArea The area to draw in. Any hint outside this area will be hidden
      * @param inSelector true if this hint is inside the selector area and should be hidden if it is too narrow, false
      *                   to hide on maxArea instead.
      *
      * @return the new Hint.
      */
-    fun buildHint(context: Context, @DrawableRes iconId: Int, inSelector: Boolean): Hint {
+    fun buildHint(
+        context: Context,
+        @DrawableRes iconId: Int,
+        iconsSize: Int,
+        maxArea: Rect,
+        inSelector: Boolean
+    ): Hint {
         return SingleHint(context, iconsSize, maxArea, iconId, inSelector)
     }
 
@@ -56,14 +57,25 @@ object HintFactory {
      *
      * @param context The Android context.
      * @param icons The identifiers of the two drawable resources containing the hint icons.
+     * @param iconsSize The size of the hint icons.
+     * @param iconsMargin The distance between two icons in a Hint.
+     * @param maxArea The area to draw in. Any hint outside this area will be hidden
      * @param inSelector true if this hint is inside the selector area and should be hidden if it is too narrow, false
      *                   to hide on maxArea instead. Index correspond with icons param.
      * @param isVertical true if the two icons are placed vertically, false if horizontally.
      *
      * @return the new Hint.
      */
-    fun buildHint(context: Context, @DrawableRes @Size(2) icons: IntArray,
-                  @Size(2)  inSelector: BooleanArray, isVertical: Boolean,): Hint {
+    fun buildHint(
+        context: Context,
+        @DrawableRes @Size(2)
+        icons: IntArray,
+        iconsSize: Int,
+        iconsMargin: Int,
+        maxArea: Rect,
+        @Size(2)  inSelector: BooleanArray,
+        isVertical: Boolean
+    ): Hint {
         return DoubleHint(context, iconsSize, maxArea, iconsMargin, icons, inSelector, isVertical)
     }
 }

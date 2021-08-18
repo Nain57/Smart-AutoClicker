@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.selector.condition
+package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.RectF
-import android.view.View
 
-import androidx.annotation.ColorInt
 import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
@@ -32,63 +31,94 @@ import com.buzbuz.smartautoclicker.ui.R
  * Controls the hints and their animations state.
  *
  * @param context the Android Context.
- * @param iconsSize the size of the hint icons.
+ * @param styledAttrs
  * @param screenMetrics object providing the current screen size.
- * @param iconsMargin the margin between two hint icons for hints with two icons.
- * @param iconsColor the color for the hint icons.
- * @param hintFadeDuration the duration of the fade out animation on the hints in milliseconds.
- * @param hintAllFadeDelay the delay before starting the fade out animation when showing all the hints in milliseconds.
- * @param view the view the hints are draw in. Used only for invalidation purposes.
+ * @param viewInvalidator
  */
 class SelectorHintsController(
     context: Context,
-    iconsSize: Int,
+    styledAttrs: TypedArray,
     screenMetrics: ScreenMetrics,
-    iconsMargin: Int,
-    @ColorInt private val iconsColor: Int,
-    private val hintFadeDuration: Long,
-    private val hintAllFadeDelay: Long,
-    private val view: View
+    private val viewInvalidator: () -> Unit,
 ) {
 
+    private companion object {
+        /** */
+        private const val DEFAULT_HINTS_ICON_MARGIN = 5
+        /** */
+        private const val DEFAULT_HINTS_ICON_SIZE = 10
+    }
+
     /** The maximum size of the selector. */
-    private val maxArea: RectF = RectF().apply {
+    private val maxArea: Rect = RectF().apply {
         val screenSize = screenMetrics.getScreenSize()
         right = screenSize.x.toFloat()
         bottom = screenSize.y.toFloat()
-    }
+    }.toRect()
+    /** */
+    private val iconsMargin: Int = styledAttrs.getDimensionPixelSize(
+        R.styleable.ConditionSelectorView_hintsIconsMargin,
+        DEFAULT_HINTS_ICON_MARGIN
+    )
+    /** */
+    private val iconsSize: Int = styledAttrs.getDimensionPixelSize(
+        R.styleable.ConditionSelectorView_hintsIconsSize,
+        DEFAULT_HINTS_ICON_SIZE
+    )
 
     /** Map between a gesture type and its hint. */
     private val hintsIcons: Map<GestureType, Hint>
+
     init {
-        HintFactory.iconsMargin = iconsMargin
-        HintFactory.iconsSize = iconsSize
-        HintFactory.maxArea = maxArea.toRect()
+        val moveIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintMoveIcon, 0)
+        val upIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeUpIcon, 0)
+        val downIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeDownIcon, 0)
+        val leftIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeLeftIcon, 0)
+        val rightIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeRightIcon, 0)
+
         hintsIcons = mapOf(
-            Move to HintFactory.buildHint(context, R.drawable.ic_hint_move, true),
+            Move to HintFactory.buildHint(
+                context,
+                moveIcon,
+                iconsSize,
+                maxArea,
+                true
+            ),
             ResizeBottom to HintFactory.buildHint(
-                context, intArrayOf(
-                    R.drawable.ic_hint_resize_up,
-                    R.drawable.ic_hint_resize_down
-                ), booleanArrayOf(true, false), true
+                context,
+                intArrayOf(upIcon, downIcon),
+                iconsSize,
+                iconsMargin,
+                maxArea,
+                booleanArrayOf(true, false),
+                true
             ),
             ResizeTop to HintFactory.buildHint(
-                context, intArrayOf(
-                    R.drawable.ic_hint_resize_up,
-                    R.drawable.ic_hint_resize_down
-                ), booleanArrayOf(false, true), true
+                context,
+                intArrayOf(upIcon, downIcon),
+                iconsSize,
+                iconsMargin,
+                maxArea,
+                booleanArrayOf(false, true),
+                true
             ),
             ResizeRight to HintFactory.buildHint(
-                context, intArrayOf(
-                    R.drawable.ic_hint_resize_left,
-                    R.drawable.ic_hint_resize_right
-                ), booleanArrayOf(true, false), false
+                context,
+                intArrayOf(leftIcon, rightIcon),
+                iconsSize,
+                iconsMargin,
+                maxArea,
+                booleanArrayOf(true, false),
+                false
             ),
             ResizeLeft to HintFactory.buildHint(
-                context, intArrayOf(
-                    R.drawable.ic_hint_resize_left,
-                    R.drawable.ic_hint_resize_right
-                ), booleanArrayOf(false, true), false
+                context,
+                intArrayOf(leftIcon, rightIcon),
+                iconsSize,
+                iconsMargin,
+                maxArea,
+                booleanArrayOf(false, true),
+                false
             )
         )
     }
@@ -108,14 +138,14 @@ class SelectorHintsController(
     fun show(gesture: GestureType) {
         alpha = 255
         iconsShown = mutableSetOf(gesture)
-        view.invalidate()
+        viewInvalidator.invoke()
     }
 
     /** Show all hints. */
     fun showAll() {
         alpha = 0
         iconsShown = hintsIcons.keys.toMutableSet()
-        view.invalidate()
+        viewInvalidator.invoke()
     }
 
     fun invalidate() {
@@ -148,7 +178,7 @@ class SelectorHintsController(
             }
         }
 
-        view.invalidate()
+        viewInvalidator.invoke()
     }
 
     /**

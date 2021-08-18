@@ -14,17 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.selector.condition
+package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
 import android.view.View
-import androidx.annotation.ColorInt
+
 import androidx.core.content.res.use
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.Selector
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.SelectorHintsController
+
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
@@ -43,22 +50,18 @@ class ConditionSelectorView(
 ) : View(context) {
 
     /** */
-    private val selector = Selector(context, screenMetrics, ::invalidate)
-    /** */
     private val capture = Capture(context, screenMetrics, ::invalidate)
+    /** */
+    private lateinit var selector: Selector
     /** Controls the display of the user hints around the selector. */
     private lateinit var hintsIcons: SelectorHintsController
-    /**
-     *
-     */
+    /** */
     private lateinit var animations: Animations
 
     /** Paint drawing the selector. */
     private val selectorPaint = Paint()
     /** Paint for the background of the selector. */
     private val backgroundPaint = Paint()
-    /** The radius of the corner for the selector. */
-    private var cornerRadius = 0f
 
     /** The drawable for the screen capture. */
     private var screenCapture: BitmapDrawable? = null
@@ -74,28 +77,14 @@ class ConditionSelectorView(
             invalidate()
         }
 
+    /** */
     init {
-        var hintIconsSize = 10
-        var hintIconsMargin = 5
-        @ColorInt var outlineColor = Color.WHITE
-        var hintFadeDuration = 500
-        var hintAllFadeDelay = 1000
-
         context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
-            hintIconsSize = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_hintsIconsSize, hintIconsSize)
-            hintIconsMargin = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_hintsIconsMargin, hintIconsMargin)
-            outlineColor =  ta.getColor(R.styleable.ConditionSelectorView_colorOutlinePrimary, outlineColor)
-            hintFadeDuration = ta.getInteger(R.styleable.ConditionSelectorView_hintsFadeDuration, hintFadeDuration)
-            hintAllFadeDelay = ta.getInteger(R.styleable.ConditionSelectorView_hintsAllFadeDelay, hintAllFadeDelay)
-
-            cornerRadius = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_cornerRadius, 2)
-                .toFloat()
-
             val thickness = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_thickness, 4).toFloat()
             selectorPaint.apply {
                 style = Paint.Style.STROKE
                 strokeWidth = thickness
-                color = outlineColor
+                color = ta.getColor(R.styleable.ConditionSelectorView_colorOutlinePrimary, Color.WHITE)
                 alpha = 0
             }
             backgroundPaint.apply {
@@ -104,23 +93,9 @@ class ConditionSelectorView(
                 color = ta.getColor(R.styleable.ConditionSelectorView_colorBackground, Color.TRANSPARENT)
             }
 
-            selector.setDefaultValues(
-                defaultWidth =  ta.getDimensionPixelSize(
-                    R.styleable.ConditionSelectorView_defaultWidth,
-                    100
-                ).toFloat() / 2,
-                defaultHeight = ta.getDimensionPixelSize(
-                    R.styleable.ConditionSelectorView_defaultHeight,
-                    100
-                ).toFloat() / 2,
-                handle = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_resizeHandleSize, 10)
-                    .toFloat(),
-                areaOffset = kotlin.math.ceil(thickness / 2).toInt()
-            )
-
             animations = Animations(ta)
-            hintsIcons = SelectorHintsController(context, hintIconsSize, screenMetrics, hintIconsMargin,
-                outlineColor, hintFadeDuration.toLong(), hintAllFadeDelay.toLong(), this)
+            selector = Selector(context, ta, screenMetrics, ::invalidate)
+            hintsIcons = SelectorHintsController(context, ta, screenMetrics, ::invalidate)
         }
     }
 
@@ -211,7 +186,7 @@ class ConditionSelectorView(
             draw(canvas)
         }
 
-        canvas.drawRoundRect(selector.selectorArea, cornerRadius, cornerRadius, selectorPaint)
+        canvas.drawRoundRect(selector.selectorArea, selector.cornerRadius, selector.cornerRadius, selectorPaint)
         canvas.drawRect(selector.selectedArea, backgroundPaint)
 
         hintsIcons.onDraw(canvas)

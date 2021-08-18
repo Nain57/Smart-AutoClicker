@@ -64,5 +64,15 @@
         <attr name="hintsFadeDuration" format="integer"/>
         <!-- The delay before starting the fade out animation when showing all the hints in milliseconds. -->
         <attr name="hintsAllFadeDelay" format="integer"/>
+        <!-- The drawable for the move Hint. -->
+        <attr name="hintMoveIcon" format="reference" />
+        <!-- The drawable for the resize up Hint. -->
+        <attr name="hintResizeUpIcon" format="reference" />
+        <!-- The drawable for the resize down Hint. -->
+        <attr name="hintResizeDownIcon" format="reference" />
+        <!-- The drawable for the left Hint. -->
+        <attr name="hintResizeLeftIcon" format="reference" />
+        <!-- The drawable for the right Hint. -->
+        <attr name="hintResizeRightIcon" format="reference" />
     </declare-styleable>
 </resources>
