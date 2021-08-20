@@ -17,8 +17,11 @@
 package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.RectF
+import android.graphics.drawable.BitmapDrawable
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -28,11 +31,11 @@ import com.buzbuz.smartautoclicker.extensions.translate
 import kotlin.math.max
 import kotlin.math.min
 
-class Capture(
+internal class Capture(
     context: Context,
-    private val screenMetrics: ScreenMetrics,
-    private val viewInvalidator: () -> Unit,
-) {
+    screenMetrics: ScreenMetrics,
+    viewInvalidator: () -> Unit,
+): SelectorViewComponent(screenMetrics, viewInvalidator) {
 
     private companion object {
         /** The minimum zoom value. */
@@ -70,30 +73,15 @@ class Capture(
     /** */
     private val scaleGestureDetector = ScaleGestureDetector(context, scaleGestureListener)
 
-    /** The maximum size of the selector. */
-    private val maxArea: RectF = RectF().apply {
-        val screenSize = screenMetrics.getScreenSize()
-        right = screenSize.x.toFloat()
-        bottom = screenSize.y.toFloat()
-    }
+    /** The drawable for the screen capture. */
+    var screenCapture: BitmapDrawable? = null
     /** The current zoom level*/
     var zoomLevel = 1f
         private set
-
     /** The current area where the capture is displayed. It can be bigger than the screen when zoomed. */
     val captureArea = RectF(0f, 0f, maxArea.width(), maxArea.height())
 
-    fun onViewSizeChanged(w: Int, h: Int) {
-        val screenSize = screenMetrics.getScreenSize()
-        maxArea.apply {
-            right = screenSize.x.toFloat()
-            bottom = screenSize.y.toFloat()
-        }
-
-        viewInvalidator.invoke()
-    }
-
-    fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         var handled = gestureDetector.onTouchEvent(event)
         handled = handled or scaleGestureDetector.onTouchEvent(event)
         return handled
@@ -122,7 +110,7 @@ class Capture(
         // Translate safely
         captureArea.translate(inboundsTranslateX, inboundsTranslateY)
 
-        viewInvalidator.invoke()
+        invalidate()
     }
 
     /**
@@ -137,21 +125,32 @@ class Capture(
 
     private fun scaleCapture(scaleFactor: Float, scalePivot: PointF) {
         val newZoom = (zoomLevel * scaleFactor).coerceIn(ZOOM_MINIMUM, ZOOM_MAXIMUM)
-
         if (zoomLevel == newZoom) {
             return
         }
+        zoomLevel = newZoom
 
         val pivot = if (newZoom < 1) {
             PointF(maxArea.centerX(), maxArea.centerY())
         } else {
             scalePivot
         }
-
-
-        zoomLevel = newZoom
         captureArea.scale(scaleFactor, pivot)
 
-        viewInvalidator.invoke()
+        invalidate()
+    }
+
+
+    override fun onDraw(canvas: Canvas) {
+        screenCapture?.apply {
+            canvas.drawColor(Color.BLACK)
+            setBounds(
+                captureArea.left.toInt(),
+                captureArea.top.toInt(),
+                captureArea.right.toInt(),
+                captureArea.bottom.toInt()
+            )
+            draw(canvas)
+        }
     }
 }

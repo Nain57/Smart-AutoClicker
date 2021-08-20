@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,8 +20,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.view.KeyEvent.ACTION_UP
@@ -29,9 +27,9 @@ import android.view.MotionEvent
 import android.view.View
 
 import androidx.core.content.res.use
-import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.Selector
-import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.SelectorHintsController
 
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.Selector
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.HintsController
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
@@ -54,48 +52,17 @@ class ConditionSelectorView(
     /** */
     private lateinit var selector: Selector
     /** Controls the display of the user hints around the selector. */
-    private lateinit var hintsIcons: SelectorHintsController
+    private lateinit var hintsIcons: HintsController
+
     /** */
     private lateinit var animations: Animations
-
-    /** Paint drawing the selector. */
-    private val selectorPaint = Paint()
-    /** Paint for the background of the selector. */
-    private val backgroundPaint = Paint()
-
-    /** The drawable for the screen capture. */
-    private var screenCapture: BitmapDrawable? = null
-
-    /** Tell if the content of this view should be hidden or not. */
-    var hide = true
-        set(value) {
-            if (field == value) {
-                return
-            }
-
-            field = value
-            invalidate()
-        }
 
     /** */
     init {
         context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
-            val thickness = ta.getDimensionPixelSize(R.styleable.ConditionSelectorView_thickness, 4).toFloat()
-            selectorPaint.apply {
-                style = Paint.Style.STROKE
-                strokeWidth = thickness
-                color = ta.getColor(R.styleable.ConditionSelectorView_colorOutlinePrimary, Color.WHITE)
-                alpha = 0
-            }
-            backgroundPaint.apply {
-                isAntiAlias = true
-                style = Paint.Style.FILL
-                color = ta.getColor(R.styleable.ConditionSelectorView_colorBackground, Color.TRANSPARENT)
-            }
-
             animations = Animations(ta)
             selector = Selector(context, ta, screenMetrics, ::invalidate)
-            hintsIcons = SelectorHintsController(context, ta, screenMetrics, ::invalidate)
+            hintsIcons = HintsController(context, ta, screenMetrics, ::invalidate)
         }
     }
 
@@ -104,23 +71,28 @@ class ConditionSelectorView(
         animations.apply {
             onCaptureZoomLevelChanged = capture::setZoomLevel
             onSelectorBorderAlphaChanged = { alpha ->
-                selectorPaint.alpha = alpha
-                invalidate()
+                selector.selectorAlpha = alpha
             }
             onSelectorBackgroundAlphaChanged = { alpha ->
-                backgroundPaint.alpha = alpha
-                invalidate()
+                selector.backgroundAlpha = alpha
             }
             onHintsAlphaChanged = { alpha ->
                 hintsIcons.alpha = alpha
-                hintsIcons.invalidate()
+                android.util.Log.i("TOTO", "Hints alpha = $alpha")
             }
         }
 
         selector.onSelectorPositionChanged = { position ->
-            hintsIcons.invalidate(position)
+            hintsIcons.setSelectorArea(position)
         }
     }
+
+    /** Tell if the content of this view should be hidden or not. */
+    var hide = true
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     /**
      * Shows the capture on the screen.
@@ -128,8 +100,7 @@ class ConditionSelectorView(
      * @param bitmap the capture the be shown.
      */
     fun showCapture(bitmap: Bitmap) {
-        screenCapture = BitmapDrawable(resources, bitmap)
-
+        capture.screenCapture = BitmapDrawable(resources, bitmap)
         hintsIcons.showAll()
         animations.startShowSelectorAnimation(
             onAnimationCompleted = {
@@ -145,7 +116,7 @@ class ConditionSelectorView(
      */
     fun getSelection(): Pair<Rect, Bitmap> {
         val selectionArea = selector.getSelectionArea(capture.captureArea, capture.zoomLevel)
-        return selectionArea to Bitmap.createBitmap(screenCapture!!.bitmap, selectionArea.left,
+        return selectionArea to Bitmap.createBitmap(capture.screenCapture!!.bitmap, selectionArea.left,
             selectionArea.top, selectionArea.width(), selectionArea.height())
     }
 
@@ -153,6 +124,7 @@ class ConditionSelectorView(
         super.onSizeChanged(w, h, oldw, oldh)
         selector.onViewSizeChanged(w, h)
         capture.onViewSizeChanged(w, h)
+        hintsIcons.onViewSizeChanged(w, h)
         invalidate()
     }
 
@@ -175,20 +147,8 @@ class ConditionSelectorView(
             return
         }
 
-        screenCapture?.apply {
-            canvas.drawColor(Color.BLACK)
-            setBounds(
-                capture.captureArea.left.toInt(),
-                capture.captureArea.top.toInt(),
-                capture.captureArea.right.toInt(),
-                capture.captureArea.bottom.toInt()
-            )
-            draw(canvas)
-        }
-
-        canvas.drawRoundRect(selector.selectorArea, selector.cornerRadius, selector.cornerRadius, selectorPaint)
-        canvas.drawRect(selector.selectedArea, backgroundPaint)
-
+        capture.onDraw(canvas)
+        selector.onDraw(canvas)
         hintsIcons.onDraw(canvas)
     }
 }

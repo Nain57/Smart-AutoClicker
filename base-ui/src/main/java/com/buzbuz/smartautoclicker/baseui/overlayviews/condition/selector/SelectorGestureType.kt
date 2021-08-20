@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
 
 import android.graphics.RectF
 
-sealed class GestureType {
+internal sealed class GestureType {
     /** */
     abstract fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF
     /** */
@@ -27,7 +27,7 @@ sealed class GestureType {
 
 }
 
-object ResizeLeft: GestureType() {
+internal object ResizeLeft: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float) =
         RectF(
             viewArea.left - handleSize,
@@ -37,7 +37,7 @@ object ResizeLeft: GestureType() {
         )
 }
 
-object ResizeTop: GestureType() {
+internal object ResizeTop: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
         RectF(
             viewArea.left,
@@ -47,7 +47,7 @@ object ResizeTop: GestureType() {
         )
 }
 
-object ResizeRight: GestureType() {
+internal object ResizeRight: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
         RectF(
             if(isEnoughInnerSpace(viewArea, handleSize)) viewArea.right - innerHandleSize else viewArea.right,
@@ -57,7 +57,7 @@ object ResizeRight: GestureType() {
         )
 }
 
-object ResizeBottom: GestureType() {
+internal object ResizeBottom: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
         RectF(
             viewArea.left,
@@ -67,7 +67,7 @@ object ResizeBottom: GestureType() {
         )
 }
 
-object Move: GestureType() {
+internal object Move: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
         viewArea
 }

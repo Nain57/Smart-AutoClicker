@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.ui.R
  *
  * @param styledAttrs
  */
-class Animations(styledAttrs: TypedArray) {
+internal class Animations(styledAttrs: TypedArray) {
 
     private companion object {
         /** */

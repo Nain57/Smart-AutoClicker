@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,10 +20,10 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.graphics.RectF
-
+import android.view.MotionEvent
 import androidx.core.graphics.toRect
 
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.SelectorViewComponent
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
@@ -35,12 +35,12 @@ import com.buzbuz.smartautoclicker.ui.R
  * @param screenMetrics object providing the current screen size.
  * @param viewInvalidator
  */
-class SelectorHintsController(
+internal class HintsController(
     context: Context,
     styledAttrs: TypedArray,
     screenMetrics: ScreenMetrics,
-    private val viewInvalidator: () -> Unit,
-) {
+    viewInvalidator: () -> Unit,
+): SelectorViewComponent(screenMetrics, viewInvalidator) {
 
     private companion object {
         /** */
@@ -49,12 +49,6 @@ class SelectorHintsController(
         private const val DEFAULT_HINTS_ICON_SIZE = 10
     }
 
-    /** The maximum size of the selector. */
-    private val maxArea: Rect = RectF().apply {
-        val screenSize = screenMetrics.getScreenSize()
-        right = screenSize.x.toFloat()
-        bottom = screenSize.y.toFloat()
-    }.toRect()
     /** */
     private val iconsMargin: Int = styledAttrs.getDimensionPixelSize(
         R.styleable.ConditionSelectorView_hintsIconsMargin,
@@ -69,54 +63,56 @@ class SelectorHintsController(
     /** Map between a gesture type and its hint. */
     private val hintsIcons: Map<GestureType, Hint>
 
+    /** */
     init {
         val moveIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintMoveIcon, 0)
         val upIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeUpIcon, 0)
         val downIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeDownIcon, 0)
         val leftIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeLeftIcon, 0)
         val rightIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeRightIcon, 0)
+        val maxRect = maxArea.toRect()
 
         hintsIcons = mapOf(
-            Move to HintFactory.buildHint(
+            Move to SingleHint(
                 context,
+                iconsSize,
+                maxRect,
                 moveIcon,
-                iconsSize,
-                maxArea,
-                true
+                booleanArrayOf(true)
             ),
-            ResizeBottom to HintFactory.buildHint(
+            ResizeBottom to DoubleHint(
                 context,
-                intArrayOf(upIcon, downIcon),
                 iconsSize,
+                maxRect,
                 iconsMargin,
-                maxArea,
+                intArrayOf(upIcon, downIcon),
                 booleanArrayOf(true, false),
                 true
             ),
-            ResizeTop to HintFactory.buildHint(
+            ResizeTop to DoubleHint(
                 context,
-                intArrayOf(upIcon, downIcon),
                 iconsSize,
+                maxRect,
                 iconsMargin,
-                maxArea,
+                intArrayOf(upIcon, downIcon),
                 booleanArrayOf(false, true),
                 true
             ),
-            ResizeRight to HintFactory.buildHint(
+            ResizeRight to DoubleHint(
                 context,
-                intArrayOf(leftIcon, rightIcon),
                 iconsSize,
+                maxRect,
                 iconsMargin,
-                maxArea,
+                intArrayOf(leftIcon, rightIcon),
                 booleanArrayOf(true, false),
                 false
             ),
-            ResizeLeft to HintFactory.buildHint(
+            ResizeLeft to DoubleHint(
                 context,
-                intArrayOf(leftIcon, rightIcon),
                 iconsSize,
+                maxRect,
                 iconsMargin,
-                maxArea,
+                intArrayOf(leftIcon, rightIcon),
                 booleanArrayOf(false, true),
                 false
             )
@@ -129,6 +125,13 @@ class SelectorHintsController(
     private val selectorArea = Rect()
     /** The current alpha value to applied to all currently shown icons. */
     var alpha: Int = 0
+        set(value) {
+            field = value
+            iconsShown.forEach {
+                hintsIcons[it]!!.setAlpha(value)
+            }
+            invalidate()
+        }
 
     /**
      * Show the hint for the provided gesture.
@@ -136,20 +139,16 @@ class SelectorHintsController(
      * @param gesture the gesture to show the hint of.
      */
     fun show(gesture: GestureType) {
-        alpha = 255
         iconsShown = mutableSetOf(gesture)
-        viewInvalidator.invoke()
+        alpha = 255
+        invalidate()
     }
 
     /** Show all hints. */
     fun showAll() {
-        alpha = 0
         iconsShown = hintsIcons.keys.toMutableSet()
-        viewInvalidator.invoke()
-    }
-
-    fun invalidate() {
-        invalidate(selectorArea)
+        alpha = 255
+        invalidate()
     }
 
     /**
@@ -158,7 +157,7 @@ class SelectorHintsController(
      *
      * @param newSelectorArea the current selector area.
      */
-    fun invalidate(newSelectorArea: Rect) {
+    fun setSelectorArea(newSelectorArea: Rect) {
         selectorArea.set(newSelectorArea)
 
         val allShown = iconsShown.size == hintsIcons.size
@@ -166,27 +165,25 @@ class SelectorHintsController(
             val hint = hintsIcons[hintType]!!
             when(hintType) {
                 Move -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
-                    newSelectorArea.centerY(), alpha)
+                    newSelectorArea.centerY())
                 ResizeTop -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
-                    newSelectorArea.top, alpha, booleanArrayOf(false, allShown))
+                    newSelectorArea.top, booleanArrayOf(false, allShown))
                 ResizeBottom -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
-                    newSelectorArea.bottom, alpha, booleanArrayOf(allShown, false))
+                    newSelectorArea.bottom, booleanArrayOf(allShown, false))
                 ResizeLeft -> hint.invalidate(newSelectorArea, newSelectorArea.left,
-                    newSelectorArea.centerY(), alpha, booleanArrayOf(false, allShown))
+                    newSelectorArea.centerY(), booleanArrayOf(false, allShown))
                 ResizeRight -> hint.invalidate(newSelectorArea, newSelectorArea.right,
-                    newSelectorArea.centerY(), alpha, booleanArrayOf(allShown, false))
+                    newSelectorArea.centerY(), booleanArrayOf(allShown, false))
             }
         }
 
-        viewInvalidator.invoke()
+        invalidate()
     }
 
-    /**
-     * Draw the hints on the canvas.
-     *
-     * @param canvas the canvas to draw into.
-     */
-    fun onDraw(canvas: Canvas) {
+    override fun onTouchEvent(event: MotionEvent): Boolean = false
+
+    override fun onDraw(canvas: Canvas) {
+        android.util.Log.i("TOTO", "onDraw Hints alpha = $alpha")
         iconsShown.forEach { hintType ->
             hintsIcons[hintType]!!.draw(canvas)
         }

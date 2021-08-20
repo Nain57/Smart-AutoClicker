@@ -18,14 +18,13 @@ package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.PointF
-import android.graphics.Rect
-import android.graphics.RectF
+import android.graphics.*
 import android.view.GestureDetector
 import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
 import androidx.core.graphics.toRect
 
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.SelectorViewComponent
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.extensions.translate
 import com.buzbuz.smartautoclicker.ui.R
@@ -33,12 +32,12 @@ import com.buzbuz.smartautoclicker.ui.R
 import kotlin.math.max
 import kotlin.math.min
 
-class Selector(
+internal class Selector(
     context: Context,
     styledAttrs: TypedArray,
-    private val screenMetrics: ScreenMetrics,
-    private val viewInvalidator: () -> Unit,
-) {
+    screenMetrics: ScreenMetrics,
+    viewInvalidator: () -> Unit,
+): SelectorViewComponent(screenMetrics, viewInvalidator) {
 
     private companion object {
         /** Ratio between the handle and the inner handle */
@@ -65,12 +64,6 @@ class Selector(
     var currentGesture: GestureType? = null
         private set
 
-    /** The maximum size of the selector. */
-    private val maxArea: RectF = RectF().apply {
-        val screenSize = screenMetrics.getScreenSize()
-        right = screenSize.x.toFloat()
-        bottom = screenSize.y.toFloat()
-    }
     /** Default size of the selector area. */
     private val selectorDefaultSize = PointF(
         styledAttrs.getDimensionPixelSize(
@@ -96,31 +89,88 @@ class Selector(
             4
         ).toFloat() / 2
     ).toInt()
-
     /** The radius of the corner for the selector. */
-    val cornerRadius = styledAttrs.getDimensionPixelSize(
+    private val cornerRadius = styledAttrs.getDimensionPixelSize(
         R.styleable.ConditionSelectorView_cornerRadius,
         2
     ).toFloat()
-    /** Area within the selector that represents the zone to be capture to creates a click condition. */
-    val selectedArea = RectF()
+
+    /** Paint drawing the selector. */
+    private val selectorPaint = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeWidth = styledAttrs.getDimensionPixelSize(
+            R.styleable.ConditionSelectorView_thickness,
+            4
+        ).toFloat()
+        color = styledAttrs.getColor(
+            R.styleable.ConditionSelectorView_colorOutlinePrimary,
+            Color.WHITE
+        )
+        alpha = 0
+    }
+    /** Paint for the background of the selector. */
+    private val backgroundPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        color = styledAttrs.getColor(
+            R.styleable.ConditionSelectorView_colorBackground,
+            Color.TRANSPARENT
+        )
+    }
+
     /** The area where the selector should be drawn. */
-    val selectorArea = RectF()
+    private val selectorArea = RectF()
+    /** Area within the selector that represents the zone to be capture to creates a click condition. */
+    private val selectedArea = RectF()
 
     /** */
     var onSelectorPositionChanged: ((Rect) -> Unit)? = null
 
-    fun onViewSizeChanged(w: Int, h: Int) {
-        val screenSize = screenMetrics.getScreenSize()
-        maxArea.apply {
-            right = screenSize.x.toFloat()
-            bottom = screenSize.y.toFloat()
+    /**
+     *
+     */
+    var backgroundAlpha: Int = 255
+        set(value) {
+            field = value
+            backgroundPaint.alpha = value
+            invalidate()
+        }
+    /**
+     *
+     */
+    var selectorAlpha: Int = 255
+        set(value) {
+            field = value
+            selectorPaint.alpha = value
+            invalidate()
         }
 
-        selectorToDefaultPosition()
+    /**
+     * Get the part of the capture that is currently selected within the selector.
+     *
+     * @param captureArea
+     * @param zoomLevel
+     *
+     * @return the area of the selector relative to the screen size.
+     */
+    fun getSelectionArea(captureArea: RectF, zoomLevel: Float): Rect {
+        return RectF(selectedArea).run {
+            intersect(captureArea)
+
+            val invertedZoomLevel = 1 / zoomLevel
+
+            left = (left - captureArea.left) * invertedZoomLevel
+            top = (top - captureArea.top) * invertedZoomLevel
+            right = (right - captureArea.left) * invertedZoomLevel
+            bottom = (bottom - captureArea.top) * invertedZoomLevel
+
+            toRect()
+        }
     }
 
-    private fun selectorToDefaultPosition() {
+    override fun onViewSizeChanged(w: Int, h: Int) {
+        super.onViewSizeChanged(w, h)
+
         selectorArea.apply {
             left = maxArea.centerX() - selectorDefaultSize.x
             top = maxArea.centerY() - selectorDefaultSize.y
@@ -130,10 +180,9 @@ class Selector(
 
         verifyBounds()
         onSelectorPositionChanged?.invoke(selectorArea.toRect())
-        viewInvalidator.invoke()
     }
 
-    fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         var consumed = gestureDetector.onTouchEvent(event)
         if (!consumed && currentGesture != null) {
             consumed = true
@@ -177,10 +226,13 @@ class Selector(
 
             verifyBounds()
             onSelectorPositionChanged?.invoke(selectorArea.toRect())
-            viewInvalidator.invoke()
+            invalidate()
         }
     }
 
+    /**
+     *
+     */
     private fun verifyBounds() {
         selectorArea.intersect(maxArea)
         selectedArea.apply {
@@ -191,24 +243,9 @@ class Selector(
         }
     }
 
-    /**
-     * Get the part of the capture that is currently selected within the selector.
-     *
-     * @param captureArea
-     * @param zoomLevel
-     *
-     * @return the area of the selector relative to the screen size.
-     */
-    fun getSelectionArea(captureArea: RectF, zoomLevel: Float): Rect {
-        return RectF(this.selectedArea).run {
-            val invertedZoomLevel = 1 / zoomLevel
-
-            left = (left - captureArea.left) * invertedZoomLevel
-            top = (top - captureArea.top) * invertedZoomLevel
-            right = (right - captureArea.left) * invertedZoomLevel
-            bottom = (bottom - captureArea.top) * invertedZoomLevel
-
-            toRect()
-        }
+    /** */
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
+        canvas.drawRect(selectedArea, backgroundPaint)
     }
 }
