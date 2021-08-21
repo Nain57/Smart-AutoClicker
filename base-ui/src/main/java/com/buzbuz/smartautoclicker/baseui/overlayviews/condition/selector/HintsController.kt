@@ -141,14 +141,14 @@ internal class HintsController(
     fun show(gesture: GestureType) {
         iconsShown = mutableSetOf(gesture)
         alpha = 255
-        invalidate()
+        setSelectorArea(selectorArea)
     }
 
     /** Show all hints. */
     fun showAll() {
         iconsShown = hintsIcons.keys.toMutableSet()
         alpha = 255
-        invalidate()
+        setSelectorArea(selectorArea)
     }
 
     /**
@@ -175,7 +175,6 @@ internal class HintsController(
                     newSelectorArea.centerY(), booleanArrayOf(allShown, false))
             }
         }
-
         invalidate()
     }
 
@@ -189,5 +188,6 @@ internal class HintsController(
 
     override fun onReset() {
         alpha = 0
+        iconsShown.clear()
     }
 }

@@ -56,12 +56,13 @@ class ConditionSelectorView(
     private lateinit var selector: Selector
     /** Controls the display of the user hints around the selector. */
     private lateinit var hintsIcons: HintsController
-
     /** */
     private lateinit var animations: Animations
 
     /** */
     private var isSelectorValid = false
+    /** Used during selector validation. kept here to avoid instantiation at each touch event. */
+    private val selectorValidityTempValue = RectF()
 
     /** */
     init {
@@ -102,7 +103,11 @@ class ConditionSelectorView(
     /** Tell if the content of this view should be hidden or not. */
     var hide = true
         set(value) {
+            if (field == value) {
+                return
+            }
             field = value
+
             if (value) {
                 capture.onReset()
                 selector.onReset()
@@ -110,9 +115,6 @@ class ConditionSelectorView(
             }
             invalidate()
         }
-
-    /** Used during selector validation. kept here to avoid instantiation at each touch event. */
-    private val selectorValidityTempValue = RectF()
 
     /**
      *

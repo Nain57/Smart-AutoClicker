@@ -73,7 +73,6 @@ internal abstract class Hint(
                         hideValues: BooleanArray? = booleanArrayOf(false)) {
         val hide = hideValues?.get(0) ?: true
         isHidden = hide || !(inSelector[0] && selectorArea.contains(icon.bounds) || !inSelector[0] && maxArea.contains(icon.bounds))
-        android.util.Log.i("TOTO", "isHidden: $isHidden; $this")
     }
 
     /**
@@ -148,7 +147,6 @@ internal class DoubleHint(
 
     override fun invalidate(selectorArea: Rect, newCenterX: Int, newCenterY: Int,
                             @Size(2) hideValues: BooleanArray?) {
-        android.util.Log.i("TOTO", "Double hint isHidden: ${hideValues.contentToString()}")
         if (isVertical) {
             super.invalidate(selectorArea, newCenterX, newCenterY - iconsMargin - iconHalfSize,
                 booleanArrayOf(hideValues!![0]))
