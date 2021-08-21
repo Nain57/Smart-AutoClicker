@@ -154,6 +154,10 @@
         <item name="hintResizeDownIcon">@drawable/ic_hint_resize_down</item>
         <item name="hintResizeLeftIcon">@drawable/ic_hint_resize_left</item>
         <item name="hintResizeRightIcon">@drawable/ic_hint_resize_right</item>
+        <item name="showSelectorAnimationDuration">@integer/duration_show_selector_animation_ms</item>
+        <item name="showCaptureAnimationDuration">@integer/duration_show_capture_animation_ms</item>
+        <item name="minimumZoomValue">@integer/capture_minimum_zoom</item>
+        <item name="maximumZoomValue">@integer/capture_maximum_zoom</item>
     </style>
 
 </resources>

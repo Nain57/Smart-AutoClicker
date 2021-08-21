@@ -16,7 +16,9 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <integer name="duration_hint_fade_ms">750</integer>
-    <integer name="duration_hint_all_fade_delay_ms">750</integer>
+    <integer name="duration_hint_fade_ms">500</integer>
+    <integer name="duration_hint_all_fade_delay_ms">500</integer>
+    <integer name="duration_show_selector_animation_ms">500</integer>
+    <integer name="duration_show_capture_animation_ms">750</integer>
     <integer name="duration_morph_play_pause_ms">175</integer>
 </resources>

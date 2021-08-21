@@ -50,13 +50,13 @@ class ConditionSelectorView(
     private val onSelectorValidityChanged: (Boolean) -> Unit,
 ) : View(context) {
 
-    /** */
-    private val capture = Capture(context, screenMetrics, ::invalidate)
-    /** */
+    /** Controls the display of the bitmap captured. */
+    private lateinit var capture: Capture
+    /** Controls the display of the selector. */
     private lateinit var selector: Selector
     /** Controls the display of the user hints around the selector. */
     private lateinit var hintsIcons: HintsController
-    /** */
+    /** Controls the animations. */
     private lateinit var animations: Animations
 
     /** */
@@ -68,6 +68,7 @@ class ConditionSelectorView(
     init {
         context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
             animations = Animations(ta)
+            capture = Capture(context, ta, screenMetrics, ::invalidate)
             selector = Selector(context, ta, screenMetrics, ::invalidate)
             hintsIcons = HintsController(context, ta, screenMetrics, ::invalidate)
         }

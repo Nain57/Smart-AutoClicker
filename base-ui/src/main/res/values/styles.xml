@@ -17,35 +17,11 @@
 -->
 <resources>
 
-    <style name="OverlaySelectorView">
-        <item name="colorBackground">@android:color/white</item>
-    </style>
-
-    <style name="OverlaySelectorView.Click">
-        <item name="radius">28dp</item>
-        <item name="innerRadius">3dp</item>
-        <item name="thickness">6dp</item>
-        <item name="colorInner">@android:color/white</item>
-        <item name="colorOutlinePrimary">@android:color/red</item>
-        <item name="colorOutlineSecondary">@android:color/holo_blue_dark</item>
-    </style>
-
-    <style name="OverlaySelectorView.Condition">
-        <item name="colorOutlinePrimary">@android:color/white</item>
-        <item name="thickness">4dp</item>
-        <item name="cornerRadius">2dp</item>
-        <item name="defaultWidth">230dp</item>
-        <item name="defaultHeight">130dp</item>
-        <item name="resizeHandleSize">50dp</item>
-        <item name="hintsIconsSize">30dp</item>
-        <item name="hintsIconsMargin">5dp</item>
-        <item name="hintsFadeDuration">750</item>
-        <item name="hintsAllFadeDelay">750</item>
-        <item name="hintMoveIcon">@null</item>
-        <item name="hintResizeUpIcon">@null</item>
-        <item name="hintResizeDownIcon">@null</item>
-        <item name="hintResizeLeftIcon">@null</item>
-        <item name="hintResizeRightIcon">@null</item>
-    </style>
+    <!-- Style for common value between the click and condition selectors -->
+    <style name="OverlaySelectorView"/>
+    <!-- Style for the click selector -->
+    <style name="OverlaySelectorView.Click" />
+    <!-- Style for the condition selector -->
+    <style name="OverlaySelectorView.Condition"/>
 
 </resources>

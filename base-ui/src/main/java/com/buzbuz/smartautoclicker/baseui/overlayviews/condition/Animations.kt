@@ -33,33 +33,30 @@ import com.buzbuz.smartautoclicker.ui.R
  */
 internal class Animations(styledAttrs: TypedArray) {
 
-    private companion object {
-        /** */
-        private const val DEFAULT_FADE_DURATION = 500
-        /** */
-        private const val DEFAULT_FADE_ALL_HINTS_DURATION = 1000
-        /** The duration of the capture display animation in milliseconds. */
-        private const val SHOW_SELECTOR_ANIMATION_DURATION = 500L
-        /** The duration of the capture display animation in milliseconds. */
-        private const val SHOW_CAPTURE_ANIMATION_DURATION = 750L
-    }
-
     /** */
     private val selectorBackgroundAlpha: Int = styledAttrs.getColor(
         R.styleable.ConditionSelectorView_colorBackground,
         Color.TRANSPARENT
     ).shr(24)
-
     /** */
     private val hintFadeDuration = styledAttrs.getInteger(
         R.styleable.ConditionSelectorView_hintsFadeDuration,
         DEFAULT_FADE_DURATION
     ).toLong()
-
     /** */
     private val hintAllFadeDelay = styledAttrs.getInteger(
         R.styleable.ConditionSelectorView_hintsAllFadeDelay,
         DEFAULT_FADE_ALL_HINTS_DURATION
+    ).toLong()
+    /** The duration of the show selector animation in milliseconds. */
+    private val showSelectorAnimationDuration = styledAttrs.getInteger(
+        R.styleable.ConditionSelectorView_showSelectorAnimationDuration,
+        DEFAULT_SELECTOR_ANIMATION_DURATION
+    ).toLong()
+    /** The duration of the show capture animation in milliseconds. */
+    private val showCaptureAnimationDuration = styledAttrs.getInteger(
+        R.styleable.ConditionSelectorView_showCaptureAnimationDuration,
+        DEFAULT_CAPTURE_ANIMATION_DURATION
     ).toLong()
 
     /** */
@@ -104,7 +101,7 @@ internal class Animations(styledAttrs: TypedArray) {
 
     /** Animator for the scale change when defining the capture. */
     private val showCaptureAnimator: Animator = ValueAnimator.ofFloat(1f, 0.8f).apply {
-        duration = SHOW_CAPTURE_ANIMATION_DURATION
+        duration = showCaptureAnimationDuration
         interpolator = DecelerateInterpolator(2f)
         addUpdateListener {
             onCaptureZoomLevelChanged?.invoke(it.animatedValue as Float)
@@ -113,7 +110,7 @@ internal class Animations(styledAttrs: TypedArray) {
 
     /**  */
     private val showSelectorAndHintsAnimator: Animator = ValueAnimator.ofInt(0, 255).apply {
-        duration = SHOW_SELECTOR_ANIMATION_DURATION
+        duration = showSelectorAnimationDuration
         interpolator = LinearInterpolator()
         addUpdateListener {
             (it.animatedValue as Int).let { alpha ->
@@ -125,7 +122,7 @@ internal class Animations(styledAttrs: TypedArray) {
 
     /**  */
     private val showSelectorBackgroundAnimator: Animator = ValueAnimator.ofInt(0, selectorBackgroundAlpha).apply {
-        duration = SHOW_SELECTOR_ANIMATION_DURATION
+        duration = showSelectorAnimationDuration
         interpolator = LinearInterpolator()
         addUpdateListener {
             onSelectorBackgroundAlphaChanged?.invoke(it.animatedValue as Int)
@@ -154,3 +151,12 @@ internal class Animations(styledAttrs: TypedArray) {
         start()
     }
 }
+
+/** The default duration of the hints fade out animation in milliseconds. */
+private const val DEFAULT_FADE_DURATION = 500
+/** The default duration of the all hints fade out animation in milliseconds. */
+private const val DEFAULT_FADE_ALL_HINTS_DURATION = 1000
+/** The default duration of the capture display animation in milliseconds. */
+private const val DEFAULT_SELECTOR_ANIMATION_DURATION = 500
+/** The default duration of the capture display animation in milliseconds. */
+private const val DEFAULT_CAPTURE_ANIMATION_DURATION = 750

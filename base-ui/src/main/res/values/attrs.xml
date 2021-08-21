@@ -74,5 +74,13 @@
         <attr name="hintResizeLeftIcon" format="reference" />
         <!-- The drawable for the right Hint. -->
         <attr name="hintResizeRightIcon" format="reference" />
+        <!-- The duration of the show selector animation, in milliseconds . -->
+        <attr name="showSelectorAnimationDuration" format="integer" />
+        <!-- The duration of the show capture animation, in milliseconds . -->
+        <attr name="showCaptureAnimationDuration" format="integer" />
+        <!-- The minimum value for the zoom. Should be between [0f..10f] for reasonable results) -->
+        <attr name="minimumZoomValue" format="float" />
+        <!-- The maximum value for the zoom. Should be between [0f..10f] for reasonable results) -->
+        <attr name="maximumZoomValue" format="float" />
     </declare-styleable>
 </resources>

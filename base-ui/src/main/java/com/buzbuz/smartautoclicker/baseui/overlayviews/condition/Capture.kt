@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.view.GestureDetector
@@ -26,22 +27,20 @@ import android.view.ScaleGestureDetector
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.translate
+import com.buzbuz.smartautoclicker.ui.R
 
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ *
+ */
 internal class Capture(
     context: Context,
+    styledAttrs: TypedArray,
     screenMetrics: ScreenMetrics,
     viewInvalidator: () -> Unit,
 ): SelectorViewComponent(screenMetrics, viewInvalidator) {
-
-    private companion object {
-        /** The minimum zoom value. */
-        private const val ZOOM_MINIMUM = 0.8f
-        /** The maximum zoom value. */
-        private const val ZOOM_MAXIMUM = 3f
-    }
 
     /** */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
@@ -72,15 +71,25 @@ internal class Capture(
     /** */
     private val scaleGestureDetector = ScaleGestureDetector(context, scaleGestureListener)
 
-    /** The drawable for the screen capture. */
-    var screenCapture: BitmapDrawable? = null
+    /** The minimum zoom value. */
+    private val zoomMin: Float = styledAttrs.getFloat(
+        R.styleable.ConditionSelectorView_minimumZoomValue,
+        DEFAULT_ZOOM_MINIMUM
+    )
+    /** The maximum zoom value. */
+    private val zoomMax: Float = styledAttrs.getFloat(
+        R.styleable.ConditionSelectorView_maximumZoomValue,
+        DEFAULT_ZOOM_MAXIMUM
+    )
     /** The current zoom level*/
     var zoomLevel = 1f
         private set
+
     /** The current area where the capture is displayed. It can be bigger than the screen when zoomed. */
     val captureArea = RectF(0f, 0f, maxArea.width(), maxArea.height())
-
-    /** */
+    /** The drawable for the screen capture. */
+    var screenCapture: BitmapDrawable? = null
+    /** Listener upon the [captureArea] changes. */
     var onCapturePositionChanged: ((RectF) -> Unit)? = null
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -127,7 +136,7 @@ internal class Capture(
     }
 
     private fun scaleCapture(scaleFactor: Float, scalePivot: PointF) {
-        val newZoom = (zoomLevel * scaleFactor).coerceIn(ZOOM_MINIMUM, ZOOM_MAXIMUM)
+        val newZoom = (zoomLevel * scaleFactor).coerceIn(zoomMin, zoomMax)
         if (zoomLevel == newZoom) {
             return
         }
@@ -170,3 +179,8 @@ internal class Capture(
         onCapturePositionChanged?.invoke(captureArea)
     }
 }
+
+/** The default minimum zoom value. */
+private const val DEFAULT_ZOOM_MINIMUM = 0.8f
+/** The default maximum zoom value. */
+private const val DEFAULT_ZOOM_MAXIMUM = 3f
