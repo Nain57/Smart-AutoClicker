@@ -21,8 +21,10 @@ import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.MotionEvent
+
 import androidx.core.graphics.toRect
 
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.ConditionSelectorView
 import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.SelectorViewComponent
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
@@ -31,9 +33,9 @@ import com.buzbuz.smartautoclicker.ui.R
  * Controls the hints and their animations state.
  *
  * @param context the Android Context.
- * @param styledAttrs
+ * @param styledAttrs the styled attributes of the [ConditionSelectorView]
  * @param screenMetrics object providing the current screen size.
- * @param viewInvalidator
+ * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal class HintsController(
     context: Context,
@@ -42,19 +44,12 @@ internal class HintsController(
     viewInvalidator: () -> Unit,
 ): SelectorViewComponent(screenMetrics, viewInvalidator) {
 
-    private companion object {
-        /** */
-        private const val DEFAULT_HINTS_ICON_MARGIN = 5
-        /** */
-        private const val DEFAULT_HINTS_ICON_SIZE = 10
-    }
-
-    /** */
+    /** The distance between the hint and the selector border. */
     private val iconsMargin: Int = styledAttrs.getDimensionPixelSize(
         R.styleable.ConditionSelectorView_hintsIconsMargin,
         DEFAULT_HINTS_ICON_MARGIN
     )
-    /** */
+    /** The size of the icons for the hints. */
     private val iconsSize: Int = styledAttrs.getDimensionPixelSize(
         R.styleable.ConditionSelectorView_hintsIconsSize,
         DEFAULT_HINTS_ICON_SIZE
@@ -63,7 +58,7 @@ internal class HintsController(
     /** Map between a gesture type and its hint. */
     private val hintsIcons: Map<GestureType, Hint>
 
-    /** */
+    /** Initialize the list of hints. */
     init {
         val moveIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintMoveIcon, 0)
         val upIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeUpIcon, 0)
@@ -121,7 +116,7 @@ internal class HintsController(
 
     /** The set of icons currently shown. */
     private var iconsShown: MutableSet<GestureType> = HashSet()
-    /** */
+    /** The current area of the selector. */
     private val selectorArea = Rect()
     /** The current alpha value to applied to all currently shown icons. */
     var alpha: Int = 0
@@ -191,3 +186,8 @@ internal class HintsController(
         iconsShown.clear()
     }
 }
+
+/** The default distance between the hint and the selector border. */
+private const val DEFAULT_HINTS_ICON_MARGIN = 5
+/** The default size of the icons for the hints. */
+private const val DEFAULT_HINTS_ICON_SIZE = 10

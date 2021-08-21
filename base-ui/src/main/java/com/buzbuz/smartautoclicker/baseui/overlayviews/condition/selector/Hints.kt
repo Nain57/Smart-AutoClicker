@@ -49,11 +49,13 @@ internal abstract class Hint(
     protected val icon = ContextCompat.getDrawable(context, iconId)!!.apply {
         setTint(context.resources.getColor(R.color.overlayViewPrimary, null))
     }.mutate()
-    /** */
+    /** True if this hints should be hidden, false if not. */
     private var isHidden: Boolean = false
 
     /**
+     * Change the transparency of the hint icon.
      *
+     * @param alpha the transparency value.
      */
     @CallSuper
     open fun setAlpha(alpha: Int) {

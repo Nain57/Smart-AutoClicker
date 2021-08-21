@@ -59,12 +59,12 @@ class ConditionSelectorView(
     /** Controls the animations. */
     private lateinit var animations: Animations
 
-    /** */
+    /** Tells if the selector is at a valid position relatively to the capture position. */
     private var isSelectorValid = false
     /** Used during selector validation. kept here to avoid instantiation at each touch event. */
     private val selectorValidityTempValue = RectF()
 
-    /** */
+    /** Get the attributes from the style file and initialize all components. */
     init {
         context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
             animations = Animations(ta)
@@ -74,7 +74,7 @@ class ConditionSelectorView(
         }
     }
 
-    /** */
+    /** Setup the position changes callbacks. */
     init {
         selector.onSelectorPositionChanged = { position ->
             hintsIcons.setSelectorArea(position)
@@ -85,7 +85,7 @@ class ConditionSelectorView(
         }
     }
 
-    /** */
+    /** Setup animation values callback. */
     init {
         animations.apply {
             onCaptureZoomLevelChanged = capture::setZoomLevel
@@ -118,7 +118,8 @@ class ConditionSelectorView(
         }
 
     /**
-     *
+     * Verifies if the [selector] is at a valid position with the [capture].
+     * If the validation position value changes, notifies [onSelectorValidityChanged].
      */
     private fun verifySelectorValidity() {
         selectorValidityTempValue.set(RectF(selector.selectedArea))

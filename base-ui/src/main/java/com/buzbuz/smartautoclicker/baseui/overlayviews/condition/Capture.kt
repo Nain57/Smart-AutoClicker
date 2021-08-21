@@ -18,7 +18,10 @@ package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PointF
+import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -33,7 +36,12 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
+ * Displays a bitmap and handles moving/zooming on it.
  *
+ * @param context the Android context.
+ * @param styledAttrs the styled attributes of the [ConditionSelectorView]
+ * @param screenMetrics provides information about current display.
+ * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal class Capture(
     context: Context,
@@ -42,20 +50,20 @@ internal class Capture(
     viewInvalidator: () -> Unit,
 ): SelectorViewComponent(screenMetrics, viewInvalidator) {
 
-    /** */
+    /** Listener for the [gestureDetector] handling the move gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             translateCapture(-distanceX, -distanceY)
             return true
         }
     }
-    /** */
+    /** Gesture detector for the moving of the capture. */
     private val gestureDetector = GestureDetector(context, gestureListener)
 
-    /** */
+    /** Listener for the [scaleGestureDetector] handling the pinch scaling gesture. */
     private val scaleGestureListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
-        /** */
+        /** Focus position of the gesture to be used as scaling pivot. */
         private val scaleFocus = PointF()
 
         override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
@@ -68,7 +76,7 @@ internal class Capture(
             return true
         }
     }
-    /** */
+    /** Gesture detector for the scaling of the capture. */
     private val scaleGestureDetector = ScaleGestureDetector(context, scaleGestureListener)
 
     /** The minimum zoom value. */
@@ -98,6 +106,12 @@ internal class Capture(
         return handled
     }
 
+    /**
+     * Translate the capture.
+     *
+     * @param translateX the horizontal value for the translation.
+     * @param translateY the vertical value for the translation.
+     */
     private fun translateCapture(translateX: Float, translateY: Float) {
         // Verify if the translation isn't moving the capture too far away and correct the value to avoid to "lost" the
         // capture.
@@ -126,7 +140,10 @@ internal class Capture(
     }
 
     /**
+     * Set the zoom level for the capture.
+     * This will use [scaleCapture] with the correct parameters.
      *
+     * @param newLevel the new zoom level.
      */
     fun setZoomLevel(newLevel: Float) {
         scaleCapture(
@@ -135,6 +152,12 @@ internal class Capture(
         )
     }
 
+    /**
+     * Scale the capture.
+     *
+     * @param scaleFactor the scale factor of the capture.
+     * @param scalePivot the pivot for the scaling of the capture.
+     */
     private fun scaleCapture(scaleFactor: Float, scalePivot: PointF) {
         val newZoom = (zoomLevel * scaleFactor).coerceIn(zoomMin, zoomMax)
         if (zoomLevel == newZoom) {

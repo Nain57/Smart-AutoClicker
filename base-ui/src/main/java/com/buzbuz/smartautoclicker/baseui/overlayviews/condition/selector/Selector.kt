@@ -18,12 +18,19 @@ package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
+import android.graphics.Rect
+import android.graphics.RectF
 import android.view.GestureDetector
 import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
+
 import androidx.core.graphics.toRect
 
+import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.ConditionSelectorView
 import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.SelectorViewComponent
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.extensions.translate
@@ -32,6 +39,14 @@ import com.buzbuz.smartautoclicker.ui.R
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * Displays a rectangle selector and handles moving/resizing on it.
+ *
+ * @param context the Android Context.
+ * @param styledAttrs the styled attributes of the [ConditionSelectorView]
+ * @param screenMetrics object providing the current screen size.
+ * @param viewInvalidator calls invalidate on the view hosting this component.
+ */
 internal class Selector(
     context: Context,
     styledAttrs: TypedArray,
@@ -39,7 +54,7 @@ internal class Selector(
     viewInvalidator: () -> Unit,
 ): SelectorViewComponent(screenMetrics, viewInvalidator) {
 
-    /** */
+    /** Listener for the [gestureDetector] handling the move/resize gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent): Boolean {
@@ -52,10 +67,9 @@ internal class Selector(
             return true
         }
     }
-
-    /** */
+    /** Gesture detector for the move/resize of the capture. */
     private val gestureDetector = GestureDetector(context, gestureListener)
-    /** */
+    /** The type of gesture currently executed by the user. */
     var currentGesture: GestureType? = null
         private set
 
@@ -70,7 +84,7 @@ internal class Selector(
             100
         ).toFloat() / 2f
     )
-    /** */
+    /** The size of the selector handle. */
     private val handleSize = styledAttrs.getDimensionPixelSize(
         R.styleable.ConditionSelectorView_resizeHandleSize,
         10
@@ -120,21 +134,17 @@ internal class Selector(
     /** Area within the selector that represents the zone to be capture to creates a click condition. */
     val selectedArea = RectF()
 
-    /** */
+    /** Listener upon the position of the selector. */
     var onSelectorPositionChanged: ((Rect) -> Unit)? = null
 
-    /**
-     *
-     */
+    /** Transparency of the background. */
     var backgroundAlpha: Int = 255
         set(value) {
             field = value
             backgroundPaint.alpha = value
             invalidate()
         }
-    /**
-     *
-     */
+    /** Transparency of the selector. */
     var selectorAlpha: Int = 255
         set(value) {
             field = value
@@ -170,7 +180,7 @@ internal class Selector(
         resetSelectorPosition()
     }
 
-    /** */
+    /** Reset the selector to its original position. */
     private fun resetSelectorPosition() {
         selectorArea.apply {
             left = maxArea.centerX() - selectorDefaultSize.x
@@ -223,7 +233,10 @@ internal class Selector(
     private val moveResult = RectF()
 
     /**
+     * Translate the selector.
      *
+     * @param translateX the horizontal value for the translation.
+     * @param translateY the vertical value for the translation.
      */
     private fun onTranslateSelector(translateX: Float, translateY: Float) {
         currentGesture?.let {
@@ -260,9 +273,7 @@ internal class Selector(
         }
     }
 
-    /**
-     *
-     */
+    /** Verify the correctness of the selector bounds. */
     private fun verifyBounds() {
         selectorArea.intersect(maxArea)
         selectedArea.apply {
@@ -273,7 +284,6 @@ internal class Selector(
         }
     }
 
-    /** */
     override fun onDraw(canvas: Canvas) {
         canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
         canvas.drawRect(selectedArea, backgroundPaint)

@@ -23,27 +23,30 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+
 import androidx.core.animation.doOnEnd
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+
 import com.buzbuz.smartautoclicker.ui.R
 
 /**
+ * Handles the animation for the [ConditionSelectorView].
  *
- * @param styledAttrs
+ * @param styledAttrs the styled attributes of the [ConditionSelectorView]
  */
 internal class Animations(styledAttrs: TypedArray) {
 
-    /** */
+    /** The transparency of the background color of the selector. */
     private val selectorBackgroundAlpha: Int = styledAttrs.getColor(
         R.styleable.ConditionSelectorView_colorBackground,
         Color.TRANSPARENT
     ).shr(24)
-    /** */
+    /** The duration of the hints fading animation in milliseconds. */
     private val hintFadeDuration = styledAttrs.getInteger(
         R.styleable.ConditionSelectorView_hintsFadeDuration,
         DEFAULT_FADE_DURATION
     ).toLong()
-    /** */
+    /** The duration of the all hints fading animation in milliseconds. */
     private val hintAllFadeDelay = styledAttrs.getInteger(
         R.styleable.ConditionSelectorView_hintsAllFadeDelay,
         DEFAULT_FADE_ALL_HINTS_DURATION
@@ -59,17 +62,19 @@ internal class Animations(styledAttrs: TypedArray) {
         DEFAULT_CAPTURE_ANIMATION_DURATION
     ).toLong()
 
-    /** */
+    /** Listener notified for capture zoom level changes due to animations. */
     var onCaptureZoomLevelChanged: ((Float) -> Unit)? = null
-    /** */
+    /** Listener notified for selector border alpha changes due to animations. */
     var onSelectorBorderAlphaChanged: ((Int) -> Unit)? = null
-    /** */
+    /** Listener notified for selector background alpha changes due to animations. */
     var onSelectorBackgroundAlphaChanged: ((Int) -> Unit)? = null
-    /** */
+    /** Listener notified for hints alpha changes due to animations. */
     var onHintsAlphaChanged: ((Int) -> Unit)? = null
 
     /**
+     * Start the show selector animation.
      *
+     * @param onAnimationCompleted called once the animation is finished.
      */
     fun startShowSelectorAnimation(onAnimationCompleted: () -> Unit) {
         if (showSelectorAnimators.isRunning) {
@@ -80,19 +85,16 @@ internal class Animations(styledAttrs: TypedArray) {
         showSelectorAnimators.start()
     }
 
-    /**
-     * @return true if the show selector animation is running, false if not.
-     */
+    /** @return true if the show selector animation is running, false if not. */
     fun isShowSelectorAnimationRunning(): Boolean = showSelectorAnimators.isRunning
 
-    /**
-     *
-     */
+    /** Start the hide hints animation. */
     fun startHideHintsAnimation() {
         cancelHideHintsAnimation()
         hideHintsAnimator.start()
     }
 
+    /** Cancel the hide hints animation. */
     fun cancelHideHintsAnimation() {
         if (hideHintsAnimator.isRunning) {
             hideHintsAnimator.end()
@@ -107,8 +109,7 @@ internal class Animations(styledAttrs: TypedArray) {
             onCaptureZoomLevelChanged?.invoke(it.animatedValue as Float)
         }
     }
-
-    /**  */
+    /** Animator for the selector and hints showing. */
     private val showSelectorAndHintsAnimator: Animator = ValueAnimator.ofInt(0, 255).apply {
         duration = showSelectorAnimationDuration
         interpolator = LinearInterpolator()
@@ -119,8 +120,7 @@ internal class Animations(styledAttrs: TypedArray) {
             }
         }
     }
-
-    /**  */
+    /** Animator for the selector background showing. */
     private val showSelectorBackgroundAnimator: Animator = ValueAnimator.ofInt(0, selectorBackgroundAlpha).apply {
         duration = showSelectorAnimationDuration
         interpolator = LinearInterpolator()
@@ -128,8 +128,7 @@ internal class Animations(styledAttrs: TypedArray) {
             onSelectorBackgroundAlphaChanged?.invoke(it.animatedValue as Int)
         }
     }
-
-    /** */
+    /** Set of animators required for the show selector animation. */
     private val showSelectorAnimators = AnimatorSet().apply {
         playTogether(
             listOf(
@@ -140,7 +139,7 @@ internal class Animations(styledAttrs: TypedArray) {
         )
     }
 
-    /** */
+    /** Animator for the hiding of the hints. */
     private val hideHintsAnimator = ValueAnimator.ofInt(255, 0).apply {
         startDelay = hintAllFadeDelay
         duration = hintFadeDuration

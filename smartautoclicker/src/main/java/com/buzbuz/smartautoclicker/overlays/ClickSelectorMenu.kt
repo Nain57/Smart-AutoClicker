@@ -28,9 +28,9 @@ import androidx.core.graphics.toPoint
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.baseui.overlayviews.ClickSelectorView
-import com.buzbuz.smartautoclicker.baseui.overlayviews.ClickSelectorView.Companion.FIRST
-import com.buzbuz.smartautoclicker.baseui.overlayviews.ClickSelectorView.Companion.SECOND
-import com.buzbuz.smartautoclicker.baseui.overlayviews.ClickSelectorView.Companion.SelectionIndex
+import com.buzbuz.smartautoclicker.baseui.overlayviews.FIRST
+import com.buzbuz.smartautoclicker.baseui.overlayviews.SECOND
+import com.buzbuz.smartautoclicker.baseui.overlayviews.SelectionIndex
 import com.buzbuz.smartautoclicker.database.ClickInfo
 
 /**

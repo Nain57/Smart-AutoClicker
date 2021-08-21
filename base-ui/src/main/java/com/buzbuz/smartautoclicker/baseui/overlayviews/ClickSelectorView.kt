@@ -24,8 +24,10 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.view.MotionEvent
 import android.view.View
+
 import androidx.annotation.IntDef
 import androidx.core.content.res.use
+
 import com.buzbuz.smartautoclicker.ui.R
 
 /**
@@ -33,21 +35,6 @@ import com.buzbuz.smartautoclicker.ui.R
  * the positions selected by the user.
  */
 class ClickSelectorView(context: Context) : View(context) {
-
-    companion object {
-
-        /**
-         * Defines the different points captured by this selector.
-         * To change the point capture, use [toSelectionStep].
-         */
-        @IntDef(FIRST, SECOND)
-        @Retention(AnnotationRetention.SOURCE)
-        annotation class SelectionIndex
-        /** The user is selecting the first click. */
-        const val FIRST = 1
-        /** The user is selecting the second click. */
-        const val SECOND = 2
-    }
 
     /** Position of the first point selected. */
     var position1: PointF? = null
@@ -189,3 +176,12 @@ class ClickSelectorView(context: Context) : View(context) {
         canvas.drawCircle(position.x, position.y, backgroundCircleRadius, backgroundPaint)
     }
 }
+
+/** Defines the different points captured by a [ClickSelectorView]. */
+@IntDef(FIRST, SECOND)
+@Retention(AnnotationRetention.SOURCE)
+annotation class SelectionIndex
+/** The user is selecting the first click. */
+const val FIRST = 1
+/** The user is selecting the second click. */
+const val SECOND = 2
