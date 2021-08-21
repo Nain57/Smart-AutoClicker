@@ -39,11 +39,6 @@ internal class Selector(
     viewInvalidator: () -> Unit,
 ): SelectorViewComponent(screenMetrics, viewInvalidator) {
 
-    private companion object {
-        /** Ratio between the handle and the inner handle */
-        private const val INNER_HANDLE_RATIO = 3f
-    }
-
     /** */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
 
@@ -118,10 +113,12 @@ internal class Selector(
         )
     }
 
+    /** The minimum size of the selector. Size is relative to the [maxArea]. */
+    private val selectorMinimumSize = PointF()
     /** The area where the selector should be drawn. */
     private val selectorArea = RectF()
     /** Area within the selector that represents the zone to be capture to creates a click condition. */
-    private val selectedArea = RectF()
+    val selectedArea = RectF()
 
     /** */
     var onSelectorPositionChanged: ((Rect) -> Unit)? = null
@@ -177,6 +174,10 @@ internal class Selector(
             right = maxArea.centerX() + selectorDefaultSize.x
             bottom = maxArea.centerY() + selectorDefaultSize.y
         }
+        selectorMinimumSize.apply {
+            x = maxArea.width() * SELECTOR_MINIMUM_WIDTH_RATIO
+            y = maxArea.height() * SELECTOR_MINIMUM_HEIGHT_RATIO
+        }
 
         verifyBounds()
         onSelectorPositionChanged?.invoke(selectorArea.toRect())
@@ -214,14 +215,39 @@ internal class Selector(
         return currentGesture != null
     }
 
+    /** The result of the move gesture. Kept here to avoid instantiation at each touch event. */
+    private val moveResult = RectF()
+
+    /**
+     *
+     */
     private fun onTranslateSelector(translateX: Float, translateY: Float) {
         currentGesture?.let {
             when (it) {
-                ResizeLeft -> selectorArea.left = min(selectorArea.left + translateX, selectorArea.right)
-                ResizeTop -> selectorArea.top = min(selectorArea.top + translateY, selectorArea.bottom)
-                ResizeRight -> selectorArea.right = max(selectorArea.right + translateX, selectorArea.left)
-                ResizeBottom -> selectorArea.bottom = max(selectorArea.bottom + translateY, selectorArea.top)
-                Move -> selectorArea.translate(translateX, translateY)
+                ResizeLeft -> selectorArea.left = min(
+                    selectorArea.left + translateX,
+                    selectorArea.right - selectorMinimumSize.x
+                )
+                ResizeTop -> selectorArea.top = min(
+                    selectorArea.top + translateY,
+                    selectorArea.bottom - selectorMinimumSize.y
+                )
+                ResizeRight -> selectorArea.right = max(
+                    selectorArea.right + translateX,
+                    selectorArea.left + selectorMinimumSize.x
+                )
+                ResizeBottom -> selectorArea.bottom = max(
+                    selectorArea.bottom + translateY,
+                    selectorArea.top + selectorMinimumSize.y
+                )
+                Move -> {
+                    moveResult.set(selectorArea)
+                    moveResult.translate(translateX, translateY)
+
+                    if (maxArea.contains(moveResult)) {
+                        selectorArea.set(moveResult)
+                    }
+                }
             }
 
             verifyBounds()
@@ -249,3 +275,10 @@ internal class Selector(
         canvas.drawRect(selectedArea, backgroundPaint)
     }
 }
+
+/** The ratio of the maximum width to be considered as the minimum width. */
+private const val SELECTOR_MINIMUM_WIDTH_RATIO = 0.10f
+/** The ratio of the maximum height to be considered as the minimum height. */
+private const val SELECTOR_MINIMUM_HEIGHT_RATIO = 0.05f
+/** Ratio between the handle and the inner handle */
+private const val INNER_HANDLE_RATIO = 3f

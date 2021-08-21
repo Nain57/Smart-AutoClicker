@@ -61,7 +61,7 @@ class ConditionSelectorMenu(
     }
 
     /** The view displaying the screenshot and the selector for the capture. */
-    private val selectorView = ConditionSelectorView(context, screenMetrics)
+    private val selectorView = ConditionSelectorView(context, screenMetrics, ::onSelectorValidityChanged)
 
     /** The current state of the overlay. */
     @ConditionCaptureState
@@ -101,6 +101,10 @@ class ConditionSelectorMenu(
             R.id.btn_confirm -> onConfirm()
             R.id.btn_cancel -> dismiss()
         }
+    }
+
+    private fun onSelectorValidityChanged(isValid: Boolean) {
+        setMenuItemViewEnabled(R.id.btn_confirm, isValid, isValid)
     }
 
     /**

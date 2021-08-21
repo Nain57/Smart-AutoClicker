@@ -21,12 +21,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
 import android.view.View
 
 import androidx.core.content.res.use
+import androidx.core.graphics.minus
 
 import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.Selector
 import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.HintsController
@@ -44,7 +46,8 @@ import com.buzbuz.smartautoclicker.ui.R
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
 class ConditionSelectorView(
     context: Context,
-    private val screenMetrics: ScreenMetrics
+    private val screenMetrics: ScreenMetrics,
+    private val onSelectorValidityChanged: (Boolean) -> Unit,
 ) : View(context) {
 
     /** */
@@ -58,11 +61,25 @@ class ConditionSelectorView(
     private lateinit var animations: Animations
 
     /** */
+    private var isSelectorValid = false
+
+    /** */
     init {
         context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
             animations = Animations(ta)
             selector = Selector(context, ta, screenMetrics, ::invalidate)
             hintsIcons = HintsController(context, ta, screenMetrics, ::invalidate)
+        }
+    }
+
+    /** */
+    init {
+        selector.onSelectorPositionChanged = { position ->
+            hintsIcons.setSelectorArea(position)
+            verifySelectorValidity()
+        }
+        capture.onCapturePositionChanged = { _ ->
+            verifySelectorValidity()
         }
     }
 
@@ -78,12 +95,7 @@ class ConditionSelectorView(
             }
             onHintsAlphaChanged = { alpha ->
                 hintsIcons.alpha = alpha
-                android.util.Log.i("TOTO", "Hints alpha = $alpha")
             }
-        }
-
-        selector.onSelectorPositionChanged = { position ->
-            hintsIcons.setSelectorArea(position)
         }
     }
 
@@ -93,6 +105,20 @@ class ConditionSelectorView(
             field = value
             invalidate()
         }
+
+    /** Used during selector validation. kept here to avoid instantiation at each touch event. */
+    private val selectorValidityTempValue = RectF()
+
+    /**
+     *
+     */
+    private fun verifySelectorValidity() {
+        selectorValidityTempValue.set(RectF(selector.selectedArea))
+        if (selectorValidityTempValue.intersect(capture.captureArea.minus(CAPTURE_MINIMUM_SIZE)) != isSelectorValid) {
+            isSelectorValid = !isSelectorValid
+            onSelectorValidityChanged(isSelectorValid)
+        }
+    }
 
     /**
      * Shows the capture on the screen.
@@ -115,6 +141,10 @@ class ConditionSelectorView(
      * @return a pair of the capture area and a bitmap of its content.
      */
     fun getSelection(): Pair<Rect, Bitmap> {
+        if (!isSelectorValid) {
+            throw IllegalStateException("Can't get a selection, selector is invalid.")
+        }
+
         val selectionArea = selector.getSelectionArea(capture.captureArea, capture.zoomLevel)
         return selectionArea to Bitmap.createBitmap(capture.screenCapture!!.bitmap, selectionArea.left,
             selectionArea.top, selectionArea.width(), selectionArea.height())
@@ -152,3 +182,10 @@ class ConditionSelectorView(
         hintsIcons.onDraw(canvas)
     }
 }
+
+/**
+ * The minimum size of the capture.
+ * Final results will not always be the size, as it is relative to the capture viewport, but we just don't want a
+ * null result.
+ */
+private const val CAPTURE_MINIMUM_SIZE = 50f

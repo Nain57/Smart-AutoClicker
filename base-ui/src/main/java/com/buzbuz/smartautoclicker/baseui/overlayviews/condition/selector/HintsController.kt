@@ -183,7 +183,6 @@ internal class HintsController(
     override fun onTouchEvent(event: MotionEvent): Boolean = false
 
     override fun onDraw(canvas: Canvas) {
-        android.util.Log.i("TOTO", "onDraw Hints alpha = $alpha")
         iconsShown.forEach { hintType ->
             hintsIcons[hintType]!!.draw(canvas)
         }

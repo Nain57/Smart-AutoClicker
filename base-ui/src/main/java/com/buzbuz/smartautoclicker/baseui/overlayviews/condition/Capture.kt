@@ -17,17 +17,16 @@
 package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.PointF
-import android.graphics.RectF
+import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.translate
+
 import kotlin.math.max
 import kotlin.math.min
 
@@ -81,6 +80,9 @@ internal class Capture(
     /** The current area where the capture is displayed. It can be bigger than the screen when zoomed. */
     val captureArea = RectF(0f, 0f, maxArea.width(), maxArea.height())
 
+    /** */
+    var onCapturePositionChanged: ((RectF) -> Unit)? = null
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         var handled = gestureDetector.onTouchEvent(event)
         handled = handled or scaleGestureDetector.onTouchEvent(event)
@@ -110,6 +112,7 @@ internal class Capture(
         // Translate safely
         captureArea.translate(inboundsTranslateX, inboundsTranslateY)
 
+        onCapturePositionChanged?.invoke(captureArea)
         invalidate()
     }
 
@@ -137,6 +140,7 @@ internal class Capture(
         }
         captureArea.scale(scaleFactor, pivot)
 
+        onCapturePositionChanged?.invoke(captureArea)
         invalidate()
     }
 

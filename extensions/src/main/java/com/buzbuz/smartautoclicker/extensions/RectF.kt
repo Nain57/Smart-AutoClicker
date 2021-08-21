@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,22 +19,6 @@ package com.buzbuz.smartautoclicker.extensions
 import android.graphics.PointF
 import android.graphics.RectF
 
-/**
- * Scale the rectangle by the provided factor.
- * The pivot will be the center of the Rect.
- *
- * @param scaleFactor the scale factor.
- */
-fun RectF.scale(scaleFactor: Float) {
-    val xOffset = (width() * scaleFactor - width()) / 2
-    val yOffset = (height() * scaleFactor - height()) / 2
-
-    left -= xOffset
-    top -= yOffset
-    right += xOffset
-    bottom += yOffset
-}
-
 fun RectF.scale(scaleFactor: Float, pivot: PointF) {
     val widthOffset = (width() * scaleFactor - width())
     val heightOffset = (height() * scaleFactor - height())
@@ -53,20 +37,4 @@ fun RectF.translate(translateX: Float, translateY: Float) {
     top += translateY
     right += translateX
     bottom += translateY
-}
-
-/**
- * Center the rectangle to the specified position.
- *
- * @param newCenterX the new x position.
- * @param newCenterY the new y position.
- */
-fun RectF.move(newCenterX: Float, newCenterY: Float) {
-    val halfWidth = width() / 2
-    val halfHeight = height() / 2
-
-    left = newCenterX - halfWidth
-    top = newCenterY - halfHeight
-    right = newCenterX + halfWidth
-    bottom = newCenterY + halfHeight
 }
