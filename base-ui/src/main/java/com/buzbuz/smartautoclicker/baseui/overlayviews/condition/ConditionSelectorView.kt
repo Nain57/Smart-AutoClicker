@@ -160,6 +160,10 @@ class ConditionSelectorView(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (animations.isShowSelectorAnimationRunning()) {
+            return false
+        }
+
         selector.currentGesture?.let { gestureType ->
             hintsIcons.show(gestureType)
             animations.cancelHideHintsAnimation()

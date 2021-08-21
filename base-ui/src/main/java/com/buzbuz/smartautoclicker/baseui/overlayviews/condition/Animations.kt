@@ -84,6 +84,11 @@ internal class Animations(styledAttrs: TypedArray) {
     }
 
     /**
+     * @return true if the show selector animation is running, false if not.
+     */
+    fun isShowSelectorAnimationRunning(): Boolean = showSelectorAnimators.isRunning
+
+    /**
      *
      */
     fun startHideHintsAnimation() {

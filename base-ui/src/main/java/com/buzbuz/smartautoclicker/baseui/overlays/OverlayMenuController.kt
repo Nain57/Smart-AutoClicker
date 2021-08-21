@@ -100,7 +100,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     /** The shared preference storing the position of the menu in order to save/restore the last user position. */
     private val sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     /** The Android window manager. Used to add/remove the overlay menu and view. */
-    protected val windowManager = context.getSystemService(WindowManager::class.java)!!
+    private val windowManager = context.getSystemService(WindowManager::class.java)!!
     /** Value of the alpha for a disabled item view in the menu. */
     @SuppressLint("ResourceType")
     private val disabledItemAlpha = context.resources.getFraction(R.dimen.alpha_menu_item_disabled, 1, 1)
@@ -121,6 +121,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
     /** Listener upon the screen orientation changes. */
     private val orientationListener = ::onOrientationChanged
+    /** Tells if there is a hide overlay view button or not. */
+    private var haveHideButton = false
 
     /**
      * Creates the root view of the menu overlay.
@@ -154,7 +156,16 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
                 @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
                 when (view.id) {
                     R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
-                    R.id.btn_hide_overlay -> view.setOnClickListener { onHideOverlayClicked() }
+                    R.id.btn_hide_overlay -> {
+                        haveHideButton = true
+                        view.setOnClickListener { hideButton ->
+                            if (hideButton.visibility == View.VISIBLE) {
+                                setOverlayViewVisibility(View.GONE)
+                            } else {
+                                setOverlayViewVisibility(View.VISIBLE)
+                            }
+                        }
+                    }
                     else -> view.setOnClickListener { v -> onMenuItemClicked(v.id) }
                 }
             }
@@ -200,9 +211,27 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         screenOverlayView = null
     }
 
-    /** */
+    /**
+     * Change the menu view visibility.
+     * @param visibility the new visibility to apply.
+     */
     protected fun setMenuVisibility(visibility: Int) {
         menuLayout?.visibility = visibility
+    }
+
+    /**
+     * Change the overlay view visibility, allowing the user the click on the Activity bellow the overlays.
+     * Updates the hide button state, if any.
+     *
+     * @param newVisibility the new visibility to apply.
+     */
+    protected fun setOverlayViewVisibility(newVisibility: Int) {
+        screenOverlayView?.apply {
+            visibility = newVisibility
+            if (haveHideButton) {
+                setMenuItemViewEnabled(R.id.btn_hide_overlay, visibility == View.VISIBLE , true)
+            }
+        }
     }
 
     /**
@@ -237,22 +266,6 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      */
     protected fun setMenuItemViewDrawable(@IdRes viewId: Int, drawable: Drawable) {
         (menuLayout?.findViewById<View>(viewId) as ImageView).setImageDrawable(drawable)
-    }
-
-    /**
-     * Called when the user clicks on the [R.id.btn_hide_overlay] menu item.
-     * Will show/hide the overlay view, allowing the user the click on the Activity bellow the overlays.
-     */
-    private fun onHideOverlayClicked() {
-        screenOverlayView?.apply {
-            if (visibility == View.VISIBLE) {
-                visibility = View.GONE
-                setMenuItemViewEnabled(R.id.btn_hide_overlay, true , true)
-            } else {
-                visibility = View.VISIBLE
-                setMenuItemViewEnabled(R.id.btn_hide_overlay, false , true)
-            }
-        }
     }
 
     /**

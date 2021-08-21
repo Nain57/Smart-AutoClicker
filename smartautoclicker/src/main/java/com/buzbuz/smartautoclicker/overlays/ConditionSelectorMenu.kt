@@ -72,10 +72,12 @@ class ConditionSelectorMenu(
                 SELECTION -> {
                     setMenuItemViewImageResource(R.id.btn_confirm, R.drawable.ic_screenshot)
                     setMenuVisibility(View.VISIBLE)
+                    setOverlayViewVisibility(View.GONE)
                     selectorView.hide = true
                 }
                 CAPTURE -> {
                     setMenuVisibility(View.GONE)
+                    setOverlayViewVisibility(View.VISIBLE)
                     selectorView.hide = true
                 }
                 ADJUST -> {
@@ -99,10 +101,16 @@ class ConditionSelectorMenu(
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_confirm -> onConfirm()
-            R.id.btn_cancel -> dismiss()
+            R.id.btn_cancel -> onCancel()
         }
     }
 
+    /**
+     * Called when the validity of the selector have changed.
+     * Update the buttons to avoid a capture if the selector can't provide the bitmap.
+     *
+     * @param isValid validity of the selector.
+     */
     private fun onSelectorValidityChanged(isValid: Boolean) {
         setMenuItemViewEnabled(R.id.btn_confirm, isValid, isValid)
     }
@@ -126,6 +134,17 @@ class ConditionSelectorMenu(
             val selection = selectorView.getSelection()
             onConditionSelected(selection.first, selection.second)
             dismiss()
+        }
+    }
+
+    /**
+     * Called when the user press the cancel button.
+     * Depending on the current state, dismiss this overlay or return to the previous step.
+     */
+    private fun onCancel() {
+        when (state) {
+            SELECTION -> dismiss()
+            ADJUST -> state = SELECTION
         }
     }
 }
