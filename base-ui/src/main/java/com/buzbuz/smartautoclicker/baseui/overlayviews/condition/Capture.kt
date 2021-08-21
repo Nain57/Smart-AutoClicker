@@ -157,4 +157,16 @@ internal class Capture(
             draw(canvas)
         }
     }
+
+    override fun onReset() {
+        setZoomLevel(1f)
+        captureArea.apply {
+            left = 0f
+            top = 0f
+            right = maxArea.width()
+            bottom = maxArea.height()
+        }
+
+        onCapturePositionChanged?.invoke(captureArea)
+    }
 }

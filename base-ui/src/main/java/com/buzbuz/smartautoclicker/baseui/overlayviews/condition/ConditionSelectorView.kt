@@ -103,6 +103,11 @@ class ConditionSelectorView(
     var hide = true
         set(value) {
             field = value
+            if (value) {
+                capture.onReset()
+                selector.onReset()
+                hintsIcons.onReset()
+            }
             invalidate()
         }
 

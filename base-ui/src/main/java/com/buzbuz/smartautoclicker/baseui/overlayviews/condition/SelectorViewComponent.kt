@@ -52,6 +52,9 @@ internal abstract class SelectorViewComponent(
     /** */
     abstract fun onDraw(canvas: Canvas)
 
+    /** */
+    abstract fun onReset()
+
     /**
      *
      */

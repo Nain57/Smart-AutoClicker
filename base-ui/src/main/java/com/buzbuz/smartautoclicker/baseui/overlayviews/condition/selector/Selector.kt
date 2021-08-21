@@ -167,7 +167,11 @@ internal class Selector(
 
     override fun onViewSizeChanged(w: Int, h: Int) {
         super.onViewSizeChanged(w, h)
+        resetSelectorPosition()
+    }
 
+    /** */
+    private fun resetSelectorPosition() {
         selectorArea.apply {
             left = maxArea.centerX() - selectorDefaultSize.x
             top = maxArea.centerY() - selectorDefaultSize.y
@@ -273,6 +277,12 @@ internal class Selector(
     override fun onDraw(canvas: Canvas) {
         canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
         canvas.drawRect(selectedArea, backgroundPaint)
+    }
+
+    override fun onReset() {
+        resetSelectorPosition()
+        backgroundAlpha = 255
+        selectorAlpha = 255
     }
 }
 

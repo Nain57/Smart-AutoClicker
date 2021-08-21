@@ -127,8 +127,8 @@ internal class HintsController(
     var alpha: Int = 0
         set(value) {
             field = value
-            iconsShown.forEach {
-                hintsIcons[it]!!.setAlpha(value)
+            hintsIcons.forEach {
+                it.value.setAlpha(value)
             }
             invalidate()
         }
@@ -161,8 +161,7 @@ internal class HintsController(
         selectorArea.set(newSelectorArea)
 
         val allShown = iconsShown.size == hintsIcons.size
-        iconsShown.forEach { hintType ->
-            val hint = hintsIcons[hintType]!!
+        hintsIcons.forEach { (hintType, hint) ->
             when(hintType) {
                 Move -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
                     newSelectorArea.centerY())
@@ -186,5 +185,9 @@ internal class HintsController(
         iconsShown.forEach { hintType ->
             hintsIcons[hintType]!!.draw(canvas)
         }
+    }
+
+    override fun onReset() {
+        alpha = 0
     }
 }
