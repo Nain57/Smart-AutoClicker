@@ -177,6 +177,7 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
         }
 
         captureInfo = area to callback
+        processingThreadHandler?.post(::onCaptureImage)
     }
 
     /**
@@ -257,6 +258,24 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
     }
 
     /**
+     * Called when a screenshot is required by [captureArea].
+     * Process the currently displayed image and creates a bitmap of it.
+     */
+    @WorkerThread
+    private fun onCaptureImage() {
+        if (cache.currentImage == null) return
+
+        // Refresh cached values on the image, we are going to use it.
+        cache.refreshProcessedImage(displaySize)
+
+        // A screen capture is requested, process it and notify the resulting bitmap.
+        captureInfo?.let { capture ->
+            notifyCapture(Bitmap.createBitmap(cache.screenBitmap!!, capture.first.left, capture.first.top,
+                capture.first.width(), capture.first.height()))
+        }
+    }
+
+    /**
      * Called when a new Image of the screen is available.
      *
      * Used as listener for [ScreenRecorder] and executed on the thread handled by [processingThread], this method will
@@ -268,30 +287,24 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
      */
     @WorkerThread
     private fun onNewImage(imageReader: ImageReader) {
+        cache.currentImage?.close()
+
         cache.currentImage = imageReader.acquireLatestImage()
-        cache.currentImage?.use {
-            // An area has been found and we are waiting its clicks delay before detecting something else or
-            // no capture to do and no click list to detect ? We have nothing to do.
-            if (isAreaFound || captureInfo == null && detectionInfo == null) {
-                return
-            }
 
-            // Refresh cached values on the image, we are going to use it.
-            cache.refreshProcessedImage(displaySize)
+        // An area has been found and we are waiting its clicks delay before detecting something else or
+        // no click list to detect ? We have nothing to do.
+        if (isAreaFound ||  detectionInfo == null) {
+            return
+        }
 
-            // A screen capture is requested, process it and notify the resulting bitmap.
-            captureInfo?.let { capture ->
-                notifyCapture(Bitmap.createBitmap(cache.screenBitmap!!, capture.first.left, capture.first.top,
-                    capture.first.width(), capture.first.height()))
-                return
-            }
+        // Refresh cached values on the image, we are going to use it.
+        cache.refreshProcessedImage(displaySize)
 
-            // A detection is ongoing, process the scenario to detect a click that fulfils its conditions.
-            detectionInfo?.let { detectionInfo ->
-                scenarioProcessor.detect(detectionInfo.first)?.let {
-                    // A click is detected, notify it
-                    notifyClickDetection(it)
-                }
+        // A detection is ongoing, process the scenario to detect a click that fulfils its conditions.
+        detectionInfo?.let { detectionInfo ->
+            scenarioProcessor.detect(detectionInfo.first)?.let {
+                // A click is detected, notify it
+                notifyClickDetection(it)
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -139,6 +139,7 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
             right = 0
             bottom = 0
         }
+        currentImage?.close()
         currentImage = null
         screenBitmap = null
         screenPixels = null

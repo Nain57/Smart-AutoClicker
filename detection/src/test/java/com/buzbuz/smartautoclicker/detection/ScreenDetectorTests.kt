@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -200,6 +200,10 @@ class ScreenDetectorTests {
      */
     private fun executeCaptureArea() {
         screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        screenDetector.processingThread?.let {
+            shadowOf(it.looper).idle()
+        }
+
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
     }
 
@@ -422,8 +426,8 @@ class ScreenDetectorTests {
     fun capture_bitmapCreation() {
         val imageAvailableListener = toStartScreenRecord()
 
-        executeCaptureArea()
         imageAvailableListener.onImageAvailable(mockImageReader)
+        executeCaptureArea()
 
         verify(mockBitmapCreator).createBitmap(mockScreenBitmap, VALID_CLICK_CONDITION_AREA.left,
             VALID_CLICK_CONDITION_AREA.top, VALID_CLICK_CONDITION_AREA.right, VALID_CLICK_CONDITION_AREA.bottom)
@@ -433,8 +437,8 @@ class ScreenDetectorTests {
     fun capture_callback() {
         val imageAvailableListener = toStartScreenRecord()
 
-        executeCaptureArea()
         imageAvailableListener.onImageAvailable(mockImageReader)
+        executeCaptureArea()
 
         shadowOf(Looper.getMainLooper()).idle() // callback is posted on main thread handler.
         verify(mockCaptureCallback).onCaptured(mockCaptureBitmap)
@@ -444,8 +448,8 @@ class ScreenDetectorTests {
     fun capture_cleanup() {
         val imageAvailableListener = toStartScreenRecord()
 
-        executeCaptureArea()
         imageAvailableListener.onImageAvailable(mockImageReader)
+        executeCaptureArea()
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // callback is posted on main thread handler.
