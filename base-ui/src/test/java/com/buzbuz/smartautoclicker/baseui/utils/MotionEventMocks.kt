@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.baseui.utils
 
 import android.view.MotionEvent
-import com.buzbuz.smartautoclicker.baseui.gestures.BaseResizeGestureTests
 
 import org.mockito.Mockito
 import org.mockito.Mockito.`when` as mockWhen

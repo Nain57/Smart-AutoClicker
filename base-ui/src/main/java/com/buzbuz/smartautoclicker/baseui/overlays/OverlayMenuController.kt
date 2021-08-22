@@ -158,11 +158,13 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
                     R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
                     R.id.btn_hide_overlay -> {
                         haveHideButton = true
-                        view.setOnClickListener { hideButton ->
-                            if (hideButton.visibility == View.VISIBLE) {
-                                setOverlayViewVisibility(View.GONE)
-                            } else {
-                                setOverlayViewVisibility(View.VISIBLE)
+                        view.setOnClickListener {
+                            screenOverlayView?.let { view ->
+                                if (view.visibility == View.VISIBLE) {
+                                    setOverlayViewVisibility(View.GONE)
+                                } else {
+                                    setOverlayViewVisibility(View.VISIBLE)
+                                }
                             }
                         }
                     }
