@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.extensions
 
+import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Build
 
@@ -28,34 +29,10 @@ import org.junit.runner.RunWith
 
 import org.robolectric.annotation.Config
 
-import kotlin.math.pow
-
 /** Tests for the extensions for [RectF]. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class RectFTests {
-
-    private companion object {
-
-        /** RectF used as reference rectangle for all tests. */
-        private val TEST_DATA_RECT = RectF(10f, 10f, 20f, 20f)
-
-        /**
-         * Simple assertion on scaling.
-         * If we scale the rectangle by two, we expect it to have its width and height enhanced times the scale ratio.
-         * Given this information, we can simply calculate and compare their areas. So, the expected area will be:
-         *
-         *   width x scaleRatio x height x scaleRatio
-         *
-         * @param scaleRatio the ratio applied to the original data set.
-         * @param actual the actual rect after the scaling to be verified.
-         */
-        fun assertScaled(scaleRatio: Float, actual: RectF) {
-            val expectedArea = TEST_DATA_RECT.width() * TEST_DATA_RECT.height() * scaleRatio.pow(2)
-            val actualArea = actual.width() * actual.height()
-            assertEquals(expectedArea, actualArea)
-        }
-    }
 
     /** Object under tests, initialized before each test. */
     private lateinit var testedRectF: RectF
@@ -66,60 +43,175 @@ class RectFTests {
     }
 
     @Test
-    fun scaleUp() {
-        val scaleRatio = 2f
-        testedRectF.scale(scaleRatio)
-        assertScaled(scaleRatio, testedRectF)
+    fun scaleOne_shouldNotMove() {
+        val expectedCenter = PointF(testedRectF.centerX(), testedRectF.centerY())
+        testedRectF.scale(1f, expectedCenter)
+
+        assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
     }
 
     @Test
-    fun scaleDown() {
-        val scaleRatio = 0.5f
-        testedRectF.scale(scaleRatio)
-        assertScaled(scaleRatio, testedRectF)
+    fun scaleOne_shouldHaveSameSize() {
+        val expectedSize = PointF(testedRectF.width(), testedRectF.height())
+        testedRectF.scale(1f, PointF(testedRectF.centerX(), testedRectF.centerY()))
+
+        assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
     }
 
     @Test
-    fun scaleOne() {
-        val scaleRatio = 1f
-        testedRectF.scale(scaleRatio)
-        assertScaled(scaleRatio, testedRectF)
+    fun scaleUp_pivotCenter() {
+        val expectedCenter = PointF(testedRectF.centerX(), testedRectF.centerY())
+        testedRectF.scale(2f, expectedCenter)
+
+        assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
     }
 
     @Test
-    fun scaleZero() {
-        val scaleRatio = 0f
-        testedRectF.scale(scaleRatio)
-        assertScaled(scaleRatio, testedRectF)
+    fun scaleUp_pivotLeft() {
+        val expectedValue = testedRectF.left
+        testedRectF.scale(2f, PointF(expectedValue, testedRectF.centerY()))
+
+        assertEquals(expectedValue, testedRectF.left)
     }
 
     @Test
-    fun moveSame() {
-        testedRectF.move(testedRectF.centerX(), testedRectF.centerY())
-        assertEquals(TEST_DATA_RECT, testedRectF)
+    fun scaleUp_pivotRight() {
+        val expectedValue = testedRectF.right
+        testedRectF.scale(2f, PointF(expectedValue, testedRectF.centerY()))
+
+        assertEquals(expectedValue, testedRectF.right)
     }
 
     @Test
-    fun moveXOnly() {
-        testedRectF.move(20f, TEST_DATA_RECT.centerY())
-        assertEquals(RectF(15f, TEST_DATA_RECT.top, 25f,TEST_DATA_RECT.bottom), testedRectF)
+    fun scaleUp_pivotTop() {
+        val expectedValue = testedRectF.top
+        testedRectF.scale(2f, PointF(testedRectF.centerX(), expectedValue))
+
+        assertEquals(expectedValue, testedRectF.top)
     }
 
     @Test
-    fun moveYOnly() {
-        testedRectF.move(TEST_DATA_RECT.centerX(), 20f)
-        assertEquals(RectF(TEST_DATA_RECT.left, 15f, TEST_DATA_RECT.right,25f), testedRectF)
+    fun scaleUp_pivotBottom() {
+        val expectedValue = testedRectF.bottom
+        testedRectF.scale(2f, PointF(testedRectF.centerX(), expectedValue))
+
+        assertEquals(expectedValue, testedRectF.bottom)
     }
 
     @Test
-    fun movePositive() {
-        testedRectF.move(50f, 50f)
-        assertEquals(RectF(45f, 45f, 55f,55f), testedRectF)
+    fun scaleUp_size() {
+        val scaleFactor = 2f
+        val expectedSize = PointF(testedRectF.width() * scaleFactor, testedRectF.height() * scaleFactor)
+        testedRectF.scale(scaleFactor, PointF(testedRectF.centerX(), testedRectF.centerY()))
+
+        assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
     }
 
     @Test
-    fun moveNegative() {
-        testedRectF.move(-50f, -50f)
-        assertEquals(RectF(-55f, -55f, -45f,-45f), testedRectF)
+    fun scaleDown_pivotCenter() {
+        val expectedCenter = PointF(testedRectF.centerX(), testedRectF.centerY())
+        testedRectF.scale(0.8f, expectedCenter)
+
+        assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
+    }
+
+    @Test
+    fun scaleDown_pivotLeft() {
+        val expectedValue = testedRectF.left
+        testedRectF.scale(0.8f, PointF(expectedValue, testedRectF.centerY()))
+
+        assertEquals(expectedValue, testedRectF.left)
+    }
+
+    @Test
+    fun scaleDown_pivotRight() {
+        val expectedValue = testedRectF.right
+        testedRectF.scale(0.8f, PointF(expectedValue, testedRectF.centerY()))
+
+        assertEquals(expectedValue, testedRectF.right)
+    }
+
+    @Test
+    fun scaleDown_pivotTop() {
+        val expectedValue = testedRectF.top
+        testedRectF.scale(0.8f, PointF(testedRectF.centerX(), expectedValue))
+
+        assertEquals(expectedValue, testedRectF.top)
+    }
+
+    @Test
+    fun scaleDown_pivotBottom() {
+        val expectedValue = testedRectF.bottom
+        testedRectF.scale(0.8f, PointF(testedRectF.centerX(), expectedValue))
+
+        assertEquals(expectedValue, testedRectF.bottom)
+    }
+
+    @Test
+    fun scaleDown_size() {
+        val scaleFactor = 0.8f
+        val expectedSize = PointF(testedRectF.width() * scaleFactor, testedRectF.height() * scaleFactor)
+        testedRectF.scale(scaleFactor, PointF(testedRectF.centerX(), testedRectF.centerY()))
+
+        assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
+    }
+
+    @Test
+    fun translateSame() {
+        val expectedArea = RectF(testedRectF)
+        testedRectF.translate(0f, 0f)
+
+        assertEquals(expectedArea, testedRectF)
+    }
+
+    @Test
+    fun translateX_negative() {
+        val translation = -10f
+        val expectedLeft = testedRectF.left + translation
+        val expectedRight = testedRectF.right + translation
+
+        testedRectF.translate(translation, 0f)
+
+        assertEquals(expectedLeft, testedRectF.left)
+        assertEquals(expectedRight, testedRectF.right)
+    }
+
+    @Test
+    fun translateX_positive() {
+        val translation = 10f
+        val expectedLeft = testedRectF.left + translation
+        val expectedRight = testedRectF.right + translation
+
+        testedRectF.translate(translation, 0f)
+
+        assertEquals(expectedLeft, testedRectF.left)
+        assertEquals(expectedRight, testedRectF.right)
+    }
+
+    @Test
+    fun translateY_negative() {
+        val translation = -10f
+        val expectedTop = testedRectF.top + translation
+        val expectedBottom = testedRectF.bottom + translation
+
+        testedRectF.translate(0f, translation)
+
+        assertEquals(expectedTop, testedRectF.top)
+        assertEquals(expectedBottom, testedRectF.bottom)
+    }
+
+    @Test
+    fun translateY_positive() {
+        val translation = 10f
+        val expectedTop = testedRectF.top + translation
+        val expectedBottom = testedRectF.bottom + translation
+
+        testedRectF.translate(0f, translation)
+
+        assertEquals(expectedTop, testedRectF.top)
+        assertEquals(expectedBottom, testedRectF.bottom)
     }
 }
+
+/** RectF used as reference rectangle for all tests. */
+private val TEST_DATA_RECT = RectF(10f, 10f, 20f, 20f)
