@@ -166,7 +166,7 @@ class SmartAutoClickerService : AccessibilityService() {
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title, scenarioName))
             .setContentText(getString(R.string.notification_message))
-            .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+            .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .setSmallIcon(R.drawable.ic_notification)
             .build()
     }

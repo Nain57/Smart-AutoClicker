@@ -164,6 +164,7 @@ internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvai
      * This method will free/close any resources related to screen recording. If a detection was started, it will be
      * stopped. If the screen record wasn't started, this method will have no effect.
      */
+    @WorkerThread
     fun stopProjection() {
         Log.d(TAG, "Stop media projection")
 
