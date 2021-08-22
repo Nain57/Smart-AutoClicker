@@ -55,6 +55,9 @@ class ClickConfigDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogClickConfigBinding
 
+    /** */
+    private var showConditionDialog: ClickCondition? = null
+
     override fun onCreateDialog(): AlertDialog.Builder {
         viewBinding = DialogClickConfigBinding.inflate(LayoutInflater.from(context))
         return AlertDialog.Builder(context)
@@ -80,6 +83,17 @@ class ClickConfigDialog(
         }
 
         refreshDialogDisplay()
+    }
+
+    override fun onVisibilityChanged(visible: Boolean) {
+        showConditionDialog?.let { condition ->
+            showSubOverlay(ClickConditionDialog(context, condition to conditionsAdapter.itemCount - 2) {
+                conditionsAdapter.removeCondition(it)
+                refreshDialogDisplay()
+            }, false)
+        }
+
+        showConditionDialog = null
     }
 
     /**
@@ -138,8 +152,10 @@ class ClickConfigDialog(
      */
     private fun onAddConditionClicked() {
         val conditionSelectorMenu = ConditionSelectorMenu(context) { area, bitmap ->
-            conditionsAdapter.addCondition(area, bitmap)
+            val newCondition = ClickCondition(area, bitmap)
+            conditionsAdapter.addCondition(newCondition)
             refreshDialogDisplay()
+            showConditionDialog = newCondition
         }
         showSubOverlay(conditionSelectorMenu, true)
     }

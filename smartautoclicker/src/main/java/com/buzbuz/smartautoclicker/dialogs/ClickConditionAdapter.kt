@@ -78,8 +78,8 @@ class ConditionAdapter(
      *
      * @param condition the condition to be added.
      */
-    fun addCondition(area: Rect, condition: Bitmap) {
-        newConditions.add(ClickCondition(area, condition))
+    fun addCondition(condition: ClickCondition) {
+        newConditions.add(condition)
         notifyDataSetChanged()
     }
 
