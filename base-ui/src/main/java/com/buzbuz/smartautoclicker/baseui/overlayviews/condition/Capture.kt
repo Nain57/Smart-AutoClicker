@@ -176,6 +176,17 @@ internal class Capture(
         invalidate()
     }
 
+    override fun onViewSizeChanged(w: Int, h: Int) {
+        super.onViewSizeChanged(w, h)
+        if (screenCapture == null) {
+            captureArea.apply {
+                left = 0f
+                top = 0f
+                right = maxArea.width()
+                bottom = maxArea.height()
+            }
+        }
+    }
 
     override fun onDraw(canvas: Canvas) {
         screenCapture?.apply {
@@ -191,6 +202,7 @@ internal class Capture(
     }
 
     override fun onReset() {
+        screenCapture = null
         setZoomLevel(1f)
         captureArea.apply {
             left = 0f

@@ -57,6 +57,8 @@ internal class HintsController(
 
     /** Map between a gesture type and its hint. */
     private val hintsIcons: Map<GestureType, Hint>
+    /** Maximum area for the hints. */
+    private val maxRect = Rect()
 
     /** Initialize the list of hints. */
     init {
@@ -65,7 +67,7 @@ internal class HintsController(
         val downIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeDownIcon, 0)
         val leftIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeLeftIcon, 0)
         val rightIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeRightIcon, 0)
-        val maxRect = maxArea.toRect()
+        maxRect.set(maxArea.toRect())
 
         hintsIcons = mapOf(
             Move to SingleHint(
@@ -171,6 +173,11 @@ internal class HintsController(
             }
         }
         invalidate()
+    }
+
+    override fun onViewSizeChanged(w: Int, h: Int) {
+        super.onViewSizeChanged(w, h)
+        maxRect.set(maxArea.toRect())
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean = false

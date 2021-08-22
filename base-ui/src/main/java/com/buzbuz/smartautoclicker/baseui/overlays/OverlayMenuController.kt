@@ -322,6 +322,13 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         loadMenuPosition(screenMetrics.getOrientation())
 
         windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+        screenOverlayView?.let { overlayView ->
+            screenMetrics.getScreenSize().let { size ->
+                overlayLayoutParams.width = size.x
+                overlayLayoutParams.height = size.y
+            }
+            windowManager.updateViewLayout(overlayView, overlayLayoutParams)
+        }
     }
 
     /**

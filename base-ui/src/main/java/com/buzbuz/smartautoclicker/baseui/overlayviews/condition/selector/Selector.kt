@@ -126,6 +126,8 @@ internal class Selector(
             Color.TRANSPARENT
         )
     }
+    /** The transparency of the background color of the selector. */
+    private val selectorBackgroundAlpha: Int = backgroundPaint.color.shr(24)
 
     /** The minimum size of the selector. Size is relative to the [maxArea]. */
     private val selectorMinimumSize = PointF()
@@ -138,7 +140,7 @@ internal class Selector(
     var onSelectorPositionChanged: ((Rect) -> Unit)? = null
 
     /** Transparency of the background. */
-    var backgroundAlpha: Int = 255
+    var backgroundAlpha: Int = selectorBackgroundAlpha
         set(value) {
             field = value
             backgroundPaint.alpha = value
@@ -291,7 +293,7 @@ internal class Selector(
 
     override fun onReset() {
         resetSelectorPosition()
-        backgroundAlpha = 255
+        backgroundAlpha = selectorBackgroundAlpha
         selectorAlpha = 255
     }
 }

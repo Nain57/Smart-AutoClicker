@@ -41,14 +41,16 @@ import com.buzbuz.smartautoclicker.ui.R
  * easily select a section of the screen for a click condition.
  *
  * @param context the Android context
- * @param screenMetrics the current screen metrics.
+ * @param onSelectorValidityChanged listener upon the selector validity.
  */
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
 class ConditionSelectorView(
     context: Context,
-    private val screenMetrics: ScreenMetrics,
     private val onSelectorValidityChanged: (Boolean) -> Unit,
 ) : View(context) {
+
+    /** The current screen metrics. */
+    private val screenMetrics = ScreenMetrics(context)
 
     /** Controls the display of the bitmap captured. */
     private lateinit var capture: Capture
