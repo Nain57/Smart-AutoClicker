@@ -343,10 +343,29 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
 
         mainHandler.post {
             detectionInfo?.second?.invoke(click)
+
+            // check stop condition after click is executed
+            checkDetectionStopCondition(click)
         }
 
         mainHandler.postDelayed({
             isAreaFound = false
         }, click.delayAfterMs)
+    }
+
+    /**
+     * Called after a click is executed.
+     * Check if a stop condition is set to the corresponding [ClickInfo]. Decrease the execution counter and stop the
+     * detection when the counter reaches zero.
+     */
+    private fun checkDetectionStopCondition(click: ClickInfo) {
+        click.stopAfterExecutions?.let {executions ->
+            val stopAfter = executions - 1
+            click.stopAfterExecutions = stopAfter
+
+            if (stopAfter <= 0) {
+                stopDetection()
+            }
+        }
     }
 }
