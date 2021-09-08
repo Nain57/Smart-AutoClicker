@@ -51,6 +51,7 @@ data class ClickInfo internal constructor(
     var conditionList: List<ClickCondition>,
     var id: Long,
     var delayAfterMs: Long,
+    var stopAfterExecutions: Int?,
     var priority: Int
 ) {
 
@@ -59,7 +60,7 @@ data class ClickInfo internal constructor(
      *
      * @param name the name of the new click.
      */
-    constructor(name: String) : this(name, 0L, null, null, null, AND, emptyList(), 0L, 50, 0)
+    constructor(name: String) : this(name, 0L, null, null, null, AND, emptyList(), 0L, 50, null, 0)
 
     companion object {
 
@@ -103,6 +104,7 @@ data class ClickInfo internal constructor(
                     ClickCondition.fromEntities(entity.conditions),
                     entity.click.clickId,
                     entity.click.delayAfter,
+                    entity.click.stopAfter,
                     entity.click.priority
                 )
             } ?: emptyList()
@@ -137,6 +139,7 @@ data class ClickInfo internal constructor(
                 toYPos,
                 conditionOperator,
                 delayAfterMs,
+                stopAfterExecutions,
                 priority
             ),
             ClickCondition.toEntities(conditionList)

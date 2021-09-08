@@ -184,6 +184,38 @@
 
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/HeaderCardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_click_config_stop_after_executions"
+                    style="@style/HeaderTitle"/>
+
+                <include layout="@layout/include_view_separator"/>
+
+                <EditText
+                    android:id="@+id/edit_stop_after"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:inputType="number"
+                    android:hint="@string/dialog_click_config_executions_hint"
+                    android:importantForAutofill="no" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <include layout="@layout/include_view_separator"/>
 
     </LinearLayout>

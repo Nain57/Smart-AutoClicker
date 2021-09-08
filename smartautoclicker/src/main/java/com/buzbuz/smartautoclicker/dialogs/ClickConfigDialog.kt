@@ -79,6 +79,10 @@ class ClickConfigDialog(
                 layoutConditionOperator.setOnClickListener { onConfigureOperatorClicked() }
                 conditionsAdapter.conditions = ArrayList(click.conditionList)
                 listConditions.adapter = conditionsAdapter
+
+                if (click.stopAfterExecutions != null) {
+                    editStopAfter.setText(click.stopAfterExecutions.toString())
+                }
             }
         }
 
@@ -183,6 +187,9 @@ class ClickConfigDialog(
             name = viewBinding.editName.text.toString()
             delayAfterMs = viewBinding.editDelayAfter.text.toString().toLong()
             conditionList = conditionsAdapter.getAllConditions()
+
+            val stopAfter = viewBinding.editStopAfter.text.toString()
+            stopAfterExecutions = if (stopAfter.isNotEmpty()) stopAfter.toInt() else null
 
             if (clickInfo.id == 0L) {
                 DetectorModel.get().addClick(clickInfo)

@@ -91,6 +91,7 @@ internal data class ClickEntity(
     @ColumnInfo(name = "to_y") val toY: Int,
     @ColumnInfo(name = "operator") val conditionOperator: Int,
     @ColumnInfo(name = "delay_after") var delayAfter: Long,
+    @ColumnInfo(name = "stop_after") var stopAfter: Int?,
     @ColumnInfo(name = "priority") var priority: Int
 )
 
