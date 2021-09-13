@@ -42,7 +42,7 @@ class ClickInfoTests {
             TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
             Point(TestsData.CLICK_FROMX, TestsData.CLICK_FROMY), Point(TestsData.CLICK_TOX, TestsData.CLICK_TOY),
             TestsData.CLICK_CONDITION_OPERATOR, emptyList(), TestsData.CLICK_ID, TestsData.CLICK_DELAY_AFTER,
-            TestsData.CLICK_PRIORITY).copyAsNew()
+            TestsData.CLICK_STOP_AFTER, TestsData.CLICK_PRIORITY).copyAsNew()
 
         assertEquals("Invalid name", TestsData.CLICK_NAME, actual.name)
         assertEquals("Invalid scenario", TestsData.CLICK_SCENARIO_ID, actual.scenarioId)
@@ -52,6 +52,7 @@ class ClickInfoTests {
         assertEquals("Invalid operator", TestsData.CLICK_CONDITION_OPERATOR, actual.conditionOperator)
         assertEquals("Invalid condition list", emptyList<ClickCondition>(), actual.conditionList)
         assertEquals("Invalid delay after", TestsData.CLICK_DELAY_AFTER, actual.delayAfterMs)
+        assertEquals("Invalid stop after", TestsData.CLICK_STOP_AFTER, actual.stopAfterExecutions)
         assertEquals("Invalid priority", TestsData.CLICK_PRIORITY, actual.priority)
         assertEquals("Id should be 0", 0, actual.id)
     }
@@ -68,12 +69,13 @@ class ClickInfoTests {
                 TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
                 Point(TestsData.CLICK_FROMX, TestsData.CLICK_FROMY), Point(TestsData.CLICK_TOX, TestsData.CLICK_TOY),
                 TestsData.CLICK_CONDITION_OPERATOR, emptyList(), TestsData.CLICK_ID, TestsData.CLICK_DELAY_AFTER,
-                TestsData.CLICK_PRIORITY),
+                TestsData.CLICK_STOP_AFTER, TestsData.CLICK_PRIORITY),
             ClickInfo(
                 TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
                 Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
                 Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, emptyList(),
-                TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)
+                TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_STOP_AFTER_2,
+                TestsData.CLICK_PRIORITY_2)
         )
         val entities = listOf(
             ClickWithConditions(TestsData.CLICK_ENTITY, emptyList()),
@@ -100,12 +102,13 @@ class ClickInfoTests {
                 TestsData.CLICK_NAME, TestsData.CLICK_SCENARIO_ID, TestsData.CLICK_TYPE,
                 Point(TestsData.CLICK_FROMX, TestsData.CLICK_FROMY), Point(TestsData.CLICK_TOX, TestsData.CLICK_TOY),
                 TestsData.CLICK_CONDITION_OPERATOR, expectedConditions, TestsData.CLICK_ID, TestsData.CLICK_DELAY_AFTER,
-                TestsData.CLICK_PRIORITY),
+                TestsData.CLICK_STOP_AFTER, TestsData.CLICK_PRIORITY),
             ClickInfo(
                 TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
                 Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
                 Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, expectedConditions,
-                TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)
+                TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_STOP_AFTER_2,
+                TestsData.CLICK_PRIORITY_2)
         )
 
         val entities = listOf(
@@ -123,7 +126,8 @@ class ClickInfoTests {
             TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
             Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
             Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, emptyList(),
-            TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)
+            TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_STOP_AFTER_2,
+            TestsData.CLICK_PRIORITY_2)
 
         assertEquals(expected, clickInfo.toEntity())
     }
@@ -146,7 +150,8 @@ class ClickInfoTests {
             TestsData.CLICK_NAME_2, TestsData.CLICK_SCENARIO_ID_2, TestsData.CLICK_TYPE_2,
             Point(TestsData.CLICK_FROMX_2, TestsData.CLICK_FROMY_2),
             Point(TestsData.CLICK_TOX_2, TestsData.CLICK_TOY_2), TestsData.CLICK_CONDITION_OPERATOR_2, clickConditions,
-            TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_PRIORITY_2)
+            TestsData.CLICK_ID_2, TestsData.CLICK_DELAY_AFTER_2, TestsData.CLICK_STOP_AFTER_2,
+            TestsData.CLICK_PRIORITY_2)
 
         assertEquals(expected, clickInfo.toEntity())
     }
