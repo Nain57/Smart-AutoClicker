@@ -63,8 +63,8 @@
     <string name="dialog_click_config_condition_title">Only if</string>
     <string name="dialog_click_config_delay_after_title">Delay before next click</string>
     <string name="dialog_click_config_duration_hint">ms</string>
-    <string name="dialog_click_config_stop_after_executions">Stop scenario after number of executions</string>
-    <string name="dialog_click_config_executions_hint">unlimited executions</string>
+    <string name="dialog_click_config_stop_after_executions">Executions before scenario end</string>
+    <string name="dialog_click_config_executions_hint">Don\'t stop the scenario</string>
 
     <string name="dialog_click_type_title">Click type</string>
     <string name="dialog_click_type_single">Single click</string>
