@@ -358,6 +358,7 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
      * Check if a stop condition is set to the corresponding [ClickInfo]. Decrease the execution counter and stop the
      * detection when the counter reaches zero.
      */
+    @MainThread
     private fun checkDetectionStopCondition(click: ClickInfo) {
         click.stopAfterExecutions?.let {executions ->
             val stopAfter = executions - 1
