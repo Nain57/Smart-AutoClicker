@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
  * @param id the identifier of the click. Use 0 to save a new click, as the identifier generation is handled by the
  *           room database.
  * @param delayAfterMs the delay to wait after executing this click before executing another one.
+ * @param stopAfterExecutions the amount of executions of this click before stopping the scenario.
  * @param priority the priority of the click in the scenario.
  */
 data class ClickInfo internal constructor(
