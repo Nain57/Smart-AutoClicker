@@ -64,8 +64,8 @@ internal abstract class ClickDatabase : RoomDatabase() {
         }
 
         /**
-         * Migration from database v1 to v2.
-         * Changes: conditions have now a customizable difference threshold.
+         * Migration from database v2 to v3.
+         * Changes: clicks have now an optional amount of executions before the scenario is stopped.
          */
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {

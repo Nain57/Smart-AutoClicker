@@ -69,6 +69,8 @@ internal data class ScenarioEntity(
  * @param conditionOperator the operator to apply to all [ConditionEntity] related to this click. Can be any value
  *                          of [com.buzbuz.smartautoclicker.clicks.ClickInfo.Operator].
  * @param delayAfter the minimum delay between this click and the next one.
+ * @param stopAfter the number of executions of this click after which the scenario is stopped. Null if the scenario is
+ *                  always continued after this click.
  * @param priority the order in the scenario. Lowest orders will always be checked first when detecting.
  */
 @Entity(
