@@ -47,10 +47,11 @@ internal object TestsData {
     const val CLICK_TOY = 0
     const val CLICK_CONDITION_OPERATOR = ClickInfo.AND
     const val CLICK_DELAY_AFTER = 1250L
+    val CLICK_STOP_AFTER = null
     const val CLICK_PRIORITY = 0
     val CLICK_ENTITY = ClickEntity(
         CLICK_ID, SCENARIO_ID, CLICK_NAME, CLICK_TYPE, CLICK_FROMX, CLICK_FROMY, CLICK_TOX, CLICK_TOY,
-        CLICK_CONDITION_OPERATOR, CLICK_DELAY_AFTER, CLICK_PRIORITY
+        CLICK_CONDITION_OPERATOR, CLICK_DELAY_AFTER, CLICK_STOP_AFTER, CLICK_PRIORITY
     )
     /**
      * Instantiates a new [ClickInfo] based on [CLICK_ENTITY].
@@ -60,7 +61,7 @@ internal object TestsData {
      */
     fun newClickInfo(id: Long = CLICK_ID, priority: Int = CLICK_PRIORITY, conditions: List<ClickCondition> = emptyList()) =
         ClickInfo(CLICK_NAME, CLICK_SCENARIO_ID, CLICK_TYPE, Point(CLICK_FROMX, CLICK_FROMY), Point(0, 0),
-            CLICK_CONDITION_OPERATOR, conditions, id, CLICK_DELAY_AFTER, priority)
+            CLICK_CONDITION_OPERATOR, conditions, id, CLICK_DELAY_AFTER, CLICK_STOP_AFTER, priority)
     /**
      * Instantiates a new [ClickWithConditions] based on [CLICK_ENTITY].
      * @param scenarioId the scenario for this click
@@ -80,10 +81,11 @@ internal object TestsData {
     const val CLICK_TOY_2 = 700
     const val CLICK_CONDITION_OPERATOR_2 = ClickInfo.OR
     const val CLICK_DELAY_AFTER_2 = 300L
+    const val CLICK_STOP_AFTER_2 = 10
     const val CLICK_PRIORITY_2 = 1
     val CLICK_ENTITY_2 = ClickEntity(
         CLICK_ID_2, SCENARIO_ID_2, CLICK_NAME_2, CLICK_TYPE_2, CLICK_FROMX_2, CLICK_FROMY_2,
-        CLICK_TOX_2, CLICK_TOY_2, CLICK_CONDITION_OPERATOR_2, CLICK_DELAY_AFTER_2, CLICK_PRIORITY_2
+        CLICK_TOX_2, CLICK_TOY_2, CLICK_CONDITION_OPERATOR_2, CLICK_DELAY_AFTER_2, CLICK_STOP_AFTER_2, CLICK_PRIORITY_2
     )
     /**
      * Instantiates a new [ClickInfo] based on [CLICK_ENTITY].
@@ -93,7 +95,8 @@ internal object TestsData {
      */
     fun newClickInfo2(id: Long = CLICK_ID_2, priority: Int = CLICK_PRIORITY_2, conditions: List<ClickCondition> = emptyList()) =
         ClickInfo(CLICK_NAME_2, CLICK_SCENARIO_ID_2, CLICK_TYPE_2, Point(CLICK_FROMX_2, CLICK_FROMY_2),
-            Point(CLICK_TOX_2, CLICK_TOY_2), CLICK_CONDITION_OPERATOR_2, conditions, id, CLICK_DELAY_AFTER_2, priority)
+            Point(CLICK_TOX_2, CLICK_TOY_2), CLICK_CONDITION_OPERATOR_2, conditions, id, CLICK_DELAY_AFTER_2,
+            CLICK_STOP_AFTER_2, priority)
     /**
      * Instantiates a new [ClickWithConditions] based on [CLICK_ENTITY_2].
      * @param scenarioId the scenario for this click
