@@ -157,8 +157,8 @@ internal class Selector(
     /**
      * Get the part of the capture that is currently selected within the selector.
      *
-     * @param captureArea
-     * @param zoomLevel
+     * @param captureArea the current area for the capture.
+     * @param zoomLevel the current zoom level on the capture.
      *
      * @return the area of the selector relative to the screen size.
      */
@@ -172,6 +172,8 @@ internal class Selector(
             top = (top - captureArea.top) * invertedZoomLevel
             right = (right - captureArea.left) * invertedZoomLevel
             bottom = (bottom - captureArea.top) * invertedZoomLevel
+
+            intersect(maxArea)
 
             toRect()
         }
