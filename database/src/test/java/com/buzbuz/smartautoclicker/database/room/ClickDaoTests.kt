@@ -20,6 +20,9 @@ import android.os.Build
 import androidx.room.Room
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.buzbuz.smartautoclicker.database.old.room.ClickDatabase
+import com.buzbuz.smartautoclicker.database.old.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.old.room.ScenarioWithClicks
 
 import com.buzbuz.smartautoclicker.database.utils.assertSameClickList
 import com.buzbuz.smartautoclicker.database.utils.assertSameScenarioList
@@ -87,7 +90,8 @@ class ClickDaoTests {
     fun addScenario() = runBlocking {
         database.clickDao().addClickScenario(TestsData.SCENARIO_ENTITY)
 
-        assertEquals(ScenarioWithClicks(TestsData.SCENARIO_ENTITY, emptyList()),
+        assertEquals(
+            ScenarioWithClicks(TestsData.SCENARIO_ENTITY, emptyList()),
             database.clickDao().getClickScenarios().getOrAwaitValue()[0])
     }
 
@@ -116,7 +120,8 @@ class ClickDaoTests {
 
         database.clickDao().renameScenario(TestsData.SCENARIO_ENTITY.id, newName)
 
-        assertEquals(ScenarioWithClicks(TestsData.SCENARIO_ENTITY.copy(name = newName), emptyList()),
+        assertEquals(
+            ScenarioWithClicks(TestsData.SCENARIO_ENTITY.copy(name = newName), emptyList()),
             database.clickDao().getClickScenarios().getOrAwaitValue()[0])
     }
 

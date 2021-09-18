@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.database.utils
 
-import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
-import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
+import com.buzbuz.smartautoclicker.database.old.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.old.room.ScenarioWithClicks
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo

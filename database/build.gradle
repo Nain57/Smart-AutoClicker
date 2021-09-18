@@ -55,6 +55,8 @@ dependencies {
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
     kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
 
+    implementation project(path: ':extensions')
+
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.arch.core:core-testing:${rootProject.ext.androidxArchCoreTestingVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
