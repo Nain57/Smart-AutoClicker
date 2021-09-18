@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.baseui.overlays
 import android.content.Context
 import android.util.Log
 
+import androidx.annotation.CallSuper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -42,6 +43,8 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
     private val lifecycleRegistry: LifecycleRegistry by lazy { LifecycleRegistry(this) }
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
+    /** Tells if the overlay is shown. */
+    private var isShown: Boolean = false
     /**
      * OverlayController for an overlay shown from this OverlayController using [showSubOverlay].
      * Null if none has been shown, or if a previous sub OverlayController has been dismissed.
@@ -52,6 +55,12 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      * Null unless the overlay is shown.
      */
     private var onDismissListener: (() -> Unit)? = null
+
+    /**
+     * Call to [showSubOverlay] that has been made while hidden.
+     * It will be executed once [show] is called.
+     */
+    private var pendingSubOverlayRequest: Pair<OverlayController, Boolean>? = null
 
     /** Creates the ui object to be shown. */
     protected abstract fun onCreate()
@@ -77,6 +86,7 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
         onDismissListener = dismissListener
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
         onCreate()
+        lifecycleRegistry.currentState = Lifecycle.State.STARTED
         show()
     }
 
@@ -85,13 +95,19 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      * If the lifecycle doesn't allows it, does nothing.
      */
     fun show() {
-        if (lifecycleRegistry.currentState != Lifecycle.State.CREATED) {
+        if (isShown || lifecycleRegistry.currentState != Lifecycle.State.STARTED) {
             return
         }
 
         Log.d(TAG, "show overlay ${hashCode()}")
         lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+        isShown = true
         onShow()
+
+        if (pendingSubOverlayRequest != null) {
+            showSubOverlay(pendingSubOverlayRequest!!.first, pendingSubOverlayRequest!!.second)
+            pendingSubOverlayRequest = null
+        }
     }
 
     /**
@@ -99,12 +115,13 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      * If the lifecycle doesn't allows it, does nothing.
      */
     fun hide() {
-        if (lifecycleRegistry.currentState != Lifecycle.State.RESUMED) {
+        if (!isShown) {
             return
         }
 
         Log.d(TAG, "hide overlay ${hashCode()}")
-        lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        isShown = false
         onHide()
     }
 
@@ -114,16 +131,18 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      */
     fun dismiss() {
         if (lifecycleRegistry.currentState < Lifecycle.State.CREATED) {
+            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
             return
-        }
-        if (lifecycleRegistry.currentState == Lifecycle.State.RESUMED) {
-            hide()
         }
 
         Log.d(TAG, "dismiss overlay ${hashCode()}")
+
+        hide()
+
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        onDismissed()
         subOverlayController?.dismiss()
+
+        onDismissed()
         onDismissListener?.invoke()
         onDismissListener = null
     }
@@ -137,16 +156,27 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      * @param overlayController the controller of the new overlay to be shown.
      * @param hideCurrent true to hide the current overlay, false to display the new overlay over it.
      */
-    protected fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
-        if (lifecycleRegistry.currentState < Lifecycle.State.CREATED) {
+    @CallSuper
+    protected open fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
+        if (lifecycleRegistry.currentState < Lifecycle.State.STARTED) {
             Log.e(TAG, "Can't show ${overlayController.hashCode()}, parent ${hashCode()} is not created")
+            return
+        } else if (lifecycleRegistry.currentState < Lifecycle.State.RESUMED) {
+            Log.i(TAG, "Delaying sub overlay: ${overlayController.hashCode()}; hide=$hideCurrent; " +
+                    "parent=${hashCode()}")
+            pendingSubOverlayRequest = overlayController to hideCurrent
             return
         }
 
         Log.d(TAG, "show sub overlay: ${overlayController.hashCode()}; hide=$hideCurrent; parent=${hashCode()}")
 
         subOverlayController = overlayController
-        if (hideCurrent) hide()
+        if (hideCurrent) {
+            hide()
+        } else {
+            lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        }
+
         overlayController.create { onSubOverlayDismissed(overlayController) }
     }
 
@@ -160,7 +190,14 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
 
         if (dismissedOverlay == subOverlayController) {
             subOverlayController = null
-            show()
+
+            if (lifecycleRegistry.currentState == Lifecycle.State.DESTROYED) return
+
+            if (isShown) {
+                lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+            } else {
+                show()
+            }
         }
     }
 }
