@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,27 +19,28 @@ package com.buzbuz.smartautoclicker.activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.ClickScenario
+import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.ItemScenarioBinding
 
 /** Adapter for the display of the click scenarios created by the user into a RecyclerView. */
 class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
 
     /** The list of scenarios to be displayed by this adapter. */
-    var scenarios: List<ClickScenario>? = null
+    var scenarios: List<Scenario>? = null
         set(value) {
             field = value
             notifyDataSetChanged()
         }
     /** Listener upon the click on a scenario. */
-    var startScenarioListener: ((ClickScenario) -> Unit)? = null
+    var startScenarioListener: ((Scenario) -> Unit)? = null
     /** Listener upon the rename button of a scenario. */
-    var editClickListener: ((ClickScenario) -> Unit)? = null
+    var editClickListener: ((Scenario) -> Unit)? = null
     /** Listener upon the delete button of a scenario. */
-    var deleteScenarioListener: ((ClickScenario) -> Unit)? = null
+    var deleteScenarioListener: ((Scenario) -> Unit)? = null
 
     override fun getItemCount(): Int = scenarios?.size ?: 0
 
@@ -63,7 +64,7 @@ class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
      * @param scenario the scenario used as argument for the listener lambda
      * @param listener the listener to notify upon click.
      */
-    private fun setClickListener(view: View, scenario: ClickScenario, listener: ((ClickScenario) -> Unit)?) =
+    private fun setClickListener(view: View, scenario: Scenario, listener: ((Scenario) -> Unit)?) =
         listener?.let {
             view.setOnClickListener { it(scenario) }
         } ?: view.setOnClickListener(null)

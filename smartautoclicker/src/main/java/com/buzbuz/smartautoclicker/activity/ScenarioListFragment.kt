@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,19 +23,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
-import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
-import com.buzbuz.smartautoclicker.model.ScenarioViewModel
+
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Fragment displaying the list of click scenario and the creation dialog.
@@ -43,10 +48,6 @@ import com.buzbuz.smartautoclicker.model.ScenarioViewModel
  */
 class ScenarioListFragment : Fragment() {
 
-    private companion object {
-        /** Tag for logs. */
-        private const val TAG = "ScenarioListFragment"
-    }
     /**
      * Listener interface upon user clicks on a scenario displayed by this fragment.
      * Must be implemented by the [androidx.fragment.app.FragmentActivity] attached to this fragment.
@@ -57,7 +58,7 @@ class ScenarioListFragment : Fragment() {
          * The user has clicked on a scenario.
          * @param scenario the clicked scenario.
          */
-        fun onClicked(scenario: ClickScenario)
+        fun onClicked(scenario: Scenario)
     }
 
     /** ViewModel providing the click scenarios data to the UI. */
@@ -86,7 +87,6 @@ class ScenarioListFragment : Fragment() {
             deleteScenarioListener = ::onDeleteClicked
             editClickListener = ::onRenameClicked
         }
-        scenarioViewModel.clickScenario.observe(this, scenariosObserver)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,11 +99,14 @@ class ScenarioListFragment : Fragment() {
 
         listBinding.empty.setText(R.string.no_scenarios)
         viewBinding.add.setOnClickListener { onCreateClicked() }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scenarioViewModel.clickScenario.removeObservers(this)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scenarioViewModel.scenarioList.collect {
+                    onNewScenarioList(it)
+                }
+            }
+        }
     }
 
     /**
@@ -147,7 +150,7 @@ class ScenarioListFragment : Fragment() {
      *
      * @param scenario the scenario to delete.
      */
-    private fun onDeleteClicked(scenario: ClickScenario) {
+    private fun onDeleteClicked(scenario: Scenario) {
         showDialog(AlertDialog.Builder(requireContext())
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_delete_scenario_title)
             .setMessage(resources.getString(R.string.dialog_delete_scenario_message, scenario.name))
@@ -164,7 +167,7 @@ class ScenarioListFragment : Fragment() {
      *
      * @param scenario the scenario to rename.
      */
-    private fun onRenameClicked(scenario: ClickScenario) {
+    private fun onRenameClicked(scenario: Scenario) {
         val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
         val dialog = AlertDialog.Builder(requireContext())
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_rename_scenario_title)
@@ -187,7 +190,7 @@ class ScenarioListFragment : Fragment() {
      * Observer upon the list of click scenarios.
      * Will update the list/empty view according to the current click scenarios
      */
-    private val scenariosObserver: Observer<List<ClickScenario>> = Observer { scenarios ->
+    private fun onNewScenarioList(scenarios: List<Scenario>) {
         listBinding.apply {
             loading.visibility = View.GONE
             if (scenarios.isNullOrEmpty()) {
@@ -202,3 +205,6 @@ class ScenarioListFragment : Fragment() {
         scenariosAdapter.scenarios = scenarios
     }
 }
+
+/** Tag for logs. */
+private const val TAG = "ScenarioListFragment"

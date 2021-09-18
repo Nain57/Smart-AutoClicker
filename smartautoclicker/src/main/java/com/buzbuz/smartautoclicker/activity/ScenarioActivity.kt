@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,16 +21,15 @@ import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.ClickScenario
-import com.buzbuz.smartautoclicker.model.ScenarioViewModel
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.database.domain.Scenario
 
 /**
  * Entry point activity for the application.
@@ -42,20 +41,13 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService
 class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioClickedListener,
     PermissionsDialogFragment.PermissionDialogListener {
 
-    companion object {
-        /** Tag for logs. */
-        const val TAG = "MainActivity"
-        /** Permission request code for the screen sharing. */
-        const val SCREEN_SHARING_PERMISSION_REQUEST_CODE = 1234
-    }
-
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by viewModels()
 
     /** Starts the media projection permission dialog and handle the result. */
     private lateinit var screenCaptureLauncher: ActivityResultLauncher<Intent>
     /** Scenario clicked by the user. */
-    private var requestedScenario: ClickScenario? = null
+    private var requestedScenario: Scenario? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +70,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioCli
         SmartAutoClickerService.getLocalService(null)
     }
 
-    override fun onClicked(scenario: ClickScenario) {
+    override fun onClicked(scenario: Scenario) {
         requestedScenario = scenario
 
         if (!scenarioViewModel.arePermissionsGranted()) {
