@@ -21,9 +21,10 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.media.Image
 import android.util.LruCache
+
 import androidx.annotation.WorkerThread
 
-import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.testing.OpenForTesting
 
 /**
@@ -70,20 +71,20 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
      * of the key, and [Pair.second] is the instance of the array that will contains the pixels of the currently
      * checked image.
      */
-    val pixelsCache: LruCache<ClickCondition, Pair<IntArray, IntArray>?> = object
-        : LruCache<ClickCondition, Pair<IntArray, IntArray>?>(
+    val pixelsCache: LruCache<Condition, Pair<IntArray, IntArray>?> = object
+        : LruCache<Condition, Pair<IntArray, IntArray>?>(
         ((Runtime.getRuntime().maxMemory() / 1024) * CACHE_SIZE_RATIO).toInt()
     ) {
 
-        override fun sizeOf(key: ClickCondition, arrays: Pair<IntArray, IntArray>?): Int {
+        override fun sizeOf(key: Condition, arrays: Pair<IntArray, IntArray>?): Int {
             // The cache size will be measured in kilobytes rather than number of items.
             return arrays?.run { first.size * 2 * 32 / 1024 } ?: 0
         }
 
-        override fun create(condition: ClickCondition): Pair<IntArray, IntArray>? {
+        override fun create(condition: Condition): Pair<IntArray, IntArray>? {
             // Pixels of the condition. Size and content never changes during detection.
             val expectedPixels = IntArray(condition.area.height() * condition.area.width())
-            val conditionBitmap = bitmapSupplier.invoke(condition.path, condition.area.width(), condition.area.height()) ?: return null
+            val conditionBitmap = bitmapSupplier.invoke(condition.path!!, condition.area.width(), condition.area.height()) ?: return null
             conditionBitmap.getPixels(expectedPixels, 0, condition.area.width(), 0, 0,
                 condition.area.width(), condition.area.height())
 

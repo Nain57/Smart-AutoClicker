@@ -24,8 +24,8 @@ import android.util.LruCache
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.database.ClickCondition
-import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.old.ClickCondition
+import com.buzbuz.smartautoclicker.database.old.ClickInfo
 import com.buzbuz.smartautoclicker.detection.utils.ProcessingData
 
 import org.junit.Assert.assertEquals
@@ -42,10 +42,10 @@ import org.mockito.MockitoAnnotations
 
 import org.robolectric.annotation.Config
 
-/** Test the [ScenarioProcessor] class. */
+/** Test the [ConditionDetector] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
-class ScenarioProcessorTests {
+class ConditionDetectorTests {
 
     private companion object {
         private const val TEST_DATA_NAME = "name"
@@ -81,7 +81,7 @@ class ScenarioProcessorTests {
     @Mock private lateinit var mockScreenBitmap: Bitmap
 
     /** The object under test. */
-    private lateinit var scenarioProcessor: ScenarioProcessor
+    private lateinit var conditionDetector: ConditionDetector
 
     /**
      * Create a new click condition and mocks it in the pixels cache.
@@ -122,17 +122,17 @@ class ScenarioProcessorTests {
         mockWhen(mockScreenBitmap.width).thenReturn(ProcessingData.SCREEN_SIZE)
         mockWhen(mockScreenBitmap.height).thenReturn(ProcessingData.SCREEN_SIZE)
 
-        scenarioProcessor = ScenarioProcessor(spiedCache)
+        conditionDetector = ConditionDetector(spiedCache)
     }
 
     @Test
     fun empty() {
-        assertNull(scenarioProcessor.detect(emptyList()))
+        assertNull(conditionDetector.detect(emptyList()))
     }
 
     @Test
     fun noConditions() {
-        assertNull(scenarioProcessor.detect(listOf(
+        assertNull(conditionDetector.detect(listOf(
             ProcessingData.newClickInfo(TEST_DATA_NAME),
             ProcessingData.newClickInfo(TEST_DATA_NAME2),
             ProcessingData.newClickInfo(TEST_DATA_NAME3)
@@ -144,7 +144,7 @@ class ScenarioProcessorTests {
         val validCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_PATH, ClickInfo.AND, listOf(validCondition))
-        assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+        assertEquals(validClick, conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -152,7 +152,7 @@ class ScenarioProcessorTests {
         val conditionArea = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(conditionArea))
-        assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+        assertEquals(validClick, conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -160,7 +160,7 @@ class ScenarioProcessorTests {
         val conditionArea = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART_OUTSIDE, true)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(conditionArea))
-        assertNull(scenarioProcessor.detect(listOf(validClick)))
+        assertNull(conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -168,7 +168,7 @@ class ScenarioProcessorTests {
         val validCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(validCondition))
-        assertNull(scenarioProcessor.detect(listOf(validClick)))
+        assertNull(conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -176,7 +176,7 @@ class ScenarioProcessorTests {
         val validCondition = mockClickCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, null)
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(validCondition))
-        assertNull(scenarioProcessor.detect(listOf(validClick)))
+        assertNull(conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -187,7 +187,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(errorCondition, otherCondition, onScreenCondition))
-        assertNull(scenarioProcessor.detect(listOf(validClick)))
+        assertNull(conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -198,7 +198,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(errorCondition, otherCondition, onScreenCondition))
-        assertNull(scenarioProcessor.detect(listOf(validClick)))
+        assertNull(conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -209,7 +209,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(invalidCondition, otherCondition, onScreenCondition))
-        assertNull(scenarioProcessor.detect(listOf(validClick)))
+        assertNull(conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -220,7 +220,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(onScreenCondition1, onScreenCondition2, onScreenCondition3))
-        assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+        assertEquals(validClick, conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -231,7 +231,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(errorCondition, otherCondition, onScreenCondition))
-        assertNull(scenarioProcessor.detect(listOf(validClick)))
+        assertNull(conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -242,7 +242,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(errorCondition, otherCondition, onScreenCondition))
-        assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+        assertEquals(validClick, conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -253,7 +253,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(invalidCondition, otherCondition, onScreenCondition))
-        assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+        assertEquals(validClick, conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -264,7 +264,7 @@ class ScenarioProcessorTests {
 
         val validClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.OR,
             listOf(onScreenCondition1, onScreenCondition2, onScreenCondition3))
-        assertEquals(validClick, scenarioProcessor.detect(listOf(validClick)))
+        assertEquals(validClick, conditionDetector.detect(listOf(validClick)))
     }
 
     @Test
@@ -273,7 +273,7 @@ class ScenarioProcessorTests {
         val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
         val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, false)
 
-        assertNull(scenarioProcessor.detect(listOf(
+        assertNull(conditionDetector.detect(listOf(
             ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(condition1, condition2, condition3)),
             ProcessingData.newClickInfo(TEST_DATA_NAME2, ClickInfo.AND, listOf(condition1, condition2, condition3)),
             ProcessingData.newClickInfo(TEST_DATA_NAME3, ClickInfo.AND, listOf(condition1, condition2, condition3))
@@ -286,7 +286,7 @@ class ScenarioProcessorTests {
         val condition2 = mockClickCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, null)
         val condition3 = mockClickCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, null)
 
-        assertNull(scenarioProcessor.detect(listOf(
+        assertNull(conditionDetector.detect(listOf(
             ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(condition1, condition2, condition3)),
             ProcessingData.newClickInfo(TEST_DATA_NAME2, ClickInfo.AND, listOf(condition1, condition2, condition3)),
             ProcessingData.newClickInfo(TEST_DATA_NAME3, ClickInfo.AND, listOf(condition1, condition2, condition3))
@@ -301,7 +301,7 @@ class ScenarioProcessorTests {
         val expectedClick = ProcessingData.newClickInfo(TEST_DATA_NAME3, ClickInfo.OR,
             listOf(condition1, condition2, validCondition))
 
-        assertEquals(expectedClick, scenarioProcessor.detect(listOf(
+        assertEquals(expectedClick, conditionDetector.detect(listOf(
             ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND, listOf(condition1, condition2)),
             ProcessingData.newClickInfo(TEST_DATA_NAME2, ClickInfo.AND, listOf(condition1, condition2)),
             expectedClick
@@ -316,7 +316,7 @@ class ScenarioProcessorTests {
         val expectedClick = ProcessingData.newClickInfo(TEST_DATA_NAME, ClickInfo.AND,
             listOf(condition1, condition2, condition3))
 
-        assertEquals(expectedClick, scenarioProcessor.detect(listOf(
+        assertEquals(expectedClick, conditionDetector.detect(listOf(
             expectedClick,
             ProcessingData.newClickInfo(TEST_DATA_NAME2, ClickInfo.AND, listOf(condition1, condition2, condition3)),
             ProcessingData.newClickInfo(TEST_DATA_NAME3, ClickInfo.AND, listOf(condition1, condition2, condition3))

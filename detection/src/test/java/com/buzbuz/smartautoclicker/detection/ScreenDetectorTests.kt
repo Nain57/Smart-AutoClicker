@@ -38,8 +38,8 @@ import android.view.WindowManager
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.database.ClickCondition
-import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.old.ClickCondition
+import com.buzbuz.smartautoclicker.database.old.ClickInfo
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.detection.utils.ProcessingData
@@ -75,7 +75,7 @@ import org.robolectric.annotation.Config
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
 
-/** Test the [ScenarioProcessor] class. */
+/** Test the [ConditionDetector] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q], shadows = [ ShadowImageReader::class, ShadowBitmapCreator::class ])
 class ScreenDetectorTests {

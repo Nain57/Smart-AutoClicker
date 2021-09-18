@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,7 +39,7 @@ import androidx.annotation.WorkerThread
  *
  * Uses the [MediaProjection] API to create a [VirtualDisplay] not shown to the user and containing a copy of the
  * user device screen content. An [ImageReader] is attached to this display in order to monitor every new frame
- * displayed on the screen, received in the form of an [Image]. Then, process those Image with [ScenarioProcessor]
+ * displayed on the screen, received in the form of an [Image]. Then, process those Image with [ConditionDetector]
  * according to the current mode (capture/detection). All Image processing code is executed on a background thread
  * (methods annotated with [WorkerThread]), and all results callbacks are executed on the main thread (the thread that
  * has instantiated this class).
@@ -120,8 +120,7 @@ internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvai
      * @param processingHandler the handler on the thread that will handle the virtual display and the image reader on it.
      * This should not be the main thread.
      */
-    @WorkerThread
-    fun startScreenRecord(context: Context, displaySize: Point, processingHandler: Handler) {
+    suspend fun startScreenRecord(context: Context, displaySize: Point, processingHandler: Handler) {
         if (projection == null || imageReader != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
