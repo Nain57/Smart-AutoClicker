@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
+import android.accessibilityservice.GestureDescription
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -34,34 +35,35 @@ import androidx.annotation.GuardedBy
 import androidx.annotation.MainThread
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 
-import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.Repository
+import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.android.asCoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
 /**
- * Detects [ClickInfo] on a display.
+ * Detects [Event] conditions on a display and execute its actions.
  *
  * In order to detect, you must start recording the screen to get images to detect on, this can be done by calling
  * [startScreenRecord]. Then, to take a screenshot of the screen, you can use [captureArea]. Or, you can start the
- * detection of a list of [ClickInfo] by using [startDetection].
+ * detection of a list of [Event] by using [startDetection].
  * The states of the recording and the detection are available in [isScreenRecording] and [isDetecting] respectively.
  * Once you no longer needs to capture or detect, call [stopDetection] or [stop] to release all processing resources.
  *
  * @param context the Android context.
- * @param bitmapSupplier provides the bitmap for the given path, width and height. This call will be made on the
- * processing thread, so you can use it directly to perform the loading from the memory, but keep in mind that the more
- * time this thread spend here, the slower the detection will be.
  */
-class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int, Int) -> Bitmap?) {
-
-    private companion object {
-        /** Tag for logs. */
-        private const val TAG = "ScreenDetector"
-        /** Name of the image processing thread. */
-        private const val PROCESSING_THREAD_NAME = "SmartAutoClicker.Processing"
-    }
+class ScreenDetector(
+    private val context: Context
+) {
 
     /** Monitors the state of the screen. */
     private val screenMetrics = ScreenMetrics(context)
@@ -71,36 +73,42 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
     private val mainHandler = Handler(Looper.getMainLooper())
     /** Record the screen and provide images of it regularly via [onNewImage]. */
     private val screenRecorder = ScreenRecorder(::onNewImage)
+    /** Repository of the events to detect. */
+    private val repository = Repository.getRepository(context)
     /** The cache for image processing optimization. */
-    private val cache = Cache(bitmapSupplier)
-    /** The click scenario processing object. */
-    private val scenarioProcessor = ScenarioProcessor(cache)
-    /** Backing property for [isScreenRecording]. */
-    private val _isScreenRecording = MutableLiveData(false)
-    /** Backing property for [isDetecting]. */
-    private val _isDetecting = MutableLiveData(false)
+    private val cache = Cache { path, width, height ->
+        // We can run blocking here, we are on the screen detector thread
+        runBlocking(Dispatchers.IO) {
+            repository.getBitmap(path, width, height)
+        }
+    }
+    /** Process the events conditions to detect them on the screen. */
+    private val conditionDetector = ConditionDetector(cache)
+    /** Execute the detected event actions. */
+    private val actionExecutor = ActionExecutor()
 
     /** The current size of the display, in pixels. */
-    @GuardedBy("mainHandler") private var displaySize: Point = Point()
+    @GuardedBy("mainHandler")
+    private var displaySize: Point = Point()
         get() = synchronized(mainHandler) { field }
         set(value) = synchronized(mainHandler) { field = value }
+
     /**
      * Information about the current screen capture.
      * The Rect is the area on the screen to be capture and the lambda is the callback to be called once the capture is
      * complete.
      */
-    @GuardedBy("mainHandler") private var captureInfo: Pair<Rect, (Bitmap) -> Unit>? = null
+    @GuardedBy("mainHandler")
+    private var captureInfo: Pair<Rect, (Bitmap) -> Unit>? = null
         get() = synchronized(mainHandler) { field }
         set(value) = synchronized(mainHandler) { field = value }
+
     /**
      * Information about the current detection session.
      * The list contains the clicks to be detected and the lambda is the callback to be called once a detection occurs.
      */
-    @GuardedBy("mainHandler") private var detectionInfo: Pair<List<ClickInfo>, (ClickInfo) -> Unit>? = null
-        get() = synchronized(mainHandler) { field }
-        set(value) = synchronized(mainHandler) { field = value }
-    /** True if a click is detected and we are waiting its delay before next processing. */
-    @GuardedBy("mainHandler") private var isAreaFound = false
+    @GuardedBy("mainHandler")
+    private var detectionInfo: List<Event>? = null
         get() = synchronized(mainHandler) { field }
         set(value) = synchronized(mainHandler) { field = value }
 
@@ -110,12 +118,21 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
     /** Handler on the [processingThread]. */
     private var processingThreadHandler: Handler? = null
 
-    /** True if we are currently detecting clicks, false if not. */
-    val isDetecting: LiveData<Boolean>
-        get() = _isDetecting
+    // TODO: Get rid of android concurrency to use only coroutines
+    /** Coroutine scope for the image processing. */
+    private var processingCoroutineScope = CoroutineScope(Job())
+    /** Coroutine dispatcher for the image processing. */
+    private var processingCoroutineDispatcher: CoroutineDispatcher? = null
+
+    /** Backing property for [isScreenRecording]. */
+    private val _isScreenRecording = MutableStateFlow(false)
     /** True if we are currently screen recording, false if not. */
-    val isScreenRecording: LiveData<Boolean>
-        get() = _isScreenRecording
+    val isScreenRecording: StateFlow<Boolean> = _isScreenRecording
+
+    /** Backing property for [isDetecting]. */
+    private val _isDetecting = MutableStateFlow(false)
+    /** True if we are currently detecting clicks, false if not. */
+    val isDetecting: StateFlow<Boolean> = _isDetecting
 
     /**
      * Start the screen detection.
@@ -135,7 +152,7 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
      */
     @MainThread
     fun startScreenRecord(context: Context, resultCode: Int, data: Intent) {
-        if (_isScreenRecording.value!!) {
+        if (_isScreenRecording.value) {
             Log.w(TAG, "startScreenRecord: Screen record is already started")
             return
         }
@@ -146,15 +163,17 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
         processingThread = HandlerThread(PROCESSING_THREAD_NAME).apply {
             start()
             processingThreadHandler = Handler(looper)
+            processingCoroutineDispatcher = processingThreadHandler!!.asCoroutineDispatcher()
         }
 
         screenRecorder.apply {
             startProjection(context, resultCode, data) {
                 stop()
             }
-            processingThreadHandler!!.post {
+
+            processingCoroutineScope.launch(processingCoroutineDispatcher!!) {
                 startScreenRecord(context, displaySize, processingThreadHandler!!)
-                _isScreenRecording.postValue(true)
+                _isScreenRecording.emit(true)
             }
         }
     }
@@ -171,7 +190,7 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
      */
     @MainThread
     fun captureArea(area: Rect, callback: (Bitmap) -> Unit) {
-        if (!_isScreenRecording.value!!) {
+        if (!_isScreenRecording.value) {
             Log.w(TAG, "captureArea: Screen record is not started.")
             return
         }
@@ -181,40 +200,51 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
     }
 
     /**
+     * Set the gesture executor for the [ActionExecutor].
+     * @param listener the gesture executor.
+     */
+    fun setOnGestureDetectedListener(listener: ((GestureDescription) -> Unit)?) {
+        actionExecutor.onGestureExecutionListener = listener
+    }
+
+    /**
      * Start the screen detection.
      *
      * After calling this method, all [Image] displayed on the screen will be checked for the provided clicks conditions
-     * fulfillment. For each image, the first click in the list that is detected will be notified through the provided
+     * fulfillment. For each image, the first event in the list that is detected will be notified through the provided
      * callback.
      * [isScreenRecording] should be true to capture. Detection can be stopped with [stopDetection] or [stop].
      *
-     * @param clicks the list of clicks to be detected on the screen.
-     * @param callback the object to notify upon click detection.
+     * @param events the list of events to be detected on the screen.
      */
     @AnyThread
-    fun startDetection(clicks: List<ClickInfo>, callback: (ClickInfo) -> Unit) {
-        if (!_isScreenRecording.value!!) {
+    fun startDetection(events: List<Event>) {
+        if (!_isScreenRecording.value) {
             Log.w(TAG, "captureArea: Screen record is not started.")
             return
-        } else if (_isDetecting.value!!) {
+        } else if (_isDetecting.value) {
             Log.w(TAG, "captureArea: detection is already started.")
             return
         }
 
-        _isDetecting.postValue(true)
-        detectionInfo = clicks to callback
+        processingCoroutineScope.launch {
+            _isDetecting.emit(true)
+        }
+        detectionInfo = events
     }
 
     /**
      * Stop the screen detection started with [startDetection].
      *
-     * After a call to this method, the clicks provided in the start method will no longer be checked on the current
+     * After a call to this method, the events provided in the start method will no longer be checked on the current
      * image. Note that this will not stop the screen recording, you should still call [stop] to completely
      * release the [ScreenDetector] resources.
      */
     @AnyThread
     fun stopDetection() {
-        _isDetecting.postValue(false)
+        processingCoroutineScope.launch {
+            _isDetecting.emit(false)
+        }
         detectionInfo = null
     }
 
@@ -226,21 +256,23 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
      */
     @MainThread
     fun stop() {
-        if (!_isScreenRecording.value!!) {
+        if (!_isScreenRecording.value) {
             Log.w(TAG, "stop: Screen record is already stopped.")
             return
-        } else if (_isDetecting.value!!) {
+        } else if (_isDetecting.value) {
             stopDetection()
         }
 
         screenMetrics.unregisterOrientationListener()
-        processingThreadHandler?.post {
-            screenRecorder.stopProjection()
-            cache.release()
-            processingThread?.quitSafely()
-            processingThreadHandler = null
-            processingThread = null
-            _isScreenRecording.postValue(false)
+        processingCoroutineDispatcher?.let {
+            processingCoroutineScope.launch(it) {
+                screenRecorder.stopProjection()
+                cache.release()
+                _isScreenRecording.emit(false)
+                processingThread?.quitSafely()
+                processingThreadHandler = null
+                processingThread = null
+            }
         }
     }
 
@@ -250,10 +282,12 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
      * As we now have different screen metrics, we need to stop and start the virtual display with the correct one.
      */
     private fun onOrientationChanged() {
-        processingThreadHandler?.post {
-            screenRecorder.stopScreenRecord()
-            displaySize = screenMetrics.getScreenSize()
-            screenRecorder.startScreenRecord(context, displaySize, processingThreadHandler!!)
+        processingCoroutineDispatcher?.let {
+            processingCoroutineScope.launch(it) {
+                screenRecorder.stopScreenRecord()
+                displaySize = screenMetrics.getScreenSize()
+                screenRecorder.startScreenRecord(context, displaySize, processingThreadHandler!!)
+            }
         }
     }
 
@@ -270,8 +304,12 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
 
         // A screen capture is requested, process it and notify the resulting bitmap.
         captureInfo?.let { capture ->
-            notifyCapture(Bitmap.createBitmap(cache.screenBitmap!!, capture.first.left, capture.first.top,
-                capture.first.width(), capture.first.height()))
+            notifyCapture(
+                Bitmap.createBitmap(
+                    cache.screenBitmap!!, capture.first.left, capture.first.top,
+                    capture.first.width(), capture.first.height()
+                )
+            )
         }
     }
 
@@ -279,9 +317,8 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
      * Called when a new Image of the screen is available.
      *
      * Used as listener for [ScreenRecorder] and executed on the thread handled by [processingThread], this method will
-     * either make a screen capture or tries to detect a click depending on the current values for [captureInfo] and
-     * [detectionInfo]. If none of those values are not null, or if we just detected a click and we are waiting for its
-     * delay, the Image will be ignored.
+     * either make a screen capture or tries to detect an event depending on the current values for [captureInfo] and
+     * [detectionInfo]. If none of those values are not null, the Image will be ignored.
      *
      * @param imageReader the image reader providing [Image] to process. Should be the same reader as [imageReader].
      */
@@ -291,20 +328,21 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
 
         cache.currentImage = imageReader.acquireLatestImage()
 
-        // An area has been found and we are waiting its clicks delay before detecting something else or
-        // no click list to detect ? We have nothing to do.
-        if (isAreaFound ||  detectionInfo == null) {
+        // An area has been found and we are waiting for its actions to be executed or no event list to detect ?
+        // We have nothing to do.
+        if (detectionInfo == null || actionExecutor.state != ActionExecutor.State.IDLE) {
             return
         }
 
         // Refresh cached values on the image, we are going to use it.
         cache.refreshProcessedImage(displaySize)
 
-        // A detection is ongoing, process the scenario to detect a click that fulfils its conditions.
+        // A detection is ongoing, process the scenario to detect an event that fulfils its conditions.
         detectionInfo?.let { detectionInfo ->
-            scenarioProcessor.detect(detectionInfo.first)?.let {
-                // A click is detected, notify it
-                notifyClickDetection(it)
+            conditionDetector.detect(detectionInfo)?.let { event ->
+                event.actions?.let { actions ->
+                    actionExecutor.executeActions(actions)
+                }
             }
         }
     }
@@ -326,47 +364,9 @@ class ScreenDetector(private val context: Context, bitmapSupplier: (String, Int,
             captureCallback.invoke(capture)
         }
     }
-
-    /**
-     * Notify the [detectionInfo] callback for click detection.
-     *
-     * Executed on the thread handled by [processingThread], this method will notifies the detection listener with the
-     * provided click. The callback will be executed on the main thread.
-     * Also, it will set the [isAreaFound] value to true until the [ClickInfo.delayAfterMs] is elapsed, allowing to
-     * skip the [Image] processing phase to avoid detecting clicks during this waiting delay.
-     *
-     * @param click the click detected on the screen to be propagated through the callback.
-     */
-    @WorkerThread
-    private fun notifyClickDetection(click: ClickInfo) {
-        isAreaFound = true
-
-        mainHandler.post {
-            detectionInfo?.second?.invoke(click)
-
-            // check stop condition after click is executed
-            checkDetectionStopCondition(click)
-        }
-
-        mainHandler.postDelayed({
-            isAreaFound = false
-        }, click.delayAfterMs)
-    }
-
-    /**
-     * Called after a click is executed.
-     * Check if a stop condition is set to the corresponding [ClickInfo]. Decrease the execution counter and stop the
-     * detection when the counter reaches zero.
-     */
-    @MainThread
-    private fun checkDetectionStopCondition(click: ClickInfo) {
-        click.stopAfterExecutions?.let {executions ->
-            val stopAfter = executions - 1
-            click.stopAfterExecutions = stopAfter
-
-            if (stopAfter <= 0) {
-                stopDetection()
-            }
-        }
-    }
 }
+
+/** Tag for logs. */
+private const val TAG = "ScreenDetector"
+/** Name of the image processing thread. */
+private const val PROCESSING_THREAD_NAME = "SmartAutoClicker.Processing"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,39 +18,43 @@ package com.buzbuz.smartautoclicker.detection
 
 import android.graphics.Rect
 import android.media.Image
+
 import androidx.annotation.WorkerThread
 
-import com.buzbuz.smartautoclicker.database.ClickCondition
-import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.domain.AND
+import com.buzbuz.smartautoclicker.database.domain.OR
+import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
+import com.buzbuz.smartautoclicker.database.domain.Event
 
 import kotlin.math.abs
 
 /**
- * Process [Image] from the [Cache] and tries to detect the list of [ClickInfo] on it.
+ * Process [Image] from the [Cache] and tries to detect the list of [Event] on it.
  **
  * @param cache the image cache to apply the detection to.
  */
 @WorkerThread
-internal class ScenarioProcessor(private val cache: Cache) {
+internal class ConditionDetector(private val cache: Cache) {
 
     /**
-     * Find a click with the conditions fulfilled on the provided Image.
+     * Find an event with the conditions fulfilled on the current image.
      *
-     * @param clicks the list of clicks to be verified.
+     * @param events the list of events to be verified.
      *
-     * @return the first ClickInfo with all conditions fulfilled, or null if none has been found.
+     * @return the first Event with all conditions fulfilled, or null if none has been found.
      */
-    fun detect(clicks: List<ClickInfo>) : ClickInfo? {
-        for (click in clicks) {
+    fun detect(events: List<Event>) : Event? {
+        for (event in events) {
 
-            // No conditions ? This should not happen, skip this click
-            if (click.conditionList.isEmpty()) {
+            // No conditions ? This should not happen, skip this event
+            if (event.conditions?.isEmpty() == true) {
                 continue
             }
 
-            // If conditions are fulfilled, execute this click !
-            if (verifyConditions(click.conditionOperator, click.conditionList)) {
-                return click
+            // If conditions are fulfilled, execute this event's actions !
+            if (verifyConditions(event.conditionOperator, event.conditions!!)) {
+                return event
             }
         }
 
@@ -58,33 +62,30 @@ internal class ScenarioProcessor(private val cache: Cache) {
     }
 
     /**
-     * Verifies if all conditions of a click are fulfilled.
+     * Verifies if all conditions of a events are fulfilled.
      *
      * Applies the provided conditions the currently processed [Image] according to the provided operator.
      *
-     * @param operator the operator to apply between the conditions. Must be one of [ClickInfo.Operator] values.
+     * @param operator the operator to apply between the conditions. Must be one of [ConditionOperator] values.
      * @param conditions the condition to be checked on the currently processed [Image].
      */
-    private fun verifyConditions(
-        @ClickInfo.Companion.Operator operator: Int,
-        conditions: List<ClickCondition>
-    ) : Boolean {
+    private fun verifyConditions(@ConditionOperator operator: Int, conditions: List<Condition>) : Boolean {
 
         for (condition in conditions) {
             // Verify if the condition is fulfilled.
             if (!checkCondition(condition)) {
-                if (operator == ClickInfo.AND) {
+                if (operator == AND) {
                     // One of the condition isn't fulfilled, it's a false for a AND operator.
                     return false
                 }
-            } else if (operator  == ClickInfo.OR) {
+            } else if (operator  == OR) {
                 // One of the condition is fulfilled, it's a yes for a OR operator.
                 return true
             }
         }
 
         // All conditions passed for AND, none are for OR.
-        return operator == ClickInfo.AND
+        return operator == AND
     }
 
     /**
@@ -92,11 +93,11 @@ internal class ScenarioProcessor(private val cache: Cache) {
      *
      * Check if the condition bitmap match the content of the condition area on the currently processed [Image].
      *
-     * @param condition the click condition to be verified.
+     * @param condition the event condition to be verified.
      *
      * @return true if the currently processed [Image] contains the condition bitmap at the condition area.
      */
-    private fun checkCondition(condition: ClickCondition) : Boolean {
+    private fun checkCondition(condition: Condition) : Boolean {
         // Now we have a condition cache, so let's detect !
         cache.pixelsCache.get(condition)?.let { pixels ->
 

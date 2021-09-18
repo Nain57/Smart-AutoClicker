@@ -20,8 +20,8 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.database.ClickCondition
-import com.buzbuz.smartautoclicker.database.ClickInfo
+import com.buzbuz.smartautoclicker.database.old.ClickCondition
+import com.buzbuz.smartautoclicker.database.old.ClickInfo
 
 import java.lang.IllegalArgumentException
 import kotlin.math.max
