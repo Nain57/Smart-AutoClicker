@@ -21,13 +21,15 @@ import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.database.old.ClickRepository
+import com.buzbuz.smartautoclicker.database.old.ClickScenario
 
-import com.buzbuz.smartautoclicker.database.room.ClickDao
-import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
-import com.buzbuz.smartautoclicker.database.room.ConditionEntity
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
-import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
+import com.buzbuz.smartautoclicker.database.old.room.ClickDao
+import com.buzbuz.smartautoclicker.database.old.room.ClickDatabase
+import com.buzbuz.smartautoclicker.database.old.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.old.room.ConditionEntity
+import com.buzbuz.smartautoclicker.database.old.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.old.room.ScenarioWithClicks
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 import com.buzbuz.smartautoclicker.database.utils.anyNotNull
 import com.buzbuz.smartautoclicker.database.utils.getOrAwaitValue

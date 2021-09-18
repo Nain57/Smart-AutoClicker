@@ -19,12 +19,12 @@ package com.buzbuz.smartautoclicker.database.utils
 import android.graphics.Point
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.database.ClickCondition
-import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.database.room.ClickEntity
-import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
-import com.buzbuz.smartautoclicker.database.room.ConditionEntity
-import com.buzbuz.smartautoclicker.database.room.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.old.ClickCondition
+import com.buzbuz.smartautoclicker.database.old.ClickInfo
+import com.buzbuz.smartautoclicker.database.old.room.ClickEntity
+import com.buzbuz.smartautoclicker.database.old.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.old.room.ConditionEntity
+import com.buzbuz.smartautoclicker.database.old.room.ScenarioEntity
 
 /** Data set for the database tests. */
 internal object TestsData {

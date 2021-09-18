@@ -19,8 +19,9 @@ package com.buzbuz.smartautoclicker.database
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.database.old.ClickScenario
 
-import com.buzbuz.smartautoclicker.database.room.ScenarioWithClicks
+import com.buzbuz.smartautoclicker.database.old.room.ScenarioWithClicks
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 
 import org.junit.Assert.assertEquals

@@ -21,7 +21,9 @@ import android.graphics.Rect
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.buzbuz.smartautoclicker.database.room.ClickWithConditions
+import com.buzbuz.smartautoclicker.database.old.ClickCondition
+import com.buzbuz.smartautoclicker.database.old.ClickInfo
+import com.buzbuz.smartautoclicker.database.old.room.ClickWithConditions
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 
 import org.junit.Assert.assertEquals
