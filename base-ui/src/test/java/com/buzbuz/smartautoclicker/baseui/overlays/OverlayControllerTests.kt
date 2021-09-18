@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -122,7 +122,7 @@ class OverlayControllerTests {
         verify(overlayControllerImpl, never()).onCreate()
         verify(overlayControllerImpl, never()).onShow()
         verify(overlayControllerImpl, never()).onDismissed()
-        assertEquals(Lifecycle.State.CREATED, overlayController.lifecycle.currentState)
+        assertEquals(Lifecycle.State.STARTED, overlayController.lifecycle.currentState)
     }
 
     @Test
@@ -212,7 +212,6 @@ class OverlayControllerTests {
 
     @Test
     fun dismissNotCreated() {
-        val expectedState = overlayController.lifecycle.currentState
         overlayController.dismiss()
 
         verify(overlayControllerImpl, never()).onShow()
@@ -220,7 +219,7 @@ class OverlayControllerTests {
         verify(overlayControllerImpl, never()).onHide()
         verify(overlayControllerImpl, never()).onDismissed()
         verify(dismissListener, never()).onDismissed()
-        assertEquals(expectedState, overlayController.lifecycle.currentState)
+        assertEquals(Lifecycle.State.DESTROYED, overlayController.lifecycle.currentState)
     }
 
     @Test
@@ -282,7 +281,7 @@ class OverlayControllerTests {
     fun subOverlayDismissed() {
         overlayController.create()
         val subOverlay = OverlayControllerTestImpl(mockContext)
-        overlayController.publicShowSubOverlay(subOverlay)
+        overlayController.publicShowSubOverlay(subOverlay, false)
         clearInvocations(overlayControllerImpl)
 
         subOverlay.dismiss()

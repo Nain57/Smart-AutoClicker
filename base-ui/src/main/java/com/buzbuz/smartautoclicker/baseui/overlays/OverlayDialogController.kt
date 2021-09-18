@@ -138,6 +138,11 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
         dialog?.dismiss()
     }
 
+    final override fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean) {
+        super.showSubOverlay(overlayController, hideCurrent)
+        hideSoftInput()
+    }
+
     /** Handle the dialog dismissing. */
     @CallSuper
     protected open fun onDialogDismissed() {
