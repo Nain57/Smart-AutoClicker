@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,44 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.model
+package com.buzbuz.smartautoclicker.activity
 
 import android.app.Application
 import android.content.Intent
 import android.provider.Settings
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.database.ClickRepository
-import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
-import com.buzbuz.smartautoclicker.database.ClickCondition
+import com.buzbuz.smartautoclicker.database.Repository
+import com.buzbuz.smartautoclicker.database.domain.Scenario
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
 class ScenarioViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The repository providing access to the click database. */
-    private val clickRepository = ClickRepository.getRepository(application)
+    /** The repository providing access to the database. */
+    private val repository = Repository.getRepository(application)
     /** Callback upon the availability of the [SmartAutoClickerService]. */
     private val serviceConnection: (SmartAutoClickerService.LocalService?) -> Unit = { localService ->
         clickerService = localService
-    }
-    /** Listener upon conditions without clicks. */
-    private val clicklessConditionObserver = object : Observer<List<ClickCondition>> {
-        override fun onChanged(conditions: List<ClickCondition>?) {
-            if (conditions.isNullOrEmpty()) {
-                return
-            }
-
-            viewModelScope.launch(Dispatchers.IO) {
-                BitmapManager.getInstance(application).deleteBitmaps(conditions.map { it.path })
-                clickRepository.deleteClicklessConditions()
-            }
-        }
     }
 
     /**
@@ -60,16 +46,14 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      */
     private var clickerService: SmartAutoClickerService.LocalService? = null
 
-    /** LiveData upon the list of scenarios. */
-    val clickScenario = clickRepository.scenarios
+    /** Flow upon the list of scenarios. */
+    val scenarioList: Flow<List<Scenario>> = repository.scenarios
 
     init {
         SmartAutoClickerService.getLocalService(serviceConnection)
-        clickRepository.clicklessConditions.observeForever(clicklessConditionObserver)
     }
 
     override fun onCleared() {
-        clickRepository.clicklessConditions.removeObserver(clicklessConditionObserver)
         SmartAutoClickerService.getLocalService(null)
         super.onCleared()
     }
@@ -101,7 +85,9 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * @param name the name of this new scenario.
      */
     fun createScenario(name: String) {
-        viewModelScope.launch(Dispatchers.IO) { clickRepository.createScenario(name) }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addScenario(Scenario(name = name))
+        }
     }
 
     /**
@@ -110,8 +96,11 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * @param scenario the scenario to be renamed
      * @param name the new name of the scenario
      */
-    fun renameScenario(scenario: ClickScenario, name: String) {
-        viewModelScope.launch(Dispatchers.IO) { clickRepository.renameScenario(scenario.id, name) }
+    fun renameScenario(scenario: Scenario, name: String) {
+        scenario.name = name
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateScenario(scenario)
+        }
     }
 
     /**
@@ -121,8 +110,8 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      *
      * @param scenario the scenario to be deleted.
      */
-    fun deleteScenario(scenario: ClickScenario) {
-        viewModelScope.launch(Dispatchers.IO) { clickRepository.deleteScenario(scenario) }
+    fun deleteScenario(scenario: Scenario) {
+        viewModelScope.launch(Dispatchers.IO) { repository.deleteScenario(scenario) }
     }
 
     /**
@@ -140,7 +129,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * [android.app.Activity.onActivityResult]
      * @param scenario the identifier of the scenario of clicks to be used for detection.
      */
-    fun loadScenario(resultCode: Int, data: Intent, scenario: ClickScenario) {
+    fun loadScenario(resultCode: Int, data: Intent, scenario: Scenario) {
         clickerService?.start(resultCode, data, scenario)
     }
 
