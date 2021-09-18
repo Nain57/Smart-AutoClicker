@@ -26,7 +26,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 

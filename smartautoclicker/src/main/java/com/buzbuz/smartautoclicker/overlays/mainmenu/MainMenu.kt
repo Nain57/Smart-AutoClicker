@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,34 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays
+package com.buzbuz.smartautoclicker.overlays.mainmenu
 
 import android.content.Context
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
-import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.dialogs.ClickListDialog
-import com.buzbuz.smartautoclicker.model.DetectorModel
+import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.overlays.eventlist.EventListDialog
+
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * [OverlayMenuController] implementation for displaying the main menu overlay.
  *
  * This is the menu displayed once the service is started via the [com.buzbuz.smartautoclicker.activity.ScenarioActivity]
  * once the user has selected a scenario to be used. It allows the user to start the detection on the currently loaded
- * scenario, as well as editing the attached list of clicks.
+ * scenario, as well as editing the attached list of events.
  *
  * There is no overlay views attached to this overlay menu, meaning that the user will always be able to clicks on the
  * Activities displayed below it.
  *
  * @param context the Android Context for the overlay menu shown by this controller.
- * @param detectionListener listener notified upon click detection.
  */
-class MainMenu(context: Context, private val detectionListener: (ClickInfo) -> Unit) : OverlayMenuController(context) {
+class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuController(context) {
+
+    /** The view model for this menu. */
+    private var viewModel: MainMenuModel? = MainMenuModel(context).apply {
+        attachToLifecycle(this@MainMenu)
+    }
 
     /** Animation from play to pause. */
     private val playToPauseDrawable =
@@ -58,38 +70,35 @@ class MainMenu(context: Context, private val detectionListener: (ClickInfo) -> U
 
     override fun onCreate() {
         super.onCreate()
-        DetectorModel.get().apply {
-            scenarioClicks.observe(this@MainMenu, ::onClickListChanged)
-            detecting.observe(this@MainMenu, ::onDetectionStateChanged)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel?.eventList?.collect { onEventListChanged(it) } }
+                launch { viewModel?.detectionState?.collect { onDetectionStateChanged(it) } }
+            }
         }
     }
 
     override fun onDismissed() {
         super.onDismissed()
-        DetectorModel.get().apply {
-            scenarioClicks.removeObservers(this@MainMenu)
-            detecting.removeObservers(this@MainMenu)
-        }
+        viewModel = null
     }
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_play -> {
-                DetectorModel.get().apply {
-                    if (detecting.value!!) stopDetection() else startDetection(detectionListener)
-                }
-            }
-            R.id.btn_click_list -> showSubOverlay(ClickListDialog(ContextThemeWrapper(context, R.style.AppTheme)), true)
+            R.id.btn_play -> viewModel?.toggleDetection()
+            R.id.btn_click_list -> showSubOverlay(
+                EventListDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
             R.id.btn_stop -> dismiss()
         }
     }
 
     /**
-     * Handles changes on the click list.
-     * Refresh the play menu item according to the click count.
+     * Handles changes on the event list.
+     * Refresh the play menu item according to the event count.
      */
-    private fun onClickListChanged(clicks: List<ClickInfo>?) =
-        setMenuItemViewEnabled(R.id.btn_play, !clicks.isNullOrEmpty())
+    private fun onEventListChanged(events: List<Event>?) =
+        setMenuItemViewEnabled(R.id.btn_play, !events.isNullOrEmpty())
 
     /**
      * Handles the changes in the detection state.

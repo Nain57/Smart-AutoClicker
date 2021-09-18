@@ -86,6 +86,15 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
+    <style name="DialogTitleIcon">
+        <item name="android:layout_width">@dimen/item_height</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_large</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/primaryDark</item>
+        <item name="android:tint">@color/textTitle</item>
+    </style>
+
     <style name="DialogChoiceItemTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/item_height</item>

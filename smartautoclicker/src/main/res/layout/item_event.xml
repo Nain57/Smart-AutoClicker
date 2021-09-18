@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@
         android:gravity="center_vertical"
         android:textSize="@dimen/text_size_list_item_text"
         android:drawablePadding="@dimen/margin_horizontal_default"
-        tools:text="@string/dialog_click_config_name_default"/>
+        tools:text="@string/default_event_name"/>
 
     <ImageButton
         android:id="@+id/btn_action"
