@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,8 +21,8 @@
     <string name="activity_scenario_title">Click scenarios</string>
     <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
     <plurals name="scenario_sub_text">
-        <item quantity="one">%d click</item>
-        <item quantity="other">%d clicks</item>
+        <item quantity="one">%d event</item>
+        <item quantity="other">%d events</item>
     </plurals>
 
     <string name="dialog_permissions_title">Permissions required</string>
@@ -44,31 +44,22 @@
     <string name="dialog_delete_scenario_message">This will delete %1$s. Are you sure ?</string>
     <string name="dialog_rename_scenario_title">Rename scenario</string>
 
-    <string name="dialog_click_list_title">Click list</string>
-    <string name="dialog_click_list_add">New</string>
-    <string name="dialog_click_list_reorder">Reorder</string>
-    <string name="dialog_click_list_no_clicks">No clicks.\nClick on \'New\' to create one. </string>
+    <string name="dialog_event_list_title">Event list</string>
+    <string name="dialog_event_list_add">New</string>
+    <string name="dialog_event_list_reorder">Reorder</string>
+    <string name="dialog_event_list_no_events">No events.\nClick on \'New\' to create one. </string>
 
-    <string name="dialog_click_add_title">Add new click</string>
-    <string name="dialog_click_add_create">Create</string>
-    <string name="dialog_click_add_copy">Copy from an existing click</string>
+    <string name="dialog_event_add_title">Add new event</string>
+    <string name="dialog_event_add_create">Create</string>
+    <string name="dialog_event_add_copy">Copy from an existing event</string>
 
-    <string name="dialog_click_config_title">Click configuration</string>
-    <string name="dialog_click_config_name_title">Name</string>
-    <string name="dialog_click_config_name_default">Default click</string>
-    <string name="dialog_click_config_type_title">Click type</string>
-    <string name="dialog_click_config_type_none">No click type defined</string>
-    <string name="dialog_click_config_type_single">Single click on %1$d, %2$d</string>
-    <string name="dialog_click_config_type_swipe">Swipe from %1$d, %2$d to %3$d, %4$d</string>
-    <string name="dialog_click_config_condition_title">Only if</string>
-    <string name="dialog_click_config_delay_after_title">Delay before next click</string>
-    <string name="dialog_click_config_duration_hint">ms</string>
+    <string name="dialog_event_config_title">Event configuration</string>
+    <string name="dialog_event_config_name_title">Name</string>
+    <string name="dialog_event_config_condition_title">Conditions</string>
+    <string name="dialog_event_config_actions_title">Actions</string>
+
     <string name="dialog_click_config_stop_after_executions">Executions before scenario end</string>
     <string name="dialog_click_config_executions_hint">Don\'t stop the scenario</string>
-
-    <string name="dialog_click_type_title">Click type</string>
-    <string name="dialog_click_type_single">Single click</string>
-    <string name="dialog_click_type_swipe">Swipe</string>
 
     <string name="dialog_condition_operator_title">Conditions type</string>
     <string name="condition_operator_and">All conditions</string>
@@ -76,13 +67,27 @@
     <string name="condition_operator_and_desc">All conditions are fulfilled</string>
     <string name="condition_operator_or_desc">At least one is fulfilled</string>
 
-    <string name="dialog_click_condition_title">Click condition</string>
-    <string name="dialog_click_condition_details_title">Details</string>
-    <string name="dialog_click_condition_delete">Delete</string>
-    <string name="dialog_click_condition_at">at position [%1$d,%2$d] [%3$d,%4$d]</string>
-    <string name="dialog_click_condition_threshold_title">Tolerated difference</string>
-    <string name="dialog_click_condition_threshold_value">Tolerance: %1$d %%</string>
-    <string name="dialog_click_condition_error">The condition image can\'t be found.</string>
+    <string name="dialog_action_type_title">Action type</string>
+    <string name="dialog_action_type_click">Click</string>
+    <string name="dialog_action_type_swipe">Swipe</string>
+    <string name="dialog_action_type_pause">Wait</string>
+    <string name="dialog_action_config_click_press_duration_title">Press duration</string>
+    <string name="dialog_action_config_click_position_title">Click position</string>
+    <string name="dialog_action_config_click_position_none">No click position defined</string>
+    <string name="dialog_action_config_click_position">Click on %1$d, %2$d</string>
+    <string name="dialog_action_config_swipe_duration_title">Swipe duration</string>
+    <string name="dialog_action_config_swipe_position_title">Swipe position</string>
+    <string name="dialog_action_config_swipe_position_none">No swipe position defined</string>
+    <string name="dialog_action_config_swipe_position">Swipe from %1$d, %2$d to %3$d, %4$d</string>
+    <string name="dialog_action_config_pause_duration_title">Pause duration</string>
+
+    <string name="dialog_condition_title">Condition</string>
+    <string name="dialog_condition_details_title">Details</string>
+    <string name="dialog_condition_delete">Delete</string>
+    <string name="dialog_condition_at">at position [%1$d,%2$d] [%3$d,%4$d]</string>
+    <string name="dialog_condition_threshold_title">Tolerated difference</string>
+    <string name="dialog_condition_threshold_value">Tolerance: %1$d %%</string>
+    <string name="dialog_condition_error">The condition image can\'t be found.</string>
 
     <string name="toast_configure_single_click">Touch the position to click on.</string>
     <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
@@ -105,4 +110,8 @@
     <string name="content_desc_enable_click">Enable or disable overlay and allow clicks on applications</string>
     <string name="content_desc_overlay_state">Overlay permission state</string>
     <string name="content_desc_accessibility_state">Accessibility service permission state</string>
+    <string name="content_desc_action">The action to be executed</string>
+
+    <string name="dialog_unit_ms" translatable="false">ms</string>
+
 </resources>

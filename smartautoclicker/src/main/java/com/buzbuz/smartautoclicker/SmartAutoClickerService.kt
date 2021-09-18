@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,38 +17,35 @@
 package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.GestureDescription
-import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
-import android.graphics.Path
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.view.accessibility.AccessibilityEvent
+
 import androidx.core.app.NotificationCompat
 
-import com.buzbuz.smartautoclicker.database.ClickInfo
-import com.buzbuz.smartautoclicker.database.ClickScenario
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
-import com.buzbuz.smartautoclicker.model.DetectorModel
-import com.buzbuz.smartautoclicker.overlays.MainMenu
+import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayController
+import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.detection.DetectorEngine
 
 /**
  * AccessibilityService implementation for the SmartAutoClicker.
  *
  * Started automatically by Android once the user has defined this service has an accessibility service, it provides
- * an API to start and stop the [DetectorModel] correctly in order to display the overlay UI and record the screen for
+ * an API to start and stop the [DetectorEngine] correctly in order to display the overlay UI and record the screen for
  * clicks detection.
  * This API is offered through the [LocalService] class, which is instantiated in the [LOCAL_SERVICE_INSTANCE] object.
  * This system is used instead of the usual binder interface because an [AccessibilityService] already has its own
  * binder and it can't be changed. To access this local service, use [getLocalService].
  *
- * We need this service to be an accessibility service in order to inject the detected clicks on the currently
- * displayed activity. This injection is made by the [performClick] method, which is called everytime a [ClickInfo] has
+ * We need this service to be an accessibility service in order to inject the detected event on the currently
+ * displayed activity. This injection is made by the [dispatchGesture] method, which is called everytime an event has
  * been detected.
  */
 class SmartAutoClickerService : AccessibilityService() {
@@ -83,6 +80,8 @@ class SmartAutoClickerService : AccessibilityService() {
         }
     }
 
+    /** The engine for the detection. */
+    private var detectorEngine: DetectorEngine? = null
     /** The root controller for the overlay ui. */
     private var rootOverlayController: OverlayController? = null
     /** True if the overlay is started, false if not. */
@@ -105,16 +104,22 @@ class SmartAutoClickerService : AccessibilityService() {
          * [android.app.Activity.onActivityResult]
          * @param scenario the identifier of the scenario of clicks to be used for detection.
          */
-        fun start(resultCode: Int, data: Intent, scenario: ClickScenario) {
+        fun start(resultCode: Int, data: Intent, scenario: Scenario) {
             if (isStarted) {
                 return
             }
 
             isStarted = true
             startForeground(NOTIFICATION_ID, createNotification(scenario.name))
-            DetectorModel.attach(this@SmartAutoClickerService)
-            DetectorModel.get().init(this@SmartAutoClickerService, resultCode, data, scenario)
-            rootOverlayController = MainMenu(this@SmartAutoClickerService, ::performClick).apply {
+
+            detectorEngine = DetectorEngine.getDetectorEngine(this@SmartAutoClickerService).apply {
+                init(this@SmartAutoClickerService, resultCode, data, scenario)
+                setOnGestureDetectedListener { gestureDescription ->
+                    dispatchGesture(gestureDescription, null, null)
+                }
+            }
+
+            rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario).apply {
                 create(::stop)
             }
         }
@@ -126,9 +131,16 @@ class SmartAutoClickerService : AccessibilityService() {
             }
 
             isStarted = false
+
             rootOverlayController?.dismiss()
-            DetectorModel.get().stop()
-            DetectorModel.detach()
+            rootOverlayController = null
+
+            detectorEngine?.let { detector ->
+                detector.stop()
+                detector.clear()
+            }
+            detectorEngine = null
+
             stopForeground(true)
         }
     }
@@ -169,29 +181,6 @@ class SmartAutoClickerService : AccessibilityService() {
             .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .setSmallIcon(R.drawable.ic_notification)
             .build()
-    }
-
-    /**
-     * Perform the provided click on the current activity.
-     *
-     * @param click the click to be performed.
-     */
-    private fun performClick(click: ClickInfo) {
-        val clickPath = Path()
-        val clickBuilder = GestureDescription.Builder()
-
-        clickPath.moveTo(click.from!!.x.toFloat(), click.from!!.y.toFloat())
-        when (click.type) {
-            ClickInfo.SINGLE -> {
-                clickBuilder.addStroke(StrokeDescription(clickPath, 0, 1))
-            }
-            ClickInfo.SWIPE -> {
-                clickPath.lineTo(click.to!!.x.toFloat(), click.to!!.y.toFloat())
-                clickBuilder.addStroke(StrokeDescription(clickPath, 0, 175))
-            }
-        }
-
-        dispatchGesture(clickBuilder.build(), null, null)
     }
 
     override fun onInterrupt() { /* Unused */ }
