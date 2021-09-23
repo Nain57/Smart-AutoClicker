@@ -58,7 +58,7 @@ import androidx.room.Relation
     )]
 )
 internal data class EventEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "operator") val conditionOperator: Int,

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.database
+package com.buzbuz.smartautoclicker.database.bitmap
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -35,7 +35,7 @@ import java.nio.ByteBuffer
  * @param appDataDir the directory where all bitmaps will be saved/loaded.
  */
 @Suppress("BlockingMethodInNonBlockingContext") // All are handled in IO dispatcher
-internal class BitmapManager(private val appDataDir: File) {
+internal class BitmapManagerImpl(private val appDataDir: File) : BitmapManager {
 
     companion object {
         /** Tag for logs */
@@ -56,15 +56,7 @@ internal class BitmapManager(private val appDataDir: File) {
         }
     }
 
-    /**
-     * Save the provided bitmap into the persistent memory.
-     * If the bitmap is already saved, does nothing.
-     *
-     * @param bitmap the bitmap to be saved on the persistent memory.
-     *
-     * @return the path of the bitmap.
-     */
-    suspend fun saveBitmap(bitmap: Bitmap) : String {
+    override suspend fun saveBitmap(bitmap: Bitmap) : String {
         val uncompressedBuffer = ByteBuffer.allocateDirect(bitmap.byteCount)
         bitmap.copyPixelsToBuffer(uncompressedBuffer)
         uncompressedBuffer.position(0)
@@ -86,18 +78,7 @@ internal class BitmapManager(private val appDataDir: File) {
         return path
     }
 
-    /**
-     * Load a bitmap.
-     * If it was already loaded, returns immediately with the value from the cache. If not, load it from the persistent
-     * memory.
-     *
-     * @param path the path of the bitmap.
-     * @param width the width of the bitmap.
-     * @param height the height of the bitmap.
-     *
-     * @return the loaded bitmap, or null if the path is invalid
-     */
-    suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap? {
+    override suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap? {
         var cachedBitmap = memoryCache.get(path)
         if (cachedBitmap != null) {
             return cachedBitmap
@@ -126,12 +107,7 @@ internal class BitmapManager(private val appDataDir: File) {
         }
     }
 
-    /**
-     * Delete the specified bitmaps from the persistent memory.
-     *
-     * @param paths the paths of the bitmaps to be deleted.
-     */
-    fun deleteBitmaps(paths: List<String>) {
+    override fun deleteBitmaps(paths: List<String>) {
         for (path in paths) {
             val file = File(appDataDir, path)
             if (!file.exists()) {
@@ -143,8 +119,7 @@ internal class BitmapManager(private val appDataDir: File) {
         }
     }
 
-    /** Release the cache of bitmaps. */
-    fun releaseCache() {
+    override fun releaseCache() {
         memoryCache.evictAll()
     }
 }

@@ -14,12 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.database.utils
+package com.buzbuz.smartautoclicker.database.room.migrations
 
-import org.mockito.Mockito
-
-/**
- * Argument matcher for a nonnull kotlin function argument matching any nonnull value.
- * @param T the type of the argument.
- */
-fun <T> anyNotNull(): T = Mockito.any()
+class Migration3to4Tests {
+}

@@ -132,10 +132,16 @@ internal abstract class EventDao {
     ) {
         updateEvent(event)
 
+        actionsUpdater.toBeAdded.forEach { action ->
+            action.eventId = event.id
+        }
         addActions(actionsUpdater.toBeAdded)
         updateActions(actionsUpdater.toBeUpdated)
         deleteActions(actionsUpdater.toBeRemoved)
 
+        conditionsUpdater.toBeAdded.forEach { condition ->
+            condition.eventId = event.id
+        }
         addConditions(conditionsUpdater.toBeAdded)
         updateConditions(conditionsUpdater.toBeUpdated)
         deleteConditions(conditionsUpdater.toBeRemoved)

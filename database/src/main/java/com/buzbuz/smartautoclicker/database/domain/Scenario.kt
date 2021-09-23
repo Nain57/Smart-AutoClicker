@@ -23,13 +23,13 @@ import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
  * Scenario of events.
  *
  * @param id the unique identifier for the scenario. Use 0 for creating a new scenario. Default value is 0.
- * @param name the name of the click.
- * @param clickCount the number of clicks in this scenario. Default value is 0.
+ * @param name the name of the scenario.
+ * @param eventCount the number of events in this scenario. Default value is 0.
  */
 data class Scenario(
     val id: Long = 0,
     var name: String,
-    val clickCount: Int = 0,
+    val eventCount: Int = 0,
 ) {
     /** @return the entity equivalent of this scenario. */
     internal fun toEntity() = ScenarioEntity(id, name)
@@ -39,5 +39,5 @@ data class Scenario(
 internal fun ScenarioWithEvents.toScenario() = Scenario(
     id = scenario.id,
     name = scenario.name,
-    clickCount = events.size
+    eventCount = events.size
 )
