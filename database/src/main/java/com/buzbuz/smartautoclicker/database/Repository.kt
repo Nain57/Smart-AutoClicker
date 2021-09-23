@@ -17,35 +17,21 @@
 package com.buzbuz.smartautoclicker.database
 
 import android.content.Context
-import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
+import android.graphics.Bitmap
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManagerImpl
 
-import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
-import com.buzbuz.smartautoclicker.database.domain.toEvent
-import com.buzbuz.smartautoclicker.database.domain.toScenario
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.dao.EntityListUpdater
-import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 /**
- * Repository for the database and bitmap manager.
+ * Repository storing the information about the scenarios and their events.
  * Provide the access to the scenario, events, actions and conditions from the database and the conditions bitmap from
  * the application data folder.
- *
- * @param database the database containing the list of scenario.
- * @param bitmapManager save and loads the bitmap for the conditions.
  */
-class Repository internal constructor(
-    database: ClickDatabase,
-    private val bitmapManager: BitmapManager
-) {
+interface Repository {
 
     companion object {
 
@@ -62,33 +48,15 @@ class Repository internal constructor(
          */
         fun getRepository(context: Context): Repository {
             return INSTANCE ?: synchronized(this) {
-                val instance = Repository(ClickDatabase.getDatabase(context), BitmapManagerImpl(context.filesDir))
+                val instance = RepositoryImpl(ClickDatabase.getDatabase(context), BitmapManagerImpl(context.filesDir))
                 INSTANCE = instance
                 instance
             }
         }
     }
 
-    /** The Dao for accessing the database. */
-    private val scenarioDao = database.scenarioDao()
-    /** The Dao for accessing the database. */
-    private val eventDao = database.eventDao()
-    /** The Dao for accessing the conditions. */
-    private val conditionsDao = database.conditionDao()
-
-    /** List updater for the list of actions. */
-    private val actionsUpdater = EntityListUpdater<ActionEntity, Long>(
-        defaultPrimaryKey = 0L,
-        primaryKeySupplier = { action -> action.id },
-    )
-    /** List updater for the list of conditions. */
-    private val conditionsUpdater = EntityListUpdater<ConditionEntity, Long>(
-        defaultPrimaryKey = 0L,
-        primaryKeySupplier = { condition -> condition.id },
-    )
-
     /** The list of scenarios. */
-    val scenarios = scenarioDao.getScenariosWithEvents().mapList { it.toScenario() }
+    val scenarios: Flow<List<Scenario>>
 
     /**
      * Add a new scenario.
@@ -96,18 +64,14 @@ class Repository internal constructor(
      * @param scenario the scenario to add.
      * @return the identifier for the newly add scenario.
      */
-    suspend fun addScenario(scenario: Scenario): Long {
-        return scenarioDao.add(scenario.toEntity())
-    }
+    suspend fun addScenario(scenario: Scenario): Long
 
     /**
      * Update a scenario.
      *
      * @param scenario the scenario to update.
      */
-    suspend fun updateScenario(scenario: Scenario) {
-        scenarioDao.update(scenario.toEntity())
-    }
+    suspend fun updateScenario(scenario: Scenario)
 
     /**
      * Delete a scenario.
@@ -115,17 +79,7 @@ class Repository internal constructor(
      *
      * @param scenario the scenario to delete.
      */
-    suspend fun deleteScenario(scenario: Scenario) {
-        val removedConditionsPath = mutableListOf<String>()
-        eventDao.getEventsIds(scenario.id).forEach { eventId ->
-            conditionsDao.getConditionsPath(eventId).forEach { path ->
-                if (!removedConditionsPath.contains(path))  removedConditionsPath.add(path)
-            }
-        }
-
-        scenarioDao.delete(scenario.toEntity())
-        clearRemovedConditionsBitmaps(removedConditionsPath)
-    }
+    suspend fun deleteScenario(scenario: Scenario)
 
     /**
      * Get a flow on the specified scenario.
@@ -133,10 +87,7 @@ class Repository internal constructor(
      * @param scenarioId the identifier of the scenario.
      * @return the flow on the scenario.
      */
-    fun getScenario(scenarioId: Long): Flow<Scenario> = scenarioDao.getScenarioWithEvents(scenarioId)
-        .map { scenarioEntity ->
-            scenarioEntity.toScenario()
-        }
+    fun getScenario(scenarioId: Long): Flow<Scenario>
 
     /**
      * Get the list of events for a given scenario.
@@ -145,8 +96,7 @@ class Repository internal constructor(
      * @param scenarioId the identifier of the scenario to ge the events from.
      * @return the list of events, ordered by execution priority.
      */
-    fun getEventList(scenarioId: Long): Flow<List<Event>> =
-        eventDao.getEvents(scenarioId).mapList { it.toEvent() }
+    fun getEventList(scenarioId: Long): Flow<List<Event>>
 
     /**
      * Get the list of complete events for a given scenario.
@@ -154,8 +104,7 @@ class Repository internal constructor(
      * @param scenarioId the identifier of the scenario to ge the events from.
      * @return the list of complete events, ordered by execution priority.
      */
-    fun getCompleteEventList(scenarioId: Long): Flow<List<Event>> =
-        eventDao.getCompleteEvents(scenarioId).mapList { it.toEvent() }
+    fun getCompleteEventList(scenarioId: Long): Flow<List<Event>>
 
     /**
      * Get the complete version of a given event.
@@ -163,7 +112,7 @@ class Repository internal constructor(
      * @param eventId the event identifier to get the complete version of.
      * @return the complete event.
      */
-    suspend fun getCompleteEvent(eventId: Long) = eventDao.getEvent(eventId).toEvent()
+    suspend fun getCompleteEvent(eventId: Long): Event
 
     /**
      * Add a new event.
@@ -172,16 +121,7 @@ class Repository internal constructor(
      * @param event the event to be added.
      * @return true if it has been added, false if not.
      */
-    suspend fun addEvent(event: Event): Boolean {
-        event.conditions?.let {
-            saveNewConditionsBitmap(it)
-        }
-
-        event.toCompleteEntity()?.let { entity ->
-            eventDao.addEvent(entity)
-            return true
-        } ?: return false
-    }
+    suspend fun addEvent(event: Event): Boolean
 
     /**
      * Update an event.
@@ -189,47 +129,21 @@ class Repository internal constructor(
      *
      * @param event the event to update.
      */
-    suspend fun updateEvent(event: Event) {
-        event.conditions?.let {
-            saveNewConditionsBitmap(it)
-        }
-
-        event.toCompleteEntity()?.let { eventEntity ->
-            // Get current database values
-            val oldActions = eventDao.getActions(eventEntity.event.id)
-            val oldConditions = conditionsDao.getConditions(eventEntity.event.id)
-
-            // Refresh the updaters
-            actionsUpdater.refreshUpdateValues(oldActions, eventEntity.actions)
-            conditionsUpdater.refreshUpdateValues(oldConditions, eventEntity.conditions)
-
-            // Update database values
-            eventDao.updateEvent(eventEntity.event, actionsUpdater, conditionsUpdater)
-
-            // Remove the conditions bitmap if unused
-            clearRemovedConditionsBitmaps(conditionsUpdater.toBeRemoved.map { it.path })
-        }
-    }
+    suspend fun updateEvent(event: Event)
 
     /**
      * Update the priorities of the event list.
      *
      * @param events the events, ordered by execution priority.
      */
-    suspend fun updateEventsPriority(events: List<Event>) {
-        eventDao.updateEventList(events.map { it.toEntity() })
-    }
+    suspend fun updateEventsPriority(events: List<Event>)
 
     /**
      * Remove an event.
      *
      * @param event the event to remove.
      */
-    suspend fun removeEvent(event: Event) {
-        val removedConditions = conditionsDao.getConditionsPath(event.id)
-        eventDao.deleteEvent(event.toEntity())
-        clearRemovedConditionsBitmaps(removedConditions)
-    }
+    suspend fun removeEvent(event: Event)
 
     /**
      * Get the bitmap for the given path.
@@ -241,35 +155,5 @@ class Repository internal constructor(
      *
      * @return the bitmap, or null if the path can't be found.
      */
-    suspend fun getBitmap(path: String, width: Int, height: Int) = bitmapManager.loadBitmap(path, width, height)
-
-    /**
-     * Save the new conditions bitmap on the application data folder.
-     *
-     * @param conditions the list of conditions to save their bitmap.
-     */
-    private suspend fun saveNewConditionsBitmap(conditions: List<Condition>) {
-        conditions.forEach { condition ->
-            if (condition.path == null) {
-                if (condition.bitmap == null) {
-                    throw IllegalArgumentException("Can't save invalid condition")
-                }
-
-                condition.path = bitmapManager.saveBitmap(condition.bitmap)
-            }
-        }
-    }
-
-    /**
-     * Remove bitmaps from the application data folder.
-     *
-     * @param removedPath the list of path for the bitmaps to be removed.
-     */
-    private suspend fun clearRemovedConditionsBitmaps(removedPath: List<String>) {
-        val deletedPaths = removedPath.filter { path ->
-            conditionsDao.getValidPathCount(path) == 0
-        }
-
-        bitmapManager.deleteBitmaps(deletedPaths)
-    }
+    suspend fun getBitmap(path: String, width: Int, height: Int): Bitmap?
 }

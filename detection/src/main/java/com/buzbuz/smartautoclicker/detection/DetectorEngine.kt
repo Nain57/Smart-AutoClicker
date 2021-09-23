@@ -79,7 +79,7 @@ class DetectorEngine internal constructor(context: Context) {
     private val coroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
     /** Object recording the screen of the display to detect on and trying to match the events from the scenario on it. */
-    private val screenDetector = ScreenDetector(context)
+    private val screenDetector = ScreenDetector(context, Repository.getRepository(context))
 
     /**
      * True if this model is detecting, false if not.

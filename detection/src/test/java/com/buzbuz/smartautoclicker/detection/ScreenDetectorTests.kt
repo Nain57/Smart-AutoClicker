@@ -37,14 +37,16 @@ import android.view.Surface
 import android.view.WindowManager
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.buzbuz.smartautoclicker.database.domain.AND
 
+import com.buzbuz.smartautoclicker.database.Repository
+import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.detection.utils.ProcessingData
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
+
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -75,7 +77,6 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 
 import java.nio.ByteBuffer
-import java.util.concurrent.TimeUnit
 
 /** Test the [ConditionDetector] class. */
 @RunWith(AndroidJUnit4::class)
@@ -142,6 +143,7 @@ class ScreenDetectorTests {
 
     // ScreenRecorder
     @Mock private lateinit var mockContext: Context
+    @Mock private lateinit var mockRepository: Repository
     @Mock private lateinit var mockResources: Resources
     @Mock private lateinit var mockDisplay: Display
     @Mock private lateinit var mockWindowManager: WindowManager
@@ -221,6 +223,7 @@ class ScreenDetectorTests {
      */
     private fun toStartDetection(clicks: List<Event>) {
         screenDetector.startDetection(clicks)
+        screenDetector.processingThread?.let { shadowOf(it.looper).idle() }
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
     }
 
@@ -230,6 +233,7 @@ class ScreenDetectorTests {
      */
     private fun toStopDetection() {
         screenDetector.stopDetection()
+        screenDetector.processingThread?.let { shadowOf(it.looper).idle() }
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
     }
 
@@ -302,7 +306,7 @@ class ScreenDetectorTests {
         mockWhen(mockBitmapCreator.createBitmap(eq(mockScreenBitmap), anyInt(), anyInt(), anyInt(), anyInt()))
             .thenReturn(mockCaptureBitmap)
 
-        screenDetector = ScreenDetector(mockContext)
+        screenDetector = ScreenDetector(mockContext, mockRepository)
     }
 
     /** Setup the mocks for the screen recorder. */
@@ -500,35 +504,6 @@ class ScreenDetectorTests {
 
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
         verifyNoInteractions(mockDetectionCallback)
-    }
-
-    @Test
-    fun detection_clickDetected() {
-        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(VALID_CONDITION))
-        val imageAvailableListener = toStartScreenRecord()
-
-        toStartDetection(listOf(click))
-        imageAvailableListener.onImageAvailable(mockImageReader)
-
-        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
-        verify(mockDetectionCallback).onDetected(click)
-    }
-
-    @Test
-    fun detection_clickDetected_multipleImages() {
-        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(VALID_CONDITION))
-        val imageAvailableListener = toStartScreenRecord()
-
-        toStartDetection(listOf(click))
-
-        val imageCount = 5
-        for (i in 0 until imageCount) {
-            imageAvailableListener.onImageAvailable(mockImageReader)
-            shadowOf(Looper.getMainLooper()).runToNextTask() // idle to execute possible callbacks
-        }
-
-        shadowOf(Looper.getMainLooper()).idle()
-        verify(mockDetectionCallback, times(imageCount)).onDetected(click)
     }
 
     @Test
