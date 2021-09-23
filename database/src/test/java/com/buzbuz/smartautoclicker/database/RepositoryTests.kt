@@ -61,7 +61,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
 
-/** Tests for the [Repository]. */
+/** Tests for the [RepositoryImpl]. */
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
@@ -83,7 +83,7 @@ class RepositoryTests {
     /** A mocked version of the Condition Dao. */
     @Mock private lateinit var mockConditionDao: ConditionDao
     /** Object under tests. */
-    private lateinit var repository: Repository
+    private lateinit var repository: RepositoryImpl
 
     @Before
     fun setUp() {
@@ -97,7 +97,7 @@ class RepositoryTests {
         mockWhen(mockDatabase.eventDao()).thenReturn(mockEventDao)
         mockWhen(mockDatabase.conditionDao()).thenReturn(mockConditionDao)
 
-        repository = Repository(mockDatabase, mockBitmapManager)
+        repository = RepositoryImpl(mockDatabase, mockBitmapManager)
         clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao)
     }
 

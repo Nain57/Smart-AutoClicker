@@ -60,9 +60,11 @@ import kotlinx.coroutines.flow.StateFlow
  * Once you no longer needs to capture or detect, call [stopDetection] or [stop] to release all processing resources.
  *
  * @param context the Android context.
+ * @param repository the repository of the events to detect.
  */
 class ScreenDetector(
-    private val context: Context
+    private val context: Context,
+    private val repository: Repository,
 ) {
 
     /** Monitors the state of the screen. */
@@ -73,8 +75,6 @@ class ScreenDetector(
     private val mainHandler = Handler(Looper.getMainLooper())
     /** Record the screen and provide images of it regularly via [onNewImage]. */
     private val screenRecorder = ScreenRecorder(::onNewImage)
-    /** Repository of the events to detect. */
-    private val repository = Repository.getRepository(context)
     /** The cache for image processing optimization. */
     private val cache = Cache { path, width, height ->
         // We can run blocking here, we are on the screen detector thread
