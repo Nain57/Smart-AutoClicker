@@ -128,7 +128,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
      */
     fun getCompleteEvent(event: Event, forCopy: Boolean, onCompleted: (Event) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val completeEvent = repository.getCompleteEvent(event)
+            val completeEvent = repository.getCompleteEvent(event.id)
             if (forCopy) {
                 completeEvent.priority = events.value.size
                 completeEvent.cleanUpIds()

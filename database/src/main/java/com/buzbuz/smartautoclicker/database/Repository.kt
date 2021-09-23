@@ -17,6 +17,8 @@
 package com.buzbuz.smartautoclicker.database
 
 import android.content.Context
+import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
+import com.buzbuz.smartautoclicker.database.bitmap.BitmapManagerImpl
 
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.Event
@@ -37,10 +39,13 @@ import kotlinx.coroutines.flow.map
  * Provide the access to the scenario, events, actions and conditions from the database and the conditions bitmap from
  * the application data folder.
  *
- * @param context the Android context.
  * @param database the database containing the list of scenario.
+ * @param bitmapManager save and loads the bitmap for the conditions.
  */
-class Repository internal constructor(context: Context, database: ClickDatabase) {
+class Repository internal constructor(
+    database: ClickDatabase,
+    private val bitmapManager: BitmapManager
+) {
 
     companion object {
 
@@ -57,15 +62,13 @@ class Repository internal constructor(context: Context, database: ClickDatabase)
          */
         fun getRepository(context: Context): Repository {
             return INSTANCE ?: synchronized(this) {
-                val instance = Repository(context, ClickDatabase.getDatabase(context))
+                val instance = Repository(ClickDatabase.getDatabase(context), BitmapManagerImpl(context.filesDir))
                 INSTANCE = instance
                 instance
             }
         }
     }
 
-    /** Save and loads the bitmap for the conditions. */
-    private val bitmapManager = BitmapManager(context.filesDir)
     /** The Dao for accessing the database. */
     private val scenarioDao = database.scenarioDao()
     /** The Dao for accessing the database. */
@@ -115,7 +118,9 @@ class Repository internal constructor(context: Context, database: ClickDatabase)
     suspend fun deleteScenario(scenario: Scenario) {
         val removedConditionsPath = mutableListOf<String>()
         eventDao.getEventsIds(scenario.id).forEach { eventId ->
-            removedConditionsPath.addAll(conditionsDao.getConditionsPath(eventId))
+            conditionsDao.getConditionsPath(eventId).forEach { path ->
+                if (!removedConditionsPath.contains(path))  removedConditionsPath.add(path)
+            }
         }
 
         scenarioDao.delete(scenario.toEntity())
@@ -138,7 +143,7 @@ class Repository internal constructor(context: Context, database: ClickDatabase)
      * Note that those events will not have their actions/conditions, use [getCompleteEventList] for that.
      *
      * @param scenarioId the identifier of the scenario to ge the events from.
-     * @return the lsit of events, ordered by execution priority.
+     * @return the list of events, ordered by execution priority.
      */
     fun getEventList(scenarioId: Long): Flow<List<Event>> =
         eventDao.getEvents(scenarioId).mapList { it.toEvent() }
@@ -155,10 +160,10 @@ class Repository internal constructor(context: Context, database: ClickDatabase)
     /**
      * Get the complete version of a given event.
      *
-     * @param event the event to get the complete version of.
+     * @param eventId the event identifier to get the complete version of.
      * @return the complete event.
      */
-    suspend fun getCompleteEvent(event: Event) = eventDao.getEvent(event.id).toEvent()
+    suspend fun getCompleteEvent(eventId: Long) = eventDao.getEvent(eventId).toEvent()
 
     /**
      * Add a new event.
@@ -168,7 +173,9 @@ class Repository internal constructor(context: Context, database: ClickDatabase)
      * @return true if it has been added, false if not.
      */
     suspend fun addEvent(event: Event): Boolean {
-        saveNewConditionsBitmap(event.conditions!!)
+        event.conditions?.let {
+            saveNewConditionsBitmap(it)
+        }
 
         event.toCompleteEntity()?.let { entity ->
             eventDao.addEvent(entity)
@@ -183,7 +190,9 @@ class Repository internal constructor(context: Context, database: ClickDatabase)
      * @param event the event to update.
      */
     suspend fun updateEvent(event: Event) {
-        saveNewConditionsBitmap(event.conditions!!)
+        event.conditions?.let {
+            saveNewConditionsBitmap(it)
+        }
 
         event.toCompleteEntity()?.let { eventEntity ->
             // Get current database values
@@ -217,12 +226,7 @@ class Repository internal constructor(context: Context, database: ClickDatabase)
      * @param event the event to remove.
      */
     suspend fun removeEvent(event: Event) {
-        val removedConditions = if (event.conditions == null) {
-            conditionsDao.getConditionsPath(event.id)
-        } else {
-            event.conditions.map { it.path!! }
-        }
-
+        val removedConditions = conditionsDao.getConditionsPath(event.id)
         eventDao.deleteEvent(event.toEntity())
         clearRemovedConditionsBitmaps(removedConditions)
     }

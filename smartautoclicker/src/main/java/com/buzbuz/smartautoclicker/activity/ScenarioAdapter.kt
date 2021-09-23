@@ -51,7 +51,7 @@ class ScenarioAdapter : RecyclerView.Adapter<ScenarioViewHolder>() {
         val scenario = scenarios!![position]
         holder.viewBinding.name.text = scenario.name
         holder.viewBinding.details.text = holder.itemView.context.resources
-            .getQuantityString(R.plurals.scenario_sub_text, scenario.clickCount, scenario.clickCount)
+            .getQuantityString(R.plurals.scenario_sub_text, scenario.eventCount, scenario.eventCount)
         setClickListener(holder.viewBinding.root, scenario, startScenarioListener)
         setClickListener(holder.viewBinding.btnDelete, scenario, deleteScenarioListener)
         setClickListener(holder.viewBinding.btnRename, scenario, editClickListener)

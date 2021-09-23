@@ -31,7 +31,7 @@ internal interface ConditionDao {
      * @param eventId the identifier of the event to get the conditions from.
      * @return the list of conditions for the event.
      */
-    @Query("SELECT * FROM condition_table WHERE eventId=:eventId")
+    @Query("SELECT * FROM condition_table WHERE eventId=:eventId ORDER BY id")
     suspend fun getConditions(eventId: Long): List<ConditionEntity>
 
     /**
