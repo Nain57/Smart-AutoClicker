@@ -37,14 +37,16 @@ import android.view.Surface
 import android.view.WindowManager
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.database.domain.AND
 
-import com.buzbuz.smartautoclicker.database.old.ClickCondition
-import com.buzbuz.smartautoclicker.database.old.ClickInfo
+import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.detection.utils.ProcessingData
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
-import com.buzbuz.smartautoclicker.detection.utils.getOrAwaitValue
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -89,30 +91,34 @@ class ScreenDetectorTests {
 
         private const val VALID_CLICK_CONDITION_PATH = "/this/is/a/path"
         private const val VALID_CLICK_CONDITION_THRESHOLD = 12
-        private val VALID_CLICK_CONDITION_AREA = Rect(
+        private val VALID_CONDITION_AREA = Rect(
             0,
             0,
             ProcessingData.SCREEN_AREA.width() - 1,
             ProcessingData.SCREEN_AREA.height() - 1
         )
-        private val VALID_CLICK_CONDITION = ClickCondition(
-            VALID_CLICK_CONDITION_AREA,
+        private val VALID_CONDITION = Condition(
+            42L,
+            84L,
             VALID_CLICK_CONDITION_PATH,
-            VALID_CLICK_CONDITION_THRESHOLD
+            VALID_CONDITION_AREA,
+            VALID_CLICK_CONDITION_THRESHOLD,
         )
 
-        private const val INVALID_CLICK_CONDITION_PATH = "/this/is/another/path"
-        private const val INVALID_CLICK_CONDITION_THRESHOLD = 25
-        private val INVALID_CLICK_CONDITION_AREA = Rect(
+        private const val INVALID_CONDITION_PATH = "/this/is/another/path"
+        private const val INVALID_CONDITION_THRESHOLD = 25
+        private val INVALID_CONDITION_AREA = Rect(
             1,
             0,
             ProcessingData.SCREEN_AREA.width(),
             ProcessingData.SCREEN_AREA.height()
         )
-        private val INVALID_CLICK_CONDITION = ClickCondition(
-            INVALID_CLICK_CONDITION_AREA,
-            INVALID_CLICK_CONDITION_PATH,
-            INVALID_CLICK_CONDITION_THRESHOLD
+        private val INVALID_CONDITION = Condition(
+            12L,
+            89L,
+            INVALID_CONDITION_PATH,
+            INVALID_CONDITION_AREA,
+            INVALID_CONDITION_THRESHOLD
         )
 
         private const val IMAGE_PIXEL_STRIDE = 1
@@ -131,7 +137,7 @@ class ScreenDetectorTests {
 
     /** Interface to be mocked in order to verify the calls to the click detected callback. */
     interface DetectionCallback {
-        fun onDetected(click: ClickInfo)
+        fun onDetected(event: Event)
     }
 
     // ScreenRecorder
@@ -199,7 +205,7 @@ class ScreenDetectorTests {
      * This will execute all handlers runnable in order to ensure state correctness.
      */
     private fun executeCaptureArea() {
-        screenDetector.captureArea(VALID_CLICK_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        screenDetector.captureArea(VALID_CONDITION_AREA, mockCaptureCallback::onCaptured)
         screenDetector.processingThread?.let {
             shadowOf(it.looper).idle()
         }
@@ -213,8 +219,8 @@ class ScreenDetectorTests {
      *
      * @param clicks the list of clicks used as tests data.
      */
-    private fun toStartDetection(clicks: List<ClickInfo>) {
-        screenDetector.startDetection(clicks, mockDetectionCallback::onDetected)
+    private fun toStartDetection(clicks: List<Event>) {
+        screenDetector.startDetection(clicks)
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
     }
 
@@ -279,24 +285,24 @@ class ScreenDetectorTests {
         // Mock bitmap for the valid click condition
         mockValidConditionBitmap = mockConditionBitmap(
             VALID_CLICK_CONDITION_PATH,
-            ProcessingData.getScreenPixelCacheForArea(VALID_CLICK_CONDITION_AREA).first,
-            VALID_CLICK_CONDITION_AREA.width(),
-            VALID_CLICK_CONDITION_AREA.height()
+            ProcessingData.getScreenPixelCacheForArea(VALID_CONDITION_AREA).first,
+            VALID_CONDITION_AREA.width(),
+            VALID_CONDITION_AREA.height()
         )
 
         // Mock Bitmap for the invalid click condition
         mockInvalidConditionBitmap = mockConditionBitmap(
-            INVALID_CLICK_CONDITION_PATH,
-            ProcessingData.getOtherPixelCacheForArea(INVALID_CLICK_CONDITION_AREA).first,
-            INVALID_CLICK_CONDITION_AREA.width(),
-            INVALID_CLICK_CONDITION_AREA.height()
+            INVALID_CONDITION_PATH,
+            ProcessingData.getOtherPixelCacheForArea(INVALID_CONDITION_AREA).first,
+            INVALID_CONDITION_AREA.width(),
+            INVALID_CONDITION_AREA.height()
         )
 
         // Mock for the capture
         mockWhen(mockBitmapCreator.createBitmap(eq(mockScreenBitmap), anyInt(), anyInt(), anyInt(), anyInt()))
             .thenReturn(mockCaptureBitmap)
 
-        screenDetector = ScreenDetector(mockContext, mockBitmapSupplier::getBitmap)
+        screenDetector = ScreenDetector(mockContext)
     }
 
     /** Setup the mocks for the screen recorder. */
@@ -405,14 +411,14 @@ class ScreenDetectorTests {
     }
 
     @Test
-    fun isScreenRecording_initialValue() {
-        assertFalse(screenDetector.isScreenRecording.getOrAwaitValue())
+    fun isScreenRecording_initialValue() = runBlocking {
+        assertFalse(screenDetector.isScreenRecording.first())
     }
 
     @Test
-    fun isScreenRecording_recording() {
+    fun isScreenRecording_recording() = runBlocking {
         toStartScreenRecord()
-        assertTrue(screenDetector.isScreenRecording.getOrAwaitValue())
+        assertTrue(screenDetector.isScreenRecording.first())
     }
 
     @Test
@@ -429,8 +435,8 @@ class ScreenDetectorTests {
         imageAvailableListener.onImageAvailable(mockImageReader)
         executeCaptureArea()
 
-        verify(mockBitmapCreator).createBitmap(mockScreenBitmap, VALID_CLICK_CONDITION_AREA.left,
-            VALID_CLICK_CONDITION_AREA.top, VALID_CLICK_CONDITION_AREA.right, VALID_CLICK_CONDITION_AREA.bottom)
+        verify(mockBitmapCreator).createBitmap(mockScreenBitmap, VALID_CONDITION_AREA.left,
+            VALID_CONDITION_AREA.top, VALID_CONDITION_AREA.right, VALID_CONDITION_AREA.bottom)
     }
 
     @Test
@@ -477,7 +483,7 @@ class ScreenDetectorTests {
     fun detection_clickWithoutConditions() {
         val imageAvailableListener = toStartScreenRecord()
 
-        toStartDetection(listOf(ProcessingData.newClickInfo(CLICK_NAME)))
+        toStartDetection(listOf(ProcessingData.newEvent(name = CLICK_NAME)))
         imageAvailableListener.onImageAvailable(mockImageReader)
 
         shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
@@ -486,7 +492,7 @@ class ScreenDetectorTests {
 
     @Test
     fun detection_clickNotDetected() {
-        val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(INVALID_CLICK_CONDITION))
+        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(INVALID_CONDITION))
         val imageAvailableListener = toStartScreenRecord()
 
         toStartDetection(listOf(click))
@@ -498,7 +504,7 @@ class ScreenDetectorTests {
 
     @Test
     fun detection_clickDetected() {
-        val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(VALID_CLICK_CONDITION))
+        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(VALID_CONDITION))
         val imageAvailableListener = toStartScreenRecord()
 
         toStartDetection(listOf(click))
@@ -510,7 +516,7 @@ class ScreenDetectorTests {
 
     @Test
     fun detection_clickDetected_multipleImages() {
-        val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(VALID_CLICK_CONDITION))
+        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(VALID_CONDITION))
         val imageAvailableListener = toStartScreenRecord()
 
         toStartDetection(listOf(click))
@@ -526,24 +532,8 @@ class ScreenDetectorTests {
     }
 
     @Test
-    fun detection_clickDetected_delayAfter() {
-        val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(VALID_CLICK_CONDITION), CLICK_DELAY)
-        val imageAvailableListener = toStartScreenRecord()
-
-        toStartDetection(listOf(click))
-
-        imageAvailableListener.onImageAvailable(mockImageReader)
-        imageAvailableListener.onImageAvailable(mockImageReader) // This one should be skipped due to delay
-        shadowOf(Looper.getMainLooper()).idleFor(CLICK_DELAY + 1, TimeUnit.MILLISECONDS)
-        imageAvailableListener.onImageAvailable(mockImageReader)
-        shadowOf(Looper.getMainLooper()).idle()
-
-        verify(mockDetectionCallback, times(2)).onDetected(click)
-    }
-
-    @Test
     fun detection_alreadyStarted() {
-        val click = ProcessingData.newClickInfo(CLICK_NAME, ClickInfo.AND, listOf(INVALID_CLICK_CONDITION))
+        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(INVALID_CONDITION))
         val imageAvailableListener = toStartScreenRecord()
 
         // Start with an empty list then a valid list, then check that the valid item is never detected
@@ -556,45 +546,45 @@ class ScreenDetectorTests {
     }
 
     @Test
-    fun isDetecting_notDetecting() {
+    fun isDetecting_notDetecting() = runBlocking {
         toStartScreenRecord()
-        assertFalse(screenDetector.isDetecting.getOrAwaitValue())
+        assertFalse(screenDetector.isDetecting.first())
     }
 
     @Test
-    fun isDetecting_detecting() {
-        toStartScreenRecord()
-        toStartDetection(emptyList())
-
-        assertTrue(screenDetector.isDetecting.getOrAwaitValue())
-    }
-
-    @Test
-    fun stopDetecting_notStarted() {
-        toStopDetection()
-        assertFalse(screenDetector.isDetecting.getOrAwaitValue())
-    }
-
-    @Test
-    fun stopDetecting_started() {
+    fun isDetecting_detecting() = runBlocking {
         toStartScreenRecord()
         toStartDetection(emptyList())
 
-        toStopDetection()
-
-        assertFalse(screenDetector.isDetecting.getOrAwaitValue())
+        assertTrue(screenDetector.isDetecting.first())
     }
 
     @Test
-    fun stopScreenRecord_notStarted() {
+    fun stopDetecting_notStarted() = runBlocking {
+        toStopDetection()
+        assertFalse(screenDetector.isDetecting.first())
+    }
+
+    @Test
+    fun stopDetecting_started() = runBlocking {
+        toStartScreenRecord()
+        toStartDetection(emptyList())
+
+        toStopDetection()
+
+        assertFalse(screenDetector.isDetecting.first())
+    }
+
+    @Test
+    fun stopScreenRecord_notStarted() = runBlocking {
         toStopScreenRecord()
 
-        assertFalse(screenDetector.isScreenRecording.getOrAwaitValue())
-        assertFalse(screenDetector.isDetecting.getOrAwaitValue())
+        assertFalse(screenDetector.isScreenRecording.first())
+        assertFalse(screenDetector.isDetecting.first())
     }
 
     @Test
-    fun stopScreenRecord_recording() {
+    fun stopScreenRecord_recording() = runBlocking {
         toStartScreenRecord()
 
         toStopScreenRecord()
@@ -606,12 +596,12 @@ class ScreenDetectorTests {
             verify(mockMediaProjection).unregisterCallback(anyNotNull())
             verify(mockMediaProjection).stop()
         }
-        assertFalse(screenDetector.isScreenRecording.getOrAwaitValue())
-        assertFalse(screenDetector.isDetecting.getOrAwaitValue())
+        assertFalse(screenDetector.isScreenRecording.first())
+        assertFalse(screenDetector.isDetecting.first())
     }
 
     @Test
-    fun stopScreenRecord_detecting() {
+    fun stopScreenRecord_detecting() = runBlocking {
         toStartScreenRecord()
         toStartDetection(emptyList())
 
@@ -624,7 +614,7 @@ class ScreenDetectorTests {
             verify(mockMediaProjection).unregisterCallback(anyNotNull())
             verify(mockMediaProjection).stop()
         }
-        assertFalse(screenDetector.isScreenRecording.getOrAwaitValue())
-        assertFalse(screenDetector.isDetecting.getOrAwaitValue())
+        assertFalse(screenDetector.isScreenRecording.first())
+        assertFalse(screenDetector.isDetecting.first())
     }
 }

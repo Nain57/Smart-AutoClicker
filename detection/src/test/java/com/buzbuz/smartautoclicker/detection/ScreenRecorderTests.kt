@@ -34,6 +34,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
+import kotlinx.coroutines.runBlocking
 
 import org.junit.After
 import org.junit.Before
@@ -143,7 +144,7 @@ class ScreenRecorderTests {
     }
 
     @Test
-    fun startScreenRecord() {
+    fun startScreenRecord() = runBlocking {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
         screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
@@ -152,7 +153,7 @@ class ScreenRecorderTests {
     }
 
     @Test
-    fun startScreenRecord_alreadyStarted() {
+    fun startScreenRecord_alreadyStarted() = runBlocking  {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
         screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
@@ -162,7 +163,7 @@ class ScreenRecorderTests {
     }
 
     @Test
-    fun stopProjection() {
+    fun stopProjection() = runBlocking  {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
         screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
@@ -176,6 +177,7 @@ class ScreenRecorderTests {
             verify(mockMediaProjection).unregisterCallback(anyNotNull())
             verify(mockMediaProjection).stop()
         }
+        Unit
     }
 
     @Test
@@ -190,7 +192,7 @@ class ScreenRecorderTests {
     }
 
     @Test
-    fun stopScreenRecord() {
+    fun stopScreenRecord() = runBlocking {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
         screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
@@ -202,6 +204,7 @@ class ScreenRecorderTests {
             verify(mockImageReader).setOnImageAvailableListener(null, null)
             verify(mockImageReader).close()
         }
+        Unit
     }
 
     @Test
@@ -226,7 +229,7 @@ class ScreenRecorderTests {
     }
 
     @Test
-    fun onNewImage() {
+    fun onNewImage() = runBlocking  {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
         screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)

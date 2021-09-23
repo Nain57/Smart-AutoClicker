@@ -20,13 +20,16 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.database.old.ClickCondition
-import com.buzbuz.smartautoclicker.database.old.ClickInfo
+import com.buzbuz.smartautoclicker.database.domain.AND
+import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
+import com.buzbuz.smartautoclicker.database.domain.Event
 
 import java.lang.IllegalArgumentException
+
 import kotlin.math.max
 import kotlin.math.min
-
 import kotlin.math.sqrt
 
 /** Test data and helpers for the detection tests. */
@@ -84,15 +87,15 @@ internal object ProcessingData {
         return IntArray(arraysSize) to IntArray(arraysSize)
     }
 
-    /** Instantiates a new click info with only the useful values for the tests. */
-    fun newClickInfo(
+    /** Instantiates a new event with only the useful values for the tests. */
+    fun newEvent(
+        id: Long = 1L,
+        scenarioId: Long = 1L,
         name: String,
-        @ClickInfo.Companion.Operator operator: Int = ClickInfo.AND,
-        conditions: List<ClickCondition> = emptyList(),
-        delayMs: Long = 0L
-    ) = ClickInfo(name).apply {
-        conditionOperator = operator
-        conditionList = conditions
-        delayAfterMs = delayMs
-    }
+        @ConditionOperator operator: Int = AND,
+        priority: Int = 0,
+        actions: List<Action> = emptyList(),
+        conditions: List<Condition> = emptyList(),
+        stopAfter: Int = 0
+    ) = Event(id, scenarioId, name, operator, priority, actions.toMutableList(), conditions.toMutableList(), stopAfter)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,8 +23,8 @@ import android.media.Image
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.database.domain.Condition
 
-import com.buzbuz.smartautoclicker.database.old.ClickCondition
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.detection.utils.anyNotNull
 
@@ -67,23 +67,27 @@ class CacheTests {
         private const val TEST_DATA_IMAGE_ROW_STRIDE = TEST_DATA_DISPLAY_SIZE_WIDTH
         private const val TEST_DATA_IMAGE_ROW_STRIDE_2 = TEST_DATA_DISPLAY_SIZE_WIDTH_2
 
-        private const val TEST_DATA_CLICK_CONDITION_PATH = "/this/is/a/path"
-        private const val TEST_DATA_CLICK_CONDITION_WIDTH = 100
-        private const val TEST_DATA_CLICK_CONDITION_HEIGHT = 100
-        private const val TEST_DATA_CLICK_CONDITION_THRESHOLD = 12
-        private val TEST_DATA_CLICK_CONDITION_AREA = Rect(
-            TEST_DATA_CLICK_CONDITION_WIDTH,
-            TEST_DATA_CLICK_CONDITION_HEIGHT,
-            TEST_DATA_CLICK_CONDITION_WIDTH * 2,
-            TEST_DATA_CLICK_CONDITION_HEIGHT * 2
+        private const val TEST_DATA_CONDITION_ID = 42L
+        private const val TEST_DATA_EVENT_ID = 84L
+        private const val TEST_DATA_CONDITION_PATH = "/this/is/a/path"
+        private const val TEST_DATA_CONDITION_WIDTH = 100
+        private const val TEST_DATA_CONDITION_HEIGHT = 100
+        private const val TEST_DATA_CONDITION_THRESHOLD = 12
+        private val TEST_DATA_CONDITION_AREA = Rect(
+            TEST_DATA_CONDITION_WIDTH,
+            TEST_DATA_CONDITION_HEIGHT,
+            TEST_DATA_CONDITION_WIDTH * 2,
+            TEST_DATA_CONDITION_HEIGHT * 2
         )
-        private val TEST_DATA_CLICK_CONDITION = ClickCondition(
-            TEST_DATA_CLICK_CONDITION_AREA,
-            TEST_DATA_CLICK_CONDITION_PATH,
-            TEST_DATA_CLICK_CONDITION_THRESHOLD
+        private val TEST_DATA_CONDITION = Condition(
+            TEST_DATA_CONDITION_ID,
+            TEST_DATA_EVENT_ID,
+            TEST_DATA_CONDITION_PATH,
+            TEST_DATA_CONDITION_AREA,
+            TEST_DATA_CONDITION_THRESHOLD,
         )
         private val TEST_DATA_CLICK_CONDITION_IMAGE_PIXELS =
-            IntArray(TEST_DATA_CLICK_CONDITION_WIDTH * TEST_DATA_CLICK_CONDITION_HEIGHT)
+            IntArray(TEST_DATA_CONDITION_WIDTH * TEST_DATA_CONDITION_HEIGHT)
     }
 
     /** Interface to be mocked in order to verify the calls to the bitmap supplier. */
@@ -136,12 +140,12 @@ class CacheTests {
 
         // Mock the bitmaps supplied by bitmap supplier lambda
         mockWhen(mockBitmapSupplier.getBitmap(
-            TEST_DATA_CLICK_CONDITION_PATH,
-            TEST_DATA_CLICK_CONDITION_WIDTH,
-            TEST_DATA_CLICK_CONDITION_HEIGHT
+            TEST_DATA_CONDITION_PATH,
+            TEST_DATA_CONDITION_WIDTH,
+            TEST_DATA_CONDITION_HEIGHT
         )).thenReturn(mockSuppliedBitmap)
-        mockWhen(mockSuppliedBitmap.width).thenReturn(TEST_DATA_CLICK_CONDITION_WIDTH)
-        mockWhen(mockSuppliedBitmap.height).thenReturn(TEST_DATA_CLICK_CONDITION_HEIGHT)
+        mockWhen(mockSuppliedBitmap.width).thenReturn(TEST_DATA_CONDITION_WIDTH)
+        mockWhen(mockSuppliedBitmap.height).thenReturn(TEST_DATA_CONDITION_HEIGHT)
 
         // Mock the image data
         mockWhen(mockImage.planes).thenReturn(arrayOf(mockImagePlane))
@@ -233,11 +237,11 @@ class CacheTests {
     fun pixelCache_createItem() {
         val conditionPixelsCaptor = ArgumentCaptor.forClass(IntArray::class.java)
 
-        val result = cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
+        val result = cache.pixelsCache.get(TEST_DATA_CONDITION)
 
         verify(mockSuppliedBitmap).getPixels(conditionPixelsCaptor.capture(), eq(0),
-            eq(TEST_DATA_CLICK_CONDITION_WIDTH), eq(0), eq(0), eq(TEST_DATA_CLICK_CONDITION_WIDTH),
-            eq(TEST_DATA_CLICK_CONDITION_HEIGHT))
+            eq(TEST_DATA_CONDITION_WIDTH), eq(0), eq(0), eq(TEST_DATA_CONDITION_WIDTH),
+            eq(TEST_DATA_CONDITION_HEIGHT))
         assertNotNull("Result should not be null", result)
         assertTrue("Invalid pixel cache condition pixels arrays",
             conditionPixelsCaptor.value.contentEquals(result!!.first))
@@ -249,15 +253,15 @@ class CacheTests {
     @Test
     fun pixelCache_createItem_noBitmap() {
         mockWhen(mockBitmapSupplier.getBitmap(
-            TEST_DATA_CLICK_CONDITION_PATH,
-            TEST_DATA_CLICK_CONDITION_WIDTH,
-            TEST_DATA_CLICK_CONDITION_HEIGHT
+            TEST_DATA_CONDITION_PATH,
+            TEST_DATA_CONDITION_WIDTH,
+            TEST_DATA_CONDITION_HEIGHT
         )).thenReturn(null)
 
-        val result = cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
+        val result = cache.pixelsCache.get(TEST_DATA_CONDITION)
 
-        verify(mockSuppliedBitmap, never()).getPixels(anyNotNull(), eq(0), eq(TEST_DATA_CLICK_CONDITION_WIDTH),
-            eq(0), eq(0), eq(TEST_DATA_CLICK_CONDITION_WIDTH), eq(TEST_DATA_CLICK_CONDITION_HEIGHT))
+        verify(mockSuppliedBitmap, never()).getPixels(anyNotNull(), eq(0), eq(TEST_DATA_CONDITION_WIDTH),
+            eq(0), eq(0), eq(TEST_DATA_CONDITION_WIDTH), eq(TEST_DATA_CONDITION_HEIGHT))
         assertNull("Result should be null", result)
     }
 
@@ -272,7 +276,7 @@ class CacheTests {
 
     @Test
     fun release_pixelsCache() {
-        cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
+        cache.pixelsCache.get(TEST_DATA_CONDITION)
         cache.release()
 
         assertInitialCacheValues()
@@ -282,7 +286,7 @@ class CacheTests {
     fun release_bitmapCache_and_pixelsCache() {
         cache.currentImage = mockImage
         cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
-        cache.pixelsCache.get(TEST_DATA_CLICK_CONDITION)
+        cache.pixelsCache.get(TEST_DATA_CONDITION)
         cache.release()
 
         assertInitialCacheValues()
