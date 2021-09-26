@@ -41,7 +41,7 @@ data class Event(
     var priority: Int,
     val actions: MutableList<Action>? = null,
     val conditions: MutableList<Condition>? = null,
-    private val stopAfter: Int? = null,
+    val stopAfter: Int? = null,
 ) {
 
     /** @return the entity equivalent of this event. */
