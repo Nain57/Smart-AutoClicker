@@ -45,6 +45,11 @@ android {
     testOptions {
         unitTests.includeAndroidResources = true
     }
+
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("test").assets.srcDirs += "$projectDir/schemas".toString()
+    }
 }
 
 dependencies {
@@ -59,6 +64,7 @@ dependencies {
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.arch.core:core-testing:${rootProject.ext.androidxArchCoreTestingVersion}"
+    testImplementation("androidx.room:room-testing:${rootProject.ext.androidxRoomVersion}")
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
     testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
