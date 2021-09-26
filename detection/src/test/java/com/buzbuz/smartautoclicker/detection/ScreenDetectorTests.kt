@@ -39,8 +39,6 @@ import android.view.WindowManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.detection.shadows.ShadowImageReader
@@ -67,7 +65,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.doAnswer
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Mockito.`when` as mockWhen
@@ -87,39 +84,20 @@ class ScreenDetectorTests {
         private const val PROJECTION_RESULT_CODE = 42
         private val PROJECTION_DATA_INTENT = Intent()
 
-        private const val CLICK_NAME = "Click"
-        private const val CLICK_DELAY = 5000L
-
         private const val VALID_CLICK_CONDITION_PATH = "/this/is/a/path"
-        private const val VALID_CLICK_CONDITION_THRESHOLD = 12
         private val VALID_CONDITION_AREA = Rect(
             0,
             0,
             ProcessingData.SCREEN_AREA.width() - 1,
             ProcessingData.SCREEN_AREA.height() - 1
         )
-        private val VALID_CONDITION = Condition(
-            42L,
-            84L,
-            VALID_CLICK_CONDITION_PATH,
-            VALID_CONDITION_AREA,
-            VALID_CLICK_CONDITION_THRESHOLD,
-        )
 
         private const val INVALID_CONDITION_PATH = "/this/is/another/path"
-        private const val INVALID_CONDITION_THRESHOLD = 25
         private val INVALID_CONDITION_AREA = Rect(
             1,
             0,
             ProcessingData.SCREEN_AREA.width(),
             ProcessingData.SCREEN_AREA.height()
-        )
-        private val INVALID_CONDITION = Condition(
-            12L,
-            89L,
-            INVALID_CONDITION_PATH,
-            INVALID_CONDITION_AREA,
-            INVALID_CONDITION_THRESHOLD
         )
 
         private const val IMAGE_PIXEL_STRIDE = 1
@@ -134,11 +112,6 @@ class ScreenDetectorTests {
     /** Interface to be mocked in order to verify the calls to the caputre completion callback. */
     interface CaptureCallback {
         fun onCaptured(capture: Bitmap)
-    }
-
-    /** Interface to be mocked in order to verify the calls to the click detected callback. */
-    interface DetectionCallback {
-        fun onDetected(event: Event)
     }
 
     // ScreenRecorder
@@ -159,7 +132,6 @@ class ScreenDetectorTests {
     @Mock private lateinit var mockScreenImagePlane: Image.Plane
     @Mock private lateinit var mockScreenImagePlaneBuffer: ByteBuffer
     @Mock private lateinit var mockCaptureCallback: CaptureCallback
-    @Mock private lateinit var mockDetectionCallback: DetectionCallback
 
     // Bitmaps
     @Mock private lateinit var mockBitmapCreator: ShadowBitmapCreator.BitmapCreator
@@ -464,60 +436,6 @@ class ScreenDetectorTests {
 
         shadowOf(Looper.getMainLooper()).idle() // callback is posted on main thread handler.
         verify(mockCaptureCallback).onCaptured(mockCaptureBitmap) // must be called only once
-    }
-
-    @Test
-    fun detection_noScreenRecording() {
-        toStartDetection(emptyList())
-        verifyNoInteractions(mockDetectionCallback)
-    }
-
-    @Test
-    fun detection_emptyClickList() {
-        val imageAvailableListener = toStartScreenRecord()
-
-        toStartDetection(emptyList())
-        imageAvailableListener.onImageAvailable(mockImageReader)
-
-        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
-        verifyNoInteractions(mockDetectionCallback)
-    }
-
-    @Test
-    fun detection_clickWithoutConditions() {
-        val imageAvailableListener = toStartScreenRecord()
-
-        toStartDetection(listOf(ProcessingData.newEvent(name = CLICK_NAME)))
-        imageAvailableListener.onImageAvailable(mockImageReader)
-
-        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
-        verifyNoInteractions(mockDetectionCallback)
-    }
-
-    @Test
-    fun detection_clickNotDetected() {
-        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(INVALID_CONDITION))
-        val imageAvailableListener = toStartScreenRecord()
-
-        toStartDetection(listOf(click))
-        imageAvailableListener.onImageAvailable(mockImageReader)
-
-        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
-        verifyNoInteractions(mockDetectionCallback)
-    }
-
-    @Test
-    fun detection_alreadyStarted() {
-        val click = ProcessingData.newEvent(name = CLICK_NAME, operator = AND, conditions = listOf(INVALID_CONDITION))
-        val imageAvailableListener = toStartScreenRecord()
-
-        // Start with an empty list then a valid list, then check that the valid item is never detected
-        toStartDetection(emptyList())
-        toStartDetection(listOf(click))
-        imageAvailableListener.onImageAvailable(mockImageReader)
-
-        shadowOf(Looper.getMainLooper()).idle() // idle to execute possible callbacks
-        verifyNoInteractions(mockDetectionCallback)
     }
 
     @Test
