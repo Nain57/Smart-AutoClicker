@@ -287,4 +287,4 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
 }
 
 /** Delay without update before updating the action. */
-private const val EDIT_TEXT_UPDATE_DELAY = 750L
+private const val EDIT_TEXT_UPDATE_DELAY = 500L

@@ -136,7 +136,8 @@ class ActionConfigDialog(
                 actionConfigLayoutClick.visibility = View.VISIBLE
 
                 editPressDuration.addOnAfterTextChangedListener { editable ->
-                    clickValues.setPressDuration(editable.toString().toLong())
+                    val pressDuration = editable.toString()
+                    clickValues.setPressDuration(if (pressDuration.isNotEmpty()) pressDuration.toLong() else 0)
                 }
 
                 textClickPosition.setOnClickListener {
@@ -205,7 +206,8 @@ class ActionConfigDialog(
                 actionConfigLayoutSwipe.visibility = View.VISIBLE
 
                 editSwipeDuration.addOnAfterTextChangedListener { editable ->
-                    swipeValues.setSwipeDuration(editable.toString().toLong())
+                    val swipeDuration = editable.toString()
+                    swipeValues.setSwipeDuration(if (swipeDuration.isNotEmpty()) swipeDuration.toLong() else 0)
                 }
 
                 textSwipePosition.setOnClickListener {
@@ -281,7 +283,8 @@ class ActionConfigDialog(
                 actionConfigLayoutPause.visibility = View.VISIBLE
 
                 editPauseDuration.addOnAfterTextChangedListener { editable ->
-                    pauseValues.setPauseDuration(editable.toString().toLong())
+                    val pauseDuration = editable.toString()
+                    pauseValues.setPauseDuration(if (pauseDuration.isNotEmpty()) pauseDuration.toLong() else 0)
                 }
             }
         }
