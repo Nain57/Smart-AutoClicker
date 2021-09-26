@@ -5,5 +5,5 @@
     <!-- The minimum zoom value for the capture overlay view -->
     <item name="capture_minimum_zoom" format="float" type="integer">0.8</item>
     <!-- The maximum zoom value for the capture overlay view -->
-    <item name="capture_maximum_zoom" format="float" type="integer">3.0</item>
+    <item name="capture_maximum_zoom" format="float" type="integer">5.0</item>
 </resources>
