@@ -117,12 +117,14 @@ class ScreenDetector(
     var processingThread: HandlerThread? = null
     /** Handler on the [processingThread]. */
     private var processingThreadHandler: Handler? = null
-
     // TODO: Get rid of android concurrency to use only coroutines
     /** Coroutine scope for the image processing. */
     private var processingCoroutineScope = CoroutineScope(Job())
     /** Coroutine dispatcher for the image processing. */
     private var processingCoroutineDispatcher: CoroutineDispatcher? = null
+
+    /** Number of execution count for each events since the detection start. */
+    private val executedEvents = HashMap<Event, Int>()
 
     /** Backing property for [isScreenRecording]. */
     private val _isScreenRecording = MutableStateFlow(false)
@@ -226,6 +228,9 @@ class ScreenDetector(
             Log.w(TAG, "captureArea: detection is already started.")
             return
         }
+
+        executedEvents.clear()
+        events.forEach { executedEvents[it] = 0 }
 
         processingCoroutineScope.launch {
             _isDetecting.emit(true)
@@ -334,12 +339,24 @@ class ScreenDetector(
             return
         }
 
+        // Check if an event has reached its max execution count.
+        executedEvents.forEach { (event, executedCount) ->
+            event.stopAfter?.let { stopAfter ->
+                if (stopAfter <= executedCount) {
+                    stopDetection()
+                }
+            }
+        }
+
         // Refresh cached values on the image, we are going to use it.
         cache.refreshProcessedImage(displaySize)
 
         // A detection is ongoing, process the scenario to detect an event that fulfils its conditions.
         detectionInfo?.let { detectionInfo ->
             conditionDetector.detect(detectionInfo)?.let { event ->
+                executedEvents[event] = executedEvents[event]?.plus(1)
+                    ?: throw IllegalStateException("Can' find the event in the executed events map.")
+
                 event.actions?.let { actions ->
                     actionExecutor.executeActions(actions)
                 }

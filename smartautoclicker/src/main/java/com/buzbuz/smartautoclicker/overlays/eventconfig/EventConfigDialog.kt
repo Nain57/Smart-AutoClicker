@@ -118,6 +118,11 @@ class EventConfigDialog(
                 viewModel?.setEventName(editable.toString())
             }
 
+            editStopAfter.addOnAfterTextChangedListener { editable ->
+                val stopAfter = editable.toString()
+                viewModel?.setEventStopAfter(if (stopAfter.isNotEmpty()) stopAfter.toInt() else null)
+            }
+
             listConditions.adapter = conditionsAdapter
             listActions.adapter = actionsAdapter
         }
@@ -180,6 +185,15 @@ class EventConfigDialog(
 
                 launch {
                     subOverlayViewModel?.subOverlayRequest?.collect { updateSubOverlay(it) }
+                }
+
+                launch {
+                    viewModel?.stopAfter?.collect { stopAfter ->
+                        viewBinding.editStopAfter.apply {
+                            setText(stopAfter?.toString())
+                            setSelection(length())
+                        }
+                    }
                 }
             }
         }

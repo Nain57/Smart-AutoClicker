@@ -55,7 +55,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
      * stopped editing for a moment.
      * This Job is null when the user isn't editing.
      */
-    private var editNameJob: Job? = null
+    private var editJob: Job? = null
 
     /** Repository providing access to the click database. */
     private val repository = Repository.getRepository(context)
@@ -70,6 +70,8 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     val conditionOperator: Flow<Int?> = configuredEvent.map { it?.conditionOperator }
     /** The event conditions currently edited by the user. */
     val conditions: Flow<List<Condition>?> = configuredEvent.map { it?.conditions }
+    /** The number of times to execute this event before ending the scenario. */
+    val stopAfter: Flow<Int?> = configuredEvent.map { it?.stopAfter }
     /** Tells if the configured event is valid and can be saved. */
     val isValidEvent: Flow<Boolean> = configuredEvent.map { event ->
         event != null && event.name.isNotEmpty() && !event.actions.isNullOrEmpty() && !event.conditions.isNullOrEmpty()
@@ -97,8 +99,8 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
      */
     fun setEventName(name: String) {
         configuredEvent.value?.let { event ->
-            editNameJob?.cancel()
-            editNameJob = viewModelScope.launch {
+            editJob?.cancel()
+            editJob = viewModelScope.launch {
                 delay(EDIT_TEXT_UPDATE_DELAY)
                 configuredEvent.value = event.copy(name = name)
             }
@@ -256,6 +258,20 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     }
 
     /**
+     * Set the stop after count value of the configured event.
+     * @param stopAfter the new value.
+     */
+    fun setEventStopAfter(stopAfter: Int?) {
+        configuredEvent.value?.let { event ->
+            editJob?.cancel()
+            editJob = viewModelScope.launch {
+                delay(EDIT_TEXT_UPDATE_DELAY)
+                configuredEvent.value = event.copy(stopAfter = stopAfter)
+            }
+        }
+    }
+
+    /**
      * Get the bitmap corresponding to a condition.
      * Loading is async and the result notified via the onBitmapLoaded argument.
      *
@@ -314,4 +330,4 @@ sealed class ActionTypeChoice(title: Int, iconId: Int?): DialogChoice(title, ico
 }
 
 /** Delay without update before updating the action. */
-private const val EDIT_TEXT_UPDATE_DELAY = 750L
+private const val EDIT_TEXT_UPDATE_DELAY = 500L

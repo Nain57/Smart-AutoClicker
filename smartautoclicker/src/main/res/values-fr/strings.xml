@@ -49,8 +49,8 @@
     <string name="dialog_action_config_click_position">Clic simple sur %1$d, %2$d</string>
     <string name="dialog_action_config_swipe_position">Glisser de %1$d, %2$d à %3$d, %4$d</string>
     <string name="dialog_event_config_condition_title">Conditions</string>
-    <string name="dialog_click_config_stop_after_executions">Éxecutions avant d\'arrêter le scénario</string>
-    <string name="dialog_click_config_executions_hint">Ne pas arrêter le scénario</string>
+    <string name="dialog_event_config_stop_after_executions">Éxecutions avant d\'arrêter le scénario</string>
+    <string name="dialog_event_config_executions_hint">Ne pas arrêter le scénario</string>
     <string name="dialog_condition_operator_title">Type de conditions</string>
     <string name="condition_operator_and">Toutes les conditions</string>
     <string name="condition_operator_or">Une seule condition</string>
