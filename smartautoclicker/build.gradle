@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,12 +28,12 @@ if (signingPropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.buzbuz.smartautoclicker"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 8
         versionName "1.2.0"
 
@@ -85,11 +85,11 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
     implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03"
 
     implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleExtensionVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
