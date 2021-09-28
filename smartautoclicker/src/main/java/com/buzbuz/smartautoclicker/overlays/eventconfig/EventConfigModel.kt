@@ -34,7 +34,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -62,10 +65,18 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     /** The event being configured by the user. Defined using [setConfigEvent]. */
     private val configuredEvent = MutableStateFlow<Event?>(null)
 
+    /** */
+    private val _action = configuredEvent
+        .map { it?.actions }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            emptyList()
+        )
+    /** The event actions currently edited by the user. */
+    val actions: StateFlow<List<Action>?> = _action
     /** The event name value currently edited by the user. */
     val eventName: Flow<String?> = configuredEvent.map { it?.name }
-    /** The event actions currently edited by the user. */
-    val actions: Flow<List<Action>?> = configuredEvent.map { it?.actions }
     /** The event condition operator currently edited by the user. */
     val conditionOperator: Flow<Int?> = configuredEvent.map { it?.conditionOperator }
     /** The event conditions currently edited by the user. */
@@ -179,6 +190,17 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
                 viewModelScope.launch {
                     configuredEvent.value = event.copy(actions = newActions)
                 }
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    fun updateActionOrder(actions: List<Action>) {
+        configuredEvent.value?.let { event ->
+            viewModelScope.launch {
+                configuredEvent.value = event.copy(actions = actions.toMutableList())
             }
         }
     }
@@ -301,12 +323,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     }
 }
 
-/**
- * Choices for the condition operator selection dialog.
- *
- * @param title the string res of the title for this choice.
- * @param iconId the icon res of the image for this choice.
- */
+/** Choices for the condition operator selection dialog. */
 sealed class OperatorChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
     /** AND choice. */
     object And : OperatorChoice(R.string.condition_operator_and_desc, R.drawable.ic_all_conditions)
@@ -314,12 +331,15 @@ sealed class OperatorChoice(title: Int, iconId: Int?): DialogChoice(title, iconI
     object Or : OperatorChoice(R.string.condition_operator_or_desc, R.drawable.ic_one_condition)
 }
 
-/**
- * Choices for the action type selection dialog.
- *
- * @param title the string res of the title for this choice.
- * @param iconId the icon res of the image for this choice.
- */
+/** Choices for the action creation dialog. */
+sealed class ActionCreationChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
+    /** Choice for creating a new Event. */
+    object Create : ActionCreationChoice(R.string.dialog_action_new_create, R.drawable.ic_add)
+    /** Choice for copying an Event. */
+    object Copy : ActionCreationChoice(R.string.dialog_action_new_copy, R.drawable.ic_copy)
+}
+
+/** Choices for the action type selection dialog.*/
 sealed class ActionTypeChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
     /** Click Action choice. */
     object Click : ActionTypeChoice(R.string.dialog_action_type_click, R.drawable.ic_click)

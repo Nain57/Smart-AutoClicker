@@ -75,6 +75,15 @@ internal abstract class EventDao {
     abstract suspend fun getEvent(eventId: Long): CompleteEventEntity
 
     /**
+     * Get all actions from all events.
+     *
+     * @return the list containing all actions.
+     */
+    @Transaction
+    @Query("SELECT * FROM action_table ORDER BY name")
+    abstract fun getAllActions(): Flow<List<ActionEntity>>
+
+    /**
      * Update the provided events in the database.
      * Priorities will be updated.
      *

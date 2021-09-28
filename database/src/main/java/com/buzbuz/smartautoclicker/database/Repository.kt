@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.database
 import android.content.Context
 import android.graphics.Bitmap
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManagerImpl
+import com.buzbuz.smartautoclicker.database.domain.Action
 
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
@@ -113,6 +114,13 @@ interface Repository {
      * @return the complete event.
      */
     suspend fun getCompleteEvent(eventId: Long): Event
+
+    /**
+     * Get all actions from all events.
+     *
+     * @return the list containing all actions.
+     */
+    fun getAllActions(): Flow<List<Action>>
 
     /**
      * Add a new event.

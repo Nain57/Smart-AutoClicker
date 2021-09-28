@@ -20,36 +20,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
+import com.buzbuz.smartautoclicker.databinding.ItemActionCardBinding
+
+import java.util.Collections
+
+import kotlin.collections.ArrayList
 
 /**
  * Displays the actions in a list.
  * Also provide a item displayed in the last position to add a new action.
  *
- * @param addActionClickedListener the listener called when the user clicks on the add item.
+ * @param addActionClickedListener the listener called when the user clicks on the add item. True if this is the first
+ *                                 item, false if not.
  * @param actionClickedListener  the listener called when the user clicks on a action.
  */
 class ActionsAdapter(
-    private val addActionClickedListener: () -> Unit,
+    private val addActionClickedListener: (Boolean) -> Unit,
     private val actionClickedListener: (Int, Action) -> Unit,
-) : RecyclerView.Adapter<ActionViewHolder>() {
+    private val actionReorderListener: (List<Action>) -> Unit,
+) : ListAdapter<Action, ActionViewHolder>(ActionDiffUtilCallback) {
 
     /** The list of actions to be shown by this adapter.*/
     var actions: ArrayList<Action>? = null
         set(value) {
             field = value
-            notifyDataSetChanged()
+            submitList(value)
         }
 
     override fun getItemCount(): Int = actions?.size?.plus(1) ?: 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionViewHolder =
-        ActionViewHolder(ItemActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ActionViewHolder(ItemActionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ActionViewHolder, position: Int) {
         // The last item is the add item, allowing the user to add a new action.
@@ -59,20 +68,43 @@ class ActionsAdapter(
             holder.onBindAction(actions!![position], actionClickedListener)
         }
     }
+
+
+    /**
+     * Swap the position of two actions in the list.
+     *
+     * @param from the position of the click to be moved.
+     * @param to the new position of the click to be moved.
+     */
+    fun swapActions(from: Int, to: Int) {
+        actions?.let {
+            Collections.swap(it, from, to)
+            notifyItemMoved(from, to)
+            actionReorderListener(it)
+        }
+    }
+}
+
+/** */
+object ActionDiffUtilCallback: DiffUtil.ItemCallback<Action>(){
+    override fun areItemsTheSame(oldItem: Action, newItem: Action): Boolean =
+        oldItem.getIdentifier() == newItem.getIdentifier()
+
+    override fun areContentsTheSame(oldItem: Action, newItem: Action): Boolean = oldItem == newItem
 }
 
 /**
  * View holder displaying an action in the [ActionsAdapter].
  * @param viewBinding the view binding for this item.
  */
-class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerView.ViewHolder(viewBinding.root) {
+class ActionViewHolder(private val viewBinding: ItemActionCardBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /**
      * Bind this view holder as a 'Add action' item.
      *
      * @param addActionClickedListener listener notified upon user click on this item.
      */
-    fun onBindAddAction(addActionClickedListener: () -> Unit) {
+    fun onBindAddAction(addActionClickedListener: (Boolean) -> Unit) {
         viewBinding.apply {
             actionName.visibility = View.GONE
             actionIcon.apply {
@@ -80,7 +112,8 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
                 setImageResource(R.drawable.ic_add)
             }
         }
-        itemView.setOnClickListener { addActionClickedListener.invoke() }
+
+        itemView.setOnClickListener { addActionClickedListener.invoke(bindingAdapterPosition == 0) }
     }
 
     /**
@@ -111,5 +144,41 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
         }
 
         itemView.setOnClickListener { actionClickedListener.invoke(bindingAdapterPosition, action) }
+    }
+}
+
+/** ItemTouchHelper attached to the adapter */
+class ActionReorderTouchHelper
+    : ItemTouchHelper.SimpleCallback(0, 0) {
+
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        (recyclerView.adapter as ActionsAdapter).swapActions(
+            viewHolder.bindingAdapterPosition,
+            target.bindingAdapterPosition
+        )
+        return true
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        // Nothing do to
+    }
+
+    override fun canDropOver(
+        recyclerView: RecyclerView,
+        current: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        if (target.bindingAdapterPosition == recyclerView.adapter!!.itemCount - 1) return false
+        return true
+    }
+
+    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+        val dragFlags = if (viewHolder.bindingAdapterPosition == recyclerView.adapter!!.itemCount - 1) 0
+                        else ItemTouchHelper.START or ItemTouchHelper.END
+        return makeMovementFlags(dragFlags, 0)
     }
 }

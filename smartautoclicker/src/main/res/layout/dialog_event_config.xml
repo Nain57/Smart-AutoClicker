@@ -152,7 +152,7 @@
                     android:scrollbars="horizontal"
                     android:background="@color/eventConfigListBackground"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_action"
+                    tools:listitem="@layout/item_action_card"
                     tools:itemCount="1"/>
 
             </LinearLayout>

@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
@@ -38,6 +39,7 @@ import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 
 import kotlinx.coroutines.flow.collect
@@ -77,12 +79,24 @@ class EventConfigDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEventConfigBinding
 
+    /** TouchHelper applied to [actionsAdapter] allowing to drag and drop the items. */
+    private val itemTouchHelper = ItemTouchHelper(ActionReorderTouchHelper())
+
     /** Adapter displaying all actions for the event displayed by this dialog. */
     private val actionsAdapter = ActionsAdapter(
-        addActionClickedListener = { subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionTypeSelection) },
+        addActionClickedListener = { isFirst ->
+            subOverlayViewModel?.apply {
+                if (isFirst) {
+                    requestSubOverlay(SubOverlay.ActionTypeSelection)
+                } else {
+                    requestSubOverlay(SubOverlay.ActionCreate)
+                }
+            }
+        },
         actionClickedListener = { index, action ->
             subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionConfig(action, index))
         },
+        actionReorderListener = { actions -> viewModel?.updateActionOrder(actions) }
     )
     /** Adapter displaying all conditions for the event displayed by this dialog. */
     private val conditionsAdapter = ConditionAdapter(
@@ -125,6 +139,7 @@ class EventConfigDialog(
 
             listConditions.adapter = conditionsAdapter
             listActions.adapter = actionsAdapter
+            itemTouchHelper.attachToRecyclerView(listActions)
         }
 
         lifecycleScope.launch {
@@ -215,6 +230,21 @@ class EventConfigDialog(
      */
     private fun updateSubOverlay(overlayType: SubOverlay) {
         when (overlayType) {
+            is SubOverlay.ActionCreate -> {
+                showSubOverlay(MultiChoiceDialog(
+                    context = context,
+                    dialogTitle = R.string.dialog_action_new_title,
+                    choices = listOf(ActionCreationChoice.Create, ActionCreationChoice.Copy),
+                    onChoiceSelected = { choiceClicked ->
+                        if (choiceClicked is ActionCreationChoice.Create) {
+                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionTypeSelection)
+                        } else {
+                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionCopy)
+                        }
+                    }
+                ))
+            }
+
             is SubOverlay.ActionTypeSelection -> {
                 showSubOverlay(MultiChoiceDialog(
                     context = context,
@@ -230,6 +260,18 @@ class EventConfigDialog(
                         }
                     }
                 ))
+            }
+
+            is SubOverlay.ActionCopy -> {
+                viewModel?.let {
+                    showSubOverlay(ActionCopyDialog(
+                        context = context,
+                        actions = it.actions.value!!,
+                        onActionSelected = { actionSelected ->
+                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionConfig(actionSelected))
+                        }
+                    ))
+                }
             }
 
             is SubOverlay.ActionConfig -> {

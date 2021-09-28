@@ -25,7 +25,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
@@ -34,10 +33,9 @@ import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEventListBinding
-import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
-import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
+import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -52,7 +50,7 @@ import kotlinx.coroutines.launch
 class EventListDialog(
     context: Context,
     scenario: Scenario,
-) : OverlayDialogController(context) {
+) : LoadableListDialog(context) {
 
     /** The view model for this dialog. */
     private var viewModel: EventListModel? = EventListModel(context).apply {
@@ -61,16 +59,17 @@ class EventListDialog(
     }
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEventListBinding
-    /** ViewBinding containing the views for the loadable list merge layout. */
-    private lateinit var listBinding: MergeLoadableListBinding
     /** Adapter displaying the list of events. */
     private lateinit var adapter: EventListAdapter
     /** TouchHelper applied to [adapter] when in [REORDER] mode allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(EventReorderTouchHelper())
 
+    override val emptyTextId: Int = R.string.dialog_event_list_no_events
+
+    override fun getListBindingRoot(): View = viewBinding.root
+
     override fun onCreateDialog(): AlertDialog.Builder {
         viewBinding = DialogEventListBinding.inflate(LayoutInflater.from(context))
-        listBinding = MergeLoadableListBinding.bind(viewBinding.root)
 
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_event_list_title)
@@ -81,16 +80,11 @@ class EventListDialog(
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
+        super.onDialogCreated(dialog)
         adapter = EventListAdapter(::onEventClicked) { deletedEvent ->
             viewModel?.deleteEvent(deletedEvent)
         }
-
-        listBinding.apply {
-            list.addItemDecoration(DividerItemDecoration(context,
-                DividerItemDecoration.VERTICAL))
-            list.adapter = adapter
-            empty.setText(R.string.dialog_event_list_no_events)
-        }
+        listBinding.list.adapter = adapter
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -129,16 +123,7 @@ class EventListDialog(
      * @param events the new list of events.
      */
     private fun onEventListChanged(events: List<Event>?) {
-        listBinding.apply {
-            loading.visibility = View.GONE
-            if (events.isNullOrEmpty()) {
-                list.visibility = View.GONE
-                empty.visibility = View.VISIBLE
-            } else {
-                list.visibility = View.VISIBLE
-                empty.visibility = View.GONE
-            }
-        }
+        updateLayoutState(events)
 
         adapter.clicks = events?.toMutableList()
 
@@ -251,17 +236,4 @@ class EventListDialog(
             true
         )
     }
-}
-
-/**
- * Dialog choice for the event creation.
- *
- * @param title the string res of the title for this choice.
- * @param iconId the icon res of the image for this choice. Can be null if no image are requested.
- */
-sealed class CreateEventChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
-    /** Choice for creating a new Event. */
-    object Create : CreateEventChoice(R.string.dialog_event_add_create, R.drawable.ic_add)
-    /** Choice for copying an Event. */
-    object Copy : CreateEventChoice(R.string.dialog_event_add_copy, R.drawable.ic_copy)
 }

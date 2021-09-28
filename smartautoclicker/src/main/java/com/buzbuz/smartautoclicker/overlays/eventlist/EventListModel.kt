@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
+import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -69,7 +70,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
         )
 
     /** List of events for the scenario specified in [scenario]. */
-    val events: StateFlow<List<Event>> = scenario
+    val events: StateFlow<List<Event>?> = scenario
         .filterNotNull()
         .flatMapLatest { scenario ->
             repository.getEventList(scenario.id)
@@ -77,7 +78,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = emptyList()
+            initialValue = null
         )
 
     /** Backing property for [uiMode]. */
@@ -114,7 +115,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
         scenarioId = scenario.value!!.id,
         name = context.getString(R.string.default_event_name),
         conditionOperator = AND,
-        priority = events.value.size,
+        priority = events.value!!.size,
         conditions = mutableListOf(),
         actions = mutableListOf(),
     )
@@ -130,7 +131,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
         viewModelScope.launch(Dispatchers.IO) {
             val completeEvent = repository.getCompleteEvent(event.id)
             if (forCopy) {
-                completeEvent.priority = events.value.size
+                completeEvent.priority = events.value!!.size
                 completeEvent.cleanUpIds()
             }
 
@@ -185,6 +186,19 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
 
         viewModelScope.launch(Dispatchers.IO) { repository.removeEvent(event) }
     }
+}
+
+/**
+ * Dialog choice for the event creation.
+ *
+ * @param title the string res of the title for this choice.
+ * @param iconId the icon res of the image for this choice. Can be null if no image are requested.
+ */
+sealed class CreateEventChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
+    /** Choice for creating a new Event. */
+    object Create : CreateEventChoice(R.string.dialog_event_add_create, R.drawable.ic_add)
+    /** Choice for copying an Event. */
+    object Copy : CreateEventChoice(R.string.dialog_event_add_copy, R.drawable.ic_copy)
 }
 
 /** Define the different display mode for the dialog. */

@@ -15,43 +15,53 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.cardview.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/dialog_item_action_width"
-    android:layout_height="@dimen/dialog_item_action_height"
-    android:layout_marginStart="@dimen/margin_horizontal_small"
-    android:layout_marginEnd="@dimen/margin_horizontal_small"
-    android:layout_marginTop="@dimen/margin_vertical_large"
-    android:layout_marginBottom="@dimen/margin_vertical_large">
+    style="@style/ItemView.Big">
+
+    <ImageView
+        android:id="@+id/action_type_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        android:paddingStart="@dimen/margin_horizontal_mini"
+        android:paddingEnd="@dimen/margin_horizontal_mini"
+        android:scaleType="center"
+        tools:src="@drawable/ic_wait"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/action_type_icon"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/margin_horizontal_mini"
         android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/action_icon"
-            android:layout_width="@dimen/dialog_item_action_icon_size"
-            android:layout_height="@dimen/dialog_item_action_icon_size"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="fitCenter"
-            android:contentDescription="@string/content_desc_action"
-            tools:src="@drawable/ic_click"/>
 
         <TextView
             android:id="@+id/action_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_small"
-            android:layout_marginTop="@dimen/margin_vertical_default"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/text_size_list_item_text_small"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginBottom="@dimen/margin_vertical_mini"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_list_item_text_big"
+            android:textStyle="bold"
             android:singleLine="true"
-            android:ellipsize="marquee"
-            tools:text="Action name"/>
+            tools:text="Pause before click"/>
 
+        <TextView
+            android:id="@+id/action_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_vertical_small"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_list_item_text_small"
+            android:textStyle="italic"
+            tools:text="500 ms"/>
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</RelativeLayout>
