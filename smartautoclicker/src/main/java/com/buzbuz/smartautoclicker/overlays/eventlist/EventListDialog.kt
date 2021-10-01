@@ -125,7 +125,7 @@ class EventListDialog(
     private fun onEventListChanged(events: List<Event>?) {
         updateLayoutState(events)
 
-        adapter.clicks = events?.toMutableList()
+        adapter.events = events?.toMutableList()
 
         // In edition, buttons displays depends on the event count, refresh them
         if (viewModel?.uiMode?.value == EDITION) {
@@ -176,7 +176,7 @@ class EventListDialog(
         dialog?.let {
             itemTouchHelper.attachToRecyclerView(listBinding.list)
             changeButtonState(it.getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE, android.R.string.ok) {
-                viewModel?.updateEventsPriority((adapter.clicks!!))
+                viewModel?.updateEventsPriority((adapter.events!!))
                 viewModel?.setUiMode(EDITION)
             }
             changeButtonState(it.getButton(AlertDialog.BUTTON_NEGATIVE), View.VISIBLE, android.R.string.cancel) {
@@ -219,8 +219,8 @@ class EventListDialog(
      * @param event the event clicked.
      */
     private fun onEventClicked(event: Event) {
-        viewModel?.getCompleteEvent(event, viewModel!!.uiMode.value == COPY) { completeEvent->
-            openEventConfigDialog(completeEvent)
+        viewModel?.let { model ->
+            openEventConfigDialog(if (viewModel!!.uiMode.value == COPY) model.getCopyEvent(event) else event)
         }
     }
 

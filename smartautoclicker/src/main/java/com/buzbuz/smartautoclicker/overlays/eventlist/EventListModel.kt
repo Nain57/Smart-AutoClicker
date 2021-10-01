@@ -73,7 +73,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
     val events: StateFlow<List<Event>?> = scenario
         .filterNotNull()
         .flatMapLatest { scenario ->
-            repository.getEventList(scenario.id)
+            repository.getCompleteEventList(scenario.id)
         }
         .stateIn(
             scope = viewModelScope,
@@ -121,23 +121,14 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
     )
 
     /**
-     * Get the complete event for an event.
+     * Get a copy of the provided event.
      *
-     * @param event the event to get the complete version of.
-     * @param forCopy true if the generated event is for copy purpose, false if not.
-     * @param onCompleted callback called upon completion.
+     * @param event the event to get the copy of.
      */
-    fun getCompleteEvent(event: Event, forCopy: Boolean, onCompleted: (Event) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val completeEvent = repository.getCompleteEvent(event.id)
-            if (forCopy) {
-                completeEvent.priority = events.value!!.size
-                completeEvent.cleanUpIds()
-            }
-
-            withContext(Dispatchers.Main) {
-                onCompleted.invoke(completeEvent)
-            }
+    fun getCopyEvent(event: Event): Event {
+        return event.deepCopy().apply {
+            priority = events.value!!.size
+            cleanUpIds()
         }
     }
 

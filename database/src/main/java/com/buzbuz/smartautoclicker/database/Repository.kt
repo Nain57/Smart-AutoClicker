@@ -18,9 +18,9 @@ package com.buzbuz.smartautoclicker.database
 
 import android.content.Context
 import android.graphics.Bitmap
+
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManagerImpl
 import com.buzbuz.smartautoclicker.database.domain.Action
-
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase

@@ -19,13 +19,15 @@ package com.buzbuz.smartautoclicker.overlays.eventlist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
-import com.buzbuz.smartautoclicker.extensions.setLeftCompoundDrawable
 
 import java.util.Collections
 
@@ -48,77 +50,48 @@ class EventListAdapter(
     private val deleteClickedListener: ((Event) -> Unit)
 ) : RecyclerView.Adapter<EventViewHolder>() {
 
-    /** The list of clicks displayed by this adapter. */
-    var clicks: List<Event>? = null
+    /** The list of events displayed by this adapter. */
+    var events: List<Event>? = null
         set(value) {
             field = value
             notifyDataSetChanged()
         }
     /**
-     * Original position of the clicks when entering the [REORDER] mode.
+     * Original position of the events when entering the [REORDER] mode.
      * If [cancelReorder] is called, this list will be used to restore the original positions before user changes.
      */
-    var backupClicks: List<Event>? = null
+    var backupEvents: List<Event>? = null
     /** Set the Ui mode for the adapter. This will trigger a refresh of the list. */
     @Mode
-    var mode: Int? = null
+    var mode: Int = EDITION
         set(value) {
             field = value
-            backupClicks = if (value == REORDER) clicks?.toMutableList() else null
+            backupEvents = if (value == REORDER) events?.toMutableList() else null
             notifyDataSetChanged()
         }
 
-    override fun getItemCount(): Int = clicks?.size ?: 0
+    override fun getItemCount(): Int = events?.size ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        val click = clicks!![position]
-        val drawable = R.drawable.ic_click //TODO: Update items summary
-
-        holder.holderViewBinding.apply {
-            name.text = click.name
-            name.setLeftCompoundDrawable(drawable)
-
-            when (mode) {
-                EDITION -> {
-                    root.setOnClickListener { itemClickedListener.invoke(click) }
-                    btnAction.apply {
-                        visibility = View.VISIBLE
-                        setImageResource(R.drawable.ic_cancel)
-                        setOnClickListener { deleteClickedListener.invoke(click) }
-                    }
-                }
-                COPY -> {
-                    root.setOnClickListener { itemClickedListener.invoke(click) }
-                    btnAction.visibility = View.GONE
-                }
-                REORDER -> {
-                    root.setOnClickListener(null)
-                    btnAction.apply {
-                        visibility = View.VISIBLE
-                        setImageResource(R.drawable.ic_drag)
-                        setOnClickListener(null)
-                    }
-                }
-            }
-        }
+        holder.bindEvent(events!![position], mode, itemClickedListener, deleteClickedListener)
     }
 
     /**
-     * Swap the position of two clicks in the list.
+     * Swap the position of two events in the list.
      * If the ui is not in [REORDER] mode, this method will have no effect.
      *
      * @param from the position of the click to be moved.
      * @param to the new position of the click to be moved.
      */
-    fun moveClicks(from: Int, to: Int) {
+    fun moveEvents(from: Int, to: Int) {
         if (mode != REORDER) {
             return
         }
 
-        clicks?.let {
+        events?.let {
             Collections.swap(it, from, to)
             notifyItemMoved(from, to)
         }
@@ -126,7 +99,7 @@ class EventListAdapter(
 
     /** Cancel all reordering changes made by the user.  */
     fun cancelReorder() {
-        clicks = backupClicks?.toMutableList()
+        events = backupEvents?.toMutableList()
     }
 }
 
@@ -134,8 +107,97 @@ class EventListAdapter(
  * View holder displaying a click in the [EventListAdapter].
  * @param holderViewBinding the view binding for this item.
  */
-class EventViewHolder(val holderViewBinding: ItemEventBinding)
-    : RecyclerView.ViewHolder(holderViewBinding.root)
+class EventViewHolder(private val holderViewBinding: ItemEventBinding)
+    : RecyclerView.ViewHolder(holderViewBinding.root) {
+
+    /**
+     * Bind this view holder to an event.
+     *
+     * @param event the item providing the binding data.
+     * @param mode the current ui mode.
+     * @param itemClickedListener listener called when an event is clicked.
+     * @param deleteClickedListener listener called when the delete button is clicked.
+     */
+    fun bindEvent(
+        event: Event,
+        @Mode mode: Int,
+        itemClickedListener: (Event) -> Unit,
+        deleteClickedListener: (Event) -> Unit,
+    ) {
+        holderViewBinding.apply {
+            name.text = event.name
+
+            actionsLayout.removeAllViews()
+            event.actions?.forEach { action ->
+                View.inflate(itemView.context, R.layout.view_action_icon, actionsLayout)
+                (actionsLayout.getChildAt(actionsLayout.childCount - 1) as ImageView)
+                    .setImageResource(getActionIconRes(action))
+            }
+        }
+
+        when (mode) {
+            EDITION -> bindEdition(event, itemClickedListener, deleteClickedListener)
+            COPY -> bindCopy(event, itemClickedListener)
+            REORDER -> bindReorder()
+        }
+    }
+
+    /**
+     * Bind this view holder to an event in edition mode.
+     *
+     * @param event the item providing the binding data.
+     * @param itemClickedListener listener called when an event is clicked.
+     * @param deleteClickedListener listener called when the delete button is clicked.
+     */
+    private fun bindEdition(event: Event, itemClickedListener: (Event) -> Unit, deleteClickedListener: (Event) -> Unit) {
+        holderViewBinding.apply {
+            root.setOnClickListener { itemClickedListener.invoke(event) }
+            btnAction.apply {
+                visibility = View.VISIBLE
+                setImageResource(R.drawable.ic_cancel)
+                setOnClickListener { deleteClickedListener.invoke(event) }
+            }
+        }
+    }
+
+    /**
+     * Bind this view holder to an event in copy mode.
+     *
+     * @param event the item providing the binding data.
+     * @param itemClickedListener listener called when an event is clicked.
+     */
+    private fun bindCopy(event: Event, itemClickedListener: (Event) -> Unit) {
+        holderViewBinding.apply {
+            root.setOnClickListener { itemClickedListener.invoke(event) }
+            btnAction.visibility = View.GONE
+        }
+    }
+
+    /** Bind this view holder to an event in reorder mode. */
+    private fun bindReorder() {
+        holderViewBinding.apply {
+            root.setOnClickListener(null)
+            btnAction.apply {
+                visibility = View.VISIBLE
+                setImageResource(R.drawable.ic_drag)
+                setOnClickListener(null)
+            }
+        }
+    }
+
+    /**
+     * Get the icon for a given action.
+     *
+     * @param action the action to get the icon of.
+     * @return the icon resource identifier.
+     */
+    private fun getActionIconRes(action: Action) : Int =
+        when (action) {
+            is Action.Click -> R.drawable.ic_click
+            is Action.Swipe -> R.drawable.ic_swipe
+            is Action.Pause -> R.drawable.ic_wait_aligned
+        }
+}
 
 /**
  * ItemTouchHelper attached to the adapter when in [REORDER] mode in order for the user to change the order of
@@ -149,7 +211,7 @@ class EventReorderTouchHelper
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        (recyclerView.adapter as EventListAdapter).moveClicks(
+        (recyclerView.adapter as EventListAdapter).moveEvents(
             viewHolder.bindingAdapterPosition,
             target.bindingAdapterPosition
         )
