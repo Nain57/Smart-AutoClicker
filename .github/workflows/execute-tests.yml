@@ -1,4 +1,4 @@
-name: Tests
+name: 'Execute tests'
 
 on:
   push:
@@ -20,10 +20,9 @@ jobs:
           java-version: '11'
       - name: Local unit tests with Gradle
         run: ./gradlew testDebugUnitTest
-      - name: Android Test Report
-        uses: dorny/test-reporter@v1
-        if: ${{ always() }} # IMPORTANT: run Android Test Report regardless
+      - name: Upload tests results
+        uses: actions/upload-artifact@v2
+        if: success() || failure()
         with:
-          name: JUnit Tests
+          name: test-results
           path: ./**/testDebugUnitTest/TEST-*.xml
-          reporter: java-junit
