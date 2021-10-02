@@ -64,7 +64,7 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
     /**
      * The cache for the pixels.
      *
-     * The key is the click condition, with [Pair.first] the area on the screen that should be checked, and
+     * The key is the event condition, with [Pair.first] the area on the screen that should be checked, and
      * [Pair.second] the bitmap of the image that should matched.
      *
      * The value is the cached pixels, with [Pair.first] the pixels of the condition, i.o.w. the [Pair.second] value

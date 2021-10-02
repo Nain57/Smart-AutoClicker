@@ -41,7 +41,7 @@
             android:id="@+id/btn_click_list"
             style="@style/OverlayButton"
             android:src="@drawable/ic_click_list"
-            android:contentDescription="@string/content_desc_open_click_list" />
+            android:contentDescription="@string/content_desc_open_event_list" />
 
         <ImageButton
             android:id="@+id/btn_move"

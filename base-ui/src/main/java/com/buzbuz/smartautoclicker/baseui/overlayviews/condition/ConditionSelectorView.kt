@@ -36,9 +36,9 @@ import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
 /**
- * Overlay view used as screenOverlayView showing the area to capture the content as a click condition.
+ * Overlay view used as screenOverlayView showing the area to capture the content as an event condition.
  * This view allows to zoom/move the bitmap displayed as background, as well as display a selector over it allowing to
- * easily select a section of the screen for a click condition.
+ * easily select a section of the screen for a event condition.
  *
  * @param context the Android context
  * @param onSelectorValidityChanged listener upon the selector validity.

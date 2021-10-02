@@ -133,7 +133,7 @@ internal class Selector(
     private val selectorMinimumSize = PointF()
     /** The area where the selector should be drawn. */
     private val selectorArea = RectF()
-    /** Area within the selector that represents the zone to be capture to creates a click condition. */
+    /** Area within the selector that represents the zone to be capture to creates a event condition. */
     val selectedArea = RectF()
 
     /** Listener upon the position of the selector. */

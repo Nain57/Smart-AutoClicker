@@ -71,11 +71,11 @@
         n\'est collectée par cette application. N\hésitez pas à visiter notre GitHub, le projet est open source !</string>
     <string name="content_desc_add_scenario">Créer un nouveau scénario</string>
     <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
-    <string name="content_desc_click_action_btn">Editer cet évènement</string>
+    <string name="content_desc_event_action_btn">Editer cet évènement</string>
     <string name="content_desc_delete_scenario">Supprimer le scenario</string>
     <string name="content_desc_play_pause_scenario">Jouer ou arrêter le scenario</string>
     <string name="content_desc_stop_clicker">Quitter Smart AutoClicker</string>
-    <string name="content_desc_open_click_list">Ouvrir la liste des évènements</string>
+    <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
     <string name="content_desc_move_menu">Déplacer le menu flottant</string>
     <string name="content_desc_confirm">Confirmer</string>
     <string name="content_desc_go_back">Retour au dialog</string>

@@ -54,7 +54,7 @@
         android:layout_centerVertical="true"
         android:scaleType="center"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/content_desc_click_action_btn"
+        android:contentDescription="@string/content_desc_event_action_btn"
         tools:src="@drawable/ic_cancel"/>
 
 </RelativeLayout>

@@ -29,7 +29,7 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 
 /**
- * Manages the bitmaps for the click conditions.
+ * Manages the bitmaps for the event conditions.
  * Handle the save/load into the persistent memory, as well as the cache loading them in ram.
  *
  * @param appDataDir the directory where all bitmaps will be saved/loaded.
