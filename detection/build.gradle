@@ -35,6 +35,14 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+    compileOptions {
+        kotlin {
+            kotlinOptions {
+                freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -45,10 +53,6 @@ android {
     testOptions {
         unitTests.includeAndroidResources = true
     }
-}
-
-kotlin.sourceSets.all {
-    languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
 }
 
 dependencies {
