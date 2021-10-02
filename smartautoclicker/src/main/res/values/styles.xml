@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -134,11 +134,11 @@
         <item name="android:scaleType">fitCenter</item>
     </style>
 
-    <style name="OverlaySelectorView">
+    <style name="OverlaySelectorView" tools:ignore="UnusedResources">
         <item name="colorBackground">@color/overlayClickSelectorBackground</item>
     </style>
 
-    <style name="OverlaySelectorView.Click">
+    <style name="OverlaySelectorView.Click" tools:ignore="UnusedResources">
         <item name="radius">@dimen/overlay_click_selector_radius</item>
         <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
         <item name="thickness">@dimen/overlay_click_selector_thickness</item>
@@ -147,7 +147,7 @@
         <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
     </style>
 
-    <style name="OverlaySelectorView.Condition">
+    <style name="OverlaySelectorView.Condition" tools:ignore="UnusedResources">
         <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
         <item name="thickness">@dimen/overlay_condition_selector_thickness</item>
         <item name="cornerRadius">@dimen/overlay_condition_selector_corner_radius</item>
