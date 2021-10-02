@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.mainmenu
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
+import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.detection.DetectorEngine
 
@@ -32,6 +33,8 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
 
     /** The detector engine. */
     private var detectorEngine: DetectorEngine? = DetectorEngine.getDetectorEngine(context)
+    /** The repository for the scenarios. */
+    private var repository: Repository? = Repository.getRepository(context)
     /** The current of the detection. */
     val detectionState: Flow<Boolean> = detectorEngine!!.detecting
     /** The current list of event in the detector engine. */
@@ -50,6 +53,8 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
 
     override fun onCleared() {
         super.onCleared()
+        repository?.cleanCache()
+        repository = null
         detectorEngine = null
     }
 }

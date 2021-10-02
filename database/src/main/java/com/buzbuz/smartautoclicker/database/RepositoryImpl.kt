@@ -147,6 +147,10 @@ internal class RepositoryImpl internal constructor(
 
     override suspend fun getBitmap(path: String, width: Int, height: Int) = bitmapManager.loadBitmap(path, width, height)
 
+    override fun cleanCache() {
+        bitmapManager.releaseCache()
+    }
+
     /**
      * Save the new conditions bitmap on the application data folder.
      *

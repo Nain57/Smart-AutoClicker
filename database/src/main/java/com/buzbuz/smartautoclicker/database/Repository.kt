@@ -164,4 +164,7 @@ interface Repository {
      * @return the bitmap, or null if the path can't be found.
      */
     suspend fun getBitmap(path: String, width: Int, height: Int): Bitmap?
+
+    /** Clean the cache of this repository. */
+    fun cleanCache()
 }
