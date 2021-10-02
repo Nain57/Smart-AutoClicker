@@ -116,10 +116,11 @@
     <string name="content_desc_move_menu">Move the floating menu</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_go_back">Back to dialog</string>
-    <string name="content_desc_enable_click">Enable or disable overlay and allow clicks on applications</string>
     <string name="content_desc_overlay_state">Overlay permission state</string>
     <string name="content_desc_accessibility_state">Accessibility service permission state</string>
     <string name="content_desc_action">The action to be executed</string>
+    <string name="content_desc_action_icon">The icon showing the type of action</string>
+    <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
 
     <string name="dialog_unit_ms" translatable="false">ms</string>
 

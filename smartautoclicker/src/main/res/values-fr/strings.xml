@@ -79,7 +79,6 @@
     <string name="content_desc_move_menu">Déplacer le menu flottant</string>
     <string name="content_desc_confirm">Confirmer</string>
     <string name="content_desc_go_back">Retour au dialog</string>
-    <string name="content_desc_enable_click">Activer ou désactiver la superposition et permettre le clic sur les applications</string>
     <string name="content_desc_overlay_state">État de la permission de superposition</string>
     <string name="content_desc_accessibility_state">État du service d\'accessibilité</string>
     <string name="content_desc_action">L\'action à éxecuter</string>
@@ -104,5 +103,9 @@
     <string name="dialog_action_copy_click_details">Pendant %1$s à [%2$d, %3$d]</string>
     <string name="dialog_action_copy_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
     <string name="dialog_action_copy_pause_details">Pendant %1$s</string>
+    <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
+    <string name="content_desc_dialog_title_icon">L\icone du titre du dialogue.</string>
+
+
 
 </resources>

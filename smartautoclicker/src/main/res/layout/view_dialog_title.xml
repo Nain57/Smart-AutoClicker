@@ -28,6 +28,7 @@
         style="@style/DialogTitleIcon"
         android:scaleType="fitCenter"
         android:visibility="gone"
+        android:contentDescription="@string/content_desc_dialog_title_icon"
         tools:src="@drawable/ic_all_conditions"
         tools:visibility="visible"/>
 
