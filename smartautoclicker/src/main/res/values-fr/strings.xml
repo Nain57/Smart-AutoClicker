@@ -105,7 +105,11 @@
     <string name="dialog_action_copy_pause_details">Pendant %1$s</string>
     <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
     <string name="content_desc_dialog_title_icon">L\icone du titre du dialogue.</string>
-
-
+    <string name="dialog_condition_copy_title">Copier depuis</string>
+    <string name="dialog_condition_copy_empty">Impossible de copier. Vous n\'avez créé aucune condition.</string>
+    <string name="dialog_condition_copy_threshold">%1$d%%</string>
+    <string name="dialog_condition_new_title">Nouvelle condition</string>
+    <string name="dialog_condition_new_create">Créer</string>
+    <string name="dialog_condition_new_copy">Copy from another condition</string>
 
 </resources>

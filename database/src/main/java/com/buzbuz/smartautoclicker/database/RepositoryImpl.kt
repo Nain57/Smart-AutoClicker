@@ -97,6 +97,8 @@ internal class RepositoryImpl internal constructor(
 
     override fun getAllActions(): Flow<List<Action>> = eventDao.getAllActions().mapList { it.toAction() }
 
+    override fun getAllConditions(): Flow<List<Condition>> = conditionsDao.getAllConditions().mapList { it.toCondition() }
+
     override suspend fun addEvent(event: Event): Boolean {
         event.conditions?.let {
             saveNewConditionsBitmap(it)

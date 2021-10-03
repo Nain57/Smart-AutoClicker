@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
@@ -55,7 +56,7 @@ class ActionCopyDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogActionCopyBinding
     /** Adapter displaying the list of events. */
-    private lateinit var adapter: ActionCopyAdapter
+    private lateinit var actionCopyAdapter: ActionCopyAdapter
 
     override val emptyTextId: Int = R.string.dialog_action_copy_empty
 
@@ -73,19 +74,23 @@ class ActionCopyDialog(
     override fun onDialogCreated(dialog: AlertDialog) {
         super.onDialogCreated(dialog)
 
-        adapter = ActionCopyAdapter { selectedAction ->
+        actionCopyAdapter = ActionCopyAdapter { selectedAction ->
             viewModel?.let {
                 onActionSelected(it.getNewActionForCopy(selectedAction))
                 dismiss()
             }
         }
-        listBinding.list.adapter = adapter
 
+        listBinding.list.apply {
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = actionCopyAdapter
+        }
+        
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel?.actionList?.collect { actionList ->
                     updateLayoutState(actionList)
-                    adapter.actions = if (actionList == null) ArrayList() else ArrayList(actionList)
+                    actionCopyAdapter.actions = if (actionList == null) ArrayList() else ArrayList(actionList)
                 }
             }
         }

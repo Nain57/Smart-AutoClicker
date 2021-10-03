@@ -21,7 +21,7 @@
     <color name="accent">#448AFF</color>
 
     <color name="textTitle">#FFFFFF</color>
-    <color name="eventConfigListBackground">#EAEAEA</color>
+    <color name="listBackground">#EAEAEA</color>
 
     <color name="overlayMenuBackground">#77000000</color>
     <color name="overlayMenuButtons">#FFFFFF</color>

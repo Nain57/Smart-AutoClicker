@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
@@ -60,8 +61,8 @@ class EventListDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEventListBinding
     /** Adapter displaying the list of events. */
-    private lateinit var adapter: EventListAdapter
-    /** TouchHelper applied to [adapter] when in [REORDER] mode allowing to drag and drop the items. */
+    private lateinit var eventAdapter: EventListAdapter
+    /** TouchHelper applied to [eventAdapter] when in [REORDER] mode allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(EventReorderTouchHelper())
 
     override val emptyTextId: Int = R.string.dialog_event_list_no_events
@@ -81,10 +82,14 @@ class EventListDialog(
 
     override fun onDialogCreated(dialog: AlertDialog) {
         super.onDialogCreated(dialog)
-        adapter = EventListAdapter(::onEventClicked) { deletedEvent ->
+        eventAdapter = EventListAdapter(::onEventClicked) { deletedEvent ->
             viewModel?.deleteEvent(deletedEvent)
         }
-        listBinding.list.adapter = adapter
+
+        listBinding.list.apply {
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = eventAdapter
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -96,7 +101,7 @@ class EventListDialog(
 
                 launch {
                     viewModel?.uiMode?.collect { mode ->
-                        adapter.mode = mode
+                        eventAdapter.mode = mode
                         when(mode) {
                             EDITION -> toEditionMode()
                             COPY -> toCopyMode()
@@ -125,7 +130,7 @@ class EventListDialog(
     private fun onEventListChanged(events: List<Event>?) {
         updateLayoutState(events)
 
-        adapter.events = events?.toMutableList()
+        eventAdapter.events = events?.toMutableList()
 
         // In edition, buttons displays depends on the event count, refresh them
         if (viewModel?.uiMode?.value == EDITION) {
@@ -146,7 +151,7 @@ class EventListDialog(
             )
             changeButtonState(
                 button = getButton(AlertDialog.BUTTON_NEGATIVE),
-                visibility = if (adapter.itemCount > 1) View.VISIBLE else View.INVISIBLE,
+                visibility = if (eventAdapter.itemCount > 1) View.VISIBLE else View.INVISIBLE,
                 textId = R.string.dialog_event_list_reorder,
                 listener = { viewModel?.setUiMode(REORDER) },
             )
@@ -176,11 +181,11 @@ class EventListDialog(
         dialog?.let {
             itemTouchHelper.attachToRecyclerView(listBinding.list)
             changeButtonState(it.getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE, android.R.string.ok) {
-                viewModel?.updateEventsPriority((adapter.events!!))
+                viewModel?.updateEventsPriority((eventAdapter.events!!))
                 viewModel?.setUiMode(EDITION)
             }
             changeButtonState(it.getButton(AlertDialog.BUTTON_NEGATIVE), View.VISIBLE, android.R.string.cancel) {
-                adapter.cancelReorder()
+                eventAdapter.cancelReorder()
                 viewModel?.setUiMode(EDITION)
             }
             changeButtonState(it.getButton(AlertDialog.BUTTON_NEUTRAL), View.GONE)
@@ -193,7 +198,7 @@ class EventListDialog(
      * dialog to create a new click, or it will display the New/Copy dialog first.
      */
     private fun onAddClicked() {
-        if (adapter.itemCount > 0) {
+        if (eventAdapter.itemCount > 0) {
             showSubOverlay(MultiChoiceDialog(
                 context = context,
                 dialogTitle = R.string.dialog_event_add_title,

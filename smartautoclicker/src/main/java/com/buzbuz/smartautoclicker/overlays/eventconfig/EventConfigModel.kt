@@ -65,7 +65,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     /** The event being configured by the user. Defined using [setConfigEvent]. */
     private val configuredEvent = MutableStateFlow<Event?>(null)
 
-    /** */
+    /** Backing property for [actions]. */
     private val _action = configuredEvent
         .map { it?.actions }
         .stateIn(
@@ -75,12 +75,20 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
         )
     /** The event actions currently edited by the user. */
     val actions: StateFlow<List<Action>?> = _action
+    /** Backing property for [conditions]. */
+    private val _conditions = configuredEvent
+        .map { it?.conditions }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            emptyList()
+        )
+    /** The event conditions currently edited by the user. */
+    val conditions: StateFlow<List<Condition>?> = _conditions
     /** The event name value currently edited by the user. */
     val eventName: Flow<String?> = configuredEvent.map { it?.name }
     /** The event condition operator currently edited by the user. */
     val conditionOperator: Flow<Int?> = configuredEvent.map { it?.conditionOperator }
-    /** The event conditions currently edited by the user. */
-    val conditions: Flow<List<Condition>?> = configuredEvent.map { it?.conditions }
     /** The number of times to execute this event before ending the scenario. */
     val stopAfter: Flow<Int?> = configuredEvent.map { it?.stopAfter }
     /** Tells if the configured event is valid and can be saved. */
@@ -332,10 +340,18 @@ sealed class OperatorChoice(title: Int, iconId: Int?): DialogChoice(title, iconI
 }
 
 /** Choices for the action creation dialog. */
+sealed class ConditionCreationChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
+    /** Choice for creating a new Condition. */
+    object Create : ConditionCreationChoice(R.string.dialog_condition_new_create, R.drawable.ic_add)
+    /** Choice for copying an Condition. */
+    object Copy : ConditionCreationChoice(R.string.dialog_condition_new_copy, R.drawable.ic_copy)
+}
+
+/** Choices for the action creation dialog. */
 sealed class ActionCreationChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
-    /** Choice for creating a new Event. */
+    /** Choice for creating a new Action. */
     object Create : ActionCreationChoice(R.string.dialog_action_new_create, R.drawable.ic_add)
-    /** Choice for copying an Event. */
+    /** Choice for copying an Action. */
     object Copy : ActionCreationChoice(R.string.dialog_action_new_copy, R.drawable.ic_copy)
 }
 

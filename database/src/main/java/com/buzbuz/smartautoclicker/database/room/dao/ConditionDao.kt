@@ -20,10 +20,19 @@ import androidx.room.Dao
 import androidx.room.Query
 
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
+import kotlinx.coroutines.flow.Flow
 
 /** Allows to access the conditions in the database. */
 @Dao
 internal interface ConditionDao {
+
+    /**
+     * Get all conditions from all events.
+     *
+     * @return the list containing all conditions.
+     */
+    @Query("SELECT * FROM condition_table")
+    fun getAllConditions(): Flow<List<ConditionEntity>>
 
     /**
      * Get the list of conditions for a given event.

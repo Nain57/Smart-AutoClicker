@@ -21,7 +21,6 @@ import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
@@ -46,7 +45,6 @@ abstract class LoadableListDialog(
     @CallSuper
     override fun onDialogCreated(dialog: AlertDialog) {
         listBinding = MergeLoadableListBinding.bind(getListBindingRoot()).apply {
-            list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             empty.setText(emptyTextId)
         }
     }

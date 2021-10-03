@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfi
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 
 import kotlinx.coroutines.flow.collect
@@ -100,7 +101,15 @@ class EventConfigDialog(
     )
     /** Adapter displaying all conditions for the event displayed by this dialog. */
     private val conditionsAdapter = ConditionAdapter(
-        addConditionClickedListener = { subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCapture) },
+        addConditionClickedListener = { isFirst ->
+            subOverlayViewModel?.apply {
+                if (isFirst) {
+                    requestSubOverlay(SubOverlay.ConditionCapture)
+                } else {
+                    requestSubOverlay(SubOverlay.ConditionCreate)
+                }
+            }
+        },
         conditionClickedListener = { index, condition ->
             subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionConfig(condition, index))
         },
@@ -304,6 +313,33 @@ class EventConfigDialog(
                         }
                     }
                 ))
+            }
+
+            is SubOverlay.ConditionCreate -> {
+                showSubOverlay(MultiChoiceDialog(
+                    context = context,
+                    dialogTitle = R.string.dialog_condition_new_title,
+                    choices = listOf(ConditionCreationChoice.Create, ConditionCreationChoice.Copy),
+                    onChoiceSelected = { choiceClicked ->
+                        if (choiceClicked is ConditionCreationChoice.Create) {
+                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCapture)
+                        } else {
+                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCopy)
+                        }
+                    }
+                ))
+            }
+
+            is SubOverlay.ConditionCopy -> {
+                viewModel?.let {
+                    showSubOverlay(ConditionCopyDialog(
+                        context = context,
+                        conditions = it.conditions.value!!,
+                        onConditionSelected = { conditionSelected ->
+                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionConfig(conditionSelected))
+                        }
+                    ))
+                }
             }
 
             is SubOverlay.ConditionCapture -> {

@@ -21,6 +21,7 @@ import android.graphics.Bitmap
 
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManagerImpl
 import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
@@ -121,6 +122,13 @@ interface Repository {
      * @return the list containing all actions.
      */
     fun getAllActions(): Flow<List<Action>>
+
+    /**
+     * Get all conditions from all events.
+     *
+     * @return the list containing all conditions.
+     */
+    fun getAllConditions(): Flow<List<Condition>>
 
     /**
      * Add a new event.

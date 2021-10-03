@@ -112,9 +112,9 @@
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal"
                     android:scrollbars="horizontal"
-                    android:background="@color/eventConfigListBackground"
+                    android:background="@color/listBackground"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_condition"
+                    tools:listitem="@layout/item_condition_card"
                     tools:itemCount="1"/>
 
             </LinearLayout>
@@ -150,7 +150,7 @@
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal"
                     android:scrollbars="horizontal"
-                    android:background="@color/eventConfigListBackground"
+                    android:background="@color/listBackground"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_action_card"
                     tools:itemCount="1"/>

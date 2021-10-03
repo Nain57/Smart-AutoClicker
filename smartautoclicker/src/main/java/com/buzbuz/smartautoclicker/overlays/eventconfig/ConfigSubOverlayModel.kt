@@ -80,6 +80,12 @@ sealed class SubOverlay {
     /** Condition operator selection dialog. */
     object ConditionOperatorSelection : SubOverlay()
 
+    /** Condition creation dialog. */
+    object ConditionCreate : SubOverlay()
+
+    /** Condition copy dialog. */
+    object ConditionCopy : SubOverlay()
+
     /** Condition capture sub overlay menu. */
     object ConditionCapture : SubOverlay()
 

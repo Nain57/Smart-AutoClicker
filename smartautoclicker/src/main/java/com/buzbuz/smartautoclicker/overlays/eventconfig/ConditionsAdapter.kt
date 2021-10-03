@@ -25,8 +25,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.ItemConditionBinding
 import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.databinding.ItemConditionCardBinding
 
 import kotlinx.coroutines.Job
 
@@ -34,11 +34,13 @@ import kotlinx.coroutines.Job
  * Adapter displaying the conditions for the event displayed by the dialog.
  * Also provide a item displayed in the last position to add a new condition.
  *
- * @param addConditionClickedListener the listener called when the user clicks on the add item.
+ * @param addConditionClickedListener the listener called when the user clicks on the add item. True if this is the
+ *                                    first item, false if not.
  * @param conditionClickedListener the listener called when the user clicks on a condition.
+ * @param bitmapProvider provides the conditions bitmaps to the items.
  */
 class ConditionAdapter(
-    private val addConditionClickedListener: () -> Unit,
+    private val addConditionClickedListener: (Boolean) -> Unit,
     private val conditionClickedListener: (Int, Condition) -> Unit,
     private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
 ) : RecyclerView.Adapter<ConditionViewHolder>() {
@@ -54,7 +56,7 @@ class ConditionAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConditionViewHolder =
         ConditionViewHolder(
-            ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemConditionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             bitmapProvider,
         )
 
@@ -75,9 +77,10 @@ class ConditionAdapter(
 /**
  * View holder displaying a condition in the [ConditionAdapter].
  * @param viewBinding the view binding for this item.
+ * @param bitmapProvider provides the conditions bitmaps to the items.
  */
 class ConditionViewHolder(
-    private val viewBinding: ItemConditionBinding,
+    private val viewBinding: ItemConditionCardBinding,
     private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
@@ -89,12 +92,12 @@ class ConditionViewHolder(
      *
      * @param addConditionClickedListener listener notified upon user click on this item.
      */
-    fun onBindAddCondition(addConditionClickedListener: () -> Unit) {
+    fun onBindAddCondition(addConditionClickedListener: (Boolean) -> Unit) {
         viewBinding.imageCondition.apply {
             scaleType = ImageView.ScaleType.CENTER
             setImageResource(R.drawable.ic_add)
         }
-        itemView.setOnClickListener { addConditionClickedListener.invoke() }
+        itemView.setOnClickListener { addConditionClickedListener.invoke(bindingAdapterPosition == 0) }
     }
 
     /**

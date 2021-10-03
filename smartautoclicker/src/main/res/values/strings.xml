@@ -97,6 +97,12 @@
     <string name="dialog_condition_threshold_title">Tolerated difference</string>
     <string name="dialog_condition_threshold_value">Tolerance: %1$d %%</string>
     <string name="dialog_condition_error">The condition image can\'t be found.</string>
+    <string name="dialog_condition_new_title">New Condition</string>
+    <string name="dialog_condition_new_create">Create</string>
+    <string name="dialog_condition_new_copy">Copy from another condition</string>
+    <string name="dialog_condition_copy_title">Copy from</string>
+    <string name="dialog_condition_copy_empty">Can\'t copy, you don\'t have any conditions.</string>
+    <string name="dialog_condition_copy_threshold">%1$d%%</string>
 
     <string name="toast_configure_single_click">Touch the position to click on.</string>
     <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
