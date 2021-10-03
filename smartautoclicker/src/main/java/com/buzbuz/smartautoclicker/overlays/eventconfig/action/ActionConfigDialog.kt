@@ -30,7 +30,6 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionConfigBinding
-import com.buzbuz.smartautoclicker.extensions.addOnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 
@@ -128,17 +127,8 @@ class ActionConfigDialog(
      */
     private fun setupClickUi(clickValues: ActionConfigModel.ClickActionValues) {
         viewBinding.apply {
-            editName.addOnAfterTextChangedListener { editable ->
-                clickValues.setName(editable.toString())
-            }
-
             includeClickConfig.apply {
                 actionConfigLayoutClick.visibility = View.VISIBLE
-
-                editPressDuration.addOnAfterTextChangedListener { editable ->
-                    val pressDuration = editable.toString()
-                    clickValues.setPressDuration(if (pressDuration.isNotEmpty()) pressDuration.toLong() else 0)
-                }
 
                 textClickPosition.setOnClickListener {
                     showSubOverlay(ClickSwipeSelectorMenu(
@@ -198,17 +188,8 @@ class ActionConfigDialog(
      */
     private fun setupSwipeUi(swipeValues: ActionConfigModel.SwipeActionValues) {
         viewBinding.apply {
-            editName.addOnAfterTextChangedListener { editable ->
-                swipeValues.setName(editable.toString())
-            }
-
             includeSwipeConfig.apply {
                 actionConfigLayoutSwipe.visibility = View.VISIBLE
-
-                editSwipeDuration.addOnAfterTextChangedListener { editable ->
-                    val swipeDuration = editable.toString()
-                    swipeValues.setSwipeDuration(if (swipeDuration.isNotEmpty()) swipeDuration.toLong() else 0)
-                }
 
                 textSwipePosition.setOnClickListener {
                     showSubOverlay(
@@ -275,17 +256,8 @@ class ActionConfigDialog(
      */
     private fun setupPauseUi(pauseValues: ActionConfigModel.PauseActionValues) {
         viewBinding.apply {
-            editName.addOnAfterTextChangedListener { editable ->
-                pauseValues.setName(editable.toString())
-            }
-
             includePauseConfig.apply {
                 actionConfigLayoutPause.visibility = View.VISIBLE
-
-                editPauseDuration.addOnAfterTextChangedListener { editable ->
-                    val pauseDuration = editable.toString()
-                    pauseValues.setPauseDuration(if (pauseDuration.isNotEmpty()) pauseDuration.toLong() else 0)
-                }
             }
         }
 
@@ -318,8 +290,36 @@ class ActionConfigDialog(
 
     /** Notify the confirm listener and dismiss the dialog. */
     private fun onOkClicked() {
-        viewModel?.let {
-            onConfirmClicked.invoke(it.getConfiguredAction())
+        viewModel?.let { model ->
+            val configuredAction = when (val actionValues = model.actionValues.value) {
+                is ActionConfigModel.ClickActionValues -> {
+                    val pressDuration = viewBinding.includeClickConfig.editPressDuration.toString()
+                    actionValues.getConfiguredClick(
+                        viewBinding.editName.text.toString(),
+                        if (pressDuration.isNotEmpty()) pressDuration.toLong() else 0,
+                    )
+                }
+
+                is ActionConfigModel.SwipeActionValues -> {
+                    val swipeDuration = viewBinding.includeSwipeConfig.editSwipeDuration.toString()
+                    actionValues.getConfiguredSwipe(
+                        viewBinding.editName.text.toString(),
+                        if (swipeDuration.isNotEmpty()) swipeDuration.toLong() else 0,
+                    )
+                }
+
+                is ActionConfigModel.PauseActionValues -> {
+                    val pauseDuration = viewBinding.includePauseConfig.editPauseDuration.toString()
+                    actionValues.getConfiguredPause(
+                        viewBinding.editName.text.toString(),
+                        if (pauseDuration.isNotEmpty()) pauseDuration.toLong() else 0,
+                    )
+                }
+
+                else -> null
+            }
+
+            configuredAction?.let { onConfirmClicked(it) }
         }
         dismiss()
     }

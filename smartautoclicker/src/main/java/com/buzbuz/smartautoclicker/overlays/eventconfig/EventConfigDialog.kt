@@ -33,7 +33,6 @@ import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.databinding.DialogEventConfigBinding
-import com.buzbuz.smartautoclicker.extensions.addOnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfigDialog
@@ -135,15 +134,6 @@ class EventConfigDialog(
 
             layoutConditionOperator.setOnClickListener {
                 subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionOperatorSelection)
-            }
-
-            editName.addOnAfterTextChangedListener { editable ->
-                viewModel?.setEventName(editable.toString())
-            }
-
-            editStopAfter.addOnAfterTextChangedListener { editable ->
-                val stopAfter = editable.toString()
-                viewModel?.setEventStopAfter(if (stopAfter.isNotEmpty()) stopAfter.toInt() else null)
             }
 
             listConditions.adapter = conditionsAdapter
@@ -384,7 +374,13 @@ class EventConfigDialog(
      * This will close the dialog and notify the listener.
      */
     private fun onOkClicked() {
-        viewModel?.let { onConfigComplete(it.getConfiguredEvent()) }
+        viewModel?.let {
+            val stopAfter = viewBinding.editStopAfter.text.toString()
+            onConfigComplete(it.getConfiguredEvent(
+                eventName = viewBinding.editName.text.toString(),
+                stopAfterExec = if (stopAfter.isNotEmpty()) stopAfter.toInt() else null
+            ))
+        }
         dismiss()
     }
 }

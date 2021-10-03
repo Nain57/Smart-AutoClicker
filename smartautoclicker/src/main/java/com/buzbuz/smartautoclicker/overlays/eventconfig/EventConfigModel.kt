@@ -31,7 +31,6 @@ import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,17 +47,6 @@ import kotlinx.coroutines.withContext
  * @param context the Android context.
  */
 class EventConfigModel(context: Context) : OverlayViewModel(context) {
-
-    /**
-     * Job for updating [configuredEvent] values that depends on an EditText.
-     * As the user can stop the EditText edition with a lots of different ways, it is difficult to tell exactly when the
-     * user is done editing. As a solution, we listen to each text edition and call the model for an update. But those
-     * calls can be numerous and this leads to a slow UI feeling when editing.
-     * So we delay those calls using this [Job] by [EDIT_TEXT_UPDATE_DELAY] to only update once after the user have
-     * stopped editing for a moment.
-     * This Job is null when the user isn't editing.
-     */
-    private var editJob: Job? = null
 
     /** Repository providing access to the click database. */
     private val repository = Repository.getRepository(context)
@@ -108,23 +96,20 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
         }
     }
 
-    /** @return the event containing all user changes. */
-    fun getConfiguredEvent(): Event =
-        configuredEvent.value ?: throw IllegalStateException("Can't get the configured event, none were defined.")
-
     /**
-     * Set the name of the configured event.
-     * @param name the new name.
+     * Get the event with all user changes.
+     * Values provided by edit text are given here.
+     *
+     * @param eventName the name of the event.
+     * @param stopAfterExec the value for stopAfter, null for unlimited executions.
+     *
+     * @return the event containing all user changes.
      */
-    fun setEventName(name: String) {
-        configuredEvent.value?.let { event ->
-            editJob?.cancel()
-            editJob = viewModelScope.launch {
-                delay(EDIT_TEXT_UPDATE_DELAY)
-                configuredEvent.value = event.copy(name = name)
-            }
-        }
-    }
+    fun getConfiguredEvent(eventName: String, stopAfterExec: Int?): Event =
+        configuredEvent.value?.apply {
+            name = eventName
+            stopAfter = stopAfterExec
+        } ?: throw IllegalStateException("Can't get the configured event, none were defined.")
 
     /**
      * Create a new action with the default values from configuration.
@@ -203,7 +188,8 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     }
 
     /**
-     *
+     * Update the priority of the actions.
+     * @param actions the new actions order.
      */
     fun updateActionOrder(actions: List<Action>) {
         configuredEvent.value?.let { event ->
@@ -288,20 +274,6 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     }
 
     /**
-     * Set the stop after count value of the configured event.
-     * @param stopAfter the new value.
-     */
-    fun setEventStopAfter(stopAfter: Int?) {
-        configuredEvent.value?.let { event ->
-            editJob?.cancel()
-            editJob = viewModelScope.launch {
-                delay(EDIT_TEXT_UPDATE_DELAY)
-                configuredEvent.value = event.copy(stopAfter = stopAfter)
-            }
-        }
-    }
-
-    /**
      * Get the bitmap corresponding to a condition.
      * Loading is async and the result notified via the onBitmapLoaded argument.
      *
@@ -364,6 +336,3 @@ sealed class ActionTypeChoice(title: Int, iconId: Int?): DialogChoice(title, ico
     /** Pause Action choice. */
     object Pause : ActionTypeChoice(R.string.dialog_action_type_pause, R.drawable.ic_wait)
 }
-
-/** Delay without update before updating the action. */
-private const val EDIT_TEXT_UPDATE_DELAY = 500L

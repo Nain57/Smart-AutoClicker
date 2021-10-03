@@ -22,12 +22,12 @@ import android.graphics.Point
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.domain.Action
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -43,17 +43,6 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     /** The action being configured by the user. Defined using [setConfigAction]. */
     private val configuredAction = MutableStateFlow<Action?>(null)
 
-    /**
-     * Job for updating [configuredAction] values that depends on an EditText.
-     * As the user can stop the EditText edition with a lots of different ways, it is difficult to tell exactly when the
-     * user is done editing. As a solution, we listen to each text edition and call the model for an update. But those
-     * calls can be numerous and this leads to a slow UI feeling when editing.
-     * So we delay those calls using this [Job] by [EDIT_TEXT_UPDATE_DELAY] to only update once after the user have
-     * stopped editing for a moment.
-     * This Job is null when the user isn't editing.
-     */
-    private var editJob: Job? = null
-
     /** Tells if the configured action is valid and can be saved. */
     val isValidAction: Flow<Boolean> = configuredAction.map { action ->
         when (action) {
@@ -67,15 +56,21 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     }
 
     /** The values for the [configuredAction]. Type will change according to the action type. */
-    val actionValues = configuredAction.mapNotNull { action ->
-        @Suppress("UNCHECKED_CAST") // Nullity is handled first
-        when (action) {
-            null -> null
-            is Action.Click -> ClickActionValues()
-            is Action.Swipe -> SwipeActionValues()
-            is Action.Pause -> PauseActionValues()
+    val actionValues = configuredAction
+        .map { action ->
+            @Suppress("UNCHECKED_CAST") // Nullity is handled first
+            when (action) {
+                null -> null
+                is Action.Click -> ClickActionValues()
+                is Action.Swipe -> SwipeActionValues()
+                is Action.Pause -> PauseActionValues()
+            }
         }
-    }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            null
+        )
 
     /**
      * Set the configured action.
@@ -88,10 +83,6 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             configuredAction.emit(action.deepCopy())
         }
     }
-
-    /** @return the condition containing all user changes. */
-    fun getConfiguredAction(): Action =
-        configuredAction.value ?: throw IllegalStateException("Can't get the configured action, none were defined.")
 
     /** Base class for observing/editing the values for an action. */
     abstract inner class ActionValues
@@ -125,33 +116,6 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
 
         /**
-         * Set the name of the configured click action.
-         * @param name the new name.
-         */
-        fun setName(name: String) {
-            (configuredAction.value as Action.Click).let { click ->
-                viewModelScope.launch {
-                    delay(EDIT_TEXT_UPDATE_DELAY)
-                    configuredAction.emit(click.copy(name = name))
-                }
-            }
-        }
-
-        /**
-         * Set the duration between the press and release of the click.
-         * @param durationMs the new duration in milliseconds.
-         */
-        fun setPressDuration(durationMs: Long) {
-            (configuredAction.value as Action.Click).let { click ->
-                editJob?.cancel()
-                editJob = viewModelScope.launch {
-                    delay(EDIT_TEXT_UPDATE_DELAY)
-                    configuredAction.emit(click.copy(pressDuration = durationMs))
-                }
-            }
-        }
-
-        /**
          * Set the position of the click.
          * @param position the new position.
          */
@@ -162,6 +126,21 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 }
             }
         }
+
+        /**
+         * Get the click with all user changes.
+         * Values provided by edit text are given here.
+         *
+         * @param clickName the name of the action.
+         * @param duration the duration of the click press.
+         *
+         * @return the click containing all user changes.
+         */
+        fun getConfiguredClick(clickName: String, duration: Long): Action.Click =
+            (configuredAction.value as Action.Click).apply {
+                name = clickName
+                pressDuration = duration
+            }
     }
 
     /** Allow to observe/edit the value a swipe action. */
@@ -195,34 +174,6 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
 
         /**
-         * Set the name of the configured swipe action.
-         * @param name the new name.
-         */
-        fun setName(name: String) {
-            (configuredAction.value as Action.Swipe).let { swipe ->
-                editJob?.cancel()
-                editJob = viewModelScope.launch {
-                    delay(EDIT_TEXT_UPDATE_DELAY)
-                    configuredAction.emit(swipe.copy(name = name))
-                }
-            }
-        }
-
-        /**
-         * Set the duration between the start and end of the swipe.
-         * @param durationMs the new duration in milliseconds.
-         */
-        fun setSwipeDuration(durationMs: Long) {
-            (configuredAction.value as Action.Swipe).let { swipe ->
-                editJob?.cancel()
-                editJob = viewModelScope.launch {
-                    delay(EDIT_TEXT_UPDATE_DELAY)
-                    configuredAction.emit(swipe.copy(swipeDuration = durationMs))
-                }
-            }
-        }
-
-        /**
          * Set the start and end positions of the swipe.
          * @param from the new start position.
          * @param to the new end position.
@@ -234,6 +185,21 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 }
             }
         }
+
+        /**
+         * Get the swipe with all user changes.
+         * Values provided by edit text are given here.
+         *
+         * @param swipeName the name of the action.
+         * @param duration the duration of the swipe.
+         *
+         * @return the swipe containing all user changes.
+         */
+        fun getConfiguredSwipe(swipeName: String, duration: Long): Action.Swipe =
+            (configuredAction.value as Action.Swipe).apply {
+                name = swipeName
+                swipeDuration = duration
+            }
     }
 
     /** Allow to observe/edit the value a pause action. */
@@ -257,34 +223,18 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
 
         /**
-         * Set the name of the configured pause action.
-         * @param name the new name.
+         * Get the pause with all user changes.
+         * Values provided by edit text are given here.
+         *
+         * @param pauseName the name of the action.
+         * @param duration the duration of the pause.
+         *
+         * @return the pause containing all user changes.
          */
-        fun setName(name: String) {
-            (configuredAction.value as Action.Pause).let { pause ->
-                editJob?.cancel()
-                editJob = viewModelScope.launch {
-                    delay(EDIT_TEXT_UPDATE_DELAY)
-                    configuredAction.emit(pause.copy(name = name))
-                }
+        fun getConfiguredPause(pauseName: String, duration: Long): Action.Pause =
+            (configuredAction.value as Action.Pause).apply {
+                name = pauseName
+                pauseDuration = duration
             }
-        }
-
-        /**
-         * Set the pause duration.
-         * @param durationMs the new duration in milliseconds.
-         */
-        fun setPauseDuration(durationMs: Long) {
-            (configuredAction.value as Action.Pause).let { pause ->
-                editJob?.cancel()
-                editJob = viewModelScope.launch {
-                    delay(EDIT_TEXT_UPDATE_DELAY)
-                    configuredAction.emit(pause.copy(pauseDuration = durationMs))
-                }
-            }
-        }
     }
 }
-
-/** Delay without update before updating the action. */
-private const val EDIT_TEXT_UPDATE_DELAY = 500L
