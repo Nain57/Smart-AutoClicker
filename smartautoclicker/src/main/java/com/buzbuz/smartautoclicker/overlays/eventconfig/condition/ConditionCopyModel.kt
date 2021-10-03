@@ -73,7 +73,7 @@ class ConditionCopyModel(context: Context) : OverlayViewModel(context) {
      * @param condition the condition to copy.
      */
     fun getNewConditionForCopy(condition: Condition): Condition =
-        condition.copy(id = 0, path = "" + condition.path)
+        condition.copy(id = 0, path = if (condition.path != null) "" + condition.path else null)
 
     /**
      * Get the bitmap corresponding to a condition.
