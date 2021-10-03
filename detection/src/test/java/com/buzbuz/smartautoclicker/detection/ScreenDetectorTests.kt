@@ -459,16 +459,6 @@ class ScreenDetectorTests {
     }
 
     @Test
-    fun stopDetecting_started() = runBlocking {
-        toStartScreenRecord()
-        toStartDetection(emptyList())
-
-        toStopDetection()
-
-        assertFalse(screenDetector.isDetecting.first())
-    }
-
-    @Test
     fun stopScreenRecord_notStarted() = runBlocking {
         toStopScreenRecord()
 
