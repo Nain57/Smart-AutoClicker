@@ -110,6 +110,6 @@
     <string name="dialog_condition_copy_threshold">%1$d%%</string>
     <string name="dialog_condition_new_title">Nouvelle condition</string>
     <string name="dialog_condition_new_create">Créer</string>
-    <string name="dialog_condition_new_copy">Copy from another condition</string>
+    <string name="dialog_condition_new_copy">Copier depuis une autre condition</string>
 
 </resources>
