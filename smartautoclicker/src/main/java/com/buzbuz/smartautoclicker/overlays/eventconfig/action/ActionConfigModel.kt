@@ -17,10 +17,18 @@
 package com.buzbuz.smartautoclicker.overlays.eventconfig.action
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.overlays.eventconfig.EVENT_CONFIG_PREFERENCES_NAME
+import com.buzbuz.smartautoclicker.overlays.eventconfig.getClickPressDurationConfig
+import com.buzbuz.smartautoclicker.overlays.eventconfig.getPauseDurationConfig
+import com.buzbuz.smartautoclicker.overlays.eventconfig.getSwipeDurationConfig
+import com.buzbuz.smartautoclicker.overlays.eventconfig.putClickPressDurationConfig
+import com.buzbuz.smartautoclicker.overlays.eventconfig.putPauseDurationConfig
+import com.buzbuz.smartautoclicker.overlays.eventconfig.putSwipeDurationConfig
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,16 +50,19 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** The action being configured by the user. Defined using [setConfigAction]. */
     private val configuredAction = MutableStateFlow<Action?>(null)
+    /** */
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+        EVENT_CONFIG_PREFERENCES_NAME,
+        Context.MODE_PRIVATE
+    )
 
     /** Tells if the configured action is valid and can be saved. */
     val isValidAction: Flow<Boolean> = configuredAction.map { action ->
         when (action) {
             null -> false
-            is Action.Click -> !action.name.isNullOrEmpty() && action.pressDuration != null && action.x != null
-                    && action.y != null
-            is Action.Swipe -> !action.name.isNullOrEmpty() && action.swipeDuration != null && action.fromX != null
-                    && action.fromY != null && action.toX != null && action.toY != null
-            is Action.Pause -> !action.name.isNullOrEmpty() && action.pauseDuration != null
+            is Action.Click -> action.x != null && action.y != null
+            is Action.Swipe -> action.fromX != null && action.fromY != null && action.toX != null && action.toY != null
+            is Action.Pause -> true
         }
     }
 
@@ -100,10 +111,10 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
         /** The duration between the press and release of the click in milliseconds. */
         val pressDuration: Flow<Long?> = configuredAction.map { click ->
-            if (click is Action.Click) {
+            if (click is Action.Click && click.pressDuration != null) {
                 click.pressDuration
             } else {
-                null
+                sharedPreferences.getClickPressDurationConfig(context)
             }
         }
         /** The position of the click. */
@@ -140,6 +151,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             (configuredAction.value as Action.Click).apply {
                 name = clickName
                 pressDuration = duration
+                sharedPreferences.edit().putClickPressDurationConfig(duration).apply()
             }
     }
 
@@ -156,10 +168,10 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
         /** The duration between the start and end of the swipe in milliseconds. */
         val swipeDuration: Flow<Long?> = configuredAction.map { swipe ->
-            if (swipe is Action.Swipe) {
+            if (swipe is Action.Swipe && swipe.swipeDuration != null) {
                 swipe.swipeDuration
             } else {
-                null
+                sharedPreferences.getSwipeDurationConfig(context)
             }
         }
         /** The start and end positions of the swipe. */
@@ -199,6 +211,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             (configuredAction.value as Action.Swipe).apply {
                 name = swipeName
                 swipeDuration = duration
+                sharedPreferences.edit().putSwipeDurationConfig(duration).apply()
             }
     }
 
@@ -215,10 +228,10 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
         /** The duration of the pause in milliseconds. */
         val pauseDuration: Flow<Long?> = configuredAction.map { pause ->
-            if (pause is Action.Pause) {
+            if (pause is Action.Pause && pause.pauseDuration != null) {
                 pause.pauseDuration
             } else {
-                null
+                sharedPreferences.getPauseDurationConfig(context)
             }
         }
 
@@ -235,6 +248,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             (configuredAction.value as Action.Pause).apply {
                 name = pauseName
                 pauseDuration = duration
+                sharedPreferences.edit().putPauseDurationConfig(duration).apply()
             }
     }
 }

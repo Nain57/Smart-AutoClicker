@@ -81,7 +81,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     val stopAfter: Flow<Int?> = configuredEvent.map { it?.stopAfter }
     /** Tells if the configured event is valid and can be saved. */
     val isValidEvent: Flow<Boolean> = configuredEvent.map { event ->
-        event != null && event.name.isNotEmpty() && !event.actions.isNullOrEmpty() && !event.conditions.isNullOrEmpty()
+        event != null && !event.actions.isNullOrEmpty() && !event.conditions.isNullOrEmpty()
     }
 
     /**
@@ -124,17 +124,14 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
                 is ActionTypeChoice.Click -> Action.Click(
                     eventId = event.id,
                     name = context.getString(R.string.default_click_name),
-                    pressDuration = context.resources.getInteger(R.integer.default_click_press_duration).toLong(),
                 )
                 is ActionTypeChoice.Swipe -> Action.Swipe(
                     eventId = event.id,
                     name = context.getString(R.string.default_swipe_name),
-                    swipeDuration = context.resources.getInteger(R.integer.default_swipe_duration).toLong(),
                 )
                 is ActionTypeChoice.Pause -> Action.Pause(
                     eventId = event.id,
                     name = context.getString(R.string.default_pause_name),
-                    pauseDuration = context.resources.getInteger(R.integer.default_pause_duration).toLong(),
                 )
             }
 
