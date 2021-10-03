@@ -20,7 +20,6 @@ import android.content.Context
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 
 import kotlin.math.max
 
@@ -46,11 +45,11 @@ class GridAutoFitLayoutManager(
         if (columnWidth <= 0) throw IllegalArgumentException("Column width must be positive.")
     }
 
-    override fun onMeasure(recycler: Recycler, state: RecyclerView.State, widthSpec: Int, heightSpec: Int) {
-        super.onMeasure(recycler, state, widthSpec, heightSpec)
+    override fun onLayoutCompleted(state: RecyclerView.State?) {
+        super.onLayoutCompleted(state)
 
-        val width = width
-        val height = height
+        val width = this.width
+        val height = this.height
         if (width > 0 && height > 0 && (lastWidth != width || lastHeight != height)) {
 
             val totalSpace = if (orientation == VERTICAL) {
