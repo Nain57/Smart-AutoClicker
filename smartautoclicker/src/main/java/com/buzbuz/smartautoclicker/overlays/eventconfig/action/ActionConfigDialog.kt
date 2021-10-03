@@ -293,7 +293,7 @@ class ActionConfigDialog(
         viewModel?.let { model ->
             val configuredAction = when (val actionValues = model.actionValues.value) {
                 is ActionConfigModel.ClickActionValues -> {
-                    val pressDuration = viewBinding.includeClickConfig.editPressDuration.toString()
+                    val pressDuration = viewBinding.includeClickConfig.editPressDuration.text.toString()
                     actionValues.getConfiguredClick(
                         viewBinding.editName.text.toString(),
                         if (pressDuration.isNotEmpty()) pressDuration.toLong() else 0,
@@ -301,7 +301,7 @@ class ActionConfigDialog(
                 }
 
                 is ActionConfigModel.SwipeActionValues -> {
-                    val swipeDuration = viewBinding.includeSwipeConfig.editSwipeDuration.toString()
+                    val swipeDuration = viewBinding.includeSwipeConfig.editSwipeDuration.text.toString()
                     actionValues.getConfiguredSwipe(
                         viewBinding.editName.text.toString(),
                         if (swipeDuration.isNotEmpty()) swipeDuration.toLong() else 0,
@@ -309,7 +309,7 @@ class ActionConfigDialog(
                 }
 
                 is ActionConfigModel.PauseActionValues -> {
-                    val pauseDuration = viewBinding.includePauseConfig.editPauseDuration.toString()
+                    val pauseDuration = viewBinding.includePauseConfig.editPauseDuration.text.toString()
                     actionValues.getConfiguredPause(
                         viewBinding.editName.text.toString(),
                         if (pauseDuration.isNotEmpty()) pauseDuration.toLong() else 0,
