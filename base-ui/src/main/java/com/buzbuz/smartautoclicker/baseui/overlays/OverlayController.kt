@@ -103,11 +103,6 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
         lifecycleRegistry.currentState = Lifecycle.State.RESUMED
         isShown = true
         onShow()
-
-        if (pendingSubOverlayRequest != null) {
-            showSubOverlay(pendingSubOverlayRequest!!.first, pendingSubOverlayRequest!!.second)
-            pendingSubOverlayRequest = null
-        }
     }
 
     /**
@@ -197,6 +192,11 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
                 lifecycleRegistry.currentState = Lifecycle.State.RESUMED
             } else {
                 show()
+            }
+
+            if (pendingSubOverlayRequest != null) {
+                showSubOverlay(pendingSubOverlayRequest!!.first, pendingSubOverlayRequest!!.second)
+                pendingSubOverlayRequest = null
             }
         }
     }
