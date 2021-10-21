@@ -38,8 +38,8 @@ import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
-import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionCopyDialog
-import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.copy.conditions.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 
 import kotlinx.coroutines.flow.collect
