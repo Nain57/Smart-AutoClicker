@@ -90,7 +90,7 @@ class ActionCopyDialog(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel?.actionList?.collect { actionList ->
                     updateLayoutState(actionList)
-                    actionCopyAdapter.actions = if (actionList == null) ArrayList() else ArrayList(actionList)
+                    actionCopyAdapter.submitList(if (actionList == null) ArrayList() else ArrayList(actionList))
                 }
             }
         }

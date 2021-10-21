@@ -18,6 +18,10 @@ package com.buzbuz.smartautoclicker.overlays.copy.actions
 
 import android.content.Context
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Action
@@ -25,6 +29,8 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 /**
  * View model for the [ActionCopyDialog].
@@ -38,22 +44,32 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
 
     /** The list of actions for the configured event. They are not all available yet in the database. */
     private val eventActions = MutableStateFlow<List<Action>?>(null)
+
     /** List of all actions. */
-    val actionList: Flow<List<Action>?> = repository.getAllActions()
+    val actionList: Flow<List<ActionCopyItem>?> = repository.getAllActions()
         .combine(eventActions) { dbActions, eventActions ->
             if (eventActions == null) return@combine null
+            val allItems = mutableListOf<ActionCopyItem>()
 
-            val allActions = mutableListOf<Action>()
-            allActions.addAll(eventActions)
-            allActions.sortBy { it.getActionName() }
-            val otherEventActions = dbActions.toMutableList().apply {
-                removeIf { allAction ->
-                    eventActions.find { allAction.getIdentifier() == it.getIdentifier() } != null
+            // First, add the actions from the current event
+            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
+            val eventItems = eventActions.sortedBy { it.getActionName() }.map { it.toActionItem() }
+            allItems.addAll(eventItems)
+
+            // Then, add all other actions. Remove the one already in this event and the duplicates.
+            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
+            val otherItems = dbActions
+                .map { it.toActionItem() }
+                .toMutableList()
+                .apply {
+                    removeIf { allItem ->
+                        eventItems.find { allItem.action!!.getIdentifier() == it.action!!.getIdentifier() } != null
+                    }
                 }
-            }
-            allActions.addAll(otherEventActions)
+                .distinct()
+            allItems.addAll(otherItems)
 
-            allActions
+            allItems
         }
 
     /**
@@ -69,9 +85,97 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
      * @param action the acton to copy.
      */
     fun getNewActionForCopy(action: Action): Action =
-        when(action) {
+        when (action) {
             is Action.Click -> action.copy(id = 0, name = "" + action.getActionName())
             is Action.Swipe -> action.copy(id = 0, name = "" + action.getActionName())
             is Action.Pause -> action.copy(id = 0, name = "" + action.getActionName())
         }
+
+    /** @return the [ActionCopyItem.ActionItem] corresponding to this action. */
+    private fun Action.toActionItem(): ActionCopyItem.ActionItem {
+        val item = when (this) {
+            is Action.Click -> ActionCopyItem.ActionItem(
+                icon = R.drawable.ic_click,
+                name = name!!,
+                details = context.getString(
+                    R.string.dialog_action_copy_click_details,
+                    formatDuration(pressDuration!!), x, y
+                ),
+            )
+
+            is Action.Swipe -> ActionCopyItem.ActionItem(
+                icon = R.drawable.ic_swipe,
+                name = name!!,
+                details = context.getString(
+                    R.string.dialog_action_copy_swipe_details,
+                    formatDuration(swipeDuration!!), fromX, fromY, toX, toY
+                ),
+            )
+
+            is Action.Pause -> ActionCopyItem.ActionItem(
+                icon = R.drawable.ic_wait,
+                name = name!!,
+                details = context.getString(
+                    R.string.dialog_action_copy_pause_details,
+                    formatDuration(pauseDuration!!)
+                ),
+            )
+        }
+
+        item.action = this
+        return item
+    }
+
+    /**
+     * Format a duration into a human readable string.
+     * @param msDuration the duration to be formatted in milliseconds.
+     * @return the formatted duration.
+     */
+    @OptIn(ExperimentalTime::class)
+    private fun formatDuration(msDuration: Long): String {
+        val duration = Duration.milliseconds(msDuration)
+        var value = ""
+        if (duration.inWholeHours > 0) {
+            value += "${duration.inWholeHours}h "
+        }
+        if (duration.inWholeMinutes % 60 > 0) {
+            value += "${duration.inWholeMinutes % 60}m"
+        }
+        if (duration.inWholeSeconds % 60 > 0) {
+            value += "${duration.inWholeSeconds % 60}s"
+        }
+        if (duration.inWholeMilliseconds % 1000 > 0) {
+            value += "${duration.inWholeMilliseconds % 1000}ms"
+        }
+
+        return value.trim()
+    }
+
+    /** Types of items in the action copy list. */
+    sealed class ActionCopyItem {
+
+        /**
+         * Header item, delimiting sections.
+         * @param title the title for the header.
+         */
+        data class HeaderItem(
+            @StringRes val title: Int,
+        ) : ActionCopyItem()
+
+        /**
+         * Action item.
+         * @param icon the icon for the action.
+         * @param name the name of the action.
+         * @param details the details for the action.
+         */
+        data class ActionItem (
+            @DrawableRes val icon: Int,
+            val name: String,
+            val details: String,
+        ) : ActionCopyItem() {
+
+            /** Action represented by this item. */
+            var action: Action? = null
+        }
+    }
 }

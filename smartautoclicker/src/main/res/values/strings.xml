@@ -89,6 +89,8 @@
     <string name="dialog_action_copy_click_details">During %1$s at [%2$d, %3$d]</string>
     <string name="dialog_action_copy_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
     <string name="dialog_action_copy_pause_details">During %1$s</string>
+    <string name="dialog_action_copy_header_event">Actions from this event</string>
+    <string name="dialog_action_copy_header_all">Actions from all events</string>
 
     <string name="dialog_condition_title">Condition</string>
     <string name="dialog_condition_details_title">Details</string>

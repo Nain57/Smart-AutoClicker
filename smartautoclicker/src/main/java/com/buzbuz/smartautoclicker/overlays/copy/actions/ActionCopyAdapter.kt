@@ -20,35 +20,70 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
-
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import com.buzbuz.smartautoclicker.databinding.ItemActionCopyHeaderBinding
+import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyModel.ActionCopyItem
 
 /**
  * Adapter displaying all actions in a list.
  * @param onActionSelected Called when the user presses an action.
  */
-class ActionCopyAdapter(private val onActionSelected: (Action) -> Unit): RecyclerView.Adapter<ActionViewHolder>() {
+class ActionCopyAdapter(
+    private val onActionSelected: (Action) -> Unit
+): ListAdapter<ActionCopyItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
 
-    /** The list of actions to be shown by this adapter.*/
-    var actions: ArrayList<Action>? = null
-        set(value) {
-            field = value
-            notifyDataSetChanged()
+    override fun getItemViewType(position: Int): Int =
+        when(getItem(position)) {
+            is ActionCopyItem.HeaderItem -> R.layout.item_action_copy_header
+            is ActionCopyItem.ActionItem -> R.layout.item_action
         }
 
-    override fun getItemCount(): Int = actions?.size ?: 0
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
+            R.layout.item_action_copy_header -> HeaderViewHolder(
+                ItemActionCopyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_action -> ActionViewHolder(
+                ItemActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            else -> throw IllegalArgumentException("Unsupported view type !")
+        }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionViewHolder =
-        ActionViewHolder(ItemActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is HeaderViewHolder -> holder.onBind(getItem(position) as ActionCopyItem.HeaderItem)
+            is ActionViewHolder -> holder.onBind(getItem(position) as ActionCopyItem.ActionItem, onActionSelected)
+        }
+    }
+}
 
-    override fun onBindViewHolder(holder: ActionViewHolder, position: Int) {
-        holder.onBindAction(actions!![position], onActionSelected)
+/** DiffUtil Callback comparing two items when updating the [ActionCopyAdapter] list. */
+object DiffUtilCallback: DiffUtil.ItemCallback<ActionCopyItem>(){
+    override fun areItemsTheSame(oldItem: ActionCopyItem, newItem: ActionCopyItem): Boolean =
+        when {
+            oldItem is ActionCopyItem.HeaderItem && newItem is ActionCopyItem.HeaderItem -> true
+            oldItem is ActionCopyItem.ActionItem && newItem is ActionCopyItem.ActionItem ->
+                oldItem.action!!.getIdentifier() == newItem.action!!.getIdentifier()
+            else -> false
+        }
+
+    override fun areContentsTheSame(oldItem: ActionCopyItem, newItem: ActionCopyItem): Boolean = oldItem == newItem
+}
+
+/**
+ * View holder displaying a header in the [ActionCopyAdapter].
+ * @param viewBinding the view binding for this header.
+ */
+class HeaderViewHolder(
+    private val viewBinding: ItemActionCopyHeaderBinding,
+) : RecyclerView.ViewHolder(viewBinding.root) {
+
+    fun onBind(header: ActionCopyItem.HeaderItem) {
+        viewBinding.textHeader.setText(header.title)
     }
 }
 
@@ -61,55 +96,17 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
     /**
      * Bind this view holder as a action item.
      *
-     * @param action the action to be represented by this item.
+     * @param item the item to be represented by this view holder.
      * @param actionClickedListener listener notified upon user click on this item.
      */
-    fun onBindAction(action: Action, actionClickedListener: (Action) -> Unit) {
+    fun onBind(item: ActionCopyItem.ActionItem, actionClickedListener: (Action) -> Unit) {
         viewBinding.apply {
             actionName.visibility = View.VISIBLE
-
-            when (action) {
-                is Action.Click -> {
-                    actionTypeIcon.setImageResource(R.drawable.ic_click)
-                    actionName.text = action.name
-                    actionDetails.text = itemView.context.getString(R.string.dialog_action_copy_click_details,
-                        formatDuration(action.pressDuration!!), action.x, action.y)
-                }
-                is Action.Swipe -> {
-                    actionTypeIcon.setImageResource(R.drawable.ic_swipe)
-                    actionName.text = action.name
-                    actionDetails.text = itemView.context.getString(R.string.dialog_action_copy_swipe_details,
-                        formatDuration(action.swipeDuration!!), action.fromX, action.fromY, action.toX, action.toY)
-                }
-                is Action.Pause -> {
-                    actionTypeIcon.setImageResource(R.drawable.ic_wait)
-                    actionName.text = action.name
-                    actionDetails.text = itemView.context.getString(R.string.dialog_action_copy_pause_details,
-                        formatDuration(action.pauseDuration!!))
-                }
-            }
+            actionTypeIcon.setImageResource(item.icon)
+            actionName.text = item.name
+            actionDetails.text = item.details
         }
 
-        itemView.setOnClickListener { actionClickedListener.invoke(action) }
-    }
-
-    @OptIn(ExperimentalTime::class)
-    private fun formatDuration(msDuration: Long): String {
-        val duration = Duration.milliseconds(msDuration)
-        var value = ""
-        if (duration.inWholeHours > 0) {
-            value += "${duration.inWholeHours}h "
-        }
-        if (duration.inWholeMinutes % 60 > 0) {
-            value += "${duration.inWholeMinutes % 60}m"
-        }
-        if (duration.inWholeSeconds % 60 > 0) {
-            value += "${duration.inWholeSeconds % 60}s"
-        }
-        if (duration.inWholeMilliseconds % 1000 > 0) {
-            value += "${duration.inWholeMilliseconds % 1000}ms"
-        }
-
-        return value.trim()
+        itemView.setOnClickListener { actionClickedListener.invoke(item.action!!) }
     }
 }
