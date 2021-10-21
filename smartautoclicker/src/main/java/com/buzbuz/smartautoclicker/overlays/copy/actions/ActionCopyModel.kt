@@ -56,9 +56,9 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             val eventItems = eventActions.sortedBy { it.getActionName() }.map { it.toActionItem() }
             allItems.addAll(eventItems)
 
-            // Then, add all other actions. Remove the one already in this event and the duplicates.
+            // Then, add all other actions. Remove the one already in this event.
             allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
-            val otherItems = dbActions
+            allItems.addAll(dbActions
                 .map { it.toActionItem() }
                 .toMutableList()
                 .apply {
@@ -66,10 +66,10 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
                         eventItems.find { allItem.action!!.getIdentifier() == it.action!!.getIdentifier() } != null
                     }
                 }
-                .distinct()
-            allItems.addAll(otherItems)
+            )
 
-            allItems
+            // Remove all duplicates
+            allItems.distinct()
         }
 
     /**
