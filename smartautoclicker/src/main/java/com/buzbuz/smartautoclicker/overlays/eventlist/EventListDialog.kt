@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.overlays.eventlist
 
 import android.content.Context
-import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 
@@ -34,6 +33,7 @@ import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEventListBinding
+import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
@@ -82,7 +82,7 @@ class EventListDialog(
 
     override fun onDialogCreated(dialog: AlertDialog) {
         super.onDialogCreated(dialog)
-        eventAdapter = EventListAdapter(::onEventClicked) { deletedEvent ->
+        eventAdapter = EventListAdapter(::openEventConfigDialog) { deletedEvent ->
             viewModel?.deleteEvent(deletedEvent)
         }
 
@@ -104,7 +104,6 @@ class EventListDialog(
                         eventAdapter.mode = mode
                         when(mode) {
                             EDITION -> toEditionMode()
-                            COPY -> toCopyMode()
                             REORDER -> toReorderMode()
                         }
                     }
@@ -161,21 +160,6 @@ class EventListDialog(
         }
     }
 
-    /** Change the Ui mode to [COPY]. */
-    private fun toCopyMode() {
-        dialog?.apply {
-            itemTouchHelper.attachToRecyclerView(null)
-            changeButtonState(
-                button = getButton(DialogInterface.BUTTON_POSITIVE),
-                visibility = View.VISIBLE,
-                textId =  android.R.string.cancel,
-                listener = { viewModel?.setUiMode(EDITION) }
-            )
-            changeButtonState(getButton(DialogInterface.BUTTON_NEUTRAL), View.GONE)
-            changeButtonState(getButton(DialogInterface.BUTTON_NEGATIVE), View.GONE)
-        }
-    }
-
     /** Change the Ui mode to [REORDER]. */
     private fun toReorderMode() {
         dialog?.let {
@@ -208,7 +192,7 @@ class EventListDialog(
                         is CreateEventChoice.Create -> viewModel?.getNewEvent(context)?.let {
                             openEventConfigDialog(it)
                         }
-                        is CreateEventChoice.Copy -> viewModel?.setUiMode(COPY)
+                        is CreateEventChoice.Copy -> showEventCopyDialog()
                     }
                 }
             ))
@@ -219,13 +203,14 @@ class EventListDialog(
         }
     }
 
-    /**
-     * Handle the click on an event.
-     * @param event the event clicked.
-     */
-    private fun onEventClicked(event: Event) {
-        viewModel?.let { model ->
-            openEventConfigDialog(if (viewModel!!.uiMode.value == COPY) model.getCopyEvent(event) else event)
+    /** Opens the dialog allowing the user to copy a click. */
+    private fun showEventCopyDialog() {
+        viewModel?.let {
+            showSubOverlay(EventCopyDialog(
+                context = context,
+                scenarioId = it.scenarioId.value!!,
+                onEventSelected = ::openEventConfigDialog
+            ))
         }
     }
 

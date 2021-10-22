@@ -53,6 +53,11 @@
     <string name="dialog_event_add_create">Create</string>
     <string name="dialog_event_add_copy">Copy from an existing event</string>
 
+    <string name="dialog_event_copy_header_event">Events from this scenario</string>
+    <string name="dialog_event_copy_header_all">Events from all scenarios</string>
+    <string name="dialog_event_copy_search">Search by event name</string>
+    <string name="dialog_event_copy_empty">No events found.</string>
+
     <string name="dialog_event_config_title">Event configuration</string>
     <string name="dialog_event_config_name_title">Name</string>
     <string name="dialog_event_config_condition_title">Conditions</string>
@@ -84,7 +89,6 @@
     <string name="dialog_action_new_title">New Action</string>
     <string name="dialog_action_new_create">Create</string>
     <string name="dialog_action_new_copy">Copy from another action</string>
-    <string name="dialog_action_copy_title">Copy from</string>
     <string name="dialog_action_copy_empty">No actions found.</string>
     <string name="dialog_action_copy_click_details">During %1$s at [%2$d, %3$d]</string>
     <string name="dialog_action_copy_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
@@ -103,7 +107,6 @@
     <string name="dialog_condition_new_title">New Condition</string>
     <string name="dialog_condition_new_create">Create</string>
     <string name="dialog_condition_new_copy">Copy from another condition</string>
-    <string name="dialog_condition_copy_title">Copy from</string>
     <string name="dialog_condition_copy_empty">Can\'t copy, you don\'t have any conditions.</string>
     <string name="dialog_condition_copy_threshold">%1$d%%</string>
 
@@ -132,5 +135,7 @@
     <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
 
     <string name="dialog_unit_ms" translatable="false">ms</string>
+    <string name="dialog_copy_title">Copy from</string>
+
 
 </resources>

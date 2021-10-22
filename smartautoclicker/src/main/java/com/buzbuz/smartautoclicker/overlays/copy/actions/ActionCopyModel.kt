@@ -67,24 +67,24 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
         val allItems = mutableListOf<ActionCopyItem>()
 
         // First, add the actions from the current event
-        allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
-        val eventItems = eventActions.sortedBy { it.getActionName() }.map { it.toActionItem() }
+        val eventItems = eventActions.sortedBy { it.getActionName() }.map { it.toActionItem() }.distinct()
+        if (eventItems.isNotEmpty()) allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
         allItems.addAll(eventItems)
 
         // Then, add all other actions. Remove the one already in this event.
-        allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
-        allItems.addAll(dbActions
+        val actions = dbActions
             .map { it.toActionItem() }
             .toMutableList()
             .apply {
                 removeIf { allItem ->
                     eventItems.find { allItem.action!!.getIdentifier() == it.action!!.getIdentifier() } != null
                 }
+                distinct()
             }
-        )
+        if (actions.isNotEmpty()) allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
+        allItems.addAll(actions)
 
-        // Remove all duplicates
-        return allItems.distinct()
+        return allItems
     }
 
     /**

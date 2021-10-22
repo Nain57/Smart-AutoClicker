@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
-import com.buzbuz.smartautoclicker.databinding.ItemActionCopyHeaderBinding
+import com.buzbuz.smartautoclicker.databinding.ItemCopyHeaderBinding
 import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyModel.ActionCopyItem
 
 /**
@@ -40,14 +40,14 @@ class ActionCopyAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
-            is ActionCopyItem.HeaderItem -> R.layout.item_action_copy_header
+            is ActionCopyItem.HeaderItem -> R.layout.item_copy_header
             is ActionCopyItem.ActionItem -> R.layout.item_action
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_action_copy_header -> HeaderViewHolder(
-                ItemActionCopyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_copy_header -> HeaderViewHolder(
+                ItemCopyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.item_action -> ActionViewHolder(
                 ItemActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw IllegalArgumentException("Unsupported view type !")
@@ -79,7 +79,7 @@ object DiffUtilCallback: DiffUtil.ItemCallback<ActionCopyItem>(){
  * @param viewBinding the view binding for this header.
  */
 class HeaderViewHolder(
-    private val viewBinding: ItemActionCopyHeaderBinding,
+    private val viewBinding: ItemCopyHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(header: ActionCopyItem.HeaderItem) {

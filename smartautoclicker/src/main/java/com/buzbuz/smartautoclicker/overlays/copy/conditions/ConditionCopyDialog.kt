@@ -66,7 +66,7 @@ class ConditionCopyDialog(
         viewBinding = DialogConditionCopyBinding.inflate(LayoutInflater.from(context))
 
         return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_condition_copy_title)
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_copy_title)
             .setView(viewBinding.root)
             .setPositiveButton(android.R.string.cancel, null)
     }

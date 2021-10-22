@@ -45,6 +45,10 @@
     <string name="dialog_event_add_title">Ajouter un nouvel évènement</string>
     <string name="dialog_event_add_create">Créer</string>
     <string name="dialog_event_add_copy">Copier depuis un autre évènement</string>
+    <string name="dialog_event_copy_header_event">Évènements de ce scenario</string>
+    <string name="dialog_event_copy_header_all">Évènements de tous les scenarios</string>
+    <string name="dialog_event_copy_search">Chercher par nom d\'évènement</string>
+    <string name="dialog_event_copy_empty">Aucun évènement trouvé.</string>
     <string name="dialog_event_config_name_title">Nom</string>
     <string name="dialog_action_config_click_position">Clic simple sur %1$d, %2$d</string>
     <string name="dialog_action_config_swipe_position">Glisser de %1$d, %2$d à %3$d, %4$d</string>
@@ -95,7 +99,7 @@
     <string name="dialog_action_config_swipe_duration_title">Durée du swipe</string>
     <string name="dialog_action_config_swipe_position_title">Position du swipe</string>
     <string name="dialog_action_config_pause_duration_title">Durée de la pause</string>
-    <string name="dialog_action_copy_title">Copier depuis</string>
+    <string name="dialog_copy_title">Copier depuis</string>
     <string name="dialog_action_copy_empty">Aucune action trouvée.</string>
     <string name="dialog_action_new_title">Nouvelle action</string>
     <string name="dialog_action_new_create">Créer</string>
@@ -108,7 +112,6 @@
     <string name="dialog_action_copy_search">Chercher par nom d\'action</string>
     <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
     <string name="content_desc_dialog_title_icon">L\icone du titre du dialogue.</string>
-    <string name="dialog_condition_copy_title">Copier depuis</string>
     <string name="dialog_condition_copy_empty">Impossible de copier. Vous n\'avez créé aucune condition.</string>
     <string name="dialog_condition_copy_threshold">%1$d%%</string>
     <string name="dialog_condition_new_title">Nouvelle condition</string>

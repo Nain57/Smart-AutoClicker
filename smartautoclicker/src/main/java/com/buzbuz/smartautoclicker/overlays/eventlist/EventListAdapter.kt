@@ -25,24 +25,21 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
+import com.buzbuz.smartautoclicker.overlays.utils.getIconRes
 
 import java.util.Collections
-
 
 /**
  * Adapter displaying a list of clicks.
  *
  * This adapter supports different display mode through it's [mode] member:
  *  - [EDITION]: clicking on an item calls [itemClickedListener], and the delete button is shown.
- *  - [COPY]: clicking on an item calls [itemClickedListener], and the delete button is hidden.
  *  - [REORDER]: user can't clicks on an item, items can be reordered through drag and drop, the delete button is
  *               replaced by the drag and drop icon.
  *
- * @param itemClickedListener listener called when the user clicks on an click item when in [EDITION] or [COPY]
- *                            mode.
+ * @param itemClickedListener listener called when the user clicks on an click item when in [EDITION].
  * @param deleteClickedListener listener called when the user clicks on the delete button on a click item.
  */
 class EventListAdapter(
@@ -131,13 +128,12 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
             event.actions?.forEach { action ->
                 View.inflate(itemView.context, R.layout.view_action_icon, actionsLayout)
                 (actionsLayout.getChildAt(actionsLayout.childCount - 1) as ImageView)
-                    .setImageResource(getActionIconRes(action))
+                    .setImageResource(action.getIconRes())
             }
         }
 
         when (mode) {
             EDITION -> bindEdition(event, itemClickedListener, deleteClickedListener)
-            COPY -> bindCopy(event, itemClickedListener)
             REORDER -> bindReorder()
         }
     }
@@ -160,19 +156,6 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
         }
     }
 
-    /**
-     * Bind this view holder to an event in copy mode.
-     *
-     * @param event the item providing the binding data.
-     * @param itemClickedListener listener called when an event is clicked.
-     */
-    private fun bindCopy(event: Event, itemClickedListener: (Event) -> Unit) {
-        holderViewBinding.apply {
-            root.setOnClickListener { itemClickedListener.invoke(event) }
-            btnAction.visibility = View.GONE
-        }
-    }
-
     /** Bind this view holder to an event in reorder mode. */
     private fun bindReorder() {
         holderViewBinding.apply {
@@ -184,19 +167,6 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
             }
         }
     }
-
-    /**
-     * Get the icon for a given action.
-     *
-     * @param action the action to get the icon of.
-     * @return the icon resource identifier.
-     */
-    private fun getActionIconRes(action: Action) : Int =
-        when (action) {
-            is Action.Click -> R.drawable.ic_click
-            is Action.Swipe -> R.drawable.ic_swipe
-            is Action.Pause -> R.drawable.ic_wait_aligned
-        }
 }
 
 /**

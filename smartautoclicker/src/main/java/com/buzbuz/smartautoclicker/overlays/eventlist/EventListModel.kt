@@ -55,8 +55,10 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
     /** Repository providing access to the click database. */
     private val repository = Repository.getRepository(context)
 
+    /** Backing property for [scenarioId]. */
+    private val _scenarioId = MutableStateFlow<Long?>(null)
     /** Currently selected scenario via [setScenario]. */
-    private val scenarioId = MutableStateFlow<Long?>(null)
+    val scenarioId: StateFlow<Long?> = _scenarioId
     /** The currently selected scenario. */
     private val scenario: StateFlow<Scenario?> = scenarioId
         .flatMapLatest { id ->
@@ -92,7 +94,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
      * @param scenarioValue the scenario value.
      */
     fun setScenario(scenarioValue: Scenario) {
-        scenarioId.value = scenarioValue.id
+        _scenarioId.value = scenarioValue.id
     }
 
     /**
@@ -118,18 +120,6 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
         conditions = mutableListOf(),
         actions = mutableListOf(),
     )
-
-    /**
-     * Get a copy of the provided event.
-     *
-     * @param event the event to get the copy of.
-     */
-    fun getCopyEvent(event: Event): Event {
-        return event.deepCopy().apply {
-            priority = events.value!!.size
-            cleanUpIds()
-        }
-    }
 
     /**
      * Update the priority of the events in the scenario.
@@ -192,7 +182,7 @@ sealed class CreateEventChoice(title: Int, iconId: Int?): DialogChoice(title, ic
 }
 
 /** Define the different display mode for the dialog. */
-@IntDef(EDITION, COPY, REORDER)
+@IntDef(EDITION, REORDER)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Mode
 /**
@@ -206,15 +196,6 @@ annotation class Mode
  */
 const val EDITION = 1
 /**
- * Shown when clicking on reorder. The action button is hide on each event item. Clicking on an
- * item will open the event config dialog, allowing you to modify the copied click.
- * The dialogs buttons are:
- *  - [AlertDialog.BUTTON_POSITIVE]: The clicks order changes are validated. Goes to edition mode.
- *  - [AlertDialog.BUTTON_NEGATIVE]: The clicks order changes are discarded. Goes to edition mode.
- *  - [AlertDialog.BUTTON_NEUTRAL]: The button is hide.
- */
-const val COPY = 2
-/**
  * Shown when clicking on reorder. The action button show the move icon on each event item. Long
  * clicking and moving on an item will drag and drop the item in order to allow clicks reordering. The dialogs
  * buttons are:
@@ -222,6 +203,6 @@ const val COPY = 2
  *  - [AlertDialog.BUTTON_NEGATIVE]: The clicks order changes are discarded. Goes to edition mode.
  *  - [AlertDialog.BUTTON_NEUTRAL]: The button is hide.
  */
-const val REORDER = 3
+const val REORDER = 2
 
 private const val TAG = "EventListModel"

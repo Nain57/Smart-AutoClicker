@@ -117,6 +117,13 @@ interface Repository {
     suspend fun getCompleteEvent(eventId: Long): Event
 
     /**
+     * Get all events from all scenarios.
+     *
+     * @return the list containing all events.
+     */
+    fun getAllEvents(): Flow<List<Event>>
+
+    /**
      * Get all actions from all events.
      *
      * @return the list containing all actions.
