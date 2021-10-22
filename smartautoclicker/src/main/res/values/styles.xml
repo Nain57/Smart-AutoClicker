@@ -18,10 +18,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="autoCompleteTextViewStyle">@style/SearchView</item>
+    </style>
+
+    <style name="SearchView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@color/textTitle</item>
+        <item name="android:textColorHint">@color/textHint</item>
     </style>
 
     <style name="HeaderCardView">
@@ -80,10 +85,10 @@
         <item name="android:layout_height">@dimen/item_height</item>
         <item name="android:paddingStart">@dimen/margin_horizontal_large</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:background">@color/primaryDark</item>
         <item name="android:textColor">@color/textTitle</item>
         <item name="android:textSize">@dimen/text_size_dialog_title</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="DialogTitleIcon">
@@ -91,7 +96,6 @@
         <item name="android:layout_height">@dimen/item_height</item>
         <item name="android:paddingStart">@dimen/margin_horizontal_large</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@color/primaryDark</item>
         <item name="android:tint">@color/textTitle</item>
     </style>
 

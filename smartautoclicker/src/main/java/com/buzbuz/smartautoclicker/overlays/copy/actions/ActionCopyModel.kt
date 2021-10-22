@@ -44,33 +44,60 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
 
     /** The list of actions for the configured event. They are not all available yet in the database. */
     private val eventActions = MutableStateFlow<List<Action>?>(null)
+    /** The currently searched action name. Null if no is. */
+    private val searchQuery = MutableStateFlow<String?>(null)
 
-    /** List of all actions. */
-    val actionList: Flow<List<ActionCopyItem>?> = repository.getAllActions()
-        .combine(eventActions) { dbActions, eventActions ->
-            if (eventActions == null) return@combine null
-            val allItems = mutableListOf<ActionCopyItem>()
-
-            // First, add the actions from the current event
-            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
-            val eventItems = eventActions.sortedBy { it.getActionName() }.map { it.toActionItem() }
-            allItems.addAll(eventItems)
-
-            // Then, add all other actions. Remove the one already in this event.
-            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
-            allItems.addAll(dbActions
-                .map { it.toActionItem() }
-                .toMutableList()
-                .apply {
-                    removeIf { allItem ->
-                        eventItems.find { allItem.action!!.getIdentifier() == it.action!!.getIdentifier() } != null
-                    }
-                }
-            )
-
-            // Remove all duplicates
-            allItems.distinct()
+    /**
+     * List of displayed action items.
+     * This list can contains all events with headers, or the search result depending on the current search query.
+     */
+    val actionList: Flow<List<ActionCopyItem>?> =
+        combine(repository.getAllActions(), eventActions, searchQuery) { dbActions, eventActions, query ->
+            eventActions ?: return@combine null
+            if (query.isNullOrEmpty()) getAllItems(dbActions, eventActions) else getSearchedItems(dbActions, query)
         }
+
+    /**
+     * Get all items with the headers.
+     * @param dbActions all actions in the database.
+     * @param eventActions all actions in the current event.
+     * @return the complete list of action items.
+     */
+    private fun getAllItems(dbActions: List<Action>, eventActions: List<Action>): List<ActionCopyItem> {
+        val allItems = mutableListOf<ActionCopyItem>()
+
+        // First, add the actions from the current event
+        allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
+        val eventItems = eventActions.sortedBy { it.getActionName() }.map { it.toActionItem() }
+        allItems.addAll(eventItems)
+
+        // Then, add all other actions. Remove the one already in this event.
+        allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
+        allItems.addAll(dbActions
+            .map { it.toActionItem() }
+            .toMutableList()
+            .apply {
+                removeIf { allItem ->
+                    eventItems.find { allItem.action!!.getIdentifier() == it.action!!.getIdentifier() } != null
+                }
+            }
+        )
+
+        // Remove all duplicates
+        return allItems.distinct()
+    }
+
+    /**
+     * Get the result of the search query.
+     * @param dbActions all actions in the database.
+     * @param query the current search query.
+     */
+    private fun getSearchedItems(dbActions: List<Action>, query: String): List<ActionCopyItem> = dbActions
+        .filter { action ->
+            action.getActionName()!!.startsWith(query, true)
+        }
+        .map { it.toActionItem() }
+        .distinct()
 
     /**
      * Set the current event actions.
@@ -78,6 +105,14 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
      */
     fun setCurrentEventActions(actions: List<Action>) {
         eventActions.value = actions
+    }
+
+    /**
+     * Update the action search query.
+     * @param query the new query.
+     */
+    fun updateSearchQuery(query: String?) {
+        searchQuery.value = query
     }
 
     /**

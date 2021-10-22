@@ -19,8 +19,12 @@ package com.buzbuz.smartautoclicker.overlays.copy.actions
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
+import androidx.annotation.ColorRes
 
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,7 +33,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionCopyBinding
-import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 
 import kotlinx.coroutines.flow.collect
@@ -66,13 +69,26 @@ class ActionCopyDialog(
         viewBinding = DialogActionCopyBinding.inflate(LayoutInflater.from(context))
 
         return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_action_copy_title)
+            .setCustomTitle(null)
             .setView(viewBinding.root)
             .setPositiveButton(android.R.string.cancel, null)
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
         super.onDialogCreated(dialog)
+
+        viewBinding.search.apply {
+            findViewById<ImageView>(androidx.appcompat.R.id.search_button).setIconTint(R.color.overlayViewPrimary)
+            findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).setIconTint(R.color.overlayViewPrimary)
+
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?) = false
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    viewModel?.updateSearchQuery(newText)
+                    return true
+                }
+            })
+        }
 
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->
             viewModel?.let {
@@ -99,5 +115,13 @@ class ActionCopyDialog(
     override fun onDialogDismissed() {
         super.onDialogDismissed()
         viewModel = null
+    }
+
+    /** @param color the tint color to apply to the ImageView. */
+    private fun ImageView.setIconTint(@ColorRes color: Int) {
+        setColorFilter(
+            ContextCompat.getColor(context, color),
+            android.graphics.PorterDuff.Mode.SRC_IN
+        )
     }
 }

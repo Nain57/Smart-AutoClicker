@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2021 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@
     <color name="accent">#448AFF</color>
 
     <color name="textTitle">#FFFFFF</color>
+    <color name="textHint">#88FFFFFF</color>
     <color name="listBackground">#EAEAEA</color>
 
     <color name="overlayMenuBackground">#77000000</color>

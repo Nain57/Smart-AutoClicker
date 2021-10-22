@@ -15,11 +15,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dialog_width"
-    android:layout_height="@dimen/dialog_height">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/primaryDark"
+        tools:viewBindingIgnore="true">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/DialogTitle"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/search"
+            android:text="@string/dialog_action_copy_title"/>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:iconifiedByDefault="true"
+            app:queryHint="@string/dialog_action_copy_search"
+            android:imeOptions="actionSearch"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/merge_loadable_list"/>
 
-</FrameLayout>
+</LinearLayout>
