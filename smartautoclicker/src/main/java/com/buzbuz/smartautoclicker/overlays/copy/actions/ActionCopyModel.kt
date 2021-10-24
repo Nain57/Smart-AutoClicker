@@ -96,7 +96,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
      */
     private fun getSearchedItems(dbActions: List<Action>, query: String): List<ActionCopyItem> = dbActions
         .filter { action ->
-            action.getActionName()!!.startsWith(query, true)
+            action.getActionName()!!.contains(query, true)
         }
         .map { it.toActionItem() }
         .distinct()

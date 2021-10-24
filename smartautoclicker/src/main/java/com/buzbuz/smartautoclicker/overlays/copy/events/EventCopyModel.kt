@@ -108,7 +108,7 @@ class EventCopyModel(context: Context) : OverlayViewModel(context) {
      */
     private fun getSearchedItems(dbEvents: List<Event>, query: String): List<EventCopyItem> = dbEvents
         .filter { event ->
-            event.name.startsWith(query, true)
+            event.name.contains(query, true)
         }
         .map { it.toEventItem() }
         .distinct()
