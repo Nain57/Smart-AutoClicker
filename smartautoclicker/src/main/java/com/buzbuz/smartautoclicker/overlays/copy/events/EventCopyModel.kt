@@ -91,10 +91,10 @@ class EventCopyModel(context: Context) : OverlayViewModel(context) {
             .toMutableList()
             .apply {
                 removeIf { allItem ->
-                    eventItems.find { allItem.event!!.id == it.event!!.id } != null
+                    eventItems.find { allItem.event!!.id == it.event!!.id || allItem == it } != null
                 }
-                distinct()
             }
+            .distinct()
         if (events.isNotEmpty()) allItems.add(EventCopyItem.HeaderItem(R.string.dialog_event_copy_header_all))
         allItems.addAll(events)
 

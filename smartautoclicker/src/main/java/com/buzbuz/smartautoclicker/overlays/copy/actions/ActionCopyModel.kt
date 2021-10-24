@@ -77,10 +77,12 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             .toMutableList()
             .apply {
                 removeIf { allItem ->
-                    eventItems.find { allItem.action!!.getIdentifier() == it.action!!.getIdentifier() } != null
+                    eventItems.find {
+                        allItem.action!!.getIdentifier() == it.action!!.getIdentifier() || allItem == it
+                    } != null
                 }
-                distinct()
             }
+            .distinct()
         if (actions.isNotEmpty()) allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
         allItems.addAll(actions)
 
