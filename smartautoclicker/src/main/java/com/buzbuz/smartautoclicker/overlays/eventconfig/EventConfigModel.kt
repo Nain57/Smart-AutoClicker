@@ -28,13 +28,16 @@ import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
+import com.buzbuz.smartautoclicker.overlays.utils.EDIT_TEXT_DEBOUNCE_MS
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
@@ -46,6 +49,7 @@ import kotlinx.coroutines.withContext
  *
  * @param context the Android context.
  */
+@OptIn(FlowPreview::class)
 class EventConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** Repository providing access to the click database. */
@@ -74,14 +78,14 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     /** The event conditions currently edited by the user. */
     val conditions: StateFlow<List<Condition>?> = _conditions
     /** The event name value currently edited by the user. */
-    val eventName: Flow<String?> = configuredEvent.map { it?.name }
+    val eventName: Flow<String?> = configuredEvent.map { it?.name }.debounce(EDIT_TEXT_DEBOUNCE_MS)
     /** The event condition operator currently edited by the user. */
     val conditionOperator: Flow<Int?> = configuredEvent.map { it?.conditionOperator }
     /** The number of times to execute this event before ending the scenario. */
-    val stopAfter: Flow<Int?> = configuredEvent.map { it?.stopAfter }
+    val stopAfter: Flow<Int?> = configuredEvent.map { it?.stopAfter }.debounce(EDIT_TEXT_DEBOUNCE_MS)
     /** Tells if the configured event is valid and can be saved. */
     val isValidEvent: Flow<Boolean> = configuredEvent.map { event ->
-        event != null && !event.actions.isNullOrEmpty() && !event.conditions.isNullOrEmpty()
+        event != null && event.name.isNotEmpty() && !event.actions.isNullOrEmpty() && !event.conditions.isNullOrEmpty()
     }
 
     /**
@@ -98,18 +102,20 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
 
     /**
      * Get the event with all user changes.
-     * Values provided by edit text are given here.
-     *
-     * @param eventName the name of the event.
-     * @param stopAfterExec the value for stopAfter, null for unlimited executions.
-     *
      * @return the event containing all user changes.
      */
-    fun getConfiguredEvent(eventName: String, stopAfterExec: Int?): Event =
-        configuredEvent.value?.apply {
-            name = eventName
-            stopAfter = stopAfterExec
-        } ?: throw IllegalStateException("Can't get the configured event, none were defined.")
+    fun getConfiguredEvent(): Event =
+        configuredEvent.value ?: throw IllegalStateException("Can't get the configured event, none were defined.")
+
+    /**
+     * Set the configured event name.
+     * @param name the new event name.
+     */
+    fun setEventName(name: String) {
+        configuredEvent.value?.let { event ->
+            configuredEvent.value = event.copy(name = name)
+        } ?: throw IllegalStateException("Can't set event name, event is null!")
+    }
 
     /**
      * Create a new action with the default values from configuration.
@@ -297,6 +303,16 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
 
         onBitmapLoaded.invoke(null)
         return null
+    }
+
+    /**
+     * Set the configured number of executions for this event.
+     * @param stopAfter the number of executions for this event.
+     */
+    fun setEventStopAfterExec(stopAfter: Int?) {
+        configuredEvent.value?.let { event ->
+            configuredEvent.value = event.copy(stopAfter = stopAfter)
+        } ?: throw IllegalStateException("Can't set event name, event is null!")
     }
 }
 

@@ -17,9 +17,11 @@
 package com.buzbuz.smartautoclicker.overlays.utils
 
 import android.widget.ImageView
+
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
 
@@ -42,3 +44,6 @@ fun ImageView.setIconTint(@ColorRes color: Int) {
         android.graphics.PorterDuff.Mode.SRC_IN
     )
 }
+
+/** Debounce value for all flows updating an EditText. */
+const val EDIT_TEXT_DEBOUNCE_MS: Long = 500

@@ -29,12 +29,13 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.getSwipeDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putClickPressDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putPauseDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putSwipeDurationConfig
-
+import com.buzbuz.smartautoclicker.overlays.utils.EDIT_TEXT_DEBOUNCE_MS
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
  *
  * @param context the Android context.
  */
+@OptIn(FlowPreview::class)
 class ActionConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** The action being configured by the user. Defined using [setConfigAction]. */
@@ -56,13 +58,18 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         Context.MODE_PRIVATE
     )
 
+    /** The name of the action. */
+    val name: Flow<String?> = configuredAction.map { it?.getActionName() }.debounce(EDIT_TEXT_DEBOUNCE_MS)
+
     /** Tells if the configured action is valid and can be saved. */
     val isValidAction: Flow<Boolean> = configuredAction.map { action ->
         when (action) {
             null -> false
-            is Action.Click -> action.x != null && action.y != null
-            is Action.Swipe -> action.fromX != null && action.fromY != null && action.toX != null && action.toY != null
-            is Action.Pause -> true
+            is Action.Click -> !action.name.isNullOrEmpty() && action.x != null && action.y != null
+                    && action.pressDuration != null
+            is Action.Swipe -> !action.name.isNullOrEmpty() && action.fromX != null && action.fromY != null && action.toX != null
+                    && action.toY != null && action.swipeDuration != null
+            is Action.Pause -> !action.name.isNullOrEmpty() && action.pauseDuration != null
         }
     }
 
@@ -95,20 +102,41 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
     }
 
+    /**
+     * Set the name of the click.
+     * @param name the new name.
+     */
+    fun setName(name: String) {
+        viewModelScope.launch {
+            when (val action = configuredAction.value) {
+                is Action.Click ->  configuredAction.emit(action.copy(name = "" + name))
+                is Action.Swipe ->  configuredAction.emit(action.copy(name = "" + name))
+                is Action.Pause ->  configuredAction.emit(action.copy(name = "" + name))
+            }
+        }
+    }
+
+    /** Save the configured values to restore them at next creation. */
+    fun saveLastConfig() {
+        when (val action = configuredAction.value) {
+            is Action.Click ->
+                sharedPreferences.edit().putClickPressDurationConfig(action.pressDuration ?: 0).apply()
+            is Action.Swipe ->
+                sharedPreferences.edit().putSwipeDurationConfig(action.swipeDuration ?: 0).apply()
+            is Action.Pause ->
+                sharedPreferences.edit().putPauseDurationConfig(action.pauseDuration ?: 0).apply()
+        }
+    }
+
+    /** @return the action currently configured. */
+    fun getConfiguredAction(): Action = configuredAction.value!!
+
     /** Base class for observing/editing the values for an action. */
     abstract inner class ActionValues
 
     /** Allow to observe/edit the value a click action. */
     inner class ClickActionValues : ActionValues() {
 
-        /** The name of the click. */
-        val name: Flow<String?> = configuredAction.mapNotNull { click ->
-            if (click is Action.Click) {
-                click.name
-            } else {
-                null
-            }
-        }
         /** The duration between the press and release of the click in milliseconds. */
         val pressDuration: Flow<Long?> = configuredAction.map { click ->
             if (click is Action.Click && click.pressDuration != null) {
@@ -116,7 +144,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             } else {
                 sharedPreferences.getClickPressDurationConfig(context)
             }
-        }
+        }.debounce(EDIT_TEXT_DEBOUNCE_MS)
         /** The position of the click. */
         val position: Flow<Point?> = configuredAction.map { click ->
             if (click is Action.Click && click.x != null && click.y != null) {
@@ -139,33 +167,21 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
 
         /**
-         * Get the click with all user changes.
-         * Values provided by edit text are given here.
-         *
-         * @param clickName the name of the action.
-         * @param duration the duration of the click press.
-         *
-         * @return the click containing all user changes.
+         * Set the press duration of the click.
+         * @param durationMs the new duration in milliseconds.
          */
-        fun getConfiguredClick(clickName: String, duration: Long): Action.Click =
-            (configuredAction.value as Action.Click).apply {
-                name = clickName
-                pressDuration = duration
-                sharedPreferences.edit().putClickPressDurationConfig(duration).apply()
+        fun setPressDuration(durationMs: Long) {
+            (configuredAction.value as Action.Click).let { click ->
+                viewModelScope.launch {
+                    configuredAction.emit(click.copy(pressDuration = durationMs))
+                }
             }
+        }
     }
 
     /** Allow to observe/edit the value a swipe action. */
     inner class SwipeActionValues : ActionValues() {
 
-        /** The name of the click. */
-        val name: Flow<String?> = configuredAction.mapNotNull { swipe ->
-            if (swipe is Action.Swipe) {
-                swipe.name
-            } else {
-                null
-            }
-        }
         /** The duration between the start and end of the swipe in milliseconds. */
         val swipeDuration: Flow<Long?> = configuredAction.map { swipe ->
             if (swipe is Action.Swipe && swipe.swipeDuration != null) {
@@ -173,7 +189,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             } else {
                 sharedPreferences.getSwipeDurationConfig(context)
             }
-        }
+        }.debounce(EDIT_TEXT_DEBOUNCE_MS)
         /** The start and end positions of the swipe. */
         val positions: Flow<Pair<Point?, Point?>> = configuredAction.map { swipe ->
             if (swipe is Action.Swipe && swipe.fromX != null && swipe.fromY != null
@@ -199,33 +215,21 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
 
         /**
-         * Get the swipe with all user changes.
-         * Values provided by edit text are given here.
-         *
-         * @param swipeName the name of the action.
-         * @param duration the duration of the swipe.
-         *
-         * @return the swipe containing all user changes.
+         * Set the duration of the swipe.
+         * @param durationMs the new duration in milliseconds.
          */
-        fun getConfiguredSwipe(swipeName: String, duration: Long): Action.Swipe =
-            (configuredAction.value as Action.Swipe).apply {
-                name = swipeName
-                swipeDuration = duration
-                sharedPreferences.edit().putSwipeDurationConfig(duration).apply()
+        fun setSwipeDuration(durationMs: Long) {
+            (configuredAction.value as Action.Swipe).let { swipe ->
+                viewModelScope.launch {
+                    configuredAction.emit(swipe.copy(swipeDuration = durationMs))
+                }
             }
+        }
     }
 
     /** Allow to observe/edit the value a pause action. */
     inner class PauseActionValues : ActionValues() {
 
-        /** The name of the pause. */
-        val name: Flow<String?> = configuredAction.mapNotNull { pause ->
-            if (pause is Action.Pause) {
-                pause.name
-            } else {
-                null
-            }
-        }
         /** The duration of the pause in milliseconds. */
         val pauseDuration: Flow<Long?> = configuredAction.map { pause ->
             if (pause is Action.Pause && pause.pauseDuration != null) {
@@ -233,22 +237,18 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             } else {
                 sharedPreferences.getPauseDurationConfig(context)
             }
-        }
+        }.debounce(EDIT_TEXT_DEBOUNCE_MS)
 
         /**
-         * Get the pause with all user changes.
-         * Values provided by edit text are given here.
-         *
-         * @param pauseName the name of the action.
-         * @param duration the duration of the pause.
-         *
-         * @return the pause containing all user changes.
+         * Set the duration of the pause.
+         * @param durationMs the new duration in milliseconds.
          */
-        fun getConfiguredPause(pauseName: String, duration: Long): Action.Pause =
-            (configuredAction.value as Action.Pause).apply {
-                name = pauseName
-                pauseDuration = duration
-                sharedPreferences.edit().putPauseDurationConfig(duration).apply()
+        fun setPauseDuration(durationMs: Long) {
+            (configuredAction.value as Action.Pause).let { pause ->
+                viewModelScope.launch {
+                    configuredAction.emit(pause.copy(pauseDuration = durationMs))
+                }
             }
+        }
     }
 }

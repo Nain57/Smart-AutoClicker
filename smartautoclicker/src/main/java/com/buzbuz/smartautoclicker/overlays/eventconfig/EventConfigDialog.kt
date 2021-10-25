@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 
@@ -41,6 +42,7 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialo
 import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.copy.conditions.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -136,6 +138,25 @@ class EventConfigDialog(
                 subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionOperatorSelection)
             }
 
+            editName.apply {
+                setSelectAllOnFocus(true)
+                addTextChangedListener(object : OnAfterTextChangedListener() {
+                    override fun afterTextChanged(s: Editable?) {
+                        viewModel?.setEventName(s.toString())
+                    }
+                })
+            }
+
+            editStopAfter.apply {
+                setSelectAllOnFocus(true)
+                object : OnAfterTextChangedListener() {
+                    override fun afterTextChanged(s: Editable?) {
+                        val stopAfter = viewBinding.editStopAfter.text.toString()
+                        viewModel?.setEventStopAfterExec(if (stopAfter.isNotEmpty()) stopAfter.toInt() else null)
+                    }
+                }
+            }
+
             listConditions.adapter = conditionsAdapter
             listActions.adapter = actionsAdapter
             itemTouchHelper.attachToRecyclerView(listActions)
@@ -148,7 +169,7 @@ class EventConfigDialog(
                     viewModel?.eventName?.collect { name ->
                         viewBinding.editName.apply {
                             setText(name)
-                            setSelection(length())
+                            setSelection(name?.length ?: 0)
                         }
                     }
                 }
@@ -204,8 +225,9 @@ class EventConfigDialog(
                 launch {
                     viewModel?.stopAfter?.collect { stopAfter ->
                         viewBinding.editStopAfter.apply {
-                            setText(stopAfter?.toString())
-                            setSelection(length())
+                            val stopAfterText = stopAfter?.toString()
+                            setText(stopAfterText)
+                            setSelection(stopAfterText?.length ?: 0)
                         }
                     }
                 }
@@ -375,11 +397,7 @@ class EventConfigDialog(
      */
     private fun onOkClicked() {
         viewModel?.let {
-            val stopAfter = viewBinding.editStopAfter.text.toString()
-            onConfigComplete(it.getConfiguredEvent(
-                eventName = viewBinding.editName.text.toString(),
-                stopAfterExec = if (stopAfter.isNotEmpty()) stopAfter.toInt() else null
-            ))
+            onConfigComplete(it.getConfiguredEvent())
         }
         dismiss()
     }

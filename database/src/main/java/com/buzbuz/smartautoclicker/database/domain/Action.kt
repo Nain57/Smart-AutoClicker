@@ -28,6 +28,8 @@ sealed class Action {
     abstract fun getIdentifier(): Long
     /** @return the name of this action. */
     abstract fun getActionName(): String?
+    /** @param name the name of this action. */
+    abstract fun setActionName(name: String)
     /** @return the entity equivalent of this action. */
     internal abstract fun toEntity(): ActionEntity
     /** Cleanup all ids contained in this action. Ideal for copying. */
@@ -59,6 +61,7 @@ sealed class Action {
 
         override fun getIdentifier(): Long = id
         override fun getActionName(): String? = name
+        override fun setActionName(name: String) { this.name = name }
 
         override fun toEntity(): ActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Click is incomplete.")
@@ -111,6 +114,7 @@ sealed class Action {
 
         override fun getIdentifier(): Long = id
         override fun getActionName(): String? = name
+        override fun setActionName(name: String) { this.name = name }
 
         override fun toEntity(): ActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Swipe is incomplete.")
@@ -156,6 +160,7 @@ sealed class Action {
 
         override fun getIdentifier(): Long = id
         override fun getActionName(): String? = name
+        override fun setActionName(name: String) { this.name = name }
 
         override fun toEntity(): ActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Swipe is incomplete.")

@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.action
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 
@@ -32,6 +33,7 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
+import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -89,10 +91,27 @@ class ActionConfigDialog(
     override fun onDialogCreated(dialog: AlertDialog) {
         viewBinding.apply {
             root.setOnTouchListener(hideSoftInputTouchListener)
+            editName.apply {
+                setSelectAllOnFocus(true)
+                addTextChangedListener(object : OnAfterTextChangedListener() {
+                    override fun afterTextChanged(s: Editable?) {
+                        viewModel?.setName(viewBinding.editName.text.toString())
+                    }
+                })
+            }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel?.name?.collect { name ->
+                        viewBinding.editName.apply {
+                            setText(name)
+                            setSelection(name?.length ?: 0)
+                        }
+                    }
+                }
+
                 launch {
                     viewModel?.actionValues?.collect { actionValues ->
                         when (actionValues) {
@@ -140,25 +159,26 @@ class ActionConfigDialog(
                     ), hideCurrent = true)
                 }
                 textClickPosition.setLeftRightCompoundDrawables(R.drawable.ic_click, R.drawable.ic_chevron)
+
+                editPressDuration.apply {
+                    setSelectAllOnFocus(true)
+                    addTextChangedListener(object : OnAfterTextChangedListener() {
+                        override fun afterTextChanged(s: Editable?) {
+                            (viewModel?.actionValues?.value as ActionConfigModel.ClickActionValues)
+                                .setPressDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else 0)
+                        }
+                    })
+                }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    clickValues.name.collect { name ->
-                        viewBinding.editName.apply {
-                            setText(name)
-                            setSelection(length())
-                        }
-                    }
-                }
-
-                launch {
                     clickValues.pressDuration.collect { duration ->
                         viewBinding.includeClickConfig.editPressDuration.apply {
                             setText(duration.toString())
-                            setSelection(length())
+                            setSelection(duration.toString().length)
                         }
                     }
                 }
@@ -206,25 +226,26 @@ class ActionConfigDialog(
                     )
                 }
                 textSwipePosition.setLeftRightCompoundDrawables(R.drawable.ic_swipe, R.drawable.ic_chevron)
+
+                editSwipeDuration.apply {
+                    setSelectAllOnFocus(true)
+                    addTextChangedListener(object : OnAfterTextChangedListener() {
+                        override fun afterTextChanged(s: Editable?) {
+                            (viewModel?.actionValues?.value as ActionConfigModel.SwipeActionValues)
+                                .setSwipeDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else 0)
+                        }
+                    })
+                }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    swipeValues.name.collect { name ->
-                        viewBinding.editName.apply {
-                            setText(name)
-                            setSelection(length())
-                        }
-                    }
-                }
-
-                launch {
                     swipeValues.swipeDuration.collect { duration ->
                         viewBinding.includeSwipeConfig.editSwipeDuration.apply {
                             setText(duration.toString())
-                            setSelection(length())
+                            setSelection(duration.toString().length)
                         }
                     }
                 }
@@ -258,29 +279,26 @@ class ActionConfigDialog(
         viewBinding.apply {
             includePauseConfig.apply {
                 actionConfigLayoutPause.visibility = View.VISIBLE
+
+                editPauseDuration.apply {
+                    setSelectAllOnFocus(true)
+                    addTextChangedListener(object : OnAfterTextChangedListener() {
+                        override fun afterTextChanged(s: Editable?) {
+                            (viewModel?.actionValues?.value as ActionConfigModel.PauseActionValues)
+                                .setPauseDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else 0)
+                        }
+                    })
+                }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    pauseValues.name.collect { name ->
-                        viewBinding.editName.apply {
-                            if (name.isNullOrEmpty()) {
-                                setText(R.string.default_event_name)
-                            } else {
-                                setText(name)
-                            }
-                            setSelection(length())
-                        }
-                    }
-                }
-
-                launch {
                     pauseValues.pauseDuration.collect { duration ->
                         viewBinding.includePauseConfig.editPauseDuration.apply {
                             setText(duration.toString())
-                            setSelection(length())
+                            setSelection(duration.toString().length)
                         }
                     }
                 }
@@ -291,35 +309,8 @@ class ActionConfigDialog(
     /** Notify the confirm listener and dismiss the dialog. */
     private fun onOkClicked() {
         viewModel?.let { model ->
-            val configuredAction = when (val actionValues = model.actionValues.value) {
-                is ActionConfigModel.ClickActionValues -> {
-                    val pressDuration = viewBinding.includeClickConfig.editPressDuration.text.toString()
-                    actionValues.getConfiguredClick(
-                        viewBinding.editName.text.toString(),
-                        if (pressDuration.isNotEmpty()) pressDuration.toLong() else 0,
-                    )
-                }
-
-                is ActionConfigModel.SwipeActionValues -> {
-                    val swipeDuration = viewBinding.includeSwipeConfig.editSwipeDuration.text.toString()
-                    actionValues.getConfiguredSwipe(
-                        viewBinding.editName.text.toString(),
-                        if (swipeDuration.isNotEmpty()) swipeDuration.toLong() else 0,
-                    )
-                }
-
-                is ActionConfigModel.PauseActionValues -> {
-                    val pauseDuration = viewBinding.includePauseConfig.editPauseDuration.text.toString()
-                    actionValues.getConfiguredPause(
-                        viewBinding.editName.text.toString(),
-                        if (pauseDuration.isNotEmpty()) pauseDuration.toLong() else 0,
-                    )
-                }
-
-                else -> null
-            }
-
-            configuredAction?.let { onConfirmClicked(it) }
+            model.saveLastConfig()
+            onConfirmClicked(model.getConfiguredAction())
         }
         dismiss()
     }
