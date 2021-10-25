@@ -22,14 +22,12 @@ import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.overlays.eventconfig.EVENT_CONFIG_PREFERENCES_NAME
-import com.buzbuz.smartautoclicker.overlays.eventconfig.getClickPressDurationConfig
-import com.buzbuz.smartautoclicker.overlays.eventconfig.getPauseDurationConfig
-import com.buzbuz.smartautoclicker.overlays.eventconfig.getSwipeDurationConfig
+import com.buzbuz.smartautoclicker.overlays.eventconfig.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putClickPressDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putPauseDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putSwipeDurationConfig
 import com.buzbuz.smartautoclicker.overlays.utils.EDIT_TEXT_DEBOUNCE_MS
+
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,11 +50,8 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** The action being configured by the user. Defined using [setConfigAction]. */
     private val configuredAction = MutableStateFlow<Action?>(null)
-    /** */
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-        EVENT_CONFIG_PREFERENCES_NAME,
-        Context.MODE_PRIVATE
-    )
+    /** Event configuration shared preferences. */
+    private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
     /** The name of the action. */
     val name: Flow<String?> = configuredAction.map { it?.getActionName() }.debounce(EDIT_TEXT_DEBOUNCE_MS)
@@ -139,10 +134,10 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
 
         /** The duration between the press and release of the click in milliseconds. */
         val pressDuration: Flow<Long?> = configuredAction.map { click ->
-            if (click is Action.Click && click.pressDuration != null) {
+            if (click is Action.Click) {
                 click.pressDuration
             } else {
-                sharedPreferences.getClickPressDurationConfig(context)
+                null
             }
         }.debounce(EDIT_TEXT_DEBOUNCE_MS)
         /** The position of the click. */
@@ -187,7 +182,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             if (swipe is Action.Swipe && swipe.swipeDuration != null) {
                 swipe.swipeDuration
             } else {
-                sharedPreferences.getSwipeDurationConfig(context)
+                null
             }
         }.debounce(EDIT_TEXT_DEBOUNCE_MS)
         /** The start and end positions of the swipe. */
@@ -235,7 +230,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             if (pause is Action.Pause && pause.pauseDuration != null) {
                 pause.pauseDuration
             } else {
-                sharedPreferences.getPauseDurationConfig(context)
+                null
             }
         }.debounce(EDIT_TEXT_DEBOUNCE_MS)
 

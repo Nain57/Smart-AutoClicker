@@ -127,18 +127,9 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
         configuredEvent.value?.let { event ->
 
             return when (actionType) {
-                is ActionTypeChoice.Click -> Action.Click(
-                    eventId = event.id,
-                    name = context.getString(R.string.default_click_name),
-                )
-                is ActionTypeChoice.Swipe -> Action.Swipe(
-                    eventId = event.id,
-                    name = context.getString(R.string.default_swipe_name),
-                )
-                is ActionTypeChoice.Pause -> Action.Pause(
-                    eventId = event.id,
-                    name = context.getString(R.string.default_pause_name),
-                )
+                is ActionTypeChoice.Click -> newDefaultClick(context, event.id)
+                is ActionTypeChoice.Swipe -> newDefaultSwipe(context, event.id)
+                is ActionTypeChoice.Pause -> newDefaultPause(context, event.id)
             }
 
         } ?: throw IllegalStateException("Can't create an action, event is null!")
@@ -221,11 +212,11 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
      */
     fun createCondition(context: Context, area: Rect, bitmap: Bitmap): Condition {
         configuredEvent.value?.let { event ->
-            return Condition(
+            return newDefaultCondition(
+                context = context,
                 eventId = event.id,
                 bitmap = bitmap,
                 area = area,
-                threshold = context.resources.getInteger(R.integer.default_condition_threshold),
             )
         } ?: throw IllegalStateException("Can't create a condition, event is null!")
     }

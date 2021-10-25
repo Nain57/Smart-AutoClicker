@@ -25,10 +25,10 @@ import androidx.appcompat.app.AlertDialog
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
+import com.buzbuz.smartautoclicker.overlays.eventconfig.newDefaultEvent
 import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.Dispatchers
@@ -112,13 +112,10 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
      * @param context the Android context.
      * @return the new event.
      */
-    fun getNewEvent(context: Context) = Event(
+    fun getNewEvent(context: Context) = newDefaultEvent(
+        context = context,
         scenarioId = scenario.value!!.id,
-        name = context.getString(R.string.default_event_name),
-        conditionOperator = AND,
-        priority = events.value!!.size,
-        conditions = mutableListOf(),
-        actions = mutableListOf(),
+        scenarioEventsSize = events.value!!.size,
     )
 
     /**
