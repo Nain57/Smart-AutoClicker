@@ -170,8 +170,8 @@ class ConditionSelectorView(
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (animations.isShowSelectorAnimationRunning()) {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event == null || animations.isShowSelectorAnimationRunning()) {
             return false
         }
 

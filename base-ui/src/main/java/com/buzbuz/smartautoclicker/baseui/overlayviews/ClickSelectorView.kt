@@ -140,7 +140,9 @@ class ClickSelectorView(context: Context) : View(context) {
     }
 
     @SuppressLint("ClickableViewAccessibility") // You can't click on this view
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        event ?: return false
+
         if (event.action != MotionEvent.ACTION_DOWN || event.action != MotionEvent.ACTION_MOVE) {
             super.onTouchEvent(event)
         }
