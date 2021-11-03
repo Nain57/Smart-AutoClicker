@@ -175,8 +175,8 @@ class EventConfigDialog(
                 }
 
                 launch {
-                    viewModel?.actions?.collect { actions ->
-                        actionsAdapter.actions = actions?.let { ArrayList(actions) }
+                    viewModel?.actionListItems?.collect { actions ->
+                        actionsAdapter.submitList(actions.toMutableList())
                     }
                 }
 

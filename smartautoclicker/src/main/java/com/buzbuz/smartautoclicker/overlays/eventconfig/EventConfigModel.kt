@@ -49,7 +49,7 @@ import kotlinx.coroutines.withContext
  *
  * @param context the Android context.
  */
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalStdlibApi::class)
 class EventConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** Repository providing access to the click database. */
@@ -67,6 +67,16 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
         )
     /** The event actions currently edited by the user. */
     val actions: StateFlow<List<Action>?> = _action
+    /** The item to be displayed in the action list. Last item is always the add actions . */
+    val actionListItems: Flow<List<ActionListItem>> = _action
+        .map { actions ->
+            buildList {
+                actions?.let { actionList ->
+                    addAll(actionList.map { ActionListItem.ActionItem(it) })
+                }
+                add(ActionListItem.AddActionItem)
+            }
+        }
     /** Backing property for [conditions]. */
     private val _conditions = configuredEvent
         .map { it?.conditions }
@@ -185,10 +195,16 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
      * Update the priority of the actions.
      * @param actions the new actions order.
      */
-    fun updateActionOrder(actions: List<Action>) {
+    fun updateActionOrder(actions: List<ActionListItem>) {
         configuredEvent.value?.let { event ->
             viewModelScope.launch {
-                configuredEvent.value = event.copy(actions = actions.toMutableList())
+                val newActions = actions.mapNotNull {
+                    when (it) {
+                        is ActionListItem.AddActionItem -> null
+                        is ActionListItem.ActionItem -> it.action
+                    }
+                }.toMutableList()
+                configuredEvent.value = event.copy(actions = newActions)
             }
         }
     }
@@ -305,6 +321,14 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
             configuredEvent.value = event.copy(stopAfter = stopAfter)
         } ?: throw IllegalStateException("Can't set event name, event is null!")
     }
+}
+
+/** Items displayed in the action list. */
+sealed class ActionListItem {
+    /** The add action item. */
+    object AddActionItem : ActionListItem()
+    /** Item representing a created action. */
+    data class ActionItem(val action: Action) : ActionListItem()
 }
 
 /** Choices for the condition operator selection dialog. */

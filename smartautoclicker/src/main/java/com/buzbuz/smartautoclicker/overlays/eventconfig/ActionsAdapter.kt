@@ -20,8 +20,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.recyclerview.widget.DiffUtil
 
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -29,10 +29,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionCardBinding
+import com.buzbuz.smartautoclicker.databinding.ItemAddCardBinding
+import com.buzbuz.smartautoclicker.overlays.utils.getIconRes
 
 import java.util.Collections
-
-import kotlin.collections.ArrayList
 
 /**
  * Displays the actions in a list.
@@ -45,30 +45,42 @@ import kotlin.collections.ArrayList
 class ActionsAdapter(
     private val addActionClickedListener: (Boolean) -> Unit,
     private val actionClickedListener: (Int, Action) -> Unit,
-    private val actionReorderListener: (List<Action>) -> Unit,
-) : ListAdapter<Action, ActionViewHolder>(ActionDiffUtilCallback) {
+    private val actionReorderListener: (List<ActionListItem>) -> Unit,
+) : ListAdapter<ActionListItem, RecyclerView.ViewHolder>(ActionDiffUtilCallback) {
 
     /** The list of actions to be shown by this adapter.*/
-    var actions: ArrayList<Action>? = null
-        set(value) {
-            field = value
-            submitList(value)
-        }
+    private var actions: MutableList<ActionListItem>? = null
 
-    override fun getItemCount(): Int = actions?.size?.plus(1) ?: 1
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionViewHolder =
-        ActionViewHolder(ItemActionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
-    override fun onBindViewHolder(holder: ActionViewHolder, position: Int) {
-        // The last item is the add item, allowing the user to add a new action.
-        if (position == itemCount - 1) {
-            holder.onBindAddAction(addActionClickedListener)
-        } else {
-            holder.onBindAction(actions!![position], actionClickedListener)
-        }
+    override fun submitList(list: MutableList<ActionListItem>?) {
+        actions = list
+        super.submitList(list)
     }
 
+    override fun getItem(position: Int): ActionListItem = actions!![position]
+
+    override fun getItemViewType(position: Int): Int =
+        when (getItem(position)) {
+            is ActionListItem.AddActionItem -> R.layout.item_add_card
+            is ActionListItem.ActionItem -> R.layout.item_action_card
+        }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
+            R.layout.item_add_card ->
+                AddActionViewHolder(
+                    ItemAddCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                    addActionClickedListener
+                )
+            R.layout.item_action_card ->
+                ActionViewHolder(ItemActionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            else -> throw IllegalArgumentException("Unsupported view type !")
+        }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is ActionViewHolder) {
+            holder.onBind((getItem(position) as ActionListItem.ActionItem).action, actionClickedListener)
+        }
+    }
 
     /**
      * Swap the position of two actions in the list.
@@ -80,17 +92,36 @@ class ActionsAdapter(
         actions?.let {
             Collections.swap(it, from, to)
             notifyItemMoved(from, to)
-            actionReorderListener(it)
         }
+    }
+
+    /** Notify for an item drag and drop completion. */
+    fun notifyMoveFinished() {
+        actionReorderListener(currentList)
     }
 }
 
-/** */
-object ActionDiffUtilCallback: DiffUtil.ItemCallback<Action>(){
-    override fun areItemsTheSame(oldItem: Action, newItem: Action): Boolean =
-        oldItem.getIdentifier() == newItem.getIdentifier()
+/** DiffUtil Callback comparing two ActionItem when updating the [ActionsAdapter] list. */
+object ActionDiffUtilCallback: DiffUtil.ItemCallback<ActionListItem>() {
+    override fun areItemsTheSame(oldItem: ActionListItem, newItem: ActionListItem): Boolean = when {
+        oldItem is ActionListItem.AddActionItem && newItem is ActionListItem.AddActionItem -> true
+        oldItem is ActionListItem.ActionItem && newItem is ActionListItem.ActionItem ->
+            oldItem.action.getIdentifier() == newItem.action.getIdentifier()
+        else -> false
+    }
 
-    override fun areContentsTheSame(oldItem: Action, newItem: Action): Boolean = oldItem == newItem
+    override fun areContentsTheSame(oldItem: ActionListItem, newItem: ActionListItem): Boolean = oldItem == newItem
+}
+
+/** View holder for the add action item. */
+class AddActionViewHolder(
+    viewBinding: ItemAddCardBinding,
+    addActionClickedListener: (Boolean) -> Unit,
+) : RecyclerView.ViewHolder(viewBinding.root) {
+
+    init {
+        itemView.setOnClickListener { addActionClickedListener.invoke(bindingAdapterPosition == 0) }
+    }
 }
 
 /**
@@ -100,47 +131,17 @@ object ActionDiffUtilCallback: DiffUtil.ItemCallback<Action>(){
 class ActionViewHolder(private val viewBinding: ItemActionCardBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /**
-     * Bind this view holder as a 'Add action' item.
-     *
-     * @param addActionClickedListener listener notified upon user click on this item.
-     */
-    fun onBindAddAction(addActionClickedListener: (Boolean) -> Unit) {
-        viewBinding.apply {
-            actionName.visibility = View.GONE
-            actionIcon.apply {
-                scaleType = ImageView.ScaleType.CENTER
-                setImageResource(R.drawable.ic_add)
-            }
-        }
-
-        itemView.setOnClickListener { addActionClickedListener.invoke(bindingAdapterPosition == 0) }
-    }
-
-    /**
      * Bind this view holder as a action item.
      *
      * @param action the action to be represented by this item.
      * @param actionClickedListener listener notified upon user click on this item.
      */
-    fun onBindAction(action: Action, actionClickedListener: (Int, Action) -> Unit) {
+    fun onBind(action: Action, actionClickedListener: (Int, Action) -> Unit) {
         viewBinding.apply {
             actionName.visibility = View.VISIBLE
+            actionName.text = action.getActionName()
             actionIcon.scaleType = ImageView.ScaleType.FIT_CENTER
-
-            when (action) {
-                is Action.Click -> {
-                    actionIcon.setImageResource(R.drawable.ic_click)
-                    actionName.text = action.name
-                }
-                is Action.Swipe -> {
-                    actionIcon.setImageResource(R.drawable.ic_swipe)
-                    actionName.text = action.name
-                }
-                is Action.Pause -> {
-                    actionIcon.setImageResource(R.drawable.ic_wait)
-                    actionName.text = action.name
-                }
-            }
+            actionIcon.setImageResource(action.getIconRes())
         }
 
         itemView.setOnClickListener { actionClickedListener.invoke(bindingAdapterPosition, action) }
@@ -148,14 +149,17 @@ class ActionViewHolder(private val viewBinding: ItemActionCardBinding) : Recycle
 }
 
 /** ItemTouchHelper attached to the adapter */
-class ActionReorderTouchHelper
-    : ItemTouchHelper.SimpleCallback(0, 0) {
+class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(0, 0) {
+
+    /** Tells if the user is currently dragging an item. */
+    private var isDragging: Boolean = false
 
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+        isDragging = true
         (recyclerView.adapter as ActionsAdapter).swapActions(
             viewHolder.bindingAdapterPosition,
             target.bindingAdapterPosition
@@ -163,8 +167,13 @@ class ActionReorderTouchHelper
         return true
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        // Nothing do to
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+
+        if (isDragging) {
+            (recyclerView.adapter as ActionsAdapter).notifyMoveFinished()
+            isDragging = false
+        }
     }
 
     override fun canDropOver(
@@ -172,7 +181,7 @@ class ActionReorderTouchHelper
         current: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        if (target.bindingAdapterPosition == recyclerView.adapter!!.itemCount - 1) return false
+        if (target is AddActionViewHolder) return false
         return true
     }
 
@@ -181,4 +190,6 @@ class ActionReorderTouchHelper
                         else ItemTouchHelper.START or ItemTouchHelper.END
         return makeMovementFlags(dragFlags, 0)
     }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) { /* Nothing do to */ }
 }
