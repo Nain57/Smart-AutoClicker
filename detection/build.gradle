@@ -56,13 +56,10 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
 
     implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
-
 
     implementation project(path: ':extensions')
     implementation project(path: ':database')

@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.action
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Point
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.domain.Action
@@ -107,6 +108,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 is Action.Click ->  configuredAction.emit(action.copy(name = "" + name))
                 is Action.Swipe ->  configuredAction.emit(action.copy(name = "" + name))
                 is Action.Pause ->  configuredAction.emit(action.copy(name = "" + name))
+                else -> Log.w(TAG, "Can't set name, invalid action type $action")
             }
         }
     }
@@ -120,6 +122,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 sharedPreferences.edit().putSwipeDurationConfig(action.swipeDuration ?: 0).apply()
             is Action.Pause ->
                 sharedPreferences.edit().putPauseDurationConfig(action.pauseDuration ?: 0).apply()
+            else -> Log.w(TAG, "Can't save last config, invalid action type $action")
         }
     }
 
@@ -247,3 +250,6 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
     }
 }
+
+/** Tag for the logs. */
+private const val TAG = "ActionConfigModel"

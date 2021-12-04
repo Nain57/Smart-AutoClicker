@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 
 /**
@@ -170,7 +170,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
      */
     @OptIn(ExperimentalTime::class)
     private fun formatDuration(msDuration: Long): String {
-        val duration = Duration.milliseconds(msDuration)
+        val duration = msDuration.milliseconds
         var value = ""
         if (duration.inWholeHours > 0) {
             value += "${duration.inWholeHours}h "

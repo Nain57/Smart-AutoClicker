@@ -36,9 +36,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -62,7 +62,7 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
     /** The currently selected scenario. */
     private val scenario: StateFlow<Scenario?> = scenarioId
         .flatMapLatest { id ->
-            id?.let { repository.getScenario(it) } ?: flow { emit(null) }
+            id?.let { repository.getScenario(it) } ?: emptyFlow()
         }
         .stateIn(
             scope = viewModelScope,
