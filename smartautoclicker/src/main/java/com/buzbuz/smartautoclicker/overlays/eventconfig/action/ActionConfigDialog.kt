@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.action
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 
@@ -162,10 +164,11 @@ class ActionConfigDialog(
 
                 editPressDuration.apply {
                     setSelectAllOnFocus(true)
+                    filters = arrayOf(DurationInputFilter())
                     addTextChangedListener(object : OnAfterTextChangedListener() {
                         override fun afterTextChanged(s: Editable?) {
                             (viewModel?.actionValues?.value as ActionConfigModel.ClickActionValues)
-                                .setPressDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else 0)
+                                .setPressDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
                         }
                     })
                 }
@@ -178,7 +181,7 @@ class ActionConfigDialog(
                     clickValues.pressDuration.collect { duration ->
                         viewBinding.includeClickConfig.editPressDuration.apply {
                             setText(duration.toString())
-                            setSelection(duration.toString().length)
+                            setSelection(text.length)
                         }
                     }
                 }
@@ -229,10 +232,11 @@ class ActionConfigDialog(
 
                 editSwipeDuration.apply {
                     setSelectAllOnFocus(true)
+                    filters = arrayOf(DurationInputFilter())
                     addTextChangedListener(object : OnAfterTextChangedListener() {
                         override fun afterTextChanged(s: Editable?) {
                             (viewModel?.actionValues?.value as ActionConfigModel.SwipeActionValues)
-                                .setSwipeDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else 0)
+                                .setSwipeDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
                         }
                     })
                 }
@@ -245,7 +249,7 @@ class ActionConfigDialog(
                     swipeValues.swipeDuration.collect { duration ->
                         viewBinding.includeSwipeConfig.editSwipeDuration.apply {
                             setText(duration.toString())
-                            setSelection(duration.toString().length)
+                            setSelection(text.length)
                         }
                     }
                 }
@@ -282,10 +286,11 @@ class ActionConfigDialog(
 
                 editPauseDuration.apply {
                     setSelectAllOnFocus(true)
+                    filters = arrayOf(DurationInputFilter())
                     addTextChangedListener(object : OnAfterTextChangedListener() {
                         override fun afterTextChanged(s: Editable?) {
                             (viewModel?.actionValues?.value as ActionConfigModel.PauseActionValues)
-                                .setPauseDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else 0)
+                                .setPauseDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
                         }
                     })
                 }
@@ -298,7 +303,7 @@ class ActionConfigDialog(
                     pauseValues.pauseDuration.collect { duration ->
                         viewBinding.includePauseConfig.editPauseDuration.apply {
                             setText(duration.toString())
-                            setSelection(duration.toString().length)
+                            setSelection(text.length)
                         }
                     }
                 }
@@ -314,4 +319,23 @@ class ActionConfigDialog(
         }
         dismiss()
     }
+}
+
+/** Input filter for an Action duration. */
+private class DurationInputFilter : InputFilter {
+
+    override fun filter(
+        source: CharSequence?,
+        start: Int,
+        end: Int,
+        dest: Spanned?,
+        dstart: Int,
+        dend: Int
+    ): CharSequence? {
+        try {
+            if (Integer.parseInt(dest.toString() + source.toString()) > 0) return null
+        } catch (nfe: NumberFormatException) { }
+        return ""
+    }
+
 }

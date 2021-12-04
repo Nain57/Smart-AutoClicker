@@ -62,10 +62,10 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         when (action) {
             null -> false
             is Action.Click -> !action.name.isNullOrEmpty() && action.x != null && action.y != null
-                    && action.pressDuration != null
+                    && action.pressDuration.isValidDuration()
             is Action.Swipe -> !action.name.isNullOrEmpty() && action.fromX != null && action.fromY != null && action.toX != null
-                    && action.toY != null && action.swipeDuration != null
-            is Action.Pause -> !action.name.isNullOrEmpty() && action.pauseDuration != null
+                    && action.toY != null && action.swipeDuration.isValidDuration()
+            is Action.Pause -> !action.name.isNullOrEmpty() && action.pauseDuration.isValidDuration()
         }
     }
 
@@ -168,7 +168,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
          * Set the press duration of the click.
          * @param durationMs the new duration in milliseconds.
          */
-        fun setPressDuration(durationMs: Long) {
+        fun setPressDuration(durationMs: Long?) {
             (configuredAction.value as Action.Click).let { click ->
                 viewModelScope.launch {
                     configuredAction.emit(click.copy(pressDuration = durationMs))
@@ -216,7 +216,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
          * Set the duration of the swipe.
          * @param durationMs the new duration in milliseconds.
          */
-        fun setSwipeDuration(durationMs: Long) {
+        fun setSwipeDuration(durationMs: Long?) {
             (configuredAction.value as Action.Swipe).let { swipe ->
                 viewModelScope.launch {
                     configuredAction.emit(swipe.copy(swipeDuration = durationMs))
@@ -241,7 +241,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
          * Set the duration of the pause.
          * @param durationMs the new duration in milliseconds.
          */
-        fun setPauseDuration(durationMs: Long) {
+        fun setPauseDuration(durationMs: Long?) {
             (configuredAction.value as Action.Pause).let { pause ->
                 viewModelScope.launch {
                     configuredAction.emit(pause.copy(pauseDuration = durationMs))
@@ -253,3 +253,5 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
 
 /** Tag for the logs. */
 private const val TAG = "ActionConfigModel"
+/** Check if this duration value is valid for an action. */
+private fun Long?.isValidDuration(): Boolean = this != null && this > 0
