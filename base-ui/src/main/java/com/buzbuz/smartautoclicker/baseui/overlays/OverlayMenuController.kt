@@ -92,7 +92,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     /** The layout parameters of the overlay view. */
     private val overlayLayoutParams:  WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
         copyFrom(menuLayoutParams)
-        screenMetrics.getScreenSize().let { size ->
+        screenMetrics.screenSize.let { size ->
             width = size.x
             height = size.y
         }
@@ -176,7 +176,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         overlayLayoutParams.gravity = Gravity.TOP or Gravity.START
-        loadMenuPosition(screenMetrics.getOrientation())
+        loadMenuPosition(screenMetrics.orientation)
     }
 
     protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit? = null
@@ -207,7 +207,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     @CallSuper
     override fun onDismissed() {
         // Save last user position
-        saveMenuPosition(screenMetrics.getOrientation())
+        saveMenuPosition(screenMetrics.orientation)
 
         menuLayout = null
         screenOverlayView = null
@@ -305,7 +305,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * @param y the vertical position.
      */
     private fun setMenuLayoutPosition(x: Int, y: Int) {
-        val displaySize = screenMetrics.getScreenSize()
+        val displaySize = screenMetrics.screenSize
         menuLayoutParams.x = x.coerceIn(0, displaySize.x - menuLayout!!.width)
         menuLayoutParams.y = y.coerceIn(0, displaySize.y - menuLayout!!.height)
     }
@@ -316,16 +316,16 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * orientation.
      */
     private fun onOrientationChanged() {
-        saveMenuPosition(if (screenMetrics.getOrientation() == Configuration.ORIENTATION_LANDSCAPE)
+        saveMenuPosition(if (screenMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE)
             Configuration.ORIENTATION_PORTRAIT
         else
             Configuration.ORIENTATION_LANDSCAPE
         )
-        loadMenuPosition(screenMetrics.getOrientation())
+        loadMenuPosition(screenMetrics.orientation)
 
         windowManager.updateViewLayout(menuLayout, menuLayoutParams)
         screenOverlayView?.let { overlayView ->
-            screenMetrics.getScreenSize().let { size ->
+            screenMetrics.screenSize.let { size ->
                 overlayLayoutParams.width = size.x
                 overlayLayoutParams.height = size.y
             }

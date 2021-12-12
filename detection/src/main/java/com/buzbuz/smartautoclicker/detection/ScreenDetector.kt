@@ -159,7 +159,7 @@ class ScreenDetector(
             return
         }
 
-        displaySize = screenMetrics.getScreenSize()
+        displaySize = screenMetrics.screenSize
         screenMetrics.registerOrientationListener(orientationListener)
 
         processingThread = HandlerThread(PROCESSING_THREAD_NAME).apply {
@@ -290,7 +290,7 @@ class ScreenDetector(
         processingCoroutineDispatcher?.let {
             processingCoroutineScope.launch(it) {
                 screenRecorder.stopScreenRecord()
-                displaySize = screenMetrics.getScreenSize()
+                displaySize = screenMetrics.screenSize
                 screenRecorder.startScreenRecord(context, displaySize, processingThreadHandler!!)
             }
         }

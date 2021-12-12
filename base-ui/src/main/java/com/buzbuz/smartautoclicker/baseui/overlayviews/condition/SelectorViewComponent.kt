@@ -37,7 +37,7 @@ internal abstract class SelectorViewComponent(
 
     /** The maximum size of the selector. */
     protected val maxArea: RectF = RectF().apply {
-        val screenSize = screenMetrics.getScreenSize()
+        val screenSize = screenMetrics.screenSize
         right = screenSize.x.toFloat()
         bottom = screenSize.y.toFloat()
     }
@@ -51,7 +51,7 @@ internal abstract class SelectorViewComponent(
      */
     @CallSuper
     open fun onViewSizeChanged(w: Int, h: Int) {
-        val screenSize = screenMetrics.getScreenSize()
+        val screenSize = screenMetrics.screenSize
         maxArea.apply {
             right = screenSize.x.toFloat()
             bottom = screenSize.y.toFloat()

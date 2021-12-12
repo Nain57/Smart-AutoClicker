@@ -45,22 +45,20 @@ class ScreenMetrics(private val context: Context) {
 
     /** The display to get the value from. It will always be the first one available. */
     private val display = context.getSystemService(DisplayManager::class.java).getDisplay(0)
-    /** Size of the display, refreshed at each [getScreenSize] call. */
-    private val size = Point()
-
-    /** The orientation of the display. This value is updated only when a listener is registered. */
-    private var orientation = getOrientation()
     /** The listener upon orientation changes. */
     private var orientationListener: (() -> Unit)? = null
+
+    /** The orientation of the display. */
+    var orientation = computeOrientation()
+        private set
+    /** The screen size. */
+    var screenSize: Point = computeScreenSize()
+        private set
 
     /** Listen to the configuration changes and calls [orientationListener] when needed. */
     private val configChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val newOrientation = getOrientation()
-            if (orientation != newOrientation) {
-                orientation = newOrientation
-                orientationListener?.invoke()
-            }
+            updateScreenMetrics()
         }
     }
 
@@ -88,18 +86,46 @@ class ScreenMetrics(private val context: Context) {
         }
     }
 
-    /** The size of the current display in pixels. */
-    fun getScreenSize(): Point {
-        display.getRealSize(size)
-        return size
+    /** Update orientation and screen size, if needed. Should be called after a configuration change. */
+    private fun updateScreenMetrics() {
+        val newOrientation = computeOrientation()
+        if (orientation != newOrientation) {
+            orientation = newOrientation
+            screenSize = computeScreenSize()
+            orientationListener?.invoke()
+        }
     }
 
-    /** Get the orientation of the screen. */
-    fun getOrientation(): Int {
-        return when (display.rotation) {
-            Surface.ROTATION_0, Surface.ROTATION_180 -> Configuration.ORIENTATION_PORTRAIT
-            Surface.ROTATION_90, Surface.ROTATION_270 -> Configuration.ORIENTATION_LANDSCAPE
-            else -> Configuration.ORIENTATION_UNDEFINED
+    /** @return the size of the display, in pixels. */
+    private fun computeScreenSize(): Point {
+        val size = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val currentWindowMetricsBound = context.getSystemService(WindowManager::class.java)
+                .currentWindowMetrics.bounds
+
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                Point(currentWindowMetricsBound.right, currentWindowMetricsBound.bottom)
+            } else {
+                Point(currentWindowMetricsBound.bottom, currentWindowMetricsBound.right)
+            }
+        } else {
+            val realSize = Point()
+            display.getRealSize(realSize)
+            realSize
         }
+
+        // Some phone can be messy with the size change with the orientation. Correct it here.
+        return if (orientation == Configuration.ORIENTATION_PORTRAIT && size.x > size.y ||
+            orientation == Configuration.ORIENTATION_LANDSCAPE && size.x < size.y) {
+            Point(size.y, size.x)
+        } else {
+            size
+        }
+    }
+
+    /**  @return the orientation of the screen. */
+    private fun computeOrientation(): Int = when (display.rotation) {
+        Surface.ROTATION_0, Surface.ROTATION_180 -> Configuration.ORIENTATION_PORTRAIT
+        Surface.ROTATION_90, Surface.ROTATION_270 -> Configuration.ORIENTATION_LANDSCAPE
+        else -> Configuration.ORIENTATION_UNDEFINED
     }
 }

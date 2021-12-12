@@ -61,7 +61,7 @@ class ConditionSelectorMenu(
     }
 
     /** The view displaying the screenshot and the selector for the capture. */
-    private val selectorView = ConditionSelectorView(context, ::onSelectorValidityChanged)
+    private val selectorView = ConditionSelectorView(context, screenMetrics, ::onSelectorValidityChanged)
 
     /** The current state of the overlay. */
     @ConditionCaptureState
@@ -123,7 +123,7 @@ class ConditionSelectorMenu(
         if (state == SELECTION) {
             state = CAPTURE
             Handler(Looper.getMainLooper()).postDelayed({
-                val screenSize = screenMetrics.getScreenSize()
+                val screenSize = screenMetrics.screenSize
                 val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
                 DetectorEngine.getDetectorEngine(context).captureScreenArea(screenRect) { bitmap ->
                     selectorView.showCapture(bitmap)

@@ -222,12 +222,11 @@ class OverlayMenuControllerTests {
             argument.y = TEST_DATA_DISPLAY_HEIGHT
             null
         }.`when`(mockDisplay).getRealSize(any())
-
-        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
     }
 
     @Test
     fun createLifecycle() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         mockViewsFromImpl()
 
         overlayMenuController.create()
@@ -241,6 +240,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun createAddMenuView() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         mockViewsFromImpl(menuView)
 
@@ -252,6 +252,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun createAddViews() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         val overlayView = mock(View::class.java)
         mockViewsFromImpl(menuView, overlayView)
@@ -265,6 +266,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun getInitialMenuPositionFirstTime() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         mockViewsFromImpl()
 
         overlayMenuController.create()
@@ -276,8 +278,9 @@ class OverlayMenuControllerTests {
 
     @Test
     fun getInitialMenuPositionFromSharedPrefs_landscape() {
-        mockViewsFromImpl()
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
+        mockViewsFromImpl()
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
 
         overlayMenuController.create()
@@ -291,8 +294,9 @@ class OverlayMenuControllerTests {
 
     @Test
     fun getInitialMenuPositionFromSharedPrefs_portrait() {
-        mockViewsFromImpl()
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
+        mockViewsFromImpl()
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS, TEST_DATA_Y_POS)
 
         overlayMenuController.create()
@@ -306,6 +310,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setupViewClickListeners() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
             createMockMenuItemView(),
@@ -320,6 +325,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setupViewClickListenersDepth2() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
             createMockMenuItemView(),
@@ -334,6 +340,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setupMoveItemTouchListener() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val moveItem = createMockMenuItemView(R.id.btn_move)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
@@ -349,6 +356,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setupMoveItemTouchListenerDepth2() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val moveItem = createMockMenuItemView(R.id.btn_move)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
@@ -364,6 +372,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setupHideItemTouchListener() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
@@ -379,6 +388,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setupHideItemTouchListenerDepth2() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
@@ -394,6 +404,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun hideButtonInitialState() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         mockViewsFromImpl(createMockMenuView(sequenceOf(createMockMenuItemView(), hideItem)))
 
@@ -405,6 +416,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun hideMenu() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         mockViewsFromImpl(menuView)
         overlayMenuController.create()
@@ -416,6 +428,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun hideAll() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         val overlayView = mock(View::class.java)
         mockViewsFromImpl(menuView, overlayView)
@@ -429,8 +442,9 @@ class OverlayMenuControllerTests {
 
     @Test
     fun savePositionOnDismiss_landscape() {
-        mockViewsFromImpl()
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
+        mockViewsFromImpl()
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         overlayMenuController.create()
 
@@ -447,8 +461,9 @@ class OverlayMenuControllerTests {
 
     @Test
     fun savePositionOnDismiss_portrait() {
-        mockViewsFromImpl()
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
+        mockViewsFromImpl()
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         overlayMenuController.create()
 
@@ -465,6 +480,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setMenuItemDisabledNotClickable() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val itemId = 42
         val item = createMockMenuItemView(itemId)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -481,6 +497,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setMenuItemDisabledClickable() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val itemId = 42
         val item = createMockMenuItemView(itemId)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -497,6 +514,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setMenuItemEnabled() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val itemId = 42
         val item = createMockMenuItemView(itemId)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -513,6 +531,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setItemImageDrawable() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val itemId = 42
         val item = createMockMenuItemView(itemId)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -529,6 +548,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setItemImageResource() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val itemId = 42
         val item = createMockMenuItemView(itemId)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -545,6 +565,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun onMenuItemClicked() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val itemId = 42
         val item = createMockMenuItemView(itemId)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -563,6 +584,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun onHideOverlayClickedOverlayVisible() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val overlayView = mock(View::class.java)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -592,6 +614,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun onHideOverlayClickedOverlayGone() {
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val overlayView = mock(View::class.java)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
@@ -621,13 +644,14 @@ class OverlayMenuControllerTests {
 
     @Test
     fun onMove() {
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
         val moveItem = createMockMenuItemView(R.id.btn_move)
         val menuView = createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             moveItem,
         ))
         mockViewsFromImpl(menuView)
-        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         overlayMenuController.create()
 
@@ -654,8 +678,9 @@ class OverlayMenuControllerTests {
 
     @Test
     fun orientationChanged() {
-        mockViewsFromImpl()
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
+        mockViewsFromImpl()
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS_2, TEST_DATA_Y_POS_2)
         overlayMenuController.create()

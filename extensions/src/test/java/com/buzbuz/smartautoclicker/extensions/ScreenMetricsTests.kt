@@ -64,6 +64,14 @@ class ScreenMetricsTests {
     /** The object under tests. */
     private lateinit var screenMetrics: ScreenMetrics
 
+    /** @return the broadcast receiver registered upon orientation listener registration */
+    private fun getBroadcastOrientationReceiver(): BroadcastReceiver {
+        val receiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
+        verify(mockContext).registerReceiver(receiverCaptor.capture(), any())
+
+        return receiverCaptor.value
+    }
+
     @Before
     fun setUp() {
         mockContext = Mockito.mock(Context::class.java)
@@ -79,79 +87,139 @@ class ScreenMetricsTests {
             argument.y = DISPLAY_SIZE_Y
             null
         }.`when`(mockDisplay).getRealSize(any())
+    }
+
+    @Test
+    fun getScreenSize_initial_portrait() {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
-
         screenMetrics = ScreenMetrics(mockContext)
+
+        assertEquals(Point(DISPLAY_SIZE_Y, DISPLAY_SIZE_X), screenMetrics.screenSize)
     }
 
     @Test
-    fun getScreenSize() {
-        assertEquals(Point(DISPLAY_SIZE_X, DISPLAY_SIZE_Y), screenMetrics.getScreenSize())
-    }
-
-    @Test
-    fun getOrientation_landscape() {
+    fun getScreenSize_initial_landscape() {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
+        screenMetrics = ScreenMetrics(mockContext)
+
+        assertEquals(Point(DISPLAY_SIZE_X, DISPLAY_SIZE_Y), screenMetrics.screenSize)
+    }
+
+    @Test
+    fun getOrientation_landscape_90() {
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
+        screenMetrics = ScreenMetrics(mockContext)
+
         assertEquals("Invalid orientation for rotation 90",
             Configuration.ORIENTATION_LANDSCAPE,
-            screenMetrics.getOrientation()
-        )
-
-        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_270)
-        assertEquals("Invalid orientation for rotation 270",
-            Configuration.ORIENTATION_LANDSCAPE,
-            screenMetrics.getOrientation()
+            screenMetrics.orientation
         )
     }
 
     @Test
-    fun getOrientation_portrait() {
+    fun getOrientation_landscape_270() {
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_270)
+        screenMetrics = ScreenMetrics(mockContext)
+
+        assertEquals("Invalid orientation for rotation 90",
+            Configuration.ORIENTATION_LANDSCAPE,
+            screenMetrics.orientation
+        )
+    }
+
+    @Test
+    fun getOrientation_portrait_0() {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        screenMetrics = ScreenMetrics(mockContext)
+
         assertEquals("Invalid orientation for rotation 0",
             Configuration.ORIENTATION_PORTRAIT,
-            screenMetrics.getOrientation()
+            screenMetrics.orientation
         )
+    }
 
+    @Test
+    fun getOrientation_portrait_180() {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_180)
+        screenMetrics = ScreenMetrics(mockContext)
+
         assertEquals("Invalid orientation for rotation 180",
             Configuration.ORIENTATION_PORTRAIT,
-            screenMetrics.getOrientation()
+            screenMetrics.orientation
         )
     }
 
     @Test
     fun orientationChanged() {
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        screenMetrics = ScreenMetrics(mockContext)
+
         screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
-        val receiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
-        verify(mockContext).registerReceiver(receiverCaptor.capture(), any())
-
-        receiverCaptor.value.onReceive(mockContext, Intent())
+        getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
 
         verify(mockOrientationListener).onOrientationChanged()
     }
 
     @Test
     fun orientationChanged_sameOrientation() {
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
-        val receiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
-        verify(mockContext).registerReceiver(receiverCaptor.capture(), any())
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        screenMetrics = ScreenMetrics(mockContext)
 
-        receiverCaptor.value.onReceive(mockContext, Intent())
+        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
 
         verify(mockOrientationListener, never()).onOrientationChanged()
     }
 
     @Test
     fun orientationChanged_unregistration() {
+        screenMetrics = ScreenMetrics(mockContext)
+
         screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
-        val receiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
-        verify(mockContext).registerReceiver(receiverCaptor.capture(), any())
+        val receiver = getBroadcastOrientationReceiver()
 
         screenMetrics.unregisterOrientationListener()
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
-        receiverCaptor.value.onReceive(mockContext, Intent())
+        receiver.onReceive(mockContext, Intent())
 
         verify(mockOrientationListener, never()).onOrientationChanged()
+    }
+
+    @Test
+    fun orientationChanged_sizeUpdate_portraitToLandscape() {
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        screenMetrics = ScreenMetrics(mockContext)
+
+        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
+        getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
+
+        assertEquals(Point(DISPLAY_SIZE_X, DISPLAY_SIZE_Y), screenMetrics.screenSize)
+    }
+
+    @Test
+    fun orientationChanged_sizeUpdate_landscapeToPortrait() {
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
+        screenMetrics = ScreenMetrics(mockContext)
+
+        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
+
+        assertEquals(Point(DISPLAY_SIZE_Y, DISPLAY_SIZE_X), screenMetrics.screenSize)
+    }
+
+    @Test
+    fun orientationChanged_sizeUpdate_noChanges() {
+        mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
+        screenMetrics = ScreenMetrics(mockContext)
+
+        val expectedSize = screenMetrics.screenSize
+
+        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
+
+        assertEquals(expectedSize, screenMetrics.screenSize)
     }
 }
