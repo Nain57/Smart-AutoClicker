@@ -19,6 +19,7 @@
     <string name="app_name" translatable="false">Smart AutoClicker</string>
 
     <string name="activity_scenario_title">Scenarios</string>
+    <string name="menu_search_item_title">Search</string>
     <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
     <plurals name="scenario_sub_text">
         <item quantity="one">%d event</item>

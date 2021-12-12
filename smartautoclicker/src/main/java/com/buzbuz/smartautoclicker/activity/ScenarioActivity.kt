@@ -20,12 +20,14 @@ import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Toast
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
@@ -52,6 +54,8 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioCli
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scenario)
+        setSupportActionBar(findViewById(R.id.toolbar))
+
         supportActionBar?.title = resources.getString(R.string.activity_scenario_title)
         scenarioViewModel.stopScenario()
 
@@ -63,6 +67,21 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.OnScenarioCli
                 finish()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_scenario_activity, menu)
+
+        val searchView = menu.findItem(R.id.action_search).actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?) = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                scenarioViewModel.updateSearchQuery(newText)
+                return true
+            }
+        })
+
+        return true
     }
 
     override fun onDestroy() {

@@ -18,6 +18,7 @@
 <resources>
 
     <string name="activity_scenario_title">Scenarios</string>
+    <string name="menu_search_item_title">Rechercher</string>
     <string name="no_scenarios">"Aucun scenario.\nAppuyez sur le button \'+\' pour en créer un."</string>
     <plurals name="scenario_sub_text">
         <item quantity="one">%d évènement</item>

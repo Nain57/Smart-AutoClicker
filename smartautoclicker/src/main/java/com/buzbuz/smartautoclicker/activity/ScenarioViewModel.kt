@@ -28,6 +28,8 @@ import com.buzbuz.smartautoclicker.database.domain.Scenario
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
@@ -46,8 +48,17 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      */
     private var clickerService: SmartAutoClickerService.LocalService? = null
 
+    /** The currently searched action name. Null if no is. */
+    private val searchQuery = MutableStateFlow<String?>(null)
     /** Flow upon the list of scenarios. */
     val scenarioList: Flow<List<Scenario>> = repository.scenarios
+        .combine(searchQuery) { scenarios, query ->
+            if (query.isNullOrEmpty()) return@combine scenarios
+
+            scenarios.filter { scenario ->
+                scenario.name.contains(query, true)
+            }
+        }
 
     init {
         SmartAutoClickerService.getLocalService(serviceConnection)
@@ -136,5 +147,13 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     /** Stop the overlay UI and release all associated resources. */
     fun stopScenario() {
         clickerService?.stop()
+    }
+
+    /**
+     * Update the action search query.
+     * @param query the new query.
+     */
+    fun updateSearchQuery(query: String?) {
+        searchQuery.value = query
     }
 }
