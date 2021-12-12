@@ -18,47 +18,48 @@ package com.buzbuz.smartautoclicker.baseui
 
 import android.content.Context
 
-import androidx.annotation.CallSuper
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 
 /** Base class for a "ViewModel" for an overlay. */
-abstract class OverlayViewModel(protected val context: Context): LifecycleObserver {
+abstract class OverlayViewModel(protected val context: Context): DefaultLifecycleObserver {
 
-    /** The lifecycle owner (the overlay). Defined with [attachToLifecycle]. */
-    private var lifecycleOwner: LifecycleOwner? = null
+    /** Tells if this view model is attached to a lifecycle. */
+    private var isAttachedToLifecycle: Boolean = false
 
     /** The scope for all coroutines executed by this model. */
     protected val viewModelScope = CoroutineScope(Job())
 
     /**
      * Attach the view model to a lifecycle.
-     * @param lifecycleOwner the owner of the lifecycle to attach to.
+     * @param owner the owner of the lifecycle to attach to.
      */
-    fun attachToLifecycle(lifecycleOwner: LifecycleOwner) {
-        if (this.lifecycleOwner != null) {
-            throw IllegalStateException("Model is already attached to ${this.lifecycleOwner}")
+    fun attachToLifecycle(owner: LifecycleOwner) {
+        if (isAttachedToLifecycle) {
+            throw IllegalStateException("Model is already attached to a lifecycle owner")
         }
 
-        this.lifecycleOwner = lifecycleOwner
-        lifecycleOwner.lifecycle.addObserver(this)
+        isAttachedToLifecycle = true
+        owner.lifecycle.addObserver(this)
+    }
+
+    final override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+
+        onCleared()
+
+        owner.lifecycle.removeObserver(this)
+        viewModelScope.cancel()
+        isAttachedToLifecycle = false
     }
 
     /**
      * Called when the lifecycle owner is destroyed.
-     * Remove the reference on the owner and cancel the [viewModelScope].
+     * Override to clear any resources associated with this view model.
      */
-    @CallSuper
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    open fun onCleared() {
-        lifecycleOwner?.lifecycle?.removeObserver(this)
-        lifecycleOwner = null
-        viewModelScope.cancel()
-    }
+    open fun onCleared() {}
 }
