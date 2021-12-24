@@ -17,8 +17,8 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.6.0'
-    ext.kotlinx_version = '1.5.2-native-mt'
+    ext.kotlin_version = '1.6.10'
+    ext.kotlinx_version = '1.6.0-native-mt'
 
     repositories {
         google()
@@ -49,7 +49,7 @@ ext {
     androidxLifecycleExtensionVersion = '2.2.0'
     androidxRecyclerViewVersion = '1.2.1'
     androidxFragmentVersion = '1.4.0'
-    androidxRoomVersion = '2.4.0-rc01'
+    androidxRoomVersion = '2.4.0'
     googleMaterialVersion = '1.4.0'
 
     jUnitVersion = '4.13.2'
