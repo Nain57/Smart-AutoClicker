@@ -78,7 +78,6 @@ class ConditionDetectorTests {
 
     private lateinit var spiedCache: Cache
     @Mock private lateinit var mockPixelCache: LruCache<Condition, Pair<IntArray, IntArray>?>
-    @Mock private lateinit var mockCurrentImage: Image
     @Mock private lateinit var mockScreenBitmap: Bitmap
 
     /** The object under test. */
@@ -114,7 +113,6 @@ class ConditionDetectorTests {
         // Setup cache mocks
         spiedCache = spy(Cache() { _, _, _ -> null })
         doReturn(mockPixelCache).`when`(spiedCache).pixelsCache
-        doReturn(mockCurrentImage).`when`(spiedCache).currentImage
         doReturn(mockScreenBitmap).`when`(spiedCache).screenBitmap
         doReturn(ProcessingData.SCREEN_AREA).`when`(spiedCache).displaySize
 

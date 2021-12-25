@@ -112,7 +112,6 @@ class CacheTests {
 
     /** Assert if the [cache] values aren't the correct default ones. */
     private fun assertInitialCacheValues() {
-        assertNull("Initial current image should be null", cache.currentImage)
         assertNull("Initial screen bitmap should be null", cache.screenBitmap)
         assertNull("Initial screen pixels should be null", cache.screenPixels)
         assertEquals("Initial display size is invalid", Rect(), cache.displaySize)
@@ -172,8 +171,7 @@ class CacheTests {
 
     @Test
     fun refresh_bitmapCacheCreation() {
-        cache.currentImage = mockImage
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+        cache.refreshProcessedImage(mockImage, TEST_DATA_DISPLAY_SIZE)
 
         verify(mockBitmapCreator)
             .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT, Bitmap.Config.ARGB_8888)
@@ -187,11 +185,9 @@ class CacheTests {
 
     @Test
     fun refresh_bitmapCacheCreation_twice_sameDisplay() {
-        cache.currentImage = mockImage
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+        cache.refreshProcessedImage(mockImage, TEST_DATA_DISPLAY_SIZE)
 
-        cache.currentImage = mockImage2
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE_2)
+        cache.refreshProcessedImage(mockImage2, TEST_DATA_DISPLAY_SIZE_2)
 
         verify(mockBitmapCreator)
             .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT, Bitmap.Config.ARGB_8888)
@@ -207,9 +203,8 @@ class CacheTests {
 
     @Test
     fun refresh_bitmapCacheCreation_twice_newDisplay() {
-        cache.currentImage = mockImage
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+        cache.refreshProcessedImage(mockImage, TEST_DATA_DISPLAY_SIZE)
+        cache.refreshProcessedImage(mockImage, TEST_DATA_DISPLAY_SIZE)
 
         verify(mockBitmapCreator)
             .createBitmap(TEST_DATA_DISPLAY_SIZE_WIDTH, TEST_DATA_DISPLAY_SIZE_HEIGHT, Bitmap.Config.ARGB_8888)
@@ -223,8 +218,7 @@ class CacheTests {
 
     @Test
     fun refresh_bitmapCaching() {
-        cache.currentImage = mockImage
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+        cache.refreshProcessedImage(mockImage, TEST_DATA_DISPLAY_SIZE)
 
         inOrder(mockCreatedBitmap).apply {
             verify(mockCreatedBitmap).copyPixelsFromBuffer(mockImagePlaneBuffer)
@@ -267,8 +261,7 @@ class CacheTests {
 
     @Test
     fun release_bitmapCache() {
-        cache.currentImage = mockImage
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+        cache.refreshProcessedImage(mockImage, TEST_DATA_DISPLAY_SIZE)
         cache.release()
 
         assertInitialCacheValues()
@@ -284,8 +277,7 @@ class CacheTests {
 
     @Test
     fun release_bitmapCache_and_pixelsCache() {
-        cache.currentImage = mockImage
-        cache.refreshProcessedImage(TEST_DATA_DISPLAY_SIZE)
+        cache.refreshProcessedImage(mockImage, TEST_DATA_DISPLAY_SIZE)
         cache.pixelsCache.get(TEST_DATA_CONDITION)
         cache.release()
 
