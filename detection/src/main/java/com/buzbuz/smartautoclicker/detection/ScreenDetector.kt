@@ -136,6 +136,9 @@ class ScreenDetector(
     /** True if we are currently detecting clicks, false if not. */
     val isDetecting: StateFlow<Boolean> = _isDetecting
 
+    /** The current image displayed by the screen. */
+    private var currentImage: Image? = null
+
     /**
      * Start the screen detection.
      *
@@ -302,19 +305,20 @@ class ScreenDetector(
      */
     @WorkerThread
     private fun onCaptureImage() {
-        if (cache.currentImage == null) return
+        currentImage?.let { image ->
 
-        // Refresh cached values on the image, we are going to use it.
-        cache.refreshProcessedImage(displaySize)
+            // Refresh cached values on the image, we are going to use it.
+            cache.refreshProcessedImage(image, displaySize)
 
-        // A screen capture is requested, process it and notify the resulting bitmap.
-        captureInfo?.let { capture ->
-            notifyCapture(
-                Bitmap.createBitmap(
-                    cache.screenBitmap!!, capture.first.left, capture.first.top,
-                    capture.first.width(), capture.first.height()
+            // A screen capture is requested, process it and notify the resulting bitmap.
+            captureInfo?.let { capture ->
+                notifyCapture(
+                    Bitmap.createBitmap(
+                        cache.screenBitmap!!, capture.first.left, capture.first.top,
+                        capture.first.width(), capture.first.height()
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -329,9 +333,9 @@ class ScreenDetector(
      */
     @WorkerThread
     private fun onNewImage(imageReader: ImageReader) {
-        cache.currentImage?.close()
-
-        cache.currentImage = imageReader.acquireLatestImage()
+        currentImage?.close()
+        val image = imageReader.acquireLatestImage() ?: return
+        currentImage = image
 
         // An area has been found and we are waiting for its actions to be executed or no event list to detect ?
         // We have nothing to do.
@@ -349,8 +353,8 @@ class ScreenDetector(
         }
 
         // Refresh cached values on the image, we are going to use it.
-        cache.refreshProcessedImage(displaySize)
-
+        cache.refreshProcessedImage(image, displaySize)
+    
         // A detection is ongoing, process the scenario to detect an event that fulfils its conditions.
         detectionInfo?.let { detectionInfo ->
             conditionDetector.detect(detectionInfo)?.let { event ->

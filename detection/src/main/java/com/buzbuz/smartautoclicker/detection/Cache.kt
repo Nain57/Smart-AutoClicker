@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
 import android.media.Image
+import android.util.Log
 import android.util.LruCache
 
 import androidx.annotation.WorkerThread
@@ -50,8 +51,6 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
 
     /** The size of the display providing the images. */
     val displaySize: Rect = Rect()
-    /** The image currently processed. */
-    var currentImage: Image? = null
     /** The bitmap of the currently processed [Image] */
     var screenBitmap: Bitmap? = null
     /** The pixels of the currently processed [Image] */
@@ -100,38 +99,33 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
      * This method must be called before all condition verification methods in order to ensure the processing on the
      * correct values.
      *
+     * @param currentImage the current image displayed by the screen.
      * @param currentDisplaySize the current size of the display.
      */
-    fun refreshProcessedImage(currentDisplaySize: Point) {
+    fun refreshProcessedImage(currentImage: Image, currentDisplaySize: Point) {
         if (currentDisplaySize.x != displaySize.width() || currentDisplaySize.y != displaySize.height()) {
             displaySize.apply {
                 right = currentDisplaySize.x
                 bottom = currentDisplaySize.y
             }
-            screenBitmap = null
+
+            val pixelStride = currentImage.planes[0].pixelStride
+            val rowPadding = currentImage.planes[0].rowStride - pixelStride * displaySize.width()
+
+            // All images should have the same size, as we are detecting on the whole screen, so keep using the same
+            // bitmap to avoid instantiating one every time.
+            screenBitmap = Bitmap.createBitmap(displaySize.width() + rowPadding / pixelStride, displaySize.height(),
+                Bitmap.Config.ARGB_8888)
+            screenPixels = IntArray(screenBitmap!!.width * screenBitmap!!.height)
         }
 
-        currentImage?.let { image ->
-            // If this is the first time we process, we need to create the cached bitmap.
-            screenBitmap ?: run {
-                val pixelStride = image.planes[0].pixelStride
-                val rowPadding = image.planes[0].rowStride - pixelStride * displaySize.width()
-
-                // All images should have the same size, as we are detecting on the whole screen, so keep using the same
-                // bitmap to avoid instantiating one every time.
-                screenBitmap = Bitmap.createBitmap(displaySize.width() + rowPadding / pixelStride, displaySize.height(),
-                    Bitmap.Config.ARGB_8888)
-                screenPixels = IntArray(screenBitmap!!.width * screenBitmap!!.height)
-            }
-
-            screenBitmap!!.apply {
-                // Put the pixels from the image buffer into the screen bitmap
-                copyPixelsFromBuffer(image.planes[0].buffer)
-                // Fill the screen pixel cache.
-                getPixels(screenPixels, 0, screenBitmap!!.width, 0, 0, screenBitmap!!.width,
-                    screenBitmap!!.height)
-            }
-        }
+        screenBitmap?.apply {
+            // Put the pixels from the image buffer into the screen bitmap
+            copyPixelsFromBuffer(currentImage.planes[0].buffer)
+            // Fill the screen pixel cache.
+            getPixels(screenPixels, 0, screenBitmap!!.width, 0, 0, screenBitmap!!.width,
+                screenBitmap!!.height)
+        } ?: Log.e(TAG, "Can't process the current image, screen bitmap is null.")
     }
 
     /** Release all cached values. */
@@ -140,8 +134,7 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
             right = 0
             bottom = 0
         }
-        currentImage?.close()
-        currentImage = null
+
         screenBitmap = null
         screenPixels = null
         pixelsCache.evictAll()
@@ -149,3 +142,6 @@ internal class Cache(private val bitmapSupplier: (String, Int, Int) -> Bitmap?) 
         cropIndex = 0
     }
 }
+
+/** Tag for logs. */
+private const val TAG = "Cache"
