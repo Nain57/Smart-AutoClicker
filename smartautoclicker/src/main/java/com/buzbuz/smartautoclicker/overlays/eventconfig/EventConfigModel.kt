@@ -319,7 +319,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     fun setEventStopAfterExec(stopAfter: Int?) {
         configuredEvent.value?.let { event ->
             configuredEvent.value = event.copy(stopAfter = stopAfter)
-        } ?: throw IllegalStateException("Can't set event name, event is null!")
+        } ?: throw IllegalStateException("Can't set executions before scenario end, event is null!")
     }
 }
 
