@@ -149,12 +149,12 @@ class EventConfigDialog(
 
             editStopAfter.apply {
                 setSelectAllOnFocus(true)
-                object : OnAfterTextChangedListener() {
+                addTextChangedListener(object : OnAfterTextChangedListener() {
                     override fun afterTextChanged(s: Editable?) {
                         val stopAfter = viewBinding.editStopAfter.text.toString()
                         viewModel?.setEventStopAfterExec(if (stopAfter.isNotEmpty()) stopAfter.toInt() else null)
                     }
-                }
+                })
             }
 
             listConditions.adapter = conditionsAdapter
