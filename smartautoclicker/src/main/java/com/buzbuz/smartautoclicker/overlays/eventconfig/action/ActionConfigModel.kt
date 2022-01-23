@@ -27,15 +27,14 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.getEventConfigPreference
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putClickPressDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putPauseDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putSwipeDurationConfig
-import com.buzbuz.smartautoclicker.overlays.utils.EDIT_TEXT_DEBOUNCE_MS
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 /**
@@ -55,7 +54,9 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
     /** The name of the action. */
-    val name: Flow<String?> = configuredAction.map { it?.getActionName() }.debounce(EDIT_TEXT_DEBOUNCE_MS)
+    val name: Flow<String?> = configuredAction
+        .map { it?.getActionName() }
+        .take(1)
 
     /** Tells if the configured action is valid and can be saved. */
     val isValidAction: Flow<Boolean> = configuredAction.map { action ->
@@ -80,6 +81,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 is Action.Pause -> PauseActionValues()
             }
         }
+        .take(1)
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(),
@@ -136,13 +138,9 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     inner class ClickActionValues : ActionValues() {
 
         /** The duration between the press and release of the click in milliseconds. */
-        val pressDuration: Flow<Long?> = configuredAction.map { click ->
-            if (click is Action.Click) {
-                click.pressDuration
-            } else {
-                null
-            }
-        }.debounce(EDIT_TEXT_DEBOUNCE_MS)
+        val pressDuration: Flow<Long?> = configuredAction
+            .map { (it as Action.Click).pressDuration }
+            .take(1)
         /** The position of the click. */
         val position: Flow<Point?> = configuredAction.map { click ->
             if (click is Action.Click && click.x != null && click.y != null) {
@@ -181,13 +179,9 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     inner class SwipeActionValues : ActionValues() {
 
         /** The duration between the start and end of the swipe in milliseconds. */
-        val swipeDuration: Flow<Long?> = configuredAction.map { swipe ->
-            if (swipe is Action.Swipe && swipe.swipeDuration != null) {
-                swipe.swipeDuration
-            } else {
-                null
-            }
-        }.debounce(EDIT_TEXT_DEBOUNCE_MS)
+        val swipeDuration: Flow<Long?> = configuredAction
+            .map { (it as Action.Swipe).swipeDuration }
+            .take(1)
         /** The start and end positions of the swipe. */
         val positions: Flow<Pair<Point?, Point?>> = configuredAction.map { swipe ->
             if (swipe is Action.Swipe && swipe.fromX != null && swipe.fromY != null
@@ -229,13 +223,9 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     inner class PauseActionValues : ActionValues() {
 
         /** The duration of the pause in milliseconds. */
-        val pauseDuration: Flow<Long?> = configuredAction.map { pause ->
-            if (pause is Action.Pause && pause.pauseDuration != null) {
-                pause.pauseDuration
-            } else {
-                null
-            }
-        }.debounce(EDIT_TEXT_DEBOUNCE_MS)
+        val pauseDuration: Flow<Long?> = configuredAction
+            .map { (it as Action.Pause).pauseDuration }
+            .take(1)
 
         /**
          * Set the duration of the pause.

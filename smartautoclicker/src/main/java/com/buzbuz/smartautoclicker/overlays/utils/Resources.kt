@@ -44,6 +44,3 @@ fun ImageView.setIconTint(@ColorRes color: Int) {
         android.graphics.PorterDuff.Mode.SRC_IN
     )
 }
-
-/** Debounce value for all flows updating an EditText. */
-const val EDIT_TEXT_DEBOUNCE_MS: Long = 500
