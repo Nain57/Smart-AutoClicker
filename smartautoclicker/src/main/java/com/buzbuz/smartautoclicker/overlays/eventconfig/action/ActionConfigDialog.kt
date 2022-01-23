@@ -37,7 +37,6 @@ import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**

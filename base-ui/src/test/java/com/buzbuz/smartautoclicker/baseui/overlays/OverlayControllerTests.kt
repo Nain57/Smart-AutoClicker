@@ -48,8 +48,8 @@ class OverlayControllerTests {
      */
     class OverlayControllerTestImpl(context: Context, private val impl: OverlayControllerImpl? = null) : OverlayController(context) {
         override fun onCreate() { impl?.onCreate() }
-        override fun onShow() { impl?.onShow() }
-        override fun onHide() { impl?.onHide() }
+        override fun onStart() { impl?.onStart() }
+        override fun onStop() { impl?.onStop() }
         override fun onDismissed() { impl?.onDismissed() }
         fun publicShowSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
             showSubOverlay(overlayController, hideCurrent)
@@ -62,8 +62,8 @@ class OverlayControllerTests {
      */
     interface OverlayControllerImpl {
         fun onCreate()
-        fun onShow()
-        fun onHide()
+        fun onStart()
+        fun onStop()
         fun onDismissed()
     }
 
@@ -90,8 +90,8 @@ class OverlayControllerTests {
 
         val lifecycleOrder = inOrder(overlayControllerImpl)
         lifecycleOrder.verify(overlayControllerImpl).onCreate()
-        lifecycleOrder.verify(overlayControllerImpl).onShow()
-        verify(overlayControllerImpl, never()).onHide()
+        lifecycleOrder.verify(overlayControllerImpl).onStart()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(Lifecycle.State.RESUMED, overlayController.lifecycle.currentState)
     }
@@ -105,8 +105,8 @@ class OverlayControllerTests {
         overlayController.create()
 
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onShow()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStart()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(expectedState, overlayController.lifecycle.currentState)
     }
@@ -116,11 +116,11 @@ class OverlayControllerTests {
         overlayController.create()
         clearInvocations(overlayControllerImpl)
 
-        overlayController.hide()
+        overlayController.stop()
 
-        verify(overlayControllerImpl).onHide()
+        verify(overlayControllerImpl).onStop()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(Lifecycle.State.STARTED, overlayController.lifecycle.currentState)
     }
@@ -128,11 +128,11 @@ class OverlayControllerTests {
     @Test
     fun hideNotCreated() {
         val expectedState = overlayController.lifecycle.currentState
-        overlayController.hide()
+        overlayController.stop()
 
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(expectedState, overlayController.lifecycle.currentState)
     }
@@ -140,15 +140,15 @@ class OverlayControllerTests {
     @Test
     fun hideAlreadyHidden() {
         overlayController.create()
-        overlayController.hide()
+        overlayController.stop()
         clearInvocations(overlayControllerImpl)
         val expectedState = overlayController.lifecycle.currentState
 
-        overlayController.hide()
+        overlayController.stop()
 
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(expectedState, overlayController.lifecycle.currentState)
     }
@@ -156,14 +156,14 @@ class OverlayControllerTests {
     @Test
     fun show() {
         overlayController.create()
-        overlayController.hide()
+        overlayController.stop()
         clearInvocations(overlayControllerImpl)
 
-        overlayController.show()
+        overlayController.start()
 
-        verify(overlayControllerImpl).onShow()
+        verify(overlayControllerImpl).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(Lifecycle.State.RESUMED, overlayController.lifecycle.currentState)
     }
@@ -171,11 +171,11 @@ class OverlayControllerTests {
     @Test
     fun showNotCreated() {
         val expectedState = overlayController.lifecycle.currentState
-        overlayController.show()
+        overlayController.start()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(expectedState, overlayController.lifecycle.currentState)
     }
@@ -186,11 +186,11 @@ class OverlayControllerTests {
         clearInvocations(overlayControllerImpl)
         val expectedState = overlayController.lifecycle.currentState
 
-        overlayController.show()
+        overlayController.start()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(expectedState, overlayController.lifecycle.currentState)
     }
@@ -202,9 +202,9 @@ class OverlayControllerTests {
 
         overlayController.dismiss()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl).onHide()
+        verify(overlayControllerImpl).onStop()
         verify(overlayControllerImpl).onDismissed()
         verify(dismissListener).onDismissed()
         assertEquals(Lifecycle.State.DESTROYED, overlayController.lifecycle.currentState)
@@ -214,9 +214,9 @@ class OverlayControllerTests {
     fun dismissNotCreated() {
         overlayController.dismiss()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         verify(dismissListener, never()).onDismissed()
         assertEquals(Lifecycle.State.DESTROYED, overlayController.lifecycle.currentState)
@@ -225,14 +225,14 @@ class OverlayControllerTests {
     @Test
     fun dismissNotShown() {
         overlayController.create(dismissListener::onDismissed)
-        overlayController.hide()
+        overlayController.stop()
         clearInvocations(overlayControllerImpl)
 
         overlayController.dismiss()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl).onDismissed()
         verify(dismissListener).onDismissed()
         assertEquals(Lifecycle.State.DESTROYED, overlayController.lifecycle.currentState)
@@ -246,9 +246,9 @@ class OverlayControllerTests {
 
         overlayController.publicShowSubOverlay(subOverlay)
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(Lifecycle.State.RESUMED, subOverlay.lifecycle.currentState)
     }
@@ -261,9 +261,9 @@ class OverlayControllerTests {
 
         overlayController.publicShowSubOverlay(subOverlay, true)
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl).onHide()
+        verify(overlayControllerImpl).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(Lifecycle.State.RESUMED, subOverlay.lifecycle.currentState)
     }
@@ -286,9 +286,9 @@ class OverlayControllerTests {
 
         subOverlay.dismiss()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(Lifecycle.State.RESUMED, overlayController.lifecycle.currentState)
     }
@@ -302,9 +302,9 @@ class OverlayControllerTests {
 
         subOverlay.dismiss()
 
-        verify(overlayControllerImpl).onShow()
+        verify(overlayControllerImpl).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         assertEquals(Lifecycle.State.RESUMED, overlayController.lifecycle.currentState)
     }
@@ -318,9 +318,9 @@ class OverlayControllerTests {
 
         overlayController.dismiss()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl).onHide()
+        verify(overlayControllerImpl, never()).onStop() // Overlay is already stopped due to SubOverlay being shown
         verify(overlayControllerImpl).onDismissed()
         assertEquals(Lifecycle.State.DESTROYED, overlayController.lifecycle.currentState)
         assertEquals(Lifecycle.State.DESTROYED, subOverlay.lifecycle.currentState)
@@ -335,9 +335,9 @@ class OverlayControllerTests {
 
         overlayController.dismiss()
 
-        verify(overlayControllerImpl, never()).onShow()
+        verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
-        verify(overlayControllerImpl, never()).onHide()
+        verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl).onDismissed()
         assertEquals(Lifecycle.State.DESTROYED, overlayController.lifecycle.currentState)
         assertEquals(Lifecycle.State.DESTROYED, subOverlay.lifecycle.currentState)

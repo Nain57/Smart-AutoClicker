@@ -104,7 +104,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
     }
 
     /**
-     * Called when the visibility of the dialog has changed due to a call to [show] or [hide].
+     * Called when the visibility of the dialog has changed due to a call to [start] or [stop].
      *
      * Once the sub element is dismissed, this method will be called again, notifying for the new visibility of the
      * dialog.
@@ -113,25 +113,25 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      */
     protected open fun onVisibilityChanged(visible: Boolean): Unit? = null
 
-    final override fun onShow() {
-        if (isShowing) {
-            return
+    final override fun start() {
+        if (!isShowing) {
+            isShowing = true
+            dialog?.show()
+            onVisibilityChanged(true)
         }
 
-        isShowing = true
-        dialog!!.show()
-        onVisibilityChanged(true)
+        super.start()
     }
 
-    final override fun onHide() {
-        if (!isShowing) {
-            return
+    final override fun stop(hideUi: Boolean) {
+        if (hideUi && isShowing) {
+            hideSoftInput()
+            dialog?.hide()
+            isShowing = false
+            onVisibilityChanged(false)
         }
 
-        hideSoftInput()
-        dialog?.hide()
-        isShowing = false
-        onVisibilityChanged(false)
+        super.stop(hideUi)
     }
 
     final override fun onDismissed() {

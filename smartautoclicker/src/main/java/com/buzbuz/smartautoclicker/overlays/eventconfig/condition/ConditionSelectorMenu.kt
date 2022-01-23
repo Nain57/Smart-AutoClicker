@@ -93,8 +93,8 @@ class ConditionSelectorMenu(
 
     override fun onCreateOverlayView(): View = selectorView
 
-    override fun onShow() {
-        super.onShow()
+    override fun onStart() {
+        super.onStart()
         state = SELECTION
     }
 

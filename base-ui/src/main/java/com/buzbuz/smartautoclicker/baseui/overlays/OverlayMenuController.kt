@@ -182,7 +182,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit? = null
 
     @CallSuper
-    override fun onShow() {
+    override fun onStart() {
         screenMetrics.registerOrientationListener(orientationListener)
 
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
@@ -194,7 +194,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     }
 
     @CallSuper
-    override fun onHide() {
+    override fun onStop() {
         screenOverlayView?.let {
             windowManager.removeView(it)
         }

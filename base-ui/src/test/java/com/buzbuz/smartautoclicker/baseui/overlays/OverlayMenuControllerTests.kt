@@ -83,8 +83,8 @@ class OverlayMenuControllerTests {
         override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup = impl.onCreateMenu(layoutInflater)
         override fun onCreateOverlayView(): View? = impl.onCreateOverlayView()
         override fun onMenuItemClicked(viewId: Int): Unit? = impl.onMenuItemClicked(viewId)
-        override fun onShow() {
-            super.onShow()
+        override fun onStart() {
+            super.onStart()
             impl.onShow()
         }
         fun publicSetMenuItemViewEnabled(@IdRes viewId: Int, enabled: Boolean, clickable: Boolean = false) {
@@ -421,7 +421,7 @@ class OverlayMenuControllerTests {
         mockViewsFromImpl(menuView)
         overlayMenuController.create()
 
-        overlayMenuController.hide()
+        overlayMenuController.stop()
 
         verify(mockWindowManager).removeView(menuView)
     }
@@ -434,7 +434,7 @@ class OverlayMenuControllerTests {
         mockViewsFromImpl(menuView, overlayView)
         overlayMenuController.create()
 
-        overlayMenuController.hide()
+        overlayMenuController.stop()
 
         verify(mockWindowManager).removeView(menuView)
         verify(mockWindowManager).removeView(overlayView)

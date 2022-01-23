@@ -61,8 +61,8 @@ class ClickSwipeSelectorMenu(
 
     override fun onCreateOverlayView(): ClickSelectorView = selectorView
 
-    override fun onShow() {
-        super.onShow()
+    override fun onStart() {
+        super.onStart()
         toSelectionStep(FIRST)
     }
 

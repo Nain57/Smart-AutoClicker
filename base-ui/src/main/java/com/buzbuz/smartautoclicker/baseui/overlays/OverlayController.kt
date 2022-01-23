@@ -60,16 +60,16 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
 
     /**
      * Call to [showSubOverlay] that has been made while hidden.
-     * It will be executed once [show] is called.
+     * It will be executed once [start] is called.
      */
     private var pendingSubOverlayRequest: Pair<OverlayController, Boolean>? = null
 
     /** Creates the ui object to be shown. */
     protected abstract fun onCreate()
     /** Show the ui object to the user. */
-    protected abstract fun onShow()
+    protected open fun onStart() {}
     /** Hide the ui object from the user. */
-    protected abstract fun onHide()
+    protected open fun onStop() {}
     /** Destroys the ui object. */
     protected abstract fun onDismissed()
 
@@ -89,37 +89,37 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
         onCreate()
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
-        show()
+        start()
     }
 
     /**
      * Show the ui object.
      * If the lifecycle doesn't allows it, does nothing.
      */
-    fun show() {
-        if (isShown || lifecycleRegistry.currentState != Lifecycle.State.STARTED) {
+    @CallSuper
+    internal open fun start() {
+        if (lifecycleRegistry.currentState != Lifecycle.State.STARTED) {
             return
         }
 
         Log.d(TAG, "show overlay ${hashCode()}")
         lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-        isShown = true
-        onShow()
+        onStart()
     }
 
     /**
      * Hide the ui object.
      * If the lifecycle doesn't allows it, does nothing.
      */
-    fun hide() {
-        if (!isShown) {
+    @CallSuper
+    internal open fun stop(hideUi: Boolean = false) {
+        if (lifecycleRegistry.currentState < Lifecycle.State.RESUMED) {
             return
         }
 
         Log.d(TAG, "hide overlay ${hashCode()}")
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
-        isShown = false
-        onHide()
+        onStop()
     }
 
     /**
@@ -134,7 +134,7 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
 
         Log.d(TAG, "dismiss overlay ${hashCode()}")
 
-        hide()
+        stop(false)
 
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         subOverlayController?.dismiss()
@@ -147,7 +147,7 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
     /**
      * Creates and show another overlay managed by a OverlayController from this dialog.
      *
-     * Using this method instead of directly calling [create] and [show] on the new OverlayController will allow to keep
+     * Using this method instead of directly calling [create] and [start] on the new OverlayController will allow to keep
      * a back stack of OverlayController, allowing to resume the current overlay once the new overlay is dismissed.
      *
      * @param overlayController the controller of the new overlay to be shown.
@@ -168,11 +168,7 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
         Log.d(TAG, "show sub overlay: ${overlayController.hashCode()}; hide=$hideCurrent; parent=${hashCode()}")
 
         subOverlayController = overlayController
-        if (hideCurrent) {
-            hide()
-        } else {
-            lifecycleRegistry.currentState = Lifecycle.State.STARTED
-        }
+        stop(hideCurrent)
 
         overlayController.create { onSubOverlayDismissed(overlayController) }
     }
@@ -190,11 +186,7 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
 
             if (lifecycleRegistry.currentState == Lifecycle.State.DESTROYED) return
 
-            if (isShown) {
-                lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-            } else {
-                show()
-            }
+            start()
 
             if (pendingSubOverlayRequest != null) {
                 showSubOverlay(pendingSubOverlayRequest!!.first, pendingSubOverlayRequest!!.second)
