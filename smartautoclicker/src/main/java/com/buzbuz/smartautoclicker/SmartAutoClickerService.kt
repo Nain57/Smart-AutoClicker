@@ -29,10 +29,13 @@ import android.view.accessibility.AccessibilityEvent
 import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
-import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayController
+import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.detection.DetectorEngine
+
+import java.io.FileDescriptor
+import java.io.PrintWriter
 
 /**
  * AccessibilityService implementation for the SmartAutoClicker.
@@ -181,6 +184,21 @@ class SmartAutoClickerService : AccessibilityService() {
             .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .setSmallIcon(R.drawable.ic_notification)
             .build()
+    }
+
+    /**
+     * Dump the state of the service via adb.
+     * adb shell "dumpsys activity service com.buzbuz.smartautoclicker.debug/com.buzbuz.smartautoclicker.SmartAutoClickerService"
+     */
+    override fun dump(fd: FileDescriptor?, writer: PrintWriter?, args: Array<out String>?) {
+        super.dump(fd, writer, args)
+
+        if (writer == null) return
+
+        writer.println("* UI:")
+        val prefix = "\t"
+
+        rootOverlayController?.dump(writer, prefix) ?: writer.println("$prefix None")
     }
 
     override fun onInterrupt() { /* Unused */ }

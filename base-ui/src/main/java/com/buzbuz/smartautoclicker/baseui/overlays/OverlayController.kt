@@ -24,6 +24,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 
+import java.io.PrintWriter
+
 /**
  * Base class for an overlay based ui providing lifecycle and back stack management.
  *
@@ -200,4 +202,26 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
             }
         }
     }
+
+    /**
+     * Dump the state of this overlay controller into the provided writer.
+     *
+     * @param writer the writer to dump into.
+     * @param prefix the prefix to start each line with.
+     */
+    fun dump(writer: PrintWriter, prefix: String) {
+        writer.apply {
+            println("$prefix * ${this@OverlayController.toDumpString()}:")
+
+            val contentPrefix = "$prefix\t"
+            println("$contentPrefix Lifecycle: ${lifecycleRegistry.currentState}")
+            println("$contentPrefix Visible: $isShown")
+            println("$contentPrefix SubOverlay: ${subOverlayController?.toDumpString()}")
+
+            subOverlayController?.dump(writer, prefix)
+        }
+    }
+
+    /** @return the dump representation of this OverlayController. */
+    private fun toDumpString() = "${javaClass.simpleName}@${hashCode()}"
 }
