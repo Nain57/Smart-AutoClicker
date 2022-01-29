@@ -73,7 +73,7 @@ internal class Capture(
                 x = scaleGestureDetector.focusX
                 y = scaleGestureDetector.focusY
             }
-            scaleCapture(scaleGestureDetector.scaleFactor, scaleFocus)
+            setZoomLevel(zoomLevel * scaleGestureDetector.scaleFactor, scaleFocus)
 
             return true
         }
@@ -143,36 +143,23 @@ internal class Capture(
 
     /**
      * Set the zoom level for the capture.
-     * This will use [scaleCapture] with the correct parameters.
      *
      * @param newLevel the new zoom level.
+     * @param zoomPivot the pivot for the scaling of the capture. Default value is the center of the capture.
      */
-    fun setZoomLevel(newLevel: Float) {
-        scaleCapture(
-            scaleFactor = newLevel / zoomLevel,
-            scalePivot = PointF(captureArea.centerX(), captureArea.centerY())
-        )
-    }
-
-    /**
-     * Scale the capture.
-     *
-     * @param scaleFactor the scale factor of the capture.
-     * @param scalePivot the pivot for the scaling of the capture.
-     */
-    private fun scaleCapture(scaleFactor: Float, scalePivot: PointF) {
-        val newZoom = (zoomLevel * scaleFactor).coerceIn(zoomMin, zoomMax)
+    fun setZoomLevel(newLevel: Float, zoomPivot: PointF = PointF(captureArea.centerX(), captureArea.centerY())) {
+        val newZoom = newLevel.coerceIn(zoomMin, zoomMax)
         if (zoomLevel == newZoom) {
             return
         }
-        zoomLevel = newZoom
 
         val pivot = if (newZoom < 1) {
             PointF(maxArea.centerX(), maxArea.centerY())
         } else {
-            scalePivot
+            zoomPivot
         }
-        captureArea.scale(scaleFactor, pivot)
+        captureArea.scale(newZoom / zoomLevel, pivot)
+        zoomLevel = newZoom
 
         onCapturePositionChanged?.invoke(captureArea)
         invalidate()

@@ -89,7 +89,9 @@ class ConditionSelectorView(
     /** Setup animation values callback. */
     init {
         animations.apply {
-            onCaptureZoomLevelChanged = capture::setZoomLevel
+            onCaptureZoomLevelChanged = { zoomLevel ->
+                capture.setZoomLevel(zoomLevel)
+            }
             onSelectorBorderAlphaChanged = { alpha ->
                 selector.selectorAlpha = alpha
             }
