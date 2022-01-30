@@ -1,0 +1,80 @@
+/*
+ * Copyright (C) 2022 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/** Path of the intermediate directory within the module build folder. */
+def intermediateDirPath = "${buildDir.toPath()}/intermediates/$name"
+/** Path of the OpenCV source code zip file in the intermediate build folder. */
+def zipFilePath = "$intermediateDirPath/OpenCV-${rootProject.ext.openCvVersion}.zip"
+/** Path where the OpenCV source code is unzipped. */
+def sourceCodePath = "${project.projectDir}/src/main/opencv"
+/** Path of the OpenCV source code version. */
+def sourceCodeVersionPath = "${sourceCodePath}/version.txt"
+
+/** Download the OpenCV zipped source code from github. */
+task downloadZip {
+    def zipFile = file(zipFilePath)
+    outputs.file(zipFile)
+
+    doLast {
+        def intermediateDir = file(intermediateDirPath)
+        if (intermediateDir.exists()) {
+            delete intermediateDir
+        }
+        mkdir intermediateDir
+
+        if (!zipFile.exists()) {
+            new URL("https://github.com/opencv/opencv/archive/refs/tags/${rootProject.ext.openCvVersion}.zip")
+                    .withInputStream { i ->
+                        zipFile.withOutputStream { it << i }
+                    }
+        }
+    }
+}
+
+/** Extract the OpenCV source code. */
+task extractZip(type: Sync) {
+    dependsOn tasks.getByPath("downloadZip")
+
+    def sourceCodeVersionFile = file(sourceCodeVersionPath)
+    if (sourceCodeVersionFile.exists()) {
+        if (sourceCodeVersionFile.text != "${rootProject.ext.openCvVersion}") {
+            delete sourceCodePath
+        }
+    }
+
+    from (zipTree(zipFilePath)) {
+        include "**"
+        includeEmptyDirs = false
+        eachFile { fcd ->
+            fcd.relativePath = new RelativePath(true, fcd.relativePath.segments.drop(1))
+        }
+    }
+
+    into file(sourceCodePath)
+
+    doLast {
+        file(sourceCodeVersionPath).text = "${rootProject.ext.openCvVersion}"
+    }
+}
+
+project.afterEvaluate {
+    tasks.findAll {task ->
+        task.name.startsWith("configureCMake")
+    }.forEach {task ->
+        task.dependsOn("extractZip")
+    }
+}
