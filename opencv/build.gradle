@@ -73,12 +73,11 @@ android {
                         "-DWITH_QUIRC=OFF",
                         "-DWITH_V4L=OFF",
                         "-DWITH_WEBP=OFF",
-                        "-DBUILD_LIST=core,features2d,flann,imgcodecs,imgproc,stitching",
+                        "-DBUILD_LIST=core,imgproc",
                         "-DBUILD_JAVA=OFF",
                         "-DBUILD_ANDROID_EXAMPLES=OFF",
                         "-DBUILD_ANDROID_PROJECTS=OFF",
-                        "-DBUILD_SHARED_LIBS=ON",
-                        "-DCMAKE_INSTALL_PREFIX=./src/main/opencv/outputs"
+                        "-DBUILD_SHARED_LIBS=ON"
             }
         }
     }
@@ -91,7 +90,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "src/main/opencv/CMakeLists.txt"
+            path "src/main/cpp/CMakeLists.txt"
             version "3.18.1"
         }
     }

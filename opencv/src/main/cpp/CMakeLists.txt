@@ -1,74 +1,65 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html
+# Copyright (C) 2022 Nain57
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; If not, see <http://www.gnu.org/licenses/>.
 
 # Sets the minimum version of CMake required to build the native library.
-
 cmake_minimum_required(VERSION 3.18.1)
 
 # Declares and names the project.
-
 project("smartautoclicker")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
-
 add_library( # Sets the name of the library.
-             smartautoclicker
+        smartautoclicker
 
-             # Sets the library as a shared library.
-             SHARED
+        # Sets the library as a shared library.
+        SHARED
 
-             # Provides a relative path to your source file(s).
-             smartautoclicker.cpp )
+        # Provides a relative path to your source file(s).
+        smartautoclicker.cpp )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
 # you want to add. CMake verifies that the library exists before
 # completing its build.
-
 find_library( # Sets the name of the path variable.
-              log-lib
+        log-lib
 
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
+        # Specifies the name of the NDK library that
+        # you want CMake to locate.
+        log )
+
+# Adds the CMakeLists.txt file located in the specified directory
+# as a build dependency.
+add_subdirectory(opencv)
+
+# For a reason I'm missing, we have to set the correct output for opencv_core
+set_target_properties( opencv_core PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
+target_link_libraries(smartautoclicker opencv_core opencv_imgproc ${log-lib} )
 
-target_link_libraries( # Specifies the target library.
-                       smartautoclicker
+target_include_directories(smartautoclicker PUBLIC
+        opencv/modules/core/include
+        opencv/modules/imgcodecs/include
+        opencv/modules/imgproc/include )
 
-                       # Links the target library to the log library
-                       # included in the NDK.
-                       ${log-lib} )
-
-
-# Sets lib_src_DIR to the path of the target CMake project.
-set( lib_src_DIR ../opencv )
-
-# Sets lib_build_DIR to the path of the desired output directory.
-set( lib_build_DIR ../opencv/outputs )
-file(MAKE_DIRECTORY ${lib_build_DIR})
-
-# Adds the CMakeLists.txt file located in the specified directory
-# as a build dependency.
-add_subdirectory( # Specifies the directory of the CMakeLists.txt file.
-        ${lib_src_DIR}
-
-        # Specifies the directory for the build outputs.
-        ${lib_build_DIR} )
-
-# Adds the output of the additional CMake build as a prebuilt static
-# library and names it lib_opencv.
-add_library( lib_opencv STATIC IMPORTED )
-set_target_properties( lib_opencv PROPERTIES IMPORTED_LOCATION
-        ${lib_build_DIR}/${ANDROID_ABI}/lib_opencv.a )
-include_directories( ${lib_src_DIR}/include )
-
-# Links the top-level CMake build output against lib_gmath.
-target_link_libraries( smartautoclicker ... lib_opencv )
+# Required to get opencv2/open_modules.hpp generated at build time
+include_directories (${CMAKE_BINARY_DIR})
