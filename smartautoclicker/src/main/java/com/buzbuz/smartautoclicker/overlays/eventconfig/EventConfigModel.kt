@@ -323,7 +323,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
 }
 
 /** Items displayed in the action list. */
-sealed class  ActionListItem {
+sealed class ActionListItem {
     /** The add action item. */
     object AddActionItem : ActionListItem()
     /** Item representing a created action. */
