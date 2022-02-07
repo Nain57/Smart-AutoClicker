@@ -23,6 +23,7 @@ import androidx.annotation.WorkerThread
 
 import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.OR
+import com.buzbuz.smartautoclicker.database.domain.NOT
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.database.domain.Event
@@ -75,17 +76,26 @@ internal class ConditionDetector(private val cache: Cache) {
             // Verify if the condition is fulfilled.
             if (!checkCondition(condition)) {
                 if (operator == AND) {
-                    // One of the condition isn't fulfilled, it's a false for a AND operator.
+                    // One of the conditions isn't fulfilled, it's a false for an AND operator.
                     return false
                 }
-            } else if (operator  == OR) {
-                // One of the condition is fulfilled, it's a yes for a OR operator.
-                return true
+            } else {
+                if (operator == OR) {
+                    // One of the conditions is fulfilled, it's a yes for a OR operator.
+                    return true
+                }
+                if (operator == NOT) {
+                    // One of the conditions is fulfilled, it's a false for a NOT operator.
+                    return false
+                }
             }
         }
 
-        // All conditions passed for AND, none are for OR.
-        return operator == AND
+        // All conditions passed.
+        if (operator == AND || operator == NOT) {
+            return true
+        }
+        return false
     }
 
     /**
@@ -104,6 +114,7 @@ internal class ConditionDetector(private val cache: Cache) {
             // Check if the condition is contained in the screen
             if (!cache.displaySize.contains(condition.area)) {
                 return false
+                // this for NOT???????????
             }
 
             // Get the pixels of the part of the [Image] that will be compared.

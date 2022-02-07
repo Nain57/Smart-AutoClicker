@@ -101,10 +101,12 @@ internal fun CompleteEventEntity.toEvent() = Event(
 )
 
 /** Defines the operators to be applied between the click conditions. */
-@IntDef(AND, OR)
+@IntDef(AND, OR, NOT)
 @Retention(AnnotationRetention.SOURCE)
 annotation class ConditionOperator
 /** All conditions must be fulfilled to execute the click. */
 const val AND = 1
 /** Only one of the conditions must be fulfilled to execute the click. */
 const val OR = 2
+/** None of the conditions must be fulfilled to execute the click. */
+const val NOT = 3

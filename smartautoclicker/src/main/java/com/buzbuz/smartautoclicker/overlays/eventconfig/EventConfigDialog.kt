@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.OR
+import com.buzbuz.smartautoclicker.database.domain.NOT
 import com.buzbuz.smartautoclicker.databinding.DialogEventConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
@@ -196,6 +197,12 @@ class EventConfigDialog(
                                         text = context.getString(R.string.condition_operator_or)
                                     }
                                 }
+                                NOT -> {
+                                    viewBinding.textConditionOperatorDesc.apply {
+                                        setLeftRightCompoundDrawables(R.drawable.ic_not_condition, R.drawable.ic_chevron)
+                                        text = context.getString(R.string.condition_operator_not)
+                                    }
+                                }
                             }
                         }
                     }
@@ -317,11 +324,12 @@ class EventConfigDialog(
                 showSubOverlay(MultiChoiceDialog(
                     context = context,
                     dialogTitle = R.string.dialog_condition_operator_title,
-                    choices = listOf(OperatorChoice.And, OperatorChoice.Or),
+                    choices = listOf(OperatorChoice.And, OperatorChoice.Or, OperatorChoice.Not),
                     onChoiceSelected = { choiceClicked ->
                         when (choiceClicked) {
                             is OperatorChoice.And -> viewModel?.setConditionOperator(AND)
                             is OperatorChoice.Or -> viewModel?.setConditionOperator(OR)
+                            is OperatorChoice.Not -> viewModel?.setConditionOperator(NOT)
                         }
                     }
                 ))

@@ -70,8 +70,10 @@
     <string name="dialog_condition_operator_title">Conditions type</string>
     <string name="condition_operator_and">All conditions</string>
     <string name="condition_operator_or">Only one condition</string>
+    <string name="condition_operator_not">No condition</string>
     <string name="condition_operator_and_desc">All conditions are fulfilled</string>
     <string name="condition_operator_or_desc">At least one is fulfilled</string>
+    <string name="condition_operator_not_desc">No condition is fulfilled (e.g. on changing pixels)</string>
 
     <string name="dialog_action_type_title">Action type</string>
     <string name="dialog_action_type_click">Click</string>

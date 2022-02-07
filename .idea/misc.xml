@@ -5,5 +5,54 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/anim_pause_play.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/anim_play_pause.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_add.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_all_conditions.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_cancel.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_none_condition.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_not_condition.xml" value="0.114" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_notification.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_one_condition.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_or_condition.xml" value="0.12" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_stop.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/activity_scenario.xml" value="0.25" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_action_config.xml" value="0.25" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_action_copy.xml" value="0.22" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_condition_config.xml" value="0.22" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_condition_copy.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_edit.xml" value="0.15" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_event_config.xml" value="0.33" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_event_copy.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_event_list.xml" value="0.22" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_multi_choice.xml" value="0.25" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_permissions.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/fragment_scenarios.xml" value="0.18" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/include_click_config.xml" value="0.25" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/include_pause_config.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/include_swipe_config.xml" value="0.33" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/include_view_separator.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_action.xml" value="0.18" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_action_card.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_add_card.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_condition.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_condition_card.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_copy_header.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_event.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_multi_choice.xml" value="0.33" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/item_scenario.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/merge_loadable_list.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/overlay_menu.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/view_action_icon.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/layout/view_dialog_title.xml" value="0.1" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/menu/menu_scenario_activity.xml" value="0.18" />
+        <entry key="..\:/Users/user/StudioProjects/Smart-AutoClicker/smartautoclicker/src/main/res/mipmap-anydpi-v26/ic_smart_auto_clicker.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>
