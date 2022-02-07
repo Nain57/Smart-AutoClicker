@@ -114,7 +114,6 @@ internal class ConditionDetector(private val cache: Cache) {
             // Check if the condition is contained in the screen
             if (!cache.displaySize.contains(condition.area)) {
                 return false
-                // this for NOT???????????
             }
 
             // Get the pixels of the part of the [Image] that will be compared.
