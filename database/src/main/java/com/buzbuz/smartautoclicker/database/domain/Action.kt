@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.database.domain
 
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ActionType
+import kotlin.random.Random
 
 /** Base for for all possible actions for en Event. */
 sealed class Action {
@@ -72,8 +73,8 @@ sealed class Action {
                 name = name!!,
                 type = ActionType.CLICK,
                 pressDuration = pressDuration,
-                x = x,
-                y = y,
+                x = x?.plus(Random.nextInt(-2,2)),
+                y = y?.plus(Random.nextInt(-2,+2)),
             )
         }
 
@@ -125,10 +126,10 @@ sealed class Action {
                 name = name!!,
                 type = ActionType.SWIPE,
                 swipeDuration = swipeDuration,
-                fromX = fromX,
-                fromY = fromY,
-                toX = toX,
-                toY = toY,
+                fromX = fromX?.plus(Random.nextInt(-2,2)),
+                fromY = fromY?.plus(Random.nextInt(-2,2)),
+                toX = toX?.plus(Random.nextInt(-2,2)),
+                toY = toY?.plus(Random.nextInt(-2,2)),
             )
         }
 

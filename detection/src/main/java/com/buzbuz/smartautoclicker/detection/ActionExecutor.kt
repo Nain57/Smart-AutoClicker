@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Action.Click
 import com.buzbuz.smartautoclicker.database.domain.Action.Pause
 import com.buzbuz.smartautoclicker.database.domain.Action.Swipe
+import kotlin.random.Random
 
 /**
  * Execute the actions of an event.
@@ -74,9 +75,11 @@ internal class ActionExecutor {
                 is Swipe -> executeSwipe(action)
                 is Pause -> {
                     val actionsLeft = actions.subList(index + 1, actions.size)
-                    workerThreadHandler.postDelayed({
-                        executeActions(actionsLeft)
-                    }, action.pauseDuration!!)
+                    action.pauseDuration?.plus(Random.nextLong(0, 250))?.let {
+                        workerThreadHandler.postDelayed({
+                            executeActions(actionsLeft)
+                        }, it)
+                    }
                     return
                 }
             }
