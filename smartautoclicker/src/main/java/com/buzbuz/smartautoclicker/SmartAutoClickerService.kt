@@ -172,7 +172,7 @@ class SmartAutoClickerService : AccessibilityService() {
             manager!!.createNotificationChannel(
                 NotificationChannel(
                     NOTIFICATION_CHANNEL_ID,
-                    getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_LOW
+                    getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH
                 )
             )
         }
@@ -183,6 +183,8 @@ class SmartAutoClickerService : AccessibilityService() {
             .setContentText(getString(R.string.notification_message))
             .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .setSmallIcon(R.drawable.ic_notification)
+            .setOngoing(true)
+            .setPriority(2)
             .build()
     }
 
