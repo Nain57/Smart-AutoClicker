@@ -54,7 +54,7 @@ set_target_properties( opencv_core PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_L
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
-target_link_libraries(smartautoclicker opencv_core opencv_imgproc ${log-lib} )
+target_link_libraries(smartautoclicker opencv_core opencv_imgproc -ljnigraphics ${log-lib} )
 
 target_include_directories(smartautoclicker PUBLIC
         opencv/modules/core/include
