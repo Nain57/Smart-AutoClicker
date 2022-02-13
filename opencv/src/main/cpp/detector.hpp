@@ -14,28 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.opencv
 
-import android.graphics.Bitmap
+#include <jni.h>
+#include <opencv2/imgproc/imgproc.hpp>
 
-class NativeLib : AutoCloseable {
+namespace smartautoclicker {
 
-    companion object {
-        // Used to load the 'smartautoclicker' library on application startup.
-        init {
-            System.loadLibrary("smartautoclicker")
-        }
-    }
+    class Detector {
 
-    private val nativePtr: Long = newDetector()
+    private:
 
-    override fun close() = deleteDetector()
+        constexpr static const double DETECTION_SCALE_RATIO = 0.1;
 
-    private external fun newDetector(): Long
+        std::unique_ptr<cv::Mat> currentImage = nullptr;
 
-    private external fun deleteDetector()
+        static std::unique_ptr<cv::Mat> bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap);
 
-    external fun setScreenImage(screenBitmap: Bitmap)
+        static std::unique_ptr<cv::Mat> scale(const cv::Mat& mat, const double& ratio);
 
-    external fun detectCondition(conditionBitmap: Bitmap, threshold: Double): Boolean
+    public:
+
+        Detector() = default;
+
+        void setScreenImage(JNIEnv *env, jobject screenImage);
+
+        bool detectCondition(JNIEnv *env, jobject conditionImage, double threshold);
+    };
 }
+
+

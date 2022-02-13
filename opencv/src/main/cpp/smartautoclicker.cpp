@@ -21,65 +21,58 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <string>
 
-using namespace cv;
+#include "detector.hpp"
 
-Mat *bitmapRGBA888ToMat2(JNIEnv *env, jobject bitmap);
+using namespace smartautoclicker;
 
-extern "C" {
+/**
+ * This function is a helper providing the boiler plate code to return the native object from Java object.
+ * The "nativePtr" is reached from this code, casted to People's pointer and returned. This will be used in
+ * all our native methods wrappers to recover the object before invoking it's methods.
+ */
+static Detector *getObject(JNIEnv *env, jobject self)
+{
+    jclass cls = env->GetObjectClass(self);
+    if (!cls)
+        env->FatalError("GetObjectClass failed");
 
-    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_matchCondition(
-            JNIEnv *env,
-            jobject thiz,
-            jobject imageBitmap,
-            jobject conditionBitmap
-    ) {
-        Mat* imageMat = bitmapRGBA888ToMat2(env, imageBitmap);
-        Mat* conditionMat = bitmapRGBA888ToMat2(env, conditionBitmap);
+    jfieldID nativeObjectPointerID = env->GetFieldID(cls, "nativePtr", "J");
+    if (!nativeObjectPointerID)
+        env->FatalError("GetFieldID failed");
 
-        double scale = 0.1;
-        Mat imageResized;
-        resize(*imageMat, imageResized, Size(), scale, scale, INTER_AREA);
-        Mat conditionResized;
-        resize(*conditionMat, conditionResized, Size(), scale, scale, INTER_AREA);
-
-        int result_cols =  imageResized.cols - conditionResized.cols + 1;
-        int result_rows = imageResized.rows - conditionResized.rows + 1;
-        Mat resultMat = Mat(result_rows, result_cols, CV_8UC4);
-
-        matchTemplate(imageResized, conditionResized, resultMat, TM_CCOEFF_NORMED);
-
-        double minVal; double maxVal; Point minLoc; Point maxLoc;
-        minMaxLoc(resultMat, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
-
-        return true;
-    }
+    jlong nativeObjectPointer = env->GetLongField(self, nativeObjectPointerID);
+    return reinterpret_cast<Detector *>(nativeObjectPointer);
 }
 
-Mat *bitmapRGBA888ToMat2(JNIEnv *env, jobject bitmap) {
-
-    AndroidBitmapInfo info;
-    void *pixels = nullptr;
-    Mat *dst;
-
-    try {
-        CV_Assert(AndroidBitmap_getInfo(env, bitmap, &info) >= 0);
-        CV_Assert(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
-        CV_Assert(AndroidBitmap_lockPixels(env, bitmap, &pixels) >= 0);
-        CV_Assert(pixels);
-        dst = new Mat(info.height, info.width, CV_8UC4);
-
-        Mat tmp(info.height, info.width, CV_8UC4, pixels);
-        tmp.copyTo(*dst);
-
-        AndroidBitmap_unlockPixels(env, bitmap);
-        return dst;
-    } catch (...) {
-        AndroidBitmap_unlockPixels(env, bitmap);
-        __android_log_print(ANDROID_LOG_ERROR, "native-lib",
-                            "bitmapRGBA888ToMat2 caught an exception");
-        jclass je = env->FindClass("java/lang/Exception");
-        env->ThrowNew(je, "Unknown exception in JNI code {bitmapRGBA888ToMat2}");
-        return nullptr;
+extern "C" {
+    JNIEXPORT jlong JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_newDetector(
+            JNIEnv *env,
+            jobject self
+    ) {
+        return reinterpret_cast<jlong>(new Detector());
     }
 
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_setScreenImage(
+            JNIEnv *env,
+            jobject self,
+            jobject screenBitmap
+    ) {
+        getObject(env, self)->setScreenImage(env, screenBitmap);
+    }
+
+    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_detectCondition(
+            JNIEnv *env,
+            jobject self,
+            jobject conditionBitmap,
+            jdouble threshold
+    ) {
+        return getObject(env, self)->detectCondition(env, conditionBitmap, threshold);
+    }
+
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_deleteDetector(
+            JNIEnv *env,
+            jobject self
+    ) {
+        delete getObject(env, self);
+    }
 }
