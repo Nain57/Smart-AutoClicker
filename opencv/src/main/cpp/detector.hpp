@@ -23,10 +23,14 @@ namespace smartautoclicker {
     class Detector {
 
     private:
+        constexpr static const double SCALED_IMAGE_MIN_SIZE_PIXEL = 400;
 
-        constexpr static const double DETECTION_SCALE_RATIO = 0.1;
+        double scaleRatio = 1;
 
         std::unique_ptr<cv::Mat> currentImage = nullptr;
+        std::unique_ptr<cv::Mat> currentImageScaled = nullptr;
+
+        static bool matchCondition(cv::Mat& image, cv::Mat& condition, double threshold);
 
         static std::unique_ptr<cv::Mat> bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap);
 
@@ -39,6 +43,8 @@ namespace smartautoclicker {
         void setScreenImage(JNIEnv *env, jobject screenImage);
 
         bool detectCondition(JNIEnv *env, jobject conditionImage, double threshold);
+
+        bool detectCondition(JNIEnv *env, jobject conditionImage, int x, int y, int width, int height, double threshold);
     };
 }
 
