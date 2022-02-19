@@ -69,6 +69,19 @@ extern "C" {
         return getObject(env, self)->detectCondition(env, conditionBitmap, threshold);
     }
 
+    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_detectConditionAt(
+            JNIEnv *env,
+            jobject self,
+            jobject conditionBitmap,
+            jint x,
+            jint y,
+            jint width,
+            jint height,
+            jdouble threshold
+    ) {
+        return getObject(env, self)->detectCondition(env, conditionBitmap, x, y, width, height, threshold);
+    }
+
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_deleteDetector(
             JNIEnv *env,
             jobject self

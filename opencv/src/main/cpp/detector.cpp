@@ -23,10 +23,36 @@ using namespace cv;
 using namespace smartautoclicker;
 
 void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
-    currentImage = scale(*bitmapRGBA888ToMat(env, screenImage), DETECTION_SCALE_RATIO);
+    currentImage = bitmapRGBA888ToMat(env, screenImage);
+
+    if (currentImage->rows > currentImage->cols && currentImage->rows > SCALED_IMAGE_MIN_SIZE_PIXEL) {
+        scaleRatio = SCALED_IMAGE_MIN_SIZE_PIXEL / currentImage->rows;
+    } else if (currentImage->cols > SCALED_IMAGE_MIN_SIZE_PIXEL) {
+        scaleRatio = SCALED_IMAGE_MIN_SIZE_PIXEL / currentImage->cols;
+    } else {
+        scaleRatio = 1;
+    }
+    currentImageScaled = scale(*currentImage, scaleRatio);
+    __android_log_print(ANDROID_LOG_ERROR, "Detector",
+                        "Size: %d/%d", currentImage->cols, currentImage->rows);
 }
 
 bool Detector::detectCondition(JNIEnv *env, jobject conditionImage, double threshold) {
+    if (currentImageScaled->empty()) {
+        __android_log_print(ANDROID_LOG_ERROR, "Detector",
+                            "detectCondition caught an exception");
+        jclass je = env->FindClass("java/lang/Exception");
+        env->ThrowNew(je, "Can't detect condition, current image is null !");
+        return false;
+    }
+
+    auto condition = scale(*bitmapRGBA888ToMat(env, conditionImage), scaleRatio);
+
+    return matchCondition(*currentImageScaled, *condition, threshold);
+}
+
+bool Detector::detectCondition(JNIEnv *env, jobject conditionImage, int x, int y, int width, int height,
+                               double threshold) {
     if (currentImage->empty()) {
         __android_log_print(ANDROID_LOG_ERROR, "Detector",
                             "detectCondition caught an exception");
@@ -35,13 +61,18 @@ bool Detector::detectCondition(JNIEnv *env, jobject conditionImage, double thres
         return false;
     }
 
-    auto condition = scale(*bitmapRGBA888ToMat(env, conditionImage), DETECTION_SCALE_RATIO);
+    auto croppedImage = Mat(*currentImage, Rect(x, y , width, height));
+    auto condition = bitmapRGBA888ToMat(env, conditionImage);
 
-    int result_cols = currentImage->cols - condition->cols + 1;
-    int result_rows = currentImage->rows - condition->rows + 1;
+    return matchCondition(croppedImage, *condition, threshold);
+}
+
+bool Detector::matchCondition(cv::Mat& image, cv::Mat& condition, double threshold) {
+    int result_cols = image.cols - condition.cols + 1;
+    int result_rows = image.rows - condition.rows + 1;
     Mat resultMat = Mat(result_rows, result_cols, CV_8UC4);
 
-    matchTemplate(*currentImage, *condition, resultMat, TM_CCOEFF_NORMED);
+    matchTemplate(image, condition, resultMat, TM_CCOEFF_NORMED);
 
     double minVal; double maxVal; Point minLoc; Point maxLoc;
     minMaxLoc(resultMat, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
@@ -76,4 +107,3 @@ std::unique_ptr<Mat> Detector::scale(const cv::Mat& mat, const double& ratio) {
     resize(mat, *imageResized, Size(), ratio, ratio, INTER_AREA);
     return imageResized;
 }
-

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.opencv
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 
 class NativeLib : AutoCloseable {
 
@@ -31,6 +32,10 @@ class NativeLib : AutoCloseable {
 
     override fun close() = deleteDetector()
 
+    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Double): Boolean {
+        return detectConditionAt(conditionBitmap, position.left, position.top, position.width(), position.height(), threshold)
+    }
+
     private external fun newDetector(): Long
 
     private external fun deleteDetector()
@@ -38,4 +43,14 @@ class NativeLib : AutoCloseable {
     external fun setScreenImage(screenBitmap: Bitmap)
 
     external fun detectCondition(conditionBitmap: Bitmap, threshold: Double): Boolean
+
+    private external fun detectConditionAt(
+        conditionBitmap:
+        Bitmap,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        threshold: Double
+    ): Boolean
 }
