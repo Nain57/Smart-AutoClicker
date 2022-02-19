@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.database.domain.EXACT
 
 /**
  * Creates a new event.
@@ -52,9 +53,11 @@ fun newDefaultEvent(context: Context, scenarioId: Long, scenarioEventsSize: Int)
  */
 fun newDefaultCondition(context: Context, eventId: Long, area: Rect, bitmap: Bitmap) = Condition(
     eventId = eventId,
+    name = context.resources.getString(R.string.default_condition_name),
     bitmap = bitmap,
     area = area,
     threshold = context.resources.getInteger(R.integer.default_condition_threshold),
+    detectionType = EXACT,
 )
 
 /**

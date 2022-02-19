@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.database.room.migrations.Migration1to2
 import com.buzbuz.smartautoclicker.database.room.migrations.Migration2to3
 import com.buzbuz.smartautoclicker.database.room.migrations.Migration3to4
+import com.buzbuz.smartautoclicker.database.room.migrations.Migration4to5
 
 /**
  * Database for the scenario and their events.
@@ -51,7 +52,7 @@ import com.buzbuz.smartautoclicker.database.room.migrations.Migration3to4
         ScenarioEntity::class,
         ConditionEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(ActionTypeStringConverter::class)
@@ -87,6 +88,7 @@ internal abstract class ClickDatabase : RoomDatabase() {
                     .addMigrations(Migration1to2)
                     .addMigrations(Migration2to3)
                     .addMigrations(Migration3to4)
+                    .addMigrations(Migration4to5)
                     .build()
 
                 INSTANCE = instance

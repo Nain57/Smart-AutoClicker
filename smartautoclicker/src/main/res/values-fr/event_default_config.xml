@@ -20,4 +20,5 @@
     <string name="default_click_name">Clic</string>
     <string name="default_swipe_name">Swipe</string>
     <string name="default_pause_name">Pause</string>
+    <string name="default_condition_name">Condition</string>
 </resources>

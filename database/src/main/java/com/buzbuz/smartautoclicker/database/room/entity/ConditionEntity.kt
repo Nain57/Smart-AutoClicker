@@ -33,6 +33,7 @@ import androidx.room.PrimaryKey
  *
  * @param id unique identifier for a condition. Also the primary key in the table.
  * @param eventId identifier of this condition's event. Reference the key [EventEntity.id] in event_table.
+ * @param name the name of the condition.
  * @param path the path on the application appData directory for the bitmap representing the condition. Also the
  *             primary key for this entity.
  * @param areaLeft the left coordinate of the rectangle defining the matching area.
@@ -40,6 +41,8 @@ import androidx.room.PrimaryKey
  * @param areaRight the right coordinate of the rectangle defining the matching area.
  * @param areaBottom the bottom coordinate of the rectangle defining the matching area.
  * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
+ * @param detectionType the type of detection. Can be any of the values defined in
+ *                      [com.buzbuz.smartautoclicker.database.domain.DetectionType].
  */
 @Entity(
     tableName = "condition_table",
@@ -53,12 +56,13 @@ import androidx.room.PrimaryKey
 )
 internal data class ConditionEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") val id: Long,
-    @ColumnInfo(name= "eventId") var eventId: Long,
-    @ColumnInfo(name= "path") val path: String,
+    @ColumnInfo(name = "eventId") var eventId: Long,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "path") val path: String,
     @ColumnInfo(name = "area_left") val areaLeft: Int,
     @ColumnInfo(name = "area_top") val areaTop: Int,
     @ColumnInfo(name = "area_right") val areaRight: Int,
     @ColumnInfo(name = "area_bottom") val areaBottom: Int,
     @ColumnInfo(name = "threshold", defaultValue = "1") val threshold: Int,
+    @ColumnInfo(name = "detection_type") val detectionType: Int,
 )
-
