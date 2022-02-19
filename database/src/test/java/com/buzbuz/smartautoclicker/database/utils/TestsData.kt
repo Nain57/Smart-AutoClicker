@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ActionType
@@ -173,27 +174,33 @@ internal object TestsData {
     const val CONDITION_RIGHT = 69
     const val CONDITION_BOTTOM = 89
     const val CONDITION_THRESHOLD = 25
+    const val CONDITION_NAME = "Condition name"
+    const val CONDITION_DETECTION_TYPE = EXACT
 
     fun getNewConditionEntity(
         id: Long = CONDITION_ID,
+        name: String = CONDITION_NAME,
         path: String = CONDITION_PATH,
         left: Int = CONDITION_LEFT,
         top: Int = CONDITION_TOP,
         right: Int = CONDITION_RIGHT,
         bottom: Int = CONDITION_BOTTOM,
         threshold: Int = CONDITION_THRESHOLD,
+        detectionType: Int = CONDITION_DETECTION_TYPE,
         eventId: Long
-    ) = ConditionEntity(id, eventId, path, left, top, right, bottom, threshold)
+    ) = ConditionEntity(id, eventId, name, path, left, top, right, bottom, threshold, detectionType)
 
     fun getNewCondition(
         id: Long = CONDITION_ID,
+        name: String = CONDITION_NAME,
         path: String? = CONDITION_PATH,
         left: Int = CONDITION_LEFT,
         top: Int = CONDITION_TOP,
         right: Int = CONDITION_RIGHT,
         bottom: Int = CONDITION_BOTTOM,
         threshold: Int = CONDITION_THRESHOLD,
+        detectionType: Int = CONDITION_DETECTION_TYPE,
         bitmap: Bitmap? = null,
         eventId: Long
-    ) = Condition(id, eventId, path, Rect(left, top, right, bottom), threshold, bitmap)
+    ) = Condition(id, eventId, name, path, Rect(left, top, right, bottom), threshold, detectionType, bitmap)
 }

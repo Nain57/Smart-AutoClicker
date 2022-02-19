@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.database.utils
 
 import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
 
+// ----- Utils for Database V3 -----
+
 fun getInsertV3Scenario(id: Long, name: String) =
     """
         INSERT INTO scenario_table (id, name) 
@@ -47,7 +49,21 @@ fun getInsertV3ConditionCrossRef(clickId: Long, path: String) =
     """.trimIndent()
 
 
+// ----- Utils for Database V4 -----
+
 fun getV4Scenarios() = "SELECT * FROM scenario_table"
 fun getV4Events() = "SELECT * FROM event_table"
 fun getV4Conditions() = "SELECT * FROM condition_table"
 fun getV4Actions() = "SELECT * FROM action_table"
+
+fun getInsertV4Condition(id: Long, eventId: Long, path: String, left: Int, top: Int, right: Int, bottom: Int,
+                         threshold: Int) =
+    """
+        INSERT INTO condition_table (id, eventId, path, area_left, area_top, area_right, area_bottom, threshold) 
+        VALUES ($id, $eventId, "$path", $left, $top, $right, $bottom, $threshold)
+    """.trimIndent()
+
+
+// ----- Utils for Database V5 -----
+
+fun getV5Conditions() = "SELECT * FROM condition_table"

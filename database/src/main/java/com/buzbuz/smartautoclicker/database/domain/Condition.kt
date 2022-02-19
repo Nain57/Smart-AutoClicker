@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.database.domain
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import androidx.annotation.IntDef
 
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
 
@@ -26,17 +27,21 @@ import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
  *
  * @param id the unique identifier for the condition. Use 0 for creating a new condition. Default value is 0.
  * @param eventId the identifier of the event for this condition.
+ * @param name the name of the condition.
  * @param path the path to the bitmap that should be matched for detection.
  * @param area the area of the screen to detect.
  * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
+ * @param detectionType the type of detection for this condition. Must be one of [DetectionType].
  * @param bitmap the bitmap for the condition. Not set when fetched from the repository.
  */
 data class Condition(
     var id: Long = 0,
     var eventId: Long,
+    var name: String,
     var path: String? = null,
     var area: Rect,
     var threshold: Int,
+    @DetectionType val detectionType: Int,
     val bitmap: Bitmap? = null,
 ) {
 
@@ -44,12 +49,14 @@ data class Condition(
     internal fun toEntity() = ConditionEntity(
         id,
         eventId,
+        name,
         path!!,
         area.left,
         area.top,
         area.right,
         area.bottom,
-        threshold
+        threshold,
+        detectionType,
     )
 
     /** Cleanup all ids contained in this condition. Ideal for copying. */
@@ -67,4 +74,13 @@ data class Condition(
 
 /** @return the condition for this entity. */
 internal fun ConditionEntity.toCondition(): Condition =
-    Condition(id, eventId, path, Rect(areaLeft, areaTop, areaRight, areaBottom), threshold)
+    Condition(id, eventId, name, path, Rect(areaLeft, areaTop, areaRight, areaBottom), threshold, detectionType)
+
+/** Defines the detection type to apply to a condition. */
+@IntDef(EXACT, WHOLE_SCREEN)
+@Retention(AnnotationRetention.SOURCE)
+annotation class DetectionType
+/** The condition must be detected at the exact same position. */
+const val EXACT = 1
+/** The condition can be detected anywhere on the screen. */
+const val WHOLE_SCREEN = 2
