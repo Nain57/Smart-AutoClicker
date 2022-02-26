@@ -32,7 +32,7 @@ class ImageDetector : AutoCloseable {
 
     override fun close() = deleteDetector()
 
-    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Double): Boolean {
+    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): Boolean {
         return detectConditionAt(conditionBitmap, position.left, position.top, position.width(), position.height(), threshold)
     }
 
@@ -42,7 +42,7 @@ class ImageDetector : AutoCloseable {
 
     external fun setScreenImage(screenBitmap: Bitmap)
 
-    external fun detectCondition(conditionBitmap: Bitmap, threshold: Double): Boolean
+    external fun detectCondition(conditionBitmap: Bitmap, threshold: Int): Boolean
 
     private external fun detectConditionAt(
         conditionBitmap:
@@ -51,6 +51,6 @@ class ImageDetector : AutoCloseable {
         y: Int,
         width: Int,
         height: Int,
-        threshold: Double
+        threshold: Int
     ): Boolean
 }
