@@ -36,14 +36,14 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
     /** The repository for the scenarios. */
     private var repository: Repository? = Repository.getRepository(context)
     /** The current of the detection. */
-    val detectionState: Flow<Boolean> = detectorEngine!!.detecting
+    val detectionState: Flow<Boolean> = detectorEngine!!.isDetecting
     /** The current list of event in the detector engine. */
     val eventList: Flow<List<Event>?> = detectorEngine!!.scenarioEvents
 
     /** Start/Stop the detection. */
     fun toggleDetection() {
         detectorEngine?.apply {
-            if (detecting.value) {
+            if (isDetecting.value) {
                 stopDetection()
             } else {
                 startDetection()

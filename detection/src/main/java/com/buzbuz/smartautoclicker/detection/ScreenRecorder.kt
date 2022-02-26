@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.detection
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.hardware.display.DisplayManager
@@ -38,7 +39,7 @@ import androidx.annotation.WorkerThread
  *
  * Uses the [MediaProjection] API to create a [VirtualDisplay] not shown to the user and containing a copy of the
  * user device screen content. An [ImageReader] is attached to this display in order to monitor every new frame
- * displayed on the screen, received in the form of an [Image]. Then, process those Image with [ConditionDetector]
+ * displayed on the screen, received in the form of an [Image]. Then, process those Image with [ScenarioProcessor]
  * according to the current mode (capture/detection). All Image processing code is executed on a background thread
  * (methods annotated with [WorkerThread]), and all results callbacks are executed on the main thread (the thread that
  * has instantiated this class).
@@ -132,6 +133,7 @@ internal class ScreenRecorder {
             null)
     }
 
+    /** @return the last image of the screen, or null if they have been processed. */
     fun acquireLatestImage(): Image? = imageReader?.acquireLatestImage()
 
     /**
@@ -180,4 +182,28 @@ internal class ScreenRecorder {
             stopListener?.invoke()
         }
     }
+}
+
+/**
+ * Transform an Image into a bitmap.
+ *
+ * @param resultBitmap a bitmap to use as a cache in order to avoid instantiating an new one. If null, a new one is
+ *                     created.
+ * @return the bitmap corresponding to the image. If [resultBitmap] was provided, it will be the same object.
+ */
+internal fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
+    var bitmap = resultBitmap
+    if (bitmap == null || bitmap.width != width || bitmap.height != height) {
+        val pixelStride = planes[0].pixelStride
+        val rowPadding = planes[0].rowStride - pixelStride * width
+
+        if (bitmap == null) {
+            bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888)
+        } else {
+            bitmap.reconfigure(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888)
+        }
+    }
+
+    bitmap?.copyPixelsFromBuffer(planes[0].buffer)
+    return bitmap!!
 }

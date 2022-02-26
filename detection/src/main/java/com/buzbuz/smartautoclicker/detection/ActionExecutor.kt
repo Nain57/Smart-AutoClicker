@@ -30,49 +30,23 @@ import kotlinx.coroutines.withContext
 
 /**
  * Execute the actions of an event.
- * Execute the list of actions provided by [executeActions]. The state of the executor is provided by [state].
+ *
+ * @param gestureExecutor The executor for the actions requiring a gesture on the user screen.
  */
-internal class ActionExecutor {
-
-    /** The states of the [ActionExecutor]. */
-    enum class State {
-        /** The executor is idle, waiting for its next action the execute. */
-        IDLE,
-        /** The executor is currently executing an action. */
-        EXECUTING,
-    }
-
-    /** The executor for the actions requiring a gesture on the user screen. */
-    var onGestureExecutionListener: ((GestureDescription) -> Unit)? = null
-    /** The current state the this action executor. */
-    var state: State = State.IDLE
-        private set
+internal class ActionExecutor(private val gestureExecutor: (GestureDescription) -> Unit) {
 
     /**
      * Execute the provided actions.
      * @param actions the actions to be executed.
      */
     suspend fun executeActions(actions: List<Action>) {
-        if (actions.isEmpty()) {
-            state = State.IDLE
-            return
-        }
-
-        state = State.EXECUTING
-
-        actions.forEachIndexed { index, action ->
+        actions.forEach { action ->
             when (action) {
                 is Click -> executeClick(action)
                 is Swipe -> executeSwipe(action)
-                is Pause -> {
-                    delay(action.pauseDuration!!)
-                    executeActions(actions.subList(index + 1, actions.size))
-                    return
-                }
+                is Pause -> executePause(action)
             }
         }
-
-        state = State.IDLE
     }
 
     /**
@@ -87,7 +61,7 @@ internal class ActionExecutor {
         clickBuilder.addStroke(GestureDescription.StrokeDescription(clickPath, 0, click.pressDuration!!))
 
         withContext(Dispatchers.Main) {
-            onGestureExecutionListener?.invoke(clickBuilder.build())
+            gestureExecutor(clickBuilder.build())
         }
         delay(click.pressDuration!!)
     }
@@ -105,8 +79,16 @@ internal class ActionExecutor {
         clickBuilder.addStroke(GestureDescription.StrokeDescription(swipePath, 0, swipe.swipeDuration!!))
 
         withContext(Dispatchers.Main) {
-            onGestureExecutionListener?.invoke(clickBuilder.build())
+            gestureExecutor(clickBuilder.build())
         }
         delay(swipe.swipeDuration!!)
+    }
+
+    /**
+     * Execute the provided pause.
+     * @param pause the pause to be executed.
+     */
+    private suspend fun executePause(pause: Pause) {
+        delay(pause.pauseDuration!!)
     }
 }

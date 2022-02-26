@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
+import android.accessibilityservice.GestureDescription
 import android.graphics.Bitmap
 import android.media.Image
 
@@ -31,22 +32,55 @@ import com.buzbuz.smartautoclicker.opencv.ImageDetector
 import kotlinx.coroutines.yield
 
 /**
- * Process and tries to detect the list of [Event] on it.
+ * Process a screen image and tries to detect the list of [Event] on it.
  *
+ * @param events the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
+ * @param gestureExecutor execute the actions gestures on the user screen.
+ * @param onEndConditionReached called when a end condition of the scenario have been reached.
  */
-internal class ConditionDetector(
-    private val bitmapSupplier: (String, Int, Int) -> Bitmap?
-) {
+internal class ScenarioProcessor(
+    private val events: List<Event>,
+    private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
+    gestureExecutor: (GestureDescription) -> Unit,
+    private val onEndConditionReached: () -> Unit,
+) : AutoCloseable {
+
+    /** Detect the condition images on the screen image. */
+    private val imageDetector = ImageDetector()
+    /** Execute the detected event actions. */
+    private val actionExecutor = ActionExecutor(gestureExecutor)
+    /** Number of execution count for each events since the processing start. */
+    private val executedEvents = HashMap<Event, Int>().apply {
+        events.forEach { put(it, 0) }
+    }
+    /** The bitmap of the currently processed image. Kept in order to avoid instantiating a new one everytime. */
+    private var processedScreenBitmap: Bitmap? = null
 
     /**
      * Find an event with the conditions fulfilled on the current image.
      *
-     * @param events the list of events to be verified.
+     * @param screenImage the image containing the current screen display.
      *
      * @return the first Event with all conditions fulfilled, or null if none has been found.
      */
-    suspend fun detect(imageDetector: ImageDetector, events: List<Event>) : Event? {
+    suspend fun process(screenImage: Image) {
+        // Check if an event has reached its max execution count.
+        executedEvents.forEach { (event, executedCount) ->
+            event.stopAfter?.let { stopAfter ->
+                if (stopAfter <= executedCount) {
+                    onEndConditionReached()
+                    return
+                }
+            }
+        }
+
+        // Stop processing if requested
+        yield()
+
+        // Set the current screen image
+        imageDetector.setScreenImage(screenImage.toBitmap(processedScreenBitmap))
+
         for (event in events) {
             // No conditions ? This should not happen, skip this event
             if (event.conditions?.isEmpty() == true) {
@@ -55,14 +89,20 @@ internal class ConditionDetector(
 
             // If conditions are fulfilled, execute this event's actions !
             if (verifyConditions(imageDetector, event.conditionOperator, event.conditions!!)) {
-                return event
+
+                executedEvents[event] = executedEvents[event]?.plus(1)
+                    ?: throw IllegalStateException("Can' find the event in the executed events map.")
+
+                event.actions?.let { actions ->
+                    actionExecutor.executeActions(actions)
+                }
             }
 
             // Stop processing if requested
             yield()
         }
 
-        return null
+        return
     }
 
     /**
@@ -115,5 +155,9 @@ internal class ConditionDetector(
             WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, detectionRatio)
             else -> false
         }
+    }
+
+    override fun close() {
+        imageDetector.close()
     }
 }

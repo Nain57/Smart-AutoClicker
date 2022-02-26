@@ -125,7 +125,7 @@ class ConditionSelectorMenu(
             Handler(Looper.getMainLooper()).postDelayed({
                 val screenSize = screenMetrics.screenSize
                 val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
-                DetectorEngine.getDetectorEngine(context).captureScreenArea(screenRect) { bitmap ->
+                DetectorEngine.getDetectorEngine(context).captureArea(screenRect) { bitmap ->
                     selectorView.showCapture(bitmap)
                     state = ADJUST
                 }
