@@ -59,6 +59,10 @@ bool Detector::detectCondition(JNIEnv *env, jobject conditionImage, int x, int y
         return false;
     }
 
+    if (x < 0 || width < 0 || x + width > currentImage->cols || y < 0 || height < 0 || y + height > currentImage->rows) {
+        return false;
+    }
+
     auto croppedImage = Mat(*currentImage, Rect(x, y , width, height));
     auto condition = bitmapRGBA888ToMat(env, conditionImage);
 
