@@ -166,7 +166,7 @@ class ScreenDetectorTests {
      * This will execute all handlers runnable in order to ensure state correctness.
      */
     private fun toStopScreenRecord() {
-        screenDetector.stop()
+        screenDetector.stopScreenRecording()
         idleAllThread()
     }
 

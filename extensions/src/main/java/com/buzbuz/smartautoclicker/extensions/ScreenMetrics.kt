@@ -62,6 +62,8 @@ class ScreenMetrics(private val context: Context) {
         }
     }
 
+    fun getDensityDpi() = context.resources.configuration.densityDpi
+
     /**
      * Register a new orientation listener.
      * If a previous listener was registered, the new one will replace it.

@@ -63,6 +63,7 @@ dependencies {
 
     implementation project(path: ':extensions')
     implementation project(path: ':database')
+    implementation project(path: ':opencv')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
