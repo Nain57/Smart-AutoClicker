@@ -33,8 +33,6 @@ void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
         scaleRatio = 1;
     }
     currentImageScaled = scale(*currentImage, scaleRatio);
-    __android_log_print(ANDROID_LOG_ERROR, "Detector",
-                        "Size: %d/%d", currentImage->cols, currentImage->rows);
 }
 
 bool Detector::detectCondition(JNIEnv *env, jobject conditionImage, double threshold) {
