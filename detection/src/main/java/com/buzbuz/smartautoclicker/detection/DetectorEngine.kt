@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -107,7 +107,6 @@ class DetectorEngine internal constructor(context: Context) {
     /**
      * Initialize the detector model.
      *
-     * @param context the Android context.
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param data the data intent provided by the screen capture intent activity result callback
@@ -185,14 +184,14 @@ class DetectorEngine internal constructor(context: Context) {
         }
 
         _scenario.value = null
-        screenDetector.stop()
+        screenDetector.stopScreenRecord()
     }
 
     /** Clear this engine. It can't be used after this call. */
     fun clear() {
         if (screenDetector.isScreenRecording.value) {
             Log.w(TAG, "Clearing the model but it was still started.")
-            screenDetector.stop()
+            screenDetector.stopScreenRecord()
         }
 
         Log.i(TAG, "clear")

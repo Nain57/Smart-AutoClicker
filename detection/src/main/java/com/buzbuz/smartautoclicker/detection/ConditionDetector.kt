@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,26 +16,28 @@
  */
 package com.buzbuz.smartautoclicker.detection
 
-import android.graphics.Rect
+import android.graphics.Bitmap
 import android.media.Image
 
-import androidx.annotation.WorkerThread
-
 import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.database.domain.EXACT
+import com.buzbuz.smartautoclicker.database.domain.OR
+import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.opencv.ImageDetector
 
-import kotlin.math.abs
+import kotlinx.coroutines.yield
 
 /**
- * Process [Image] from the [Cache] and tries to detect the list of [Event] on it.
- **
- * @param cache the image cache to apply the detection to.
+ * Process and tries to detect the list of [Event] on it.
+ *
+ * @param bitmapSupplier provides the conditions bitmaps.
  */
-@WorkerThread
-internal class ConditionDetector(private val cache: Cache) {
+internal class ConditionDetector(
+    private val bitmapSupplier: (String, Int, Int) -> Bitmap?
+) {
 
     /**
      * Find an event with the conditions fulfilled on the current image.
@@ -44,18 +46,20 @@ internal class ConditionDetector(private val cache: Cache) {
      *
      * @return the first Event with all conditions fulfilled, or null if none has been found.
      */
-    fun detect(events: List<Event>) : Event? {
+    suspend fun detect(imageDetector: ImageDetector, events: List<Event>) : Event? {
         for (event in events) {
-
             // No conditions ? This should not happen, skip this event
             if (event.conditions?.isEmpty() == true) {
                 continue
             }
 
             // If conditions are fulfilled, execute this event's actions !
-            if (verifyConditions(event.conditionOperator, event.conditions!!)) {
+            if (verifyConditions(imageDetector, event.conditionOperator, event.conditions!!)) {
                 return event
             }
+
+            // Stop processing if requested
+            yield()
         }
 
         return null
@@ -69,11 +73,15 @@ internal class ConditionDetector(private val cache: Cache) {
      * @param operator the operator to apply between the conditions. Must be one of [ConditionOperator] values.
      * @param conditions the condition to be checked on the currently processed [Image].
      */
-    private fun verifyConditions(@ConditionOperator operator: Int, conditions: List<Condition>) : Boolean {
+    private fun verifyConditions(
+        imageDetector: ImageDetector,
+        @ConditionOperator operator: Int,
+        conditions: List<Condition>
+    ) : Boolean {
 
         for (condition in conditions) {
             // Verify if the condition is fulfilled.
-            if (!checkCondition(condition)) {
+            if (!checkCondition(imageDetector, condition)) {
                 if (operator == AND) {
                     // One of the condition isn't fulfilled, it's a false for a AND operator.
                     return false
@@ -97,58 +105,15 @@ internal class ConditionDetector(private val cache: Cache) {
      *
      * @return true if the currently processed [Image] contains the condition bitmap at the condition area.
      */
-    private fun checkCondition(condition: Condition) : Boolean {
-        // Now we have a condition cache, so let's detect !
-        cache.pixelsCache.get(condition)?.let { pixels ->
+    private fun checkCondition(imageDetector: ImageDetector, condition: Condition) : Boolean {
+        val path = condition.path ?: return false
+        val conditionBitmap = bitmapSupplier(path, condition.area.width(), condition.area.height()) ?: return false
+        val detectionRatio = (100 - condition.threshold).toDouble() / 100
 
-            // Check if the condition is contained in the screen
-            if (!cache.displaySize.contains(condition.area)) {
-                return false
-            }
-
-            // Get the pixels of the part of the [Image] that will be compared.
-            getCroppedPixels(pixels.second, condition.area)
-
-            // For each pixel, compare the RGB values of the condition pixels and the cropped image pixels and keep
-            // the difference.
-            cache.currentDiff = 0
-            for (i in pixels.second.indices) {
-                cache.currentDiff += abs((pixels.first[i] shr 16 and 0xff) - (pixels.second[i] shr 16 and 0xff)) +
-                        abs((pixels.first[i] shr 8 and 0xff) - (pixels.second[i] shr 8 and 0xff)) +
-                        abs((pixels.first[i] and 0xff) - (pixels.second[i] and 0xff))
-            }
-
-            // If the difference % is lower than the threshold, the condition is fulfilled; returns true.
-            return 100.0 * cache.currentDiff / (3L * 255 * pixels.second.size) < condition.threshold
-        }
-
-        // The cache could not initialize the pixels for the condition. This can be caused by a corrupted bitmap file.
-        return false
-    }
-
-    /**
-     * Fills the provided array with the pixels at the area on the currently processed [Image]
-     *
-     * @param pixels the array to be filled. It's size must match the area one or an [IndexOutOfBoundsException] will
-     *               thrown.
-     * @param area the area on the currently processed [Image] to take the pixels from.
-     */
-    private fun getCroppedPixels(pixels: IntArray, area: Rect) {
-        cache.screenBitmap!!.apply {
-            cache.cropIndex = 0
-
-            // Pixels are ordered by row in the image they represents; first value is the upper left pixel and last
-            // value is the lower right one. A row length is screenBitmap.width.
-
-            // For each row between the crop area top and bottom
-            for (y in (area.top * width) until area.bottom * width step width) {
-                // In this row, for each pixel between the crop area left and right
-                for (x in (area.left + y) until area.right + y) {
-                    // We want this pixel in the crop, put it and continue
-                    pixels[cache.cropIndex] = cache.screenPixels!![x]
-                    cache.cropIndex++
-                }
-            }
+        return when (condition.detectionType) {
+            EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, detectionRatio)
+            WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, detectionRatio)
+            else -> false
         }
     }
 }

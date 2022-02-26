@@ -27,7 +27,6 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
-import android.os.Handler
 import android.util.Log
 
 import androidx.annotation.MainThread
@@ -47,11 +46,9 @@ import androidx.annotation.WorkerThread
  * To start recording, call [startProjection] (see method documentation for permission management). This must be done
  * before any other action on this object. Once the recording isn't necessary anymore, you must stop it by calling
  * [stopProjection] in order to release all resources associated with this object.
- *
- * @param imageListener notified when a new image of the screen is available.
  */
 @MainThread
-internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvailableListener) {
+internal class ScreenRecorder {
 
     @VisibleForTesting
     internal companion object {
@@ -67,12 +64,13 @@ internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvai
      * [MediaProjectionManager.createScreenCaptureIntent].
      */
     private var projection: MediaProjection? = null
-    /** Allow access to [Image] rendered into the surface view of the [VirtualDisplay] */
-    private var imageReader: ImageReader? = null
     /** Virtual display capturing the content of the screen. */
     private var virtualDisplay: VirtualDisplay? = null
     /** Listener to notify upon projection ends. */
     private var stopListener: (() -> Unit)? = null
+    /** Allow access to [Image] rendered into the surface view of the [VirtualDisplay] */
+    var imageReader: ImageReader? = null
+        private set
 
     /**
      * Start the media projection.
@@ -117,10 +115,8 @@ internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvai
      *
      * @param context the Android context.
      * @param displaySize the size of the display, in pixels.
-     * @param processingHandler the handler on the thread that will handle the virtual display and the image reader on it.
-     * This should not be the main thread.
      */
-    suspend fun startScreenRecord(context: Context, displaySize: Point, processingHandler: Handler) {
+    fun startScreenRecord(context: Context, displaySize: Point) {
         if (projection == null || imageReader != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
@@ -129,14 +125,14 @@ internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvai
         Log.d(TAG, "Start screen record")
 
         @SuppressLint("WrongConstant")
-        imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2).apply {
-            setOnImageAvailableListener(imageListener, processingHandler)
-        }
+        imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2)
         virtualDisplay = projection!!.createVirtualDisplay(
             VIRTUAL_DISPLAY_NAME, displaySize.x, displaySize.y, context.resources.configuration.densityDpi,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, imageReader!!.surface, null,
             null)
     }
+
+    fun acquireLatestImage(): Image? = imageReader?.acquireLatestImage()
 
     /**
      * Stop the screen recording.
@@ -151,7 +147,6 @@ internal class ScreenRecorder(private val imageListener: ImageReader.OnImageAvai
             virtualDisplay = null
         }
         imageReader?.apply {
-            setOnImageAvailableListener(null, null)
             close()
             imageReader = null
         }
