@@ -30,7 +30,7 @@ import androidx.annotation.IntDef
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.ConditionSelectorView
-import com.buzbuz.smartautoclicker.detection.DetectorEngine
+import com.buzbuz.smartautoclicker.engine.DetectorEngine
 
 /**
  * [OverlayMenuController] implementation for displaying the area selection menu and the area to be captured in order

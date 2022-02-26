@@ -21,7 +21,7 @@ import android.content.Context
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Event
-import com.buzbuz.smartautoclicker.detection.DetectorEngine
+import com.buzbuz.smartautoclicker.engine.DetectorEngine
 
 import kotlinx.coroutines.flow.Flow
 

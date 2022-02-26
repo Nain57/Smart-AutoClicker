@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,60 +15,90 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-allopen'
-
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation 'com.buzbuz.smartautoclicker.testing.OpenClass'
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
+apply from: 'fetchSources.gradle'
+
 android {
-    compileSdkVersion 31
+    compileSdk 31
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 31
+        minSdk 24
+        targetSdk 31
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-    }
-
-    compileOptions {
-        kotlin {
-            kotlinOptions {
-                freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                arguments "-DANDROID_SDK_ROOT=${project.android.sdkDirectory}",
+                        "-DBUILD_opencv_ittnotify=OFF",
+                        "-DBUILD_ITT=OFF",
+                        "-DCV_DISABLE_OPTIMIZATION=ON",
+                        "-DWITH_CUDA=OFF",
+                        "-DWITH_OPENCL=OFF",
+                        "-DWITH_OPENCLAMDFFT=OFF",
+                        "-DWITH_OPENCLAMDBLAS=OFF",
+                        "-DWITH_VA_INTEL=OFF",
+                        "-DCPU_BASELINE_DISABLE=ON",
+                        "-DENABLE_SSE=OFF",
+                        "-DENABLE_SSE2=OFF",
+                        "-DBUILD_TESTING=OFF",
+                        "-DBUILD_PERF_TESTS=OFF",
+                        "-DBUILD_TESTS=OFF",
+                        "-DCMAKE_BUILD_TYPE=RELEASE",
+                        "-DBUILD_EXAMPLES=OFF",
+                        "-DBUILD_DOCS=OFF",
+                        "-DBUILD_opencv_apps=OFF",
+                        "-DBUILD_SHARED_LIBS=OFF",
+                        "-DOpenCV_STATIC=ON",
+                        "-DWITH_1394=OFF",
+                        "-DWITH_ARITH_DEC=OFF",
+                        "-DWITH_ARITH_ENC=OFF",
+                        "-DWITH_CUBLAS=OFF",
+                        "-DWITH_CUFFT=OFF",
+                        "-DWITH_FFMPEG=OFF",
+                        "-DWITH_GDAL=OFF",
+                        "-DWITH_GSTREAMER=OFF",
+                        "-DWITH_GTK=OFF",
+                        "-DWITH_HALIDE=OFF",
+                        "-DWITH_JASPER=OFF",
+                        "-DWITH_NVCUVID=OFF",
+                        "-DWITH_OPENEXR=OFF",
+                        "-DWITH_PROTOBUF=OFF",
+                        "-DWITH_PTHREADS_PF=OFF",
+                        "-DWITH_QUIRC=OFF",
+                        "-DWITH_V4L=OFF",
+                        "-DWITH_WEBP=OFF",
+                        "-DBUILD_LIST=core,imgproc",
+                        "-DBUILD_JAVA=OFF",
+                        "-DBUILD_ANDROID_EXAMPLES=OFF",
+                        "-DBUILD_ANDROID_PROJECTS=OFF",
+                        "-DBUILD_SHARED_LIBS=ON"
             }
         }
     }
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    testOptions {
-        unitTests.includeAndroidResources = true
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.18.1"
+        }
     }
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
-
-    implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
-
-    implementation project(path: ':extensions')
-    implementation project(path: ':database')
-    implementation project(path: ':opencv')
-
-    testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
-    testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
-    testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
-    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:${rootProject.ext.mockitoKotlinVersion}"
-    testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
