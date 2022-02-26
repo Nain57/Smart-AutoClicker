@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayController
 import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.database.domain.Scenario
-import com.buzbuz.smartautoclicker.detection.DetectorEngine
+import com.buzbuz.smartautoclicker.engine.DetectorEngine
 
 import java.io.FileDescriptor
 import java.io.PrintWriter

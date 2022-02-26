@@ -100,6 +100,6 @@ dependencies {
 
     implementation project(path: ':base-ui')
     implementation project(path: ':database')
-    implementation project(path: ':detection')
+    implementation project(path: ':engine')
     implementation project(path: ':extensions')
 }
