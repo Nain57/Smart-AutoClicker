@@ -28,5 +28,5 @@
     <integer name="default_pause_duration">50</integer>
 
     <string name="default_condition_name">Condition</string>
-    <integer name="default_condition_threshold">1</integer>
+    <integer name="default_condition_threshold">4</integer>
 </resources>
