@@ -46,7 +46,7 @@ class ScreenMetrics(private val context: Context) {
     /** The display to get the value from. It will always be the first one available. */
     private val display = context.getSystemService(DisplayManager::class.java).getDisplay(0)
     /** The listener upon orientation changes. */
-    private var orientationListener: (() -> Unit)? = null
+    private var orientationListener: ((Context) -> Unit)? = null
 
     /** The orientation of the display. */
     var orientation = computeOrientation()
@@ -62,15 +62,13 @@ class ScreenMetrics(private val context: Context) {
         }
     }
 
-    fun getDensityDpi() = context.resources.configuration.densityDpi
-
     /**
      * Register a new orientation listener.
      * If a previous listener was registered, the new one will replace it.
      *
      * @param listener the listener to be registered.
      */
-    fun registerOrientationListener(listener: () -> Unit) {
+    fun registerOrientationListener(listener: (Context) -> Unit) {
         if (listener == orientationListener) {
             return
         }
@@ -94,7 +92,7 @@ class ScreenMetrics(private val context: Context) {
         if (orientation != newOrientation) {
             orientation = newOrientation
             screenSize = computeScreenSize()
-            orientationListener?.invoke()
+            orientationListener?.invoke(context)
         }
     }
 

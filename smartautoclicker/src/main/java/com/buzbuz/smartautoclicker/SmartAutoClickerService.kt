@@ -116,9 +116,8 @@ class SmartAutoClickerService : AccessibilityService() {
             startForeground(NOTIFICATION_ID, createNotification(scenario.name))
 
             detectorEngine = DetectorEngine.getDetectorEngine(this@SmartAutoClickerService).apply {
-                init(this@SmartAutoClickerService, resultCode, data, scenario)
-                setOnGestureDetectedListener { gestureDescription ->
-                    dispatchGesture(gestureDescription, null, null)
+                startScreenRecord(this@SmartAutoClickerService, resultCode, data, scenario) { gesture ->
+                    dispatchGesture(gesture, null, null)
                 }
             }
 
@@ -139,7 +138,7 @@ class SmartAutoClickerService : AccessibilityService() {
             rootOverlayController = null
 
             detectorEngine?.let { detector ->
-                detector.stop()
+                detector.stopScreenRecord()
                 detector.clear()
             }
             detectorEngine = null

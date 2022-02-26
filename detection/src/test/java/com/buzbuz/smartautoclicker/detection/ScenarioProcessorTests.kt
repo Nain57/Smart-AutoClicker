@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.detection
 
 import android.graphics.Bitmap
 import android.graphics.Rect
-import android.media.Image
 import android.os.Build
 import android.util.LruCache
 
@@ -43,10 +42,10 @@ import org.mockito.MockitoAnnotations
 
 import org.robolectric.annotation.Config
 
-/** Test the [ConditionDetector] class. */
+/** Test the [ScenarioProcessor] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
-class ConditionDetectorTests {
+class ScenarioProcessorTests {
 
     private companion object {
         private const val TEST_DATA_NAME = "name"
@@ -81,7 +80,7 @@ class ConditionDetectorTests {
     @Mock private lateinit var mockScreenBitmap: Bitmap
 
     /** The object under test. */
-    private lateinit var conditionDetector: ConditionDetector
+    private lateinit var scenarioProcessor: ScenarioProcessor
 
     /**
      * Create a new click condition and mocks it in the pixels cache.
@@ -121,17 +120,17 @@ class ConditionDetectorTests {
         mockWhen(mockScreenBitmap.width).thenReturn(ProcessingData.SCREEN_SIZE)
         mockWhen(mockScreenBitmap.height).thenReturn(ProcessingData.SCREEN_SIZE)
 
-        conditionDetector = ConditionDetector(spiedCache)
+        scenarioProcessor = ScenarioProcessor(spiedCache)
     }
 
     @Test
     fun empty() {
-        assertNull(conditionDetector.detect(emptyList()))
+        assertNull(scenarioProcessor.process(emptyList()))
     }
 
     @Test
     fun noConditions() {
-        assertNull(conditionDetector.detect(listOf(
+        assertNull(scenarioProcessor.process(listOf(
             ProcessingData.newEvent(name = TEST_DATA_NAME),
             ProcessingData.newEvent(name = TEST_DATA_NAME2),
             ProcessingData.newEvent(name = TEST_DATA_NAME3)
@@ -143,7 +142,7 @@ class ConditionDetectorTests {
         val validCondition = mockEventCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, true)
 
         val validEvent = ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(validCondition))
-        assertEquals(validEvent, conditionDetector.detect(listOf(validEvent)))
+        assertEquals(validEvent, scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -151,7 +150,7 @@ class ConditionDetectorTests {
         val conditionArea = mockEventCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, true)
 
         val validEvent = ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(conditionArea))
-        assertEquals(validEvent, conditionDetector.detect(listOf(validEvent)))
+        assertEquals(validEvent, scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -159,7 +158,7 @@ class ConditionDetectorTests {
         val conditionArea = mockEventCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART_OUTSIDE, true)
 
         val validEvent = ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(conditionArea))
-        assertNull(conditionDetector.detect(listOf(validEvent)))
+        assertNull(scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -167,7 +166,7 @@ class ConditionDetectorTests {
         val validCondition = mockEventCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
 
         val validEvent = ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(validCondition))
-        assertNull(conditionDetector.detect(listOf(validEvent)))
+        assertNull(scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -175,7 +174,7 @@ class ConditionDetectorTests {
         val validCondition = mockEventCondition(TEST_DATA_PATH, TEST_DATA_THRESHOLD, ProcessingData.SCREEN_AREA, null)
 
         val validEvent = ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(validCondition))
-        assertNull(conditionDetector.detect(listOf(validEvent)))
+        assertNull(scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -190,7 +189,7 @@ class ConditionDetectorTests {
             conditions = listOf(errorCondition, otherCondition, onScreenCondition)
         )
 
-        assertNull(conditionDetector.detect(listOf(validEvent)))
+        assertNull(scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -204,7 +203,7 @@ class ConditionDetectorTests {
             operator = AND,
             conditions = listOf(errorCondition, otherCondition, onScreenCondition)
         )
-        assertNull(conditionDetector.detect(listOf(validEvent)))
+        assertNull(scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -218,7 +217,7 @@ class ConditionDetectorTests {
             operator = AND,
             conditions = listOf(invalidCondition, otherCondition, onScreenCondition)
         )
-        assertNull(conditionDetector.detect(listOf(validEvent)))
+        assertNull(scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -232,7 +231,7 @@ class ConditionDetectorTests {
             operator = AND,
             conditions = listOf(onScreenCondition1, onScreenCondition2, onScreenCondition3)
         )
-        assertEquals(validEvent, conditionDetector.detect(listOf(validEvent)))
+        assertEquals(validEvent, scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -246,7 +245,7 @@ class ConditionDetectorTests {
             operator = OR,
             conditions = listOf(errorCondition, otherCondition, onScreenCondition)
         )
-        assertNull(conditionDetector.detect(listOf(validEvent)))
+        assertNull(scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -260,7 +259,7 @@ class ConditionDetectorTests {
             operator = OR,
             conditions = listOf(errorCondition, otherCondition, onScreenCondition)
         )
-        assertEquals(validEvent, conditionDetector.detect(listOf(validEvent)))
+        assertEquals(validEvent, scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -274,7 +273,7 @@ class ConditionDetectorTests {
             operator = OR,
             conditions = listOf(invalidCondition, otherCondition, onScreenCondition)
         )
-        assertEquals(validEvent, conditionDetector.detect(listOf(validEvent)))
+        assertEquals(validEvent, scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -288,7 +287,7 @@ class ConditionDetectorTests {
             operator = OR,
             conditions = listOf(onScreenCondition1, onScreenCondition2, onScreenCondition3)
         )
-        assertEquals(validEvent, conditionDetector.detect(listOf(validEvent)))
+        assertEquals(validEvent, scenarioProcessor.process(listOf(validEvent)))
     }
 
     @Test
@@ -297,7 +296,7 @@ class ConditionDetectorTests {
         val condition2 = mockEventCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, false)
         val condition3 = mockEventCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, false)
 
-        assertNull(conditionDetector.detect(listOf(
+        assertNull(scenarioProcessor.process(listOf(
             ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(condition1, condition2, condition3)),
             ProcessingData.newEvent(name = TEST_DATA_NAME2, operator = AND, conditions = listOf(condition1, condition2, condition3)),
             ProcessingData.newEvent(name = TEST_DATA_NAME3, operator = AND, conditions = listOf(condition1, condition2, condition3)),
@@ -310,7 +309,7 @@ class ConditionDetectorTests {
         val condition2 = mockEventCondition(TEST_DATA_PATH2, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART, null)
         val condition3 = mockEventCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, null)
 
-        assertNull(conditionDetector.detect(listOf(
+        assertNull(scenarioProcessor.process(listOf(
             ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(condition1, condition2, condition3)),
             ProcessingData.newEvent(name = TEST_DATA_NAME2, operator = AND, conditions = listOf(condition1, condition2, condition3)),
             ProcessingData.newEvent(name = TEST_DATA_NAME3, operator = AND, conditions = listOf(condition1, condition2, condition3)),
@@ -324,7 +323,7 @@ class ConditionDetectorTests {
         val validCondition = mockEventCondition(TEST_DATA_PATH3, TEST_DATA_THRESHOLD, TEST_DATA_SCREEN_PART2, true)
         val expectedClick = ProcessingData.newEvent(name = TEST_DATA_NAME3, operator = OR, conditions = listOf(condition1, condition2, validCondition))
 
-        assertEquals(expectedClick, conditionDetector.detect(listOf(
+        assertEquals(expectedClick, scenarioProcessor.process(listOf(
             ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND, conditions = listOf(condition1, condition2)),
             ProcessingData.newEvent(name = TEST_DATA_NAME2, operator = AND, conditions = listOf(condition1, condition2)),
             expectedClick
@@ -339,7 +338,7 @@ class ConditionDetectorTests {
         val expectedEvent = ProcessingData.newEvent(name = TEST_DATA_NAME, operator = AND,
             conditions = listOf(condition1, condition2, condition3))
 
-        assertEquals(expectedEvent, conditionDetector.detect(listOf(
+        assertEquals(expectedEvent, scenarioProcessor.process(listOf(
             expectedEvent,
             ProcessingData.newEvent(name = TEST_DATA_NAME2, operator = AND, conditions = listOf(condition1, condition2, condition3)),
             ProcessingData.newEvent(name = TEST_DATA_NAME3, operator = AND, conditions = listOf(condition1, condition2, condition3)),

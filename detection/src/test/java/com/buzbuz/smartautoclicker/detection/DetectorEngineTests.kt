@@ -76,10 +76,10 @@ import org.robolectric.annotation.Config
 
 import java.nio.ByteBuffer
 
-/** Test the [ConditionDetector] class. */
+/** Test the [ScenarioProcessor] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q], shadows = [ ShadowImageReader::class, ShadowBitmapCreator::class ])
-class ScreenDetectorTests {
+class DetectorEngineTests {
 
     private companion object {
         private const val PROJECTION_RESULT_CODE = 42
@@ -143,7 +143,7 @@ class ScreenDetectorTests {
     private lateinit var mockInvalidConditionBitmap: Bitmap
 
     /** The object under tests. */
-    private lateinit var screenDetector: ScreenDetector
+    private lateinit var detectorEngine: DetectorEngine
 
     /**
      * Goes to start screen record state and provides to registered image available listener.
@@ -152,7 +152,7 @@ class ScreenDetectorTests {
      * @return the image available listener.
      */
     private fun toStartScreenRecord(): ImageReader.OnImageAvailableListener {
-        screenDetector.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
+        detectorEngine.startScreenRecord(mockContext, PROJECTION_RESULT_CODE, PROJECTION_DATA_INTENT)
         idleAllThread()
 
         val listenerCaptor = ArgumentCaptor.forClass(ImageReader.OnImageAvailableListener::class.java)
@@ -166,7 +166,7 @@ class ScreenDetectorTests {
      * This will execute all handlers runnable in order to ensure state correctness.
      */
     private fun toStopScreenRecord() {
-        screenDetector.stopScreenRecording()
+        detectorEngine.stopScreenRecording()
         idleAllThread()
     }
 
@@ -175,7 +175,7 @@ class ScreenDetectorTests {
      * This will execute all handlers runnable in order to ensure state correctness.
      */
     private fun executeCaptureArea() {
-        screenDetector.captureArea(VALID_CONDITION_AREA, mockCaptureCallback::onCaptured)
+        detectorEngine.captureArea(VALID_CONDITION_AREA, mockCaptureCallback::onCaptured)
         idleAllThread()
     }
 
@@ -186,7 +186,7 @@ class ScreenDetectorTests {
      * @param clicks the list of clicks used as tests data.
      */
     private fun toStartDetection(clicks: List<Event>) {
-        screenDetector.startDetection(clicks)
+        detectorEngine.startDetection(clicks)
         idleAllThread()
     }
 
@@ -195,13 +195,13 @@ class ScreenDetectorTests {
      * This will execute all handlers runnable in order to ensure state correctness.
      */
     private fun toStopDetection() {
-        screenDetector.stopDetection()
+        detectorEngine.stopDetection()
         idleAllThread()
     }
 
     /** Execute all pending executions on all loopers. */
     private fun idleAllThread() {
-        screenDetector.processingThread?.let { shadowOf(it.looper).idle() }
+        detectorEngine.processingThread?.let { shadowOf(it.looper).idle() }
         shadowOf(Looper.getMainLooper()).idle()
     }
 
@@ -274,7 +274,7 @@ class ScreenDetectorTests {
         mockWhen(mockBitmapCreator.createBitmap(eq(mockScreenBitmap), anyInt(), anyInt(), anyInt(), anyInt()))
             .thenReturn(mockCaptureBitmap)
 
-        screenDetector = ScreenDetector(mockContext, mockRepository)
+        detectorEngine = DetectorEngine(mockContext, mockRepository)
     }
 
     /** Setup the mocks for the screen recorder. */
@@ -385,14 +385,14 @@ class ScreenDetectorTests {
     @Test
     @Ignore("Migrate detector to coroutines")
     fun isScreenRecording_initialValue() = runBlocking {
-        assertFalse(screenDetector.isScreenRecording.first())
+        assertFalse(detectorEngine.isScreenRecording.first())
     }
 
     @Test
     @Ignore("Migrate detector to coroutines")
     fun isScreenRecording_recording() = runBlocking {
         toStartScreenRecord()
-        assertTrue(screenDetector.isScreenRecording.first())
+        assertTrue(detectorEngine.isScreenRecording.first())
     }
 
     @Test
@@ -440,7 +440,7 @@ class ScreenDetectorTests {
     @Ignore("Migrate detector to coroutines")
     fun isDetecting_notDetecting() = runBlocking {
         toStartScreenRecord()
-        assertFalse(screenDetector.isDetecting.first())
+        assertFalse(detectorEngine.isDetecting.first())
     }
 
     @Test
@@ -449,14 +449,14 @@ class ScreenDetectorTests {
         toStartScreenRecord()
         toStartDetection(emptyList())
 
-        assertTrue(screenDetector.isDetecting.first())
+        assertTrue(detectorEngine.isDetecting.first())
     }
 
     @Test
     @Ignore("Migrate detector to coroutines")
     fun stopDetecting_notStarted() = runBlocking {
         toStopDetection()
-        assertFalse(screenDetector.isDetecting.first())
+        assertFalse(detectorEngine.isDetecting.first())
     }
 
     @Test
@@ -467,7 +467,7 @@ class ScreenDetectorTests {
 
         toStopDetection()
 
-        assertFalse(screenDetector.isDetecting.first())
+        assertFalse(detectorEngine.isDetecting.first())
     }
 
     @Test
@@ -475,8 +475,8 @@ class ScreenDetectorTests {
     fun stopScreenRecord_notStarted() = runBlocking {
         toStopScreenRecord()
 
-        assertFalse(screenDetector.isScreenRecording.first())
-        assertFalse(screenDetector.isDetecting.first())
+        assertFalse(detectorEngine.isScreenRecording.first())
+        assertFalse(detectorEngine.isDetecting.first())
     }
 
     @Test
@@ -493,8 +493,8 @@ class ScreenDetectorTests {
             verify(mockMediaProjection).unregisterCallback(anyNotNull())
             verify(mockMediaProjection).stop()
         }
-        assertFalse(screenDetector.isScreenRecording.first())
-        assertFalse(screenDetector.isDetecting.first())
+        assertFalse(detectorEngine.isScreenRecording.first())
+        assertFalse(detectorEngine.isDetecting.first())
     }
 
     @Test
@@ -512,7 +512,7 @@ class ScreenDetectorTests {
             verify(mockMediaProjection).unregisterCallback(anyNotNull())
             verify(mockMediaProjection).stop()
         }
-        assertFalse(screenDetector.isScreenRecording.first())
-        assertFalse(screenDetector.isDetecting.first())
+        assertFalse(detectorEngine.isScreenRecording.first())
+        assertFalse(detectorEngine.isDetecting.first())
     }
 }

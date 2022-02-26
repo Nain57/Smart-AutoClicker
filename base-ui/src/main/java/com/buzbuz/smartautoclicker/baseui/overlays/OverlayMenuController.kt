@@ -314,8 +314,10 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * Handles the screen orientation changes.
      * It will save the menu position for the previous orientation and load and apply the correct position for the new
      * orientation.
+     *
+     * @param context the Android context.
      */
-    private fun onOrientationChanged() {
+    private fun onOrientationChanged(context: Context) {
         saveMenuPosition(if (screenMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE)
             Configuration.ORIENTATION_PORTRAIT
         else
