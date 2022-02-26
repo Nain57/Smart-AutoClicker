@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.opencv
 import android.graphics.Bitmap
 import android.graphics.Rect
 
-class NativeLib : AutoCloseable {
+class ImageDetector : AutoCloseable {
 
     companion object {
         // Used to load the 'smartautoclicker' library on application startup.

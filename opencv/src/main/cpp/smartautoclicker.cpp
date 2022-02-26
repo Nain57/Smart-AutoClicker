@@ -45,14 +45,14 @@ static Detector *getObject(JNIEnv *env, jobject self)
 }
 
 extern "C" {
-    JNIEXPORT jlong JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_newDetector(
+    JNIEXPORT jlong JNICALL Java_com_buzbuz_smartautoclicker_opencv_ImageDetector_newDetector(
             JNIEnv *env,
             jobject self
     ) {
         return reinterpret_cast<jlong>(new Detector());
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_setScreenImage(
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_opencv_ImageDetector_setScreenImage(
             JNIEnv *env,
             jobject self,
             jobject screenBitmap
@@ -60,7 +60,7 @@ extern "C" {
         getObject(env, self)->setScreenImage(env, screenBitmap);
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_detectCondition(
+    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_opencv_ImageDetector_detectCondition(
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
@@ -69,7 +69,7 @@ extern "C" {
         return getObject(env, self)->detectCondition(env, conditionBitmap, threshold);
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_detectConditionAt(
+    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_opencv_ImageDetector_detectConditionAt(
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
@@ -82,7 +82,7 @@ extern "C" {
         return getObject(env, self)->detectCondition(env, conditionBitmap, x, y, width, height, threshold);
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_opencv_NativeLib_deleteDetector(
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_opencv_ImageDetector_deleteDetector(
             JNIEnv *env,
             jobject self
     ) {
