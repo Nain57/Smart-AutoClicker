@@ -193,15 +193,12 @@ internal class ScreenRecorder {
  */
 internal fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
     var bitmap = resultBitmap
-    if (bitmap == null || bitmap.width != width || bitmap.height != height) {
-        val pixelStride = planes[0].pixelStride
-        val rowPadding = planes[0].rowStride - pixelStride * width
+    val imageWidth = width + (planes[0].rowStride - planes[0].pixelStride * width) / planes[0].pixelStride
 
-        if (bitmap == null) {
-            bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888)
-        } else {
-            bitmap.reconfigure(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888)
-        }
+    if (bitmap == null) {
+        bitmap = Bitmap.createBitmap(imageWidth, height, Bitmap.Config.ARGB_8888)
+    } else if (bitmap.width != imageWidth || bitmap.height != height) {
+        bitmap.reconfigure(imageWidth, height, Bitmap.Config.ARGB_8888)
     }
 
     bitmap?.copyPixelsFromBuffer(planes[0].buffer)

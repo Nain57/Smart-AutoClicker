@@ -79,7 +79,9 @@ internal class ScenarioProcessor(
         yield()
 
         // Set the current screen image
-        imageDetector.setScreenImage(screenImage.toBitmap(processedScreenBitmap))
+        processedScreenBitmap = screenImage.toBitmap(processedScreenBitmap).apply {
+            imageDetector.setScreenImage(this)
+        }
 
         for (event in events) {
             // No conditions ? This should not happen, skip this event
@@ -146,15 +148,17 @@ internal class ScenarioProcessor(
      * @return true if the currently processed [Image] contains the condition bitmap at the condition area.
      */
     private fun checkCondition(imageDetector: ImageDetector, condition: Condition) : Boolean {
-        val path = condition.path ?: return false
-        val conditionBitmap = bitmapSupplier(path, condition.area.width(), condition.area.height()) ?: return false
-        val detectionRatio = (100 - condition.threshold).toDouble() / 100
-
-        return when (condition.detectionType) {
-            EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, detectionRatio)
-            WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, detectionRatio)
-            else -> false
+        condition.path?.let { path ->
+            bitmapSupplier(path, condition.area.width(), condition.area.height())?.let { conditionBitmap ->
+                return when (condition.detectionType) {
+                    EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
+                    WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
+                    else -> false
+                }
+            }
         }
+
+        return false
     }
 
     override fun close() {

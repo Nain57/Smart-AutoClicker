@@ -64,7 +64,7 @@ extern "C" {
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
-            jdouble threshold
+            jint threshold
     ) {
         return getObject(env, self)->detectCondition(env, conditionBitmap, threshold);
     }
@@ -77,7 +77,7 @@ extern "C" {
             jint y,
             jint width,
             jint height,
-            jdouble threshold
+            jint threshold
     ) {
         return getObject(env, self)->detectCondition(env, conditionBitmap, x, y, width, height, threshold);
     }
