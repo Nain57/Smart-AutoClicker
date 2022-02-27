@@ -17,12 +17,6 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-allopen'
-
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation 'com.buzbuz.smartautoclicker.testing.OpenClass'
-}
 
 android {
     compileSdkVersion 31
@@ -56,8 +50,6 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
-
     implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
 
@@ -68,6 +60,7 @@ dependencies {
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
     testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_version"
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
     testImplementation "org.mockito.kotlin:mockito-kotlin:${rootProject.ext.mockitoKotlinVersion}"
     testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
