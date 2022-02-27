@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,27 +23,28 @@ import android.content.res.Resources
 import android.graphics.Point
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
+import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.os.Handler
 import android.view.Surface
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.engine.shadows.ShadowImageReader
 import com.buzbuz.smartautoclicker.engine.utils.anyNotNull
+
 import kotlinx.coroutines.runBlocking
 
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
-import org.mockito.Mockito.eq
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.isNull
 import org.mockito.Mockito.never
@@ -81,10 +82,9 @@ class ScreenRecorderTests {
     @Mock private lateinit var mockMediaProjectionManager: MediaProjectionManager
     @Mock private lateinit var mockMediaProjection: MediaProjection
     @Mock private lateinit var mockImageReader: ImageReader
+    @Mock private lateinit var mockScreenImage: Image
     @Mock private lateinit var mockSurface: Surface
     @Mock private lateinit var mockVirtualDisplay: VirtualDisplay
-    @Mock private lateinit var mockHandler: Handler
-    @Mock private lateinit var mockImageListener: ImageReader.OnImageAvailableListener
     @Mock private lateinit var mockStoppedListener: StoppedListener
 
     /** The object under tests. */
@@ -102,6 +102,7 @@ class ScreenRecorderTests {
         // Setup Image reader
         ShadowImageReader.setMockInstance(mockImageReader)
         mockWhen(mockImageReader.surface).thenReturn(mockSurface)
+        mockWhen(mockImageReader.acquireLatestImage()).thenReturn(mockScreenImage)
 
         // Setup projection mocks
         mockWhen(mockMediaProjectionManager.getMediaProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT))
@@ -117,7 +118,7 @@ class ScreenRecorderTests {
             null)
         ).thenReturn(mockVirtualDisplay)
 
-        screenRecorder = ScreenRecorder(mockImageListener)
+        screenRecorder = ScreenRecorder()
     }
 
     @After
@@ -147,32 +148,31 @@ class ScreenRecorderTests {
     fun startScreenRecord() = runBlocking {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
 
-        verify(mockImageReader).setOnImageAvailableListener(mockImageListener, mockHandler)
+        assertEquals(1, ShadowImageReader.getInstanceCreationCount())
     }
 
     @Test
     fun startScreenRecord_alreadyStarted() = runBlocking  {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
 
-        verify(mockImageReader, times(1)).setOnImageAvailableListener(mockImageListener, mockHandler)
+        assertEquals(1, ShadowImageReader.getInstanceCreationCount())
     }
 
     @Test
     fun stopProjection() = runBlocking  {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
 
         screenRecorder.stopProjection()
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
             verify(mockVirtualDisplay).release()
-            verify(mockImageReader).setOnImageAvailableListener(null, null)
             verify(mockImageReader).close()
             verify(mockMediaProjection).unregisterCallback(anyNotNull())
             verify(mockMediaProjection).stop()
@@ -195,13 +195,12 @@ class ScreenRecorderTests {
     fun stopScreenRecord() = runBlocking {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
 
         screenRecorder.stopScreenRecord()
 
         inOrder(mockVirtualDisplay, mockImageReader, mockMediaProjection).apply {
             verify(mockVirtualDisplay).release()
-            verify(mockImageReader).setOnImageAvailableListener(null, null)
             verify(mockImageReader).close()
         }
         Unit
@@ -232,12 +231,8 @@ class ScreenRecorderTests {
     fun onNewImage() = runBlocking  {
         screenRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE, mockHandler)
+        screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
 
-        val imageReaderCbCaptor = ArgumentCaptor.forClass(ImageReader.OnImageAvailableListener::class.java)
-        verify(mockImageReader).setOnImageAvailableListener(imageReaderCbCaptor.capture(), eq(mockHandler))
-        imageReaderCbCaptor.value.onImageAvailable(mockImageReader)
-
-        verify(mockImageListener).onImageAvailable(mockImageReader)
+        assertEquals(mockScreenImage, screenRecorder.acquireLatestImage())
     }
 }

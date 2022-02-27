@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,6 +33,9 @@ public class ShadowImageReader {
     @Nullable
     private static ImageReader mockImageReader = null;
 
+    /** The number of time [newInstance] have been called before the reset. */
+    private static int sInstanceCreationCount = 0;
+
     /**
      * Method to be called from the tests to set the mock returned by the [ImageReader.newInstance] method.
      *
@@ -42,12 +45,18 @@ public class ShadowImageReader {
         mockImageReader = mock;
     }
 
+    /** @return the number of time [newInstance] have been called before the reset. */
+    public static int getInstanceCreationCount() {
+        return sInstanceCreationCount;
+    }
+
     @NonNull
     @Implementation
     public static ImageReader newInstance(int width, int height, int format, int maxImages) {
         if (mockImageReader == null) {
             throw new IllegalStateException("Image reader is not mocked");
         }
+        sInstanceCreationCount++;
         return mockImageReader;
     }
 
@@ -55,5 +64,6 @@ public class ShadowImageReader {
     @Resetter
     public static void reset() {
         mockImageReader = null;
+        sInstanceCreationCount = 0;
     }
 }

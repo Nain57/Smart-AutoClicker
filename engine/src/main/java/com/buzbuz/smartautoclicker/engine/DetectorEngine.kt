@@ -28,6 +28,8 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.detection.ImageDetector
+import com.buzbuz.smartautoclicker.detection.NativeDetector
 import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
 
 import kotlinx.coroutines.CoroutineScope
@@ -101,6 +103,8 @@ class DetectorEngine(context: Context) {
     private val screenRecorder = ScreenRecorder()
     /** Process the events conditions to detect them on the screen. */
     private var scenarioProcessor: ScenarioProcessor? = null
+    /** Detect the condition images on the screen image. */
+    private var imageDetector: ImageDetector? = null
     /** Execute gestures (click or swipe) on the screen. */
     private var gestureExecutor: ((GestureDescription) -> Unit)? = null
 
@@ -241,7 +245,9 @@ class DetectorEngine(context: Context) {
         _isDetecting.value = true
 
         processingJob = processingScope?.launch {
+            imageDetector = NativeDetector()
             scenarioProcessor = ScenarioProcessor(
+                imageDetector = imageDetector!!,
                 events = scenarioEvents.value,
                 bitmapSupplier = { path, width, height ->
                     // We can run blocking here, we are on the screen detector thread
@@ -273,7 +279,8 @@ class DetectorEngine(context: Context) {
             processingJob?.cancelAndJoin()
             processingJob = null
 
-            scenarioProcessor?.close()
+            imageDetector?.close()
+            imageDetector = null
             scenarioProcessor = null
 
             _isDetecting.value = false

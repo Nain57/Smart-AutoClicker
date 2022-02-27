@@ -19,38 +19,11 @@ package com.buzbuz.smartautoclicker.detection
 import android.graphics.Bitmap
 import android.graphics.Rect
 
-class ImageDetector : AutoCloseable {
+interface ImageDetector : AutoCloseable {
 
-    companion object {
-        // Used to load the 'smartautoclicker' library on application startup.
-        init {
-            System.loadLibrary("smartautoclicker")
-        }
-    }
+    fun setScreenImage(screenBitmap: Bitmap)
 
-    private val nativePtr: Long = newDetector()
+    fun detectCondition(conditionBitmap: Bitmap, threshold: Int): Boolean
 
-    override fun close() = deleteDetector()
-
-    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): Boolean {
-        return detectConditionAt(conditionBitmap, position.left, position.top, position.width(), position.height(), threshold)
-    }
-
-    private external fun newDetector(): Long
-
-    private external fun deleteDetector()
-
-    external fun setScreenImage(screenBitmap: Bitmap)
-
-    external fun detectCondition(conditionBitmap: Bitmap, threshold: Int): Boolean
-
-    private external fun detectConditionAt(
-        conditionBitmap:
-        Bitmap,
-        x: Int,
-        y: Int,
-        width: Int,
-        height: Int,
-        threshold: Int
-    ): Boolean
+    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): Boolean
 }

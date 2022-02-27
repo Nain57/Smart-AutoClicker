@@ -34,20 +34,20 @@ import kotlinx.coroutines.yield
 /**
  * Process a screen image and tries to detect the list of [Event] on it.
  *
+ * @param imageDetector the detector for images.
  * @param events the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param gestureExecutor execute the actions gestures on the user screen.
  * @param onEndConditionReached called when a end condition of the scenario have been reached.
  */
 internal class ScenarioProcessor(
+    private val imageDetector: ImageDetector,
     private val events: List<Event>,
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
     gestureExecutor: (GestureDescription) -> Unit,
     private val onEndConditionReached: () -> Unit,
-) : AutoCloseable {
+) {
 
-    /** Detect the condition images on the screen image. */
-    private val imageDetector = ImageDetector()
     /** Execute the detected event actions. */
     private val actionExecutor = ActionExecutor(gestureExecutor)
     /** Number of execution count for each events since the processing start. */
@@ -65,19 +65,6 @@ internal class ScenarioProcessor(
      * @return the first Event with all conditions fulfilled, or null if none has been found.
      */
     suspend fun process(screenImage: Image) {
-        // Check if an event has reached its max execution count.
-        executedEvents.forEach { (event, executedCount) ->
-            event.stopAfter?.let { stopAfter ->
-                if (stopAfter <= executedCount) {
-                    onEndConditionReached()
-                    return
-                }
-            }
-        }
-
-        // Stop processing if requested
-        yield()
-
         // Set the current screen image
         processedScreenBitmap = screenImage.toBitmap(processedScreenBitmap).apply {
             imageDetector.setScreenImage(this)
@@ -98,6 +85,18 @@ internal class ScenarioProcessor(
                 event.actions?.let { actions ->
                     actionExecutor.executeActions(actions)
                 }
+
+                // Check if an event has reached its max execution count.
+                executedEvents.forEach { (event, executedCount) ->
+                    event.stopAfter?.let { stopAfter ->
+                        if (stopAfter <= executedCount) {
+                            onEndConditionReached()
+                            return
+                        }
+                    }
+                }
+
+                break
             }
 
             // Stop processing if requested
@@ -159,9 +158,5 @@ internal class ScenarioProcessor(
         }
 
         return false
-    }
-
-    override fun close() {
-        imageDetector.close()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,13 +18,20 @@ package com.buzbuz.smartautoclicker.engine
 
 import android.accessibilityservice.GestureDescription
 import android.os.Build
-import android.os.Looper
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.engine.utils.anyNotNull
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -37,11 +44,10 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 
-import org.robolectric.Shadows.shadowOf
-
 import org.robolectric.annotation.Config
 
 /** Test the [ActionExecutor] class. */
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class ActionExecutorTests {
@@ -49,7 +55,7 @@ class ActionExecutorTests {
     private companion object {
         private const val TEST_EVENT_ID = 42L
         private const val TEST_NAME = "Action name"
-        private const val TEST_DURATION = 145L
+        private const val TEST_DURATION = 25L
         private const val TEST_X1 = 12
         private const val TEST_X2 = 24
         private const val TEST_Y1 = 88
@@ -81,30 +87,27 @@ class ActionExecutorTests {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(StandardTestDispatcher())
 
-        actionExecutor = ActionExecutor()
-        actionExecutor.onGestureExecutionListener = mockExecutionListener::executeGesture
+        actionExecutor = ActionExecutor(mockExecutionListener::executeGesture)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun defaultState() {
-        assertEquals(ActionExecutor.State.IDLE, actionExecutor.state)
-    }
-
-    @Test
-    fun noActions() {
+    fun noActions() = runTest {
         actionExecutor.executeActions(emptyList())
-
         verify(mockExecutionListener, never()).executeGesture(anyNotNull())
-        assertEquals(ActionExecutor.State.IDLE, actionExecutor.state)
     }
 
     @Test
-    fun execute_oneClick() {
+    fun execute_oneClick() = runTest {
         val clickAction = getNewDefaultClick(1)
 
         actionExecutor.executeActions(listOf(clickAction))
-        shadowOf(Looper.getMainLooper()).idle()
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
@@ -112,11 +115,10 @@ class ActionExecutorTests {
     }
 
     @Test
-    fun execute_oneSwipe() {
+    fun execute_oneSwipe() = runTest {
         val swipeAction = getNewDefaultSwipe(1)
 
         actionExecutor.executeActions(listOf(swipeAction))
-        shadowOf(Looper.getMainLooper()).idle()
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
@@ -124,44 +126,18 @@ class ActionExecutorTests {
     }
 
     @Test
-    fun execute_onePause() {
+    fun execute_onePause() = runTest {
         val pause = getNewDefaultPause(1)
 
         // Execute the pause. As the handler is waiting to the finish the pause, we should stays in EXECUTING
         actionExecutor.executeActions(listOf(pause))
-        assertEquals(ActionExecutor.State.EXECUTING, actionExecutor.state)
-
-        // Execute the pause end. Executor should be back to IDLE
-        shadowOf(Looper.getMainLooper()).runToEndOfTasks()
-        assertEquals(ActionExecutor.State.IDLE, actionExecutor.state)
 
         // Only a pause, there should be no gestures
         verify(mockExecutionListener, never()).executeGesture(anyNotNull())
     }
 
     @Test
-    fun execute_twoPauses() {
-        val pause1 = getNewDefaultPause(1)
-        val pause2 = getNewDefaultPause(2)
-
-        // Execute the pauses. As the handler is waiting to the finish the pause, we should stays in EXECUTING
-        actionExecutor.executeActions(listOf(pause1, pause2))
-        assertEquals(ActionExecutor.State.EXECUTING, actionExecutor.state)
-
-        // Execute the first pause end. Executor should stays EXECUTING.
-        shadowOf(Looper.getMainLooper()).runToNextTask()
-        assertEquals(ActionExecutor.State.EXECUTING, actionExecutor.state)
-
-        // Execute the second pause end. Executor should be back to IDLE
-        shadowOf(Looper.getMainLooper()).runToNextTask()
-        assertEquals(ActionExecutor.State.IDLE, actionExecutor.state)
-
-        // Only a pause, there should be no gestures
-        verify(mockExecutionListener, never()).executeGesture(anyNotNull())
-    }
-
-    @Test
-    fun execute_mixed() {
+    fun execute_mixed() = runTest {
         val click = getNewDefaultClick(1)
         val pause = getNewDefaultPause(2)
         val swipe = getNewDefaultSwipe(3)
@@ -169,17 +145,6 @@ class ActionExecutorTests {
 
         // Execute the actions.
         actionExecutor.executeActions(listOf(click, pause, swipe))
-
-        // Execute the click
-        shadowOf(Looper.getMainLooper()).runToNextTask()
-        // As the handler is waiting to the finish the pause, we should be in EXECUTING.
-        assertEquals(ActionExecutor.State.EXECUTING, actionExecutor.state)
-        // Execute the pause end.
-        shadowOf(Looper.getMainLooper()).runToNextTask()
-        // Execute the swipe.
-        shadowOf(Looper.getMainLooper()).runToNextTask()
-        // All actions are executed, we should be in IDLE.
-        assertEquals(ActionExecutor.State.IDLE, actionExecutor.state)
 
         // Verify the gestures executions
         verify(mockExecutionListener, times(2)).executeGesture(gestureCaptor.capture())
