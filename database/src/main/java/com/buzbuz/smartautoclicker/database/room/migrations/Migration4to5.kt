@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.database.room.migrations
 
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -50,6 +49,10 @@ object Migration4to5 : Migration(4, 5) {
 
     private fun SupportSQLiteDatabase.updateAllThreshold() {
         query(getAllConditions).use { cursor ->
+            if (cursor.count == 0) {
+                return
+            }
+
             cursor.moveToFirst()
 
             val idColumnIndex = cursor.getColumnIndex("id")
