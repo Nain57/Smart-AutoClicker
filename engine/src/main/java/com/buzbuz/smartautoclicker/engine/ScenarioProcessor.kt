@@ -77,7 +77,7 @@ internal class ScenarioProcessor(
             }
 
             // If conditions are fulfilled, execute this event's actions !
-            if (verifyConditions(imageDetector, event.conditionOperator, event.conditions!!)) {
+            if (verifyConditions(event.conditionOperator, event.conditions!!)) {
 
                 executedEvents[event] = executedEvents[event]?.plus(1)
                     ?: throw IllegalStateException("Can' find the event in the executed events map.")
@@ -115,14 +115,13 @@ internal class ScenarioProcessor(
      * @param conditions the condition to be checked on the currently processed [Image].
      */
     private fun verifyConditions(
-        imageDetector: ImageDetector,
         @ConditionOperator operator: Int,
         conditions: List<Condition>
     ) : Boolean {
 
         for (condition in conditions) {
             // Verify if the condition is fulfilled.
-            if (!checkCondition(imageDetector, condition)) {
+            if (!checkCondition(condition)) {
                 if (operator == AND) {
                     // One of the condition isn't fulfilled, it's a false for a AND operator.
                     return false
@@ -146,17 +145,27 @@ internal class ScenarioProcessor(
      *
      * @return true if the currently processed [Image] contains the condition bitmap at the condition area.
      */
-    private fun checkCondition(imageDetector: ImageDetector, condition: Condition) : Boolean {
+    private fun checkCondition(condition: Condition) : Boolean {
         condition.path?.let { path ->
             bitmapSupplier(path, condition.area.width(), condition.area.height())?.let { conditionBitmap ->
-                return when (condition.detectionType) {
-                    EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
-                    WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
-                    else -> false
-                }
+                return if (condition.shouldBeDetected) detect(condition, conditionBitmap)
+                else !detect(condition, conditionBitmap)
             }
         }
 
         return false
     }
+
+    /**
+     * Detect the condition on the screen.
+     *
+     * @param condition the condition to be detected.
+     * @param conditionBitmap the bitmap representing the condition.
+     */
+    private fun detect(condition: Condition, conditionBitmap: Bitmap): Boolean =
+        when (condition.detectionType) {
+            EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
+            WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
+            else -> false
+        }
 }
