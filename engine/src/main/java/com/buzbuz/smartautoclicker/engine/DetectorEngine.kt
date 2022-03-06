@@ -207,19 +207,23 @@ class DetectorEngine(context: Context) {
         }
 
         processingScope?.launch {
-            screenRecorder.acquireLatestImage()?.use { image ->
-                val bitmap = Bitmap.createBitmap(
-                    image.toBitmap(),
-                    area.left,
-                    area.top,
-                    area.width(),
-                    area.height()
-                )
+            var image: Image?
+            do {
+                image = screenRecorder.acquireLatestImage()
+                image?.use {
+                    val bitmap = Bitmap.createBitmap(
+                        it.toBitmap(),
+                        area.left,
+                        area.top,
+                        area.width(),
+                        area.height()
+                    )
 
-                withContext(Dispatchers.Main) {
-                    callback(bitmap)
+                    withContext(Dispatchers.Main) {
+                        callback(bitmap)
+                    }
                 }
-            }
+            } while (image == null)
         }
     }
 
