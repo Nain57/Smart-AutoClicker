@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,7 +44,6 @@ import com.buzbuz.smartautoclicker.overlays.copy.conditions.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -275,7 +274,7 @@ class EventConfigDialog(
                         viewModel?.let { model ->
                             subOverlayViewModel?.requestSubOverlay(
                                 SubOverlay.ActionConfig(
-                                    model.createAction(context, choiceClicked as ActionTypeChoice),
+                                    model.createAction(context, choiceClicked),
                                 )
                             )
                         }

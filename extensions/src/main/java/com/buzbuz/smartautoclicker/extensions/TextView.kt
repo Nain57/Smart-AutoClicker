@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,20 @@ import androidx.core.content.ContextCompat
  */
 fun TextView.setLeftCompoundDrawable(@DrawableRes id: Int, @ColorInt tint: Int = -1) {
     setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(context, id), null, null, null)
+    if (tint != -1) {
+        compoundDrawablesRelative[0].setTint(tint)
+    }
+}
+
+/**
+ * Set the right compound drawable for this TextView.
+ * All other compound drawable will be set to null.
+ *
+ * @param id the drawable to be set.
+ * @param tint the tint color to apply to the drawable.
+ */
+fun TextView.setRightCompoundDrawable(@DrawableRes id: Int, @ColorInt tint: Int = -1) {
+    setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(context, id), null)
     if (tint != -1) {
         compoundDrawablesRelative[0].setTint(tint)
     }

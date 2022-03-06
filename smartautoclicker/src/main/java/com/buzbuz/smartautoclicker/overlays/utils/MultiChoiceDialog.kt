@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.utils
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
@@ -32,16 +33,17 @@ import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 /**
  * [OverlayDialogController] implementation for a dialog displaying a list of choices to the user.
  *
+ * @param T the type of choices in the list.
  * @param context the Android Context for the dialog shown by this controller.
  * @param dialogTitle the title of the dialog.
  * @param choices the choices to be displayed.
  * @param onChoiceSelected the callback to be notified upon user choice selection.
  */
-class MultiChoiceDialog(
+class MultiChoiceDialog<T : DialogChoice>(
     context: Context,
     private val dialogTitle: Int,
-    choices: List<DialogChoice>,
-    private val onChoiceSelected: (DialogChoice) -> Unit
+    choices: List<T>,
+    private val onChoiceSelected: (T) -> Unit
 ) : OverlayDialogController(context) {
 
     /** ViewBinding containing the views for this dialog. */
@@ -70,12 +72,13 @@ class MultiChoiceDialog(
 /**
  * Adapter displaying the choices in the dialog.
  *
+ * @param T the type of choices in the list.
  * @param choices the choices to be displayed in the list.
  * @param onChoiceSelected called when the user clicks on a choice.
  */
-private class ChoiceAdapter(
-    private val choices: List<DialogChoice>,
-    private val onChoiceSelected: (DialogChoice) -> Unit,
+private class ChoiceAdapter<T : DialogChoice>(
+    private val choices: List<T>,
+    private val onChoiceSelected: (T) -> Unit,
 ): RecyclerView.Adapter<ChoiceViewHolder>() {
 
     override fun getItemCount(): Int = choices.size

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,10 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.condition
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
+import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.SeekBar
 
 import androidx.appcompat.app.AlertDialog
@@ -32,10 +35,14 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.EXACT
+import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.databinding.DialogConditionConfigBinding
+import com.buzbuz.smartautoclicker.extensions.setRightCompoundDrawable
+import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -69,11 +76,7 @@ class ConditionConfigDialog(
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_condition_title)
             .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewModel?.let {
-                    onConfirmClicked.invoke(it.getConfiguredCondition())
-                }
-            }
+            .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(android.R.string.cancel, null)
             .setNeutralButton(R.string.dialog_condition_delete) { _: DialogInterface, _: Int ->
                 onDeleteClicked.invoke()
@@ -82,13 +85,29 @@ class ConditionConfigDialog(
 
     override fun onDialogCreated(dialog: AlertDialog) {
         condition.let { condition ->
-            viewBinding.textAreaAt.text = context.getString(
-                R.string.dialog_condition_at,
-                condition.area.left,
-                condition.area.top,
-                condition.area.right,
-                condition.area.bottom
-            )
+            viewBinding.editName.apply {
+                setSelectAllOnFocus(true)
+                addTextChangedListener(object : OnAfterTextChangedListener() {
+                    override fun afterTextChanged(s: Editable?) {
+                        viewModel?.setName(s.toString())
+                    }
+                })
+            }
+
+            viewBinding.conditionDetectionType.apply {
+                setRightCompoundDrawable(R.drawable.ic_chevron)
+                setOnClickListener {
+                    showSubOverlay(MultiChoiceDialog(
+                        context = context,
+                        dialogTitle = R.string.dialog_condition_type_title,
+                        choices = listOf(DetectionTypeChoice.Exact, DetectionTypeChoice.WholeScreen),
+                        onChoiceSelected = { choiceClicked ->
+                            viewModel?.setDetectionType(choiceClicked)
+                        }
+                    ))
+                }
+            }
+
             viewBinding.seekbarDiffThreshold.apply {
                 max = MAX_THRESHOLD
                 progress = condition.threshold
@@ -112,17 +131,57 @@ class ConditionConfigDialog(
                         }
                     )
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-                    viewBinding.textAreaAt.setText(R.string.dialog_condition_error)
+                    viewBinding.conditionDetectionType.setText(R.string.dialog_condition_error)
                 }
             }
 
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel?.threshold?.collect { threshold ->
-                        viewBinding.textDiffThreshold.text = context.getString(
-                            R.string.dialog_condition_threshold_value,
-                            threshold
-                        )
+                    launch {
+                        viewModel?.name?.collect { name ->
+                            viewBinding.editName.apply {
+                                setText(name)
+                                setSelection(name?.length ?: 0)
+                            }
+                        }
+                    }
+
+                    launch {
+                        viewModel?.detectionType?.collect { conditionType ->
+                            viewBinding.conditionDetectionType.text = when (conditionType) {
+                                EXACT -> context.getString(
+                                    R.string.dialog_condition_at,
+                                    condition.area.left,
+                                    condition.area.top,
+                                    condition.area.right,
+                                    condition.area.bottom
+                                )
+                                WHOLE_SCREEN -> context.getString(R.string.dialog_condition_type_whole_screen)
+                                else -> {
+                                    Log.e(TAG, "Invalid condition detection type, displaying nothing.")
+                                    null
+                                }
+                            }
+                        }
+                    }
+
+                    launch {
+                        viewModel?.threshold?.collect { threshold ->
+                            viewBinding.textDiffThreshold.text = context.getString(
+                                R.string.dialog_condition_threshold_value,
+                                threshold
+                            )
+                        }
+                    }
+
+                    launch {
+                        viewModel?.isValidCondition?.collect { isValid ->
+                            changeButtonState(
+                                button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
+                                visibility = if (isValid) View.VISIBLE else View.INVISIBLE,
+                                listener = { onOkClicked() }
+                            )
+                        }
                     }
                 }
             }
@@ -134,4 +193,15 @@ class ConditionConfigDialog(
         bitmapLoadingJob?.cancel()
         viewModel = null
     }
+
+    /** Called when the user press the OK button of the dialog. */
+    private fun onOkClicked() {
+        viewModel?.let {
+            onConfirmClicked.invoke(it.getConfiguredCondition())
+        }
+        dismiss()
+    }
 }
+
+/** Tag for logs. */
+private const val TAG = "ConditionConfigDialog"

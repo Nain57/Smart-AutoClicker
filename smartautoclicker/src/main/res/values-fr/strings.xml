@@ -62,8 +62,12 @@
     <string name="condition_operator_and_desc">Toutes les conditions sont remplies</string>
     <string name="condition_operator_or_desc">Au moins une des conditions est remplie</string>
     <string name="dialog_condition_title">Condition d\'évènements</string>
+    <string name="dialog_condition_name_title">Nom</string>
     <string name="dialog_condition_delete">Supprimer</string>
     <string name="dialog_condition_at">à la position [%1$d,%2$d] [%3$d,%4$d]</string>
+    <string name="dialog_condition_type_title">Type de détection</string>
+    <string name="dialog_condition_type_whole_screen">Sur tout l\'écran</string>
+    <string name="dialog_condition_type_exact_position">À la même position</string>
     <string name="dialog_condition_threshold_title">Différence tolérée</string>
     <string name="dialog_condition_threshold_value">Tolérance: %1$d %%</string>
     <string name="dialog_condition_error">L\'image de la condition n\'a pas pu être trouvée.</string>
@@ -87,7 +91,7 @@
     <string name="content_desc_overlay_state">État de la permission de superposition</string>
     <string name="content_desc_accessibility_state">État du service d\'accessibilité</string>
     <string name="content_desc_action">L\'action à éxecuter</string>
-    <string name="dialog_condition_details_title">Détails</string>
+    <string name="dialog_condition_detection_details_title">Détails de la détection</string>
     <string name="dialog_action_type_click">Clic</string>
     <string name="dialog_action_type_swipe">Swipe</string>
     <string name="dialog_action_type_pause">Pause</string>

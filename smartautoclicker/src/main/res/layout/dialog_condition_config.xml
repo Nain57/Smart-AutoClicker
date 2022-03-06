@@ -41,7 +41,42 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_condition_details_title"
+                    android:text="@string/dialog_condition_name_title"
+                    android:labelFor="@+id/edit_name"
+                    style="@style/HeaderTitle"/>
+
+                <include layout="@layout/include_view_separator"/>
+
+                <EditText
+                    android:id="@id/edit_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:maxLength="@integer/name_max_length"
+                    tools:text="@string/default_condition_name" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/HeaderCardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_condition_detection_details_title"
                     android:labelFor="@+id/edit_name"
                     style="@style/HeaderTitle"/>
 
@@ -63,14 +98,13 @@
                 <include layout="@layout/include_view_separator"/>
 
                 <TextView
-                    android:id="@+id/text_area_at"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_vertical_default"
-                    android:layout_marginBottom="@dimen/margin_vertical_default"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/dialog_condition_at"
-                    android:textSize="@dimen/text_size_list_item_text"/>
+                    android:id="@+id/condition_detection_type"
+                    style="@style/ItemView.Small"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/text_size_list_item_text"
+                    android:drawablePadding="@dimen/margin_horizontal_small"
+                    tools:drawableEnd="@drawable/ic_chevron"
+                    tools:text="@string/dialog_condition_type_whole_screen"/>
 
             </LinearLayout>
 

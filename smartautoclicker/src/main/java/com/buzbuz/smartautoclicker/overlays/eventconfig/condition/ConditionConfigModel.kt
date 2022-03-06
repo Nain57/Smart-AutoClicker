@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,15 +19,21 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.condition
 import android.content.Context
 import android.graphics.Bitmap
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.EXACT
+import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,8 +49,16 @@ class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** The condition being configured by the user. Defined using [setConfigCondition]. */
     private val configuredCondition = MutableStateFlow<Condition?>(null)
+    /** The type of detection currently selected by the user. */
+    val name: Flow<String?> = configuredCondition.map { it?.name }.take(1)
+    /** The type of detection currently selected by the user. */
+    val detectionType: Flow<Int> = configuredCondition.mapNotNull { it?.detectionType }
     /** The condition threshold value currently edited by the user. */
     val threshold: Flow<Int> = configuredCondition.mapNotNull { it?.threshold }
+    /** Tells if the configured condition is valid and can be saved. */
+    val isValidCondition: Flow<Boolean> = configuredCondition.map { condition ->
+        condition != null && condition.name.isNotEmpty()
+    }
 
     /**
      * Set the configured condition.
@@ -63,14 +77,37 @@ class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
         configuredCondition.value ?: throw IllegalStateException("Can't get the configured condition, none were defined.")
 
     /**
+     * Set the configured condition name.
+     * @param name the new condition name.
+     */
+    fun setName(name: String) {
+        configuredCondition.value?.let { condition ->
+            configuredCondition.value = condition.copy(name = name)
+        } ?: throw IllegalStateException("Can't set event name, event is null!")
+    }
+
+    /**
+     * Set the detection type of the configured condition.
+     * @param type the new type value.
+     */
+    fun setDetectionType(type: DetectionTypeChoice) {
+        configuredCondition.value?.let { condition ->
+            when (type) {
+                DetectionTypeChoice.Exact ->
+                    configuredCondition.value = condition.copy(detectionType = EXACT)
+                DetectionTypeChoice.WholeScreen ->
+                    configuredCondition.value = condition.copy(detectionType = WHOLE_SCREEN)
+            }
+        }
+    }
+
+    /**
      * Set the threshold of the configured condition.
      * @param value the new threshold value.
      */
     fun setThreshold(value: Int) {
         configuredCondition.value?.let { condition ->
-            viewModelScope.launch {
-                configuredCondition.emit(condition.copy(threshold = value))
-            }
+            configuredCondition.value = condition.copy(threshold = value)
         }
     }
 
@@ -102,6 +139,14 @@ class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
         onBitmapLoaded.invoke(null)
         return null
     }
+}
+
+/** Choices for the condition detection type selection dialog. */
+sealed class DetectionTypeChoice(title: Int): DialogChoice(title, null) {
+    /** Exact position choice. */
+    object Exact : DetectionTypeChoice(R.string.dialog_condition_type_exact_position)
+    /** Whole screen choice. */
+    object WholeScreen : DetectionTypeChoice(R.string.dialog_condition_type_whole_screen)
 }
 
 /** The maximum threshold value selectable by the user. */

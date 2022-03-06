@@ -99,9 +99,13 @@
     <string name="dialog_action_copy_search">Search by action name</string>
 
     <string name="dialog_condition_title">Condition</string>
-    <string name="dialog_condition_details_title">Details</string>
+    <string name="dialog_condition_name_title">Name</string>
+    <string name="dialog_condition_detection_details_title">Detection details</string>
     <string name="dialog_condition_delete">Delete</string>
     <string name="dialog_condition_at">at position [%1$d,%2$d] [%3$d,%4$d]</string>
+    <string name="dialog_condition_type_title">Detection type</string>
+    <string name="dialog_condition_type_whole_screen">Anywhere on screen</string>
+    <string name="dialog_condition_type_exact_position">At the same position</string>
     <string name="dialog_condition_threshold_title">Tolerated difference</string>
     <string name="dialog_condition_threshold_value">Tolerance: %1$d %%</string>
     <string name="dialog_condition_error">The condition image can\'t be found.</string>
