@@ -36,5 +36,5 @@ internal object ProcessingData {
         area: Rect,
         threshold: Int,
         @DetectionType detectionType: Int,
-    ) = Condition(1L, 1L, "TOTO", path, area, threshold, detectionType, null)
+    ) = Condition(1L, 1L, "TOTO", path, area, threshold, detectionType, true,null)
 }

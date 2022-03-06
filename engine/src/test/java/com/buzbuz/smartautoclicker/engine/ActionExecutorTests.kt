@@ -62,7 +62,7 @@ class ActionExecutorTests {
         private const val TEST_Y2 = 76
 
         fun getNewDefaultClick(id: Long) =
-            Action.Click(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1)
+            Action.Click(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, false)
         fun getNewDefaultSwipe(id: Long) =
             Action.Swipe(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
         fun getNewDefaultPause(id: Long) =

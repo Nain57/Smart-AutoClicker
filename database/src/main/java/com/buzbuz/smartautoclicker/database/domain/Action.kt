@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,6 +54,7 @@ sealed class Action {
         var pressDuration: Long? = null,
         var x: Int? = null,
         var y: Int? = null,
+        var clickOnCondition: Boolean,
     ) : Action() {
 
         override fun isComplete(): Boolean =
@@ -74,6 +75,7 @@ sealed class Action {
                 pressDuration = pressDuration,
                 x = x,
                 y = y,
+                clickOnCondition = clickOnCondition,
             )
         }
 
@@ -183,12 +185,10 @@ sealed class Action {
     }
 }
 
-/**
- *
- */
+/** Convert an Action entity into a Domain Action. */
 internal fun ActionEntity.toAction(): Action {
     return when (type) {
-        ActionType.CLICK -> Action.Click(id, eventId, name, pressDuration!!, x!!, y!!)
+        ActionType.CLICK -> Action.Click(id, eventId, name, pressDuration!!, x!!, y!!, clickOnCondition!!)
         ActionType.SWIPE -> Action.Swipe(id, eventId, name, swipeDuration!!, fromX!!, fromY!!, toX!!, toY!!)
         ActionType.PAUSE -> Action.Pause(id, eventId, name, pauseDuration!!)
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,6 +43,7 @@ import androidx.room.PrimaryKey
  * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
  * @param detectionType the type of detection. Can be any of the values defined in
  *                      [com.buzbuz.smartautoclicker.database.domain.DetectionType].
+ * @param shouldBeDetected true if this condition should be detected to be true, false if it should not be found.
  */
 @Entity(
     tableName = "condition_table",
@@ -65,4 +66,5 @@ internal data class ConditionEntity(
     @ColumnInfo(name = "area_bottom") val areaBottom: Int,
     @ColumnInfo(name = "threshold", defaultValue = "1") val threshold: Int,
     @ColumnInfo(name = "detection_type") val detectionType: Int,
+    @ColumnInfo(name = "shouldBeDetected") val shouldBeDetected: Boolean,
 )

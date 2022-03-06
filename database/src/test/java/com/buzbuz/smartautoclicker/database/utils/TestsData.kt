@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -92,11 +92,12 @@ internal object TestsData {
         id: Long = CLICK_ID,
         name: String = CLICK_NAME,
         pressDuration: Long = CLICK_PRESS_DURATION,
-        x: Int = CLICK_X_POSITION,
-        y: Int = CLICK_Y_POSITION,
+        x: Int? = CLICK_X_POSITION,
+        y: Int? = CLICK_Y_POSITION,
         eventId: Long,
         priority: Int,
-    ) = ActionEntity(id, eventId, priority, name, ActionType.CLICK, x = x, y = y, pressDuration = pressDuration)
+        clickOnCondition: Boolean = x != null && y != null,
+    ) = ActionEntity(id, eventId, priority, name, ActionType.CLICK, x = x, y = y, clickOnCondition = clickOnCondition, pressDuration = pressDuration)
 
     fun getNewClick(
         id: Long = CLICK_ID,
@@ -104,8 +105,9 @@ internal object TestsData {
         pressDuration: Long? = CLICK_PRESS_DURATION,
         x: Int? = CLICK_X_POSITION,
         y: Int? = CLICK_Y_POSITION,
+        clickOnCondition: Boolean = x != null && y != null,
         eventId: Long,
-    ) = Action.Click(id, eventId, name, pressDuration, x, y)
+    ) = Action.Click(id, eventId, name, pressDuration, x, y, clickOnCondition)
 
 
     /* ------- Swipe Action Data ------- */
@@ -188,7 +190,7 @@ internal object TestsData {
         threshold: Int = CONDITION_THRESHOLD,
         detectionType: Int = CONDITION_DETECTION_TYPE,
         eventId: Long
-    ) = ConditionEntity(id, eventId, name, path, left, top, right, bottom, threshold, detectionType)
+    ) = ConditionEntity(id, eventId, name, path, left, top, right, bottom, threshold, detectionType, true)
 
     fun getNewCondition(
         id: Long = CONDITION_ID,
@@ -202,5 +204,5 @@ internal object TestsData {
         detectionType: Int = CONDITION_DETECTION_TYPE,
         bitmap: Bitmap? = null,
         eventId: Long
-    ) = Condition(id, eventId, name, path, Rect(left, top, right, bottom), threshold, detectionType, bitmap)
+    ) = Condition(id, eventId, name, path, Rect(left, top, right, bottom), threshold, detectionType, true, bitmap)
 }

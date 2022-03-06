@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,6 +41,8 @@ import androidx.room.TypeConverter
  *
  * @param x [ActionType.CLICK] only: the x position of the click. Null for others [ActionType].
  * @param y [ActionType.CLICK] only: the y position of the click. Null for others [ActionType].
+ * @param clickOnCondition [ActionType.CLICK] only: if true, the click will be executed on the detected condition and
+ *                         the x and y parameters be null and ignored. If false, the x and y coordinates will be used.
  * @param pressDuration [ActionType.CLICK] only: the duration of the click press in milliseconds.
  *                      Null for others [ActionType].
  *
@@ -73,6 +75,7 @@ internal data class ActionEntity(
     // ActionType.CLICK
     @ColumnInfo(name = "x") val x: Int? = null,
     @ColumnInfo(name = "y") val y: Int? = null,
+    @ColumnInfo(name = "clickOnCondition") val clickOnCondition: Boolean? = null,
     @ColumnInfo(name = "pressDuration") val pressDuration: Long? = null,
 
     // ActionType.SWIPE

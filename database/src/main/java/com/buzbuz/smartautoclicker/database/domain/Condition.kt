@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,6 +42,7 @@ data class Condition(
     var area: Rect,
     var threshold: Int,
     @DetectionType val detectionType: Int,
+    val shouldBeDetected: Boolean,
     val bitmap: Bitmap? = null,
 ) {
 
@@ -57,6 +58,7 @@ data class Condition(
         area.bottom,
         threshold,
         detectionType,
+        shouldBeDetected,
     )
 
     /** Cleanup all ids contained in this condition. Ideal for copying. */
@@ -74,7 +76,7 @@ data class Condition(
 
 /** @return the condition for this entity. */
 internal fun ConditionEntity.toCondition(): Condition =
-    Condition(id, eventId, name, path, Rect(areaLeft, areaTop, areaRight, areaBottom), threshold, detectionType)
+    Condition(id, eventId, name, path, Rect(areaLeft, areaTop, areaRight, areaBottom), threshold, detectionType, shouldBeDetected)
 
 /** Defines the detection type to apply to a condition. */
 @IntDef(EXACT, WHOLE_SCREEN)

@@ -67,3 +67,34 @@ fun getInsertV4Condition(id: Long, eventId: Long, path: String, left: Int, top: 
 // ----- Utils for Database V5 -----
 
 fun getV5Conditions() = "SELECT * FROM condition_table"
+
+fun getInsertV5Click(id: Long, eventId: Long, name: String, type: String, x: Int, y: Int, pressDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, x, y, pressDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "$type", $x, $y, $pressDuration)
+    """.trimIndent()
+
+fun getInsertV5Swipe(id: Long, eventId: Long, name: String, type: String, fromX: Int, fromY: Int, toX: Int, toY: Int, swipeDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, fromX, fromY, toX, toY, swipeDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "$type", $fromX, $fromY, $toX, $toY, $swipeDuration)
+    """.trimIndent()
+
+fun getInsertV5Pause(id: Long, eventId: Long, name: String, type: String, pauseDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, pauseDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "$type", $pauseDuration)
+    """.trimIndent()
+
+fun getInsertV5Condition(id: Long, eventId: Long, name: String, path: String, left: Int, top: Int, right: Int, bottom: Int,
+                         threshold: Int, detectionType: Int) =
+    """
+        INSERT INTO condition_table (id, eventId, name, path, area_left, area_top, area_right, area_bottom, threshold, detection_type) 
+        VALUES ($id, $eventId, "$name","$path", $left, $top, $right, $bottom, $threshold, $detectionType)
+    """.trimIndent()
+
+
+// ----- Utils for Database V6 -----
+
+fun getV6Actions() = "SELECT * FROM action_table"
+fun getV6Conditions() = "SELECT * FROM condition_table"

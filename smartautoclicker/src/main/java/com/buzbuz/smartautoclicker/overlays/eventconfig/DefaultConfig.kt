@@ -58,6 +58,7 @@ fun newDefaultCondition(context: Context, eventId: Long, area: Rect, bitmap: Bit
     area = area,
     threshold = context.resources.getInteger(R.integer.default_condition_threshold),
     detectionType = EXACT,
+    shouldBeDetected = true,
 )
 
 /**
@@ -70,6 +71,7 @@ fun newDefaultClick(context: Context, eventId: Long) = Action.Click(
     eventId = eventId,
     name = context.getString(R.string.default_click_name),
     pressDuration = context.getEventConfigPreferences().getClickPressDurationConfig(context),
+    clickOnCondition = false,
 )
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.database.room.migrations.Migration1to2
 import com.buzbuz.smartautoclicker.database.room.migrations.Migration2to3
 import com.buzbuz.smartautoclicker.database.room.migrations.Migration3to4
 import com.buzbuz.smartautoclicker.database.room.migrations.Migration4to5
+import com.buzbuz.smartautoclicker.database.room.migrations.Migration5to6
 
 /**
  * Database for the scenario and their events.
@@ -52,7 +53,7 @@ import com.buzbuz.smartautoclicker.database.room.migrations.Migration4to5
         ScenarioEntity::class,
         ConditionEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 @TypeConverters(ActionTypeStringConverter::class)
@@ -85,10 +86,13 @@ internal abstract class ClickDatabase : RoomDatabase() {
                     ClickDatabase::class.java,
                     "click_database"
                 )
-                    .addMigrations(Migration1to2)
-                    .addMigrations(Migration2to3)
-                    .addMigrations(Migration3to4)
-                    .addMigrations(Migration4to5)
+                    .addMigrations(
+                        Migration1to2,
+                        Migration2to3,
+                        Migration3to4,
+                        Migration4to5,
+                        Migration5to6,
+                    )
                     .build()
 
                 INSTANCE = instance
