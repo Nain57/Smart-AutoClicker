@@ -198,7 +198,11 @@ internal fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
     if (bitmap == null) {
         bitmap = Bitmap.createBitmap(imageWidth, height, Bitmap.Config.ARGB_8888)
     } else if (bitmap.width != imageWidth || bitmap.height != height) {
-        bitmap.reconfigure(imageWidth, height, Bitmap.Config.ARGB_8888)
+        try {
+            bitmap.reconfigure(imageWidth, height, Bitmap.Config.ARGB_8888)
+        } catch (ex: IllegalArgumentException) {
+            bitmap = Bitmap.createBitmap(imageWidth, height, Bitmap.Config.ARGB_8888)
+        }
     }
 
     bitmap?.copyPixelsFromBuffer(planes[0].buffer)
