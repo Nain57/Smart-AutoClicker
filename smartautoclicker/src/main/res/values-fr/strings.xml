@@ -102,6 +102,8 @@
     <string name="dialog_action_config_click_position_none">Pas de position définie</string>
     <string name="dialog_action_config_swipe_position_none">Pas de position définie</string>
     <string name="dialog_action_config_click_press_duration_title">Appuyer pendant</string>
+    <string name="dialog_action_config_click_position_on_condition">Sur la condition</string>
+    <string name="dialog_action_config_click_position_select_position">À la position…</string>
     <string name="dialog_action_config_click_position_title">Position du clic</string>
     <string name="dialog_action_config_swipe_duration_title">Durée du swipe</string>
     <string name="dialog_action_config_swipe_position_title">Position du swipe</string>

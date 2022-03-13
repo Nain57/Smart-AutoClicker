@@ -35,7 +35,10 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
+import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 
 import kotlinx.coroutines.launch
 
@@ -151,13 +154,28 @@ class ActionConfigDialog(
                 actionConfigLayoutClick.visibility = View.VISIBLE
 
                 textClickPosition.setOnClickListener {
-                    showSubOverlay(ClickSwipeSelectorMenu(
+                    showSubOverlay(MultiChoiceDialog(
                         context = context,
-                        selector = CoordinatesSelector.One(),
-                        onCoordinatesSelected = { selector ->
-                            clickValues.setPosition((selector as CoordinatesSelector.One).coordinates!!)
-                        },
-                    ), hideCurrent = true)
+                        dialogTitle = R.string.dialog_condition_type_title,
+                        choices = listOf(ClickTargetChoice.OnCondition, ClickTargetChoice.AtPosition),
+                        onChoiceSelected = { choiceClicked ->
+                            when (choiceClicked) {
+                                ClickTargetChoice.OnCondition -> clickValues.setClickOnCondition(true)
+
+                                ClickTargetChoice.AtPosition -> {
+                                    clickValues.setClickOnCondition(false)
+                                    showSubOverlay(ClickSwipeSelectorMenu(
+                                        context = context,
+                                        selector = CoordinatesSelector.One(),
+                                        onCoordinatesSelected = { selector ->
+                                            clickValues.setPosition((selector as CoordinatesSelector.One).coordinates!!)
+                                        },
+                                    ), hideCurrent = true)
+                                }
+
+                            }
+                        }
+                    ))
                 }
                 textClickPosition.setLeftRightCompoundDrawables(R.drawable.ic_click, R.drawable.ic_chevron)
 
@@ -186,19 +204,23 @@ class ActionConfigDialog(
                 }
 
                 launch {
-                    clickValues.position.collect { position ->
-                        viewBinding.includeClickConfig.textClickPosition.apply {
-                            if (position == null) {
-                                setText(R.string.dialog_action_config_click_position_none)
-                            } else {
-                                text = context.getString(
-                                    R.string.dialog_action_config_click_position,
-                                    position.x,
-                                    position.y
-                                )
+                    clickValues.position
+                        .combine(clickValues.clickOnCondition) { position, clickOnCondition ->
+                            viewBinding.includeClickConfig.textClickPosition.apply {
+                                if (clickOnCondition) {
+                                    setText(R.string.dialog_action_config_click_position_on_condition)
+                                } else if (position == null){
+                                    setText(R.string.dialog_action_config_click_position_none)
+                                } else {
+                                    text = context.getString(
+                                        R.string.dialog_action_config_click_position,
+                                        position.x,
+                                        position.y
+                                    )
+                                }
                             }
-                        }
-                    }
+
+                        }.collect()
                 }
             }
         }

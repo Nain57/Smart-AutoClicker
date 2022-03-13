@@ -79,6 +79,8 @@
     <string name="dialog_action_type_pause">Wait</string>
     <string name="dialog_action_config_click_press_duration_title">Press duration</string>
     <string name="dialog_action_config_click_position_title">Click position</string>
+    <string name="dialog_action_config_click_position_on_condition">On condition</string>
+    <string name="dialog_action_config_click_position_select_position">On position…</string>
     <string name="dialog_action_config_click_position_none">No click position defined</string>
     <string name="dialog_action_config_click_position">Click on %1$d, %2$d</string>
     <string name="dialog_action_config_swipe_duration_title">Swipe duration</string>

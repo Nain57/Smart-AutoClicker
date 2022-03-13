@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Point
 import android.util.Log
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.domain.Action
@@ -27,6 +28,7 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.getEventConfigPreference
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putClickPressDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putPauseDurationConfig
 import com.buzbuz.smartautoclicker.overlays.eventconfig.putSwipeDurationConfig
+import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -149,6 +151,21 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 null
             }
         }
+        /** If the click should be made on the detected condition. */
+        val clickOnCondition: Flow<Boolean> = configuredAction.map { click ->
+            click is Action.Click && click.clickOnCondition
+        }
+
+        /**
+         *
+         */
+        fun setClickOnCondition(enabled: Boolean) {
+            (configuredAction.value as Action.Click).let { click ->
+                viewModelScope.launch {
+                    configuredAction.emit(click.copy(clickOnCondition = enabled))
+                }
+            }
+        }
 
         /**
          * Set the position of the click.
@@ -239,6 +256,14 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             }
         }
     }
+}
+
+/** Choices for the target of the click. */
+sealed class ClickTargetChoice(title: Int): DialogChoice(title, null) {
+    /** Click on the detected condition. */
+    object OnCondition : ClickTargetChoice(R.string.dialog_action_config_click_position_on_condition)
+    /** Click at a specific location. */
+    object AtPosition : ClickTargetChoice(R.string.dialog_action_config_click_position_select_position)
 }
 
 /** Tag for the logs. */
