@@ -30,4 +30,7 @@
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>
     <color name="overlayClickSelectorBackground">#77000000</color>
+
+    <color name="green_ok">#FF00FF00</color>
+    <color name="red_ko">#FFFF0000</color>
 </resources>

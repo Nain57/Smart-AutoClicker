@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -26,7 +27,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.databinding.ItemConditionCardBinding
+import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
 
 import kotlinx.coroutines.Job
 
@@ -98,6 +101,12 @@ class ConditionViewHolder(
             setImageResource(R.drawable.ic_add)
         }
         itemView.setOnClickListener { addConditionClickedListener.invoke(bindingAdapterPosition == 0) }
+
+        viewBinding.apply {
+            conditionBackground.visibility = View.GONE
+            conditionDetectionType.visibility = View.GONE
+            conditionShouldBeDetected.visibility = View.GONE
+        }
     }
 
     /**
@@ -109,6 +118,29 @@ class ConditionViewHolder(
     fun onBindCondition(condition: Condition, conditionClickedListener: (Int, Condition) -> Unit) {
         viewBinding.imageCondition.scaleType = ImageView.ScaleType.FIT_CENTER
         itemView.setOnClickListener { conditionClickedListener.invoke(bindingAdapterPosition, condition) }
+
+        viewBinding.apply {
+            conditionBackground.visibility = View.VISIBLE
+            conditionDetectionType.visibility = View.VISIBLE
+            conditionShouldBeDetected.visibility = View.VISIBLE
+        }
+
+        if (condition.shouldBeDetected) {
+            viewBinding.conditionShouldBeDetected.apply {
+                setImageResource(R.drawable.ic_confirm)
+                setIconTint(R.color.green_ok)
+            }
+        } else {
+            viewBinding.conditionShouldBeDetected.apply {
+                setImageResource(R.drawable.ic_cancel)
+                setIconTint(R.color.red_ko)
+            }
+        }
+
+        viewBinding.conditionDetectionType.setImageResource(
+            if (condition.detectionType == EXACT) R.drawable.ic_detect_exact else R.drawable.ic_detect_whole_screen
+        )
+        viewBinding.conditionDetectionType.setIconTint(R.color.overlayMenuButtons)
 
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = bitmapProvider.invoke(condition) { bitmap ->
@@ -122,8 +154,6 @@ class ConditionViewHolder(
                 )
             }
         }
-
-        // TODO: is the "waiting state" needed for the wait during the bitmap conditions loading ?
     }
 
     /** Unbind this view holder for a previously bound data model. */

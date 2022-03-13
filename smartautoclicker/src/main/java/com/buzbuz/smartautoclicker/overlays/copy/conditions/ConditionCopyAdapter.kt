@@ -28,7 +28,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.databinding.ItemConditionBinding
+import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
 
 import kotlinx.coroutines.Job
 
@@ -80,10 +82,26 @@ class ConditionViewHolder(
      */
     fun onBindCondition(condition: Condition, conditionClickedListener: (Condition) -> Unit) {
         viewBinding.apply {
+            conditionName.text = condition.name
             conditionThreshold.text = itemView.context.getString(
                 R.string.dialog_condition_copy_threshold,
                 condition.threshold
             )
+
+            conditionShouldBeDetected.apply {
+                if (condition.shouldBeDetected) {
+                    setImageResource(R.drawable.ic_confirm)
+                    setIconTint(R.color.green_ok)
+                } else {
+                    setImageResource(R.drawable.ic_cancel)
+                    setIconTint(R.color.red_ko)
+                }
+            }
+
+            conditionDetectionType.setImageResource(
+                if (condition.detectionType == EXACT) R.drawable.ic_detect_exact else R.drawable.ic_detect_whole_screen
+            )
+
             bitmapLoadingJob?.cancel()
             bitmapLoadingJob = bitmapProvider.invoke(condition) { bitmap ->
                 if (bitmap != null) {

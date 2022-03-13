@@ -24,15 +24,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.databinding.DialogConditionCopyBinding
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
-import com.buzbuz.smartautoclicker.baseui.utils.GridAutoFitLayoutManager
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -88,9 +87,9 @@ class ConditionCopyDialog(
 
         listBinding.list.apply {
             adapter = conditionAdapter
-            layoutManager = GridAutoFitLayoutManager(
+            layoutManager = GridLayoutManager(
                 context,
-                context.resources.getDimension(R.dimen.dialog_item_action_width).toInt(),
+                2,
             )
         }
 
