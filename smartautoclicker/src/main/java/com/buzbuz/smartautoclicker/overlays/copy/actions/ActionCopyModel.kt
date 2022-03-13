@@ -134,7 +134,9 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             is Action.Click -> ActionCopyItem.ActionItem(
                 icon = R.drawable.ic_click,
                 name = name!!,
-                details = context.getString(
+                details =
+                if (clickOnCondition) context.getString(R.string.dialog_action_config_click_position_on_condition)
+                else context.getString(
                     R.string.dialog_action_copy_click_details,
                     formatDuration(pressDuration!!), x, y
                 ),
