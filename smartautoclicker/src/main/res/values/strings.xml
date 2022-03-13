@@ -108,6 +108,8 @@
     <string name="dialog_condition_type_exact_position">At the same position</string>
     <string name="dialog_condition_threshold_title">Tolerated difference</string>
     <string name="dialog_condition_threshold_value">Tolerance: %1$d %%</string>
+    <string name="dialog_condition_should_be_detected">Visible</string>
+    <string name="dialog_condition_should_not_be_detected">Not visible</string>
     <string name="dialog_condition_error">The condition image can\'t be found.</string>
     <string name="dialog_condition_new_title">New Condition</string>
     <string name="dialog_condition_new_create">Create</string>

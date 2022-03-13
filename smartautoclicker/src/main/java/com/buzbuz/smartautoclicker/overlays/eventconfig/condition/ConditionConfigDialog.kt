@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.databinding.DialogConditionConfigBinding
+import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.extensions.setRightCompoundDrawable
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
@@ -94,6 +95,10 @@ class ConditionConfigDialog(
                 })
             }
 
+            viewBinding.conditionDetectionShouldAppear.setOnClickListener {
+                viewModel?.toggleShouldBeDetected()
+            }
+
             viewBinding.conditionDetectionType.apply {
                 setRightCompoundDrawable(R.drawable.ic_chevron)
                 setOnClickListener {
@@ -142,6 +147,20 @@ class ConditionConfigDialog(
                             viewBinding.editName.apply {
                                 setText(name)
                                 setSelection(name?.length ?: 0)
+                            }
+                        }
+                    }
+
+                    launch {
+                        viewModel?.shouldBeDetected?.collect { shouldBeDetected ->
+                            viewBinding.conditionDetectionShouldAppear.apply {
+                                if (shouldBeDetected) {
+                                    setText(R.string.dialog_condition_should_be_detected)
+                                    setLeftRightCompoundDrawables(R.drawable.ic_confirm, R.drawable.ic_chevron, Color.GREEN)
+                                } else {
+                                    setText(R.string.dialog_condition_should_not_be_detected)
+                                    setLeftRightCompoundDrawables(R.drawable.ic_cancel, R.drawable.ic_chevron, Color.RED)
+                                }
                             }
                         }
                     }

@@ -51,6 +51,8 @@ class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
     private val configuredCondition = MutableStateFlow<Condition?>(null)
     /** The type of detection currently selected by the user. */
     val name: Flow<String?> = configuredCondition.map { it?.name }.take(1)
+    /** Tells if the condition should be present or not on the screen. */
+    val shouldBeDetected: Flow<Boolean> = configuredCondition.mapNotNull { it?.shouldBeDetected }
     /** The type of detection currently selected by the user. */
     val detectionType: Flow<Int> = configuredCondition.mapNotNull { it?.detectionType }
     /** The condition threshold value currently edited by the user. */
@@ -83,7 +85,14 @@ class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
     fun setName(name: String) {
         configuredCondition.value?.let { condition ->
             configuredCondition.value = condition.copy(name = name)
-        } ?: throw IllegalStateException("Can't set event name, event is null!")
+        } ?: throw IllegalStateException("Can't set condition name, condition is null!")
+    }
+
+    /** Toggle between true and false for the shouldBeDetected value of the condition. */
+    fun toggleShouldBeDetected() {
+        configuredCondition.value?.let { condition ->
+            configuredCondition.value = condition.copy(shouldBeDetected = !condition.shouldBeDetected)
+        } ?: throw IllegalStateException("Can't toggle condition should be detected, condition is null!")
     }
 
     /**

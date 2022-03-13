@@ -70,6 +70,8 @@
     <string name="dialog_condition_type_exact_position">À la même position</string>
     <string name="dialog_condition_threshold_title">Différence tolérée</string>
     <string name="dialog_condition_threshold_value">Tolérance: %1$d %%</string>
+    <string name="dialog_condition_should_be_detected">Visible</string>
+    <string name="dialog_condition_should_not_be_detected">Non visible</string>
     <string name="dialog_condition_error">L\'image de la condition n\'a pas pu être trouvée.</string>
     <string name="toast_configure_single_click">Appuyez sur la position à cliquer.</string>
     <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>

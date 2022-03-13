@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -94,6 +94,18 @@
                     android:contentDescription="@string/content_desc_image_condition"
                     tools:layout_width="150dp"
                     tools:src="@drawable/ic_click"/>
+
+                <include layout="@layout/include_view_separator"/>
+
+                <TextView
+                    android:id="@+id/condition_detection_should_appear"
+                    style="@style/ItemView.Small"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/text_size_list_item_text"
+                    android:drawablePadding="@dimen/margin_horizontal_small"
+                    tools:drawableStart="@drawable/ic_confirm"
+                    tools:drawableEnd="@drawable/ic_chevron"
+                    tools:text="@string/dialog_condition_should_be_detected"/>
 
                 <include layout="@layout/include_view_separator"/>
 
