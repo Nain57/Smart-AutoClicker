@@ -117,3 +117,7 @@ android {
         jvmTarget = '1.8'
     }
 }
+
+dependencies {
+    implementation "androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}"
+}

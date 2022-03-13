@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.database.domain.DetectionType
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 import com.buzbuz.smartautoclicker.engine.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.engine.utils.ProcessingData.newCondition
@@ -84,6 +85,9 @@ class ScenarioProcessorTests {
         private const val TEST_CONDITION_PATH_3 = "TOTO3"
         private val TEST_CONDITION_AREA_3 = Rect(8 , 9, 10, 11)
         private const val TEST_CONDITION_THRESHOLD_3 = 3
+
+        private val TEST_DETECTION_OK = DetectionResult(true, 0, 0)
+        private val TEST_DETECTION_KO = DetectionResult(false, 0, 0)
     }
 
     /** Interface to be mocked in order to verify the calls to the bitmap supplier. */
@@ -127,9 +131,10 @@ class ScenarioProcessorTests {
         val conditionBitmap = mock(Bitmap::class.java)
         mockWhen(mockBitmapSupplier.getBitmap(path, area.width(), area.height())).thenReturn(conditionBitmap)
 
+        val pass = if (shouldPass) TEST_DETECTION_OK else TEST_DETECTION_KO
         when (detectionType) {
-            EXACT -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, area, threshold)).thenReturn(shouldPass)
-            WHOLE_SCREEN -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, threshold)).thenReturn(shouldPass)
+            EXACT -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, area, threshold)).thenReturn(pass)
+            WHOLE_SCREEN -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, threshold)).thenReturn(pass)
         }
         return newCondition(path, area, threshold, detectionType)
     }

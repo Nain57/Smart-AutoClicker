@@ -27,11 +27,10 @@ using namespace smartautoclicker;
 
 /**
  * This function is a helper providing the boiler plate code to return the native object from Java object.
- * The "nativePtr" is reached from this code, casted to People's pointer and returned. This will be used in
+ * The "nativePtr" is reached from this code, casted to Detector's pointer and returned. This will be used in
  * all our native methods wrappers to recover the object before invoking it's methods.
  */
-static Detector *getObject(JNIEnv *env, jobject self)
-{
+static Detector *getObject(JNIEnv *env, jobject self) {
     jclass cls = env->GetObjectClass(self);
     if (!cls)
         env->FatalError("GetObjectClass failed");
@@ -42,6 +41,16 @@ static Detector *getObject(JNIEnv *env, jobject self)
 
     jlong nativeObjectPointer = env->GetLongField(self, nativeObjectPointerID);
     return reinterpret_cast<Detector *>(nativeObjectPointer);
+}
+
+static void setDetectionResult(JNIEnv *env, jobject self, DetectionResult result) {
+    jclass cls = env->GetObjectClass(self);
+    if (!cls)
+        env->FatalError("GetObjectClass failed");
+
+    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZII)V");
+
+    env->CallVoidMethod(self, methodId, result.isDetected, (int) result.centerX, (int) result.centerY);
 }
 
 extern "C" {
@@ -60,16 +69,17 @@ extern "C" {
         getObject(env, self)->setScreenImage(env, screenBitmap);
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_detectCondition(
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_detect(
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
-            jint threshold
+            jint threshold,
+            jobject result
     ) {
-        return getObject(env, self)->detectCondition(env, conditionBitmap, threshold);
+        setDetectionResult(env, result, getObject(env, self)->detectCondition(env, conditionBitmap, threshold));
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_detectConditionAt(
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_detectAt(
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
@@ -77,9 +87,10 @@ extern "C" {
             jint y,
             jint width,
             jint height,
-            jint threshold
+            jint threshold,
+            jobject result
     ) {
-        return getObject(env, self)->detectCondition(env, conditionBitmap, x, y, width, height, threshold);
+        setDetectionResult(env, result, getObject(env, self)->detectCondition(env, conditionBitmap, x, y, width, height, threshold));
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_deleteDetector(

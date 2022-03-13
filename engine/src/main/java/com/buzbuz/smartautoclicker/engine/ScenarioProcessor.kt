@@ -162,10 +162,13 @@ internal class ScenarioProcessor(
      * @param condition the condition to be detected.
      * @param conditionBitmap the bitmap representing the condition.
      */
-    private fun detect(condition: Condition, conditionBitmap: Bitmap): Boolean =
-        when (condition.detectionType) {
+    private fun detect(condition: Condition, conditionBitmap: Bitmap): Boolean {
+        val result = when (condition.detectionType) {
             EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
             WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
-            else -> false
+            else -> null
         }
+
+        return result?.isDetected ?: false
+    }
 }

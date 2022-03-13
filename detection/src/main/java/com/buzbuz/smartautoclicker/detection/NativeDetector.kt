@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.detection
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import androidx.annotation.Keep
 
 class NativeDetector : ImageDetector {
 
@@ -28,29 +29,39 @@ class NativeDetector : ImageDetector {
         }
     }
 
+    private val detectionResult = DetectionResult(false, 0, 0)
+
+    @Keep
     private val nativePtr: Long = newDetector()
 
     override fun close() = deleteDetector()
 
-    override fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): Boolean {
-        return detectConditionAt(conditionBitmap, position.left, position.top, position.width(), position.height(), threshold)
+    external override fun setScreenImage(screenBitmap: Bitmap)
+
+    override fun detectCondition(conditionBitmap: Bitmap, threshold: Int): DetectionResult {
+        detect(conditionBitmap, threshold, detectionResult)
+        return detectionResult
+    }
+
+    override fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): DetectionResult {
+        detectAt(conditionBitmap, position.left, position.top, position.width(), position.height(), threshold, detectionResult)
+        return detectionResult
     }
 
     private external fun newDetector(): Long
 
     private external fun deleteDetector()
 
-    external override fun setScreenImage(screenBitmap: Bitmap)
+    private external fun detect(conditionBitmap: Bitmap, threshold: Int, result: DetectionResult)
 
-    external override fun detectCondition(conditionBitmap: Bitmap, threshold: Int): Boolean
-
-    private external fun detectConditionAt(
+    private external fun detectAt(
         conditionBitmap:
         Bitmap,
         x: Int,
         y: Int,
         width: Int,
         height: Int,
-        threshold: Int
-    ): Boolean
+        threshold: Int,
+        result: DetectionResult
+    )
 }

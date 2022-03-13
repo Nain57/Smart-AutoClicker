@@ -35,50 +35,68 @@ void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
     currentImageScaled = scale(*currentImage, scaleRatio);
 }
 
-bool Detector::detectCondition(JNIEnv *env, jobject conditionImage, int threshold) {
+DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, int threshold) {
+    detectionResult.isDetected = false;
+
     if (currentImageScaled->empty()) {
         __android_log_print(ANDROID_LOG_ERROR, "Detector",
                             "detectCondition caught an exception");
         jclass je = env->FindClass("java/lang/Exception");
         env->ThrowNew(je, "Can't detect condition, current image is null !");
-        return false;
+        return detectionResult;
     }
 
     auto condition = scale(*bitmapRGBA888ToMat(env, conditionImage), scaleRatio);
 
-    return matchCondition(*currentImageScaled, *condition, threshold);
+    matchCondition(*currentImageScaled, *condition, threshold);
+
+    if (detectionResult.isDetected) {
+        detectionResult.centerX = (detectionResult.maxLoc.x + (int)(condition->cols / 2)) / scaleRatio;
+        detectionResult.centerY = (detectionResult.maxLoc.y + (int)(condition->rows / 2)) / scaleRatio;
+    }
+
+    return detectionResult;
 }
 
-bool Detector::detectCondition(JNIEnv *env, jobject conditionImage, int x, int y, int width, int height, int threshold) {
+DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, int x, int y, int width, int height, int threshold) {
+    detectionResult.isDetected = false;
+
     if (currentImage->empty()) {
         __android_log_print(ANDROID_LOG_ERROR, "Detector",
                             "detectCondition caught an exception");
         jclass je = env->FindClass("java/lang/Exception");
         env->ThrowNew(je, "Can't detect condition, current image is null !");
-        return false;
+        return detectionResult;
     }
 
     if (x < 0 || width < 0 || x + width > currentImage->cols || y < 0 || height < 0 || y + height > currentImage->rows) {
-        return false;
+        return detectionResult;
     }
 
     auto croppedImage = Mat(*currentImage, Rect(x, y , width, height));
     auto condition = bitmapRGBA888ToMat(env, conditionImage);
 
-    return matchCondition(croppedImage, *condition, threshold);
+    matchCondition(croppedImage, *condition, threshold);
+
+    if (detectionResult.isDetected) {
+        detectionResult.centerX = x + (int)(width / 2);
+        detectionResult.centerY = y + (int)(height / 2);
+    }
+
+    return detectionResult;
 }
 
-bool Detector::matchCondition(cv::Mat& image, cv::Mat& condition, int threshold) {
+void Detector::matchCondition(cv::Mat& image, cv::Mat& condition, int threshold) {
     int result_cols = image.cols - condition.cols + 1;
     int result_rows = image.rows - condition.rows + 1;
     Mat resultMat = Mat(result_rows, result_cols, CV_8UC4);
 
     matchTemplate(image, condition, resultMat, TM_CCOEFF_NORMED);
 
-    double minVal; double maxVal; Point minLoc; Point maxLoc;
-    minMaxLoc(resultMat, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+    minMaxLoc(resultMat, &detectionResult.minVal, &detectionResult.maxVal, &detectionResult.minLoc,
+              &detectionResult.maxLoc, Mat());
 
-    return maxVal > ((double) (100 - threshold) / 100);
+    detectionResult.isDetected = detectionResult.maxVal > ((double) (100 - threshold) / 100);
 }
 
 std::unique_ptr<Mat> Detector::bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap) {

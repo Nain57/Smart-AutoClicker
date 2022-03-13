@@ -18,12 +18,23 @@ package com.buzbuz.smartautoclicker.detection
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import androidx.annotation.Keep
 
 interface ImageDetector : AutoCloseable {
 
     fun setScreenImage(screenBitmap: Bitmap)
 
-    fun detectCondition(conditionBitmap: Bitmap, threshold: Int): Boolean
+    fun detectCondition(conditionBitmap: Bitmap, threshold: Int): DetectionResult
 
-    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): Boolean
+    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): DetectionResult
+}
+
+data class DetectionResult(var isDetected: Boolean, var centerX: Int, var centerY: Int) {
+
+    @Keep
+    fun setResults(isDetected: Boolean, centerX: Int, centerY: Int) {
+        this.isDetected = isDetected
+        this.centerX = centerX
+        this.centerY = centerY
+    }
 }
