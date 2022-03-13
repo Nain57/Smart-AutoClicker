@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.engine
 
 import android.accessibilityservice.GestureDescription
+import android.graphics.Point
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -61,8 +62,8 @@ class ActionExecutorTests {
         private const val TEST_Y1 = 88
         private const val TEST_Y2 = 76
 
-        fun getNewDefaultClick(id: Long) =
-            Action.Click(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, false)
+        fun getNewDefaultClick(id: Long, clickOnCondition: Boolean) =
+            Action.Click(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, clickOnCondition)
         fun getNewDefaultSwipe(id: Long) =
             Action.Swipe(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
         fun getNewDefaultPause(id: Long) =
@@ -99,15 +100,26 @@ class ActionExecutorTests {
 
     @Test
     fun noActions() = runTest {
-        actionExecutor.executeActions(emptyList())
+        actionExecutor.executeActions(emptyList(), Point())
         verify(mockExecutionListener, never()).executeGesture(anyNotNull())
     }
 
     @Test
-    fun execute_oneClick() = runTest {
-        val clickAction = getNewDefaultClick(1)
+    fun execute_oneClick_notOnCondition() = runTest {
+        val clickAction = getNewDefaultClick(1, false)
 
-        actionExecutor.executeActions(listOf(clickAction))
+        actionExecutor.executeActions(listOf(clickAction), Point())
+
+        val gestureCaptor = argumentCaptor<GestureDescription>()
+        verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
+        assertActionGesture(gestureCaptor.lastValue)
+    }
+
+    @Test
+    fun execute_oneClick_onCondition() = runTest {
+        val clickAction = getNewDefaultClick(1, true)
+
+        actionExecutor.executeActions(listOf(clickAction), Point(15, 15))
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
@@ -118,7 +130,7 @@ class ActionExecutorTests {
     fun execute_oneSwipe() = runTest {
         val swipeAction = getNewDefaultSwipe(1)
 
-        actionExecutor.executeActions(listOf(swipeAction))
+        actionExecutor.executeActions(listOf(swipeAction), Point())
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
@@ -130,7 +142,7 @@ class ActionExecutorTests {
         val pause = getNewDefaultPause(1)
 
         // Execute the pause. As the handler is waiting to the finish the pause, we should stays in EXECUTING
-        actionExecutor.executeActions(listOf(pause))
+        actionExecutor.executeActions(listOf(pause), Point())
 
         // Only a pause, there should be no gestures
         verify(mockExecutionListener, never()).executeGesture(anyNotNull())
@@ -138,13 +150,13 @@ class ActionExecutorTests {
 
     @Test
     fun execute_mixed() = runTest {
-        val click = getNewDefaultClick(1)
+        val click = getNewDefaultClick(1, false)
         val pause = getNewDefaultPause(2)
         val swipe = getNewDefaultSwipe(3)
         val gestureCaptor = argumentCaptor<GestureDescription>()
 
         // Execute the actions.
-        actionExecutor.executeActions(listOf(click, pause, swipe))
+        actionExecutor.executeActions(listOf(click, pause, swipe), Point())
 
         // Verify the gestures executions
         verify(mockExecutionListener, times(2)).executeGesture(gestureCaptor.capture())

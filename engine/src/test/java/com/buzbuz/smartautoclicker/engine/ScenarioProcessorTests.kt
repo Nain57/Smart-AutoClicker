@@ -126,17 +126,18 @@ class ScenarioProcessorTests {
         area: Rect,
         threshold: Int,
         @DetectionType detectionType: Int,
-        shouldPass: Boolean,
+        shouldBeOnScreen: Boolean,
+        isDetected: Boolean,
     ) : Condition {
         val conditionBitmap = mock(Bitmap::class.java)
         mockWhen(mockBitmapSupplier.getBitmap(path, area.width(), area.height())).thenReturn(conditionBitmap)
 
-        val pass = if (shouldPass) TEST_DETECTION_OK else TEST_DETECTION_KO
+        val pass = if (isDetected) TEST_DETECTION_OK else TEST_DETECTION_KO
         when (detectionType) {
             EXACT -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, area, threshold)).thenReturn(pass)
             WHOLE_SCREEN -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, threshold)).thenReturn(pass)
         }
-        return newCondition(path, area, threshold, detectionType)
+        return newCondition(path, area, threshold, detectionType, shouldBeOnScreen)
     }
 
     /** */
@@ -213,15 +214,18 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun oneCondition_exact_noMatch() = runTest {
+    fun oneCondition_exact_noMatch_shouldBeDetected() = runTest {
         val condition = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val event = newEvent(
+            operator = AND,
+
             conditions = listOf(condition),
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1, x = 10, y = 10, clickOnCondition = false)),
         )
@@ -240,16 +244,18 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun oneCondition_exact_match() = runTest {
+    fun oneCondition_exact_noMatch_should_Not_BeDetected() = runTest {
         val condition = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = false,
+            shouldBeOnScreen = false,
         )
         val expectedDuration = 1L
         val event = newEvent(
+            operator = AND,
             conditions = listOf(condition),
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
@@ -269,13 +275,75 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun oneCondition_wholeScreen_noMatch() = runTest {
+    fun oneCondition_exact_match_shouldBeDetected() = runTest {
+        val condition = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(expectedDuration)
+        verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun oneCondition_exact_match_should_Not_BeDetected() = runTest {
+        val condition = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = false,
+        )
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verifyNoInteractions(mockGestureExecutor, mockEndListener)
+    }
+
+    @Test
+    fun oneCondition_wholeScreen_noMatch_shouldBeDetected() = runTest {
         val condition = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             WHOLE_SCREEN,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true
         )
         val event = newEvent(
             conditions = listOf(condition),
@@ -296,13 +364,14 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun oneCondition_wholeScreen_match() = runTest {
+    fun oneCondition_wholeScreen_noMatch_should_Not_BeDetected() = runTest {
         val condition = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             WHOLE_SCREEN,
-            shouldPass = true,
+            isDetected = false,
+            shouldBeOnScreen = false
         )
         val expectedDuration = 1L
         val event = newEvent(
@@ -322,6 +391,67 @@ class ScenarioProcessorTests {
         verify(mockImageDetector).setScreenImage(mockScreenBitmap)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun oneCondition_wholeScreen_match_shouldBeDetected() = runTest {
+        val condition = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            WHOLE_SCREEN,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(expectedDuration)
+        verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun oneCondition_wholeScreen_match_should_Not_BeDetected() = runTest {
+        val condition = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            WHOLE_SCREEN,
+            isDetected = true,
+            shouldBeOnScreen = false,
+        )
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
     @Test
@@ -331,21 +461,24 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val condition2 = createTestCondition(
             TEST_CONDITION_PATH_2,
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val condition3 = createTestCondition(
             TEST_CONDITION_PATH_3,
             TEST_CONDITION_AREA_3,
             TEST_CONDITION_THRESHOLD_3,
             EXACT,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
 
         val event = newEvent(
@@ -365,6 +498,99 @@ class ScenarioProcessorTests {
 
         verify(mockImageDetector).setScreenImage(mockScreenBitmap)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
+    }
+
+    @Test
+    fun severalConditions_AND_allNoMatch_oneShould_Not_BeDetected() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verifyNoInteractions(mockGestureExecutor, mockEndListener)
+    }
+
+    @Test
+    fun severalConditions_AND_allNoMatch_allShould_Not_BeDetected() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(expectedDuration)
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -374,21 +600,24 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val condition2 = createTestCondition(
             TEST_CONDITION_PATH_2,
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val condition3 = createTestCondition(
             TEST_CONDITION_PATH_3,
             TEST_CONDITION_AREA_3,
             TEST_CONDITION_THRESHOLD_3,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
 
         val event = newEvent(
@@ -411,27 +640,77 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun severalConditions_AND_allMatch() = runTest {
+    fun severalConditions_AND_oneNoMatch_should_Not_BeDetected() = runTest {
         val condition1 = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val condition2 = createTestCondition(
             TEST_CONDITION_PATH_2,
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = true,
+            isDetected = false,
+            shouldBeOnScreen = false,
         )
         val condition3 = createTestCondition(
             TEST_CONDITION_PATH_3,
             TEST_CONDITION_AREA_3,
             TEST_CONDITION_THRESHOLD_3,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(expectedDuration)
+        verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun severalConditions_AND_allMatch() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
 
         val expectedDuration = 1L
@@ -457,27 +736,78 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun severalConditions_OR_allNoMatch() = runTest {
+    fun severalConditions_AND_allMatch_oneShouldNotBeOnScreen() = runTest {
         val condition1 = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = false,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val condition2 = createTestCondition(
             TEST_CONDITION_PATH_2,
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = false,
+            isDetected = true,
+            shouldBeOnScreen = false,
         )
         val condition3 = createTestCondition(
             TEST_CONDITION_PATH_3,
             TEST_CONDITION_AREA_3,
             TEST_CONDITION_THRESHOLD_3,
             EXACT,
-            shouldPass = false,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = AND,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verifyNoInteractions(mockGestureExecutor, mockEndListener)
+    }
+
+    @Test
+    fun severalConditions_OR_allNoMatch() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
 
         val expectedDuration = 1L
@@ -501,27 +831,174 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun severalConditions_OR_oneNoMatch() = runTest {
+    fun severalConditions_OR_allNoMatch_oneShould_Not_BeDetected() = runTest {
         val condition1 = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val condition2 = createTestCondition(
             TEST_CONDITION_PATH_2,
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = false,
         )
         val condition3 = createTestCondition(
             TEST_CONDITION_PATH_3,
             TEST_CONDITION_AREA_3,
             TEST_CONDITION_THRESHOLD_3,
             EXACT,
-            shouldPass = true,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = OR,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(expectedDuration)
+        verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun severalConditions_OR_allNoMatch_allShould_Not_BeDetected() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = OR,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(expectedDuration)
+        verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun severalConditions_OR_oneNoMatch() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = OR,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(expectedDuration)
+        verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun severalConditions_OR_oneNoMatch_should_Not_BeDetected() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = false,
+            shouldBeOnScreen = false,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
 
         val expectedDuration = 1L
@@ -552,21 +1029,24 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val condition2 = createTestCondition(
             TEST_CONDITION_PATH_2,
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val condition3 = createTestCondition(
             TEST_CONDITION_PATH_3,
             TEST_CONDITION_AREA_3,
             TEST_CONDITION_THRESHOLD_3,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
 
         val expectedDuration = 1L
@@ -591,13 +1071,61 @@ class ScenarioProcessorTests {
     }
 
     @Test
+    fun severalConditions_OR_allMatch_allShould_Not_BeDetected() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = false,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            WHOLE_SCREEN,
+            isDetected = true,
+            shouldBeOnScreen = false,
+        )
+        val condition3 = createTestCondition(
+            TEST_CONDITION_PATH_3,
+            TEST_CONDITION_AREA_3,
+            TEST_CONDITION_THRESHOLD_3,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = false,
+        )
+
+        val expectedDuration = 1L
+        val event = newEvent(
+            operator = OR,
+            conditions = listOf(condition1, condition2, condition3),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verifyNoInteractions(mockGestureExecutor, mockEndListener)
+    }
+
+    @Test
     fun severalEvents_noneMatch() = runTest {
         val condition1 = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val actionDuration1 = 1L
         val event1 = newEvent(
@@ -611,7 +1139,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val actionDuration2 = 1L
         val event2 = newEvent(
@@ -640,7 +1169,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val actionDuration1 = 1L
         val event1 = newEvent(
@@ -654,7 +1184,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val actionDuration2 = 1L
         val event2 = newEvent(
@@ -684,7 +1215,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val actionDuration1 = 1L
         val event1 = newEvent(
@@ -698,7 +1230,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val actionDuration2 = 1L
         val event2 = newEvent(
@@ -728,7 +1261,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val actionDuration1 = 1L
         val event1 = newEvent(
@@ -742,7 +1276,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_2,
             TEST_CONDITION_THRESHOLD_2,
             WHOLE_SCREEN,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val actionDuration2 = 1L
         val event2 = newEvent(
@@ -772,7 +1307,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = false,
+            isDetected = false,
+            shouldBeOnScreen = true,
         )
         val actionDuration1 = 1L
         val event1 = newEvent(
@@ -802,7 +1338,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val actionDuration1 = 1L
         val event1 = newEvent(
@@ -833,7 +1370,8 @@ class ScenarioProcessorTests {
             TEST_CONDITION_AREA_1,
             TEST_CONDITION_THRESHOLD_1,
             EXACT,
-            shouldPass = true,
+            isDetected = true,
+            shouldBeOnScreen = true,
         )
         val stopAfterCount = 3
         val event1 = newEvent(

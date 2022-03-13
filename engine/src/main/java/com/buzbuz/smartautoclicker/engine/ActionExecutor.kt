@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.engine
 
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
+import android.graphics.Point
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Action.Click
@@ -38,11 +40,12 @@ internal class ActionExecutor(private val gestureExecutor: (GestureDescription) 
     /**
      * Execute the provided actions.
      * @param actions the actions to be executed.
+     * @param conditionPosition the position of the detected condition.
      */
-    suspend fun executeActions(actions: List<Action>) {
+    suspend fun executeActions(actions: List<Action>, conditionPosition: Point?) {
         actions.forEach { action ->
             when (action) {
-                is Click -> executeClick(action)
+                is Click -> executeClick(action, conditionPosition)
                 is Swipe -> executeSwipe(action)
                 is Pause -> executePause(action)
             }
@@ -53,11 +56,20 @@ internal class ActionExecutor(private val gestureExecutor: (GestureDescription) 
      * Execute the provided click.
      * @param click the click to be executed.
      */
-    private suspend fun executeClick(click: Click) {
+    private suspend fun executeClick(click: Click, conditionPosition: Point?) {
         val clickPath = Path()
         val clickBuilder = GestureDescription.Builder()
 
-        clickPath.moveTo(click.x!!.toFloat(), click.y!!.toFloat())
+        if (click.clickOnCondition) {
+            conditionPosition?.let { conditionCenter ->
+                clickPath.moveTo(conditionCenter.x.toFloat(), conditionCenter.y.toFloat())
+            } ?: run {
+                Log.w(TAG, "Can't click on position, there is no condition position")
+                return
+            }
+        } else {
+            clickPath.moveTo(click.x!!.toFloat(), click.y!!.toFloat())
+        }
         clickBuilder.addStroke(GestureDescription.StrokeDescription(clickPath, 0, click.pressDuration!!))
 
         withContext(Dispatchers.Main) {
@@ -92,3 +104,6 @@ internal class ActionExecutor(private val gestureExecutor: (GestureDescription) 
         delay(pause.pauseDuration!!)
     }
 }
+
+/** Tag for logs. */
+private const val TAG = "ActionExecutor"

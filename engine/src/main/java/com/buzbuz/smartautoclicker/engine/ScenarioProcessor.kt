@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 
 import kotlinx.coroutines.yield
@@ -77,13 +78,14 @@ internal class ScenarioProcessor(
             }
 
             // If conditions are fulfilled, execute this event's actions !
-            if (verifyConditions(event.conditionOperator, event.conditions!!)) {
+            val result = verifyConditions(event.conditionOperator, event.conditions!!)
+            if (result.first) {
 
                 executedEvents[event] = executedEvents[event]?.plus(1)
                     ?: throw IllegalStateException("Can' find the event in the executed events map.")
 
                 event.actions?.let { actions ->
-                    actionExecutor.executeActions(actions)
+                    actionExecutor.executeActions(actions, result.second?.position)
                 }
 
                 // Check if an event has reached its max execution count.
@@ -117,23 +119,29 @@ internal class ScenarioProcessor(
     private fun verifyConditions(
         @ConditionOperator operator: Int,
         conditions: List<Condition>
-    ) : Boolean {
+    ) : Pair<Boolean, DetectionResult?> {
 
-        for (condition in conditions) {
+        conditions.forEachIndexed { index, condition ->
             // Verify if the condition is fulfilled.
-            if (!checkCondition(condition)) {
+            val result = checkCondition(condition) ?: return false to null
+            if (result.isDetected xor condition.shouldBeDetected) {
                 if (operator == AND) {
                     // One of the condition isn't fulfilled, it's a false for a AND operator.
-                    return false
+                    return false to result
                 }
+
             } else if (operator  == OR) {
                 // One of the condition is fulfilled, it's a yes for a OR operator.
-                return true
+                return true to result
+            }
+
+            // All conditions passed for AND, none are for OR.
+            if (index == conditions.size - 1) {
+                return (operator == AND) to result
             }
         }
 
-        // All conditions passed for AND, none are for OR.
-        return operator == AND
+        return false to null
     }
 
     /**
@@ -143,17 +151,16 @@ internal class ScenarioProcessor(
      *
      * @param condition the event condition to be verified.
      *
-     * @return true if the currently processed [Image] contains the condition bitmap at the condition area.
+     * @return the result of the detection, or null of the detection is not possible.
      */
-    private fun checkCondition(condition: Condition) : Boolean {
+    private fun checkCondition(condition: Condition) : DetectionResult? {
         condition.path?.let { path ->
             bitmapSupplier(path, condition.area.width(), condition.area.height())?.let { conditionBitmap ->
-                return if (condition.shouldBeDetected) detect(condition, conditionBitmap)
-                else !detect(condition, conditionBitmap)
+                return detect(condition, conditionBitmap)
             }
         }
 
-        return false
+        return null
     }
 
     /**
@@ -161,14 +168,13 @@ internal class ScenarioProcessor(
      *
      * @param condition the condition to be detected.
      * @param conditionBitmap the bitmap representing the condition.
+     *
+     * @return the result of the detection.
      */
-    private fun detect(condition: Condition, conditionBitmap: Bitmap): Boolean {
-        val result = when (condition.detectionType) {
+    private fun detect(condition: Condition, conditionBitmap: Bitmap): DetectionResult =
+         when (condition.detectionType) {
             EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
             WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
-            else -> null
+            else -> throw IllegalArgumentException("Unexpected detection type")
         }
-
-        return result?.isDetected ?: false
-    }
 }
