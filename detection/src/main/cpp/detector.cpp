@@ -23,8 +23,12 @@ using namespace cv;
 using namespace smartautoclicker;
 
 void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
+    // Get screen info from the android bitmap format
     currentImage = bitmapRGBA888ToMat(env, screenImage);
 
+    // Select the scale ratio depending on the screen size.
+    // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
+    // the performance of the detection.
     if (currentImage->rows > currentImage->cols && currentImage->rows > SCALED_IMAGE_MIN_SIZE_PIXEL) {
         scaleRatio = SCALED_IMAGE_MIN_SIZE_PIXEL / currentImage->rows;
     } else if (currentImage->cols > SCALED_IMAGE_MIN_SIZE_PIXEL) {
@@ -32,12 +36,16 @@ void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
     } else {
         scaleRatio = 1;
     }
+
+    // Scale down the image and store it apart
     currentImageScaled = scale(*currentImage, scaleRatio);
 }
 
 DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, int threshold) {
-    detectionResult.isDetected = false;
+    // Reset the results cache
+    detectionResult.reset();
 
+    // setScreenImage haven't been called first
     if (currentImageScaled->empty()) {
         __android_log_print(ANDROID_LOG_ERROR, "Detector",
                             "detectCondition caught an exception");
@@ -46,10 +54,13 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
         return detectionResult;
     }
 
+    // Get the condition image information from the android bitmap format, and scale it to the processing size
     auto condition = scale(*bitmapRGBA888ToMat(env, conditionImage), scaleRatio);
 
+    // Try to match the condition somewhere on the screen
     matchCondition(*currentImageScaled, *condition, threshold);
 
+    // If the condition is detected, compute the position of the detection and add it to the results.
     if (detectionResult.isDetected) {
         detectionResult.centerX = (detectionResult.maxLoc.x + (int)(condition->cols / 2)) / scaleRatio;
         detectionResult.centerY = (detectionResult.maxLoc.y + (int)(condition->rows / 2)) / scaleRatio;
@@ -59,8 +70,10 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
 }
 
 DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, int x, int y, int width, int height, int threshold) {
-    detectionResult.isDetected = false;
+    // Reset the results cache
+    detectionResult.reset();
 
+    // setScreenImage haven't been called first
     if (currentImage->empty()) {
         __android_log_print(ANDROID_LOG_ERROR, "Detector",
                             "detectCondition caught an exception");
@@ -69,15 +82,21 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
         return detectionResult;
     }
 
+    // If the condition area isn't on the screen, no matching.
     if (x < 0 || width < 0 || x + width > currentImage->cols || y < 0 || height < 0 || y + height > currentImage->rows) {
         return detectionResult;
     }
 
+    // Crop the image at the condition position. This is like a screenshot at the same place than condition.
     auto croppedImage = Mat(*currentImage, Rect(x, y , width, height));
+    // Get the condition image information from the android bitmap format. This image as the same size than the
+    // croppedImage one.
     auto condition = bitmapRGBA888ToMat(env, conditionImage);
 
+    // Check if both images are the same.
     matchCondition(croppedImage, *condition, threshold);
 
+    // If the condition is detected, compute the position of the detection and add it to the results.
     if (detectionResult.isDetected) {
         detectionResult.centerX = x + (int)(width / 2);
         detectionResult.centerY = y + (int)(height / 2);

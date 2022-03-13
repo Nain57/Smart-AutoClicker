@@ -86,8 +86,8 @@ class ScenarioProcessorTests {
         private val TEST_CONDITION_AREA_3 = Rect(8 , 9, 10, 11)
         private const val TEST_CONDITION_THRESHOLD_3 = 3
 
-        private val TEST_DETECTION_OK = DetectionResult(true, 0, 0)
-        private val TEST_DETECTION_KO = DetectionResult(false, 0, 0)
+        private val TEST_DETECTION_OK = DetectionResult(true)
+        private val TEST_DETECTION_KO = DetectionResult(false)
     }
 
     /** Interface to be mocked in order to verify the calls to the bitmap supplier. */
