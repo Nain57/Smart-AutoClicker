@@ -64,7 +64,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     val isValidAction: Flow<Boolean> = configuredAction.map { action ->
         when (action) {
             null -> false
-            is Action.Click -> !action.name.isNullOrEmpty() && action.x != null && action.y != null
+            is Action.Click -> !action.name.isNullOrEmpty() && ((action.x != null && action.y != null) || action.clickOnCondition)
                     && action.pressDuration.isValidDuration()
             is Action.Swipe -> !action.name.isNullOrEmpty() && action.fromX != null && action.fromY != null && action.toX != null
                     && action.toY != null && action.swipeDuration.isValidDuration()

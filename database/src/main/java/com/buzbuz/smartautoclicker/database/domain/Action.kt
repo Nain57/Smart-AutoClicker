@@ -58,7 +58,7 @@ sealed class Action {
     ) : Action() {
 
         override fun isComplete(): Boolean =
-            name != null && pressDuration != null && x != null && y != null
+            name != null && pressDuration != null && ((x != null && y != null) || clickOnCondition)
 
         override fun getIdentifier(): Long = id
         override fun getActionName(): String? = name
@@ -188,7 +188,7 @@ sealed class Action {
 /** Convert an Action entity into a Domain Action. */
 internal fun ActionEntity.toAction(): Action {
     return when (type) {
-        ActionType.CLICK -> Action.Click(id, eventId, name, pressDuration!!, x!!, y!!, clickOnCondition!!)
+        ActionType.CLICK -> Action.Click(id, eventId, name, pressDuration!!, x, y, clickOnCondition!!)
         ActionType.SWIPE -> Action.Swipe(id, eventId, name, swipeDuration!!, fromX!!, fromY!!, toX!!, toY!!)
         ActionType.PAUSE -> Action.Pause(id, eventId, name, pauseDuration!!)
     }
