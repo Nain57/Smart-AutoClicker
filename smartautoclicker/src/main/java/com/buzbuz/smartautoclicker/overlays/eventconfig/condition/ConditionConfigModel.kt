@@ -19,13 +19,11 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.condition
 import android.content.Context
 import android.graphics.Bitmap
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
-import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -95,19 +93,13 @@ class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
         } ?: throw IllegalStateException("Can't toggle condition should be detected, condition is null!")
     }
 
-    /**
-     * Set the detection type of the configured condition.
-     * @param type the new type value.
-     */
-    fun setDetectionType(type: DetectionTypeChoice) {
+    /** Toggle between exact and whole screen for the detection type. */
+    fun toggleDetectionType() {
         configuredCondition.value?.let { condition ->
-            when (type) {
-                DetectionTypeChoice.Exact ->
-                    configuredCondition.value = condition.copy(detectionType = EXACT)
-                DetectionTypeChoice.WholeScreen ->
-                    configuredCondition.value = condition.copy(detectionType = WHOLE_SCREEN)
-            }
-        }
+            configuredCondition.value = condition.copy(
+                detectionType = if (condition.detectionType == EXACT) WHOLE_SCREEN else EXACT
+            )
+        } ?: throw IllegalStateException("Can't toggle condition should be detected, condition is null!")
     }
 
     /**
@@ -148,14 +140,6 @@ class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
         onBitmapLoaded.invoke(null)
         return null
     }
-}
-
-/** Choices for the condition detection type selection dialog. */
-sealed class DetectionTypeChoice(title: Int): DialogChoice(title, null) {
-    /** Exact position choice. */
-    object Exact : DetectionTypeChoice(R.string.dialog_condition_type_exact_position)
-    /** Whole screen choice. */
-    object WholeScreen : DetectionTypeChoice(R.string.dialog_condition_type_whole_screen)
 }
 
 /** The maximum threshold value selectable by the user. */

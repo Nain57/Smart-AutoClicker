@@ -39,8 +39,6 @@ import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.databinding.DialogConditionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
-import com.buzbuz.smartautoclicker.extensions.setRightCompoundDrawable
-import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.Job
@@ -99,18 +97,8 @@ class ConditionConfigDialog(
                 viewModel?.toggleShouldBeDetected()
             }
 
-            viewBinding.conditionDetectionType.apply {
-                setRightCompoundDrawable(R.drawable.ic_chevron)
-                setOnClickListener {
-                    showSubOverlay(MultiChoiceDialog(
-                        context = context,
-                        dialogTitle = R.string.dialog_condition_type_title,
-                        choices = listOf(DetectionTypeChoice.Exact, DetectionTypeChoice.WholeScreen),
-                        onChoiceSelected = { choiceClicked ->
-                            viewModel?.setDetectionType(choiceClicked)
-                        }
-                    ))
-                }
+            viewBinding.conditionDetectionType.setOnClickListener {
+                viewModel?.toggleDetectionType()
             }
 
             viewBinding.seekbarDiffThreshold.apply {
@@ -167,18 +155,25 @@ class ConditionConfigDialog(
 
                     launch {
                         viewModel?.detectionType?.collect { conditionType ->
-                            viewBinding.conditionDetectionType.text = when (conditionType) {
-                                EXACT -> context.getString(
-                                    R.string.dialog_condition_at,
-                                    condition.area.left,
-                                    condition.area.top,
-                                    condition.area.right,
-                                    condition.area.bottom
-                                )
-                                WHOLE_SCREEN -> context.getString(R.string.dialog_condition_type_whole_screen)
-                                else -> {
-                                    Log.e(TAG, "Invalid condition detection type, displaying nothing.")
-                                    null
+                            viewBinding.conditionDetectionType.apply {
+                                when (conditionType) {
+                                    EXACT -> {
+                                        text = context.getString(
+                                            R.string.dialog_condition_at,
+                                            condition.area.left,
+                                            condition.area.top,
+                                            condition.area.right,
+                                            condition.area.bottom
+                                        )
+                                        setLeftRightCompoundDrawables(R.drawable.ic_detect_exact, R.drawable.ic_chevron)
+                                    }
+                                    WHOLE_SCREEN -> {
+                                        text = context.getString(R.string.dialog_condition_type_whole_screen)
+                                        setLeftRightCompoundDrawables(R.drawable.ic_detect_whole_screen, R.drawable.ic_chevron)
+                                    }
+                                    else -> {
+                                        Log.e(TAG, "Invalid condition detection type, displaying nothing.")
+                                    }
                                 }
                             }
                         }
