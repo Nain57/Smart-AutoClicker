@@ -70,7 +70,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
                 actions?.let { actionList ->
                     addAll(actionList.map { ActionListItem.ActionItem(it) })
                 }
-                add(ActionListItem.AddActionItem)
+                add(ActionListItem.AddActionItem(size > 0))
             }
         }
     /** Backing property for [conditions]. */
@@ -321,7 +321,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
 /** Items displayed in the action list. */
 sealed class ActionListItem {
     /** The add action item. */
-    object AddActionItem : ActionListItem()
+    data class AddActionItem(val shouldDisplayCopy: Boolean) : ActionListItem()
     /** Item representing a created action. */
     data class ActionItem(val action: Action) : ActionListItem()
 }
@@ -332,14 +332,6 @@ sealed class ConditionCreationChoice(title: Int, iconId: Int?): DialogChoice(tit
     object Create : ConditionCreationChoice(R.string.dialog_condition_new_create, R.drawable.ic_add)
     /** Choice for copying an Condition. */
     object Copy : ConditionCreationChoice(R.string.dialog_condition_new_copy, R.drawable.ic_copy)
-}
-
-/** Choices for the action creation dialog. */
-sealed class ActionCreationChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
-    /** Choice for creating a new Action. */
-    object Create : ActionCreationChoice(R.string.dialog_action_new_create, R.drawable.ic_add)
-    /** Choice for copying an Action. */
-    object Copy : ActionCreationChoice(R.string.dialog_action_new_copy, R.drawable.ic_copy)
 }
 
 /** Choices for the action type selection dialog.*/

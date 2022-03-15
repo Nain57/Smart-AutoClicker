@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionCardBinding
-import com.buzbuz.smartautoclicker.databinding.ItemAddCardBinding
+import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
 import com.buzbuz.smartautoclicker.overlays.utils.getIconRes
 
 import java.util.Collections
@@ -43,7 +43,8 @@ import java.util.Collections
  * @param actionClickedListener  the listener called when the user clicks on a action.
  */
 class ActionsAdapter(
-    private val addActionClickedListener: (Boolean) -> Unit,
+    private val addActionClickedListener: () -> Unit,
+    private val copyActionClickedListener: () -> Unit,
     private val actionClickedListener: (Int, Action) -> Unit,
     private val actionReorderListener: (List<ActionListItem>) -> Unit,
 ) : ListAdapter<ActionListItem, RecyclerView.ViewHolder>(ActionDiffUtilCallback) {
@@ -60,16 +61,17 @@ class ActionsAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is ActionListItem.AddActionItem -> R.layout.item_add_card
+            is ActionListItem.AddActionItem -> R.layout.item_new_copy_card
             is ActionListItem.ActionItem -> R.layout.item_action_card
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_add_card ->
+            R.layout.item_new_copy_card ->
                 AddActionViewHolder(
-                    ItemAddCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                    addActionClickedListener
+                    ItemNewCopyCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                    addActionClickedListener,
+                    copyActionClickedListener,
                 )
             R.layout.item_action_card ->
                 ActionViewHolder(ItemActionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -77,8 +79,10 @@ class ActionsAdapter(
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ActionViewHolder) {
-            holder.onBind((getItem(position) as ActionListItem.ActionItem).action, actionClickedListener)
+        when (holder) {
+            is ActionViewHolder -> holder
+                .onBind((getItem(position) as ActionListItem.ActionItem).action, actionClickedListener)
+            is AddActionViewHolder -> holder.onBind((getItem(position) as ActionListItem.AddActionItem))
         }
     }
 
@@ -115,12 +119,23 @@ object ActionDiffUtilCallback: DiffUtil.ItemCallback<ActionListItem>() {
 
 /** View holder for the add action item. */
 class AddActionViewHolder(
-    viewBinding: ItemAddCardBinding,
-    addActionClickedListener: (Boolean) -> Unit,
+    private val viewBinding: ItemNewCopyCardBinding,
+    addActionClickedListener: () -> Unit,
+    copyActionClickedListener: () -> Unit
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     init {
-        itemView.setOnClickListener { addActionClickedListener.invoke(bindingAdapterPosition == 0) }
+        viewBinding.newItem.setOnClickListener { addActionClickedListener() }
+        viewBinding.copyItem.setOnClickListener { copyActionClickedListener() }
+    }
+
+    fun onBind(action: ActionListItem.AddActionItem) {
+        viewBinding.copyItem.visibility =
+            if (action.shouldDisplayCopy) View.VISIBLE
+            else View.GONE
+        viewBinding.separator.visibility =
+            if (action.shouldDisplayCopy) View.VISIBLE
+            else View.GONE
     }
 }
 

@@ -64,9 +64,6 @@ sealed class SubOverlay {
     /** Action type selection dialog. */
     object ActionTypeSelection : SubOverlay()
 
-    /** Action creation dialog. */
-    object ActionCreate : SubOverlay()
-
     /** Action copy dialog. */
     object ActionCopy : SubOverlay()
 

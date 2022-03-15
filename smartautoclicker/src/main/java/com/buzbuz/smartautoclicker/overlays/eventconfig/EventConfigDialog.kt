@@ -85,14 +85,11 @@ class EventConfigDialog(
 
     /** Adapter displaying all actions for the event displayed by this dialog. */
     private val actionsAdapter = ActionsAdapter(
-        addActionClickedListener = { isFirst ->
-            subOverlayViewModel?.apply {
-                if (isFirst) {
-                    requestSubOverlay(SubOverlay.ActionTypeSelection)
-                } else {
-                    requestSubOverlay(SubOverlay.ActionCreate)
-                }
-            }
+        addActionClickedListener = {
+            subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionTypeSelection)
+        },
+        copyActionClickedListener = {
+            subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionCopy)
         },
         actionClickedListener = { index, action ->
             subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionConfig(action, index))
@@ -250,20 +247,6 @@ class EventConfigDialog(
      */
     private fun updateSubOverlay(overlayType: SubOverlay) {
         when (overlayType) {
-            is SubOverlay.ActionCreate -> {
-                showSubOverlay(MultiChoiceDialog(
-                    context = context,
-                    dialogTitle = R.string.dialog_action_new_title,
-                    choices = listOf(ActionCreationChoice.Create, ActionCreationChoice.Copy),
-                    onChoiceSelected = { choiceClicked ->
-                        if (choiceClicked is ActionCreationChoice.Create) {
-                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionTypeSelection)
-                        } else {
-                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ActionCopy)
-                        }
-                    }
-                ))
-            }
 
             is SubOverlay.ActionTypeSelection -> {
                 showSubOverlay(MultiChoiceDialog(
