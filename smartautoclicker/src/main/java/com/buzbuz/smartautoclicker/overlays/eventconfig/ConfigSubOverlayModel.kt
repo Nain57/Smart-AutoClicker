@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -73,9 +73,6 @@ sealed class SubOverlay {
      * @param index the index of the action in the list.
      */
     class ActionConfig(val action: Action, val index: Int = -1) : SubOverlay()
-
-    /** Condition creation dialog. */
-    object ConditionCreate : SubOverlay()
 
     /** Condition copy dialog. */
     object ConditionCopy : SubOverlay()

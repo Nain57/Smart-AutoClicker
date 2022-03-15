@@ -98,14 +98,11 @@ class EventConfigDialog(
     )
     /** Adapter displaying all conditions for the event displayed by this dialog. */
     private val conditionsAdapter = ConditionAdapter(
-        addConditionClickedListener = { isFirst ->
-            subOverlayViewModel?.apply {
-                if (isFirst) {
-                    requestSubOverlay(SubOverlay.ConditionCapture)
-                } else {
-                    requestSubOverlay(SubOverlay.ConditionCreate)
-                }
-            }
+        addConditionClickedListener = {
+            subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCapture)
+        },
+        copyConditionClickedListener = {
+            subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCopy)
         },
         conditionClickedListener = { index, condition ->
             subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionConfig(condition, index))
@@ -198,8 +195,8 @@ class EventConfigDialog(
                 }
 
                 launch {
-                    viewModel?.conditions?.collect { conditions ->
-                        conditionsAdapter.conditions = conditions?.let { ArrayList(conditions)}
+                    viewModel?.conditionListItems?.collect { conditions ->
+                        conditionsAdapter.submitList(conditions)
                     }
                 }
 
@@ -293,21 +290,6 @@ class EventConfigDialog(
                     ),
                     hideCurrent = true,
                 )
-            }
-
-            is SubOverlay.ConditionCreate -> {
-                showSubOverlay(MultiChoiceDialog(
-                    context = context,
-                    dialogTitle = R.string.dialog_condition_new_title,
-                    choices = listOf(ConditionCreationChoice.Create, ConditionCreationChoice.Copy),
-                    onChoiceSelected = { choiceClicked ->
-                        if (choiceClicked is ConditionCreationChoice.Create) {
-                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCapture)
-                        } else {
-                            subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCopy)
-                        }
-                    }
-                ))
             }
 
             is SubOverlay.ConditionCopy -> {

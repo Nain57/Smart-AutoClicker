@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -83,6 +83,17 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
         )
     /** The event conditions currently edited by the user. */
     val conditions: StateFlow<List<Condition>?> = _conditions
+    /** */
+    val conditionListItems: Flow<List<ConditionListItem>> = _conditions
+        .map { conditions ->
+            buildList {
+                conditions?.let { conditionList ->
+                    addAll(conditionList.map { ConditionListItem.ConditionItem(it) })
+                }
+                add(ConditionListItem.AddConditionItem(size > 0))
+            }
+        }
+
     /** The event name value currently edited by the user. */
     val eventName: Flow<String?> = configuredEvent.map { it?.name }.take(1)
     /** The event condition operator currently edited by the user. */
@@ -326,12 +337,12 @@ sealed class ActionListItem {
     data class ActionItem(val action: Action) : ActionListItem()
 }
 
-/** Choices for the action creation dialog. */
-sealed class ConditionCreationChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
-    /** Choice for creating a new Condition. */
-    object Create : ConditionCreationChoice(R.string.dialog_condition_new_create, R.drawable.ic_add)
-    /** Choice for copying an Condition. */
-    object Copy : ConditionCreationChoice(R.string.dialog_condition_new_copy, R.drawable.ic_copy)
+/** Items displayed in the condition list. */
+sealed class ConditionListItem {
+    /** The add condition item. */
+    data class AddConditionItem(val shouldDisplayCopy: Boolean) : ConditionListItem()
+    /** Item representing a created condition. */
+    data class ConditionItem(val condition: Condition) : ConditionListItem()
 }
 
 /** Choices for the action type selection dialog.*/

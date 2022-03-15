@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,12 +23,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.databinding.ItemConditionCardBinding
+import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
 import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
 
 import kotlinx.coroutines.Job
@@ -43,37 +46,83 @@ import kotlinx.coroutines.Job
  * @param bitmapProvider provides the conditions bitmaps to the items.
  */
 class ConditionAdapter(
-    private val addConditionClickedListener: (Boolean) -> Unit,
+    private val addConditionClickedListener: () -> Unit,
+    private val copyConditionClickedListener: () -> Unit,
     private val conditionClickedListener: (Int, Condition) -> Unit,
     private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
-) : RecyclerView.Adapter<ConditionViewHolder>() {
+) : ListAdapter<ConditionListItem, RecyclerView.ViewHolder>(ConditionDiffUtilCallback) {
 
-    /** The list of conditions to be shown by this adapter.*/
-    var conditions: ArrayList<Condition>? = null
-        set(value) {
-            field = value
-            notifyDataSetChanged()
+    override fun getItemViewType(position: Int): Int =
+        when (getItem(position)) {
+            is ConditionListItem.AddConditionItem -> R.layout.item_new_copy_card
+            is ConditionListItem.ConditionItem -> R.layout.item_condition_card
         }
 
-    override fun getItemCount(): Int = conditions?.size?.plus(1) ?: 1
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
+            R.layout.item_new_copy_card -> AddConditionViewHolder(
+                ItemNewCopyCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                addConditionClickedListener,
+                copyConditionClickedListener,
+            )
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConditionViewHolder =
-        ConditionViewHolder(
-            ItemConditionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            bitmapProvider,
-        )
+            R.layout.item_condition_card -> ConditionViewHolder(
+                ItemConditionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                bitmapProvider,
+            )
 
-    override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) {
-        // The last item is the add item, allowing the user to add a new condition.
-        if (position == itemCount - 1) {
-            holder.onBindAddCondition(addConditionClickedListener)
-        } else {
-            holder.onBindCondition(conditions!![position], conditionClickedListener)
+            else -> throw IllegalArgumentException("Unsupported view type !")
+        }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ConditionViewHolder -> holder.onBindCondition(
+                ((getItem(position) as ConditionListItem.ConditionItem).condition),
+                conditionClickedListener,
+            )
+            is AddConditionViewHolder -> holder.onBind((getItem(position) as ConditionListItem.AddConditionItem))
         }
     }
 
-    override fun onViewRecycled(holder: ConditionViewHolder) {
-        holder.onUnbind()
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is ConditionViewHolder) {
+            holder.onUnbind()
+        }
+        super.onViewRecycled(holder)
+    }
+}
+
+/** DiffUtil Callback comparing two ActionItem when updating the [ConditionAdapter] list. */
+object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ConditionListItem>() {
+    override fun areItemsTheSame(oldItem: ConditionListItem, newItem: ConditionListItem): Boolean = when {
+        oldItem is ConditionListItem.AddConditionItem && newItem is ConditionListItem.AddConditionItem -> true
+        oldItem is ConditionListItem.ConditionItem && newItem is ConditionListItem.ConditionItem ->
+            oldItem.condition.id == oldItem.condition.id
+        else -> false
+    }
+
+    override fun areContentsTheSame(oldItem: ConditionListItem, newItem: ConditionListItem): Boolean = oldItem == newItem
+}
+
+/** View holder for the add condition item. */
+class AddConditionViewHolder(
+    private val viewBinding: ItemNewCopyCardBinding,
+    addActionClickedListener: () -> Unit,
+    copyActionClickedListener: () -> Unit
+) : RecyclerView.ViewHolder(viewBinding.root) {
+
+    init {
+        viewBinding.newItem.setOnClickListener { addActionClickedListener() }
+        viewBinding.copyItem.setOnClickListener { copyActionClickedListener() }
+    }
+
+    fun onBind(action: ConditionListItem.AddConditionItem) {
+        viewBinding.copyItem.visibility =
+            if (action.shouldDisplayCopy) View.VISIBLE
+            else View.GONE
+        viewBinding.separator.visibility =
+            if (action.shouldDisplayCopy) View.VISIBLE
+            else View.GONE
     }
 }
 
@@ -91,25 +140,6 @@ class ConditionViewHolder(
     private var bitmapLoadingJob: Job? = null
 
     /**
-     * Bind this view holder as a 'Add condition' item.
-     *
-     * @param addConditionClickedListener listener notified upon user click on this item.
-     */
-    fun onBindAddCondition(addConditionClickedListener: (Boolean) -> Unit) {
-        viewBinding.imageCondition.apply {
-            scaleType = ImageView.ScaleType.CENTER
-            setImageResource(R.drawable.ic_add)
-        }
-        itemView.setOnClickListener { addConditionClickedListener.invoke(bindingAdapterPosition == 0) }
-
-        viewBinding.apply {
-            conditionBackground.visibility = View.GONE
-            conditionDetectionType.visibility = View.GONE
-            conditionShouldBeDetected.visibility = View.GONE
-        }
-    }
-
-    /**
      * Bind this view holder as a condition item.
      *
      * @param condition the condition to be represented by this item.
@@ -118,12 +148,6 @@ class ConditionViewHolder(
     fun onBindCondition(condition: Condition, conditionClickedListener: (Int, Condition) -> Unit) {
         viewBinding.imageCondition.scaleType = ImageView.ScaleType.FIT_CENTER
         itemView.setOnClickListener { conditionClickedListener.invoke(bindingAdapterPosition, condition) }
-
-        viewBinding.apply {
-            conditionBackground.visibility = View.VISIBLE
-            conditionDetectionType.visibility = View.VISIBLE
-            conditionShouldBeDetected.visibility = View.VISIBLE
-        }
 
         if (condition.shouldBeDetected) {
             viewBinding.conditionShouldBeDetected.apply {
