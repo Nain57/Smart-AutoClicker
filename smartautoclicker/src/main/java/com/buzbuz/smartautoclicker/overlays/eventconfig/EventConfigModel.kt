@@ -23,10 +23,7 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.database.domain.*
 import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.Dispatchers
@@ -208,13 +205,12 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
         }
     }
 
-    /**
-     * Set the condition operator of the configured event.
-     * @param operator the new operator.
-     */
-    fun setConditionOperator(@ConditionOperator operator: Int) {
+    /** Toggle the condition operator between AND and OR. */
+    fun toggleConditionOperator() {
         configuredEvent.value?.let { event ->
-            configuredEvent.value = event.copy(conditionOperator = operator)
+            configuredEvent.value = event.copy(
+                conditionOperator = if (event.conditionOperator == AND) OR else AND
+            )
         } ?: throw IllegalStateException("Can't set condition operator, event is null!")
     }
 
@@ -328,14 +324,6 @@ sealed class ActionListItem {
     object AddActionItem : ActionListItem()
     /** Item representing a created action. */
     data class ActionItem(val action: Action) : ActionListItem()
-}
-
-/** Choices for the condition operator selection dialog. */
-sealed class OperatorChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
-    /** AND choice. */
-    object And : OperatorChoice(R.string.condition_operator_and_desc, R.drawable.ic_all_conditions)
-    /** OR choice. */
-    object Or : OperatorChoice(R.string.condition_operator_or_desc, R.drawable.ic_one_condition)
 }
 
 /** Choices for the action creation dialog. */

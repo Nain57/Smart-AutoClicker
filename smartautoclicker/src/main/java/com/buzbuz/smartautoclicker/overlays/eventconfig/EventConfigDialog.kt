@@ -134,7 +134,7 @@ class EventConfigDialog(
             root.setOnTouchListener(hideSoftInputTouchListener)
 
             layoutConditionOperator.setOnClickListener {
-                subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionOperatorSelection)
+                viewModel?.toggleConditionOperator()
             }
 
             editName.apply {
@@ -310,20 +310,6 @@ class EventConfigDialog(
                     ),
                     hideCurrent = true,
                 )
-            }
-
-            is SubOverlay.ConditionOperatorSelection -> {
-                showSubOverlay(MultiChoiceDialog(
-                    context = context,
-                    dialogTitle = R.string.dialog_condition_operator_title,
-                    choices = listOf(OperatorChoice.And, OperatorChoice.Or),
-                    onChoiceSelected = { choiceClicked ->
-                        when (choiceClicked) {
-                            is OperatorChoice.And -> viewModel?.setConditionOperator(AND)
-                            is OperatorChoice.Or -> viewModel?.setConditionOperator(OR)
-                        }
-                    }
-                ))
             }
 
             is SubOverlay.ConditionCreate -> {
