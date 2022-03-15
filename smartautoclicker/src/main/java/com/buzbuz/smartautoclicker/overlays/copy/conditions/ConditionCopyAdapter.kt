@@ -91,10 +91,8 @@ class ConditionViewHolder(
             conditionShouldBeDetected.apply {
                 if (condition.shouldBeDetected) {
                     setImageResource(R.drawable.ic_confirm)
-                    setIconTint(R.color.green_ok)
                 } else {
                     setImageResource(R.drawable.ic_cancel)
-                    setIconTint(R.color.red_ko)
                 }
             }
 

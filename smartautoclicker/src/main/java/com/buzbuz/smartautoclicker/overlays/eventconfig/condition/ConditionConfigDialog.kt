@@ -144,10 +144,10 @@ class ConditionConfigDialog(
                             viewBinding.conditionDetectionShouldAppear.apply {
                                 if (shouldBeDetected) {
                                     setText(R.string.dialog_condition_should_be_detected)
-                                    setLeftRightCompoundDrawables(R.drawable.ic_confirm, R.drawable.ic_chevron, Color.GREEN)
+                                    setLeftRightCompoundDrawables(R.drawable.ic_confirm, R.drawable.ic_chevron)
                                 } else {
                                     setText(R.string.dialog_condition_should_not_be_detected)
-                                    setLeftRightCompoundDrawables(R.drawable.ic_cancel, R.drawable.ic_chevron, Color.RED)
+                                    setLeftRightCompoundDrawables(R.drawable.ic_cancel, R.drawable.ic_chevron)
                                 }
                             }
                         }

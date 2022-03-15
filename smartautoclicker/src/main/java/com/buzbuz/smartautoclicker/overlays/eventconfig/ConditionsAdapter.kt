@@ -128,12 +128,12 @@ class ConditionViewHolder(
         if (condition.shouldBeDetected) {
             viewBinding.conditionShouldBeDetected.apply {
                 setImageResource(R.drawable.ic_confirm)
-                setIconTint(R.color.green_ok)
+                setIconTint(R.color.overlayMenuButtons)
             }
         } else {
             viewBinding.conditionShouldBeDetected.apply {
                 setImageResource(R.drawable.ic_cancel)
-                setIconTint(R.color.red_ko)
+                setIconTint(R.color.overlayMenuButtons)
             }
         }
 
