@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,9 @@ import android.content.Context
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.View
+import android.view.WindowManager
+import android.widget.TextView
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -27,13 +30,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.eventlist.EventListDialog
 
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -64,9 +66,21 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
 
     /** Tells if the detecting state have never been updated. Use to skip animation the first time. */
     private var isFirstStateUpdate = true
+    /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
+    private var debugObservableJob: Job? = null
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
         layoutInflater.inflate(R.layout.overlay_menu, null) as ViewGroup
+
+    override fun onCreateOverlayView(): DebugView = DebugView(context)
+
+    override fun onCreateOverlayViewLayoutParams(): WindowManager.LayoutParams =
+        super.onCreateOverlayViewLayoutParams().apply {
+            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+        }
 
     override fun onCreate() {
         super.onCreate()
@@ -75,7 +89,22 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel?.eventList?.collect { onEventListChanged(it) } }
                 launch { viewModel?.detectionState?.collect { onDetectionStateChanged(it) } }
+
+                launch {
+                    viewModel?.isDebugging?.collect { isDebugging ->
+                        changeDebugState(isDebugging)
+                    }
+                }
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        getMenuItemView<View>(R.id.btn_play)?.setOnLongClickListener {
+            viewModel?.toggleDetection(true)
+            true
         }
     }
 
@@ -124,6 +153,54 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
             } else {
                 setMenuItemViewDrawable(R.id.btn_play, pauseToPlayDrawable)
                 pauseToPlayDrawable.start()
+            }
+        }
+    }
+
+    /**
+     * Change the debug state of this UI.
+     * @param isDebugging true is the debug mode is active, false if not.
+     */
+    private fun changeDebugState(isDebugging: Boolean) {
+        if (isDebugging && debugObservableJob == null) {
+            getMenuItemView<View>(R.id.layout_debug)?.visibility = View.VISIBLE
+            setOverlayViewVisibility(View.VISIBLE)
+            debugObservableJob = observeDebugValues()
+
+        } else if (!isDebugging && debugObservableJob != null) {
+            debugObservableJob?.cancel()
+            debugObservableJob = null
+
+            getMenuItemView<View>(R.id.layout_debug)?.visibility = View.GONE
+            setOverlayViewVisibility(View.GONE)
+            (screenOverlayView as DebugView).clear()
+        }
+    }
+
+    /**
+     * Observe the values for the debug and update the debug views.
+     * @return the coroutine job for the observable. Can be cancelled to stop the observation.
+     */
+    private fun observeDebugValues() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            launch {
+                viewModel?.debugLastPositive?.collect { debugInfo ->
+                    getMenuItemView<TextView>(R.id.debug_event_name)?.text = debugInfo.eventName
+                    getMenuItemView<TextView>(R.id.debug_condition_name)?.text = debugInfo.conditionName
+                    getMenuItemView<TextView>(R.id.debug_confidence_rate)?.text = debugInfo.confidenceRateText
+                }
+            }
+
+            launch {
+                viewModel?.debugLastPositiveCoordinates?.collect { coordinates ->
+                    (screenOverlayView as DebugView).setPositiveResult(coordinates)
+                }
+            }
+
+            launch {
+                viewModel?.debugLastConfidenceRate?.collect { confRate ->
+                    getMenuItemView<TextView>(R.id.debug_current_confidence_rate)?.text = confRate
+                }
             }
         }
     }

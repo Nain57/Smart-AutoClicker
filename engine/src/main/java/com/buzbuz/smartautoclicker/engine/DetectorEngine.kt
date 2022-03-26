@@ -115,15 +115,20 @@ class DetectorEngine(context: Context) {
     /** Coroutine job for the image currently processed. */
     private var processingJob: Job? = null
 
-    /** Backing property for [isScreenRecording]. */
-    private val _isScreenRecording = MutableStateFlow(false)
-    /** True if we are currently screen recording, false if not. */
-    val isScreenRecording: StateFlow<Boolean> = _isScreenRecording
-
+    /** Tells if we are screen recording.  */
+    private val isScreenRecording = MutableStateFlow(false)
     /** Backing property for [isDetecting]. */
     private val _isDetecting = MutableStateFlow(false)
+    /** Backing property for [isDetecting]. */
+    private val _isDebugging = MutableStateFlow(false)
+
     /** True if we are currently detecting clicks, false if not. */
     val isDetecting: StateFlow<Boolean> = _isDetecting
+    /** True if we are collecting debug data, false if not. */
+    val isDebugging: StateFlow<Boolean> = _isDebugging
+
+    /** Engine for debugging purposes. */
+    val debugEngine = DebugEngine()
 
     /** The current scenario. */
     private val _scenario = MutableStateFlow<Scenario?>(null)
@@ -165,7 +170,7 @@ class DetectorEngine(context: Context) {
         scenario: Scenario,
         gestureExecutor: (GestureDescription) -> Unit
     ) {
-        if (_isScreenRecording.value) {
+        if (isScreenRecording.value) {
             Log.w(TAG, "startScreenRecord: Screen record is already started")
             return
         }
@@ -184,7 +189,7 @@ class DetectorEngine(context: Context) {
 
             processingScope?.launch {
                 startScreenRecord(context, screenMetrics.screenSize)
-                _isScreenRecording.emit(true)
+                isScreenRecording.emit(true)
                 _scenario.emit(scenario)
             }
         }
@@ -201,7 +206,7 @@ class DetectorEngine(context: Context) {
      * @param callback the object to notify upon capture completion.
      */
     fun captureArea(area: Rect, callback: (Bitmap) -> Unit) {
-        if (!_isScreenRecording.value) {
+        if (!isScreenRecording.value) {
             Log.w(TAG, "captureArea: Screen record is not started.")
             return
         }
@@ -234,9 +239,11 @@ class DetectorEngine(context: Context) {
      * fulfillment. For each image, the first event in the list that is detected will be notified through the provided
      * callback.
      * [isScreenRecording] should be true to capture. Detection can be stopped with [stopDetection] or [stopScreenRecord].
+     *
+     * @param debugMode true to get the debug info via the [debugEngine], false if not.
      */
-    fun startDetection() {
-        if (!_isScreenRecording.value) {
+    fun startDetection(debugMode: Boolean = false) {
+        if (!isScreenRecording.value) {
             Log.w(TAG, "captureArea: Screen record is not started.")
             return
         } else if (_isDetecting.value) {
@@ -247,6 +254,7 @@ class DetectorEngine(context: Context) {
         Log.i(TAG, "startDetection")
 
         _isDetecting.value = true
+        _isDebugging.value = debugMode
 
         processingJob = processingScope?.launch {
             imageDetector = NativeDetector()
@@ -263,6 +271,7 @@ class DetectorEngine(context: Context) {
                 onEndConditionReached = {
                     stopDetection()
                 },
+                debugEngine = if (debugMode) debugEngine else null,
             )
 
             processLatestImage()
@@ -280,14 +289,15 @@ class DetectorEngine(context: Context) {
         processingScope?.launch {
             Log.i(TAG, "stopDetection")
 
+            _isDetecting.value = false
+            _isDebugging.value = false
+
             processingJob?.cancelAndJoin()
             processingJob = null
-
             imageDetector?.close()
             imageDetector = null
             scenarioProcessor = null
-
-            _isDetecting.value = false
+            debugEngine.clear()
         }
     }
 
@@ -298,7 +308,7 @@ class DetectorEngine(context: Context) {
      * resources.
      */
     fun stopScreenRecord() {
-        if (!_isScreenRecording.value) {
+        if (!isScreenRecording.value) {
             Log.w(TAG, "stop: Screen record is already stopped.")
             return
         } else if (_isDetecting.value) {
@@ -310,7 +320,7 @@ class DetectorEngine(context: Context) {
         screenMetrics.unregisterOrientationListener()
         processingScope?.launch {
             screenRecorder.stopProjection()
-            _isScreenRecording.emit(false)
+            isScreenRecording.emit(false)
 
             processingScope?.cancel()
             processingScope = null
@@ -350,7 +360,7 @@ class DetectorEngine(context: Context) {
 
     /** Clear this engine. It can't be used after this call. */
     fun clear() {
-        if (_isScreenRecording.value) {
+        if (isScreenRecording.value) {
             Log.w(TAG, "Clearing the detector but it was still started.")
             stopScreenRecord()
         }

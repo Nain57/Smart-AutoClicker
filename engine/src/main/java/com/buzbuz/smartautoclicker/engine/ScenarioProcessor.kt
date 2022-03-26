@@ -22,7 +22,6 @@ import android.media.Image
 
 import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.OR
@@ -40,6 +39,7 @@ import kotlinx.coroutines.yield
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param gestureExecutor execute the actions gestures on the user screen.
  * @param onEndConditionReached called when a end condition of the scenario have been reached.
+ * @param debugEngine the engine for the debugging. Can be null if not required.
  */
 internal class ScenarioProcessor(
     private val imageDetector: ImageDetector,
@@ -47,6 +47,7 @@ internal class ScenarioProcessor(
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
     gestureExecutor: (GestureDescription) -> Unit,
     private val onEndConditionReached: () -> Unit,
+    private val debugEngine: DebugEngine?,
 ) {
 
     /** Execute the detected event actions. */
@@ -78,14 +79,16 @@ internal class ScenarioProcessor(
             }
 
             // If conditions are fulfilled, execute this event's actions !
-            val result = verifyConditions(event.conditionOperator, event.conditions!!)
-            if (result.first) {
-
+            val result = verifyConditions(event)
+            if (result.eventMatched) {
                 executedEvents[event] = executedEvents[event]?.plus(1)
                     ?: throw IllegalStateException("Can' find the event in the executed events map.")
 
+                // If scenario debug mode is ON, notifies its engine.
+                debugEngine?.sendNewResult(result)
+
                 event.actions?.let { actions ->
-                    actionExecutor.executeActions(actions, result.second?.position)
+                    actionExecutor.executeActions(actions, result.detectionResult?.position)
                 }
 
                 // Check if an event has reached its max execution count.
@@ -99,6 +102,9 @@ internal class ScenarioProcessor(
                 }
 
                 break
+            } else {
+                // If scenario debug mode is ON, notifies its engine, even for detection failure
+                debugEngine?.sendNewResult(result)
             }
 
             // Stop processing if requested
@@ -113,35 +119,56 @@ internal class ScenarioProcessor(
      *
      * Applies the provided conditions the currently processed [Image] according to the provided operator.
      *
-     * @param operator the operator to apply between the conditions. Must be one of [ConditionOperator] values.
-     * @param conditions the condition to be checked on the currently processed [Image].
+     * @param event the event to verify the conditions of.
      */
-    private fun verifyConditions(
-        @ConditionOperator operator: Int,
-        conditions: List<Condition>
-    ) : Pair<Boolean, DetectionResult?> {
-
-        conditions.forEachIndexed { index, condition ->
+    private suspend fun verifyConditions(event: Event) : ProcessorResult {
+        event.conditions?.forEachIndexed { index, condition ->
             // Verify if the condition is fulfilled.
-            val result = checkCondition(condition) ?: return false to null
-            if (result.isDetected xor condition.shouldBeDetected) {
-                if (operator == AND) {
-                    // One of the condition isn't fulfilled, it's a false for a AND operator.
-                    return false to result
-                }
+            val result = checkCondition(condition) ?: return ProcessorResult(false)
 
-            } else if (operator  == OR) {
+            if (result.isDetected xor condition.shouldBeDetected) {
+                if (event.conditionOperator == AND) {
+                    // One of the condition isn't fulfilled, it's a false for a AND operator.
+                    return ProcessorResult(
+                        false,
+                        event,
+                        event.conditions?.get(index),
+                        result,
+                    )
+                }
+            } else if (event.conditionOperator == OR) {
                 // One of the condition is fulfilled, it's a yes for a OR operator.
-                return true to result
+                return ProcessorResult(
+                    true,
+                    event,
+                    event.conditions?.get(index),
+                    result,
+                )
             }
 
             // All conditions passed for AND, none are for OR.
-            if (index == conditions.size - 1) {
-                return (operator == AND) to result
+            if (index == (event.conditions?.size ?: 0) - 1) {
+                return if (event.conditionOperator == AND) {
+                    ProcessorResult(
+                        true,
+                        event,
+                        event.conditions?.get(index),
+                        result,
+                    )
+                } else {
+                    ProcessorResult(
+                        false,
+                        event,
+                        event.conditions?.get(index),
+                        result,
+                    )
+                }
             }
+
+            yield()
         }
 
-        return false to null
+        return ProcessorResult(false)
     }
 
     /**
@@ -178,3 +205,27 @@ internal class ScenarioProcessor(
             else -> throw IllegalArgumentException("Unexpected detection type")
         }
 }
+
+/**
+ * Send a new detection result to the debug engine, if any.
+ * @param result the results to be sent.
+ */
+private suspend fun DebugEngine?.sendNewResult(result: ProcessorResult) = this?.let { debug ->
+    if (result.event != null && result.condition != null && result.detectionResult != null) {
+        debug.onNewDetectionResult(result.event, result.condition, result.detectionResult)
+    }
+}
+
+/**
+ * The results of a the scenario processing.
+ * @param eventMatched true if the event conditions have been matched.
+ * @param event the event tested.
+ * @param condition the condition detected.
+ * @param detectionResult the results of the detection.
+ */
+private data class ProcessorResult(
+    val eventMatched: Boolean,
+    val event: Event? = null,
+    val condition: Condition? = null,
+    val detectionResult: DetectionResult? = null,
+)

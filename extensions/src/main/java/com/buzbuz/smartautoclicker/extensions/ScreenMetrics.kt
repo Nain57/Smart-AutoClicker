@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,8 +43,10 @@ class ScreenMetrics(private val context: Context) {
             else WindowManager.LayoutParams.TYPE_PHONE
     }
 
+    /** */
+    private val displayManager = context.getSystemService(DisplayManager::class.java)
     /** The display to get the value from. It will always be the first one available. */
-    private val display = context.getSystemService(DisplayManager::class.java).getDisplay(0)
+    private val display = displayManager.getDisplay(0)
     /** The listener upon orientation changes. */
     private var orientationListener: ((Context) -> Unit)? = null
 
@@ -60,6 +62,28 @@ class ScreenMetrics(private val context: Context) {
         override fun onReceive(context: Context, intent: Intent) {
             updateScreenMetrics()
         }
+    }
+
+    /** @return the limit y position in screen coordinates where it is safe to draw (notch, status bar...) */
+    fun getTopSafeArea(): Int {
+        var topSafeArea = 0
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            topSafeArea = display.cutout?.safeInsetTop ?: 0
+        }
+
+        if (topSafeArea == 0 && Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+            topSafeArea = context.getSystemService(WindowManager::class.java)
+                .currentWindowMetrics.windowInsets.displayCutout?.safeInsetTop ?: 0
+        }
+
+        if (topSafeArea == 0) {
+            topSafeArea = context.resources.getDimensionPixelSize(
+                context.resources.getIdentifier("status_bar_height", "dimen", "android")
+            )
+        }
+
+        return topSafeArea
     }
 
     /**

@@ -64,6 +64,9 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     if (detectionResult.isDetected) {
         detectionResult.centerX = (detectionResult.maxLoc.x + (int)(condition->cols / 2)) / scaleRatio;
         detectionResult.centerY = (detectionResult.maxLoc.y + (int)(condition->rows / 2)) / scaleRatio;
+    } else {
+        detectionResult.centerX = 0;
+        detectionResult.centerY = 0;
     }
 
     return detectionResult;
@@ -100,6 +103,9 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     if (detectionResult.isDetected) {
         detectionResult.centerX = x + (int)(width / 2);
         detectionResult.centerY = y + (int)(height / 2);
+    } else {
+        detectionResult.centerX = 0;
+        detectionResult.centerY = 0;
     }
 
     return detectionResult;

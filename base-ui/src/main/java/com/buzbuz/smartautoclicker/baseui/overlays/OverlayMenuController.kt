@@ -280,7 +280,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     }
 
     /** */
-    protected fun getMenuItemView(@IdRes viewId: Int): View? = menuLayout?.findViewById(viewId)
+    protected fun <T: View> getMenuItemView(@IdRes viewId: Int): T? = menuLayout?.findViewById(viewId)
 
     /**
      * Called when the user touch the [R.id.btn_move] menu item.
