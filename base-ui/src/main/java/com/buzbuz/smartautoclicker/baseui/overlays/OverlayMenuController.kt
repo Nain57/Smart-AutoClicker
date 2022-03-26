@@ -89,14 +89,6 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
         PixelFormat.TRANSLUCENT)
-    /** The layout parameters of the overlay view. */
-    private val overlayLayoutParams:  WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
-        copyFrom(menuLayoutParams)
-        screenMetrics.screenSize.let { size ->
-            width = size.x
-            height = size.y
-        }
-    }
     /** The shared preference storing the position of the menu in order to save/restore the last user position. */
     private val sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     /** The Android window manager. Used to add/remove the overlay menu and view. */
@@ -113,6 +105,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * button will have no effect.
      */
     protected var screenOverlayView: View? = null
+    /** The layout parameters of the overlay view. */
+    private var overlayLayoutParams:  WindowManager.LayoutParams? = null
 
     /** The initial position of the overlay menu when pressing the move menu item. */
     private var moveInitialMenuPosition = 0 to 0
@@ -143,11 +137,26 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      */
     protected open fun onCreateOverlayView(): View? = null
 
+    /**
+     * Creates the layout parameters for the [screenOverlayView].
+     * Default implementation uses the same parameters as the floating menu, but in fullscreen.
+     *
+     * @return the layout parameters to apply to the overlay view.
+     */
+    protected open fun onCreateOverlayViewLayoutParams(): WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
+        copyFrom(menuLayoutParams)
+        screenMetrics.screenSize.let { size ->
+            width = size.x
+            height = size.y
+        }
+    }
+
     @CallSuper
     override fun onCreate() {
         // First, call implementation methods to check what we should display
         menuLayout = onCreateMenu(context.getSystemService(LayoutInflater::class.java))
         screenOverlayView = onCreateOverlayView()
+        overlayLayoutParams = onCreateOverlayViewLayoutParams()
 
         // Set the clicks listener on the menu items
         menuLayout!!.let {
@@ -175,7 +184,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
-        overlayLayoutParams.gravity = Gravity.TOP or Gravity.START
+        overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
         loadMenuPosition(screenMetrics.orientation)
     }
 
@@ -270,6 +279,9 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         (menuLayout?.findViewById<View>(viewId) as ImageView).setImageDrawable(drawable)
     }
 
+    /** */
+    protected fun getMenuItemView(@IdRes viewId: Int): View? = menuLayout?.findViewById(viewId)
+
     /**
      * Called when the user touch the [R.id.btn_move] menu item.
      * Handle the long press and move on this button in order to drag and drop the overlay menu on the screen.
@@ -328,8 +340,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         windowManager.updateViewLayout(menuLayout, menuLayoutParams)
         screenOverlayView?.let { overlayView ->
             screenMetrics.screenSize.let { size ->
-                overlayLayoutParams.width = size.x
-                overlayLayoutParams.height = size.y
+                overlayLayoutParams?.width = size.x
+                overlayLayoutParams?.height = size.y
             }
             windowManager.updateViewLayout(overlayView, overlayLayoutParams)
         }
