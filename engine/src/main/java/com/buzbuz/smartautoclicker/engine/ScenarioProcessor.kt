@@ -47,7 +47,7 @@ internal class ScenarioProcessor(
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
     gestureExecutor: (GestureDescription) -> Unit,
     private val onEndConditionReached: () -> Unit,
-    private val debugEngine: DebugEngine?,
+    private val debugEngine: DebugEngine? = null,
 ) {
 
     /** Execute the detected event actions. */
