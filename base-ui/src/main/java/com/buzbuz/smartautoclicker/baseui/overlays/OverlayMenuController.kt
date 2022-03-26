@@ -160,7 +160,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
         // Set the clicks listener on the menu items
         menuLayout!!.let {
-            val parentLayout: ViewGroup = if (it.childCount == 1) it.getChildAt(0) as ViewGroup else it
+            val parentLayout = it.findViewById<ViewGroup>(R.id.view_group_buttons)
             parentLayout.forEach { view ->
                 @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
                 when (view.id) {

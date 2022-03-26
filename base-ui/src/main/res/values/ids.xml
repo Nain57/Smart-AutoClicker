@@ -16,6 +16,8 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <!-- Id for view group containing the menu items in the OverlayMenuController -->
+    <item name="view_group_buttons" type="id"/>
     <!-- Id for the move button in the OverlayMenuController -->
     <item name="btn_move" type="id"/>
     <!-- Id for the hide button in the OverlayMenuController -->

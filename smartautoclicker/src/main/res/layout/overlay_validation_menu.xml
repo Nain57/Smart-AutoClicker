@@ -21,7 +21,7 @@
     tools:viewBindingIgnore="true">
 
     <LinearLayout
-        android:id="@+id/layout_buttons"
+        android:id="@+id/view_group_buttons"
         style="@style/OverlayButtonsLayout">
 
             <ImageButton
