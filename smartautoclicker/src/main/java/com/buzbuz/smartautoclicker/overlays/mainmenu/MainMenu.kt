@@ -85,6 +85,10 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     override fun onCreate() {
         super.onCreate()
 
+        // Ensure the debug view state is correct
+        getMenuItemView<View>(R.id.layout_debug)?.visibility = View.GONE
+        setOverlayViewVisibility(View.GONE)
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel?.eventList?.collect { onEventListChanged(it) } }
