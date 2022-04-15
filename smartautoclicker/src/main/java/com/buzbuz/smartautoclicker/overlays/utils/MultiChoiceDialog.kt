@@ -25,10 +25,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogMultiChoiceBinding
 import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceBinding
-import com.buzbuz.smartautoclicker.extensions.setCustomTitle
 
 /**
  * [OverlayDialogController] implementation for a dialog displaying a list of choices to the user.
