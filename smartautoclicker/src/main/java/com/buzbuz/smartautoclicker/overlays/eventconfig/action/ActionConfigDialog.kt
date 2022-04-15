@@ -30,7 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle

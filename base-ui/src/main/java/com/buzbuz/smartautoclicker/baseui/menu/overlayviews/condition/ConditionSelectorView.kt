@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -30,9 +30,9 @@ import android.view.View
 import androidx.core.content.res.use
 import androidx.core.graphics.minus
 
-import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.Selector
-import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector.HintsController
-import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector.Selector
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector.HintsController
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
 /**

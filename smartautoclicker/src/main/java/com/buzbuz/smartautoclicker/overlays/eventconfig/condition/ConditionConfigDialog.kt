@@ -33,7 +33,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
-import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN

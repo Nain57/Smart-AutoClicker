@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 import com.buzbuz.smartautoclicker.detection.NativeDetector
-import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

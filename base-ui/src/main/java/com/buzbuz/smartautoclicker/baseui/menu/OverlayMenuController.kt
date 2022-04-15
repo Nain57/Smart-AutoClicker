@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlays
+package com.buzbuz.smartautoclicker.baseui.menu
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -35,8 +35,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.forEach
+import com.buzbuz.smartautoclicker.baseui.OverlayController
 
-import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
 /**
@@ -114,7 +115,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     private var moveInitialTouchPosition = 0 to 0
 
     /** Listener upon the screen orientation changes. */
-    private val orientationListener = ::onOrientationChanged
+    private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
     /** Tells if there is a hide overlay view button or not. */
     private var haveHideButton = false
 
@@ -326,10 +327,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * Handles the screen orientation changes.
      * It will save the menu position for the previous orientation and load and apply the correct position for the new
      * orientation.
-     *
-     * @param context the Android context.
      */
-    private fun onOrientationChanged(context: Context) {
+    private fun onOrientationChanged() {
         saveMenuPosition(if (screenMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE)
             Configuration.ORIENTATION_PORTRAIT
         else

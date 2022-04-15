@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition
 
 import android.graphics.Canvas
 import android.graphics.RectF
@@ -22,7 +22,7 @@ import android.view.MotionEvent
 
 import androidx.annotation.CallSuper
 
-import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 
 /**
  * Base class for all view components displayed in the [ConditionSelectorView].

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlays
+package com.buzbuz.smartautoclicker.baseui
 
 import android.content.Context
 import android.util.Log
@@ -159,7 +159,8 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
             Log.e(TAG, "Can't show ${overlayController.hashCode()}, parent ${hashCode()} is not created")
             return
         } else if (lifecycleRegistry.currentState < Lifecycle.State.RESUMED) {
-            Log.i(TAG, "Delaying sub overlay: ${overlayController.hashCode()}; hide=$hideCurrent; " +
+            Log.i(
+                TAG, "Delaying sub overlay: ${overlayController.hashCode()}; hide=$hideCurrent; " +
                     "parent=${hashCode()}")
             pendingSubOverlayRequest = overlayController to hideCurrent
             return

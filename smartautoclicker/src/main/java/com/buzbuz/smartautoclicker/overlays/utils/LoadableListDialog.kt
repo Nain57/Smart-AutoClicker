@@ -22,7 +22,7 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
 
-import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
 
 /**

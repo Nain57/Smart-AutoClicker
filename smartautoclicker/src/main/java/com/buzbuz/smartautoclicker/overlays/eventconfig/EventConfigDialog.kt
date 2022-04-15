@@ -29,7 +29,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.OR

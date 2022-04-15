@@ -26,11 +26,11 @@ import android.widget.Toast
 import androidx.core.graphics.toPoint
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController
-import com.buzbuz.smartautoclicker.baseui.overlayviews.ClickSelectorView
-import com.buzbuz.smartautoclicker.baseui.overlayviews.FIRST
-import com.buzbuz.smartautoclicker.baseui.overlayviews.SECOND
-import com.buzbuz.smartautoclicker.baseui.overlayviews.SelectionIndex
+import com.buzbuz.smartautoclicker.baseui.menu.OverlayMenuController
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.ClickSelectorView
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.FIRST
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.SECOND
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.SelectionIndex
 
 /**
  * [OverlayMenuController] implementation for displaying the click area selection menu and its overlay view.

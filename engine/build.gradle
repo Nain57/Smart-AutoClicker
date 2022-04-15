@@ -53,7 +53,7 @@ dependencies {
     implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
 
-    implementation project(path: ':extensions')
+    implementation project(path: ':base-ui')
     implementation project(path: ':database')
     implementation project(path: ':detection')
 

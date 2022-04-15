@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -24,9 +24,9 @@ import android.view.MotionEvent
 
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.ConditionSelectorView
-import com.buzbuz.smartautoclicker.baseui.overlayviews.condition.SelectorViewComponent
-import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ConditionSelectorView
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.SelectorViewComponent
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
 /**

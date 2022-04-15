@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlayviews.condition.selector
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector
 
 import android.content.Context
 import android.graphics.Canvas

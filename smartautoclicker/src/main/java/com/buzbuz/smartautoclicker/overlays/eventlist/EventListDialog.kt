@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.extensions.setCustomTitle
-import com.buzbuz.smartautoclicker.baseui.overlays.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEventListBinding
@@ -38,7 +38,6 @@ import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**

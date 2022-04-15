@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlayviews
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -31,7 +31,7 @@ import androidx.core.content.res.use
 import com.buzbuz.smartautoclicker.ui.R
 
 /**
- * Overlay view used as [com.buzbuz.smartautoclicker.baseui.overlays.OverlayMenuController.screenOverlayView] showing
+ * Overlay view used as [com.buzbuz.smartautoclicker.baseui.dialog.OverlayMenuController.screenOverlayView] showing
  * the positions selected by the user.
  */
 class ClickSelectorView(context: Context) : View(context) {

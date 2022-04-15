@@ -15,7 +15,7 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 @file:Suppress("DEPRECATION")
-package com.buzbuz.smartautoclicker.extensions
+package com.buzbuz.smartautoclicker.baseui
 
 import android.content.BroadcastReceiver
 import android.content.Context

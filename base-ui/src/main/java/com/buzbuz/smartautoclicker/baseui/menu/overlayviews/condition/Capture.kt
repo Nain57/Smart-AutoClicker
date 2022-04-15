@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.overlayviews.condition
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -27,7 +27,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 
-import com.buzbuz.smartautoclicker.extensions.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.extensions.scale
 import com.buzbuz.smartautoclicker.extensions.translate
 import com.buzbuz.smartautoclicker.ui.R
