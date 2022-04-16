@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,11 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/dialog_width"
-    android:layout_height="@dimen/dialog_height">
+    android:layout_height="@dimen/dialog_height"
+    android:orientation="vertical">
 
-    <include layout="@layout/merge_loadable_list"/>
+    <FrameLayout
+        android:id="@+id/layout_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-</FrameLayout>
+        <include layout="@layout/merge_loadable_list"/>
+    </FrameLayout>
+
+    <include
+        android:id="@+id/include_buttons"
+        layout="@layout/include_event_list_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"/>
+
+</LinearLayout>

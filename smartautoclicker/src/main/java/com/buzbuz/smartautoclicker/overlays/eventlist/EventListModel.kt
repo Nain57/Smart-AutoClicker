@@ -22,14 +22,12 @@ import android.util.Log
 import androidx.annotation.IntDef
 import androidx.appcompat.app.AlertDialog
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.newDefaultEvent
-import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -163,19 +161,6 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
 
         viewModelScope.launch(Dispatchers.IO) { repository.removeEvent(event) }
     }
-}
-
-/**
- * Dialog choice for the event creation.
- *
- * @param title the string res of the title for this choice.
- * @param iconId the icon res of the image for this choice. Can be null if no image are requested.
- */
-sealed class CreateEventChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
-    /** Choice for creating a new Event. */
-    object Create : CreateEventChoice(R.string.dialog_event_add_create, R.drawable.ic_add)
-    /** Choice for copying an Event. */
-    object Copy : CreateEventChoice(R.string.dialog_event_add_copy, R.drawable.ic_copy)
 }
 
 /** Define the different display mode for the dialog. */

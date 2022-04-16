@@ -89,6 +89,10 @@
         <item name="android:background">@android:drawable/divider_horizontal_bright</item>
     </style>
 
+    <style name="Separator.Light">
+        <item name="android:backgroundTint">@color/overlayMenuButtons</item>
+    </style>
+
     <style name="DialogTitle" parent="@android:style/TextAppearance.Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/item_height</item>
@@ -106,6 +110,14 @@
         <item name="android:paddingStart">@dimen/margin_horizontal_large</item>
         <item name="android:gravity">center</item>
         <item name="android:tint">@color/textTitle</item>
+    </style>
+
+    <style name="DialogButton">
+        <item name="android:layout_width">@dimen/dialog_button_size</item>
+        <item name="android:layout_height">@dimen/dialog_button_size</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:tint">@color/overlayMenuButtons</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 
     <style name="DialogChoiceItemTitle">

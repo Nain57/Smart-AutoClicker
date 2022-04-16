@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.eventlist
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.IdRes
 
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
@@ -33,8 +34,8 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEventListBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeEventListButtonsBinding
 import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyDialog
-import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 
@@ -59,6 +60,8 @@ class EventListDialog(
     }
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEventListBinding
+    /** ViewBinding containing the views for the buttons of this dialog. */
+    private lateinit var buttonsViewBinding: IncludeEventListButtonsBinding
     /** Adapter displaying the list of events. */
     private lateinit var eventAdapter: EventListAdapter
     /** TouchHelper applied to [eventAdapter] when in [REORDER] mode allowing to drag and drop the items. */
@@ -66,17 +69,22 @@ class EventListDialog(
 
     override val emptyTextId: Int = R.string.dialog_event_list_no_events
 
-    override fun getListBindingRoot(): View = viewBinding.root
+    override fun getListBindingRoot(): View = viewBinding.layoutList
 
     override fun onCreateDialog(): AlertDialog.Builder {
         viewBinding = DialogEventListBinding.inflate(LayoutInflater.from(context))
+        buttonsViewBinding = viewBinding.includeButtons.apply {
+            btnCancel.setOnClickListener { onButtonClicked(it.id) }
+            btnConfirm.setOnClickListener { onButtonClicked(it.id) }
+            btnCopyEvent.setOnClickListener { onButtonClicked(it.id) }
+            btnMoveEvents.setOnClickListener { onButtonClicked(it.id) }
+            btnNewEvent.setOnClickListener { onButtonClicked(it.id) }
+            btnScenarioSettings.setOnClickListener { onButtonClicked(it.id) }
+        }
 
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_event_list_title)
             .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(R.string.dialog_event_list_reorder, null)
-            .setNeutralButton(R.string.dialog_event_list_add, null)
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
@@ -120,6 +128,28 @@ class EventListDialog(
         viewModel = null
     }
 
+    private fun onButtonClicked(@IdRes viewId: Int) {
+        when (viewId) {
+            R.id.btn_new_event -> viewModel?.getNewEvent(context)?.let { openEventConfigDialog(it) }
+            R.id.btn_copy_event -> showEventCopyDialog()
+            R.id.btn_move_events ->  viewModel?.setUiMode(REORDER)
+            R.id.btn_scenario_settings -> {
+
+            }
+            R.id.btn_cancel -> {
+                eventAdapter.cancelReorder()
+                viewModel?.setUiMode(EDITION)
+            }
+            R.id.btn_confirm -> when (viewModel?.uiMode?.value) {
+                EDITION -> dismiss()
+                REORDER -> viewModel?.apply {
+                    updateEventsPriority((eventAdapter.events!!))
+                    setUiMode(EDITION)
+                }
+            }
+        }
+    }
+
     /**
      * Refresh the list of events displayed by the dialog.
      *
@@ -141,20 +171,21 @@ class EventListDialog(
         dialog?.apply {
             itemTouchHelper.attachToRecyclerView(null)
 
-            changeButtonState(
-                button = getButton(AlertDialog.BUTTON_POSITIVE),
-                visibility = View.VISIBLE,
-                textId = android.R.string.ok,
-                listener = { dismiss() },
-            )
-            changeButtonState(
-                button = getButton(AlertDialog.BUTTON_NEGATIVE),
-                visibility = if (eventAdapter.itemCount > 1) View.VISIBLE else View.INVISIBLE,
-                textId = R.string.dialog_event_list_reorder,
-                listener = { viewModel?.setUiMode(REORDER) },
-            )
-            changeButtonState(getButton(AlertDialog.BUTTON_NEUTRAL), View.VISIBLE, R.string.dialog_event_list_add) {
-                onAddClicked()
+            buttonsViewBinding.apply {
+                separatorNewEvent.visibility = View.VISIBLE
+                btnNewEvent.visibility = View.VISIBLE
+                separatorCopyEvent.visibility = View.VISIBLE
+                btnCopyEvent.visibility = View.VISIBLE
+                if (eventAdapter.itemCount > 1) {
+                    separatorMoveEvents.visibility = View.VISIBLE
+                    btnMoveEvents.visibility = View.VISIBLE
+                } else {
+                    separatorMoveEvents.visibility = View.GONE
+                    btnMoveEvents.visibility = View.GONE
+                }
+
+                btnScenarioSettings.visibility = View.VISIBLE
+                btnCancel.visibility = View.GONE
             }
         }
     }
@@ -163,41 +194,16 @@ class EventListDialog(
     private fun toReorderMode() {
         dialog?.let {
             itemTouchHelper.attachToRecyclerView(listBinding.list)
-            changeButtonState(it.getButton(AlertDialog.BUTTON_POSITIVE), View.VISIBLE, android.R.string.ok) {
-                viewModel?.updateEventsPriority((eventAdapter.events!!))
-                viewModel?.setUiMode(EDITION)
-            }
-            changeButtonState(it.getButton(AlertDialog.BUTTON_NEGATIVE), View.VISIBLE, android.R.string.cancel) {
-                eventAdapter.cancelReorder()
-                viewModel?.setUiMode(EDITION)
-            }
-            changeButtonState(it.getButton(AlertDialog.BUTTON_NEUTRAL), View.GONE)
-        }
-    }
 
-    /**
-     * Called when the user clicks on the "Add" button.
-     * According to the current click count for the current scenario, it will directly starts the click configuration
-     * dialog to create a new click, or it will display the New/Copy dialog first.
-     */
-    private fun onAddClicked() {
-        if (eventAdapter.itemCount > 0) {
-            showSubOverlay(MultiChoiceDialog(
-                context = context,
-                dialogTitle = R.string.dialog_event_add_title,
-                choices = listOf(CreateEventChoice.Create, CreateEventChoice.Copy),
-                onChoiceSelected = { choiceClicked ->
-                    when (choiceClicked) {
-                        is CreateEventChoice.Create -> viewModel?.getNewEvent(context)?.let {
-                            openEventConfigDialog(it)
-                        }
-                        is CreateEventChoice.Copy -> showEventCopyDialog()
-                    }
-                }
-            ))
-        } else {
-            viewModel?.getNewEvent(context)?.let {
-                openEventConfigDialog(it)
+            buttonsViewBinding.apply {
+                separatorNewEvent.visibility = View.GONE
+                btnNewEvent.visibility = View.GONE
+                separatorCopyEvent.visibility = View.GONE
+                btnCopyEvent.visibility = View.GONE
+                separatorMoveEvents.visibility = View.GONE
+                btnMoveEvents.visibility = View.GONE
+                btnScenarioSettings.visibility = View.GONE
+                btnCancel.visibility = View.VISIBLE
             }
         }
     }
