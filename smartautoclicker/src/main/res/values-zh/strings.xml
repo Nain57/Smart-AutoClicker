@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2021 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="app_name" translatable="true">智能点击器</string>
+
+    <string name="activity_scenario_title">场景列表</string>
+    <string name="menu_search_item_title">搜索</string>
+    <string name="no_scenarios">场景列表为空，\n点击 \'+\' 按钮来创建。</string>
+    <plurals name="scenario_sub_text">
+        <item quantity="one">%d 情景</item>
+        <item quantity="other">%d 情景集合</item>
+    </plurals>
+
+    <string name="dialog_permissions_title">需要请求权限</string>
+    <string name="dialog_permissions_header">以下权限需要被允许使用：</string>
+    <string name="dialog_permission_overlay">悬浮窗</string>
+    <string name="dialog_permission_overlay_desc">悬浮窗权限允许该应用显示在其他应用的上层。</string>
+    <string name="dialog_permission_accessibility">无障碍服务</string>
+    <string name="dialog_permission_accessibility_desc">无障碍服务允许该应用在其他应用上进行点击。</string>
+
+    <string name="notification_channel_name" translatable="false">智能点击器</string>
+    <string name="notification_title">场景: %1$s</string>
+    <string name="notification_message">按住来改变场景</string>
+
+    <string name="dialog_add_scenario_title">新场景</string>
+    <string name="dialog_add_scenario_name_hint">名字</string>
+    <string name="dialog_delete_scenario_title">删除场景</string>
+    <string name="dialog_delete_scenario_message">这会删除 %1$s。你确定吗？</string>
+    <string name="dialog_rename_scenario_title">重命名场景</string>
+
+    <string name="dialog_event_list_title">情景列表</string>
+    <string name="dialog_event_list_add">新建</string>
+    <string name="dialog_event_list_reorder">重新排序</string>
+    <string name="dialog_event_list_no_events">情景列表为空。\n点击 \'新建\' 来创建。 </string>
+
+    <string name="dialog_event_add_title">添加新情景</string>
+    <string name="dialog_event_add_create">创建</string>
+    <string name="dialog_event_add_copy">从现有情景中复制</string>
+
+    <string name="dialog_event_copy_header_event">来自该场景的所有情景</string>
+    <string name="dialog_event_copy_header_all">来自所有场景的情景</string>
+    <string name="dialog_event_copy_search">通过情景名搜素</string>
+    <string name="dialog_event_copy_empty">没找到情景</string>
+
+    <string name="dialog_event_config_title">情景配置</string>
+    <string name="dialog_event_config_name_title">名字</string>
+    <string name="dialog_event_config_condition_title">条件集</string>
+    <string name="dialog_event_config_actions_title">行为列表</string>
+
+    <string name="dialog_event_config_stop_after_executions">在场景结束前执行</string>
+    <string name="dialog_event_config_executions_hint">不要停止这个场景</string>
+
+    <string name="dialog_condition_operator_title">条件类型</string>
+    <string name="condition_operator_and">所有条件</string>
+    <string name="condition_operator_or">至少一个</string>
+    <string name="condition_operator_and_desc">所有条件都满足</string>
+    <string name="condition_operator_or_desc">至少一个条件被满足</string>
+
+    <string name="dialog_action_type_title">动作类型</string>
+    <string name="dialog_action_type_click">单击</string>
+    <string name="dialog_action_type_swipe">滑动</string>
+    <string name="dialog_action_type_pause">等待</string>
+    <string name="dialog_action_config_click_press_duration_title">按压持续时间</string>
+    <string name="dialog_action_config_click_position_title">点击位置</string>
+    <string name="dialog_action_config_click_position_on_condition">在用于判断条件的图像处</string>
+    <string name="dialog_action_config_click_position_select_position">在坐标...</string>
+    <string name="dialog_action_config_click_position_none">没有指定点击位置</string>
+    <string name="dialog_action_config_click_position">在 %1$d, %2$d 上点击</string>
+    <string name="dialog_action_config_swipe_duration_title">滑动持续</string>
+    <string name="dialog_action_config_swipe_position_title">滑动位置</string>
+    <string name="dialog_action_config_swipe_position_none">没定义滑动位置</string>
+    <string name="dialog_action_config_swipe_position">滑动从 %1$d, %2$d 到 %3$d, %4$d</string>
+    <string name="dialog_action_config_pause_duration_title">暂停持续时间</string>
+
+    <string name="dialog_action_new_title">新动作</string>
+    <string name="dialog_action_new_create">创建</string>
+    <string name="dialog_action_new_copy">从其他动作拷贝</string>
+    <string name="dialog_action_copy_empty">找不到动作</string>
+    <string name="dialog_action_copy_click_details">持续 %1$s 在 [%2$d, %3$d]</string>
+    <string name="dialog_action_copy_swipe_details">持续 %1$s 从 [%2$d, %3$d] 到 [%4$d, %5$d]</string>
+    <string name="dialog_action_copy_pause_details">持续 %1$s</string>
+    <string name="dialog_action_copy_header_event">来自该情景下的所有动作</string>
+    <string name="dialog_action_copy_header_all">来自所有情景下的所有动作</string>
+    <string name="dialog_action_copy_search">通过动作名寻找</string>
+
+    <string name="dialog_condition_title">条件</string>
+    <string name="dialog_condition_name_title">名字</string>
+    <string name="dialog_condition_detection_details_title">检测详情</string>
+    <string name="dialog_condition_delete">删除</string>
+    <string name="dialog_condition_at">在位置 [%1$d,%2$d] [%3$d,%4$d]</string>
+    <string name="dialog_condition_type_title">检测类型</string>
+    <string name="dialog_condition_type_whole_screen">屏幕任意位置</string>
+    <string name="dialog_condition_type_exact_position">在相同位置</string>
+    <string name="dialog_condition_threshold_title">误差允许程度</string>
+    <string name="dialog_condition_threshold_value">误差: %1$d %%</string>
+    <string name="dialog_condition_should_be_detected">看到</string>
+    <string name="dialog_condition_should_not_be_detected">没看到</string>
+    <string name="dialog_condition_error">条件图像未能找到</string>
+    <string name="dialog_condition_new_title">新条件</string>
+    <string name="dialog_condition_new_create">创建</string>
+    <string name="dialog_condition_new_copy">从其他条件拷贝</string>
+    <string name="dialog_condition_copy_empty">不能拷贝，现在没有其他条件。</string>
+    <string name="dialog_condition_copy_threshold">%1$d%%</string>
+
+    <string name="toast_configure_single_click">触摸到点击的位置</string>
+    <string name="toast_configure_swipe_from">触摸滑动开始位置</string>
+    <string name="toast_configure_swipe_to">触摸滑动结束位置</string>
+
+    <string name="accessibility_service_description">该应用需要无障碍服务来实现自动点击。
+        一旦条件被检测到，便会执行由你创建的，位于其他应用上的点击列表。\n\n 该应用没有收集任何数据。 您可以自行访问我们的Github，代码是开源的!</string>
+
+    <string name="content_desc_add_scenario">创建一个新场景</string>
+    <string name="content_desc_image_condition">要被检测的图像</string>
+    <string name="content_desc_event_action_btn">编辑这个情景</string>
+    <string name="content_desc_delete_scenario">删除场景</string>
+    <string name="content_desc_play_pause_scenario">开始或者停止该场景</string>
+    <string name="content_desc_stop_clicker">停止自动点击器</string>
+    <string name="content_desc_open_event_list">打开情景列表</string>
+    <string name="content_desc_move_menu">移动悬浮窗菜单</string>
+    <string name="content_desc_confirm">确认</string>
+    <string name="content_desc_go_back">返回到对话框</string>
+    <string name="content_desc_overlay_state">悬浮窗权限状态</string>
+    <string name="content_desc_accessibility_state">无障碍服务权限状态</string>
+    <string name="content_desc_action">要被执行的动作</string>
+    <string name="content_desc_action_icon">这个图标标注动作类型</string>
+    <string name="content_desc_dialog_title_icon">对话框标题图标</string>
+
+    <string name="dialog_unit_ms" translatable="false">ms</string>
+    <string name="dialog_copy_title">拷贝来自</string>
+
+
+</resources>
