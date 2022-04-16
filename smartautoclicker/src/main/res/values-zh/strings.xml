@@ -62,8 +62,8 @@
     <string name="dialog_event_config_condition_title">条件集</string>
     <string name="dialog_event_config_actions_title">行为列表</string>
 
-    <string name="dialog_event_config_stop_after_executions">在场景结束前执行</string>
-    <string name="dialog_event_config_executions_hint">不要停止这个场景</string>
+    <string name="dialog_event_config_stop_after_executions">执行多少次后暂停该场景</string>
+    <string name="dialog_event_config_executions_hint">无限</string>
 
     <string name="dialog_condition_operator_title">条件类型</string>
     <string name="condition_operator_and">所有条件</string>
