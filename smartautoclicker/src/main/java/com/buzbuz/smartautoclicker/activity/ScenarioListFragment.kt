@@ -101,7 +101,7 @@ class ScenarioListFragment : Fragment() {
         viewBinding.add.setOnClickListener { onCreateClicked() }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 scenarioViewModel.scenarioList.collect {
                     onNewScenarioList(it)
                 }
