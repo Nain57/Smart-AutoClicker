@@ -64,8 +64,8 @@
     <string name="dialog_event_config_condition_title">Conditions</string>
     <string name="dialog_event_config_actions_title">Actions</string>
 
-    <string name="dialog_event_config_stop_after_executions">Executions before scenario end</string>
-    <string name="dialog_event_config_executions_hint">Don\'t stop the scenario</string>
+    <string name="dialog_event_config_stop_after_executions">Execution times then pause this scenario</string>
+    <string name="dialog_event_config_executions_hint">Unlimited</string>
 
     <string name="dialog_condition_operator_title">Conditions type</string>
     <string name="condition_operator_and">All conditions</string>
