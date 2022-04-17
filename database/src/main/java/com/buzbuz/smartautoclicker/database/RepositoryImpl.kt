@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,6 +48,8 @@ internal class RepositoryImpl internal constructor(
     private val eventDao = database.eventDao()
     /** The Dao for accessing the conditions. */
     private val conditionsDao = database.conditionDao()
+    /** The Dao for accessing the scenario end conditions. */
+    private val endConditionDao = database.endConditionDao()
 
     /** List updater for the list of actions. */
     private val actionsUpdater = EntityListUpdater<ActionEntity, Long>(
@@ -87,6 +89,20 @@ internal class RepositoryImpl internal constructor(
             scenarioEntity.toScenario()
         }
 
+    override fun getScenarioWithEndConditions(scenarioId: Long) = scenarioDao.getScenarioWithEndConditions(scenarioId)
+        .map { scenarioWithEndConditions ->
+            scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
+        }
+
+    override suspend fun addEndCondition(endCondition: EndCondition) =
+        endConditionDao.add(endCondition.toEntity())
+
+    override suspend fun updateEndCondition(endCondition: EndCondition) =
+        endConditionDao.update(endCondition.toEntity())
+
+    override suspend fun deleteEndCondition(endCondition: EndCondition) =
+        endConditionDao.delete(endCondition.toEntity())
+
     override fun getEventList(scenarioId: Long): Flow<List<Event>> =
         eventDao.getEvents(scenarioId).mapList { it.toEvent() }
 
@@ -107,7 +123,7 @@ internal class RepositoryImpl internal constructor(
         }
 
         event.toCompleteEntity()?.let { entity ->
-            eventDao.addEvent(entity)
+            eventDao.addCompleteEvent(entity)
             return true
         } ?: return false
     }

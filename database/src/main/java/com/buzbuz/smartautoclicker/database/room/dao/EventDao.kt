@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -114,7 +114,7 @@ internal abstract class EventDao {
      * @param event the complete event to be added.
      */
     @Transaction
-    open suspend fun addEvent(event: CompleteEventEntity) {
+    open suspend fun addCompleteEvent(event: CompleteEventEntity) {
         val eventId = addEvent(event.event)
 
         event.actions.forEachIndexed { index, action ->
@@ -187,7 +187,7 @@ internal abstract class EventDao {
      * @param event the event to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    protected abstract suspend fun addEvent(event: EventEntity): Long
+    abstract suspend fun addEvent(event: EventEntity): Long
     /**
      * Add a list of actions to the database.
      * @param actions the actions to be added.

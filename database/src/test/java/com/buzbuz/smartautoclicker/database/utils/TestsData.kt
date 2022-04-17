@@ -18,19 +18,9 @@ package com.buzbuz.smartautoclicker.database.utils
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import com.buzbuz.smartautoclicker.database.domain.*
 
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.database.domain.Event
-import com.buzbuz.smartautoclicker.database.domain.EXACT
-import com.buzbuz.smartautoclicker.database.domain.Scenario
-import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ActionType
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.entity.*
 
 /** Data set for the database tests. */
 internal object TestsData {
@@ -85,6 +75,37 @@ internal object TestsData {
         priority: Int,
     ) = Event(id, scenarioId, name, conditionOperator, priority, actions, conditions, stopAfter)
 
+
+    /* ------- End Condition Data ------- */
+
+    const val END_ID = 42L
+    const val END_SCENARIO_ID = SCENARIO_ID
+    const val END_EVENT_ID = EVENT_ID
+    const val END_EVENT_NAME = EVENT_NAME
+    const val END_EXECUTIONS = 42
+
+    fun getNewEndConditionEntity(
+        id: Long = END_ID,
+        scenarioId: Long = END_SCENARIO_ID,
+        eventId: Long = END_EVENT_ID,
+        executions: Int = END_EXECUTIONS,
+    ) = EndConditionEntity(id, scenarioId, eventId, executions)
+
+    fun getNewEndCondition(
+        id: Long = SCENARIO_ID,
+        scenarioId: Long = END_SCENARIO_ID,
+        eventId: Long = END_EVENT_ID,
+        eventName: String = END_EVENT_NAME,
+        executions: Int = END_EXECUTIONS,
+    ) = EndCondition(id, scenarioId, eventId, eventName, executions)
+
+    fun getNewEndConditionWithEvent(
+        id: Long = END_ID,
+        scenarioId: Long = END_SCENARIO_ID,
+        eventId: Long = END_EVENT_ID,
+        executions: Int = END_EXECUTIONS,
+        event: EventEntity,
+    ) = EndConditionWithEvent(EndConditionEntity(id, scenarioId, eventId, executions), event)
 
     /* ------- Click Action Data ------- */
 

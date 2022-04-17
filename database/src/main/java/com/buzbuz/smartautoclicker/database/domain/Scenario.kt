@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.database.domain
 
+import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
 
@@ -24,6 +25,10 @@ import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
  *
  * @param id the unique identifier for the scenario. Use 0 for creating a new scenario. Default value is 0.
  * @param name the name of the scenario.
+ * @param detectionQuality the quality of the detection algorithm. Lower value means faster detection but poorer
+ *                         quality, while higher values means better and slower detection.
+ * @param endConditionOperator the operator to apply to all [EndConditionEntity] related to this scenario. Can be any
+ *                             value of [com.buzbuz.smartautoclicker.database.domain.ConditionOperator].
  * @param eventCount the number of events in this scenario. Default value is 0.
  */
 data class Scenario(
@@ -36,6 +41,14 @@ data class Scenario(
     /** @return the entity equivalent of this scenario. */
     internal fun toEntity() = ScenarioEntity(id, name, detectionQuality, endConditionOperator)
 }
+
+/** @return the scenario for this entity. */
+internal fun ScenarioEntity.toScenario() = Scenario(
+    id = id,
+    name = name,
+    detectionQuality = detectionQuality,
+    endConditionOperator = endConditionOperator,
+)
 
 /** @return the scenario for this entity. */
 internal fun ScenarioWithEvents.toScenario() = Scenario(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,6 +57,23 @@ class ScenarioTests {
             listOf(TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0))
         ).toScenario()
         val expectedScenario = TestsData.getNewScenario(TestsData.SCENARIO_ID, TestsData.SCENARIO_NAME, eventCount = 1)
+
+        assertEquals(scenario, expectedScenario)
+    }
+
+    @Test
+    fun toScenarioComplete() {
+        val scenario = ScenarioWithEvents(
+            TestsData.getNewScenarioEntity(),
+            listOf(TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0))
+        ).toScenario()
+        val expectedScenario = TestsData.getNewScenario(
+            TestsData.SCENARIO_ID,
+            TestsData.SCENARIO_NAME,
+            TestsData.SCENARIO_DETECTION_QUALITY,
+            TestsData.SCENARIO_END_CONDITION_OPERATOR,
+            eventCount = 1
+        )
 
         assertEquals(scenario, expectedScenario)
     }

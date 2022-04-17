@@ -98,7 +98,7 @@ class EventDaoTests {
             actions = listOf(TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0)),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID))
         )
-        database.eventDao().addEvent(completeEvent)
+        database.eventDao().addCompleteEvent(completeEvent)
 
         assertEquals(completeEvent, database.eventDao().getEvent(TestsData.EVENT_ID))
     }
@@ -110,7 +110,7 @@ class EventDaoTests {
             actions = listOf(TestsData.getNewPauseEntity(eventId = 0L, priority = 0)),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = 0L))
         )
-        database.eventDao().addEvent(completeEvent)
+        database.eventDao().addCompleteEvent(completeEvent)
 
         val databaseEvent = database.eventDao().getCompleteEvents(TestsData.SCENARIO_ID).first()[0]
         assertEquals(databaseEvent.event.id, databaseEvent.actions[0].eventId)
@@ -128,7 +128,7 @@ class EventDaoTests {
             ),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = 0L))
         )
-        database.eventDao().addEvent(completeEvent)
+        database.eventDao().addCompleteEvent(completeEvent)
 
         val databaseEvent = database.eventDao().getEvent(TestsData.EVENT_ID)
         databaseEvent.actions.forEachIndexed { index, action ->
@@ -144,7 +144,7 @@ class EventDaoTests {
             actions = listOf(TestsData.getNewPauseEntity(eventId = 0L, priority = 0)),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = 0L))
         )
-        database.eventDao().addEvent(completeEvent)
+        database.eventDao().addCompleteEvent(completeEvent)
 
         database.eventDao().deleteEvent(completeEvent.event)
 
@@ -172,7 +172,7 @@ class EventDaoTests {
                 TestsData.getNewConditionEntity(id = deletedId, eventId = 0L),
             )
         )
-        database.eventDao().addEvent(oldEvent)
+        database.eventDao().addCompleteEvent(oldEvent)
 
         // Then update with the new one.
         val updatedAction = TestsData.getNewPauseEntity(id = updatedId, eventId = TestsData.EVENT_ID, priority = 1, pauseDuration = 1000L)
@@ -218,17 +218,17 @@ class EventDaoTests {
         val eventId1 = TestsData.EVENT_ID
         val eventId2 = TestsData.EVENT_ID + 1
         val eventId3 = TestsData.EVENT_ID + 2
-        database.eventDao().addEvent(CompleteEventEntity(
+        database.eventDao().addCompleteEvent(CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = eventId1, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(TestsData.getNewPauseEntity(eventId = eventId1, priority = 0)),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = eventId1))
         ))
-        database.eventDao().addEvent(CompleteEventEntity(
+        database.eventDao().addCompleteEvent(CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = eventId2, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(TestsData.getNewPauseEntity(eventId = eventId2, priority = 0)),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = eventId2))
         ))
-        database.eventDao().addEvent(CompleteEventEntity(
+        database.eventDao().addCompleteEvent(CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = eventId3, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(TestsData.getNewPauseEntity(eventId = eventId3, priority = 0)),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = eventId3))
@@ -247,7 +247,7 @@ class EventDaoTests {
             TestsData.getNewSwipeEntity(eventId = TestsData.EVENT_ID, priority = 1),
             TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 2)
         )
-        database.eventDao().addEvent(CompleteEventEntity(
+        database.eventDao().addCompleteEvent(CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = actions,
             conditions = listOf(TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID))
@@ -279,9 +279,9 @@ class EventDaoTests {
             actions = listOf(TestsData.getNewPauseEntity(eventId = eventId3, priority = 0)),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = eventId3))
         )
-        database.eventDao().addEvent(event1)
-        database.eventDao().addEvent(event2)
-        database.eventDao().addEvent(event3)
+        database.eventDao().addCompleteEvent(event1)
+        database.eventDao().addCompleteEvent(event2)
+        database.eventDao().addCompleteEvent(event3)
 
         val events = database.eventDao().getEvents(TestsData.SCENARIO_ID).first()
         val expectedEvents = events.reversed()

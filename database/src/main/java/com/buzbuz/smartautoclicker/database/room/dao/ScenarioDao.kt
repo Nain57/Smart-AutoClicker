@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEndConditions
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
 
 import kotlinx.coroutines.flow.Flow
@@ -50,6 +51,15 @@ internal interface ScenarioDao {
     @Transaction
     @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
     fun getScenarioWithEvents(scenarioId: Long): Flow<ScenarioWithEvents>
+
+    /**
+     * Get a scenario and its end conditions.
+     *
+     * @return the live data on the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
+    fun getScenarioWithEndConditions(scenarioId: Long): Flow<ScenarioWithEndConditions>
 
     /**
      * Add a new scenario to the database.

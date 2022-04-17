@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,32 +20,26 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.dao.ConditionDao
+import com.buzbuz.smartautoclicker.database.room.dao.EndConditionDao
 import com.buzbuz.smartautoclicker.database.room.dao.EventDao
 import com.buzbuz.smartautoclicker.database.room.dao.ScenarioDao
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
+import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEndConditions
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 import com.buzbuz.smartautoclicker.database.utils.anyNotNull
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.runTest
 
-import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -67,13 +61,6 @@ import java.io.File
 @Config(sdk = [Build.VERSION_CODES.Q])
 class RepositoryTests {
 
-    @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
-
-    /** Coroutine dispatcher for the tests. */
-    private val testDispatcher = TestCoroutineDispatcher()
-    /** Coroutine scope for the tests. */
-    private val testScope = TestCoroutineScope(testDispatcher)
-
     /** A mocked version of the bitmap manager. */
     @Mock private lateinit var mockBitmapManager: BitmapManager
     /** A mocked version of the Scenario Dao. */
@@ -82,13 +69,14 @@ class RepositoryTests {
     @Mock private lateinit var mockEventDao: EventDao
     /** A mocked version of the Condition Dao. */
     @Mock private lateinit var mockConditionDao: ConditionDao
+    /** A mocked version of the End condition Dao. */
+    @Mock private lateinit var mockEndConditionDao: EndConditionDao
     /** Object under tests. */
     private lateinit var repository: RepositoryImpl
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        Dispatchers.setMain(testDispatcher)
 
         val mockContext = mock(Context::class.java)
         mockWhen(mockContext.filesDir).thenReturn(File(DATA_FILE_DIR))
@@ -96,32 +84,27 @@ class RepositoryTests {
         mockWhen(mockDatabase.scenarioDao()).thenReturn(mockScenarioDao)
         mockWhen(mockDatabase.eventDao()).thenReturn(mockEventDao)
         mockWhen(mockDatabase.conditionDao()).thenReturn(mockConditionDao)
+        mockWhen(mockDatabase.endConditionDao()).thenReturn(mockEndConditionDao)
 
         repository = RepositoryImpl(mockDatabase, mockBitmapManager)
-        clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao)
-    }
-
-    @After
-    fun tearDown() {
-        testScope.cleanupTestCoroutines()
-        Dispatchers.resetMain()
+        clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao, mockEndConditionDao)
     }
 
     @Test
-    fun createScenario() = runBlocking {
+    fun createScenario() = runTest {
         repository.addScenario(TestsData.getNewScenario())
         verify(mockScenarioDao).add(TestsData.getNewScenarioEntity())
         Unit
     }
 
     @Test
-    fun updateScenario() = runBlocking {
+    fun updateScenario() = runTest {
         repository.updateScenario(TestsData.getNewScenario())
         verify(mockScenarioDao).update(TestsData.getNewScenarioEntity())
     }
 
     @Test
-    fun deleteScenario() = runBlocking {
+    fun deleteScenario() = runTest {
         mockWhen(mockEventDao.getEventsIds(TestsData.SCENARIO_ID)).thenReturn(emptyList())
         repository.deleteScenario(TestsData.getNewScenario())
 
@@ -129,7 +112,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun deleteScenario_removedConditions() = runBlocking {
+    fun deleteScenario_removedConditions() = runTest {
         mockWhen(mockEventDao.getEventsIds(TestsData.SCENARIO_ID)).thenReturn(listOf(2L, 4L))
         mockWhen(mockConditionDao.getConditionsPath(2L)).thenReturn(listOf("toto", "tutu"))
         mockWhen(mockConditionDao.getConditionsPath(4L)).thenReturn(listOf("tutu"))
@@ -141,7 +124,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun getScenario() = runBlocking {
+    fun getScenario() = runTest {
         mockWhen(mockScenarioDao.getScenarioWithEvents(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(ScenarioWithEvents(TestsData.getNewScenarioEntity(), emptyList()))
@@ -155,7 +138,74 @@ class RepositoryTests {
     }
 
     @Test
-    fun getEventList() = runBlocking {
+    fun getScenarioWithEndConditions_empty() = runTest {
+        val scenarioEntity = TestsData.getNewScenarioEntity()
+        val scenario = TestsData.getNewScenario()
+        mockWhen(mockScenarioDao.getScenarioWithEndConditions(TestsData.SCENARIO_ID)).thenReturn(
+            flow {
+                emit(ScenarioWithEndConditions(scenarioEntity, emptyList()))
+            }
+        )
+
+        val result = repository.getScenarioWithEndConditions(TestsData.SCENARIO_ID).first()
+        assertEquals(scenario, result.first)
+        assertTrue(result.second.isEmpty())
+    }
+
+    @Test
+    fun getScenarioWithEndConditions_notEmpty() = runTest {
+        val scenarioEntity = TestsData.getNewScenarioEntity()
+        val scenario = TestsData.getNewScenario()
+        val eventEntity = TestsData.getNewEventEntity(scenarioId = scenarioEntity.id, priority = 1)
+        val endConditionWithEvent = TestsData.getNewEndConditionWithEvent(event = eventEntity)
+
+        mockWhen(mockScenarioDao.getScenarioWithEndConditions(TestsData.SCENARIO_ID)).thenReturn(
+            flow {
+                emit(ScenarioWithEndConditions(scenarioEntity, listOf(endConditionWithEvent)))
+            }
+        )
+
+        val result = repository.getScenarioWithEndConditions(TestsData.SCENARIO_ID).first()
+        assertEquals(scenario, result.first)
+        assertEquals(
+            TestsData.getNewEndCondition(),
+            result.second[0]
+        )
+    }
+
+    @Test
+    fun addEndCondition() = runTest {
+        val endConditionEntity = TestsData.getNewEndConditionEntity()
+        val endCondition = TestsData.getNewEndCondition()
+        val expectedId = 42L
+        mockWhen(mockEndConditionDao.add(endConditionEntity)).thenReturn(expectedId)
+
+        assertEquals(
+            expectedId,
+            repository.addEndCondition(endCondition)
+        )
+    }
+
+    @Test
+    fun updateEndCondition() = runTest {
+        val endConditionEntity = TestsData.getNewEndConditionEntity()
+        val endCondition = TestsData.getNewEndCondition()
+
+        repository.updateEndCondition(endCondition)
+        verify(mockEndConditionDao).update(endConditionEntity)
+    }
+
+    @Test
+    fun deleteEndCondition() = runTest {
+        val endConditionEntity = TestsData.getNewEndConditionEntity()
+        val endCondition = TestsData.getNewEndCondition()
+
+        repository.deleteEndCondition(endCondition)
+        verify(mockEndConditionDao).delete(endConditionEntity)
+    }
+
+    @Test
+    fun getEventList() = runTest {
         mockWhen(mockEventDao.getEvents(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(listOf(
@@ -175,7 +225,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun getCompleteEventList() = runBlocking {
+    fun getCompleteEventList() = runTest {
         mockWhen(mockEventDao.getCompleteEvents(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(listOf(
@@ -203,7 +253,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun getCompleteEvent() = runBlocking {
+    fun getCompleteEvent() = runTest {
         mockWhen(mockEventDao.getEvent(TestsData.EVENT_ID)).thenReturn(
             CompleteEventEntity(
                 event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
@@ -225,14 +275,14 @@ class RepositoryTests {
     }
 
     @Test
-    fun getBitmap() = runBlocking {
+    fun getBitmap() = runTest {
         repository.getBitmap("toto", 20, 100)
         verify(mockBitmapManager).loadBitmap("toto", 20, 100)
         Unit
     }
 
     @Test
-    fun addEvent_saveBitmaps() = runBlocking {
+    fun addEvent_saveBitmaps() = runTest {
         val bitmapWithoutPath = mock(Bitmap::class.java)
         val bitmapWithPath = mock(Bitmap::class.java)
         val event = TestsData.getNewEvent(
@@ -256,7 +306,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun addEvent_incomplete() = runBlocking {
+    fun addEvent_incomplete() = runTest {
         val event = TestsData.getNewEvent(
             id = TestsData.EVENT_ID,
             scenarioId = TestsData.SCENARIO_ID,
@@ -265,11 +315,11 @@ class RepositoryTests {
 
         repository.addEvent(event)
 
-        verify(mockEventDao, never()).addEvent(anyNotNull())
+        verify(mockEventDao, never()).addCompleteEvent(anyNotNull())
     }
 
     @Test
-    fun addEvent() = runBlocking {
+    fun addEvent() = runTest {
         val event = TestsData.getNewEvent(
             id = TestsData.EVENT_ID,
             scenarioId = TestsData.SCENARIO_ID,
@@ -285,11 +335,11 @@ class RepositoryTests {
 
         repository.addEvent(event)
 
-        verify(mockEventDao).addEvent(expectedEntity)
+        verify(mockEventDao).addCompleteEvent(expectedEntity)
     }
 
     @Test
-    fun updateEventsPriority() = runBlocking {
+    fun updateEventsPriority() = runTest {
         val events = listOf(
             TestsData.getNewEvent(id = 1, scenarioId = TestsData.SCENARIO_ID, priority = 1),
             TestsData.getNewEvent(id = 2, scenarioId = TestsData.SCENARIO_ID, priority = 0),
@@ -308,7 +358,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun removeEvent() = runBlocking {
+    fun removeEvent() = runTest {
         val event = TestsData.getNewEvent(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 1)
         val expectedEvent = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 1)
         mockWhen(mockConditionDao.getConditionsPath(TestsData.EVENT_ID)).thenReturn(emptyList())
@@ -319,7 +369,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun removeEvent_removedConditions() = runBlocking {
+    fun removeEvent_removedConditions() = runTest {
         val event = TestsData.getNewEvent(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 1)
         val conditionsPath = listOf("tata", "toto", "tutu")
         mockWhen(mockConditionDao.getConditionsPath(TestsData.EVENT_ID)).thenReturn(conditionsPath)
@@ -333,7 +383,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun updateEvent_saveBitmaps() = runBlocking {
+    fun updateEvent_saveBitmaps() = runTest {
         val bitmapWithoutPath = mock(Bitmap::class.java)
         val bitmapWithPath = mock(Bitmap::class.java)
         val event = TestsData.getNewEvent(
@@ -359,7 +409,7 @@ class RepositoryTests {
     }
 
     @Test
-    fun updateEvent_incomplete() = runBlocking {
+    fun updateEvent_incomplete() = runTest {
         val event = TestsData.getNewEvent(
             id = TestsData.EVENT_ID,
             scenarioId = TestsData.SCENARIO_ID,
@@ -368,7 +418,7 @@ class RepositoryTests {
 
         repository.updateEvent(event)
 
-        verify(mockEventDao, never()).addEvent(anyNotNull())
+        verify(mockEventDao, never()).addCompleteEvent(anyNotNull())
     }
 }
 

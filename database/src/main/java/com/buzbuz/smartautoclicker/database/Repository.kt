@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ import android.graphics.Bitmap
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManagerImpl
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.EndCondition
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
@@ -92,6 +93,34 @@ interface Repository {
     fun getScenario(scenarioId: Long): Flow<Scenario>
 
     /**
+     * Get a flow on the scenario and its and conditions.
+     *
+     * @param scenarioId the identifier of the scenario.
+     * @return the flow on the scenario and its end conditions.
+     */
+    fun getScenarioWithEndConditions(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>>
+
+    /**
+     * Add a new end condition for a scenario.
+     *
+     * @param endCondition the end condition to be added.
+     * @return the unique identifier for the created end condition.
+     */
+    suspend fun addEndCondition(endCondition: EndCondition) : Long
+
+    /**
+     * Update an existing end condition.
+     * @param endCondition the end condition to be updated.
+     */
+    suspend fun updateEndCondition(endCondition: EndCondition)
+
+    /**
+     * Delete an existing end condition.
+     * @param endCondition the end condition to be deleted.
+     */
+    suspend fun deleteEndCondition(endCondition: EndCondition)
+
+    /**
      * Get the list of events for a given scenario.
      * Note that those events will not have their actions/conditions, use [getCompleteEventList] for that.
      *
@@ -136,7 +165,6 @@ interface Repository {
      * @return the list containing all conditions.
      */
     fun getAllConditions(): Flow<List<Condition>>
-
     /**
      * Add a new event.
      * It must be complete in order to be added or it will be skipped.

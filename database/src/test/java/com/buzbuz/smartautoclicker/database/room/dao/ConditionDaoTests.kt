@@ -101,7 +101,7 @@ class ConditionDaoTests {
             ),
         )
         database.scenarioDao().add(TestsData.getNewScenarioEntity())
-        database.eventDao().addEvent(completeEvent)
+        database.eventDao().addCompleteEvent(completeEvent)
 
         assertEquals(
             completeEvent.conditions,
@@ -126,7 +126,7 @@ class ConditionDaoTests {
             ),
         )
         database.scenarioDao().add(TestsData.getNewScenarioEntity())
-        database.eventDao().addEvent(completeEvent)
+        database.eventDao().addCompleteEvent(completeEvent)
 
         val expectedPaths = mutableListOf<String>()
         completeEvent.conditions.forEach {
@@ -164,8 +164,8 @@ class ConditionDaoTests {
             ),
         )
         database.scenarioDao().add(TestsData.getNewScenarioEntity())
-        database.eventDao().addEvent(completeEvent1)
-        database.eventDao().addEvent(completeEvent2)
+        database.eventDao().addCompleteEvent(completeEvent1)
+        database.eventDao().addCompleteEvent(completeEvent2)
 
         assertEquals(2, database.conditionDao().getValidPathCount("toto"))
     }

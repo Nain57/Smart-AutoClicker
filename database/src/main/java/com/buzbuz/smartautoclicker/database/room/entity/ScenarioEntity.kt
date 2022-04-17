@@ -31,7 +31,8 @@ import androidx.room.Relation
  * @param name the name of the scenario.
  * @param detectionQuality the quality of the detection algorithm. Lower value means faster detection but poorer
  *                         quality, while higher values means better and slower detection.
- * @param endConditionOperator
+ * @param endConditionOperator the operator to apply to all [EndConditionEntity] related to this scenario. Can be any
+ *                             value of [com.buzbuz.smartautoclicker.database.domain.ConditionOperator].
  */
 @Entity(tableName = "scenario_table")
 internal data class ScenarioEntity(
