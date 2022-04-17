@@ -80,10 +80,6 @@ class PermissionsDialogFragment : DialogFragment() {
         return AlertDialog.Builder(requireContext())
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_permissions_title)
             .setView(R.layout.dialog_permissions)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                (activity as PermissionDialogListener).onPermissionsGranted()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
             .create()
     }
 
@@ -103,8 +99,10 @@ class PermissionsDialogFragment : DialogFragment() {
         super.onResume()
         setConfigStateDrawable(overlayStateView, scenarioViewModel.isOverlayPermissionValid())
         setConfigStateDrawable(accessibilityStateView, scenarioViewModel.isAccessibilityPermissionValid())
-        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
-            scenarioViewModel.isOverlayPermissionValid() && scenarioViewModel.isAccessibilityPermissionValid()
+        if(scenarioViewModel.isOverlayPermissionValid() && scenarioViewModel.isAccessibilityPermissionValid())
+        {
+            (activity as PermissionDialogListener).onPermissionsGranted()
+        }
     }
 
     /**
