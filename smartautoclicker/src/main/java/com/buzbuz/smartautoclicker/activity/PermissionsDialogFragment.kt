@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
@@ -38,11 +39,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.buzbuz.smartautoclicker.R
@@ -98,8 +102,18 @@ class PermissionsDialogFragment : DialogFragment() {
         overlayValid = scenarioViewModel.isOverlayPermissionValid()
         accessValid = scenarioViewModel.isAccessibilityPermissionValid()
         Column() {
+            Text(
+                text = stringResource(id = R.string.dialog_permissions_title),
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .background(color = colorResource(R.color.primaryDark))
+                    .fillMaxWidth()
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(8.dp)
+            )
             Text(text = stringResource(id = R.string.dialog_permissions_header), modifier = Modifier.padding(8.dp))
-            Divider(color = Color.Gray, thickness = 1.dp)
+            Divider(color = Color.LightGray, thickness = 1.dp)
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -107,8 +121,15 @@ class PermissionsDialogFragment : DialogFragment() {
             {
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = stringResource(id = R.string.dialog_permission_overlay), fontWeight = FontWeight.Bold)
-                    Text(text = stringResource(id = R.string.dialog_permission_overlay_desc))
+                    Text(
+                        text = stringResource(id = R.string.dialog_permission_overlay),
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.dialog_permission_overlay_desc),
+                        modifier = Modifier.padding(4.dp)
+                    )
                 }
 
                 Image(
@@ -116,12 +137,12 @@ class PermissionsDialogFragment : DialogFragment() {
                     modifier = Modifier
                         .size(40.dp)
                         .padding(8.dp),
-                    painter =  painterResource(id = iconPick(overlayValid)),
+                    painter = painterResource(id = iconPick(overlayValid)),
                     contentDescription = stringResource(id = R.string.content_desc_overlay_state)
                 )
 
             }
-            Divider(color = Color.Gray, thickness = 1.dp)
+            Divider(color = Color.LightGray, thickness = 1.dp)
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -131,9 +152,12 @@ class PermissionsDialogFragment : DialogFragment() {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = stringResource(id = R.string.dialog_permission_accessibility),
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold, modifier = Modifier.padding(4.dp)
                     )
-                    Text(text = stringResource(id = R.string.dialog_permission_accessibility_desc))
+                    Text(
+                        text = stringResource(id = R.string.dialog_permission_accessibility_desc),
+                        modifier = Modifier.padding(4.dp)
+                    )
                 }
 
                 Image(
@@ -149,17 +173,19 @@ class PermissionsDialogFragment : DialogFragment() {
             }
         }
     }
-    private fun colorPick(flag:Boolean):ColorFilter{
-        return if(flag)
+
+    private fun colorPick(flag: Boolean): ColorFilter {
+        return if (flag)
             ColorFilter.tint(color = Color.Green)
         else
             ColorFilter.tint(color = Color.Red)
     }
-    private fun iconPick(flag:Boolean): Int {
-        return if(flag) {
-             R.drawable.ic_confirm
+
+    private fun iconPick(flag: Boolean): Int {
+        return if (flag) {
+            R.drawable.ic_confirm
         } else {
-             R.drawable.ic_cancel
+            R.drawable.ic_cancel
         }
     }
 
