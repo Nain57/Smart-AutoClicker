@@ -16,22 +16,38 @@
  */
 package com.buzbuz.smartautoclicker.activity
 
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-
-import androidx.appcompat.app.AlertDialog
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.activity.PermissionsDialogFragment.PermissionDialogListener
 
 /**
  * Displays the state of the permission and provide a way to access their respective settings.
@@ -44,6 +60,7 @@ class PermissionsDialogFragment : DialogFragment() {
 
         /** Intent extra bundle key for the Android settings app. */
         private const val EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key"
+
         /** Intent extra bundle key for the Android settings app. */
         private const val EXTRA_SHOW_FRAGMENT_ARGUMENTS = ":settings:show_fragment_args"
 
@@ -51,7 +68,7 @@ class PermissionsDialogFragment : DialogFragment() {
          * Creates a new instance of this fragment.
          * @return the new fragment.
          */
-        fun newInstance() : PermissionsDialogFragment {
+        fun newInstance(): PermissionsDialogFragment {
             return PermissionsDialogFragment()
         }
     }
@@ -67,40 +84,100 @@ class PermissionsDialogFragment : DialogFragment() {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by activityViewModels()
-    /** View for the overlay permission. */
-    private lateinit var overlayView: View
-    /** View for the state of the overlay permission. */
-    private lateinit var overlayStateView: ImageView
-    /** View for the accessibility service permission. */
-    private lateinit var accessibilityView: View
-    /** View for the state of the accessibility service permission. */
-    private lateinit var accessibilityStateView: ImageView
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(requireContext())
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_permissions_title)
-            .setView(R.layout.dialog_permissions)
-            .create()
+    /** View for the overlay permission. */
+    private var overlayValid by mutableStateOf(false)
+
+    /** View for the state of the overlay permission. */
+    private var accessValid by mutableStateOf(false)
+
+
+    @Preview(showBackground = true)
+    @Composable
+    fun DialogPermissions() {
+        overlayValid = scenarioViewModel.isOverlayPermissionValid()
+        accessValid = scenarioViewModel.isAccessibilityPermissionValid()
+        Column() {
+            Text(text = stringResource(id = R.string.dialog_permissions_header), modifier = Modifier.padding(8.dp))
+            Divider(color = Color.Gray, thickness = 1.dp)
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .clickable { onOverlayClicked() })
+            {
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(text = stringResource(id = R.string.dialog_permission_overlay), fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(id = R.string.dialog_permission_overlay_desc))
+                }
+
+                Image(
+                    colorFilter = colorPick(overlayValid),
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(8.dp),
+                    painter =  painterResource(id = iconPick(overlayValid)),
+                    contentDescription = stringResource(id = R.string.content_desc_overlay_state)
+                )
+
+            }
+            Divider(color = Color.Gray, thickness = 1.dp)
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .clickable { onAccessibilityClicked() })
+            {
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(id = R.string.dialog_permission_accessibility),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(text = stringResource(id = R.string.dialog_permission_accessibility_desc))
+                }
+
+                Image(
+                    colorFilter = colorPick(accessValid),
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(8.dp),
+                    painter = painterResource(id = iconPick(accessValid)),
+                    contentDescription = stringResource(id = R.string.content_desc_overlay_state)
+                )
+
+
+            }
+        }
+    }
+    private fun colorPick(flag:Boolean):ColorFilter{
+        return if(flag)
+            ColorFilter.tint(color = Color.Green)
+        else
+            ColorFilter.tint(color = Color.Red)
+    }
+    private fun iconPick(flag:Boolean): Int {
+        return if(flag) {
+             R.drawable.ic_confirm
+        } else {
+             R.drawable.ic_cancel
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog?.let {
-            overlayStateView = it.findViewById(R.id.img_config_overlay_status)
-            overlayView = it.findViewById(R.id.item_overlay_permission)
-            overlayView.setOnClickListener{ onOverlayClicked() }
-            accessibilityStateView = it.findViewById(R.id.img_config_accessibility_status)
-            accessibilityView = it.findViewById(R.id.item_accessibility_permission)
-            accessibilityView.setOnClickListener { onAccessibilityClicked() }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        overlayValid = scenarioViewModel.isOverlayPermissionValid()
+        accessValid = scenarioViewModel.isAccessibilityPermissionValid()
+        return ComposeView(requireContext()).apply {
+            setContent {
+                DialogPermissions()
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        setConfigStateDrawable(overlayStateView, scenarioViewModel.isOverlayPermissionValid())
-        setConfigStateDrawable(accessibilityStateView, scenarioViewModel.isAccessibilityPermissionValid())
-        if(scenarioViewModel.isOverlayPermissionValid() && scenarioViewModel.isAccessibilityPermissionValid())
-        {
+        overlayValid = scenarioViewModel.isOverlayPermissionValid()
+        accessValid = scenarioViewModel.isAccessibilityPermissionValid()
+        if (overlayValid and accessValid) {
             (activity as PermissionDialogListener).onPermissionsGranted()
         }
     }
@@ -147,10 +224,10 @@ class PermissionsDialogFragment : DialogFragment() {
     private fun setConfigStateDrawable(view: ImageView, state: Boolean) {
         if (state) {
             view.setImageResource(R.drawable.ic_confirm)
-            view.drawable.setTint(Color.GREEN)
+            //view.drawable.setTint(Color.GREEN)
         } else {
             view.setImageResource(R.drawable.ic_cancel)
-            view.drawable.setTint(Color.RED)
+            //view.drawable.setTint(Color.RED)
         }
     }
 }

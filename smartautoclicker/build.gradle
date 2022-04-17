@@ -75,6 +75,14 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.2.0-alpha07"
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
     packagingOptions {
         resources {
@@ -99,6 +107,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     implementation project(path: ':base-ui')
     implementation project(path: ':database')

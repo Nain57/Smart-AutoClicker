@@ -5,5 +5,15 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/clicker/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_cancel.xml" value="0.189" />
+        <entry key="..\:/clicker/Smart-AutoClicker/smartautoclicker/src/main/res/drawable/ic_confirm.xml" value="0.2835" />
+        <entry key="..\:/clicker/Smart-AutoClicker/smartautoclicker/src/main/res/layout/dialog_permissions.xml" value="0.33" />
+        <entry key="..\:/clicker/Smart-AutoClicker/smartautoclicker/src/main/res/layout/include_view_separator.xml" value="0.18072916666666666" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>
