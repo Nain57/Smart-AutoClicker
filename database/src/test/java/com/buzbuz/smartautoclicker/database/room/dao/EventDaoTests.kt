@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,23 +25,17 @@ import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.database.utils.DatabaseExecutorRule
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.runTest
 
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -54,25 +48,11 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.Q])
 class EventDaoTests {
 
-    /**
-     * Rule to swaps the background executor used by the Architecture Components with a different one which executes
-     * each IO task synchronously
-     */
-    @get:Rule
-    val instantExecutorRule = DatabaseExecutorRule()
-
-    /** Coroutine dispatcher for the tests. */
-    private val testDispatcher = TestCoroutineDispatcher()
-    /** Coroutine scope for the tests. */
-    private val testScope = TestCoroutineScope(testDispatcher)
-
     /** In memory database used to test the dao. */
     private lateinit var database: ClickDatabase
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
-
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, ClickDatabase::class.java)
             .allowMainThreadQueries()
             .build()
@@ -87,12 +67,10 @@ class EventDaoTests {
     fun tearDown() {
         database.clearAllTables()
         database.close()
-        testScope.cleanupTestCoroutines()
-        Dispatchers.resetMain()
     }
 
     @Test
-    fun addEvent() = runBlocking {
+    fun addEvent() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0)),
@@ -104,7 +82,7 @@ class EventDaoTests {
     }
 
     @Test
-    fun addEvent_setIds() = runBlocking {
+    fun addEvent_setIds() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(TestsData.getNewPauseEntity(eventId = 0L, priority = 0)),
@@ -118,7 +96,7 @@ class EventDaoTests {
     }
 
     @Test
-    fun addEvent_setActionPriority() = runBlocking {
+    fun addEvent_setActionPriority() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(
@@ -138,7 +116,7 @@ class EventDaoTests {
     }
 
     @Test
-    fun deleteEvent() = runBlocking {
+    fun deleteEvent() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(TestsData.getNewPauseEntity(eventId = 0L, priority = 0)),
@@ -152,7 +130,7 @@ class EventDaoTests {
     }
 
     @Test
-    fun updateEvent() = runBlocking {
+    fun updateEvent() = runTest {
         // First add the old event
         val updatedId = 13L
         val deletedId = 58L
@@ -214,7 +192,7 @@ class EventDaoTests {
     }
 
     @Test
-    fun getEventIds() = runBlocking {
+    fun getEventIds() = runTest {
         val eventId1 = TestsData.EVENT_ID
         val eventId2 = TestsData.EVENT_ID + 1
         val eventId3 = TestsData.EVENT_ID + 2
@@ -241,7 +219,7 @@ class EventDaoTests {
     }
 
     @Test
-    fun getActions() = runBlocking {
+    fun getActions() = runTest {
         val actions = listOf(
             TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0),
             TestsData.getNewSwipeEntity(eventId = TestsData.EVENT_ID, priority = 1),
@@ -260,7 +238,7 @@ class EventDaoTests {
     }
 
     @Test
-    fun updateEventList() = runBlocking {
+    fun updateEventList() = runTest {
         val eventId1 = TestsData.EVENT_ID
         val eventId2 = TestsData.EVENT_ID + 1
         val eventId3 = TestsData.EVENT_ID + 2

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,22 +24,15 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.database.utils.DatabaseExecutorRule
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.runTest
 
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -52,25 +45,11 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.Q])
 class ConditionDaoTests {
 
-    /**
-     * Rule to swaps the background executor used by the Architecture Components with a different one which executes
-     * each IO task synchronously
-     */
-    @get:Rule
-    val instantExecutorRule = DatabaseExecutorRule()
-
-    /** Coroutine dispatcher for the tests. */
-    private val testDispatcher = TestCoroutineDispatcher()
-    /** Coroutine scope for the tests. */
-    private val testScope = TestCoroutineScope(testDispatcher)
-
     /** In memory database used to test the dao. */
     private lateinit var database: ClickDatabase
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
-
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, ClickDatabase::class.java)
             .allowMainThreadQueries()
             .build()
@@ -80,17 +59,15 @@ class ConditionDaoTests {
     fun tearDown() {
         database.clearAllTables()
         database.close()
-        testScope.cleanupTestCoroutines()
-        Dispatchers.resetMain()
     }
 
     @Test
-    fun getConditions_none() = runBlocking {
+    fun getConditions_none() = runTest {
         assertEquals(emptyList<ConditionEntity>(), database.conditionDao().getConditions(TestsData.EVENT_ID))
     }
 
     @Test
-    fun getConditions() = runBlocking {
+    fun getConditions() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = mutableListOf(TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0)),
@@ -110,12 +87,12 @@ class ConditionDaoTests {
     }
 
     @Test
-    fun getConditionsPath_none() = runBlocking {
+    fun getConditionsPath_none() = runTest {
         assertEquals(emptyList<String>(), database.conditionDao().getConditionsPath(TestsData.EVENT_ID))
     }
 
     @Test
-    fun getConditionsPath() = runBlocking {
+    fun getConditionsPath() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = mutableListOf(TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0)),
@@ -143,12 +120,12 @@ class ConditionDaoTests {
     }
 
     @Test
-    fun getValidPathCount_none() = runBlocking {
+    fun getValidPathCount_none() = runTest {
         assertEquals(0, database.conditionDao().getValidPathCount(TestsData.CONDITION_PATH))
     }
 
     @Test
-    fun getValidPathCount() = runBlocking {
+    fun getValidPathCount() = runTest {
         val completeEvent1 = CompleteEventEntity(
             event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = mutableListOf(TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0)),

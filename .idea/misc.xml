@@ -5,5 +5,25 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/drawable/ic_drag.xml" value="0.1585" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/drawable/ic_move.xml" value="0.1585" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/drawable/ic_reorder.xml" value="0.1585" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/drawable/ic_wait_aligned.xml" value="0.1585" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/drawable/outline_arrow_drop_down_24.xml" value="0.1585" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/drawable/outline_arrow_drop_up_24.xml" value="0.1585" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/dialog_event_list.xml" value="0.176" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/dialog_permissions.xml" value="0.4" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/include_event_list_buttons.xml" value="0.6" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/item_new_copy_card.xml" value="0.10405348934391977" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/merge_loadable_list.xml" value="0.10405348934391977" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/view_action_icon.xml" value="0.12613981762917933" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/view_dialog_title.xml" value="0.12613981762917933" />
+        <entry key="..\:/Users/Nain/Desktop/Code/SmartAutoClicker/smartautoclicker/src/main/res/layout/view_scenario_buttons.xml" value="0.264" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>

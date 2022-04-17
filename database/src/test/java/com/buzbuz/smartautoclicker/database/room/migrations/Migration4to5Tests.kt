@@ -17,17 +17,20 @@
 package com.buzbuz.smartautoclicker.database.room.migrations
 
 import android.os.Build
+
 import androidx.room.testing.MigrationTestHelper
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+
 import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.utils.*
+
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 import org.robolectric.annotation.Config
 
 /** Tests the [Migration4to5]. */
@@ -42,8 +45,7 @@ class Migration4to5Tests {
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
-        ClickDatabase::class.java.canonicalName,
-        FrameworkSQLiteOpenHelperFactory()
+        ClickDatabase::class.java,
     )
 
     @Test

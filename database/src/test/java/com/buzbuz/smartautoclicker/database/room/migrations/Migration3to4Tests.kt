@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,8 +57,7 @@ class Migration3to4Tests {
 
     @get:Rule val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
-        ClickDatabase::class.java.canonicalName,
-        FrameworkSQLiteOpenHelperFactory()
+        ClickDatabase::class.java,
     )
 
     @Test
