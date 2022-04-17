@@ -164,8 +164,6 @@ class PermissionsDialogFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        overlayValid = scenarioViewModel.isOverlayPermissionValid()
-        accessValid = scenarioViewModel.isAccessibilityPermissionValid()
         return ComposeView(requireContext()).apply {
             setContent {
                 DialogPermissions()
@@ -179,6 +177,7 @@ class PermissionsDialogFragment : DialogFragment() {
         accessValid = scenarioViewModel.isAccessibilityPermissionValid()
         if (overlayValid and accessValid) {
             (activity as PermissionDialogListener).onPermissionsGranted()
+            dialog?.dismiss()
         }
     }
 
@@ -213,21 +212,5 @@ class PermissionsDialogFragment : DialogFragment() {
         intent.putExtra(EXTRA_SHOW_FRAGMENT_ARGUMENTS, bundle)
 
         requireContext().startActivity(intent)
-    }
-
-    /**
-     * Update the provided permission state view according to the state parameter.
-     *
-     * @param view the TextView displaying the permission state.
-     * @param state the state of the permission.
-     */
-    private fun setConfigStateDrawable(view: ImageView, state: Boolean) {
-        if (state) {
-            view.setImageResource(R.drawable.ic_confirm)
-            //view.drawable.setTint(Color.GREEN)
-        } else {
-            view.setImageResource(R.drawable.ic_cancel)
-            //view.drawable.setTint(Color.RED)
-        }
     }
 }
