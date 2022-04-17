@@ -100,11 +100,11 @@ internal fun CompleteEventEntity.toEvent() = Event(
     conditions = conditions.map { it.toCondition() }.toMutableList(),
 )
 
-/** Defines the operators to be applied between the click conditions. */
+/** Defines the operators to be applied between the conditions. */
 @IntDef(AND, OR)
 @Retention(AnnotationRetention.SOURCE)
 annotation class ConditionOperator
-/** All conditions must be fulfilled to execute the click. */
+/** All conditions must be fulfilled. */
 const val AND = 1
-/** Only one of the conditions must be fulfilled to execute the click. */
+/** Only one of the conditions must be fulfilled. */
 const val OR = 2

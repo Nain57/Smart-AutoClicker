@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.activity
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import androidx.lifecycle.AndroidViewModel
@@ -25,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.overlays.utils.newDefaultScenario
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -93,11 +95,12 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     /**
      * Create a new click scenario.
      *
+     * @param context the Android context.
      * @param name the name of this new scenario.
      */
-    fun createScenario(name: String) {
+    fun createScenario(context: Context, name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addScenario(Scenario(name = name))
+            repository.addScenario(newDefaultScenario(context, name))
         }
     }
 

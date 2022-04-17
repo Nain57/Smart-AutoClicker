@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,14 +20,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Point
 import android.util.Log
-import com.buzbuz.smartautoclicker.R
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.overlays.eventconfig.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.overlays.eventconfig.putClickPressDurationConfig
-import com.buzbuz.smartautoclicker.overlays.eventconfig.putPauseDurationConfig
-import com.buzbuz.smartautoclicker.overlays.eventconfig.putSwipeDurationConfig
+import com.buzbuz.smartautoclicker.overlays.utils.getEventConfigPreferences
+import com.buzbuz.smartautoclicker.overlays.utils.putClickPressDurationConfig
+import com.buzbuz.smartautoclicker.overlays.utils.putPauseDurationConfig
+import com.buzbuz.smartautoclicker.overlays.utils.putSwipeDurationConfig
 import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.FlowPreview

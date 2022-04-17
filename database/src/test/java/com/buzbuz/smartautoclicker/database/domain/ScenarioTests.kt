@@ -56,7 +56,7 @@ class ScenarioTests {
             TestsData.getNewScenarioEntity(),
             listOf(TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0))
         ).toScenario()
-        val expectedScenario = TestsData.getNewScenario(TestsData.SCENARIO_ID, TestsData.SCENARIO_NAME, 1)
+        val expectedScenario = TestsData.getNewScenario(TestsData.SCENARIO_ID, TestsData.SCENARIO_NAME, eventCount = 1)
 
         assertEquals(scenario, expectedScenario)
     }

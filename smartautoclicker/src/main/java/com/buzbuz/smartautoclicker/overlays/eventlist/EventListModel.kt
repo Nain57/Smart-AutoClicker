@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.database.Repository
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
-import com.buzbuz.smartautoclicker.overlays.eventconfig.newDefaultEvent
+import com.buzbuz.smartautoclicker.overlays.utils.newDefaultEvent
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -23,8 +23,16 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.*
+import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.database.domain.AND
+import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
+import com.buzbuz.smartautoclicker.overlays.utils.newDefaultClick
+import com.buzbuz.smartautoclicker.overlays.utils.newDefaultCondition
+import com.buzbuz.smartautoclicker.overlays.utils.newDefaultPause
+import com.buzbuz.smartautoclicker.overlays.utils.newDefaultSwipe
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview

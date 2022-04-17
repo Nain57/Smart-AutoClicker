@@ -138,7 +138,7 @@ class ScenarioListFragment : Fragment() {
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_add_scenario_title)
             .setView(dialogViewBinding.root)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                scenarioViewModel.createScenario(dialogViewBinding.editName.text.toString())
+                scenarioViewModel.createScenario(context!!, dialogViewBinding.editName.text.toString())
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create())

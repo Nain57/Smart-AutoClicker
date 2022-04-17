@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,15 +29,19 @@ import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
 data class Scenario(
     val id: Long = 0,
     var name: String,
+    var detectionQuality: Int,
+    @ConditionOperator var endConditionOperator: Int,
     val eventCount: Int = 0,
 ) {
     /** @return the entity equivalent of this scenario. */
-    internal fun toEntity() = ScenarioEntity(id, name)
+    internal fun toEntity() = ScenarioEntity(id, name, detectionQuality, endConditionOperator)
 }
 
 /** @return the scenario for this entity. */
 internal fun ScenarioWithEvents.toScenario() = Scenario(
     id = scenario.id,
     name = scenario.name,
+    detectionQuality = scenario.detectionQuality,
+    endConditionOperator = scenario.endConditionOperator,
     eventCount = events.size
 )

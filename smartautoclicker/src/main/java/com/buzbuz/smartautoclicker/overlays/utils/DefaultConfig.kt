@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig
+package com.buzbuz.smartautoclicker.overlays.utils
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -22,11 +22,19 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.Event
-import com.buzbuz.smartautoclicker.database.domain.EXACT
+import com.buzbuz.smartautoclicker.database.domain.*
+
+/**
+ * Creates a new event.
+ *
+ * @param context the Android context.
+ * @return the new event.
+ */
+fun newDefaultScenario(context: Context, scenarioName: String) = Scenario(
+    name = scenarioName,
+    detectionQuality = context.resources.getInteger(R.integer.default_detection_quality),
+    endConditionOperator = OR,
+)
 
 /**
  * Creates a new event.

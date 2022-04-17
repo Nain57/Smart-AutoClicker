@@ -98,3 +98,27 @@ fun getInsertV5Condition(id: Long, eventId: Long, name: String, path: String, le
 
 fun getV6Actions() = "SELECT * FROM action_table"
 fun getV6Conditions() = "SELECT * FROM condition_table"
+
+fun getInsertV6Scenario(id: Long, name: String) =
+    """
+        INSERT INTO scenario_table (id, name) 
+        VALUES ($id, "$name")
+    """.trimIndent()
+
+fun getInsertV6Event(
+    id: Long,
+    scenarioId: Long,
+    name: String,
+    @ConditionOperator conditionOperator: Int,
+    stopAfter: Int?,
+    priority: Int,
+) =
+    """
+        INSERT INTO event_table (id, scenario_id, name, operator, priority, stop_after) 
+        VALUES ($id, $scenarioId, "$name", $conditionOperator, $priority, $stopAfter)
+    """.trimIndent()
+
+// ----- Utils for Database V7 -----
+
+fun getV7Scenario() = "SELECT * FROM scenario_table"
+fun getV7EndCondition() = "SELECT * FROM end_condition_table"

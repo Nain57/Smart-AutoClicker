@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,11 +29,16 @@ import androidx.room.Relation
  *
  * @param id the unique identifier for a scenario.
  * @param name the name of the scenario.
+ * @param detectionQuality the quality of the detection algorithm. Lower value means faster detection but poorer
+ *                         quality, while higher values means better and slower detection.
+ * @param endConditionOperator
  */
 @Entity(tableName = "scenario_table")
 internal data class ScenarioEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "detection_quality") val detectionQuality: Int,
+    @ColumnInfo(name = "end_condition_operator") val endConditionOperator: Int,
 )
 
 /**
@@ -52,4 +57,23 @@ internal data class ScenarioWithEvents(
         entityColumn = "scenario_id"
     )
     val events: List<EventEntity>
+)
+
+/**
+ * Entity embedding a scenario and all end condition with their events.
+ *
+ * Automatically do the junction between scenario_table, end_condition_table and event_table, and provide this
+ * representation of the one to many relation between scenario and end conditions.
+ *
+ * @param scenario the scenario entity
+ * @param endConditions the list of end conditions and their events.
+ */
+internal data class ScenarioWithEndConditions(
+    @Embedded val scenario: ScenarioEntity,
+    @Relation(
+        entity = EndConditionEntity::class,
+        parentColumn = "id",
+        entityColumn = "scenario_id"
+    )
+    val endConditions: List<EndConditionWithEvent>
 )

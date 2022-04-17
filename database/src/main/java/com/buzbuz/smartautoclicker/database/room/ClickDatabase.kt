@@ -26,16 +26,14 @@ import androidx.room.TypeConverters
 import com.buzbuz.smartautoclicker.database.room.dao.ConditionDao
 import com.buzbuz.smartautoclicker.database.room.dao.EventDao
 import com.buzbuz.smartautoclicker.database.room.dao.ScenarioDao
+import com.buzbuz.smartautoclicker.database.room.entity.*
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ActionTypeStringConverter
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
-import com.buzbuz.smartautoclicker.database.room.migrations.Migration1to2
-import com.buzbuz.smartautoclicker.database.room.migrations.Migration2to3
-import com.buzbuz.smartautoclicker.database.room.migrations.Migration3to4
-import com.buzbuz.smartautoclicker.database.room.migrations.Migration4to5
-import com.buzbuz.smartautoclicker.database.room.migrations.Migration5to6
+import com.buzbuz.smartautoclicker.database.room.migrations.*
 
 /**
  * Database for the scenario and their events.
@@ -52,8 +50,9 @@ import com.buzbuz.smartautoclicker.database.room.migrations.Migration5to6
         EventEntity::class,
         ScenarioEntity::class,
         ConditionEntity::class,
+        EndConditionEntity::class,
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 @TypeConverters(ActionTypeStringConverter::class)
@@ -92,6 +91,7 @@ internal abstract class ClickDatabase : RoomDatabase() {
                         Migration3to4,
                         Migration4to5,
                         Migration5to6,
+                        Migration6to7,
                     )
                     .build()
 
