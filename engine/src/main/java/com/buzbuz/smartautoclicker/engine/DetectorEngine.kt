@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 import com.buzbuz.smartautoclicker.detection.NativeDetector
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
+import com.buzbuz.smartautoclicker.database.domain.EndCondition
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,15 +39,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 /**
  * Detects [Event] conditions on a display and execute its actions.
@@ -136,13 +138,25 @@ class DetectorEngine(context: Context) {
     val scenarioEvents: StateFlow<List<Event>> = _scenario
         .flatMapLatest {
             it?.let { event ->
-                Repository.getRepository(context).getCompleteEventList(event.id)
+                scenarioRepository.getCompleteEventList(event.id)
             } ?: flow { emit(emptyList<Event>()) }
         }
         .stateIn(
             detectorEngineScope,
             SharingStarted.Eagerly,
             emptyList()
+        )
+    /** The scenario with its end conditions. */
+    val scenarioEndConditions: StateFlow<Pair<Scenario, List<EndCondition>>?> = _scenario
+        .flatMapLatest {
+            it?.let { scenario ->
+                scenarioRepository.getScenarioWithEndConditions(scenario.id)
+            } ?: emptyFlow()
+        }
+        .stateIn(
+            detectorEngineScope,
+            SharingStarted.Eagerly,
+            null
         )
 
     /**
@@ -268,6 +282,8 @@ class DetectorEngine(context: Context) {
                     }
                 },
                 gestureExecutor = gestureExecutor!!,
+                endConditionOperator = scenarioEndConditions.value!!.first.endConditionOperator,
+                endConditions =  scenarioEndConditions.value!!.second,
                 onEndConditionReached = {
                     stopDetection()
                 },

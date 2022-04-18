@@ -19,13 +19,8 @@ package com.buzbuz.smartautoclicker.engine
 import android.accessibilityservice.GestureDescription
 import android.graphics.Bitmap
 import android.media.Image
+import com.buzbuz.smartautoclicker.database.domain.*
 
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.Event
-import com.buzbuz.smartautoclicker.database.domain.EXACT
-import com.buzbuz.smartautoclicker.database.domain.OR
-import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 
@@ -46,16 +41,17 @@ internal class ScenarioProcessor(
     private val events: List<Event>,
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
     gestureExecutor: (GestureDescription) -> Unit,
-    private val onEndConditionReached: () -> Unit,
+    @ConditionOperator endConditionOperator: Int,
+    endConditions: List<EndCondition>,
+    onEndConditionReached: () -> Unit,
     private val debugEngine: DebugEngine? = null,
 ) {
 
     /** Execute the detected event actions. */
     private val actionExecutor = ActionExecutor(gestureExecutor)
-    /** Number of execution count for each events since the processing start. */
-    private val executedEvents = HashMap<Event, Int>().apply {
-        events.forEach { put(it, 0) }
-    }
+    /** */
+    private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onEndConditionReached)
+
     /** The bitmap of the currently processed image. Kept in order to avoid instantiating a new one everytime. */
     private var processedScreenBitmap: Bitmap? = null
 
@@ -81,9 +77,6 @@ internal class ScenarioProcessor(
             // If conditions are fulfilled, execute this event's actions !
             val result = verifyConditions(event)
             if (result.eventMatched) {
-                executedEvents[event] = executedEvents[event]?.plus(1)
-                    ?: throw IllegalStateException("Can' find the event in the executed events map.")
-
                 // If scenario debug mode is ON, notifies its engine.
                 debugEngine?.sendNewResult(result)
 
@@ -92,14 +85,7 @@ internal class ScenarioProcessor(
                 }
 
                 // Check if an event has reached its max execution count.
-                executedEvents.forEach { (event, executedCount) ->
-                    event.stopAfter?.let { stopAfter ->
-                        if (stopAfter <= executedCount) {
-                            onEndConditionReached()
-                            return
-                        }
-                    }
-                }
+                if (endConditionVerifier.onEventTriggered(event)) return
 
                 break
             } else {

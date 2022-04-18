@@ -23,14 +23,8 @@ import android.media.Image
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.database.domain.*
 
-import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.DetectionType
-import com.buzbuz.smartautoclicker.database.domain.EXACT
-import com.buzbuz.smartautoclicker.database.domain.OR
-import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 import com.buzbuz.smartautoclicker.engine.shadows.ShadowBitmapCreator
@@ -185,6 +179,8 @@ class ScenarioProcessorTests {
             emptyList(),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -205,6 +201,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -235,6 +233,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -265,6 +265,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -296,6 +298,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -327,6 +331,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -355,6 +361,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -384,6 +392,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -415,6 +425,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -446,6 +458,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -492,6 +506,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -538,6 +554,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -584,6 +602,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -631,6 +651,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -677,6 +699,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -725,6 +749,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -774,6 +800,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -822,6 +850,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -869,6 +899,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -917,6 +949,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -965,6 +999,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1013,6 +1049,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1061,6 +1099,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1109,6 +1149,8 @@ class ScenarioProcessorTests {
             listOf(event),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1154,6 +1196,8 @@ class ScenarioProcessorTests {
             listOf(event1, event2),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1199,6 +1243,8 @@ class ScenarioProcessorTests {
             listOf(event1, event2),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1245,6 +1291,8 @@ class ScenarioProcessorTests {
             listOf(event1, event2),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1291,6 +1339,8 @@ class ScenarioProcessorTests {
             listOf(event1, event2),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1323,6 +1373,8 @@ class ScenarioProcessorTests {
             listOf(event1),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            emptyList(),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1332,7 +1384,7 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun stopAfter_one_match() = runTest {
+    fun endConditionReached_or_one() = runTest {
         val condition1 = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
@@ -1346,7 +1398,6 @@ class ScenarioProcessorTests {
             operator = OR,
             conditions = listOf(condition1),
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
-            stopAfter = 1,
         )
 
         scenarioProcessor = ScenarioProcessor(
@@ -1354,6 +1405,8 @@ class ScenarioProcessorTests {
             listOf(event1),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1)),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1364,7 +1417,7 @@ class ScenarioProcessorTests {
     }
 
     @Test
-    fun stopAfter_three() = runTest {
+    fun endConditionReached_or_three() = runTest {
         val condition1 = createTestCondition(
             TEST_CONDITION_PATH_1,
             TEST_CONDITION_AREA_1,
@@ -1373,12 +1426,10 @@ class ScenarioProcessorTests {
             isDetected = true,
             shouldBeOnScreen = true,
         )
-        val stopAfterCount = 3
         val event1 = newEvent(
             operator = OR,
             conditions = listOf(condition1),
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
-            stopAfter = stopAfterCount,
         )
 
         scenarioProcessor = ScenarioProcessor(
@@ -1386,6 +1437,8 @@ class ScenarioProcessorTests {
             listOf(event1),
             mockBitmapSupplier::getBitmap,
             mockGestureExecutor::executeGesture,
+            OR,
+            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 3)),
             mockEndListener::onEndConditionReached,
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1396,5 +1449,169 @@ class ScenarioProcessorTests {
 
         scenarioProcessor.process(mockScreenImage)
         verify(mockEndListener, times(1)).onEndConditionReached()
+    }
+
+    @Test
+    fun endConditionReached_or_twoEndCondition_oneOk() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+        val event1 = newEvent(
+            id = 42,
+            operator = OR,
+            conditions = listOf(condition1),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+        )
+        val event2 = newEvent(
+            id = 85,
+            operator = OR,
+            conditions = listOf(condition2),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event1, event2),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            OR,
+            listOf(
+                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
+                EndCondition(scenarioId = event2.scenarioId, eventId = event2.id, eventName = event2.name, executions = 3)
+            ),
+            mockEndListener::onEndConditionReached,
+        )
+
+        scenarioProcessor.process(mockScreenImage)
+        verify(mockEndListener, times(1)).onEndConditionReached()
+    }
+
+    @Test
+    fun endConditionReached_and_one() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val actionDuration1 = 1L
+        val event1 = newEvent(
+            operator = AND,
+            conditions = listOf(condition1),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event1),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            OR,
+            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1)),
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+
+        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        assertActionGesture(actionDuration1)
+        verify(mockEndListener).onEndConditionReached()
+    }
+
+    @Test
+    fun endConditionReached_and_three() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val event1 = newEvent(
+            operator = AND,
+            conditions = listOf(condition1),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event1),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            OR,
+            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 3)),
+            mockEndListener::onEndConditionReached,
+        )
+        scenarioProcessor.process(mockScreenImage)
+        verify(mockEndListener, never()).onEndConditionReached()
+
+        scenarioProcessor.process(mockScreenImage)
+        verify(mockEndListener, never()).onEndConditionReached()
+
+        scenarioProcessor.process(mockScreenImage)
+        verify(mockEndListener, times(1)).onEndConditionReached()
+    }
+
+    @Test
+    fun endConditionReached_and_twoEndCondition_oneOk() = runTest {
+        val condition1 = createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = true,
+            shouldBeOnScreen = true,
+        )
+        val condition2 = createTestCondition(
+            TEST_CONDITION_PATH_2,
+            TEST_CONDITION_AREA_2,
+            TEST_CONDITION_THRESHOLD_2,
+            EXACT,
+            isDetected = false,
+            shouldBeOnScreen = true,
+        )
+        val event1 = newEvent(
+            id = 42,
+            operator = OR,
+            conditions = listOf(condition1),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+        )
+        val event2 = newEvent(
+            id = 85,
+            operator = OR,
+            conditions = listOf(condition2),
+            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+        )
+
+        scenarioProcessor = ScenarioProcessor(
+            mockImageDetector,
+            listOf(event1, event2),
+            mockBitmapSupplier::getBitmap,
+            mockGestureExecutor::executeGesture,
+            AND,
+            listOf(
+                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
+                EndCondition(scenarioId = event2.scenarioId, eventId = event2.id, eventName = event2.name, executions = 3)
+            ),
+            mockEndListener::onEndConditionReached,
+        )
+
+        scenarioProcessor.process(mockScreenImage)
+        verify(mockEndListener, never()).onEndConditionReached()
     }
 }

@@ -24,11 +24,12 @@ internal object ProcessingData {
 
     /** Instantiates a new event with only the useful values for the tests. */
     fun newEvent(
+        id: Long = 1L,
         @ConditionOperator operator: Int = AND,
         actions: List<Action> = emptyList(),
         conditions: List<Condition> = emptyList(),
         stopAfter: Int? = null,
-    ) = Event(1L, 1L, "TOTO", operator, 0, actions.toMutableList(), conditions.toMutableList(), stopAfter)
+    ) = Event(id, 1L, "TOTO", operator, 0, actions.toMutableList(), conditions.toMutableList(), stopAfter)
 
     /** Instantiates a new condition with only the useful values for the tests. */
     fun newCondition(
