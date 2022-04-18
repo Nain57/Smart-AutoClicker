@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.databinding.DialogEventListBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeEventListButtonsBinding
 import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
+import com.buzbuz.smartautoclicker.overlays.scenariosettings.ScenarioSettingsDialog
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 
 import kotlinx.coroutines.launch
@@ -133,9 +134,7 @@ class EventListDialog(
             R.id.btn_new_event -> viewModel?.getNewEvent(context)?.let { openEventConfigDialog(it) }
             R.id.btn_copy_event -> showEventCopyDialog()
             R.id.btn_move_events ->  viewModel?.setUiMode(REORDER)
-            R.id.btn_scenario_settings -> {
-
-            }
+            R.id.btn_scenario_settings -> showScenarioSettingsDialog()
             R.id.btn_cancel -> {
                 eventAdapter.cancelReorder()
                 viewModel?.setUiMode(EDITION)
@@ -229,6 +228,17 @@ class EventListDialog(
                     viewModel?.addOrUpdateEvent(configuredEvent)
                 }),
             true
+        )
+    }
+
+    /** Opens the scenario settings dialog. */
+    private fun showScenarioSettingsDialog() {
+        showSubOverlay(
+            overlayController = ScenarioSettingsDialog(
+                context = context,
+                scenarioId = viewModel?.scenarioId?.value!!
+            ),
+            hideCurrent = false,
         )
     }
 }

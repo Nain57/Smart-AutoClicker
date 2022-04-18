@@ -59,7 +59,16 @@ internal interface ScenarioDao {
      */
     @Transaction
     @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
-    fun getScenarioWithEndConditions(scenarioId: Long): Flow<ScenarioWithEndConditions>
+    fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<ScenarioWithEndConditions>
+
+    /**
+     * Get a scenario and its end conditions.
+     *
+     * @return the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
+    suspend fun getScenarioWithEndConditions(scenarioId: Long): ScenarioWithEndConditions
 
     /**
      * Add a new scenario to the database.

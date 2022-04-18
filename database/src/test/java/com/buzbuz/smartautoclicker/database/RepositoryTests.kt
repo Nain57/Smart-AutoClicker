@@ -141,13 +141,13 @@ class RepositoryTests {
     fun getScenarioWithEndConditions_empty() = runTest {
         val scenarioEntity = TestsData.getNewScenarioEntity()
         val scenario = TestsData.getNewScenario()
-        mockWhen(mockScenarioDao.getScenarioWithEndConditions(TestsData.SCENARIO_ID)).thenReturn(
+        mockWhen(mockScenarioDao.getScenarioWithEndConditionsFlow(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(ScenarioWithEndConditions(scenarioEntity, emptyList()))
             }
         )
 
-        val result = repository.getScenarioWithEndConditions(TestsData.SCENARIO_ID).first()
+        val result = repository.getScenarioWithEndConditionsFlow(TestsData.SCENARIO_ID).first()
         assertEquals(scenario, result.first)
         assertTrue(result.second.isEmpty())
     }
@@ -159,13 +159,13 @@ class RepositoryTests {
         val eventEntity = TestsData.getNewEventEntity(scenarioId = scenarioEntity.id, priority = 1)
         val endConditionWithEvent = TestsData.getNewEndConditionWithEvent(event = eventEntity)
 
-        mockWhen(mockScenarioDao.getScenarioWithEndConditions(TestsData.SCENARIO_ID)).thenReturn(
+        mockWhen(mockScenarioDao.getScenarioWithEndConditionsFlow(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(ScenarioWithEndConditions(scenarioEntity, listOf(endConditionWithEvent)))
             }
         )
 
-        val result = repository.getScenarioWithEndConditions(TestsData.SCENARIO_ID).first()
+        val result = repository.getScenarioWithEndConditionsFlow(TestsData.SCENARIO_ID).first()
         assertEquals(scenario, result.first)
         assertEquals(
             TestsData.getNewEndCondition(),

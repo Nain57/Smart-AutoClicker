@@ -146,5 +146,15 @@
     <string name="dialog_unit_ms" translatable="false">ms</string>
     <string name="dialog_copy_title">Copy from</string>
 
-
+    <string name="dialog_scenario_settings_title">Scenario Settings</string>
+    <string name="dialog_scenario_settings_quality_title">Detection quality</string>
+    <string name="dialog_scenario_settings_quality_speed">Speed</string>
+    <string name="dialog_scenario_settings_quality_precision">Precision</string>
+    <string name="dialog_scenario_settings_end_condition_title">End conditions</string>
+    <string name="dialog_scenario_settings_end_condition_card_executions" translatable="false">x%1$d</string>
+    <string name="dialog_end_condition_config_title">End Condition</string>
+    <string name="dialog_end_condition_config_event_title">Event</string>
+    <string name="dialog_end_condition_config_event_no_selection">No Event selected</string>
+    <string name="dialog_end_condition_config_executions_title">Executions</string>
+    <string name="dialog_end_condition_event_select_title">Select an event</string>
 </resources>

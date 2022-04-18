@@ -150,7 +150,7 @@ class DetectorEngine(context: Context) {
     val scenarioEndConditions: StateFlow<Pair<Scenario, List<EndCondition>>?> = _scenario
         .flatMapLatest {
             it?.let { scenario ->
-                scenarioRepository.getScenarioWithEndConditions(scenario.id)
+                scenarioRepository.getScenarioWithEndConditionsFlow(scenario.id)
             } ?: emptyFlow()
         }
         .stateIn(

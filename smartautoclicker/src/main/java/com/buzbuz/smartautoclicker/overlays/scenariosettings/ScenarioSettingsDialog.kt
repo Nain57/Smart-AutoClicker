@@ -16,5 +16,125 @@
  */
 package com.buzbuz.smartautoclicker.overlays.scenariosettings
 
-class ScenarioSettingsDialog {
+import android.content.Context
+import android.view.LayoutInflater
+import android.widget.SeekBar
+
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+
+import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
+import com.buzbuz.smartautoclicker.database.domain.AND
+import com.buzbuz.smartautoclicker.database.domain.OR
+import com.buzbuz.smartautoclicker.databinding.DialogScenarioSettingsBinding
+import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
+import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
+
+import kotlinx.coroutines.launch
+
+/**
+ * [OverlayDialogController] implementation for displaying the scenario settings.
+ **
+ * @param context the Android Context for the dialog shown by this controller.
+ * @param scenarioId the scenario to display the settings of.
+ */
+class ScenarioSettingsDialog(
+    context: Context,
+    scenarioId: Long,
+) : OverlayDialogController(context) {
+
+    /** The view model for this dialog. */
+    private var viewModel: ScenarioSettingsModel? = ScenarioSettingsModel(context).apply {
+        attachToLifecycle(this@ScenarioSettingsDialog)
+        setScenario(scenarioId)
+    }
+    /** ViewBinding containing the views for this dialog. */
+    private lateinit var viewBinding: DialogScenarioSettingsBinding
+
+    /** Adapter displaying all actions for the event displayed by this dialog. */
+    private val endConditionsAdapter = EndConditionAdapter(
+        addEndConditionClickedListener = {
+
+        },
+        endConditionClickedListener = {
+
+        }
+    )
+
+    override fun onCreateDialog(): AlertDialog.Builder {
+        viewBinding = DialogScenarioSettingsBinding.inflate(LayoutInflater.from(context))
+
+        return AlertDialog.Builder(context)
+            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_scenario_settings_title)
+            .setView(viewBinding.root)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel, null)
+    }
+
+    override fun onDialogCreated(dialog: AlertDialog) {
+        viewBinding.apply {
+            seekbarQuality.apply {
+                max = SEEK_BAR_QUALITY_MAX
+                setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        viewModel?.setDetectionQuality(progress)
+                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                })
+            }
+
+            textEndConditionOperatorDesc.setOnClickListener {
+                viewModel?.toggleEndConditionOperator()
+            }
+
+            listEndConditions.adapter = endConditionsAdapter
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel?.detectionQuality?.collect { detectionQuality ->
+                        viewBinding.textQualityValue.text = detectionQuality.toString()
+                        if (viewBinding.seekbarQuality.progress == 0) {
+                            viewBinding.seekbarQuality.progress =
+                                (detectionQuality ?: 0) - DETECTION_QUALITY_MIN.toInt()
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel?.endConditionOperator?.collect { conditionOperator ->
+                        viewBinding.textEndConditionOperatorDesc.apply {
+                            when (conditionOperator) {
+                                AND -> {
+                                    setLeftRightCompoundDrawables(R.drawable.ic_all_conditions, R.drawable.ic_chevron)
+                                    text = context.getString(R.string.condition_operator_and)
+                                }
+                                OR -> {
+                                    setLeftRightCompoundDrawables(R.drawable.ic_one_condition, R.drawable.ic_chevron)
+                                    text = context.getString(R.string.condition_operator_or)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel?.endConditions?.collect { endConditions ->
+                        endConditionsAdapter.submitList(endConditions)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDialogDismissed() {
+        super.onDialogDismissed()
+        viewModel = null
+    }
 }

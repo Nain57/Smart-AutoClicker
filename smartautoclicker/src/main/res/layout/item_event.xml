@@ -18,7 +18,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ItemView.Big">
+    style="@style/ItemView.Big"
+    android:id="@+id/root_item_event">
 
     <LinearLayout
         android:layout_width="match_parent"

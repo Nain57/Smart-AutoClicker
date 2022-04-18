@@ -98,7 +98,15 @@ interface Repository {
      * @param scenarioId the identifier of the scenario.
      * @return the flow on the scenario and its end conditions.
      */
-    fun getScenarioWithEndConditions(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>>
+    fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>>
+
+    /**
+     * Get a flow on the scenario and its and conditions.
+     *
+     * @param scenarioId the identifier of the scenario.
+     * @return the flow on the scenario and its end conditions.
+     */
+    suspend fun getScenarioWithEndConditions(scenarioId: Long): Pair<Scenario, List<EndCondition>>
 
     /**
      * Add a new end condition for a scenario.

@@ -89,10 +89,16 @@ internal class RepositoryImpl internal constructor(
             scenarioEntity.toScenario()
         }
 
-    override fun getScenarioWithEndConditions(scenarioId: Long) = scenarioDao.getScenarioWithEndConditions(scenarioId)
+    override fun getScenarioWithEndConditionsFlow(scenarioId: Long) = scenarioDao.getScenarioWithEndConditionsFlow(scenarioId)
         .map { scenarioWithEndConditions ->
             scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
         }
+
+    override suspend fun getScenarioWithEndConditions(scenarioId: Long): Pair<Scenario, List<EndCondition>> {
+        val scenarioWithEndConditions = scenarioDao.getScenarioWithEndConditions(scenarioId)
+        return scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions
+            .map { it.toEndCondition() }
+    }
 
     override suspend fun addEndCondition(endCondition: EndCondition) =
         endConditionDao.add(endCondition.toEntity())
