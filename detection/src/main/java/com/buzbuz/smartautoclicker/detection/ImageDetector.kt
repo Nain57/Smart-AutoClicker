@@ -32,12 +32,17 @@ interface ImageDetector : AutoCloseable {
      * All following calls to [detectCondition] methods will be verified against this bitmap.
      *
      * @param screenBitmap the content of the screen as a bitmap.
+     * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
+     *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
      */
-    fun setScreenImage(screenBitmap: Bitmap)
+    fun setupDetection(
+        screenBitmap: Bitmap,
+        detectionQuality: Double,
+    )
 
     /**
      * Detect if the bitmap is in the whole current screen bitmap.
-     * [setScreenImage] must have been called first with the content of the screen.
+     * [setupDetection] must have been called first with the content of the screen.
      *
      * @param conditionBitmap the condition to detect in the screen.
      * @param threshold the allowed error threshold allowed for the condition.
@@ -48,7 +53,7 @@ interface ImageDetector : AutoCloseable {
 
     /**
      * Detect if the bitmap is at a specific position in the current screen bitmap.
-     * [setScreenImage] must have been called first with the content of the screen.
+     * [setupDetection] must have been called first with the content of the screen.
      *
      * @param conditionBitmap the condition to detect in the screen.
      * @param position the position on the screen where the condition should be detected.
@@ -58,6 +63,11 @@ interface ImageDetector : AutoCloseable {
      */
     fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): DetectionResult
 }
+
+/** The maximum detection quality for the algorithm. */
+const val DETECTION_QUALITY_MAX = 1200L
+/** The minimum detection quality for the algorithm. */
+const val DETECTION_QUALITY_MIN = 400L
 
 /**
  * The results of a condition detection.

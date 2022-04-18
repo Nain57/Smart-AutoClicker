@@ -64,9 +64,10 @@ extern "C" {
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_setScreenImage(
             JNIEnv *env,
             jobject self,
-            jobject screenBitmap
+            jobject screenBitmap,
+            jdouble detectionQuality
     ) {
-        getObject(env, self)->setScreenImage(env, screenBitmap);
+        getObject(env, self)->setScreenImage(env, screenBitmap, detectionQuality);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_detect(

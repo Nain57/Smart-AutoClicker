@@ -66,7 +66,7 @@ namespace smartautoclicker {
 
         Detector() = default;
 
-        void setScreenImage(JNIEnv *env, jobject screenImage);
+        void setScreenImage(JNIEnv *env, jobject screenImage, double detectionQuality);
 
         DetectionResult detectCondition(JNIEnv *env, jobject conditionImage, int threshold);
 

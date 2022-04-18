@@ -22,17 +22,17 @@
 using namespace cv;
 using namespace smartautoclicker;
 
-void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
+void Detector::setScreenImage(JNIEnv *env, jobject screenImage, double detectionQuality) {
     // Get screen info from the android bitmap format
     currentImage = bitmapRGBA888ToMat(env, screenImage);
 
     // Select the scale ratio depending on the screen size.
     // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
     // the performance of the detection.
-    if (currentImage->rows > currentImage->cols && currentImage->rows > SCALED_IMAGE_MIN_SIZE_PIXEL) {
-        scaleRatio = SCALED_IMAGE_MIN_SIZE_PIXEL / currentImage->rows;
-    } else if (currentImage->cols > SCALED_IMAGE_MIN_SIZE_PIXEL) {
-        scaleRatio = SCALED_IMAGE_MIN_SIZE_PIXEL / currentImage->cols;
+    if (currentImage->rows > currentImage->cols && currentImage->rows > detectionQuality) {
+        scaleRatio = detectionQuality / currentImage->rows;
+    } else if (currentImage->cols > detectionQuality) {
+        scaleRatio = detectionQuality / currentImage->cols;
     } else {
         scaleRatio = 1;
     }

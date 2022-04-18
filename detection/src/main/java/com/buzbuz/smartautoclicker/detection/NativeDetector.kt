@@ -45,7 +45,12 @@ class NativeDetector : ImageDetector {
 
     override fun close() = deleteDetector()
 
-    external override fun setScreenImage(screenBitmap: Bitmap)
+    override fun setupDetection(screenBitmap: Bitmap, detectionQuality: Double) {
+        if (detectionQuality < DETECTION_QUALITY_MIN || detectionQuality > DETECTION_QUALITY_MAX)
+            throw IllegalArgumentException("Invalid detection quality")
+
+        setScreenImage(screenBitmap, detectionQuality)
+    }
 
     override fun detectCondition(conditionBitmap: Bitmap, threshold: Int): DetectionResult {
         detect(conditionBitmap, threshold, detectionResult)
@@ -70,6 +75,15 @@ class NativeDetector : ImageDetector {
      * Once called, this object can't be used anymore.
      */
     private external fun deleteDetector()
+
+    /**
+     * Native method for detection setup.
+     *
+     * @param screenBitmap the content of the screen as a bitmap.
+     * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
+     *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
+     */
+    private external fun setScreenImage(screenBitmap: Bitmap, detectionQuality: Double)
 
     /**
      * Native method for detecting if the bitmap is in the whole current screen bitmap.

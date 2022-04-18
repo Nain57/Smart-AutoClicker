@@ -65,6 +65,8 @@ import java.nio.ByteBuffer
 class ScenarioProcessorTests {
 
     private companion object {
+        private const val TEST_DATA_DETECTION_QUALITY = 600.0
+
         private const val TEST_DATA_SCREEN_IMAGE_WIDTH = 800
         private const val TEST_DATA_SCREEN_IMAGE_HEIGHT = 600
         private const val TEST_DATA_SCREEN_IMAGE_PIXEL_STRIDE = 1
@@ -147,6 +149,22 @@ class ScenarioProcessorTests {
         }
     }
 
+    /** @return a new SceanarioProcessor with all necessary mocks. */
+    private fun createNewScenarioProcessor(
+        events: List<Event>,
+        endConditions: List<EndCondition>,
+        endConditionOperator: Int
+    ) = ScenarioProcessor(
+        mockImageDetector,
+        TEST_DATA_DETECTION_QUALITY.toInt(),
+        events,
+        mockBitmapSupplier::getBitmap,
+        mockGestureExecutor::executeGesture,
+        endConditionOperator,
+        endConditions,
+        mockEndListener::onEndConditionReached,
+    )
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -174,18 +192,10 @@ class ScenarioProcessorTests {
 
     @Test
     fun noEvent() = runTest{
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            emptyList(),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(emptyList(), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockBitmapSupplier, mockGestureExecutor, mockEndListener)
     }
 
@@ -196,18 +206,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockBitmapSupplier, mockGestureExecutor, mockEndListener)
     }
 
@@ -228,18 +230,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -260,18 +254,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -293,18 +279,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -326,18 +304,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -356,18 +326,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -387,18 +349,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -420,18 +374,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -453,18 +399,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -501,18 +439,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -549,18 +479,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -597,18 +519,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -646,18 +560,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -694,18 +600,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -744,19 +642,11 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -795,19 +685,11 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -845,18 +727,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -894,18 +768,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -944,18 +810,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -994,18 +852,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -1044,18 +894,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -1094,18 +936,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
@@ -1144,18 +978,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -1191,18 +1017,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event1, event2),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -1238,18 +1056,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event1, event2),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(actionDuration1)
         verifyNoInteractions(mockEndListener)
     }
@@ -1286,18 +1096,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event1, event2),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(actionDuration2)
         verifyNoInteractions(mockEndListener)
     }
@@ -1334,18 +1136,10 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event1, event2),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(actionDuration1)
         verifyNoInteractions(mockEndListener)
     }
@@ -1368,18 +1162,10 @@ class ScenarioProcessorTests {
             stopAfter = 1,
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
-            listOf(event1),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            emptyList(),
-            mockEndListener::onEndConditionReached,
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         verifyNoInteractions(mockGestureExecutor, mockEndListener)
     }
 
@@ -1400,18 +1186,14 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
+        scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
             listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1)),
-            mockEndListener::onEndConditionReached,
+            OR
         )
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(actionDuration1)
         verify(mockEndListener).onEndConditionReached()
     }
@@ -1432,15 +1214,12 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
+        scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
             listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 3)),
-            mockEndListener::onEndConditionReached,
+            OR
         )
+
         scenarioProcessor.process(mockScreenImage)
         verify(mockEndListener, never()).onEndConditionReached()
 
@@ -1482,17 +1261,13 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
+        scenarioProcessor = createNewScenarioProcessor(
             listOf(event1, event2),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
             listOf(
                 EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
                 EndCondition(scenarioId = event2.scenarioId, eventId = event2.id, eventName = event2.name, executions = 3)
             ),
-            mockEndListener::onEndConditionReached,
+            OR,
         )
 
         scenarioProcessor.process(mockScreenImage)
@@ -1516,18 +1291,16 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
+        scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1)),
-            mockEndListener::onEndConditionReached,
+            listOf(
+                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
+            ),
+            AND,
         )
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setScreenImage(mockScreenBitmap)
+        verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
         assertActionGesture(actionDuration1)
         verify(mockEndListener).onEndConditionReached()
     }
@@ -1548,14 +1321,12 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
+        scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            OR,
-            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 3)),
-            mockEndListener::onEndConditionReached,
+            listOf(
+                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 3),
+            ),
+            AND,
         )
         scenarioProcessor.process(mockScreenImage)
         verify(mockEndListener, never()).onEndConditionReached()
@@ -1598,17 +1369,13 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = ScenarioProcessor(
-            mockImageDetector,
+        scenarioProcessor = createNewScenarioProcessor(
             listOf(event1, event2),
-            mockBitmapSupplier::getBitmap,
-            mockGestureExecutor::executeGesture,
-            AND,
             listOf(
                 EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
                 EndCondition(scenarioId = event2.scenarioId, eventId = event2.id, eventName = event2.name, executions = 3)
             ),
-            mockEndListener::onEndConditionReached,
+            AND,
         )
 
         scenarioProcessor.process(mockScreenImage)

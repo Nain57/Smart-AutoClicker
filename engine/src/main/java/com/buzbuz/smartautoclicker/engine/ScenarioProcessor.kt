@@ -30,14 +30,18 @@ import kotlinx.coroutines.yield
  * Process a screen image and tries to detect the list of [Event] on it.
  *
  * @param imageDetector the detector for images.
+ * @param detectionQuality the quality of the detection.
  * @param events the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param gestureExecutor execute the actions gestures on the user screen.
+ * @param endConditionOperator the operator to apply between the end conditions.
+ * @param endConditions the list of end conditions for the current scenario.
  * @param onEndConditionReached called when a end condition of the scenario have been reached.
  * @param debugEngine the engine for the debugging. Can be null if not required.
  */
 internal class ScenarioProcessor(
     private val imageDetector: ImageDetector,
+    private val detectionQuality: Int,
     private val events: List<Event>,
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
     gestureExecutor: (GestureDescription) -> Unit,
@@ -65,7 +69,7 @@ internal class ScenarioProcessor(
     suspend fun process(screenImage: Image) {
         // Set the current screen image
         processedScreenBitmap = screenImage.toBitmap(processedScreenBitmap).apply {
-            imageDetector.setScreenImage(this)
+            imageDetector.setupDetection(this, detectionQuality.toDouble())
         }
 
         for (event in events) {
