@@ -27,6 +27,14 @@ import kotlinx.coroutines.flow.Flow
 internal interface ConditionDao {
 
     /**
+     * Get number of conditions in the database.
+     *
+     * @return the flow on the number of conditions.
+     */
+    @Query("SELECT COUNT(*) FROM condition_table")
+    abstract fun getConditionsCount(): Flow<Int>
+
+    /**
      * Get all conditions from all events.
      *
      * @return the list containing all conditions.

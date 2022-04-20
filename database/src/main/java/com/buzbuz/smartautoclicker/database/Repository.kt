@@ -121,6 +121,18 @@ interface Repository {
     fun getEventCount(): Flow<Int>
 
     /**
+     * Get the total number of actions in the database.
+     * @return a flow on the total number of actions.
+     */
+    fun getActionsCount(): Flow<Int>
+
+    /**
+     * Get the total number of conditions in the database.
+     * @return a flow on the total number of conditions.
+     */
+    fun getConditionsCount(): Flow<Int>
+
+    /**
      * Get the list of events for a given scenario.
      * Note that those events will not have their actions/conditions, use [getCompleteEventList] for that.
      *

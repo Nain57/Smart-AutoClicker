@@ -116,6 +116,8 @@ internal class RepositoryImpl internal constructor(
     }
 
     override fun getEventCount(): Flow<Int> = eventDao.getEventsCount()
+    override fun getActionsCount(): Flow<Int> = eventDao.getActionsCount()
+    override fun getConditionsCount(): Flow<Int> = conditionsDao.getConditionsCount()
 
     override fun getEventList(scenarioId: Long): Flow<List<Event>> =
         eventDao.getEvents(scenarioId).mapList { it.toEvent() }

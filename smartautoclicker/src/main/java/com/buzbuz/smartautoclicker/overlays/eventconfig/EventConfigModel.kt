@@ -37,13 +37,7 @@ import com.buzbuz.smartautoclicker.overlays.utils.newDefaultSwipe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -73,12 +67,12 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     val actions: StateFlow<List<Action>?> = _action
     /** The item to be displayed in the action list. Last item is always the add actions . */
     val actionListItems: Flow<List<ActionListItem>> = _action
-        .map { actions ->
+        .combine(repository.getActionsCount()) { actions, actionsCount ->
             buildList {
                 actions?.let { actionList ->
                     addAll(actionList.map { ActionListItem.ActionItem(it) })
                 }
-                add(ActionListItem.AddActionItem(size > 0))
+                add(ActionListItem.AddActionItem(actionsCount > 0))
             }
         }
     /** Backing property for [conditions]. */
@@ -91,14 +85,14 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
         )
     /** The event conditions currently edited by the user. */
     val conditions: StateFlow<List<Condition>?> = _conditions
-    /** */
+    /** The item to be displayed in the condition list. Last item is always the add conditions. */
     val conditionListItems: Flow<List<ConditionListItem>> = _conditions
-        .map { conditions ->
+        .combine(repository.getConditionsCount()) { conditions, conditionsCount ->
             buildList {
                 conditions?.let { conditionList ->
                     addAll(conditionList.map { ConditionListItem.ConditionItem(it) })
                 }
-                add(ConditionListItem.AddConditionItem(size > 0))
+                add(ConditionListItem.AddConditionItem(conditionsCount > 0))
             }
         }
 

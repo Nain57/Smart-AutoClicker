@@ -38,10 +38,18 @@ internal abstract class EventDao {
     /**
      * Get number of events in the database.
      *
-     * @return the flow on the list of events.
+     * @return the flow on the number of events.
      */
     @Query("SELECT COUNT(*) FROM event_table")
     abstract fun getEventsCount(): Flow<Int>
+
+    /**
+     * Get number of actions in the database.
+     *
+     * @return the flow on the number of actions.
+     */
+    @Query("SELECT COUNT(*) FROM action_table")
+    abstract fun getActionsCount(): Flow<Int>
 
     /**
      * Get the list of events for a scenario ordered by priority.
