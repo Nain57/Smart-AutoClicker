@@ -20,16 +20,23 @@ import android.content.Context
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.*
+import com.buzbuz.smartautoclicker.database.domain.AND
+import com.buzbuz.smartautoclicker.database.domain.EndCondition
+import com.buzbuz.smartautoclicker.database.domain.OR
+import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
-import com.buzbuz.smartautoclicker.overlays.eventlist.EventListDialog
-import com.buzbuz.smartautoclicker.overlays.eventlist.Mode
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * View model for the [ScenarioSettingsDialog].
@@ -45,17 +52,28 @@ class ScenarioSettingsModel(context: Context) : OverlayViewModel(context) {
     /** The scenario configured. */
     private val configuredScenario = MutableStateFlow<Scenario?>(null)
     /** The list of end condition configured. */
-    private val configuredEndConditions = MutableStateFlow<List<EndCondition>>(emptyList())
+    val configuredEndConditions = MutableStateFlow<List<EndCondition>>(emptyList())
 
     /** The quality of the detection. */
     val detectionQuality = configuredScenario.map { it?.detectionQuality }
     /** The operator applied to the end conditions. */
     val endConditionOperator = configuredScenario.map { it?.endConditionOperator }
+
+    /** List of events for this scenario. */
+    private val eventList = configuredScenario
+        .filterNotNull()
+        .flatMapLatest { repository.getEventList(it.id) }
+    /** Events available for a new end condition. */
+    private val eventsAvailable = configuredEndConditions
+        .combine(eventList) { endConditions, events ->
+            if (endConditions.isEmpty()) events.isNotEmpty()
+            else events.any { event -> endConditions.find { it.eventId == event.id } == null }
+        }
     /** The end conditions for the configured scenario. */
-    val endConditions = configuredEndConditions.map { endConditions ->
+    val endConditions = configuredEndConditions.combine(eventsAvailable) { endConditions, eventsAvailable ->
         buildList {
-            add(EndConditionListItem.AddEndConditionItem)
             endConditions.forEach { add(EndConditionListItem.EndConditionItem(it)) }
+            if (eventsAvailable) add(EndConditionListItem.AddEndConditionItem)
         }
     }
 
@@ -67,8 +85,26 @@ class ScenarioSettingsModel(context: Context) : OverlayViewModel(context) {
         viewModelScope.launch {
             val scenarioWithEndConditions = repository.getScenarioWithEndConditions(id)
             configuredScenario.value = scenarioWithEndConditions.first
-
+            configuredEndConditions.value = scenarioWithEndConditions.second
         }
+    }
+
+    /** Remove one to the detection quality */
+    fun decreaseDetectionQuality() {
+        configuredScenario.value?.let { scenario ->
+            configuredScenario.value = scenario.copy(
+                detectionQuality = max(scenario.detectionQuality - 1, DETECTION_QUALITY_MIN.toInt())
+            )
+        } ?: throw IllegalStateException("Can't set detection quality, scenario is null!")
+    }
+
+    /** Add one to the detection quality */
+    fun increaseDetectionQuality() {
+        configuredScenario.value?.let { scenario ->
+            configuredScenario.value = scenario.copy(
+                detectionQuality = min(scenario.detectionQuality + 1, DETECTION_QUALITY_MAX.toInt())
+            )
+        } ?: throw IllegalStateException("Can't set detection quality, scenario is null!")
     }
 
     /**
@@ -87,7 +123,55 @@ class ScenarioSettingsModel(context: Context) : OverlayViewModel(context) {
             configuredScenario.value = scenario.copy(
                 endConditionOperator = if (scenario.endConditionOperator == AND) OR else AND
             )
-        } ?: throw IllegalStateException("Can't set end condition operator, scenario is null!")
+        } ?: throw IllegalStateException("Can't toggle end condition operator, scenario is null!")
+    }
+
+    /** @return a new empty end condition. */
+    fun createNewEndCondition() = EndCondition(scenarioId = configuredScenario.value?.id ?: 0)
+
+    /**
+     * Add a new end condition to the scenario.
+     * @param endCondition the end condition to be added.
+     */
+    fun addEndCondition(endCondition: EndCondition) {
+        if (endCondition.id == 0L) {
+            configuredEndConditions.value = configuredEndConditions.value
+                .toMutableList()
+                .apply {
+                    add(endCondition)
+                }
+        }
+    }
+
+    /**
+     * Update an end condition from the scenario.
+     * @param endCondition the end condition to be updated.
+     */
+    fun updateEndCondition(endCondition: EndCondition, index: Int) {
+        val newConditions = ArrayList(configuredEndConditions.value)
+        newConditions[index] = endCondition
+        configuredEndConditions.value = newConditions
+    }
+
+    /**
+     * Delete a end condition from the scenario.
+     * @param endCondition the end condition to be removed.
+     */
+    fun deleteEndCondition(endCondition: EndCondition) {
+        val newConditions = ArrayList(configuredEndConditions.value)
+        if (newConditions.remove(endCondition)) {
+            configuredEndConditions.value = newConditions
+        }
+    }
+
+    /** Save the scenario settings modifications in database. */
+    fun saveModifications() {
+        viewModelScope.launch(Dispatchers.IO) {
+            configuredScenario.value?.let { scenario ->
+                repository.updateScenario(scenario)
+                repository.updateEndConditions(scenario.id, configuredEndConditions.value)
+            }
+        }
     }
 }
 

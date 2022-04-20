@@ -20,10 +20,7 @@ import android.content.Context
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 
 /** Base class for a "ViewModel" for an overlay. */
 abstract class OverlayViewModel(protected val context: Context): DefaultLifecycleObserver {
@@ -53,7 +50,10 @@ abstract class OverlayViewModel(protected val context: Context): DefaultLifecycl
         onCleared()
 
         owner.lifecycle.removeObserver(this)
-        viewModelScope.cancel()
+        viewModelScope.launch {
+            delay(5_000)
+            viewModelScope.cancel()
+        }
         isAttachedToLifecycle = false
     }
 

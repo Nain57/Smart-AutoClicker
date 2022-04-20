@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,17 +17,14 @@
 package com.buzbuz.smartautoclicker.overlays.eventlist
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
-import com.buzbuz.smartautoclicker.overlays.utils.getIconRes
+import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
 
 import java.util.Collections
 
@@ -121,51 +118,7 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
         itemClickedListener: (Event) -> Unit,
         deleteClickedListener: (Event) -> Unit,
     ) {
-        holderViewBinding.apply {
-            name.text = event.name
-
-            actionsLayout.removeAllViews()
-            event.actions?.forEach { action ->
-                View.inflate(itemView.context, R.layout.view_action_icon, actionsLayout)
-                (actionsLayout.getChildAt(actionsLayout.childCount - 1) as ImageView)
-                    .setImageResource(action.getIconRes())
-            }
-        }
-
-        when (mode) {
-            EDITION -> bindEdition(event, itemClickedListener, deleteClickedListener)
-            REORDER -> bindReorder()
-        }
-    }
-
-    /**
-     * Bind this view holder to an event in edition mode.
-     *
-     * @param event the item providing the binding data.
-     * @param itemClickedListener listener called when an event is clicked.
-     * @param deleteClickedListener listener called when the delete button is clicked.
-     */
-    private fun bindEdition(event: Event, itemClickedListener: (Event) -> Unit, deleteClickedListener: (Event) -> Unit) {
-        holderViewBinding.apply {
-            root.setOnClickListener { itemClickedListener.invoke(event) }
-            btnAction.apply {
-                visibility = View.VISIBLE
-                setImageResource(R.drawable.ic_cancel)
-                setOnClickListener { deleteClickedListener.invoke(event) }
-            }
-        }
-    }
-
-    /** Bind this view holder to an event in reorder mode. */
-    private fun bindReorder() {
-        holderViewBinding.apply {
-            root.setOnClickListener(null)
-            btnAction.apply {
-                visibility = View.VISIBLE
-                setImageResource(R.drawable.ic_drag)
-                setOnClickListener(null)
-            }
-        }
+        holderViewBinding.bindEvent(event, mode, itemClickedListener, deleteClickedListener)
     }
 }
 

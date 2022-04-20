@@ -33,17 +33,20 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.database.domain.EndCondition
 import com.buzbuz.smartautoclicker.databinding.DialogEndConditionConfigBinding
+import com.buzbuz.smartautoclicker.extensions.setRightCompoundDrawable
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
 
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-
 
 /**
  * [OverlayDialogController] implementation for displaying the end condition configuration.
  **
  * @param context the Android Context for the dialog shown by this controller.
  * @param endCondition the end condition to be configured.
- * @param endConditions the complete list of events for this scenario.
+ * @param endConditions the complete list of end conditions for this scenario.
  * @param onConfirmClicked called when the user clicks on confirm.
  * @param onDeleteClicked called when the user clicks on delete.
  */
@@ -76,14 +79,20 @@ class EndConditionConfigDialog(
 
     override fun onDialogCreated(dialog: AlertDialog) {
         viewBinding.apply {
-
+            includeSelectedEvent.root.setOnClickListener { showEventSelectionDialog() }
+            viewBinding.includeSelectedEvent.btnAction.isClickable = false
 
             editExecutions.apply {
                 setSelectAllOnFocus(true)
                 filters = arrayOf(MaxInputFilter())
                 addTextChangedListener(object : OnAfterTextChangedListener() {
                     override fun afterTextChanged(s: Editable?) {
-                        viewModel?.setExecutions(viewBinding.editExecutions.text.toString().toInt())
+                        val executions = try {
+                            viewBinding.editExecutions.text.toString().toInt()
+                        } catch (nfe: java.lang.NumberFormatException) {
+                            0
+                        }
+                        viewModel?.setExecutions(executions)
                     }
                 })
             }
@@ -92,12 +101,36 @@ class EndConditionConfigDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel?.eventName?.collect { eventName ->
-                        if (eventName == null) {
-                            viewBinding.textEventName.setText(R.string.dialog_end_condition_config_event_no_selection)
-                        } else {
-                            viewBinding.textEventName.text = eventName
-                        }
+                    viewModel?.eventsAvailable?.let { eventsAvailable ->
+                        viewModel?.selectedEvent?.combine(eventsAvailable) { event, events ->
+                            when {
+                                events.isNullOrEmpty() -> {
+                                    viewBinding.textNoEvent.apply {
+                                        visibility = View.VISIBLE
+                                        setText(R.string.dialog_end_condition_config_event_none_in_scenario)
+                                        setOnClickListener(null)
+                                        setRightCompoundDrawable(null)
+                                    }
+                                    viewBinding.includeSelectedEvent.root.visibility = View.GONE
+                                }
+                                event == null -> {
+                                    viewBinding.textNoEvent.apply {
+                                        visibility = View.VISIBLE
+                                        setText(R.string.dialog_end_condition_config_event_no_selection)
+                                        setOnClickListener { showEventSelectionDialog() }
+                                        setRightCompoundDrawable(R.drawable.ic_chevron)
+                                    }
+                                    viewBinding.includeSelectedEvent.root.visibility = View.GONE
+                                }
+                                else -> {
+                                    viewBinding.textNoEvent.visibility = View.GONE
+                                    viewBinding.includeSelectedEvent.apply {
+                                        root.visibility = View.VISIBLE
+                                        bindEvent(event = event, itemClickedListener = { showEventSelectionDialog() })
+                                    }
+                                }
+                            }
+                        }?.collect()
                     }
                 }
 
@@ -128,6 +161,21 @@ class EndConditionConfigDialog(
         viewModel = null
     }
 
+    /** Show the event selection dialog. */
+    private fun showEventSelectionDialog() {
+        showSubOverlay(
+            EndConditionEventSelectionDialog(
+                context = context,
+                eventList = viewModel?.eventsAvailable?.value ?: emptyList(),
+                onEventClicked = { event -> viewModel?.setEvent(event) }
+            )
+        )
+    }
+
+    /**
+     * Called when the of button is clicked.
+     * Propagate the configured event to the provided listener.
+     */
     private fun onOkClicked() {
         viewModel?.let { model ->
             onConfirmClicked(model.getConfiguredEndCondition())

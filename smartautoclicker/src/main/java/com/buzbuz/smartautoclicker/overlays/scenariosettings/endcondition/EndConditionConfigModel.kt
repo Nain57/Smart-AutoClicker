@@ -30,6 +30,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 
 /**
@@ -54,9 +56,6 @@ class EndConditionConfigModel(context: Context) : OverlayViewModel(context) {
             repository.getCompleteEventList(it.scenarioId)
         }
 
-    /** The name of the event linked to this end condition. Null if none is. */
-    val eventName = configuredEndCondition
-        .map { it?.eventName }
     /** The number of executions before triggering the end condition. */
     val executions = configuredEndCondition
         .filterNotNull()
@@ -68,9 +67,24 @@ class EndConditionConfigModel(context: Context) : OverlayViewModel(context) {
     }
 
     /** Events available as end condition event for this end condition */
-    val eventsAvailable = currentEndConditions
-        .combine(events) { endConditions, events ->
-            events.filter { event -> endConditions.find { it.eventId == event.id } == null }
+    val eventsAvailable = combine(
+        currentEndConditions,
+        configuredEndCondition,
+        events
+    ) { endConditions, endCondition, events ->
+            events.filter { event ->
+                endCondition?.eventId == event.id || endConditions.find { it.eventId == event.id } == null
+            }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            emptyList()
+        )
+    /** The event selected for the end condition. Null if none is. */
+    val selectedEvent = configuredEndCondition
+        .combine(events) { endCondition, events ->
+            events.find { event -> endCondition?.eventId == event.id }
         }
 
     /**

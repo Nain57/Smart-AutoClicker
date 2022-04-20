@@ -109,24 +109,10 @@ interface Repository {
     suspend fun getScenarioWithEndConditions(scenarioId: Long): Pair<Scenario, List<EndCondition>>
 
     /**
-     * Add a new end condition for a scenario.
-     *
-     * @param endCondition the end condition to be added.
-     * @return the unique identifier for the created end condition.
-     */
-    suspend fun addEndCondition(endCondition: EndCondition) : Long
-
-    /**
      * Update an existing end condition.
-     * @param endCondition the end condition to be updated.
+     * @param endConditions the new list end condition to be updated.
      */
-    suspend fun updateEndCondition(endCondition: EndCondition)
-
-    /**
-     * Delete an existing end condition.
-     * @param endCondition the end condition to be deleted.
-     */
-    suspend fun deleteEndCondition(endCondition: EndCondition)
+    suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndCondition>)
 
     /**
      * Get the list of events for a given scenario.

@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.databinding.DialogScenarioSettingsBinding
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
+import com.buzbuz.smartautoclicker.overlays.scenariosettings.endcondition.EndConditionConfigDialog
 
 import kotlinx.coroutines.launch
 
@@ -58,10 +59,24 @@ class ScenarioSettingsDialog(
     /** Adapter displaying all actions for the event displayed by this dialog. */
     private val endConditionsAdapter = EndConditionAdapter(
         addEndConditionClickedListener = {
-
+            viewModel?.createNewEndCondition()?.let { endCondition ->
+                showSubOverlay(EndConditionConfigDialog(
+                    context = context,
+                    endCondition = endCondition,
+                    endConditions = viewModel?.configuredEndConditions?.value ?: emptyList(),
+                    onConfirmClicked = { newEndCondition -> viewModel?.addEndCondition(newEndCondition) },
+                    onDeleteClicked = { viewModel?.deleteEndCondition(endCondition) }
+                ))
+            }
         },
-        endConditionClickedListener = {
-
+        endConditionClickedListener = { endCondition, index ->
+            showSubOverlay(EndConditionConfigDialog(
+                context = context,
+                endCondition = endCondition,
+                endConditions = viewModel?.configuredEndConditions?.value ?: emptyList(),
+                onConfirmClicked = { newEndCondition -> viewModel?.updateEndCondition(newEndCondition, index) },
+                onDeleteClicked = { viewModel?.deleteEndCondition(endCondition) }
+            ))
         }
     )
 
@@ -71,12 +86,15 @@ class ScenarioSettingsDialog(
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_scenario_settings_title)
             .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
+            .setPositiveButton(android.R.string.ok) { _, _ -> onOkClicked() }
             .setNegativeButton(android.R.string.cancel, null)
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
         viewBinding.apply {
+            textSpeed.setOnClickListener { viewModel?.decreaseDetectionQuality() }
+            textPrecision.setOnClickListener { viewModel?.increaseDetectionQuality() }
+
             seekbarQuality.apply {
                 max = SEEK_BAR_QUALITY_MAX
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -136,5 +154,11 @@ class ScenarioSettingsDialog(
     override fun onDialogDismissed() {
         super.onDialogDismissed()
         viewModel = null
+    }
+
+    /** */
+    private fun onOkClicked() {
+        viewModel?.saveModifications()
+        dismiss()
     }
 }

@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.dao.EntityListUpdater
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
@@ -60,6 +61,11 @@ internal class RepositoryImpl internal constructor(
     private val conditionsUpdater = EntityListUpdater<ConditionEntity, Long>(
         defaultPrimaryKey = 0L,
         primaryKeySupplier = { condition -> condition.id },
+    )
+    /** List updater for the list of end condition. */
+    private val endConditionUpdater = EntityListUpdater<EndConditionEntity, Long>(
+        defaultPrimaryKey = 0L,
+        primaryKeySupplier = { endCondition -> endCondition.id },
     )
 
     override val scenarios = scenarioDao.getScenariosWithEvents().mapList { it.toScenario() }
@@ -100,14 +106,15 @@ internal class RepositoryImpl internal constructor(
             .map { it.toEndCondition() }
     }
 
-    override suspend fun addEndCondition(endCondition: EndCondition) =
-        endConditionDao.add(endCondition.toEntity())
+    override suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndCondition>) {
+        val old = endConditionDao.getEndConditions(scenarioId)
+        val new = endConditions.map { it.toEntity() }
 
-    override suspend fun updateEndCondition(endCondition: EndCondition) =
-        endConditionDao.update(endCondition.toEntity())
+        endConditionUpdater.refreshUpdateValues(old, new)
 
-    override suspend fun deleteEndCondition(endCondition: EndCondition) =
-        endConditionDao.delete(endCondition.toEntity())
+        endConditionDao.update(endConditionUpdater)
+        println("TOTO DONE")
+    }
 
     override fun getEventList(scenarioId: Long): Flow<List<Event>> =
         eventDao.getEvents(scenarioId).mapList { it.toEvent() }

@@ -155,6 +155,7 @@
     <string name="dialog_end_condition_config_title">End Condition</string>
     <string name="dialog_end_condition_config_event_title">Event</string>
     <string name="dialog_end_condition_config_event_no_selection">No Event selected</string>
+    <string name="dialog_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
     <string name="dialog_end_condition_config_executions_title">Executions</string>
     <string name="dialog_end_condition_event_select_title">Select an event</string>
 </resources>

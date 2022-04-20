@@ -28,8 +28,6 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.database.domain.EndCondition
 import com.buzbuz.smartautoclicker.databinding.ItemEndConditionCardBinding
 import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
-import com.buzbuz.smartautoclicker.overlays.eventlist.EDITION
-import com.buzbuz.smartautoclicker.overlays.eventlist.REORDER
 
 /**
  * Adapter displaying a list of end conditions.
@@ -39,7 +37,7 @@ import com.buzbuz.smartautoclicker.overlays.eventlist.REORDER
  */
 class EndConditionAdapter(
     private val addEndConditionClickedListener: () -> Unit,
-    private val endConditionClickedListener: (EndCondition) -> Unit,
+    private val endConditionClickedListener: (EndCondition, Int) -> Unit,
 ) : ListAdapter<EndConditionListItem, RecyclerView.ViewHolder>(EndConditionDiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -100,12 +98,12 @@ class AddEndConditionViewHolder(
 /** View holder for the end condition item. */
 class EndConditionViewHolder(
     private val viewBinding: ItemEndConditionCardBinding,
-    private val endConditionClickedListener: (EndCondition) -> Unit,
+    private val endConditionClickedListener: (EndCondition, Int) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(item: EndConditionListItem.EndConditionItem) {
         viewBinding.apply {
-            root.setOnClickListener { endConditionClickedListener(item.endCondition) }
+            root.setOnClickListener { endConditionClickedListener(item.endCondition, bindingAdapterPosition) }
             textEndConditionName.text = item.endCondition.eventName
             textEndConditionExecutions.text = itemView.context.getString(
                 R.string.dialog_scenario_settings_end_condition_card_executions,

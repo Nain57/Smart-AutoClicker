@@ -174,34 +174,12 @@ class RepositoryTests {
     }
 
     @Test
-    fun addEndCondition() = runTest {
-        val endConditionEntity = TestsData.getNewEndConditionEntity()
-        val endCondition = TestsData.getNewEndCondition()
-        val expectedId = 42L
-        mockWhen(mockEndConditionDao.add(endConditionEntity)).thenReturn(expectedId)
-
-        assertEquals(
-            expectedId,
-            repository.addEndCondition(endCondition)
-        )
-    }
-
-    @Test
     fun updateEndCondition() = runTest {
-        val endConditionEntity = TestsData.getNewEndConditionEntity()
-        val endCondition = TestsData.getNewEndCondition()
+        val initialEntity = TestsData.getNewEndConditionEntity(executions = 1)
+        val endCondition = TestsData.getNewEndCondition(executions = 3)
 
-        repository.updateEndCondition(endCondition)
-        verify(mockEndConditionDao).update(endConditionEntity)
-    }
-
-    @Test
-    fun deleteEndCondition() = runTest {
-        val endConditionEntity = TestsData.getNewEndConditionEntity()
-        val endCondition = TestsData.getNewEndCondition()
-
-        repository.deleteEndCondition(endCondition)
-        verify(mockEndConditionDao).delete(endConditionEntity)
+        repository.updateEndConditions(endCondition.scenarioId, listOf(endCondition))
+        verify(mockEndConditionDao).getEndConditions(initialEntity.scenarioId)
     }
 
     @Test

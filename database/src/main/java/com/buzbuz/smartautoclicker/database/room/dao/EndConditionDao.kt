@@ -16,39 +16,68 @@
  */
 package com.buzbuz.smartautoclicker.database.room.dao
 
+import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 
 /** Allows to access and edit the end conditions in the database. */
 @Dao
-internal interface EndConditionDao {
+internal abstract class EndConditionDao {
+
+    /**
+     * Get all end conditions for a given scenario.
+     *
+     * @param scenarioId the unique identifier of the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM end_condition_table WHERE scenario_id=:scenarioId")
+    abstract fun getEndConditions(scenarioId: Long): List<EndConditionEntity>
+
+    /**
+     * Update an end condition in the database.
+     * Execute the add, update and remove actions in a transaction according to the [endConditionUpdater].
+     *
+     * @param endConditionUpdater contains the list update information for the end conditions.
+     *                       [EntityListUpdater.refreshUpdateValues] must have been called first.
+     */
+    @Transaction
+    open suspend fun update(endConditionUpdater: EntityListUpdater<EndConditionEntity, Long>) {
+        add(endConditionUpdater.toBeAdded)
+        update(endConditionUpdater.toBeUpdated)
+        delete(endConditionUpdater.toBeRemoved)
+    }
 
     /**
      * Add a new end condition to the database.
      *
-     * @param endConditionEntity the end condition to be added.
+     * @param endConditionEntities the list of end condition to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun add(endConditionEntity: EndConditionEntity): Long
+    @VisibleForTesting
+    abstract suspend fun add(endConditionEntities: List<EndConditionEntity>)
 
     /**
      * Update the selected end condition.
      *
-     * @param endConditionEntity the end condition to be updated.
+     * @param endConditionEntities the list of end condition to be updated.
      */
     @Update
-    suspend fun update(endConditionEntity: EndConditionEntity)
+    @VisibleForTesting
+    abstract suspend fun update(endConditionEntities: List<EndConditionEntity>)
 
     /**
      * Delete the provided end condition from the database.
      *
-     * @param endConditionEntity the end condition to be deleted.
+     * @param endConditionEntities the list of end condition to be deleted.
      */
     @Delete
-    suspend fun delete(endConditionEntity: EndConditionEntity)
+    @VisibleForTesting
+    abstract suspend fun delete(endConditionEntities: List<EndConditionEntity>)
 }

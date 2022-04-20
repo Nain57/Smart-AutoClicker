@@ -41,14 +41,18 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_action_config_swipe_position_title"
+                    android:text="@string/dialog_end_condition_config_event_title"
                     style="@style/HeaderTitle"/>
 
                 <include layout="@layout/include_view_separator"/>
 
+                <include
+                    android:id="@+id/include_selected_event"
+                    layout="@layout/item_event"/>
+
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/text_event_name"
-                    style="@style/ItemView.Small"
+                    android:id="@+id/text_no_event"
+                    style="@style/ItemView.Big"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_list_item_text"
                     android:text="@string/dialog_end_condition_config_event_no_selection"
