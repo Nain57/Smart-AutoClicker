@@ -36,6 +36,14 @@ import kotlinx.coroutines.flow.Flow
 internal abstract class EventDao {
 
     /**
+     * Get number of events in the database.
+     *
+     * @return the flow on the list of events.
+     */
+    @Query("SELECT COUNT(*) FROM event_table")
+    abstract fun getEventsCount(): Flow<Int>
+
+    /**
      * Get the list of events for a scenario ordered by priority.
      *
      * @param scenarioId the identifier of the scenario to get the events from.

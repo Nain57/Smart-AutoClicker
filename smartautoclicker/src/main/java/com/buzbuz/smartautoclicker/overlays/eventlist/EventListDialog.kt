@@ -116,6 +116,18 @@ class EventListDialog(
                         }
                     }
                 }
+
+                launch {
+                    viewModel?.copyButtonIsVisible?.collect { isVisible ->
+                        if (isVisible) {
+                            buttonsViewBinding.btnCopyEvent.visibility = View.VISIBLE
+                            buttonsViewBinding.separatorCopyEvent.visibility = View.VISIBLE
+                        } else {
+                            buttonsViewBinding.btnCopyEvent.visibility = View.GONE
+                            buttonsViewBinding.separatorCopyEvent.visibility = View.GONE
+                        }
+                    }
+                }
             }
         }
     }
@@ -173,8 +185,6 @@ class EventListDialog(
             buttonsViewBinding.apply {
                 separatorNewEvent.visibility = View.VISIBLE
                 btnNewEvent.visibility = View.VISIBLE
-                separatorCopyEvent.visibility = View.VISIBLE
-                btnCopyEvent.visibility = View.VISIBLE
                 if (eventAdapter.itemCount > 1) {
                     separatorMoveEvents.visibility = View.VISIBLE
                     btnMoveEvents.visibility = View.VISIBLE
@@ -197,8 +207,6 @@ class EventListDialog(
             buttonsViewBinding.apply {
                 separatorNewEvent.visibility = View.GONE
                 btnNewEvent.visibility = View.GONE
-                separatorCopyEvent.visibility = View.GONE
-                btnCopyEvent.visibility = View.GONE
                 separatorMoveEvents.visibility = View.GONE
                 btnMoveEvents.visibility = View.GONE
                 btnScenarioSettings.visibility = View.GONE

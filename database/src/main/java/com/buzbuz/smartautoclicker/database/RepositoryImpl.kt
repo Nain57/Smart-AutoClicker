@@ -113,8 +113,9 @@ internal class RepositoryImpl internal constructor(
         endConditionUpdater.refreshUpdateValues(old, new)
 
         endConditionDao.update(endConditionUpdater)
-        println("TOTO DONE")
     }
+
+    override fun getEventCount(): Flow<Int> = eventDao.getEventsCount()
 
     override fun getEventList(scenarioId: Long): Flow<List<Event>> =
         eventDao.getEvents(scenarioId).mapList { it.toEvent() }

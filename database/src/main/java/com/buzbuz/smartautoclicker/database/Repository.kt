@@ -115,6 +115,12 @@ interface Repository {
     suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndCondition>)
 
     /**
+     * Get the total number of events in the database.
+     * @return a flow on the total number of events.
+     */
+    fun getEventCount(): Flow<Int>
+
+    /**
      * Get the list of events for a given scenario.
      * Note that those events will not have their actions/conditions, use [getCompleteEventList] for that.
      *

@@ -31,13 +31,7 @@ import com.buzbuz.smartautoclicker.overlays.utils.newDefaultEvent
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -84,6 +78,12 @@ class EventListModel(context: Context) : OverlayViewModel(context) {
     private val _uiMode = MutableStateFlow(EDITION)
     /** Current Ui mode of the dialog. */
     val uiMode: StateFlow<Int> = _uiMode
+
+    /** Tells if the copy button should be visible or not. */
+    val copyButtonIsVisible = _uiMode
+        .combine(repository.getEventCount()) { uiMode, eventCount ->
+            uiMode == EDITION && eventCount > 0
+        }
 
     /**
      * Set a scenario for this [EventListModel].
