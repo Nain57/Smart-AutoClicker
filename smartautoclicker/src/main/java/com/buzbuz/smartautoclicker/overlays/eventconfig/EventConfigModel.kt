@@ -100,8 +100,6 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
     val eventName: Flow<String?> = configuredEvent.map { it?.name }.take(1)
     /** The event condition operator currently edited by the user. */
     val conditionOperator: Flow<Int?> = configuredEvent.map { it?.conditionOperator }
-    /** The number of times to execute this event before ending the scenario. */
-    val stopAfter: Flow<Int?> = configuredEvent.map { it?.stopAfter }.take(1)
     /** Tells if the configured event is valid and can be saved. */
     val isValidEvent: Flow<Boolean> = configuredEvent.map { event ->
         event != null && event.name.isNotEmpty() && !event.actions.isNullOrEmpty() && !event.conditions.isNullOrEmpty()
@@ -318,16 +316,6 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
 
         onBitmapLoaded.invoke(null)
         return null
-    }
-
-    /**
-     * Set the configured number of executions for this event.
-     * @param stopAfter the number of executions for this event.
-     */
-    fun setEventStopAfterExec(stopAfter: Int?) {
-        configuredEvent.value?.let { event ->
-            configuredEvent.value = event.copy(stopAfter = stopAfter)
-        } ?: throw IllegalStateException("Can't set executions before scenario end, event is null!")
     }
 }
 

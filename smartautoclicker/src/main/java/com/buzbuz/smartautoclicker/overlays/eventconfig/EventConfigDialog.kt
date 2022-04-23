@@ -140,16 +140,6 @@ class EventConfigDialog(
                 })
             }
 
-            editStopAfter.apply {
-                setSelectAllOnFocus(true)
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        val stopAfter = viewBinding.editStopAfter.text.toString()
-                        viewModel?.setEventStopAfterExec(if (stopAfter.isNotEmpty()) stopAfter.toInt() else null)
-                    }
-                })
-            }
-
             listConditions.adapter = conditionsAdapter
             listActions.adapter = actionsAdapter
             itemTouchHelper.attachToRecyclerView(listActions)
@@ -213,16 +203,6 @@ class EventConfigDialog(
 
                 launch {
                     subOverlayViewModel?.subOverlayRequest?.collect { updateSubOverlay(it) }
-                }
-
-                launch {
-                    viewModel?.stopAfter?.collect { stopAfter ->
-                        viewBinding.editStopAfter.apply {
-                            val stopAfterText = stopAfter?.toString()
-                            setText(stopAfterText)
-                            setSelection(stopAfterText?.length ?: 0)
-                        }
-                    }
                 }
             }
         }
