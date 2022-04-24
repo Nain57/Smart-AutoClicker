@@ -29,6 +29,9 @@
     <string name="default_pause_name">Wait</string>
     <integer name="default_pause_duration">50</integer>
 
+    <string name="default_intent_name">Intent</string>
+    <bool name="default_intent_isAdvanced">false</bool>
+
     <string name="default_condition_name">Condition</string>
     <integer name="default_condition_threshold">4</integer>
 </resources>

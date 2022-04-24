@@ -28,11 +28,7 @@ import com.buzbuz.smartautoclicker.database.domain.AND
 import com.buzbuz.smartautoclicker.database.domain.Condition
 import com.buzbuz.smartautoclicker.database.domain.Event
 import com.buzbuz.smartautoclicker.database.domain.OR
-import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
-import com.buzbuz.smartautoclicker.overlays.utils.newDefaultClick
-import com.buzbuz.smartautoclicker.overlays.utils.newDefaultCondition
-import com.buzbuz.smartautoclicker.overlays.utils.newDefaultPause
-import com.buzbuz.smartautoclicker.overlays.utils.newDefaultSwipe
+import com.buzbuz.smartautoclicker.overlays.utils.*
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -147,6 +143,7 @@ class EventConfigModel(context: Context) : OverlayViewModel(context) {
                 is ActionTypeChoice.Click -> newDefaultClick(context, event.id)
                 is ActionTypeChoice.Swipe -> newDefaultSwipe(context, event.id)
                 is ActionTypeChoice.Pause -> newDefaultPause(context, event.id)
+                is ActionTypeChoice.Intent -> newDefaultIntent(context, event.id)
             }
 
         } ?: throw IllegalStateException("Can't create an action, event is null!")
@@ -343,4 +340,6 @@ sealed class ActionTypeChoice(title: Int, iconId: Int?): DialogChoice(title, ico
     object Swipe : ActionTypeChoice(R.string.dialog_action_type_swipe, R.drawable.ic_swipe)
     /** Pause Action choice. */
     object Pause : ActionTypeChoice(R.string.dialog_action_type_pause, R.drawable.ic_wait)
+    /** Intent Action choice. */
+    object Intent : ActionTypeChoice(R.string.dialog_action_type_intent, R.drawable.ic_intent)
 }
