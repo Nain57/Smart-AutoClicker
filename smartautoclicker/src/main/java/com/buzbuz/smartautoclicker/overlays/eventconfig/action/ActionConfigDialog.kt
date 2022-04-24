@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 
 import kotlinx.coroutines.launch
+import java.lang.UnsupportedOperationException
 
 /**
  * [ActionConfigDialog] implementation for displaying an event action and providing a button to delete it.
@@ -123,7 +124,7 @@ class ActionConfigDialog(
                             is ActionConfigModel.ClickActionValues -> setupClickUi(actionValues)
                             is ActionConfigModel.SwipeActionValues -> setupSwipeUi(actionValues)
                             is ActionConfigModel.PauseActionValues -> setupPauseUi(actionValues)
-                            is ActionConfigModel.IntentActionValues ->
+                            is ActionConfigModel.IntentActionValues -> throw UnsupportedOperationException()
                         }
                     }
                 }
