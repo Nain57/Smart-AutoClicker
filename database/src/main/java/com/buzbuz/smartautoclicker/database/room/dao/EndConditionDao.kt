@@ -42,16 +42,19 @@ internal abstract class EndConditionDao {
 
     /**
      * Update an end condition in the database.
-     * Execute the add, update and remove actions in a transaction according to the [endConditionUpdater].
+     * Execute the add, update and remove end conditions operations.
      *
-     * @param endConditionUpdater contains the list update information for the end conditions.
-     *                       [EntityListUpdater.refreshUpdateValues] must have been called first.
+     * @param scenarioId the unique identifier of the scenario for the updated end conditions.
+     * @param endConditions the new end conditions for this scenario.
      */
     @Transaction
-    open suspend fun update(endConditionUpdater: EntityListUpdater<EndConditionEntity, Long>) {
-        add(endConditionUpdater.toBeAdded)
-        update(endConditionUpdater.toBeUpdated)
-        delete(endConditionUpdater.toBeRemoved)
+    open suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndConditionEntity>) {
+        EndConditionsUpdater.let {
+            it.refreshUpdateValues(getEndConditions(scenarioId), endConditions)
+            add(it.toBeAdded)
+            update(it.toBeUpdated)
+            delete(it.toBeRemoved)
+        }
     }
 
     /**

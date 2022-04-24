@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.database.domain
 
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ActionType
+import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
 
 /** Base for for all possible actions for en Event. */
 sealed class Action {
@@ -31,7 +32,7 @@ sealed class Action {
     /** @param name the name of this action. */
     abstract fun setActionName(name: String)
     /** @return the entity equivalent of this action. */
-    internal abstract fun toEntity(): ActionEntity
+    internal abstract fun toEntity(): CompleteActionEntity
     /** Cleanup all ids contained in this action. Ideal for copying. */
     internal abstract fun cleanUpIds()
     /** @return creates a deep copy of this action. */
@@ -64,18 +65,21 @@ sealed class Action {
         override fun getActionName(): String? = name
         override fun setActionName(name: String) { this.name = name }
 
-        override fun toEntity(): ActionEntity {
+        override fun toEntity(): CompleteActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Click is incomplete.")
 
-            return ActionEntity(
-                id = id,
-                eventId = eventId,
-                name = name!!,
-                type = ActionType.CLICK,
-                pressDuration = pressDuration,
-                x = x,
-                y = y,
-                clickOnCondition = clickOnCondition,
+            return CompleteActionEntity(
+                action = ActionEntity(
+                    id = id,
+                    eventId = eventId,
+                    name = name!!,
+                    type = ActionType.CLICK,
+                    pressDuration = pressDuration,
+                    x = x,
+                    y = y,
+                    clickOnCondition = clickOnCondition,
+                ),
+                intentExtras = emptyList(),
             )
         }
 
@@ -118,19 +122,22 @@ sealed class Action {
         override fun getActionName(): String? = name
         override fun setActionName(name: String) { this.name = name }
 
-        override fun toEntity(): ActionEntity {
+        override fun toEntity(): CompleteActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Swipe is incomplete.")
 
-            return ActionEntity(
-                id = id,
-                eventId = eventId,
-                name = name!!,
-                type = ActionType.SWIPE,
-                swipeDuration = swipeDuration,
-                fromX = fromX,
-                fromY = fromY,
-                toX = toX,
-                toY = toY,
+            return CompleteActionEntity(
+                action = ActionEntity(
+                    id = id,
+                    eventId = eventId,
+                    name = name!!,
+                    type = ActionType.SWIPE,
+                    swipeDuration = swipeDuration,
+                    fromX = fromX,
+                    fromY = fromY,
+                    toX = toX,
+                    toY = toY,
+                ),
+                intentExtras = emptyList(),
             )
         }
 
@@ -164,15 +171,18 @@ sealed class Action {
         override fun getActionName(): String? = name
         override fun setActionName(name: String) { this.name = name }
 
-        override fun toEntity(): ActionEntity {
-            if (!isComplete()) throw IllegalStateException("Can't transform to entity, Swipe is incomplete.")
+        override fun toEntity(): CompleteActionEntity {
+            if (!isComplete()) throw IllegalStateException("Can't transform to entity, Pause is incomplete.")
 
-            return ActionEntity(
-                id = id,
-                eventId = eventId,
-                name = name!!,
-                type = ActionType.PAUSE,
-                pauseDuration = pauseDuration,
+            return CompleteActionEntity(
+                action = ActionEntity(
+                    id = id,
+                    eventId = eventId,
+                    name = name!!,
+                    type = ActionType.PAUSE,
+                    pauseDuration = pauseDuration,
+                ),
+                intentExtras = emptyList(),
             )
         }
 
@@ -183,13 +193,74 @@ sealed class Action {
 
         override fun deepCopy(): Pause = copy(name = "" + name)
     }
+
+    /**
+     * Intent action.
+     *
+     * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+     * @param eventId the identifier of the event for this action.
+     * @param name the name of the action.
+     * @param isAdvanced
+     * @param intentAction
+     * @param flags
+     * @param extras
+     */
+    data class Intent(
+        var id: Long = 0,
+        var eventId: Long,
+        var name: String? = null,
+        var isAdvanced: Boolean? = null,
+        var intentAction: String? = null,
+        var flags: Int? = null,
+        val extras: MutableList<IntentExtra<out Any>>? = null,
+    ) : Action() {
+
+        override fun isComplete(): Boolean =
+            name != null && isAdvanced != null && intentAction != null && flags != null
+
+        override fun getIdentifier(): Long = id
+        override fun getActionName(): String? = name
+        override fun setActionName(name: String) { this.name = name }
+
+        override fun toEntity(): CompleteActionEntity {
+            if (!isComplete()) throw IllegalStateException("Can't transform to entity, Intent is incomplete.")
+
+            return CompleteActionEntity(
+                action = ActionEntity(
+                    id = id,
+                    eventId = eventId,
+                    name = name!!,
+                    type = ActionType.INTENT,
+                    isAdvanced = isAdvanced,
+                    intentAction = intentAction,
+                    flags = flags,
+                ),
+                intentExtras = extras!!.map { it.toEntity() },
+            )
+        }
+
+        override fun cleanUpIds() {
+            id = 0
+            eventId = 0
+            extras?.forEach { it.cleanUpIds() }
+        }
+
+        override fun deepCopy(): Intent = copy(name = "" + name)
+    }
 }
 
 /** Convert an Action entity into a Domain Action. */
-internal fun ActionEntity.toAction(): Action {
-    return when (type) {
-        ActionType.CLICK -> Action.Click(id, eventId, name, pressDuration!!, x, y, clickOnCondition!!)
-        ActionType.SWIPE -> Action.Swipe(id, eventId, name, swipeDuration!!, fromX!!, fromY!!, toX!!, toY!!)
-        ActionType.PAUSE -> Action.Pause(id, eventId, name, pauseDuration!!)
+internal fun CompleteActionEntity.toAction(): Action {
+    return when (action.type) {
+        ActionType.CLICK -> Action.Click(action.id, action.eventId, action.name, action.pressDuration!!,
+            action.x, action.y, action.clickOnCondition!!)
+
+        ActionType.SWIPE -> Action.Swipe(action.id, action.eventId, action.name, action.swipeDuration!!,
+            action.fromX!!, action.fromY!!, action.toX!!, action.toY!!)
+
+        ActionType.PAUSE -> Action.Pause(action.id, action.eventId, action.name, action.pauseDuration!!)
+
+        ActionType.INTENT -> Action.Intent(action.id, action.eventId, action.name, action.isAdvanced,
+            action.intentAction, action.flags, intentExtras.map { it.toIntentExtra() }.toMutableList() )
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -96,7 +96,7 @@ internal fun CompleteEventEntity.toEvent() = Event(
     conditionOperator = event.conditionOperator,
     priority = event.priority,
     stopAfter = event.stopAfter,
-    actions = actions.sortedBy { it.priority }.map { it.toAction() }.toMutableList(),
+    actions = actions.sortedBy { it.action.priority }.map { it.toAction() }.toMutableList(),
     conditions = conditions.map { it.toCondition() }.toMutableList(),
 )
 

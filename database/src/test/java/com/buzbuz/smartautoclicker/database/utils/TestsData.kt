@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.database.utils
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.database.domain.*
@@ -124,7 +125,11 @@ internal object TestsData {
         eventId: Long,
         priority: Int,
         clickOnCondition: Boolean = x != null && y != null,
-    ) = ActionEntity(id, eventId, priority, name, ActionType.CLICK, x = x, y = y, clickOnCondition = clickOnCondition, pressDuration = pressDuration)
+    ) = CompleteActionEntity(
+        action = ActionEntity(id, eventId, priority, name, ActionType.CLICK, x = x, y = y,
+            clickOnCondition = clickOnCondition, pressDuration = pressDuration),
+        intentExtras = emptyList(),
+    )
 
     fun getNewClick(
         id: Long = CLICK_ID,
@@ -157,8 +162,11 @@ internal object TestsData {
         toY: Int = SWIPE_TO_Y_POSITION,
         eventId: Long,
         priority: Int,
-    ) = ActionEntity(id, eventId, priority, name, ActionType.SWIPE, fromX = fromX, fromY = fromY, toX = toX, toY = toY,
-        swipeDuration = swipeDuration)
+    ) = CompleteActionEntity(
+        action = ActionEntity(id, eventId, priority, name, ActionType.SWIPE, fromX = fromX, fromY = fromY, toX = toX,
+            toY = toY, swipeDuration = swipeDuration),
+        intentExtras = emptyList(),
+    )
 
     fun getNewSwipe(
         id: Long = SWIPE_ID,
@@ -184,7 +192,10 @@ internal object TestsData {
         pauseDuration: Long = PAUSE_DURATION,
         eventId: Long,
         priority: Int,
-    ) = ActionEntity(id, eventId, priority, name, ActionType.PAUSE, pauseDuration = pauseDuration)
+    ) = CompleteActionEntity(
+        action = ActionEntity(id, eventId, priority, name, ActionType.PAUSE, pauseDuration = pauseDuration),
+        intentExtras = emptyList(),
+    )
 
     fun getNewPause(
         id: Long = PAUSE_ID,
@@ -193,6 +204,63 @@ internal object TestsData {
         eventId: Long,
     ) = Action.Pause(id, eventId, name, pauseDuration)
 
+
+    /* ------- Intent Action Data ------- */
+
+    const val INTENT_ID = 149L
+    const val INTENT_NAME = "Intent name"
+    const val INTENT_IS_ADVANCED = true
+    const val INTENT_ACTION = "com.toto.tata.ACTION_TOTO"
+    const val INTENT_FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+
+    fun getNewIntentEntity(
+        id: Long = INTENT_ID,
+        name: String = INTENT_NAME,
+        isAdvanced: Boolean = INTENT_IS_ADVANCED,
+        action: String = INTENT_ACTION,
+        flags: Int = INTENT_FLAGS,
+        eventId: Long,
+        priority: Int,
+        intentExtras: List<IntentExtraEntity> = emptyList()
+    ) = CompleteActionEntity(
+        action = ActionEntity(id, eventId, priority, name, ActionType.INTENT, isAdvanced = isAdvanced,
+            intentAction = action, flags = flags),
+        intentExtras = intentExtras,
+    )
+
+    fun getNewIntent(
+        id: Long = INTENT_ID,
+        name: String? = INTENT_NAME,
+        isAdvanced: Boolean = INTENT_IS_ADVANCED,
+        action: String = INTENT_ACTION,
+        flags: Int = INTENT_FLAGS,
+        eventId: Long,
+        intentExtras: MutableList<IntentExtra<out Any>> = mutableListOf()
+    ) = Action.Intent(id, eventId, name, isAdvanced, action, flags, intentExtras)
+
+
+    /* ------- Intent Extra Data ------- */
+
+    const val INTENT_EXTRA_ID = 547L
+    const val INTENT_EXTRA_ACTION_ID = INTENT_ID
+    val INTENT_EXTRA_TYPE = IntentExtraType.INTEGER
+    const val INTENT_EXTRA_KEY = "toto"
+
+    fun getNewIntentExtraEntity(
+        id: Long = INTENT_EXTRA_ID,
+        actionId: Long = INTENT_EXTRA_ACTION_ID,
+        type: IntentExtraType = INTENT_EXTRA_TYPE,
+        key: String = INTENT_EXTRA_KEY,
+        value: String,
+    ) = IntentExtraEntity(id, actionId, type, key, value)
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getNewIntentExtra(
+        id: Long = INTENT_EXTRA_ID,
+        actionId: Long = INTENT_EXTRA_ACTION_ID,
+        key: String = INTENT_EXTRA_KEY,
+        value: T,
+    ) = IntentExtra(id, actionId, key, (value as T))
 
     /* ------- Condition Data ------- */
 

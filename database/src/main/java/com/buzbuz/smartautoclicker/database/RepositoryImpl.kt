@@ -21,10 +21,6 @@ import com.buzbuz.smartautoclicker.database.domain.*
 import com.buzbuz.smartautoclicker.database.domain.toEvent
 import com.buzbuz.smartautoclicker.database.domain.toScenario
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.dao.EntityListUpdater
-import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
@@ -51,22 +47,6 @@ internal class RepositoryImpl internal constructor(
     private val conditionsDao = database.conditionDao()
     /** The Dao for accessing the scenario end conditions. */
     private val endConditionDao = database.endConditionDao()
-
-    /** List updater for the list of actions. */
-    private val actionsUpdater = EntityListUpdater<ActionEntity, Long>(
-        defaultPrimaryKey = 0L,
-        primaryKeySupplier = { action -> action.id },
-    )
-    /** List updater for the list of conditions. */
-    private val conditionsUpdater = EntityListUpdater<ConditionEntity, Long>(
-        defaultPrimaryKey = 0L,
-        primaryKeySupplier = { condition -> condition.id },
-    )
-    /** List updater for the list of end condition. */
-    private val endConditionUpdater = EntityListUpdater<EndConditionEntity, Long>(
-        defaultPrimaryKey = 0L,
-        primaryKeySupplier = { endCondition -> endCondition.id },
-    )
 
     override val scenarios = scenarioDao.getScenariosWithEvents().mapList { it.toScenario() }
 
@@ -107,12 +87,7 @@ internal class RepositoryImpl internal constructor(
     }
 
     override suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndCondition>) {
-        val old = endConditionDao.getEndConditions(scenarioId)
-        val new = endConditions.map { it.toEntity() }
-
-        endConditionUpdater.refreshUpdateValues(old, new)
-
-        endConditionDao.update(endConditionUpdater)
+        endConditionDao.updateEndConditions(scenarioId, endConditions.map { it.toEntity() })
     }
 
     override fun getEventCount(): Flow<Int> = eventDao.getEventsCount()
@@ -150,24 +125,10 @@ internal class RepositoryImpl internal constructor(
         }
 
         event.toCompleteEntity()?.let { eventEntity ->
-            // Update action priorities
-            eventEntity.actions.forEachIndexed { index, actionEntity ->
-                actionEntity.priority = index
-            }
-
-            // Get current database values
-            val oldActions = eventDao.getActions(eventEntity.event.id)
-            val oldConditions = conditionsDao.getConditions(eventEntity.event.id)
-
-            // Refresh the updaters
-            actionsUpdater.refreshUpdateValues(oldActions, eventEntity.actions)
-            conditionsUpdater.refreshUpdateValues(oldConditions, eventEntity.conditions)
-
             // Update database values
-            eventDao.updateEvent(eventEntity.event, actionsUpdater, conditionsUpdater)
-
+            val deletedConditions = eventDao.updateCompleteEvent(eventEntity)
             // Remove the conditions bitmap if unused
-            clearRemovedConditionsBitmaps(conditionsUpdater.toBeRemoved.map { it.path })
+            clearRemovedConditionsBitmaps(deletedConditions.map { it.path })
         }
     }
 

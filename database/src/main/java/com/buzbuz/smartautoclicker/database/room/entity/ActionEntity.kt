@@ -16,12 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.database.room.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
+import androidx.room.*
 
 /**
  * Entity defining an action from an event.
@@ -54,6 +49,10 @@ import androidx.room.TypeConverter
  *                      Null for others [ActionType].
  *
  * @param pauseDuration [ActionType.PAUSE] only: the duration of the pause in milliseconds.
+ *
+ * @param isAdvanced [ActionType.INTENT] only: true if the user have picked advanced intent config, false if simple.
+ * @param intentAction [ActionType.INTENT] only: action for the intent.
+ * @param flags [ActionType.INTENT] only: flags for the intent as defined in [android.content.Intent].
  */
 @Entity(
     tableName = "action_table",
@@ -66,7 +65,7 @@ import androidx.room.TypeConverter
     )]
 )
 internal data class ActionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "priority") var priority: Int = 0,
     @ColumnInfo(name = "name") val name: String,
@@ -87,6 +86,11 @@ internal data class ActionEntity(
 
     // ActionType.PAUSE
     @ColumnInfo(name = "pauseDuration") val pauseDuration: Long? = null,
+
+    // ActionType.INTENT
+    @ColumnInfo(name = "isAdvanced") val isAdvanced: Boolean? = null,
+    @ColumnInfo(name = "intent_action") val intentAction: String? = null,
+    @ColumnInfo(name = "flags") val flags: Int? = null,
 )
 
 /**
@@ -103,6 +107,8 @@ internal enum class ActionType {
     SWIPE,
     /** A pause, waiting before the next action. */
     PAUSE,
+    /** An Android Intent, allowing to interact with other applications. */
+    INTENT,
 }
 
 /** Type converter to read/write the [ActionType] into the database. */
@@ -113,3 +119,20 @@ internal class ActionTypeStringConverter {
     fun toString(date: ActionType): String = date.toString()
 }
 
+/**
+ * Entity embedding an intent action and its extras.
+ *
+ * Automatically do the junction between action_table and intent_extra_table, and provide this
+ * representation of the one to many relations between scenario to actions and conditions entities.
+ *
+ * @param action
+ * @param intentExtras
+ */
+internal data class CompleteActionEntity(
+    @Embedded val action: ActionEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "action_id"
+    )
+    val intentExtras: List<IntentExtraEntity>,
+)

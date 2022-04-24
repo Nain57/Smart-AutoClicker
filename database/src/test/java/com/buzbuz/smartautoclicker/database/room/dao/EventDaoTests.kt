@@ -22,9 +22,7 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -73,7 +71,13 @@ class EventDaoTests {
     fun addEvent() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = listOf(TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0)),
+            actions = listOf(
+                TestsData.getNewIntentEntity(
+                    eventId = TestsData.EVENT_ID,
+                    priority = 0,
+                    intentExtras = mutableListOf(TestsData.getNewIntentExtraEntity(value = "20"))
+                )
+            ),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID))
         )
         database.eventDao().addCompleteEvent(completeEvent)
@@ -85,14 +89,21 @@ class EventDaoTests {
     fun addEvent_setIds() = runTest {
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = listOf(TestsData.getNewPauseEntity(eventId = 0L, priority = 0)),
+            actions = listOf(
+                TestsData.getNewIntentEntity(
+                    eventId = 0L,
+                    priority = 0,
+                    intentExtras = mutableListOf(TestsData.getNewIntentExtraEntity(id = 0, actionId = 0, value = "20"))
+                )
+            ),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = 0L))
         )
         database.eventDao().addCompleteEvent(completeEvent)
 
         val databaseEvent = database.eventDao().getCompleteEvents(TestsData.SCENARIO_ID).first()[0]
-        assertEquals(databaseEvent.event.id, databaseEvent.actions[0].eventId)
+        assertEquals(databaseEvent.event.id, databaseEvent.actions[0].action.eventId)
         assertEquals(databaseEvent.event.id, databaseEvent.conditions[0].eventId)
+        assertEquals(databaseEvent.actions[0].action.id, databaseEvent.actions[0].intentExtras[0].actionId)
     }
 
     @Test
@@ -109,9 +120,9 @@ class EventDaoTests {
         database.eventDao().addCompleteEvent(completeEvent)
 
         val databaseEvent = database.eventDao().getEvent(TestsData.EVENT_ID)
-        databaseEvent.actions.forEachIndexed { index, action ->
-            assertEquals("Invalid action position", index + 1, action.id.toInt())
-            assertEquals("Invalid action priority value", index, action.priority)
+        databaseEvent.actions.forEachIndexed { index, completeAction ->
+            assertEquals("Invalid action position", index + 1, completeAction.action.id.toInt())
+            assertEquals("Invalid action priority value", index, completeAction.action.priority)
         }
     }
 
@@ -134,6 +145,7 @@ class EventDaoTests {
         // First add the old event
         val updatedId = 13L
         val deletedId = 58L
+        val intentId = 875L
         val oldEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(
                 id = TestsData.EVENT_ID,
@@ -144,6 +156,7 @@ class EventDaoTests {
             actions = listOf(
                 TestsData.getNewPauseEntity(id = updatedId, eventId = 0L, priority = 0, pauseDuration = 100L),
                 TestsData.getNewPauseEntity(id = deletedId, eventId = 0L, priority = 1),
+                TestsData.getNewIntentEntity(id = intentId, eventId = 0L, priority = 2, intentExtras = emptyList()),
             ),
             conditions = listOf(
                 TestsData.getNewConditionEntity(id = updatedId, eventId = 0L, path="titi"),
@@ -153,6 +166,8 @@ class EventDaoTests {
         database.eventDao().addCompleteEvent(oldEvent)
 
         // Then update with the new one.
+        val updatedExtraList = mutableListOf(TestsData.getNewIntentExtraEntity(value = "20"))
+        val updatedIntent = TestsData.getNewIntentEntity(id = intentId, eventId =  TestsData.EVENT_ID, priority = 2, intentExtras = updatedExtraList)
         val updatedAction = TestsData.getNewPauseEntity(id = updatedId, eventId = TestsData.EVENT_ID, priority = 1, pauseDuration = 1000L)
         val updatedCondition = TestsData.getNewConditionEntity(id = updatedId, eventId = TestsData.EVENT_ID, path="tutu")
         val newEvent = CompleteEventEntity(
@@ -165,30 +180,27 @@ class EventDaoTests {
             actions = listOf(
                 TestsData.getNewPauseEntity(id = DEFAULT_PRIMARY_KEY, eventId = 0L, priority = 0),
                 updatedAction,
+                updatedIntent,
             ),
             conditions = listOf(
                 TestsData.getNewConditionEntity(id = updatedId, eventId = TestsData.EVENT_ID, path="tutu"),
                 TestsData.getNewConditionEntity(id = DEFAULT_PRIMARY_KEY, eventId = 0L),
             )
         )
-        val actionUpdater = EntityListUpdater<ActionEntity, Long>(DEFAULT_PRIMARY_KEY) { it.id }.apply {
-            refreshUpdateValues(oldEvent.actions, newEvent.actions)
-        }
-        val conditionUpdater = EntityListUpdater<ConditionEntity, Long>(DEFAULT_PRIMARY_KEY) { it.id }.apply {
-            refreshUpdateValues(oldEvent.conditions, newEvent.conditions)
-        }
-        database.eventDao().updateEvent(newEvent.event, actionUpdater, conditionUpdater)
+
+        database.eventDao().updateCompleteEvent(newEvent)
 
         val databaseEvent = database.eventDao().getEvent(TestsData.EVENT_ID)
         assertEquals(newEvent.event.name, databaseEvent.event.name)
         assertEquals(newEvent.actions.size, databaseEvent.actions.size)
         databaseEvent.actions.forEach {
-            if (it.id == updatedId) assertEquals(updatedAction.pauseDuration, it.pauseDuration)
+            if (it.action.id == updatedId) assertEquals(updatedAction.action.pauseDuration, it.action.pauseDuration)
         }
         assertEquals(newEvent.conditions.size, databaseEvent.conditions.size)
         databaseEvent.conditions.forEach {
             if (it.id == updatedId) assertEquals(updatedCondition.path, it.path)
         }
+        assertEquals(newEvent.actions[0].intentExtras, databaseEvent.actions[0].intentExtras)
     }
 
     @Test
@@ -232,7 +244,7 @@ class EventDaoTests {
         ))
 
         assertEquals(
-            actions,
+            actions.map { it.action },
             database.eventDao().getActions(TestsData.EVENT_ID)
         )
     }

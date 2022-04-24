@@ -63,7 +63,7 @@ class ConditionDaoTests {
 
     @Test
     fun getConditions_none() = runTest {
-        assertEquals(emptyList<ConditionEntity>(), database.conditionDao().getConditions(TestsData.EVENT_ID))
+        assertEquals(emptyList<ConditionEntity>(), database.eventDao().getConditions(TestsData.EVENT_ID))
     }
 
     @Test
@@ -82,7 +82,7 @@ class ConditionDaoTests {
 
         assertEquals(
             completeEvent.conditions,
-            database.conditionDao().getConditions(TestsData.EVENT_ID)
+            database.eventDao().getConditions(TestsData.EVENT_ID)
         )
     }
 

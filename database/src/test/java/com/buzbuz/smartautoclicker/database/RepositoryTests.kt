@@ -43,11 +43,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.*
 
-import org.mockito.Mockito.clearInvocations
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.Mockito.`when` as mockWhen
 
@@ -175,11 +172,10 @@ class RepositoryTests {
 
     @Test
     fun updateEndCondition() = runTest {
-        val initialEntity = TestsData.getNewEndConditionEntity(executions = 1)
         val endCondition = TestsData.getNewEndCondition(executions = 3)
-
+        val endConditionEntity = TestsData.getNewEndConditionEntity(executions = 3)
         repository.updateEndConditions(endCondition.scenarioId, listOf(endCondition))
-        verify(mockEndConditionDao).getEndConditions(initialEntity.scenarioId)
+        verify(mockEndConditionDao).updateEndConditions(endCondition.scenarioId, listOf(endConditionEntity))
     }
 
     @Test
@@ -376,8 +372,7 @@ class RepositoryTests {
             )
         )
         mockWhen(mockBitmapManager.saveBitmap(bitmapWithoutPath)).thenReturn("toto")
-        mockWhen(mockConditionDao.getConditions(TestsData.EVENT_ID)).thenReturn(emptyList())
-        mockWhen(mockEventDao.getActions(TestsData.EVENT_ID)).thenReturn(emptyList())
+        mockWhen(mockEventDao.updateCompleteEvent(anyNotNull())).thenReturn(emptyList())
 
         repository.updateEvent(event)
 

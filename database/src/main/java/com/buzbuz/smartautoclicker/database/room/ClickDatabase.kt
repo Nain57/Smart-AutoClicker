@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.database.room
 
 import android.content.Context
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -32,6 +33,8 @@ import com.buzbuz.smartautoclicker.database.room.entity.ActionTypeStringConverte
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
+import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
+import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraTypeStringConverter
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.database.room.migrations.*
 
@@ -51,11 +54,15 @@ import com.buzbuz.smartautoclicker.database.room.migrations.*
         ScenarioEntity::class,
         ConditionEntity::class,
         EndConditionEntity::class,
+        IntentExtraEntity::class,
     ],
-    version = 7,
-    exportSchema = true
+    version = 8,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration (from = 7, to = 8)
+    ]
 )
-@TypeConverters(ActionTypeStringConverter::class)
+@TypeConverters(ActionTypeStringConverter::class, IntentExtraTypeStringConverter::class)
 internal abstract class ClickDatabase : RoomDatabase() {
 
     /** The data access object for the scenario in the database. */

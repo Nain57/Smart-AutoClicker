@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,10 +79,11 @@ internal data class EventEntity(
 internal data class CompleteEventEntity(
     @Embedded val event: EventEntity,
     @Relation(
+        entity = ActionEntity::class,
         parentColumn = "id",
         entityColumn = "eventId"
     )
-    val actions: List<ActionEntity>,
+    val actions: List<CompleteActionEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "eventId"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -181,5 +181,59 @@ class ActionTests {
     fun pause_deepCopy() {
         val pause = TestsData.getNewPause(eventId = TestsData.EVENT_ID)
         assertEquals(pause, pause.deepCopy())
+    }
+
+    @Test
+    fun intent_toEntity() {
+        assertEquals(
+            TestsData.getNewIntentEntity(priority = 0, eventId = TestsData.EVENT_ID),
+            TestsData.getNewIntent(eventId = TestsData.EVENT_ID).toEntity()
+        )
+    }
+
+    @Test
+    fun intent_toDomain() {
+        assertEquals(
+            TestsData.getNewIntent(eventId = TestsData.EVENT_ID),
+            TestsData.getNewIntentEntity(priority = 0, eventId = TestsData.EVENT_ID).toAction(),
+        )
+    }
+
+    @Test
+    fun intent_getIdentifier() {
+        assertEquals(
+            TestsData.INTENT_ID,
+            TestsData.getNewIntent(eventId = TestsData.EVENT_ID).getIdentifier(),
+        )
+    }
+
+    @Test
+    fun intent_isComplete() {
+        assertTrue(TestsData.getNewIntent(eventId = TestsData.EVENT_ID).isComplete())
+    }
+
+    @Test
+    fun intent_isComplete_incomplete() {
+        assertFalse(TestsData.getNewIntent(eventId = TestsData.EVENT_ID, name = null).isComplete())
+    }
+
+    @Test
+    fun intent_cleanupIds() {
+        val intent = TestsData.getNewIntent(
+            eventId = TestsData.EVENT_ID,
+            intentExtras = mutableListOf(TestsData.getNewIntentExtra(value = 20))
+        )
+        intent.cleanUpIds()
+
+        assertEquals("Action id isn't cleaned", 0L, intent.id)
+        assertEquals("Event id isn't cleaned", 0L, intent.eventId)
+        assertEquals("Intent extra id isn't cleaned", 0L, intent.extras!![0].id)
+        assertEquals("Intent extra action id isn't cleaned", 0L, intent.extras!![0].actionId)
+    }
+
+    @Test
+    fun intent_deepCopy() {
+        val intent = TestsData.getNewIntent(eventId = TestsData.EVENT_ID)
+        assertEquals(intent, intent.deepCopy())
     }
 }

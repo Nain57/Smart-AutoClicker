@@ -32,7 +32,7 @@ internal interface ConditionDao {
      * @return the flow on the number of conditions.
      */
     @Query("SELECT COUNT(*) FROM condition_table")
-    abstract fun getConditionsCount(): Flow<Int>
+    fun getConditionsCount(): Flow<Int>
 
     /**
      * Get all conditions from all events.
@@ -41,15 +41,6 @@ internal interface ConditionDao {
      */
     @Query("SELECT * FROM condition_table")
     fun getAllConditions(): Flow<List<ConditionEntity>>
-
-    /**
-     * Get the list of conditions for a given event.
-     *
-     * @param eventId the identifier of the event to get the conditions from.
-     * @return the list of conditions for the event.
-     */
-    @Query("SELECT * FROM condition_table WHERE eventId=:eventId ORDER BY id")
-    suspend fun getConditions(eventId: Long): List<ConditionEntity>
 
     /**
      * Get the list of conditions path for a given event.

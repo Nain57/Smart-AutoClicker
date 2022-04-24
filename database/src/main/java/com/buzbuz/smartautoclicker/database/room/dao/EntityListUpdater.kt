@@ -16,6 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.database.room.dao
 
+import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
+import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
+import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
+
 /**
  * Helper class to update a list in the database.
  *
@@ -29,7 +34,7 @@ package com.buzbuz.smartautoclicker.database.room.dao
  *                          primary key (ex: Long = 0L).
  * @param primaryKeySupplier provides the item primary key.
  */
-internal class EntityListUpdater<E, K>(
+internal open class EntityListUpdater<E, K>(
     private val defaultPrimaryKey: K,
     private inline val primaryKeySupplier: (E) -> K,
 ) {
@@ -70,3 +75,24 @@ internal class EntityListUpdater<E, K>(
         })
     }
 }
+
+/** List updater for the list of actions. */
+internal object ActionsUpdater : EntityListUpdater<ActionEntity, Long>(
+    defaultPrimaryKey = 0L,
+    primaryKeySupplier = { action -> action.id },
+)
+/** List updater for the list of intent extras. */
+internal object IntentExtrasUpdater : EntityListUpdater<IntentExtraEntity, Long>(
+    defaultPrimaryKey = 0L,
+    primaryKeySupplier = { intentExtra -> intentExtra.id },
+)
+/** List updater for the list of conditions. */
+internal object ConditionsUpdater : EntityListUpdater<ConditionEntity, Long>(
+    defaultPrimaryKey = 0L,
+    primaryKeySupplier = { condition -> condition.id },
+)
+/** List updater for the list of end condition. */
+internal object EndConditionsUpdater : EntityListUpdater<EndConditionEntity, Long>(
+    defaultPrimaryKey = 0L,
+    primaryKeySupplier = { endCondition -> endCondition.id },
+)
