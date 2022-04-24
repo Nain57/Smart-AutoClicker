@@ -58,7 +58,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** The name of the action. */
     val name: Flow<String?> = configuredAction
-        .map { it?.getActionName() }
+        .map { it?.name }
         .take(1)
 
     /** Tells if the configured action is valid and can be saved. */

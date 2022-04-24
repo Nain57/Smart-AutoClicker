@@ -55,7 +55,7 @@ class ActionTests {
     fun click_getIdentifier() {
         assertEquals(
             TestsData.CLICK_ID,
-            TestsData.getNewClick(eventId = TestsData.EVENT_ID).getIdentifier(),
+            TestsData.getNewClick(eventId = TestsData.EVENT_ID).id,
         )
     }
 
@@ -104,7 +104,7 @@ class ActionTests {
     fun swipe_getIdentifier() {
         assertEquals(
             TestsData.SWIPE_ID,
-            TestsData.getNewSwipe(eventId = TestsData.EVENT_ID).getIdentifier(),
+            TestsData.getNewSwipe(eventId = TestsData.EVENT_ID).id,
         )
     }
 
@@ -154,7 +154,7 @@ class ActionTests {
     fun pause_getIdentifier() {
         assertEquals(
             TestsData.PAUSE_ID,
-            TestsData.getNewPause(eventId = TestsData.EVENT_ID).getIdentifier(),
+            TestsData.getNewPause(eventId = TestsData.EVENT_ID).id,
         )
     }
 
@@ -203,7 +203,7 @@ class ActionTests {
     fun intent_getIdentifier() {
         assertEquals(
             TestsData.INTENT_ID,
-            TestsData.getNewIntent(eventId = TestsData.EVENT_ID).getIdentifier(),
+            TestsData.getNewIntent(eventId = TestsData.EVENT_ID).id,
         )
     }
 

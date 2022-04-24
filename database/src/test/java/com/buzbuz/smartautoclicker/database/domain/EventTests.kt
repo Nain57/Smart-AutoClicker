@@ -146,7 +146,7 @@ class EventTests {
             assertEquals("Condition event id is not cleaned", 0L, condition.eventId)
         }
         completeEvent.actions!!.forEach { action ->
-            assertEquals("Action id is not cleaned", 0L, action.getIdentifier())
+            assertEquals("Action id is not cleaned", 0L, action.id)
         }
     }
 

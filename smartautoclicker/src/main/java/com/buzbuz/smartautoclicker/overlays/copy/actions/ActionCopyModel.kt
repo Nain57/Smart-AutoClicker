@@ -68,7 +68,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
         val allItems = mutableListOf<ActionCopyItem>()
 
         // First, add the actions from the current event
-        val eventItems = eventActions.sortedBy { it.getActionName() }.map { it.toActionItem() }.distinct()
+        val eventItems = eventActions.sortedBy { it.name }.map { it.toActionItem() }.distinct()
         if (eventItems.isNotEmpty()) allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
         allItems.addAll(eventItems)
 
@@ -79,7 +79,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             .apply {
                 removeIf { allItem ->
                     eventItems.find {
-                        allItem.action!!.getIdentifier() == it.action!!.getIdentifier() || allItem == it
+                        allItem.action!!.id == it.action!!.id || allItem == it
                     } != null
                 }
             }
@@ -97,7 +97,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
      */
     private fun getSearchedItems(dbActions: List<Action>, query: String): List<ActionCopyItem> = dbActions
         .filter { action ->
-            action.getActionName()!!.contains(query, true)
+            action.name!!.contains(query, true)
         }
         .map { it.toActionItem() }
         .distinct()
@@ -124,9 +124,9 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
      */
     fun getNewActionForCopy(action: Action): Action =
         when (action) {
-            is Action.Click -> action.copy(id = 0, name = "" + action.getActionName())
-            is Action.Swipe -> action.copy(id = 0, name = "" + action.getActionName())
-            is Action.Pause -> action.copy(id = 0, name = "" + action.getActionName())
+            is Action.Click -> action.copy(id = 0, name = "" + action.name)
+            is Action.Swipe -> action.copy(id = 0, name = "" + action.name)
+            is Action.Pause -> action.copy(id = 0, name = "" + action.name)
             is Action.Intent -> throw UnsupportedOperationException()
         }
 

@@ -67,7 +67,7 @@ object DiffUtilCallback: DiffUtil.ItemCallback<ActionCopyItem>(){
         when {
             oldItem is ActionCopyItem.HeaderItem && newItem is ActionCopyItem.HeaderItem -> true
             oldItem is ActionCopyItem.ActionItem && newItem is ActionCopyItem.ActionItem ->
-                oldItem.action!!.getIdentifier() == newItem.action!!.getIdentifier()
+                oldItem.action!!.id == newItem.action!!.id
             else -> false
         }
 

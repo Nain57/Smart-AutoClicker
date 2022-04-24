@@ -110,7 +110,7 @@ object ActionDiffUtilCallback: DiffUtil.ItemCallback<ActionListItem>() {
     override fun areItemsTheSame(oldItem: ActionListItem, newItem: ActionListItem): Boolean = when {
         oldItem is ActionListItem.AddActionItem && newItem is ActionListItem.AddActionItem -> true
         oldItem is ActionListItem.ActionItem && newItem is ActionListItem.ActionItem ->
-            oldItem.action.getIdentifier() == newItem.action.getIdentifier()
+            oldItem.action.id == newItem.action.id
         else -> false
     }
 
@@ -154,7 +154,7 @@ class ActionViewHolder(private val viewBinding: ItemActionCardBinding) : Recycle
     fun onBind(action: Action, actionClickedListener: (Int, Action) -> Unit) {
         viewBinding.apply {
             actionName.visibility = View.VISIBLE
-            actionName.text = action.getActionName()
+            actionName.text = action.name
             actionIcon.scaleType = ImageView.ScaleType.FIT_CENTER
             actionIcon.setImageResource(action.getIconRes())
         }

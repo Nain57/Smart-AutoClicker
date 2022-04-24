@@ -23,14 +23,15 @@ import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
 /** Base for for all possible actions for en Event. */
 sealed class Action {
 
+    /** The unique identifier for the action. Use 0 for creating a new action. Default value is 0. */
+    abstract var id: Long
+    /** The identifier of the event for this action. */
+    abstract var eventId: Long
+    /** The name of the action. */
+    abstract var name: String?
+
     /** @return true if this action is complete and can be transformed into its entity. */
-    internal abstract fun isComplete(): Boolean
-    /** @return the identifier of this action. */
-    abstract fun getIdentifier(): Long
-    /** @return the name of this action. */
-    abstract fun getActionName(): String?
-    /** @param name the name of this action. */
-    abstract fun setActionName(name: String)
+    internal open fun isComplete(): Boolean = name != null
     /** @return the entity equivalent of this action. */
     internal abstract fun toEntity(): CompleteActionEntity
     /** Cleanup all ids contained in this action. Ideal for copying. */
@@ -49,9 +50,9 @@ sealed class Action {
      * @param y the y position of the click.
      */
     data class Click(
-        var id: Long = 0,
-        var eventId: Long,
-        var name: String? = null,
+        override var id: Long = 0,
+        override var eventId: Long,
+        override var name: String? = null,
         var pressDuration: Long? = null,
         var x: Int? = null,
         var y: Int? = null,
@@ -59,11 +60,7 @@ sealed class Action {
     ) : Action() {
 
         override fun isComplete(): Boolean =
-            name != null && pressDuration != null && ((x != null && y != null) || clickOnCondition)
-
-        override fun getIdentifier(): Long = id
-        override fun getActionName(): String? = name
-        override fun setActionName(name: String) { this.name = name }
+            super.isComplete() && pressDuration != null && ((x != null && y != null) || clickOnCondition)
 
         override fun toEntity(): CompleteActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Click is incomplete.")
@@ -104,9 +101,9 @@ sealed class Action {
      * @param toY the y position of the swipe end.
      */
     data class Swipe(
-        var id: Long = 0,
-        var eventId: Long,
-        var name: String? = null,
+        override var id: Long = 0,
+        override var eventId: Long,
+        override var name: String? = null,
         var swipeDuration: Long? = null,
         var fromX: Int? = null,
         var fromY: Int? = null,
@@ -115,12 +112,8 @@ sealed class Action {
     ) : Action() {
 
         override fun isComplete(): Boolean =
-            name != null && swipeDuration != null && fromX != null && fromY != null && fromY != null
+            super.isComplete() && swipeDuration != null && fromX != null && fromY != null && fromY != null
                     && toX != null && toY != null
-
-        override fun getIdentifier(): Long = id
-        override fun getActionName(): String? = name
-        override fun setActionName(name: String) { this.name = name }
 
         override fun toEntity(): CompleteActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Swipe is incomplete.")
@@ -158,18 +151,13 @@ sealed class Action {
      * @param pauseDuration the duration of the pause in milliseconds.
      */
     data class Pause(
-        var id: Long = 0,
-        var eventId: Long,
-        var name: String? = null,
+        override var id: Long = 0,
+        override var eventId: Long,
+        override var name: String? = null,
         var pauseDuration: Long? = null,
     ) : Action() {
 
-        override fun isComplete(): Boolean =
-            name != null && pauseDuration != null
-
-        override fun getIdentifier(): Long = id
-        override fun getActionName(): String? = name
-        override fun setActionName(name: String) { this.name = name }
+        override fun isComplete(): Boolean = super.isComplete() && pauseDuration != null
 
         override fun toEntity(): CompleteActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Pause is incomplete.")
@@ -206,9 +194,9 @@ sealed class Action {
      * @param extras
      */
     data class Intent(
-        var id: Long = 0,
-        var eventId: Long,
-        var name: String? = null,
+        override var id: Long = 0,
+        override var eventId: Long,
+        override var name: String? = null,
         var isAdvanced: Boolean? = null,
         var intentAction: String? = null,
         var flags: Int? = null,
@@ -216,11 +204,7 @@ sealed class Action {
     ) : Action() {
 
         override fun isComplete(): Boolean =
-            name != null && isAdvanced != null && intentAction != null && flags != null
-
-        override fun getIdentifier(): Long = id
-        override fun getActionName(): String? = name
-        override fun setActionName(name: String) { this.name = name }
+            super.isComplete() && isAdvanced != null && intentAction != null && flags != null
 
         override fun toEntity(): CompleteActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Intent is incomplete.")
