@@ -34,11 +34,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionConfigBinding
-import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
-import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 
 import kotlinx.coroutines.launch
 import java.lang.UnsupportedOperationException
@@ -121,9 +117,15 @@ class ActionConfigDialog(
                 launch {
                     viewModel?.actionValues?.collect { actionValues ->
                         when (actionValues) {
-                            is ActionConfigModel.ClickActionValues -> setupClickUi(actionValues)
-                            is ActionConfigModel.SwipeActionValues -> setupSwipeUi(actionValues)
-                            is ActionConfigModel.PauseActionValues -> setupPauseUi(actionValues)
+                            is ActionConfigModel.ClickActionValues -> viewBinding.includeClickConfig.setupClickUi(
+                                context, actionValues, this@ActionConfigDialog, lifecycleScope, ::showSubOverlay
+                            )
+                            is ActionConfigModel.SwipeActionValues -> viewBinding.includeSwipeConfig.setupSwipeUi(
+                                context, actionValues, this@ActionConfigDialog, lifecycleScope, ::showSubOverlay
+                            )
+                            is ActionConfigModel.PauseActionValues -> viewBinding.includePauseConfig.setupPauseUi(
+                                actionValues, this@ActionConfigDialog, lifecycleScope
+                            )
                             is ActionConfigModel.IntentActionValues -> throw UnsupportedOperationException()
                         }
                     }
@@ -147,194 +149,6 @@ class ActionConfigDialog(
         viewModel = null
     }
 
-    /**
-     * Setup the UI for a click Action.
-     * @param clickValues view model values for a click action.
-     */
-    private fun setupClickUi(clickValues: ActionConfigModel.ClickActionValues) {
-        viewBinding.apply {
-            includeClickConfig.apply {
-                actionConfigLayoutClick.visibility = View.VISIBLE
-
-                textClickPosition.setOnClickListener {
-                    showSubOverlay(MultiChoiceDialog(
-                        context = context,
-                        dialogTitle = R.string.dialog_condition_type_title,
-                        choices = listOf(ClickTargetChoice.OnCondition, ClickTargetChoice.AtPosition),
-                        onChoiceSelected = { choiceClicked ->
-                            when (choiceClicked) {
-                                ClickTargetChoice.OnCondition -> clickValues.setClickOnCondition(true)
-
-                                ClickTargetChoice.AtPosition -> {
-                                    clickValues.setClickOnCondition(false)
-                                    showSubOverlay(ClickSwipeSelectorMenu(
-                                        context = context,
-                                        selector = CoordinatesSelector.One(),
-                                        onCoordinatesSelected = { selector ->
-                                            clickValues.setPosition((selector as CoordinatesSelector.One).coordinates!!)
-                                        },
-                                    ), hideCurrent = true)
-                                }
-
-                            }
-                        }
-                    ))
-                }
-                textClickPosition.setLeftRightCompoundDrawables(R.drawable.ic_click, R.drawable.ic_chevron)
-
-                editPressDuration.apply {
-                    setSelectAllOnFocus(true)
-                    filters = arrayOf(DurationInputFilter())
-                    addTextChangedListener(object : OnAfterTextChangedListener() {
-                        override fun afterTextChanged(s: Editable?) {
-                            (viewModel?.actionValues?.value as ActionConfigModel.ClickActionValues)
-                                .setPressDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
-                        }
-                    })
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    clickValues.pressDuration.collect { duration ->
-                        viewBinding.includeClickConfig.editPressDuration.apply {
-                            setText(duration.toString())
-                            setSelection(text.length)
-                        }
-                    }
-                }
-
-                launch {
-                    clickValues.position
-                        .combine(clickValues.clickOnCondition) { position, clickOnCondition ->
-                            viewBinding.includeClickConfig.textClickPosition.apply {
-                                if (clickOnCondition) {
-                                    setText(R.string.dialog_action_config_click_position_on_condition)
-                                } else if (position == null){
-                                    setText(R.string.dialog_action_config_click_position_none)
-                                } else {
-                                    text = context.getString(
-                                        R.string.dialog_action_config_click_position,
-                                        position.x,
-                                        position.y
-                                    )
-                                }
-                            }
-
-                        }.collect()
-                }
-            }
-        }
-    }
-
-    /**
-     * Setup the UI for a swipe Action.
-     * @param swipeValues view model values for a swipe action.
-     */
-    private fun setupSwipeUi(swipeValues: ActionConfigModel.SwipeActionValues) {
-        viewBinding.apply {
-            includeSwipeConfig.apply {
-                actionConfigLayoutSwipe.visibility = View.VISIBLE
-
-                textSwipePosition.setOnClickListener {
-                    showSubOverlay(
-                        ClickSwipeSelectorMenu(
-                            context = context,
-                            selector = CoordinatesSelector.Two(),
-                            onCoordinatesSelected = { selector ->
-                                (selector as CoordinatesSelector.Two).let {
-                                    swipeValues.setPositions(it.coordinates1!!, it.coordinates2!!)
-                                }
-                            },
-                        ),
-                        hideCurrent = true
-                    )
-                }
-                textSwipePosition.setLeftRightCompoundDrawables(R.drawable.ic_swipe, R.drawable.ic_chevron)
-
-                editSwipeDuration.apply {
-                    setSelectAllOnFocus(true)
-                    filters = arrayOf(DurationInputFilter())
-                    addTextChangedListener(object : OnAfterTextChangedListener() {
-                        override fun afterTextChanged(s: Editable?) {
-                            (viewModel?.actionValues?.value as ActionConfigModel.SwipeActionValues)
-                                .setSwipeDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
-                        }
-                    })
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    swipeValues.swipeDuration.collect { duration ->
-                        viewBinding.includeSwipeConfig.editSwipeDuration.apply {
-                            setText(duration.toString())
-                            setSelection(text.length)
-                        }
-                    }
-                }
-
-                launch {
-                    swipeValues.positions.collect { (from, to) ->
-                        viewBinding.includeSwipeConfig.textSwipePosition.apply {
-                            if (from == null || to == null) {
-                                setText(R.string.dialog_action_config_swipe_position_none)
-                            } else {
-                                text = context.getString(
-                                    R.string.dialog_action_config_swipe_position,
-                                    from.x,
-                                    from.y,
-                                    to.x,
-                                    to.y
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Setup the UI for a pause Action.
-     * @param pauseValues view model values for a pause action.
-     */
-    private fun setupPauseUi(pauseValues: ActionConfigModel.PauseActionValues) {
-        viewBinding.apply {
-            includePauseConfig.apply {
-                actionConfigLayoutPause.visibility = View.VISIBLE
-
-                editPauseDuration.apply {
-                    setSelectAllOnFocus(true)
-                    filters = arrayOf(DurationInputFilter())
-                    addTextChangedListener(object : OnAfterTextChangedListener() {
-                        override fun afterTextChanged(s: Editable?) {
-                            (viewModel?.actionValues?.value as ActionConfigModel.PauseActionValues)
-                                .setPauseDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
-                        }
-                    })
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    pauseValues.pauseDuration.collect { duration ->
-                        viewBinding.includePauseConfig.editPauseDuration.apply {
-                            setText(duration.toString())
-                            setSelection(text.length)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /** Notify the confirm listener and dismiss the dialog. */
     private fun onOkClicked() {
         viewModel?.let { model ->
@@ -346,7 +160,7 @@ class ActionConfigDialog(
 }
 
 /** Input filter for an Action duration. */
-private class DurationInputFilter : InputFilter {
+class DurationInputFilter : InputFilter {
 
     override fun filter(
         source: CharSequence?,
