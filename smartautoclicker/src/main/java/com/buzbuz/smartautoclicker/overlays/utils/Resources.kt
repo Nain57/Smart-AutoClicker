@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,6 +35,7 @@ fun Action.getIconRes() : Int =
         is Action.Click -> R.drawable.ic_click
         is Action.Swipe -> R.drawable.ic_swipe
         is Action.Pause -> R.drawable.ic_wait_aligned
+        is Action.Intent -> R.drawable.ic_intent
     }
 
 /** @param color the tint color to apply to the ImageView. */

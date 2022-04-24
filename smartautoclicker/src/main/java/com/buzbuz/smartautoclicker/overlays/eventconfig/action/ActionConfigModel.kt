@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.lang.UnsupportedOperationException
 
 /**
  * View model for the [ActionConfigDialog].
@@ -66,9 +67,14 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
             null -> false
             is Action.Click -> !action.name.isNullOrEmpty() && ((action.x != null && action.y != null) || action.clickOnCondition)
                     && action.pressDuration.isValidDuration()
-            is Action.Swipe -> !action.name.isNullOrEmpty() && action.fromX != null && action.fromY != null && action.toX != null
-                    && action.toY != null && action.swipeDuration.isValidDuration()
+
+            is Action.Swipe -> !action.name.isNullOrEmpty() && action.fromX != null && action.fromY != null
+                    && action.toX != null && action.toY != null && action.swipeDuration.isValidDuration()
+
             is Action.Pause -> !action.name.isNullOrEmpty() && action.pauseDuration.isValidDuration()
+
+            is Action.Intent -> !action.name.isNullOrEmpty() && action.isAdvanced != null && action.intentAction != null
+                    && action.flags != null
         }
     }
 
@@ -81,6 +87,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 is Action.Click -> ClickActionValues()
                 is Action.Swipe -> SwipeActionValues()
                 is Action.Pause -> PauseActionValues()
+                is Action.Intent -> IntentActionValues()
             }
         }
         .take(1)
@@ -126,7 +133,8 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 sharedPreferences.edit().putSwipeDurationConfig(action.swipeDuration ?: 0).apply()
             is Action.Pause ->
                 sharedPreferences.edit().putPauseDurationConfig(action.pauseDuration ?: 0).apply()
-            else -> Log.w(TAG, "Can't save last config, invalid action type $action")
+            is Action.Intent -> throw UnsupportedOperationException()
+            null -> Log.w(TAG, "Can't save last config, invalid action type $action")
         }
     }
 
@@ -255,6 +263,11 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 }
             }
         }
+    }
+
+    /** Allow to observe/edit the value an intent action. */
+    inner class IntentActionValues : ActionValues() {
+
     }
 }
 

@@ -73,6 +73,7 @@ class ActionConfigDialog(
         is Action.Click -> R.string.dialog_action_type_click to R.drawable.ic_click
         is Action.Swipe -> R.string.dialog_action_type_swipe to R.drawable.ic_swipe
         is Action.Pause -> R.string.dialog_action_type_pause to R.drawable.ic_wait
+        is Action.Intent -> R.string.dialog_action_type_intent to R.drawable.ic_intent
     }
 
     override fun onCreateDialog(): AlertDialog.Builder {
@@ -122,6 +123,7 @@ class ActionConfigDialog(
                             is ActionConfigModel.ClickActionValues -> setupClickUi(actionValues)
                             is ActionConfigModel.SwipeActionValues -> setupSwipeUi(actionValues)
                             is ActionConfigModel.PauseActionValues -> setupPauseUi(actionValues)
+                            is ActionConfigModel.IntentActionValues ->
                         }
                     }
                 }

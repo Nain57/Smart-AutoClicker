@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import java.lang.UnsupportedOperationException
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 
@@ -126,6 +127,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             is Action.Click -> action.copy(id = 0, name = "" + action.getActionName())
             is Action.Swipe -> action.copy(id = 0, name = "" + action.getActionName())
             is Action.Pause -> action.copy(id = 0, name = "" + action.getActionName())
+            is Action.Intent -> throw UnsupportedOperationException()
         }
 
     /** @return the [ActionCopyItem.ActionItem] corresponding to this action. */
@@ -159,6 +161,8 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
                     formatDuration(pauseDuration!!)
                 ),
             )
+
+            is Action.Intent -> throw UnsupportedOperationException()
         }
 
         item.action = this

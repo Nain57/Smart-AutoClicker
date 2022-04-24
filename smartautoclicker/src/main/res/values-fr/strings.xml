@@ -98,6 +98,7 @@
     <string name="dialog_action_type_click">Clic</string>
     <string name="dialog_action_type_swipe">Swipe</string>
     <string name="dialog_action_type_pause">Pause</string>
+    <string name="dialog_action_type_intent">Intent</string>
     <string name="dialog_event_config_actions_title">Actions</string>
     <string name="dialog_action_type_title">Type d\'action</string>
     <string name="dialog_action_config_click_position_none">Pas de position définie</string>

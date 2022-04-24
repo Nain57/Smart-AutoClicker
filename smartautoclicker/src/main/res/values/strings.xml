@@ -77,6 +77,7 @@
     <string name="dialog_action_type_click">Click</string>
     <string name="dialog_action_type_swipe">Swipe</string>
     <string name="dialog_action_type_pause">Wait</string>
+    <string name="dialog_action_type_intent">Intent</string>
     <string name="dialog_action_config_click_press_duration_title">Press duration</string>
     <string name="dialog_action_config_click_position_title">Click position</string>
     <string name="dialog_action_config_click_position_on_condition">On condition</string>
