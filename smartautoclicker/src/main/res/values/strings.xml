@@ -89,6 +89,11 @@
     <string name="dialog_action_config_swipe_position_none">No swipe position defined</string>
     <string name="dialog_action_config_swipe_position">Swipe from %1$d, %2$d to %3$d, %4$d</string>
     <string name="dialog_action_config_pause_duration_title">Pause duration</string>
+    <string name="dialog_action_config_intent_config_type_title">Configuration type</string>
+    <string name="dialog_action_config_intent_config_type_simple">Simple</string>
+    <string name="dialog_action_config_intent_config_type_advanced">Advanced</string>
+    <string name="dialog_action_config_intent_simple_start_app_title">Start application</string>
+    <string name="dialog_action_config_intent_simple_start_app_no_app">No application selected</string>
 
     <string name="dialog_action_new_title">New Action</string>
     <string name="dialog_action_new_create">Create</string>

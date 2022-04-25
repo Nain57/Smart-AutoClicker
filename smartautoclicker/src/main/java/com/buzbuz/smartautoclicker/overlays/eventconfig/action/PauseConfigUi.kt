@@ -22,7 +22,6 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.databinding.IncludeClickConfigBinding
 
 import com.buzbuz.smartautoclicker.databinding.IncludePauseConfigBinding
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener

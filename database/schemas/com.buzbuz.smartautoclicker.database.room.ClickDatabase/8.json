@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "a08af6c47d60b31cce3fe289472a6eff",
+    "identityHash": "e75a8326216c9c5b7c61145ae4054a66",
     "entities": [
       {
         "tableName": "action_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `x` INTEGER, `y` INTEGER, `clickOnCondition` INTEGER, `pressDuration` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `intent_action` TEXT, `flags` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `x` INTEGER, `y` INTEGER, `clickOnCondition` INTEGER, `pressDuration` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -105,8 +105,20 @@
             "notNull": false
           },
           {
+            "fieldPath": "isBroadcast",
+            "columnName": "isBroadcast",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "intentAction",
             "columnName": "intent_action",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "componentName",
+            "columnName": "component_name",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -511,7 +523,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a08af6c47d60b31cce3fe289472a6eff')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e75a8326216c9c5b7c61145ae4054a66')"
     ]
   }
 }

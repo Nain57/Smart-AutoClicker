@@ -51,7 +51,9 @@ import androidx.room.*
  * @param pauseDuration [ActionType.PAUSE] only: the duration of the pause in milliseconds.
  *
  * @param isAdvanced [ActionType.INTENT] only: true if the user have picked advanced intent config, false if simple.
+ * @param isBroadcast [ActionType.INTENT] only: true the this intent should be broadcast, false for a start activity.
  * @param intentAction [ActionType.INTENT] only: action for the intent.
+ * @param componentName [ActionType.INTENT] only: the component to send the intent to. Null for if [isBroadcast] is true.
  * @param flags [ActionType.INTENT] only: flags for the intent as defined in [android.content.Intent].
  */
 @Entity(
@@ -89,7 +91,9 @@ internal data class ActionEntity(
 
     // ActionType.INTENT
     @ColumnInfo(name = "isAdvanced") val isAdvanced: Boolean? = null,
+    @ColumnInfo(name = "isBroadcast") val isBroadcast: Boolean ? = null,
     @ColumnInfo(name = "intent_action") val intentAction: String? = null,
+    @ColumnInfo(name = "component_name") val componentName: String ? = null,
     @ColumnInfo(name = "flags") val flags: Int? = null,
 )
 

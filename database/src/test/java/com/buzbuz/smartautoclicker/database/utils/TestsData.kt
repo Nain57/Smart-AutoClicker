@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.database.utils
 
+import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
@@ -210,21 +211,26 @@ internal object TestsData {
     const val INTENT_ID = 149L
     const val INTENT_NAME = "Intent name"
     const val INTENT_IS_ADVANCED = true
+    const val INTENT_IS_BROADCAST = true
     const val INTENT_ACTION = "com.toto.tata.ACTION_TOTO"
+    const val INTENT_COMPONENT_NAME_STRING = "com.toto.tata/com.toto.tata.Activity"
+    val INTENT_COMPONENT_NAME = ComponentName.unflattenFromString("com.toto.tata/com.toto.tata.Activity")
     const val INTENT_FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
     fun getNewIntentEntity(
         id: Long = INTENT_ID,
         name: String = INTENT_NAME,
         isAdvanced: Boolean = INTENT_IS_ADVANCED,
+        isBroadcast: Boolean = INTENT_IS_BROADCAST,
         action: String = INTENT_ACTION,
+        componentName: String = INTENT_COMPONENT_NAME_STRING,
         flags: Int = INTENT_FLAGS,
         eventId: Long,
         priority: Int,
         intentExtras: List<IntentExtraEntity> = emptyList()
     ) = CompleteActionEntity(
         action = ActionEntity(id, eventId, priority, name, ActionType.INTENT, isAdvanced = isAdvanced,
-            intentAction = action, flags = flags),
+            isBroadcast = isBroadcast, intentAction = action, componentName = componentName, flags = flags),
         intentExtras = intentExtras,
     )
 
@@ -232,11 +238,13 @@ internal object TestsData {
         id: Long = INTENT_ID,
         name: String? = INTENT_NAME,
         isAdvanced: Boolean = INTENT_IS_ADVANCED,
+        isBroadcast: Boolean = INTENT_IS_BROADCAST,
         action: String = INTENT_ACTION,
+        componentName: ComponentName = INTENT_COMPONENT_NAME!!,
         flags: Int = INTENT_FLAGS,
         eventId: Long,
         intentExtras: MutableList<IntentExtra<out Any>> = mutableListOf()
-    ) = Action.Intent(id, eventId, name, isAdvanced, action, flags, intentExtras)
+    ) = Action.Intent(id, eventId, name, isAdvanced, isBroadcast, action, componentName, flags, intentExtras)
 
 
     /* ------- Intent Extra Data ------- */
@@ -260,7 +268,7 @@ internal object TestsData {
         actionId: Long = INTENT_EXTRA_ACTION_ID,
         key: String = INTENT_EXTRA_KEY,
         value: T,
-    ) = IntentExtra(id, actionId, key, (value as T))
+    ) = IntentExtra(id, actionId, key, value)
 
     /* ------- Condition Data ------- */
 

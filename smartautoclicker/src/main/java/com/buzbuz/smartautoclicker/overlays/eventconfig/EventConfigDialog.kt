@@ -229,7 +229,7 @@ class EventConfigDialog(
                 showSubOverlay(MultiChoiceDialog(
                     context = context,
                     dialogTitle = R.string.dialog_action_type_title,
-                    choices = listOf(ActionTypeChoice.Click, ActionTypeChoice.Swipe, ActionTypeChoice.Pause),
+                    choices = listOf(ActionTypeChoice.Click, ActionTypeChoice.Swipe, ActionTypeChoice.Pause, ActionTypeChoice.Intent),
                     onChoiceSelected = { choiceClicked ->
                         viewModel?.let { model ->
                             subOverlayViewModel?.requestSubOverlay(

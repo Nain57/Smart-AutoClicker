@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.database.domain
 
+import android.content.ComponentName
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ActionType
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
@@ -189,7 +190,9 @@ sealed class Action {
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param isAdvanced
+     * @param isBroadcast
      * @param intentAction
+     * @param componentName
      * @param flags
      * @param extras
      */
@@ -198,7 +201,9 @@ sealed class Action {
         override var eventId: Long,
         override var name: String? = null,
         var isAdvanced: Boolean? = null,
+        var isBroadcast: Boolean? = null,
         var intentAction: String? = null,
+        var componentName: ComponentName? = null,
         var flags: Int? = null,
         val extras: MutableList<IntentExtra<out Any>>? = null,
     ) : Action() {
@@ -216,7 +221,9 @@ sealed class Action {
                     name = name!!,
                     type = ActionType.INTENT,
                     isAdvanced = isAdvanced,
+                    isBroadcast = isBroadcast,
                     intentAction = intentAction,
+                    componentName = componentName?.flattenToString(),
                     flags = flags,
                 ),
                 intentExtras = extras!!.map { it.toEntity() },
@@ -244,7 +251,10 @@ internal fun CompleteActionEntity.toAction(): Action {
 
         ActionType.PAUSE -> Action.Pause(action.id, action.eventId, action.name, action.pauseDuration!!)
 
-        ActionType.INTENT -> Action.Intent(action.id, action.eventId, action.name, action.isAdvanced,
-            action.intentAction, action.flags, intentExtras.map { it.toIntentExtra() }.toMutableList() )
+        ActionType.INTENT -> {
+            val componentName = action.componentName?.let { ComponentName.unflattenFromString(it) }
+            Action.Intent(action.id, action.eventId, action.name, action.isAdvanced, action.isBroadcast,
+                action.intentAction, componentName, action.flags, intentExtras.map { it.toIntentExtra() }.toMutableList())
+        }
     }
 }

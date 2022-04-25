@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.eventconfig.action
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Point
 import android.util.Log
@@ -165,7 +166,8 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
         }
 
         /**
-         *
+         * Set if this click should be made on the detected condition.
+         * @param enabled true to click on the detected condition, false to let the user pick its own location.
          */
         fun setClickOnCondition(enabled: Boolean) {
             (configuredAction.value as Action.Click).let { click ->
@@ -268,6 +270,19 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
     /** Allow to observe/edit the value an intent action. */
     inner class IntentActionValues : ActionValues() {
 
+        /**  */
+        val isAdvanced: Flow<Boolean> = configuredAction.map { intent ->
+            intent is Action.Intent && intent.isAdvanced ?: false
+        }
+
+        /** */
+        fun toggleIsAdvanced() {
+            (configuredAction.value as Action.Intent).let { intent ->
+                viewModelScope.launch {
+                    configuredAction.emit(intent.copy(isAdvanced = !(intent.isAdvanced ?: false)))
+                }
+            }
+        }
     }
 }
 
