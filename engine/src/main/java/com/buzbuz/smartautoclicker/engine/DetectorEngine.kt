@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.engine
 
-import android.accessibilityservice.GestureDescription
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -107,8 +106,8 @@ class DetectorEngine(context: Context) {
     private var scenarioProcessor: ScenarioProcessor? = null
     /** Detect the condition images on the screen image. */
     private var imageDetector: ImageDetector? = null
-    /** Execute gestures (click or swipe) on the screen. */
-    private var gestureExecutor: ((GestureDescription) -> Unit)? = null
+    /** The executor for the actions requiring an interaction with Android. */
+    private var androidExecutor: AndroidExecutor? = null
 
     /** The scope for the flows declared in the detector engine. */
     private val detectorEngineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -175,14 +174,14 @@ class DetectorEngine(context: Context) {
      * @param data the data intent provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param scenario the current scenario used with the detection.
-     * @param gestureExecutor called when a gesture (click or swipe) must be executed on the screen.
+     * @param androidExecutor the executor for the actions requiring an interaction with Android.
      */
     fun startScreenRecord(
         context: Context,
         resultCode: Int,
         data: Intent,
         scenario: Scenario,
-        gestureExecutor: (GestureDescription) -> Unit
+        androidExecutor: AndroidExecutor
     ) {
         if (isScreenRecording.value) {
             Log.w(TAG, "startScreenRecord: Screen record is already started")
@@ -191,7 +190,7 @@ class DetectorEngine(context: Context) {
 
         Log.i(TAG, "startScreenRecord")
 
-        this.gestureExecutor = gestureExecutor
+        this.androidExecutor = androidExecutor
         screenMetrics.registerOrientationListener(::onOrientationChanged)
 
         processingScope = CoroutineScope(Dispatchers.Default.limitedParallelism(1))
@@ -282,7 +281,7 @@ class DetectorEngine(context: Context) {
                         scenarioRepository.getBitmap(path, width, height)
                     }
                 },
-                gestureExecutor = gestureExecutor!!,
+                androidExecutor = androidExecutor!!,
                 endConditionOperator = scenarioEndConditions.value!!.first.endConditionOperator,
                 endConditions =  scenarioEndConditions.value!!.second,
                 onEndConditionReached = {
@@ -384,7 +383,7 @@ class DetectorEngine(context: Context) {
 
         Log.i(TAG, "clear")
         detectorEngineScope.cancel()
-        gestureExecutor = null
+        androidExecutor = null
         cleanInstance()
     }
 }

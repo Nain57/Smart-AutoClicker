@@ -17,13 +17,16 @@
 package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 
 import androidx.core.app.NotificationCompat
@@ -32,6 +35,7 @@ import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 
 import java.io.FileDescriptor
@@ -51,7 +55,7 @@ import java.io.PrintWriter
  * displayed activity. This injection is made by the [dispatchGesture] method, which is called everytime an event has
  * been detected.
  */
-class SmartAutoClickerService : AccessibilityService() {
+class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
     companion object {
         /** The identifier for the foreground notification of this service. */
@@ -116,9 +120,7 @@ class SmartAutoClickerService : AccessibilityService() {
             startForeground(NOTIFICATION_ID, createNotification(scenario.name))
 
             detectorEngine = DetectorEngine.getDetectorEngine(this@SmartAutoClickerService).apply {
-                startScreenRecord(this@SmartAutoClickerService, resultCode, data, scenario) { gesture ->
-                    dispatchGesture(gesture, null, null)
-                }
+                startScreenRecord(this@SmartAutoClickerService, resultCode, data, scenario, this@SmartAutoClickerService)
             }
 
             rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario).apply {
@@ -185,6 +187,22 @@ class SmartAutoClickerService : AccessibilityService() {
             .build()
     }
 
+    override fun executeGesture(gestureDescription: GestureDescription) {
+        dispatchGesture(gestureDescription, null, null)
+    }
+
+    override fun executeStartActivity(intent: Intent) {
+        try {
+            startActivity(intent)
+        } catch (anfe: ActivityNotFoundException) {
+            Log.w(TAG, "Can't start activity, it is not found.")
+        }
+    }
+
+    override fun executeSendBroadcast(intent: Intent) {
+        sendBroadcast(intent)
+    }
+
     /**
      * Dump the state of the service via adb.
      * adb shell "dumpsys activity service com.buzbuz.smartautoclicker.debug/com.buzbuz.smartautoclicker.SmartAutoClickerService"
@@ -203,3 +221,6 @@ class SmartAutoClickerService : AccessibilityService() {
     override fun onInterrupt() { /* Unused */ }
     override fun onAccessibilityEvent(event: AccessibilityEvent?) { /* Unused */ }
 }
+
+/** Tag for the logs. */
+private const val TAG = "SmartAutoClickerService"

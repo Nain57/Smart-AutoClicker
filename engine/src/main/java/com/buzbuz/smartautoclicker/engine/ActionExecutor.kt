@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.engine
 
 import android.accessibilityservice.GestureDescription
+import android.content.Intent
 import android.graphics.Path
 import android.graphics.Point
 import android.util.Log
@@ -25,6 +26,7 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.database.domain.Action.Click
 import com.buzbuz.smartautoclicker.database.domain.Action.Pause
 import com.buzbuz.smartautoclicker.database.domain.Action.Swipe
+import com.buzbuz.smartautoclicker.database.domain.putExtra
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,9 +35,9 @@ import kotlinx.coroutines.withContext
 /**
  * Execute the actions of an event.
  *
- * @param gestureExecutor The executor for the actions requiring a gesture on the user screen.
+ * @param androidExecutor the executor for the actions requiring an interaction with Android.
  */
-internal class ActionExecutor(private val gestureExecutor: (GestureDescription) -> Unit) {
+internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
 
     /**
      * Execute the provided actions.
@@ -48,6 +50,7 @@ internal class ActionExecutor(private val gestureExecutor: (GestureDescription) 
                 is Click -> executeClick(action, conditionPosition)
                 is Swipe -> executeSwipe(action)
                 is Pause -> executePause(action)
+                is Action.Intent -> executeIntent(action)
             }
         }
     }
@@ -73,7 +76,7 @@ internal class ActionExecutor(private val gestureExecutor: (GestureDescription) 
         clickBuilder.addStroke(GestureDescription.StrokeDescription(clickPath, 0, click.pressDuration!!))
 
         withContext(Dispatchers.Main) {
-            gestureExecutor(clickBuilder.build())
+            androidExecutor.executeGesture(clickBuilder.build())
         }
         delay(click.pressDuration!!)
     }
@@ -91,7 +94,7 @@ internal class ActionExecutor(private val gestureExecutor: (GestureDescription) 
         clickBuilder.addStroke(GestureDescription.StrokeDescription(swipePath, 0, swipe.swipeDuration!!))
 
         withContext(Dispatchers.Main) {
-            gestureExecutor(clickBuilder.build())
+            androidExecutor.executeGesture(clickBuilder.build())
         }
         delay(swipe.swipeDuration!!)
     }
@@ -103,7 +106,53 @@ internal class ActionExecutor(private val gestureExecutor: (GestureDescription) 
     private suspend fun executePause(pause: Pause) {
         delay(pause.pauseDuration!!)
     }
+
+    /**
+     * Execute the provided intent.
+     * @param intent the intent to be executed.
+     */
+    private suspend fun executeIntent(intent: Action.Intent) {
+        val androidIntent = Intent().apply {
+            action = intent.intentAction!!
+            flags = intent.flags!!
+
+            intent.componentName?.let {
+                component = intent.componentName
+            }
+
+            intent.extras?.forEach { putExtra(it) }
+        }
+
+        if (intent.isBroadcast!!) {
+            withContext(Dispatchers.Main) {
+                androidExecutor.executeSendBroadcast(androidIntent)
+            }
+            delay(INTENT_BROADCAST_DELAY)
+        } else {
+            withContext(Dispatchers.Main) {
+                androidExecutor.executeStartActivity(androidIntent)
+            }
+            delay(INTENT_START_ACTIVITY_DELAY)
+        }
+    }
+}
+
+/** Execute the actions related to Android. */
+interface AndroidExecutor {
+
+    /** Execute the provided gesture. */
+    fun executeGesture(gestureDescription: GestureDescription)
+
+    /** Start the activity defined by the provided intent. */
+    fun executeStartActivity(intent: Intent)
+
+    /** Send a broadcast defined by the provided intent. */
+    fun executeSendBroadcast(intent: Intent)
 }
 
 /** Tag for logs. */
 private const val TAG = "ActionExecutor"
+/** Waiting delay after a start activity to avoid overflowing the system. */
+private const val INTENT_START_ACTIVITY_DELAY = 1000L
+/** Waiting delay after a broadcast to avoid overflowing the system. */
+private const val INTENT_BROADCAST_DELAY = 100L

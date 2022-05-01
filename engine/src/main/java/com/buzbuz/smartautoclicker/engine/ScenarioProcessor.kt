@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.engine
 
-import android.accessibilityservice.GestureDescription
 import android.graphics.Bitmap
 import android.media.Image
-import com.buzbuz.smartautoclicker.database.domain.*
 
+import com.buzbuz.smartautoclicker.database.domain.*
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 
@@ -33,7 +32,7 @@ import kotlinx.coroutines.yield
  * @param detectionQuality the quality of the detection.
  * @param events the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
- * @param gestureExecutor execute the actions gestures on the user screen.
+ * @param androidExecutor execute the actions requiring an interaction with Android..
  * @param endConditionOperator the operator to apply between the end conditions.
  * @param endConditions the list of end conditions for the current scenario.
  * @param onEndConditionReached called when a end condition of the scenario have been reached.
@@ -44,7 +43,7 @@ internal class ScenarioProcessor(
     private val detectionQuality: Int,
     private val events: List<Event>,
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
-    gestureExecutor: (GestureDescription) -> Unit,
+    androidExecutor: AndroidExecutor,
     @ConditionOperator endConditionOperator: Int,
     endConditions: List<EndCondition>,
     onEndConditionReached: () -> Unit,
@@ -52,8 +51,8 @@ internal class ScenarioProcessor(
 ) {
 
     /** Execute the detected event actions. */
-    private val actionExecutor = ActionExecutor(gestureExecutor)
-    /** */
+    private val actionExecutor = ActionExecutor(androidExecutor)
+    /** Verifies the end conditions of a scenario. */
     private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onEndConditionReached)
 
     /** The bitmap of the currently processed image. Kept in order to avoid instantiating a new one everytime. */

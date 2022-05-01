@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.database.domain
 
+import android.content.Intent
 import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraType
 
@@ -59,6 +60,25 @@ data class IntentExtra<T>(
         id = 0
         actionId = 0
     }
+}
+
+/**
+ * Add the provided intent extra into the Android intent.
+ * @param extra the extra to be added.
+ */
+fun Intent.putExtra(extra: IntentExtra<out Any>): Intent {
+    when (val value = extra.value) {
+        is Byte -> putExtra(extra.key, value)
+        is Boolean -> putExtra(extra.key, value)
+        is Char -> putExtra(extra.key, value)
+        is Double -> putExtra(extra.key, value)
+        is Int -> putExtra(extra.key, value)
+        is Float -> putExtra(extra.key, value)
+        is Short -> putExtra(extra.key, value)
+        is String -> putExtra(extra.key, value)
+        else -> throw IllegalArgumentException("Unsupported value type")
+    }
+    return this
 }
 
 /** @return the intent extra for this entity. */

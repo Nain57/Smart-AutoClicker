@@ -70,10 +70,7 @@ class ActionExecutorTests {
             Action.Pause(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
     }
 
-    private interface ExecutionListener {
-        fun executeGesture(gesture: GestureDescription)
-    }
-    @Mock private lateinit var mockExecutionListener: ExecutionListener
+    @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
 
     private lateinit var actionExecutor: ActionExecutor
 
@@ -90,7 +87,7 @@ class ActionExecutorTests {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
 
-        actionExecutor = ActionExecutor(mockExecutionListener::executeGesture)
+        actionExecutor = ActionExecutor(mockAndroidExecutor)
     }
 
     @After
@@ -101,7 +98,7 @@ class ActionExecutorTests {
     @Test
     fun noActions() = runTest {
         actionExecutor.executeActions(emptyList(), Point())
-        verify(mockExecutionListener, never()).executeGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).executeGesture(anyNotNull())
     }
 
     @Test
@@ -111,7 +108,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(listOf(clickAction), Point())
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -122,7 +119,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(listOf(clickAction), Point(15, 15))
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -133,7 +130,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(listOf(swipeAction), Point())
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockExecutionListener).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -145,7 +142,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(listOf(pause), Point())
 
         // Only a pause, there should be no gestures
-        verify(mockExecutionListener, never()).executeGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).executeGesture(anyNotNull())
     }
 
     @Test
@@ -159,7 +156,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(listOf(click, pause, swipe), Point())
 
         // Verify the gestures executions
-        verify(mockExecutionListener, times(2)).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor, times(2)).executeGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.firstValue)
         assertActionGesture(gestureCaptor.lastValue)
     }
