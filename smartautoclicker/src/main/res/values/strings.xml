@@ -94,6 +94,9 @@
     <string name="dialog_action_config_intent_config_type_advanced">Advanced</string>
     <string name="dialog_action_config_intent_simple_start_app_title">Start application</string>
     <string name="dialog_action_config_intent_simple_start_app_no_app">No application selected</string>
+    <string name="dialog_application_select_title">Select an application</string>
+    <string name="dialog_application_select_empty">No application detected</string>
+
 
     <string name="dialog_action_new_title">New Action</string>
     <string name="dialog_action_new_create">Create</string>

@@ -226,7 +226,7 @@ sealed class Action {
                     componentName = componentName?.flattenToString(),
                     flags = flags,
                 ),
-                intentExtras = extras!!.map { it.toEntity() },
+                intentExtras = extras?.map { it.toEntity() } ?: emptyList(),
             )
         }
 

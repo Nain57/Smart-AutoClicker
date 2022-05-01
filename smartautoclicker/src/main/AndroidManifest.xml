@@ -24,6 +24,14 @@
     <!-- Needed to display the overlay_menu over other apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
+    <!-- Needed to get the list of applications to start when creating an intent action.-->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_smart_auto_clicker"

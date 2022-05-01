@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 202 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.action
+package com.buzbuz.smartautoclicker.overlays.eventconfig.action.click
 
 import android.content.Context
 import android.text.Editable
@@ -28,6 +28,10 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.databinding.IncludeClickConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ClickSwipeSelectorMenu
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ClickTargetChoice
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.CoordinatesSelector
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.DurationInputFilter
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
@@ -36,10 +40,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-/** Binds the [IncludeClickConfigBinding] to the [ActionConfigModel] using the [ActionConfigDialog] lifecycle. */
+/** Binds the [IncludeClickConfigBinding] to the [ClickConfigModel] using the dialog lifecycle. */
 fun IncludeClickConfigBinding.setupClickUi(
     context: Context,
-    clickValues: ActionConfigModel.ClickActionValues,
+    clickModel: ClickConfigModel,
     lifecycleOwner: LifecycleOwner,
     lifecycleScope: CoroutineScope,
     showSubOverlay: (OverlayController, Boolean) -> Unit
@@ -54,16 +58,16 @@ fun IncludeClickConfigBinding.setupClickUi(
                 choices = listOf(ClickTargetChoice.OnCondition, ClickTargetChoice.AtPosition),
                 onChoiceSelected = { choiceClicked ->
                     when (choiceClicked) {
-                        ClickTargetChoice.OnCondition -> clickValues.setClickOnCondition(true)
+                        ClickTargetChoice.OnCondition -> clickModel.setClickOnCondition(true)
 
                         ClickTargetChoice.AtPosition -> {
-                            clickValues.setClickOnCondition(false)
+                            clickModel.setClickOnCondition(false)
                             showSubOverlay(
                                 ClickSwipeSelectorMenu(
                                     context = context,
                                     selector = CoordinatesSelector.One(),
                                     onCoordinatesSelected = { selector ->
-                                        clickValues.setPosition((selector as CoordinatesSelector.One).coordinates!!)
+                                        clickModel.setPosition((selector as CoordinatesSelector.One).coordinates!!)
                                     },
                                 ),
                                 true
@@ -82,7 +86,7 @@ fun IncludeClickConfigBinding.setupClickUi(
         filters = arrayOf(DurationInputFilter())
         addTextChangedListener(object : OnAfterTextChangedListener() {
             override fun afterTextChanged(s: Editable?) {
-                clickValues.setPressDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
+                clickModel.setPressDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
             }
         })
     }
@@ -90,7 +94,7 @@ fun IncludeClickConfigBinding.setupClickUi(
     lifecycleScope.launch {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
-                clickValues.pressDuration.collect { duration ->
+                clickModel.pressDuration.collect { duration ->
                     editPressDuration.apply {
                         setText(duration.toString())
                         setSelection(text.length)
@@ -99,8 +103,8 @@ fun IncludeClickConfigBinding.setupClickUi(
             }
 
             launch {
-                clickValues.position
-                    .combine(clickValues.clickOnCondition) { position, clickOnCondition ->
+                clickModel.position
+                    .combine(clickModel.clickOnCondition) { position, clickOnCondition ->
                         textClickPosition.apply {
                             when {
                                 clickOnCondition -> setText(R.string.dialog_action_config_click_position_on_condition)

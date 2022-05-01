@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.action
+package com.buzbuz.smartautoclicker.overlays.eventconfig.action.pause
 
 import android.text.Editable
 import android.view.View
@@ -24,14 +24,15 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.databinding.IncludePauseConfigBinding
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.DurationInputFilter
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-/** Binds the [IncludePauseConfigBinding] to the [ActionConfigModel] using the [ActionConfigDialog] lifecycle. */
+/** Binds the [IncludePauseConfigBinding] to the [PauseConfigModel] using the dialog lifecycle. */
 fun IncludePauseConfigBinding.setupPauseUi(
-    pauseValues: ActionConfigModel.PauseActionValues,
+    pauseModel: PauseConfigModel,
     lifecycleOwner: LifecycleOwner,
     lifecycleScope: CoroutineScope,
 ) {
@@ -42,7 +43,7 @@ fun IncludePauseConfigBinding.setupPauseUi(
         filters = arrayOf(DurationInputFilter())
         addTextChangedListener(object : OnAfterTextChangedListener() {
             override fun afterTextChanged(s: Editable?) {
-                pauseValues.setPauseDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
+                pauseModel.setPauseDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
             }
         })
     }
@@ -50,7 +51,7 @@ fun IncludePauseConfigBinding.setupPauseUi(
     lifecycleScope.launch {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
-                pauseValues.pauseDuration.collect { duration ->
+                pauseModel.pauseDuration.collect { duration ->
                     editPauseDuration.apply {
                         setText(duration.toString())
                         setSelection(text.length)

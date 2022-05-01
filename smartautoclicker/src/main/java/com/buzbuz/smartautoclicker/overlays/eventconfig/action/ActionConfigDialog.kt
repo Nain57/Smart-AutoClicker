@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,13 +34,20 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.database.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionConfigBinding
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.click.ClickConfigModel
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.click.setupClickUi
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent.IntentConfigModel
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent.setupIntentUi
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.pause.PauseConfigModel
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.pause.setupPauseUi
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.swipe.SwipeConfigModel
+import com.buzbuz.smartautoclicker.overlays.eventconfig.action.swipe.setupSwipeUi
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.launch
-import java.lang.UnsupportedOperationException
 
 /**
- * [ActionConfigDialog] implementation for displaying an event action and providing a button to delete it.
+ * [OverlayDialogController] implementation for displaying an event action and providing a button to delete it.
  *
  * This dialog is generic for all [Action] type. Title and displayed views will change according to the type of the
  * action parameter.
@@ -115,18 +122,20 @@ class ActionConfigDialog(
                 }
 
                 launch {
-                    viewModel?.actionValues?.collect { actionValues ->
+                    viewModel?.actionModel?.collect { actionValues ->
                         when (actionValues) {
-                            is ActionConfigModel.ClickActionValues -> viewBinding.includeClickConfig.setupClickUi(
+                            is ClickConfigModel -> viewBinding.includeClickConfig.setupClickUi(
                                 context, actionValues, this@ActionConfigDialog, lifecycleScope, ::showSubOverlay
                             )
-                            is ActionConfigModel.SwipeActionValues -> viewBinding.includeSwipeConfig.setupSwipeUi(
+                            is SwipeConfigModel -> viewBinding.includeSwipeConfig.setupSwipeUi(
                                 context, actionValues, this@ActionConfigDialog, lifecycleScope, ::showSubOverlay
                             )
-                            is ActionConfigModel.PauseActionValues -> viewBinding.includePauseConfig.setupPauseUi(
+                            is PauseConfigModel -> viewBinding.includePauseConfig.setupPauseUi(
                                 actionValues, this@ActionConfigDialog, lifecycleScope
                             )
-                            is ActionConfigModel.IntentActionValues -> throw UnsupportedOperationException()
+                            is IntentConfigModel -> viewBinding.includeIntentConfig.setupIntentUi(
+                                context, actionValues, this@ActionConfigDialog, lifecycleScope, ::showSubOverlay
+                            )
                         }
                     }
                 }

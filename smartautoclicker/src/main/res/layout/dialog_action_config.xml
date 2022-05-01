@@ -62,8 +62,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <include layout="@layout/include_view_separator"/>
-
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
@@ -77,6 +75,9 @@
             <include
                 android:id="@+id/include_pause_config"
                 layout="@layout/include_pause_config"/>
+            <include
+                android:id="@+id/include_intent_config"
+                layout="@layout/include_intent_config"/>
 
         </FrameLayout>
 
