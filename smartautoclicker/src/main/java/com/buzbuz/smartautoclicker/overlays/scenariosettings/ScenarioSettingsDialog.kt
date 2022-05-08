@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.scenariosettings
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.SeekBar
 
 import androidx.appcompat.app.AlertDialog
@@ -144,6 +145,15 @@ class ScenarioSettingsDialog(
 
                 launch {
                     viewModel?.endConditions?.collect { endConditions ->
+                        viewBinding.apply {
+                            if (endConditions.isEmpty()) {
+                                layoutEndConditions.visibility = View.GONE
+                                textEndConditionNoEvent.visibility = View.VISIBLE
+                            } else {
+                                layoutEndConditions.visibility = View.VISIBLE
+                                textEndConditionNoEvent.visibility = View.GONE
+                            }
+                        }
                         endConditionsAdapter.submitList(endConditions)
                     }
                 }
@@ -156,7 +166,7 @@ class ScenarioSettingsDialog(
         viewModel = null
     }
 
-    /** */
+    /** Called when the user press the OK button. */
     private fun onOkClicked() {
         viewModel?.saveModifications()
         dismiss()

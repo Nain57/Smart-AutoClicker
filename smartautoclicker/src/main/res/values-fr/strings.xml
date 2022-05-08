@@ -148,6 +148,7 @@
     <string name="dialog_scenario_settings_quality_speed">Vitesse</string>
     <string name="dialog_scenario_settings_quality_precision">Précision</string>
     <string name="dialog_scenario_settings_end_condition_title">Conditions de fin</string>
+    <string name="dialog_scenario_settings_end_condition_no_events">Aucun évènement disponible</string>
     <string name="dialog_end_condition_config_title">Condition de fin</string>
     <string name="dialog_end_condition_config_event_title">Évènement</string>
     <string name="dialog_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>

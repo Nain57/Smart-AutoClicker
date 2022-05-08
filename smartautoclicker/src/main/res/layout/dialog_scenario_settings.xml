@@ -144,33 +144,48 @@
 
                 <include layout="@layout/include_view_separator"/>
 
-               <TextView
-                   android:id="@+id/text_end_condition_operator_desc"
-                   style="@style/ItemView.Small"
-                   android:gravity="center_vertical"
-                   android:text="@string/condition_operator_or_desc"
-                   android:textSize="@dimen/text_size_list_item_text"
-                   android:drawablePadding="@dimen/margin_horizontal_small"
-                   app:drawableEndCompat="@drawable/ic_chevron"
-                   tools:drawableStart="@drawable/ic_all_conditions"/>
-
-                <include layout="@layout/include_view_separator"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/list_end_conditions"
+                <LinearLayout
+                    android:id="@+id/layout_end_conditions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_horizontal_small"
-                    android:layout_marginEnd="@dimen/margin_horizontal_small"
-                    android:layout_marginTop="@dimen/margin_vertical_default"
-                    android:layout_marginBottom="@dimen/margin_vertical_default"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:scrollbars="horizontal"
-                    android:background="@color/listBackground"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_end_condition_card"
-                    tools:itemCount="1"/>
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_end_condition_operator_desc"
+                        style="@style/ItemView.Small"
+                        android:gravity="center_vertical"
+                        android:text="@string/condition_operator_or_desc"
+                        android:textSize="@dimen/text_size_list_item_text"
+                        android:drawablePadding="@dimen/margin_horizontal_small"
+                        app:drawableEndCompat="@drawable/ic_chevron"
+                        tools:drawableStart="@drawable/ic_all_conditions"/>
+
+                    <include layout="@layout/include_view_separator"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_end_conditions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_horizontal_small"
+                        android:layout_marginEnd="@dimen/margin_horizontal_small"
+                        android:layout_marginTop="@dimen/margin_vertical_default"
+                        android:layout_marginBottom="@dimen/margin_vertical_default"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:scrollbars="horizontal"
+                        android:background="@color/listBackground"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_end_condition_card"
+                        tools:itemCount="1"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_end_condition_no_event"
+                    style="@style/ItemView.Small"
+                    android:gravity="center"
+                    android:text="@string/dialog_scenario_settings_end_condition_no_events"
+                    android:textSize="@dimen/text_size_list_item_text"/>
 
             </LinearLayout>
 

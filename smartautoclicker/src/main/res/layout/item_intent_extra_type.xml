@@ -21,6 +21,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/text_type"
     style="@style/ItemView.Big"
+    android:textSize="@dimen/text_size_list_item_text_big"
     android:gravity="center_vertical"
     app:layout_constraintStart_toEndOf="@id/icon_app"
     app:layout_constraintEnd_toEndOf="parent"

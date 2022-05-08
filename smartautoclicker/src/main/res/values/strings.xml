@@ -181,6 +181,7 @@
     <string name="dialog_scenario_settings_quality_precision">Precision</string>
     <string name="dialog_scenario_settings_end_condition_title">End conditions</string>
     <string name="dialog_scenario_settings_end_condition_card_executions" translatable="false">x%1$d</string>
+    <string name="dialog_scenario_settings_end_condition_no_events">No events available</string>
     <string name="dialog_end_condition_config_title">End Condition</string>
     <string name="dialog_end_condition_config_event_title">Event</string>
     <string name="dialog_end_condition_config_event_no_selection">No Event selected</string>
