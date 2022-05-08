@@ -121,8 +121,8 @@ class ScreenMetrics(private val context: Context) {
     }
 
     /** @return the size of the display, in pixels. */
-    private fun computeScreenSize(): Point {
-        val size = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    private fun computeScreenSize(): Point =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val currentWindowMetricsBound = context.getSystemService(WindowManager::class.java)
                 .currentWindowMetrics.bounds
 
@@ -136,15 +136,6 @@ class ScreenMetrics(private val context: Context) {
             display.getRealSize(realSize)
             realSize
         }
-
-        // Some phone can be messy with the size change with the orientation. Correct it here.
-        return if (orientation == Configuration.ORIENTATION_PORTRAIT && size.x > size.y ||
-            orientation == Configuration.ORIENTATION_LANDSCAPE && size.x < size.y) {
-            Point(size.y, size.x)
-        } else {
-            size
-        }
-    }
 
     /**  @return the orientation of the screen. */
     private fun computeOrientation(): Int = when (display.rotation) {
