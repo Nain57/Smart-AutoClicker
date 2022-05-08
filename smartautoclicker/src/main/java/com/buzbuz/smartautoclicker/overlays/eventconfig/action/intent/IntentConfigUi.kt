@@ -74,7 +74,10 @@ fun IncludeIntentConfigBinding.setupIntentUi(
         setSelectAllOnFocus(true)
         addTextChangedListener(object : OnAfterTextChangedListener() {
             override fun afterTextChanged(s: Editable?) {
-                intentModel.setFlagsAction(if (!s.isNullOrEmpty()) s.toString().toInt() else null)
+                val flags = try {
+                    if (!s.isNullOrEmpty()) s.toString().toInt() else null
+                } catch (nfe: NumberFormatException) { null }
+                intentModel.setFlagsAction(flags)
             }
         })
     }

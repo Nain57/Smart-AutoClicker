@@ -214,7 +214,7 @@
                         android:layout_height="@dimen/item_height"
                         android:layout_marginStart="@dimen/margin_horizontal_small"
                         android:layout_marginEnd="@dimen/margin_horizontal_small"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:importantForAutofill="no"
                         android:imeOptions="actionDone"
                         tools:text="60000"/>
