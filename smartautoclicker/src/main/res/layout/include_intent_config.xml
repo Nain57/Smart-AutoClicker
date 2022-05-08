@@ -15,21 +15,107 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.core.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/action_config_layout_intent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical">
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:visibility="visible">
 
-    <LinearLayout
-        android:id="@+id/action_config_layout_intent"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        style="@style/HeaderCardView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_action_config_intent_config_type_title"
+                style="@style/HeaderTitle"/>
+
+            <include layout="@layout/include_view_separator"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_config_type"
+                style="@style/ItemView.Small"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_size_list_item_text"
+                android:drawablePadding="@dimen/margin_horizontal_small"
+                android:foreground="?attr/selectableItemBackground"
+                app:drawableEndCompat="@drawable/ic_chevron"
+                tools:text="@string/dialog_action_config_intent_config_type_simple"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layout_simple"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/HeaderCardView"
+        tools:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_action_config_intent_simple_start_app_title"
+                style="@style/HeaderTitle"/>
+
+            <include layout="@layout/include_view_separator"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/ItemView.Big">
+
+                <ImageView
+                    android:id="@+id/icon_application_to_start"
+                    android:layout_width="@dimen/item_height"
+                    android:layout_height="@dimen/item_height"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:contentDescription="@string/content_desc_application_icon"
+                    tools:src="@drawable/ic_settings" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_application_to_start"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_horizontal_default"
+                    android:gravity="center_vertical"
+                    app:layout_constraintStart_toEndOf="@id/icon_application_to_start"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:drawableEndCompat="@drawable/ic_chevron"
+                    tools:text="Smart AutoClicker"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/layout_advanced"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -44,32 +130,31 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_action_config_intent_config_type_title"
+                    android:text="@string/dialog_action_config_intent_advanced_send_type_title"
+                    android:labelFor="@+id/edit_name"
                     style="@style/HeaderTitle"/>
 
                 <include layout="@layout/include_view_separator"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/text_config_type"
+                    android:id="@+id/text_isBroadcast"
                     style="@style/ItemView.Small"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+                    android:paddingStart="@dimen/margin_horizontal_default"
+                    android:paddingEnd="@dimen/margin_horizontal_default"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_list_item_text"
                     android:drawablePadding="@dimen/margin_horizontal_small"
-                    android:foreground="?attr/selectableItemBackground"
                     app:drawableEndCompat="@drawable/ic_chevron"
-                    tools:text="@string/dialog_action_config_intent_config_type_simple"/>
+                    tools:text="@string/dialog_action_config_intent_advanced_send_type_start_app"/>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/layout_simple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/HeaderCardView"
-            tools:visibility="gone">
+            style="@style/HeaderCardView">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,226 +164,134 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_action_config_intent_simple_start_app_title"
+                    android:text="@string/dialog_action_config_intent_advanced_action_title"
+                    android:labelFor="@+id/edit_intent_action"
                     style="@style/HeaderTitle"/>
 
                 <include layout="@layout/include_view_separator"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    style="@style/ItemView.Big">
-
-                    <ImageView
-                        android:id="@+id/icon_application_to_start"
-                        android:layout_width="@dimen/item_height"
-                        android:layout_height="@dimen/item_height"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        tools:src="@drawable/ic_settings"/>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/text_application_to_start"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/margin_horizontal_default"
-                        android:gravity="center_vertical"
-                        app:layout_constraintStart_toEndOf="@id/icon_application_to_start"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:drawableEndCompat="@drawable/ic_chevron"
-                        tools:text="Smart AutoClicker"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <EditText
+                    android:id="@+id/edit_intent_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    android:imeOptions="actionDone"
+                    tools:text="android.intent.MAIN"/>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <LinearLayout
-            android:id="@+id/layout_advanced"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/HeaderCardView">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/HeaderCardView">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text="@string/dialog_action_config_intent_advanced_flags_title"
+                    android:labelFor="@+id/edit_intent_flags"
+                    style="@style/HeaderTitle"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dialog_action_config_intent_advanced_send_type_title"
-                        android:labelFor="@+id/edit_name"
-                        style="@style/HeaderTitle"/>
+                <include layout="@layout/include_view_separator"/>
 
-                    <include layout="@layout/include_view_separator"/>
+                <EditText
+                    android:id="@+id/edit_intent_flags"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:inputType="number"
+                    android:importantForAutofill="no"
+                    android:imeOptions="actionDone"
+                    tools:text="60000"/>
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/text_isBroadcast"
-                        style="@style/ItemView.Small"
-                        android:paddingStart="@dimen/margin_horizontal_default"
-                        android:paddingEnd="@dimen/margin_horizontal_default"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/text_size_list_item_text"
-                        android:drawablePadding="@dimen/margin_horizontal_small"
-                        app:drawableEndCompat="@drawable/ic_chevron"
-                        tools:text="@string/dialog_action_config_intent_advanced_send_type_start_app"/>
+            </LinearLayout>
 
-                </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/HeaderCardView">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/HeaderCardView">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text="@string/dialog_action_config_intent_advanced_comp_name_title"
+                    android:labelFor="@+id/edit_intent_component_name"
+                    style="@style/HeaderTitle"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dialog_action_config_intent_advanced_action_title"
-                        android:labelFor="@+id/edit_name"
-                        style="@style/HeaderTitle"/>
+                <include layout="@layout/include_view_separator"/>
 
-                    <include layout="@layout/include_view_separator"/>
+                <EditText
+                    android:id="@+id/edit_intent_component_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    android:imeOptions="actionDone"
+                    tools:text="com.buzbuz.smartautoclicker/.MainActivity"/>
 
-                    <EditText
-                        android:id="@+id/edit_intent_action"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height"
-                        android:layout_marginStart="@dimen/margin_horizontal_small"
-                        android:layout_marginEnd="@dimen/margin_horizontal_small"
-                        android:inputType="text"
-                        android:importantForAutofill="no"
-                        android:imeOptions="actionDone"
-                        tools:text="android.intent.MAIN"/>
+            </LinearLayout>
 
-                </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/HeaderCardView">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/HeaderCardView">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text="@string/dialog_action_config_intent_advanced_extras_title"
+                    android:labelFor="@+id/edit_name"
+                    style="@style/HeaderTitle"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dialog_action_config_intent_advanced_flags_title"
-                        android:labelFor="@+id/edit_name"
-                        style="@style/HeaderTitle"/>
+                <include layout="@layout/include_view_separator"/>
 
-                    <include layout="@layout/include_view_separator"/>
-
-                    <EditText
-                        android:id="@+id/edit_intent_flags"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height"
-                        android:layout_marginStart="@dimen/margin_horizontal_small"
-                        android:layout_marginEnd="@dimen/margin_horizontal_small"
-                        android:inputType="number"
-                        android:importantForAutofill="no"
-                        android:imeOptions="actionDone"
-                        tools:text="60000"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/HeaderCardView">
-
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_extras"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:layout_marginTop="@dimen/margin_vertical_default"
+                    android:layout_marginBottom="@dimen/margin_vertical_default"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:scrollbars="horizontal"
+                    android:background="@color/listBackground"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_end_condition_card"
+                    tools:itemCount="1"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dialog_action_config_intent_advanced_comp_name_title"
-                        android:labelFor="@+id/edit_name"
-                        style="@style/HeaderTitle"/>
+            </LinearLayout>
 
-                    <include layout="@layout/include_view_separator"/>
-
-                    <EditText
-                        android:id="@+id/edit_intent_component_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height"
-                        android:layout_marginStart="@dimen/margin_horizontal_small"
-                        android:layout_marginEnd="@dimen/margin_horizontal_small"
-                        android:inputType="text"
-                        android:importantForAutofill="no"
-                        android:imeOptions="actionDone"
-                        tools:text="com.buzbuz.smartautoclicker/.MainActivity"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/HeaderCardView">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dialog_action_config_intent_advanced_extras_title"
-                        android:labelFor="@+id/edit_name"
-                        style="@style/HeaderTitle"/>
-
-                    <include layout="@layout/include_view_separator"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/list_extras"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_horizontal_small"
-                        android:layout_marginEnd="@dimen/margin_horizontal_small"
-                        android:layout_marginTop="@dimen/margin_vertical_default"
-                        android:layout_marginBottom="@dimen/margin_vertical_default"
-                        android:layout_gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:scrollbars="horizontal"
-                        android:background="@color/listBackground"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_end_condition_card"
-                        tools:itemCount="1"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
-
+</LinearLayout>

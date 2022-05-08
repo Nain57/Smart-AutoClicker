@@ -170,6 +170,7 @@
     <string name="content_desc_action">The action to be executed</string>
     <string name="content_desc_action_icon">The icon showing the type of action</string>
     <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
+    <string name="content_desc_application_icon">The icon of the application to start.</string>
 
     <string name="dialog_unit_ms" translatable="false">ms</string>
     <string name="dialog_copy_title">Copy from</string>
