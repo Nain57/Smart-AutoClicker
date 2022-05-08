@@ -94,7 +94,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         screenMetrics = ScreenMetrics(mockContext)
 
-        assertEquals(Point(DISPLAY_SIZE_Y, DISPLAY_SIZE_X), screenMetrics.screenSize)
+        assertEquals(Point(DISPLAY_SIZE_X, DISPLAY_SIZE_Y), screenMetrics.screenSize)
     }
 
     @Test
@@ -207,7 +207,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
 
-        assertEquals(Point(DISPLAY_SIZE_Y, DISPLAY_SIZE_X), screenMetrics.screenSize)
+        assertEquals(Point(DISPLAY_SIZE_X, DISPLAY_SIZE_Y), screenMetrics.screenSize)
     }
 
     @Test
