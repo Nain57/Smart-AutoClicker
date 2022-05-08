@@ -19,8 +19,6 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.action
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
-import android.text.InputFilter
-import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 
@@ -166,23 +164,4 @@ class ActionConfigDialog(
         }
         dismiss()
     }
-}
-
-/** Input filter for an Action duration. */
-class DurationInputFilter : InputFilter {
-
-    override fun filter(
-        source: CharSequence?,
-        start: Int,
-        end: Int,
-        dest: Spanned?,
-        dstart: Int,
-        dend: Int
-    ): CharSequence? {
-        try {
-            if (Integer.parseInt(dest.toString() + source.toString()) > 0) return null
-        } catch (nfe: NumberFormatException) { }
-        return ""
-    }
-
 }

@@ -32,18 +32,18 @@ import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraType
 data class IntentExtra<T>(
     var id: Long = 0,
     var actionId: Long,
-    var key: String,
-    var value: T,
+    var key: String?,
+    var value: T?,
 ) {
 
     /** @return the entity equivalent of this intent extra. */
     internal fun toEntity(): IntentExtraEntity {
-        if (actionId == 0L)
+        if (key == null || value == null)
             throw IllegalStateException("Can't create entity, action is invalid")
 
         val type = when (value) {
-            is Byte -> IntentExtraType.BYTE
             is Boolean -> IntentExtraType.BOOLEAN
+            is Byte -> IntentExtraType.BYTE
             is Char -> IntentExtraType.CHAR
             is Double -> IntentExtraType.DOUBLE
             is Int -> IntentExtraType.INTEGER
@@ -52,13 +52,27 @@ data class IntentExtra<T>(
             is String -> IntentExtraType.STRING
             else -> throw IllegalArgumentException("Unsupported value type")
         }
-        return IntentExtraEntity(id, actionId, type, key, value.toString())
+        return IntentExtraEntity(id, actionId, type, key!!, value!!.toString())
     }
 
     /** Cleanup all ids contained in this intent extra. Ideal for copying. */
     internal fun cleanUpIds() {
         id = 0
         actionId = 0
+    }
+
+    /**
+     * Copy and change the type of the value contained in this IntentExtra.
+     * @param V the new value type.
+     * @param value the new value.
+     */
+    fun <V> copy(value: V): IntentExtra<V> {
+        if (value !is Boolean && value !is Byte && value !is Char && value !is Double && value !is Int &&
+            value !is Float && value !is Short && value !is String) {
+            throw IllegalArgumentException("Unsupported value type")
+        }
+
+        return IntentExtra(id = id, actionId = actionId, key = key, value = value)
     }
 }
 

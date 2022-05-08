@@ -78,6 +78,7 @@
     <string name="dialog_action_type_swipe">Swipe</string>
     <string name="dialog_action_type_pause">Wait</string>
     <string name="dialog_action_type_intent">Intent</string>
+
     <string name="dialog_action_config_click_press_duration_title">Press duration</string>
     <string name="dialog_action_config_click_position_title">Click position</string>
     <string name="dialog_action_config_click_position_on_condition">On condition</string>
@@ -89,14 +90,30 @@
     <string name="dialog_action_config_swipe_position_none">No swipe position defined</string>
     <string name="dialog_action_config_swipe_position">Swipe from %1$d, %2$d to %3$d, %4$d</string>
     <string name="dialog_action_config_pause_duration_title">Pause duration</string>
+
     <string name="dialog_action_config_intent_config_type_title">Configuration type</string>
     <string name="dialog_action_config_intent_config_type_simple">Simple</string>
     <string name="dialog_action_config_intent_config_type_advanced">Advanced</string>
     <string name="dialog_action_config_intent_simple_start_app_title">Start application</string>
     <string name="dialog_action_config_intent_simple_start_app_no_app">No application selected</string>
+    <string name="dialog_action_config_intent_advanced_send_type_title">Intent sending type</string>
+
+    <string name="dialog_action_config_intent_advanced_send_type_start_app" translatable="false">Start activity</string>
+    <string name="dialog_action_config_intent_advanced_send_type_broadcast" translatable="false">Send broadcast</string>
+    <string name="dialog_action_config_intent_advanced_action_title" translatable="false">Action</string>
+    <string name="dialog_action_config_intent_advanced_flags_title" translatable="false">Flags</string>
+    <string name="dialog_action_config_intent_advanced_comp_name_title" translatable="false">Component name</string>
+    <string name="dialog_action_config_intent_advanced_extras_title" translatable="false">Extras</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_title" translatable="false">Extra</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_boolean_true" translatable="false">True</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_boolean_false" translatable="false">False</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_key">Key</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value">Value</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value_type">Value type</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">Choisir un type</string>
+
     <string name="dialog_application_select_title">Select an application</string>
     <string name="dialog_application_select_empty">No application detected</string>
-
 
     <string name="dialog_action_new_title">New Action</string>
     <string name="dialog_action_new_create">Create</string>
@@ -105,6 +122,8 @@
     <string name="dialog_action_copy_click_details">During %1$s at [%2$d, %3$d]</string>
     <string name="dialog_action_copy_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
     <string name="dialog_action_copy_pause_details">During %1$s</string>
+    <string name="dialog_action_copy_intent_details_action">Send %1$s</string>
+    <string name="dialog_action_copy_intent_details_action_component">Send %1$s to %2$s</string>
     <string name="dialog_action_copy_header_event">Actions from this event</string>
     <string name="dialog_action_copy_header_all">Actions from all events</string>
     <string name="dialog_action_copy_search">Search by action name</string>

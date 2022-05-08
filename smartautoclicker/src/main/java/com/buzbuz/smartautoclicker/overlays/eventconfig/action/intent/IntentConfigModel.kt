@@ -24,14 +24,17 @@ import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 
 import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.database.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionModel
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 /**
@@ -42,7 +45,7 @@ import kotlinx.coroutines.launch
  */
 class IntentConfigModel(
     private val viewModelScope: CoroutineScope,
-    private val configuredAction: MutableStateFlow<Action?>,
+    val configuredAction: MutableStateFlow<Action?>,
     private val packageManager: PackageManager,
 ) : ActionModel() {
 
@@ -55,33 +58,53 @@ class IntentConfigModel(
         }
 
     override fun saveLastConfig(eventConfigPrefs: SharedPreferences) {
-        configuredAction.value?.let { action ->
-            if (action is Action.Intent) {
-                // TODO to be implemented
-            }
-        }
+        // Nothing to do
     }
 
     /** True if the intent creation mode is advanced, false if not. */
     val isAdvanced: Flow<Boolean> = configuredAction
         .filterIsInstance<Action.Intent>()
         .map { it.isAdvanced ?: false }
+        .distinctUntilChanged()
     /* The intent action. */
     val action: Flow<String?> = configuredAction
         .filterIsInstance<Action.Intent>()
         .map { it.intentAction }
+        .take(1)
     /** The flags for this intent. */
-    val flags: Flow<Int?> = configuredAction
+    val flags: Flow<String?> = configuredAction
         .filterIsInstance<Action.Intent>()
-        .map { it.flags }
+        .map { it.flags.toString() }
+        .take(1)
     /** The component name for the intent. */
-    val componentName: Flow<ComponentName?> = configuredAction
+    val componentName: Flow<String?> = configuredAction
         .filterIsInstance<Action.Intent>()
-        .map { it.componentName }
+        .map { it.componentName?.flattenToString() }
+        .take(1)
     /** True if this intent is a broadcast, false for a start activity. */
     val isBroadcast: Flow<Boolean> = configuredAction
         .filterIsInstance<Action.Intent>()
         .map { it.isBroadcast ?: false }
+
+    /** The list of extra items to be displayed. */
+    val extras: Flow<List<ExtraListItem>> = configuredAction
+        .filterIsInstance<Action.Intent>()
+        .map { intent ->
+            buildList {
+                intent.extras?.forEach { extra ->
+                    val lastDotIndex = extra.key!!.lastIndexOf('.', 0)
+                    add(
+                        ExtraListItem.ExtraItem(
+                            extra = extra,
+                            name = if (lastDotIndex == -1) extra.key!! else extra.key!!.substring(lastDotIndex),
+                            value = extra.value.toString()
+                        )
+                    )
+                }
+
+                add(ExtraListItem.AddExtraItem)
+            }
+        }
 
     /** Name and icon of the selected application in simple edition mode. */
     val activityInfo: Flow<ActivityDisplayInfo?> = configuredAction
@@ -98,7 +121,11 @@ class IntentConfigModel(
     fun toggleIsAdvanced() {
         (configuredAction.value as Action.Intent).let { intent ->
             viewModelScope.launch {
-                configuredAction.value = intent.copy(isAdvanced = !(intent.isAdvanced ?: false))
+                val isAdvanced =  !(intent.isAdvanced ?: false)
+                configuredAction.value = intent.copy(
+                    isAdvanced = isAdvanced,
+                    isBroadcast = if(!isAdvanced) false else intent.isBroadcast
+                )
             }
         }
     }
@@ -120,22 +147,115 @@ class IntentConfigModel(
         }
     }
 
-    /** Set the component name for the intent. */
-    fun setComponentName(componentName: ComponentName) {
+    /** Set the action for the intent. */
+    fun setIntentAction(action: String) {
         (configuredAction.value as Action.Intent).let { intent ->
             viewModelScope.launch {
-                configuredAction.value = intent.copy(componentName = componentName)
+                configuredAction.value = intent.copy(intentAction = action)
+            }
+        }
+    }
+
+    /** Set the action for the intent. */
+    fun setFlagsAction(flags: Int?) {
+        (configuredAction.value as Action.Intent).let { intent ->
+            viewModelScope.launch {
+                configuredAction.value = intent.copy(flags = flags)
+            }
+        }
+    }
+
+    /** Set the component name for the intent. */
+    fun setComponentName(componentName: String) {
+        (configuredAction.value as Action.Intent).let { intent ->
+            viewModelScope.launch {
+                configuredAction.value = intent.copy(componentName = ComponentName.unflattenFromString(componentName))
+            }
+        }
+    }
+
+    /** Toggle between a broadcast and start activity. */
+    fun toggleIsBroadcast() {
+        (configuredAction.value as Action.Intent).let { intent ->
+            viewModelScope.launch {
+                configuredAction.value = intent.copy(isBroadcast = !(intent.isBroadcast ?: false))
+            }
+        }
+    }
+
+    /** @return creates a new extra for this intent. */
+    fun getNewExtra() = IntentExtra(0L, configuredAction.value!!.id, null, null)
+
+    /**
+     * Add a new extra to the configured intent.
+     * @param extra the new extra to add.
+     */
+    fun addNewExtra(extra: IntentExtra<out Any>) {
+        (configuredAction.value as Action.Intent).let { intent ->
+            viewModelScope.launch {
+                val newList = intent.extras?.toMutableList() ?: mutableListOf()
+                newList.add(extra)
+                configuredAction.value = intent.copy(extras = newList)
+            }
+        }
+    }
+
+    /**
+     * Update an extra in the configured intent.
+     * @param extra the extra to update.
+     * @param index the index of the extra in the extra list.
+     */
+    fun updateExtra(extra: IntentExtra<out Any>, index: Int) {
+        (configuredAction.value as Action.Intent).let { intent ->
+            viewModelScope.launch {
+                val newList = intent.extras?.toMutableList() ?: return@launch
+                newList[index] = extra
+                configuredAction.value = intent.copy(extras = newList)
+            }
+        }
+    }
+
+    /**
+     * Delete an extra in the configured intent.
+     * @param index the index of the extra in the extra list.
+     */
+    fun deleteExtra(index: Int) {
+        (configuredAction.value as Action.Intent).let { intent ->
+            viewModelScope.launch {
+                val newList = intent.extras?.toMutableList() ?: return@launch
+                newList.removeAt(index)
+                configuredAction.value = intent.copy(extras = newList)
             }
         }
     }
 }
 
+/**
+ * Information about an activity to be started by the intent.
+ *
+ * @param componentName the Android component name of the activity.
+ * @param name the name of the activity.
+ * @param icon the icon of the activity.
+ */
 data class ActivityDisplayInfo(
     val componentName: ComponentName,
     val name: String,
     val icon: Drawable,
 )
 
+/** Items displayed in the extra list. */
+sealed class ExtraListItem {
+    /** The add extra item. */
+    object AddExtraItem : ExtraListItem()
+    /** Item representing an intent extra. */
+    data class ExtraItem(val extra: IntentExtra<out Any>, val name: String, val value: String) : ExtraListItem()
+}
+
+/**
+ * Get the activity display information from this resolve info, if possible.
+ * @param packageManager the Android package manager to fetch the information from.
+ * @return activity display information, or null if this resolve info is invalid for activity.
+ */
 fun ResolveInfo.getActivityDisplayInfo(packageManager: PackageManager): ActivityDisplayInfo? =
     activityInfo?.let { actInfo ->
         ActivityDisplayInfo(

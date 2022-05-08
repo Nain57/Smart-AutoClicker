@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.databinding.IncludeSwipeConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.CoordinatesSelector
-import com.buzbuz.smartautoclicker.overlays.eventconfig.action.DurationInputFilter
+import com.buzbuz.smartautoclicker.overlays.utils.DurationInputFilter
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.CoroutineScope

@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ClickTargetChoice
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.CoordinatesSelector
-import com.buzbuz.smartautoclicker.overlays.eventconfig.action.DurationInputFilter
+import com.buzbuz.smartautoclicker.overlays.utils.DurationInputFilter
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 

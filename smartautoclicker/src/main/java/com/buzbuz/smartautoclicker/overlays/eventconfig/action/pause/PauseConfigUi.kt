@@ -24,7 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.databinding.IncludePauseConfigBinding
-import com.buzbuz.smartautoclicker.overlays.eventconfig.action.DurationInputFilter
+import com.buzbuz.smartautoclicker.overlays.utils.DurationInputFilter
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.CoroutineScope

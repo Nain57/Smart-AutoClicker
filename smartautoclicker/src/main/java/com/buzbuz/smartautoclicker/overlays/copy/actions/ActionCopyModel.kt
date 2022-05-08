@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.copy.actions
 
 import android.content.Context
+import android.util.Log
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -29,7 +30,6 @@ import com.buzbuz.smartautoclicker.database.domain.Action
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import java.lang.UnsupportedOperationException
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 
@@ -127,7 +127,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             is Action.Click -> action.copy(id = 0, name = "" + action.name)
             is Action.Swipe -> action.copy(id = 0, name = "" + action.name)
             is Action.Pause -> action.copy(id = 0, name = "" + action.name)
-            is Action.Intent -> throw UnsupportedOperationException()
+            is Action.Intent -> action.copy(id = 0, name = "" + action.name)
         }
 
     /** @return the [ActionCopyItem.ActionItem] corresponding to this action. */
@@ -162,7 +162,11 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
                 ),
             )
 
-            is Action.Intent -> throw UnsupportedOperationException()
+            is Action.Intent -> ActionCopyItem.ActionItem(
+                icon = R.drawable.ic_intent,
+                name = name!!,
+                details = formatIntentDetails(this),
+            )
         }
 
         item.action = this
@@ -194,6 +198,43 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
         return value.trim()
     }
 
+    /**
+     * Format a action intent into a human readable string.
+     * @param intent the action intent to be formatted.
+     * @return the formatted intent.
+     */
+    private fun formatIntentDetails(intent: Action.Intent): String {
+        var action = intent.intentAction ?: let {
+            Log.w(TAG, "formatIntentDetails: null intent action !")
+            return ""
+        }
+
+        val dotIndex = action.lastIndexOf('.')
+        if (dotIndex != -1 && dotIndex < action.lastIndex) {
+            action = action.substring(dotIndex + 1)
+
+            if (intent.isBroadcast == false && intent.componentName != null
+                && action.length < INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT) {
+
+                var componentName = intent.componentName!!.flattenToString()
+                val dotIndex2 = componentName.lastIndexOf('.')
+                if (dotIndex2 != -1 && dotIndex2 < componentName.lastIndex) {
+
+                    componentName = componentName.substring(dotIndex2 + 1)
+                    if (componentName.length < INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT) {
+                        return context.getString(
+                            R.string.dialog_action_copy_intent_details_action_component,
+                            action,
+                            componentName,
+                        )
+                    }
+                }
+            }
+        }
+
+        return context.getString(R.string.dialog_action_copy_intent_details_action, action)
+    }
+
     /** Types of items in the action copy list. */
     sealed class ActionCopyItem {
 
@@ -222,3 +263,10 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
         }
     }
 }
+
+/** */
+private const val INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT = 15
+/** */
+private const val INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT = 20
+/** Tag for logs. */
+private const val TAG = "ActionCopyModel"
