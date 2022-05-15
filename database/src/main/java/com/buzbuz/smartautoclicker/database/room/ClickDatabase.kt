@@ -56,7 +56,7 @@ import com.buzbuz.smartautoclicker.database.room.migrations.*
         EndConditionEntity::class,
         IntentExtraEntity::class,
     ],
-    version = 8,
+    version = CLICK_DATABASE_VERSION,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 7, to = 8)
@@ -110,3 +110,6 @@ internal abstract class ClickDatabase : RoomDatabase() {
         }
     }
 }
+
+/** Current version of the database. */
+const val CLICK_DATABASE_VERSION = 8

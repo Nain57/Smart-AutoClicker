@@ -129,12 +129,15 @@ internal abstract class EventDao {
      * fields in all substructure and ensure action priority correctness.
      *
      * @param event the complete event to be added.
+     *
+     * @return the new event identifier.
      */
     @Transaction
-    open suspend fun addCompleteEvent(event: CompleteEventEntity) {
+    open suspend fun addCompleteEvent(event: CompleteEventEntity): Long {
         val eventId = addEvent(event.event)
 
         event.actions.forEachIndexed { index, action ->
+            action.action.id = 0
             action.action.eventId = eventId
             action.action.priority = index
         }
@@ -148,9 +151,12 @@ internal abstract class EventDao {
         }
 
         event.conditions.forEach {
+            it.id = 0
             it.eventId = eventId
         }
         addConditions(event.conditions)
+
+        return eventId
     }
 
     /**

@@ -24,6 +24,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 
+import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEndConditions
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
@@ -71,6 +72,15 @@ internal interface ScenarioDao {
     suspend fun getScenarioWithEndConditions(scenarioId: Long): ScenarioWithEndConditions
 
     /**
+     * Get a complete scenario
+     *
+     * @return the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
+    suspend fun getCompleteScenario(scenarioId: Long): CompleteScenario
+
+    /**
      * Add a new scenario to the database.
      *
      * @param scenarioEntity the scenario to be added.
@@ -91,9 +101,6 @@ internal interface ScenarioDao {
      *
      * Any associated [ClickEntity] will be removed from the database, as well as their related [ClickConditionCrossRef]
      * due to the [androidx.room.ForeignKey.CASCADE] deletion of this parent scenario.
-     *
-     * You might want to call [deleteClicklessConditions] after this method in order to avoid useless conditions to be
-     * stored in the database.
      *
      * @param scenario the scenario to be deleted.
      */

@@ -24,6 +24,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import kotlinx.serialization.Serializable
 
 /**
  * Entity defining an event.
@@ -57,6 +58,7 @@ import androidx.room.Relation
         onDelete = ForeignKey.CASCADE
     )]
 )
+@Serializable
 internal data class EventEntity(
     @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
@@ -76,6 +78,7 @@ internal data class EventEntity(
  * @param actions the list of actions entity for this event.
  * @param conditions the list of conditions entity for this event.
  */
+@Serializable
 internal data class CompleteEventEntity(
     @Embedded val event: EventEntity,
     @Relation(

@@ -17,6 +17,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion 31
@@ -31,6 +32,14 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    compileOptions {
+        kotlin {
+            kotlinOptions {
+                freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
             }
         }
     }
@@ -57,6 +66,8 @@ dependencies {
     implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
     kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}"
 
     implementation project(path: ':extensions')
 

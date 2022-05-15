@@ -22,6 +22,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
+import kotlinx.serialization.Serializable
+
 /**
  * Entity defining a scenario of events.
  *
@@ -35,6 +37,7 @@ import androidx.room.Relation
  *                             value of [com.buzbuz.smartautoclicker.database.domain.ConditionOperator].
  */
 @Entity(tableName = "scenario_table")
+@Serializable
 internal data class ScenarioEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "name") val name: String,
@@ -77,4 +80,22 @@ internal data class ScenarioWithEndConditions(
         entityColumn = "scenario_id"
     )
     val endConditions: List<EndConditionWithEvent>
+)
+
+/** */
+@Serializable
+internal data class CompleteScenario(
+    @Embedded val scenario: ScenarioEntity,
+    @Relation(
+        entity = EventEntity::class,
+        parentColumn = "id",
+        entityColumn = "scenario_id"
+    )
+    val events: List<CompleteEventEntity>,
+    @Relation(
+        entity = EndConditionEntity::class,
+        parentColumn = "id",
+        entityColumn = "scenario_id"
+    )
+    val endConditions: List<EndConditionEntity>
 )

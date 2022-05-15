@@ -41,7 +41,7 @@ internal class BitmapManagerImpl(private val appDataDir: File) : BitmapManager {
         /** Tag for logs */
         private const val TAG = "BitmapManager"
         /** The prefix appended to all bitmap file names. */
-        private const val CLICK_CONDITION_FILE_PREFIX = "Condition_"
+        internal const val CLICK_CONDITION_FILE_PREFIX = "Condition_"
         /** The ratio of the total application size for the size of the bitmap cache in the memory. */
         private const val CACHE_SIZE_RATIO = 0.5
     }

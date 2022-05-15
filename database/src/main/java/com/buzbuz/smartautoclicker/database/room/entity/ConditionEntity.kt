@@ -21,6 +21,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * Entity defining a condition from an event.
@@ -55,8 +56,9 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )]
 )
+@Serializable
 internal data class ConditionEntity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") val id: Long,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "path") val path: String,

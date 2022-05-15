@@ -23,6 +23,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import kotlinx.serialization.Serializable
 
 /**
  * Entity defining a end condition for a scenario.
@@ -53,6 +54,7 @@ import androidx.room.Relation
         ),
     ]
 )
+@Serializable
 internal data class EndConditionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
