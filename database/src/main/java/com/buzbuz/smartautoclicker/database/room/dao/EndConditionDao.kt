@@ -63,7 +63,6 @@ internal abstract class EndConditionDao {
      * @param endConditionEntities the list of end condition to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    @VisibleForTesting
     abstract suspend fun add(endConditionEntities: List<EndConditionEntity>)
 
     /**

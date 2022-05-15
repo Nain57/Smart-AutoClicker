@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.database.room.entity
 
 import androidx.room.*
+import kotlinx.serialization.Serializable
 
 /**
  * Entity defining an action from an event.
@@ -66,6 +67,7 @@ import androidx.room.*
         onDelete = ForeignKey.CASCADE
     )]
 )
+@Serializable
 internal data class ActionEntity(
     @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
@@ -132,6 +134,7 @@ internal class ActionTypeStringConverter {
  * @param action
  * @param intentExtras
  */
+@Serializable
 internal data class CompleteActionEntity(
     @Embedded val action: ActionEntity,
     @Relation(

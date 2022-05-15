@@ -22,6 +22,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import kotlinx.serialization.Serializable
 
 /**
  * Entity defining an intent extra.
@@ -45,6 +46,7 @@ import androidx.room.TypeConverter
         onDelete = ForeignKey.CASCADE
     )]
 )
+@Serializable
 internal data class IntentExtraEntity(
     @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "action_id") var actionId: Long,

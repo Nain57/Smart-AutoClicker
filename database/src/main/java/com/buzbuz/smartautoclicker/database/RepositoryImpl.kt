@@ -16,15 +16,22 @@
  */
 package com.buzbuz.smartautoclicker.database
 
+import android.graphics.Point
+import android.net.Uri
+
+import com.buzbuz.smartautoclicker.database.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.domain.*
 import com.buzbuz.smartautoclicker.database.domain.toEvent
 import com.buzbuz.smartautoclicker.database.domain.toScenario
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
+import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 /**
  * Repository for the database and bitmap manager.
@@ -36,7 +43,8 @@ import kotlinx.coroutines.flow.map
  */
 internal class RepositoryImpl internal constructor(
     database: ClickDatabase,
-    private val bitmapManager: BitmapManager
+    private val bitmapManager: BitmapManager,
+    private val backupEngine: BackupEngine,
 ): Repository {
 
     /** The Dao for accessing the database. */
@@ -176,5 +184,66 @@ internal class RepositoryImpl internal constructor(
         }
 
         bitmapManager.deleteBitmaps(deletedPaths)
+    }
+
+    override fun createScenarioBackup(zipFileUri: Uri, scenarios: List<Long>, screenSize: Point) = channelFlow  {
+        launch {
+            backupEngine.createBackup(
+                zipFileUri,
+                scenarios.map {
+                    scenarioDao.getCompleteScenario(it)
+                },
+                screenSize,
+                BackupEngine.BackupProgress(
+                    onError = { send(Backup.Error) },
+                    onProgressChanged = { current, max -> send(Backup.Loading(current, max)) },
+                    onCompleted = { success, failureCount, compatWarning ->
+                        send(Backup.Completed(success.size, failureCount, compatWarning))
+                    }
+                )
+            )
+        }
+    }
+
+    override fun restoreScenarioBackup(zipFileUri: Uri, screenSize: Point) = channelFlow {
+        launch {
+            backupEngine.loadBackup(
+                zipFileUri,
+                screenSize,
+                BackupEngine.BackupProgress(
+                    onError = { send(Backup.Error) },
+                    onProgressChanged = { current, max -> send(Backup.Loading(current, max)) },
+                    onVerification = { send(Backup.Verification) },
+                    onCompleted = { success, failureCount, compatWarning ->
+                        insertRestoredScenarios(success)
+                        send(Backup.Completed(success.size, failureCount, compatWarning))
+                    }
+                )
+            )
+        }
+    }
+
+    private suspend fun insertRestoredScenarios(completeScenarios: List<CompleteScenario>) {
+        completeScenarios.forEach { completeScenario ->
+            val scenarioId = scenarioDao.add(completeScenario.scenario.copy(id = 0))
+
+            val eventIdMap = mutableMapOf<Long, Long>()
+            completeScenario.events.forEach { completeEvent ->
+                val eventId = eventDao.addCompleteEvent(
+                    completeEvent.copy(event = completeEvent.event.copy(id = 0, scenarioId = scenarioId))
+                )
+                eventIdMap[completeEvent.event.id] = eventId
+            }
+
+            endConditionDao.add(
+                completeScenario.endConditions.map { endCondition ->
+                    endCondition.copy(
+                        id = 0,
+                        scenarioId = scenarioId,
+                        eventId = eventIdMap[endCondition.eventId]!!,
+                    )
+                }
+            )
+        }
     }
 }
