@@ -82,7 +82,14 @@ internal data class ScenarioWithEndConditions(
     val endConditions: List<EndConditionWithEvent>
 )
 
-/** */
+/**
+ * Entity embedding all entities for a scenario.
+ * This object can be huge and must be used only for backup purpose.
+ *
+ * @param scenario the scenario entity.
+ * @param events the complete event list for this scenario.
+ * @param endConditions the list of end conditions for this scenario.
+ */
 @Serializable
 internal data class CompleteScenario(
     @Embedded val scenario: ScenarioEntity,
