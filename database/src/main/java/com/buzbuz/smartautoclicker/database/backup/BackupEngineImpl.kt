@@ -60,7 +60,7 @@ internal class BackupEngineImpl(
         screenSize: Point,
         progress: BackupEngine.BackupProgress,
     ) {
-        Log.d(TAG, "Create backup: $zipFileUri")
+        Log.d(TAG, "Create backup: $zipFileUri for scenarios: $scenarios")
 
         var currentProgress = 0
         progress.onProgressChanged(currentProgress, scenarios.size)

@@ -318,7 +318,7 @@ internal class ScenarioSerializer {
     private fun JsonObject.deserializeIntentActionCompat(): ActionEntity? {
         val id = getLong("id", true) ?: return null
         val eventId = getLong("eventId", true) ?: return null
-        val intentAction = getString("intent_action", true) ?: return null
+        val intentAction = getString("intentAction", true) ?: return null
 
         return ActionEntity(
             id = id,
@@ -329,7 +329,7 @@ internal class ScenarioSerializer {
             isAdvanced = getBoolean("isAdvanced") ?: false,
             isBroadcast = getBoolean("isBroadcast") ?: false,
             intentAction = intentAction,
-            componentName = getString("component_name"),
+            componentName = getString("componentName"),
             flags = getInt("flags") ?: 0,
         )
     }
@@ -338,7 +338,7 @@ internal class ScenarioSerializer {
     private fun JsonArray.deserializeIntentExtrasCompat(): List<IntentExtraEntity> = mapNotNull { extra ->
         with (extra.jsonObject) {
             val id = getLong("id", true) ?: return@mapNotNull null
-            val actionId = getLong("action_id", true) ?: return@mapNotNull null
+            val actionId = getLong("actionId", true) ?: return@mapNotNull null
             val type = getEnumFromString<IntentExtraType>("type", true) ?: return@mapNotNull null
             val key = getString("key", true) ?: return@mapNotNull null
             val value = getString("value", true) ?: return@mapNotNull null
