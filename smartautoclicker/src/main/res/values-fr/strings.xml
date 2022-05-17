@@ -156,5 +156,18 @@
     <string name="dialog_end_condition_config_executions_title">Éxecutions</string>
     <string name="dialog_end_condition_event_select_title">Choisir un évènement</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
+    <string name="dialog_backup_create_title">Créer une sauvegarde</string>
+    <string name="dialog_backup_create_select_file">Choisir l\'emplacement de sauvegarde</string>
+    <string name="dialog_backup_create_progress">Sauvegarde: %1$d/%2$d</string>
+    <string name="dialog_backup_create_completed">Sauvegarde effectuée</string>
+    <string name="dialog_backup_create_error">Une erreur est survenue et la sauvegarde a été annulée</string>
+    <string name="dialog_backup_import_title">Importer une sauvegarde</string>
+    <string name="dialog_backup_import_select_file">Choisir le fichier de sauvegarde</string>
+    <string name="dialog_backup_import_progress">Import de la sauvegarde: %1$d</string>
+    <string name="dialog_backup_import_verification">Vérification des données</string>
+    <string name="dialog_backup_import_completed">Import effectué: %1$d scenarios importés</string>
+    <string name="dialog_backup_import_completed_with_error">Import effectué, des erreurs ont survenues:\n%1$d scenarios importés\n%2d erreurs</string>
+    <string name="dialog_backup_import_error">Une erreur est survenue et l\'import a été annulée</string>
+    <string name="dialog_backup_import_compatibility">Certains scenarios ont été généré par un téléphone avec un écran différent, ce qui peut causer des problèmes avec la détection et les coordonées des actions.\n\nPour régler le problème, vous devez refaire les screenshots de vos conditions et mettre à jour les coordonées de vos actions.</string>
 
 </resources>

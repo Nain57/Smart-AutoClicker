@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,32 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_cancel"
+        android:icon="@drawable/ic_cancel"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_search_item_title"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/action_select_all"
+        android:icon="@drawable/ic_select_all"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_search_item_title"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/action_import"
+        android:icon="@drawable/ic_load"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_search_item_title" />
+
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_search_item_title" />
 
     <item
         android:id="@+id/action_search"

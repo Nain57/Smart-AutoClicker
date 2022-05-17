@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,8 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
+import androidx.annotation.IntRange
+
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -29,9 +31,12 @@ import com.buzbuz.smartautoclicker.database.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.utils.newDefaultScenario
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
@@ -50,17 +55,69 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      */
     private var clickerService: SmartAutoClickerService.LocalService? = null
 
+    /** Set of scenario identifier selected for a backup. */
+    private val selectedForBackup = MutableStateFlow(emptySet<Long>())
+
+    /** Backing property for [menuState]. */
+    private val _menuState = MutableStateFlow(MenuState.SELECTION)
+    /** Current menu state. */
+    val menuState: StateFlow<MenuState> = _menuState
+    /** Current menu UI state. */
+    val menuUiState: Flow<MenuUiState> = _menuState
+        .combine(selectedForBackup) { menuState, selection ->
+            when (menuState) {
+                MenuState.SEARCH -> MenuUiState(
+                    state = menuState,
+                    searchVisibility = false,
+                    importBackupVisibility = false,
+                    cancelVisibility = false,
+                    selectAllVisibility = false,
+                    createBackupVisibility = false,
+                    createBackupEnabled = false,
+                )
+                MenuState.EXPORT -> MenuUiState(
+                    state = menuState,
+                    searchVisibility = false,
+                    importBackupVisibility = false,
+                    cancelVisibility = true,
+                    selectAllVisibility = true,
+                    createBackupVisibility = true,
+                    createBackupEnabled = selection.isNotEmpty(),
+                    createBackupAlpha = if (selection.isNotEmpty()) 255 else 127
+                )
+                MenuState.SELECTION -> MenuUiState(
+                    state = menuState,
+                    searchVisibility = true,
+                    importBackupVisibility = true,
+                    cancelVisibility = false,
+                    selectAllVisibility = false,
+                    createBackupVisibility = true,
+                    createBackupEnabled = true,
+                )
+            }
+        }
+
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
     /** Flow upon the list of scenarios. */
-    val scenarioList: Flow<List<Scenario>> = repository.scenarios
-        .combine(searchQuery) { scenarios, query ->
-            if (query.isNullOrEmpty()) return@combine scenarios
-
-            scenarios.filter { scenario ->
-                scenario.name.contains(query, true)
+    val scenarioList: StateFlow<List<ScenarioItem>> =
+        combine(repository.scenarios, searchQuery, _menuState, selectedForBackup) { scenarios, query, menuState, backupSelection ->
+            scenarios.mapNotNull { scenario ->
+                if (query.isNullOrEmpty() || scenario.name.contains(query.toString(), true)) {
+                    ScenarioItem(
+                        scenario = scenario,
+                        exportMode = menuState == MenuState.EXPORT,
+                        checkedForExport = backupSelection.contains(scenario.id)
+                    )
+                } else {
+                    null
+                }
             }
-        }
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            emptyList()
+        )
 
     init {
         SmartAutoClickerService.getLocalService(serviceConnection)
@@ -129,6 +186,39 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
+     * Change the menu state.
+     * @param menuState the new state.
+     */
+    fun setMenuState(menuState: MenuState) {
+        _menuState.value = menuState
+        selectedForBackup.value = selectedForBackup.value.toMutableSet().apply { clear() }
+    }
+
+    /**
+     * Toggle the selected for backup state of a scenario.
+     * @param scenarioId the identifier of the scenario to be toggled.
+     */
+    fun toggleScenarioSelectionForBackup(scenarioId: Long) {
+        val newSelection = selectedForBackup.value.toMutableSet().apply {
+            if (contains(scenarioId)) remove(scenarioId)
+            else add(scenarioId)
+        }
+        selectedForBackup.value = newSelection
+    }
+
+    /** Toggle the selected for backup state value for all scenario. */
+    fun toggleAllScenarioSelectionForBackup() {
+        if (scenarioList.value.size == selectedForBackup.value.size) {
+            selectedForBackup.value = emptySet()
+        } else {
+            selectedForBackup.value = scenarioList.value.map { it.scenario.id }.toSet()
+        }
+    }
+
+    /** @return the list of selected scenario identifiers. */
+    fun getScenariosSelectedForBackup(): Collection<Long> = selectedForBackup.value.toList()
+
+    /**
      * Start the overlay UI and instantiates the detection objects for a given scenario.
      *
      * This requires the media projection permission code and its data intent, they both can be retrieved using the
@@ -160,3 +250,49 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
         searchQuery.value = query
     }
 }
+
+/** Possible states for the action menu of the ScenarioListFragment. */
+enum class MenuState {
+    /** The user can select a scenario to be played/edited.*/
+    SELECTION,
+    /** The user is searching for a scenario. */
+    SEARCH,
+    /** The user is selecting the scenarios to export. */
+    EXPORT,
+}
+
+/**
+ * Ui state of the action menu.
+ *
+ * @param state the current state.
+ * @param searchVisibility the visibility of the search item.
+ * @param importBackupVisibility the visibility of the import item.
+ * @param selectAllVisibility the visibility of the select all item.
+ * @param cancelVisibility the visibility of the cancel item.
+ * @param createBackupVisibility the visibility of the export item.
+ * @param createBackupEnabled true if the user can click the export item, false if not.
+ * @param createBackupAlpha the alpha to apply to the export item. 0 is transparent, 255 is opaque.
+ */
+data class MenuUiState(
+    val state: MenuState,
+    val searchVisibility: Boolean,
+    val importBackupVisibility: Boolean,
+    val selectAllVisibility: Boolean,
+    val cancelVisibility: Boolean,
+    val createBackupVisibility: Boolean,
+    val createBackupEnabled: Boolean,
+    @IntRange(from = 0, to = 255) val createBackupAlpha: Int = 255,
+)
+
+/**
+ * Item representing a scenario on the list.
+ *
+ * @param scenario the scenario represented by the item.
+ * @param exportMode true if the item should be displayed in export scenario mode.
+ * @param checkedForExport true if the scenario is selected for export, false if not.
+ */
+data class ScenarioItem(
+    val scenario: Scenario,
+    val exportMode: Boolean,
+    val checkedForExport: Boolean,
+)

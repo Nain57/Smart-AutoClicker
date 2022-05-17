@@ -188,4 +188,18 @@
     <string name="dialog_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
     <string name="dialog_end_condition_config_executions_title">Executions</string>
     <string name="dialog_end_condition_event_select_title">Select an event</string>
+
+    <string name="dialog_backup_create_title">Create backup</string>
+    <string name="dialog_backup_create_select_file">Select output file</string>
+    <string name="dialog_backup_create_progress">Creating backup: %1$d/%2$d</string>
+    <string name="dialog_backup_create_completed">Backup completed</string>
+    <string name="dialog_backup_create_error">An error has occurred and the backup export has been cancelled</string>
+    <string name="dialog_backup_import_title">Import backup</string>
+    <string name="dialog_backup_import_select_file">Select backup file</string>
+    <string name="dialog_backup_import_progress">Importing backup: %1$d</string>
+    <string name="dialog_backup_import_verification">Data verification</string>
+    <string name="dialog_backup_import_completed">Import completed\n%1$d scenario imported</string>
+    <string name="dialog_backup_import_completed_with_error">Import completed\n%1$d scenarios imported\n%2d errors</string>
+    <string name="dialog_backup_import_error">An error has occurred and the backup import has been cancelled</string>
+    <string name="dialog_backup_import_compatibility">Some of the imported scenarios have been generated from a device with a different screen and this might cause issues with the detection and action coordinates.\n\nTo fix it, you need to take new screenshots for your conditions and update your click/swipe positions.</string>
 </resources>
