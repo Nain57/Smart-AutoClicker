@@ -51,7 +51,6 @@
     <dimen name="dialog_item_action_width">100dp</dimen>
     <dimen name="dialog_item_action_icon_size">50dp</dimen>
 
-
     <dimen name="overlay_menu_btn_size">48dp</dimen>
     <dimen name="overlay_click_selector_thickness">6dp</dimen>
     <dimen name="overlay_click_selector_radius">28dp</dimen>

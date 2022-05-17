@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,6 +42,8 @@ class PermissionsDialogFragment : DialogFragment() {
 
     companion object {
 
+        /** Tag for permission dialog fragment. */
+        const val FRAGMENT_TAG_PERMISSION_DIALOG = "PermissionDialog"
         /** Intent extra bundle key for the Android settings app. */
         private const val EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key"
         /** Intent extra bundle key for the Android settings app. */
@@ -81,7 +83,8 @@ class PermissionsDialogFragment : DialogFragment() {
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_permissions_title)
             .setView(R.layout.dialog_permissions)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                (activity as PermissionDialogListener).onPermissionsGranted()
+                (activity?.supportFragmentManager?.findFragmentByTag(FRAGMENT_TAG_SCENARIO_LIST) as PermissionDialogListener)
+                    .onPermissionsGranted()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create()
