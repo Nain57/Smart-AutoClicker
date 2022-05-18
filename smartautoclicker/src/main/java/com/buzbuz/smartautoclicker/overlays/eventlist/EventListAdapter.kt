@@ -22,7 +22,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
 

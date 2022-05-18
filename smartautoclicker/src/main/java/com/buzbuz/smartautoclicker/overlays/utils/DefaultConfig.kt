@@ -21,7 +21,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.*
+import com.buzbuz.smartautoclicker.domain.*
 
 /**
  * Creates a new event.
@@ -41,14 +41,15 @@ fun newDefaultScenario(context: Context, scenarioName: String) = Scenario(
  * @param context the Android context.
  * @return the new event.
  */
-fun newDefaultEvent(context: Context, scenarioId: Long, scenarioEventsSize: Int) = Event(
-    scenarioId = scenarioId,
-    name = context.getString(R.string.default_event_name),
-    conditionOperator = AND,
-    priority = scenarioEventsSize,
-    conditions = mutableListOf(),
-    actions = mutableListOf(),
-)
+fun newDefaultEvent(context: Context, scenarioId: Long, scenarioEventsSize: Int) =
+    Event(
+        scenarioId = scenarioId,
+        name = context.getString(R.string.default_event_name),
+        conditionOperator = AND,
+        priority = scenarioEventsSize,
+        conditions = mutableListOf(),
+        actions = mutableListOf(),
+    )
 
 /**
  * Creates a new default condition.
@@ -58,15 +59,16 @@ fun newDefaultEvent(context: Context, scenarioId: Long, scenarioEventsSize: Int)
  * @param bitmap the image for the condition to create.
  * @return the new condition.
  */
-fun newDefaultCondition(context: Context, eventId: Long, area: Rect, bitmap: Bitmap) = Condition(
-    eventId = eventId,
-    name = context.resources.getString(R.string.default_condition_name),
-    bitmap = bitmap,
-    area = area,
-    threshold = context.resources.getInteger(R.integer.default_condition_threshold),
-    detectionType = EXACT,
-    shouldBeDetected = true,
-)
+fun newDefaultCondition(context: Context, eventId: Long, area: Rect, bitmap: Bitmap) =
+    Condition(
+        eventId = eventId,
+        name = context.resources.getString(R.string.default_condition_name),
+        bitmap = bitmap,
+        area = area,
+        threshold = context.resources.getInteger(R.integer.default_condition_threshold),
+        detectionType = EXACT,
+        shouldBeDetected = true,
+    )
 
 /**
  * Creates a new default click action.

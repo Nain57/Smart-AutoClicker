@@ -49,7 +49,7 @@ import com.buzbuz.smartautoclicker.activity.PermissionsDialogFragment.Companion.
 import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment
 import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
-import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding

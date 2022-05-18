@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 
 /** Allows to access and edit the end conditions in the database. */
 @Dao
-internal abstract class EndConditionDao {
+abstract class EndConditionDao {
 
     /**
      * Get all end conditions for a given scenario.

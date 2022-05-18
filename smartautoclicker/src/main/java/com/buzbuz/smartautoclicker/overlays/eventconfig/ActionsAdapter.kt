@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionCardBinding
 import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
 import com.buzbuz.smartautoclicker.overlays.utils.getIconRes

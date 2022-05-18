@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.engine.utils
 
 import android.graphics.Rect
-import com.buzbuz.smartautoclicker.database.domain.*
+import com.buzbuz.smartautoclicker.domain.*
 
 /** Test data and helpers for the detection tests. */
 internal object ProcessingData {
@@ -29,7 +29,16 @@ internal object ProcessingData {
         actions: List<Action> = emptyList(),
         conditions: List<Condition> = emptyList(),
         stopAfter: Int? = null,
-    ) = Event(id, 1L, "TOTO", operator, 0, actions.toMutableList(), conditions.toMutableList(), stopAfter)
+    ) = Event(
+        id,
+        1L,
+        "TOTO",
+        operator,
+        0,
+        actions.toMutableList(),
+        conditions.toMutableList(),
+        stopAfter
+    )
 
     /** Instantiates a new condition with only the useful values for the tests. */
     fun newCondition(
@@ -38,5 +47,15 @@ internal object ProcessingData {
         threshold: Int,
         @DetectionType detectionType: Int,
         shouldBeDetected: Boolean = true,
-    ) = Condition(1L, 1L, "TOTO", path, area, threshold, detectionType, shouldBeDetected,null)
+    ) = Condition(
+        1L,
+        1L,
+        "TOTO",
+        path,
+        area,
+        threshold,
+        detectionType,
+        shouldBeDetected,
+        null
+    )
 }

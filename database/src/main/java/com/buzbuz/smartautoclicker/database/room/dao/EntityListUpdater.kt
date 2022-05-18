@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
  *                          primary key (ex: Long = 0L).
  * @param primaryKeySupplier provides the item primary key.
  */
-internal open class EntityListUpdater<E, K>(
+open class EntityListUpdater<E, K>(
     private val defaultPrimaryKey: K,
     private inline val primaryKeySupplier: (E) -> K,
 ) {

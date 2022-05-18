@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.Flow
 
 /** Allows to access the conditions in the database. */
 @Dao
-internal interface ConditionDao {
+interface ConditionDao {
 
     /**
      * Get number of conditions in the database.

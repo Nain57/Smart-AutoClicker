@@ -22,7 +22,6 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
-import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.ActionType
 import com.buzbuz.smartautoclicker.database.utils.*
@@ -52,7 +51,7 @@ class Migration5to6Tests {
     fun migrateConditions_shouldBeDetectedColumn() {
         // Insert in V5 and close
         helper.createDatabase(TEST_DB, 5).apply {
-            execSQL(getInsertV5Condition(24L, 1L, "", "", 0, 0, 0, 0, 0, EXACT))
+            execSQL(getInsertV5Condition(24L, 1L, "", "", 0, 0, 0, 0, 0, 1))
             close()
         }
 

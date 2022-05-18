@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.overlays.scenariosettings.endcondition
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.EndCondition
-import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.scenariosettings.ScenarioSettingsDialog
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi

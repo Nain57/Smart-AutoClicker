@@ -20,13 +20,9 @@ import android.database.Cursor
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.ActionType
 import com.buzbuz.smartautoclicker.database.utils.getInsertV3Click
@@ -134,7 +130,8 @@ class Migration3to4Tests {
         // Insert in V3 and close
         helper.createDatabase(TEST_DB, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
-            execSQL(getInsertV3Click(clickId, scenarioId, "TATA", 1, 1, 1, 1, 1, OR, 1, 1, 1))
+            execSQL(getInsertV3Click(clickId, scenarioId, "TATA", 1, 1, 1, 1, 1,
+                2, 1, 1, 1))
             execSQL(getInsertV3ConditionCrossRef(clickId, conditionPath))
             execSQL(getInsertV3Condition(conditionPath, left, top, right, bottom, width, height, threshold))
             close()
@@ -186,7 +183,8 @@ class Migration3to4Tests {
         // Insert in V3 and close
         helper.createDatabase(TEST_DB, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
-            execSQL(getInsertV3Click(clickId, scenarioId, "TATA", 1, 1, 1, 1, 1, OR, 1, 1, 1))
+            execSQL(getInsertV3Click(clickId, scenarioId, "TATA", 1, 1, 1, 1, 1,
+                2, 1, 1, 1))
 
             execSQL(getInsertV3ConditionCrossRef(clickId, conditionPath1))
             execSQL(getInsertV3Condition(conditionPath1, left1, top1, right1, bottom1, width1, height1, threshold1))
@@ -234,7 +232,7 @@ class Migration3to4Tests {
         val scenarioId = 1L
         val clickId = 42L
         val clickName = "HELLO"
-        val conditionOperator = AND
+        val conditionOperator = 1
         val stopAfter = 5
         val priority = 1
 
@@ -271,12 +269,12 @@ class Migration3to4Tests {
         val scenarioId = 1L
         val clickId1 = 42L
         val clickName1 = "HELLO"
-        val conditionOperator1 = AND
+        val conditionOperator1 = 1
         val stopAfter1 = 5
         val priority1 = 1
         val clickId2 = 84L
         val clickName2 = "GUTEN TAG"
-        val conditionOperator2 = OR
+        val conditionOperator2 = 2
         val stopAfter2 = 1
         val priority2 = 2
 
@@ -333,7 +331,8 @@ class Migration3to4Tests {
         // Insert in V3 and close
         helper.createDatabase(TEST_DB, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
-            execSQL(getInsertV3Click(clickId, scenarioId, clickName, 1, clickX, clickY, 1, 1, AND, clickDelayAfter, 1, 1))
+            execSQL(getInsertV3Click(clickId, scenarioId, clickName, 1, clickX, clickY, 1, 1,
+                1, clickDelayAfter, 1, 1))
             close()
         }
 
@@ -382,7 +381,8 @@ class Migration3to4Tests {
         // Insert in V3 and close
         helper.createDatabase(TEST_DB, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
-            execSQL(getInsertV3Click(swipeId, scenarioId, swipeName, 2, swipeX1, swipeY1, swipeX2, swipeY2, AND, swipeDelayAfter, 1, 1))
+            execSQL(getInsertV3Click(swipeId, scenarioId, swipeName, 2, swipeX1, swipeY1, swipeX2, swipeY2,
+                1, swipeDelayAfter, 1, 1))
             close()
         }
 
@@ -427,7 +427,7 @@ class Migration3to4Tests {
     }
 
     private fun assertDbEvent(cursor: Cursor, eventId: Long, scenarioId: Long, name: String,
-                              @ConditionOperator operator: Int, priority: Int, stopAfter: Int) {
+                              operator: Int, priority: Int, stopAfter: Int) {
         cursor.apply {
             assertEquals("Invalid event id", eventId, getLong(getColumnIndex("id")))
             assertEquals("Invalid scenario id", scenarioId, getLong(getColumnIndex("scenario_id")))

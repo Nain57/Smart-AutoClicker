@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.Flow
 
 /** Allows to access and edit the events in the database. */
 @Dao
-internal abstract class EventDao {
+abstract class EventDao {
 
     /**
      * Get number of events in the database.

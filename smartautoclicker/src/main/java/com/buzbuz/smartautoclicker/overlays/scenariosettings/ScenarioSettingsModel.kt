@@ -19,11 +19,11 @@ package com.buzbuz.smartautoclicker.overlays.scenariosettings
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.EndCondition
-import com.buzbuz.smartautoclicker.database.domain.OR
-import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.AND
+import com.buzbuz.smartautoclicker.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.OR
+import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
 
@@ -127,7 +127,8 @@ class ScenarioSettingsModel(context: Context) : OverlayViewModel(context) {
     }
 
     /** @return a new empty end condition. */
-    fun createNewEndCondition() = EndCondition(scenarioId = configuredScenario.value?.id ?: 0)
+    fun createNewEndCondition() =
+        EndCondition(scenarioId = configuredScenario.value?.id ?: 0)
 
     /**
      * Add a new end condition to the scenario.

@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.Condition
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

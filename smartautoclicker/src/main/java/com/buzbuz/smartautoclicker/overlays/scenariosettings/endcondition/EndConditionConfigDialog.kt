@@ -31,7 +31,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
-import com.buzbuz.smartautoclicker.database.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.databinding.DialogEndConditionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setRightCompoundDrawable
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener

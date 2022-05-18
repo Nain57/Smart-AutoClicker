@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
-import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.databinding.DialogConditionCopyBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 

@@ -23,8 +23,8 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 
-import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.database.domain.IntentExtra
+import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionModel
 
 import kotlinx.coroutines.CoroutineScope

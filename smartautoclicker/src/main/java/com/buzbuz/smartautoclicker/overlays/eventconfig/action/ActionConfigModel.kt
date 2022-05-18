@@ -22,7 +22,7 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.click.ClickConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent.IntentConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.pause.PauseConfigModel

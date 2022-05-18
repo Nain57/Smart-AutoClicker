@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.database.utils
 
-import com.buzbuz.smartautoclicker.database.domain.ConditionOperator
 
 // ----- Utils for Database V3 -----
 
@@ -28,7 +27,7 @@ fun getInsertV3Scenario(id: Long, name: String) =
 
 
 fun getInsertV3Click(id: Long, scenarioId: Long, name: String, type: Int, fromX: Int, fromY: Int, toX: Int, toY: Int,
-                     @ConditionOperator operator: Int, delayAfter: Long, stopAfter: Int, priority: Int) =
+                     operator: Int, delayAfter: Long, stopAfter: Int, priority: Int) =
     """
         INSERT INTO click_table (clickId, scenario_id, name, type, from_X, from_y, to_x, to_y, operator, delay_after, stop_after, priority) 
         VALUES ($id, $scenarioId, "$name", $type, $fromX, $fromY, $toX, $toY, $operator, $delayAfter, $stopAfter, $priority)
@@ -109,7 +108,7 @@ fun getInsertV6Event(
     id: Long,
     scenarioId: Long,
     name: String,
-    @ConditionOperator conditionOperator: Int,
+    conditionOperator: Int,
     stopAfter: Int?,
     priority: Int,
 ) =

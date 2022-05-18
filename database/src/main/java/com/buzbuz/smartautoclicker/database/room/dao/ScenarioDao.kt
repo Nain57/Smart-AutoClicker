@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.Flow
 
 /** Allows to access and edit the scenario in the database. */
 @Dao
-internal interface ScenarioDao {
+interface ScenarioDao {
 
     /**
      * Get all events scenario and their events.

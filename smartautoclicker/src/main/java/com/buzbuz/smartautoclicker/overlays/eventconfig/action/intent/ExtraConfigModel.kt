@@ -22,7 +22,7 @@ import android.text.InputType
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.domain.IntentExtra
+import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.utils.NumberInputFilter
 
 import kotlinx.coroutines.flow.Flow

@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.database.utils.TestsData
+import com.buzbuz.smartautoclicker.database.utils.TestsData.cloneConditions
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -68,20 +69,21 @@ class ConditionDaoTests {
 
     @Test
     fun getConditions() = runTest {
+        val expectedConditions = mutableListOf(
+            TestsData.getNewConditionEntity(id = 1, eventId = TestsData.EVENT_ID),
+            TestsData.getNewConditionEntity(id = 2, eventId = TestsData.EVENT_ID),
+            TestsData.getNewConditionEntity(id = 3, eventId = TestsData.EVENT_ID),
+        )
         val completeEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = mutableListOf(TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0)),
-            conditions = mutableListOf(
-                TestsData.getNewConditionEntity(id = 1, eventId = TestsData.EVENT_ID),
-                TestsData.getNewConditionEntity(id = 2, eventId = TestsData.EVENT_ID),
-                TestsData.getNewConditionEntity(id = 3, eventId = TestsData.EVENT_ID),
-            ),
+            conditions = expectedConditions.cloneConditions(),
         )
         database.scenarioDao().add(TestsData.getNewScenarioEntity())
         database.eventDao().addCompleteEvent(completeEvent)
 
         assertEquals(
-            completeEvent.conditions,
+            expectedConditions,
             database.eventDao().getConditions(TestsData.EVENT_ID)
         )
     }

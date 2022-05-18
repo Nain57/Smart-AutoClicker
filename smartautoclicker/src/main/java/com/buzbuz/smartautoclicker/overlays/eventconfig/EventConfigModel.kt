@@ -22,12 +22,12 @@ import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.Action
-import com.buzbuz.smartautoclicker.database.domain.AND
-import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.Event
-import com.buzbuz.smartautoclicker.database.domain.OR
+import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.AND
+import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.utils.*
 
 import kotlinx.coroutines.Dispatchers

@@ -20,23 +20,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.ColorRes
 
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionCopyBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
 
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**

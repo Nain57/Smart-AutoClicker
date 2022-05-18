@@ -55,7 +55,7 @@ import kotlinx.serialization.Serializable
     ]
 )
 @Serializable
-internal data class EndConditionEntity(
+data class EndConditionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
     @ColumnInfo(name = "event_id") val eventId: Long,
@@ -71,7 +71,7 @@ internal data class EndConditionEntity(
  * @param endCondition the end condition entity.
  * @param event the event entity.
  */
-internal data class EndConditionWithEvent(
+data class EndConditionWithEvent(
     @Embedded val endCondition: EndConditionEntity,
     @Relation(
         parentColumn = "event_id",

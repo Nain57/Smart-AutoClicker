@@ -34,7 +34,7 @@ import androidx.core.app.NotificationCompat
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
-import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 

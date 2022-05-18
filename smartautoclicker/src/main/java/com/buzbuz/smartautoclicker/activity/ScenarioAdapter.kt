@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.ItemScenarioBinding
 
 /**

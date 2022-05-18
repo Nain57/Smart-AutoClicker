@@ -24,6 +24,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.database.utils.TestsData
+import com.buzbuz.smartautoclicker.database.utils.TestsData.cloneActions
+import com.buzbuz.smartautoclicker.database.utils.TestsData.cloneEvent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -73,14 +75,15 @@ class EventDaoTests {
             event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
             actions = listOf(
                 TestsData.getNewIntentEntity(
+                    id = 1,
                     eventId = TestsData.EVENT_ID,
                     priority = 0,
-                    intentExtras = mutableListOf(TestsData.getNewIntentExtraEntity(value = "20"))
+                    intentExtras = mutableListOf(TestsData.getNewIntentExtraEntity(actionId = 1, value = "20"))
                 )
             ),
-            conditions = listOf(TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID))
+            conditions = listOf(TestsData.getNewConditionEntity(id = 1, eventId = TestsData.EVENT_ID))
         )
-        database.eventDao().addCompleteEvent(completeEvent)
+        database.eventDao().addCompleteEvent(completeEvent.cloneEvent())
 
         assertEquals(completeEvent, database.eventDao().getEvent(TestsData.EVENT_ID))
     }
@@ -143,9 +146,9 @@ class EventDaoTests {
     @Test
     fun updateEvent() = runTest {
         // First add the old event
-        val updatedId = 13L
-        val deletedId = 58L
-        val intentId = 875L
+        val updatedId = 1L
+        val deletedId = 2L
+        val intentId = 3L
         val oldEvent = CompleteEventEntity(
             event = TestsData.getNewEventEntity(
                 id = TestsData.EVENT_ID,
@@ -163,7 +166,7 @@ class EventDaoTests {
                 TestsData.getNewConditionEntity(id = deletedId, eventId = 0L),
             )
         )
-        database.eventDao().addCompleteEvent(oldEvent)
+        database.eventDao().addCompleteEvent(oldEvent.cloneEvent())
 
         // Then update with the new one.
         val updatedExtraList = mutableListOf(TestsData.getNewIntentExtraEntity(value = "20"))
@@ -233,13 +236,13 @@ class EventDaoTests {
     @Test
     fun getActions() = runTest {
         val actions = listOf(
-            TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0),
-            TestsData.getNewSwipeEntity(eventId = TestsData.EVENT_ID, priority = 1),
-            TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 2)
+            TestsData.getNewPauseEntity(id = 1, eventId = TestsData.EVENT_ID, priority = 0),
+            TestsData.getNewSwipeEntity(id = 2, eventId = TestsData.EVENT_ID, priority = 1),
+            TestsData.getNewClickEntity(id = 3, eventId = TestsData.EVENT_ID, priority = 2)
         )
         database.eventDao().addCompleteEvent(CompleteEventEntity(
             event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = actions,
+            actions = actions.cloneActions(),
             conditions = listOf(TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID))
         ))
 
