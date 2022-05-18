@@ -20,10 +20,10 @@ import android.content.Context
 import android.graphics.Bitmap
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.Condition
-import com.buzbuz.smartautoclicker.database.domain.EXACT
-import com.buzbuz.smartautoclicker.database.domain.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.EXACT
+import com.buzbuz.smartautoclicker.domain.WHOLE_SCREEN
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

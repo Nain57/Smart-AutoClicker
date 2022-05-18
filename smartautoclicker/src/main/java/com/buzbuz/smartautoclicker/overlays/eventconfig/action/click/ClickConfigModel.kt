@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.eventconfig.action.click
 import android.content.SharedPreferences
 import android.graphics.Point
 
-import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.isValidDuration
 import com.buzbuz.smartautoclicker.overlays.utils.putClickPressDurationConfig

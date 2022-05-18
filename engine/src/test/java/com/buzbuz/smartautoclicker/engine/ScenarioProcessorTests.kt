@@ -23,7 +23,7 @@ import android.media.Image
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.buzbuz.smartautoclicker.database.domain.*
+import com.buzbuz.smartautoclicker.domain.*
 
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
@@ -200,7 +200,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -224,7 +226,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -248,7 +252,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -273,7 +279,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -298,7 +306,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -320,7 +330,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -343,7 +355,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -368,7 +382,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -393,7 +409,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -433,7 +451,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -473,7 +493,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -513,7 +535,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -554,7 +578,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -594,7 +620,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -636,7 +664,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
 
@@ -679,7 +709,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
 
@@ -721,7 +753,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -762,7 +796,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -804,7 +840,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -846,7 +884,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -888,7 +928,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -930,7 +972,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -972,7 +1016,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -1011,7 +1057,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -1050,7 +1098,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -1090,7 +1140,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -1130,7 +1182,9 @@ class ScenarioProcessorTests {
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -1156,7 +1210,9 @@ class ScenarioProcessorTests {
             stopAfter = 1,
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1), emptyList(),
+            OR
+        )
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap, TEST_DATA_DETECTION_QUALITY)
@@ -1182,7 +1238,14 @@ class ScenarioProcessorTests {
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
-            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1)),
+            listOf(
+                EndCondition(
+                    scenarioId = event1.scenarioId,
+                    eventId = event1.id,
+                    eventName = event1.name,
+                    executions = 1
+                )
+            ),
             OR
         )
         scenarioProcessor.process(mockScreenImage)
@@ -1210,7 +1273,14 @@ class ScenarioProcessorTests {
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
-            listOf(EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 3)),
+            listOf(
+                EndCondition(
+                    scenarioId = event1.scenarioId,
+                    eventId = event1.id,
+                    eventName = event1.name,
+                    executions = 3
+                )
+            ),
             OR
         )
 
@@ -1258,8 +1328,18 @@ class ScenarioProcessorTests {
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1, event2),
             listOf(
-                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
-                EndCondition(scenarioId = event2.scenarioId, eventId = event2.id, eventName = event2.name, executions = 3)
+                EndCondition(
+                    scenarioId = event1.scenarioId,
+                    eventId = event1.id,
+                    eventName = event1.name,
+                    executions = 1
+                ),
+                EndCondition(
+                    scenarioId = event2.scenarioId,
+                    eventId = event2.id,
+                    eventName = event2.name,
+                    executions = 3
+                )
             ),
             OR,
         )
@@ -1288,7 +1368,12 @@ class ScenarioProcessorTests {
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
             listOf(
-                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
+                EndCondition(
+                    scenarioId = event1.scenarioId,
+                    eventId = event1.id,
+                    eventName = event1.name,
+                    executions = 1
+                ),
             ),
             AND,
         )
@@ -1318,7 +1403,12 @@ class ScenarioProcessorTests {
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
             listOf(
-                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 3),
+                EndCondition(
+                    scenarioId = event1.scenarioId,
+                    eventId = event1.id,
+                    eventName = event1.name,
+                    executions = 3
+                ),
             ),
             AND,
         )
@@ -1366,8 +1456,18 @@ class ScenarioProcessorTests {
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1, event2),
             listOf(
-                EndCondition(scenarioId = event1.scenarioId, eventId = event1.id, eventName = event1.name, executions = 1),
-                EndCondition(scenarioId = event2.scenarioId, eventId = event2.id, eventName = event2.name, executions = 3)
+                EndCondition(
+                    scenarioId = event1.scenarioId,
+                    eventId = event1.id,
+                    eventName = event1.name,
+                    executions = 1
+                ),
+                EndCondition(
+                    scenarioId = event2.scenarioId,
+                    eventId = event2.id,
+                    eventName = event2.name,
+                    executions = 3
+                )
             ),
             AND,
         )

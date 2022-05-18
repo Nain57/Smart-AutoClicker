@@ -16,10 +16,32 @@
  */
 package com.buzbuz.smartautoclicker.database.bitmap
 
+import android.content.Context
 import android.graphics.Bitmap
 
 /** Manages the bitmaps for the click conditions. */
 interface BitmapManager {
+
+    companion object {
+        /** Singleton preventing multiple instances of the repository at the same time. */
+        @Volatile
+        private var INSTANCE: BitmapManager? = null
+
+        /**
+         * Get the repository singleton, or instantiates it if it wasn't yet.
+         *
+         * @param context the Android context.
+         *
+         * @return the repository singleton.
+         */
+        fun getBitmapManager(context: Context): BitmapManager {
+            return INSTANCE ?: synchronized(this) {
+                val instance = BitmapManagerImpl(context.filesDir)
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 
     /**
      * Save the provided bitmap into the persistent memory.
@@ -54,3 +76,6 @@ interface BitmapManager {
     /** Release the cache of bitmaps. */
     fun releaseCache()
 }
+
+/** The prefix appended to all bitmap file names. */
+const val CLICK_CONDITION_FILE_PREFIX = "Condition_"

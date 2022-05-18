@@ -34,11 +34,11 @@ import kotlinx.serialization.Serializable
  * @param detectionQuality the quality of the detection algorithm. Lower value means faster detection but poorer
  *                         quality, while higher values means better and slower detection.
  * @param endConditionOperator the operator to apply to all [EndConditionEntity] related to this scenario. Can be any
- *                             value of [com.buzbuz.smartautoclicker.database.domain.ConditionOperator].
+ *                             value of [com.buzbuz.smartautoclicker.domain.ConditionOperator].
  */
 @Entity(tableName = "scenario_table")
 @Serializable
-internal data class ScenarioEntity(
+data class ScenarioEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "detection_quality") val detectionQuality: Int,
@@ -54,7 +54,7 @@ internal data class ScenarioEntity(
  * @param scenario the scenario entity.
  * @param events the list of event entity for this scenario.
  */
-internal data class ScenarioWithEvents(
+data class ScenarioWithEvents(
     @Embedded val scenario: ScenarioEntity,
     @Relation(
         parentColumn = "id",
@@ -72,7 +72,7 @@ internal data class ScenarioWithEvents(
  * @param scenario the scenario entity
  * @param endConditions the list of end conditions and their events.
  */
-internal data class ScenarioWithEndConditions(
+data class ScenarioWithEndConditions(
     @Embedded val scenario: ScenarioEntity,
     @Relation(
         entity = EndConditionEntity::class,
@@ -91,7 +91,7 @@ internal data class ScenarioWithEndConditions(
  * @param endConditions the list of end conditions for this scenario.
  */
 @Serializable
-internal data class CompleteScenario(
+data class CompleteScenario(
     @Embedded val scenario: ScenarioEntity,
     @Relation(
         entity = EventEntity::class,

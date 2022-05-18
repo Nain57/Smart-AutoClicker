@@ -23,7 +23,6 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
-import com.buzbuz.smartautoclicker.database.domain.OR
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.utils.getInsertV6Event
 import com.buzbuz.smartautoclicker.database.utils.getInsertV6Scenario
@@ -117,7 +116,7 @@ class Migration6to7Tests {
             moveToFirst()
             Assert.assertEquals(
                 "Invalid end_condition_operator value",
-                OR,
+                2,
                 getInt(getColumnIndex("end_condition_operator"))
             )
         }
@@ -150,7 +149,7 @@ class Migration6to7Tests {
         // Insert in V6 and close
         helper.createDatabase(TEST_DB, 6).apply {
             execSQL(getInsertV6Scenario(24L, "TOTO"))
-            execSQL(getInsertV6Event(1L,24L, "TUTU", OR, null, 1))
+            execSQL(getInsertV6Event(1L,24L, "TUTU", 2, null, 1))
             close()
         }
 
@@ -175,8 +174,8 @@ class Migration6to7Tests {
         // Insert in V6 and close
         helper.createDatabase(TEST_DB, 6).apply {
             execSQL(getInsertV6Scenario(scenarioId, "TOTO"))
-            execSQL(getInsertV6Event(1L, scenarioId, "TUTU", OR, null, 1))
-            execSQL(getInsertV6Event(eventId, scenarioId, "TATA", OR, stopAfter, 2))
+            execSQL(getInsertV6Event(1L, scenarioId, "TUTU", 2, null, 1))
+            execSQL(getInsertV6Event(eventId, scenarioId, "TATA", 2, stopAfter, 2))
             close()
         }
 
@@ -207,9 +206,9 @@ class Migration6to7Tests {
         // Insert in V6 and close
         helper.createDatabase(TEST_DB, 6).apply {
             execSQL(getInsertV6Scenario(scenarioId1, "TOTO"))
-            execSQL(getInsertV6Event(1L, scenarioId1, "TUTU", OR, null, 1))
-            execSQL(getInsertV6Event(eventId1, scenarioId1, "TATA", OR, stopAfter1, 2))
-            execSQL(getInsertV6Event(eventId2, scenarioId1, "TETE", OR, stopAfter2, 3))
+            execSQL(getInsertV6Event(1L, scenarioId1, "TUTU", 2, null, 1))
+            execSQL(getInsertV6Event(eventId1, scenarioId1, "TATA", 2, stopAfter1, 2))
+            execSQL(getInsertV6Event(eventId2, scenarioId1, "TETE", 2, stopAfter2, 3))
             close()
         }
 
@@ -245,10 +244,10 @@ class Migration6to7Tests {
         // Insert in V6 and close
         helper.createDatabase(TEST_DB, 6).apply {
             execSQL(getInsertV6Scenario(scenarioId1, "TOTO"))
-            execSQL(getInsertV6Event(1L, scenarioId1, "TUTU", OR, null, 1))
-            execSQL(getInsertV6Event(eventId1, scenarioId1, "TATA", OR, stopAfter1, 2))
+            execSQL(getInsertV6Event(1L, scenarioId1, "TUTU", 2, null, 1))
+            execSQL(getInsertV6Event(eventId1, scenarioId1, "TATA", 2, stopAfter1, 2))
             execSQL(getInsertV6Scenario(scenarioId2, "TITI"))
-            execSQL(getInsertV6Event(eventId2, scenarioId2, "TETE", OR, stopAfter2, 1))
+            execSQL(getInsertV6Event(eventId2, scenarioId2, "TETE", 2, stopAfter2, 1))
             close()
         }
 

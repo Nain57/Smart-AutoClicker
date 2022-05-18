@@ -23,7 +23,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.domain.Action
 
 /**
  * Get the icon for a given action.

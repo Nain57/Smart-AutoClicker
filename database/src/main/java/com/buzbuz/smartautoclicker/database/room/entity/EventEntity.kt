@@ -43,7 +43,7 @@ import kotlinx.serialization.Serializable
  * @param scenarioId identifier of this event's scenario. Reference the key [ScenarioEntity.id] in scenario_table.
  * @param name name of this event.
  * @param conditionOperator the operator to apply to all [ConditionEntity] related to this click. Can be any value
- *                          of [com.buzbuz.smartautoclicker.database.domain.ConditionOperator].
+ *                          of [com.buzbuz.smartautoclicker.domain.ConditionOperator].
  * @param priority the order in the scenario. Lowest priority will always be checked first when detecting.
  * @param stopAfter the number of executions of this click after which the scenario is stopped. Null if the scenario is
  *                  always continued after this click.
@@ -59,7 +59,7 @@ import kotlinx.serialization.Serializable
     )]
 )
 @Serializable
-internal data class EventEntity(
+data class EventEntity(
     @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
     @ColumnInfo(name = "name") val name: String,
@@ -79,7 +79,7 @@ internal data class EventEntity(
  * @param conditions the list of conditions entity for this event.
  */
 @Serializable
-internal data class CompleteEventEntity(
+data class CompleteEventEntity(
     @Embedded val event: EventEntity,
     @Relation(
         entity = ActionEntity::class,

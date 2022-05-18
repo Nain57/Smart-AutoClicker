@@ -63,7 +63,7 @@ import com.buzbuz.smartautoclicker.database.room.migrations.*
     ]
 )
 @TypeConverters(ActionTypeStringConverter::class, IntentExtraTypeStringConverter::class)
-internal abstract class ClickDatabase : RoomDatabase() {
+abstract class ClickDatabase : RoomDatabase() {
 
     /** The data access object for the scenario in the database. */
     abstract fun scenarioDao(): ScenarioDao

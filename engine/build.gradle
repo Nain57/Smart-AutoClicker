@@ -54,7 +54,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
 
     implementation project(path: ':base-ui')
-    implementation project(path: ':database')
+    implementation project(path: ':domain')
     implementation project(path: ':detection')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"

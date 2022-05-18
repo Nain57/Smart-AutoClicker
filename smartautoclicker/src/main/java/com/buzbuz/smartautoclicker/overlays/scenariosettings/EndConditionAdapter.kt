@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.databinding.ItemEndConditionCardBinding
 import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
 

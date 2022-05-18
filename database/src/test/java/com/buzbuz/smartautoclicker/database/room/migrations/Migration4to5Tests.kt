@@ -22,7 +22,6 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
-import com.buzbuz.smartautoclicker.database.domain.EXACT
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.utils.*
 
@@ -87,7 +86,7 @@ class Migration4to5Tests {
         Assert.assertEquals("Invalid conditions list size", 1, conditionsCursor.count)
         conditionsCursor.apply {
             moveToFirst()
-            Assert.assertEquals("Invalid condition name", EXACT, getInt(getColumnIndex("detection_type")))
+            Assert.assertEquals("Invalid condition name", 1, getInt(getColumnIndex("detection_type")))
         }
 
         conditionsCursor.close()

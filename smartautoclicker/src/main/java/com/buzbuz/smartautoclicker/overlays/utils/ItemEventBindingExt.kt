@@ -20,7 +20,7 @@ import android.view.View
 import android.widget.ImageView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.database.domain.Event
+import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.eventlist.EDITION
 import com.buzbuz.smartautoclicker.overlays.eventlist.Mode

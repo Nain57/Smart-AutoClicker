@@ -20,8 +20,8 @@ import android.content.Context
 import android.graphics.Bitmap
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
-import com.buzbuz.smartautoclicker.database.Repository
-import com.buzbuz.smartautoclicker.database.domain.Condition
+import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.Repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

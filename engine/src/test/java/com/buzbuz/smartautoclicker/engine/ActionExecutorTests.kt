@@ -22,7 +22,7 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.database.domain.Action
+import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.engine.utils.anyNotNull
 
 import kotlinx.coroutines.Dispatchers
@@ -63,11 +63,11 @@ class ActionExecutorTests {
         private const val TEST_Y2 = 76
 
         fun getNewDefaultClick(id: Long, clickOnCondition: Boolean) =
-            Action.Click(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, clickOnCondition)
+            com.buzbuz.smartautoclicker.domain.Action.Click(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, clickOnCondition)
         fun getNewDefaultSwipe(id: Long) =
-            Action.Swipe(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
+            com.buzbuz.smartautoclicker.domain.Action.Swipe(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
         fun getNewDefaultPause(id: Long) =
-            Action.Pause(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
+            com.buzbuz.smartautoclicker.domain.Action.Pause(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
     }
 
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor

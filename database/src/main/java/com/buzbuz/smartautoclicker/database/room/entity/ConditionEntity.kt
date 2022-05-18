@@ -43,7 +43,7 @@ import kotlinx.serialization.Serializable
  * @param areaBottom the bottom coordinate of the rectangle defining the matching area.
  * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
  * @param detectionType the type of detection. Can be any of the values defined in
- *                      [com.buzbuz.smartautoclicker.database.domain.DetectionType].
+ *                      [com.buzbuz.smartautoclicker.domain.DetectionType].
  * @param shouldBeDetected true if this condition should be detected to be true, false if it should not be found.
  */
 @Entity(
@@ -57,7 +57,7 @@ import kotlinx.serialization.Serializable
     )]
 )
 @Serializable
-internal data class ConditionEntity(
+data class ConditionEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "name") val name: String,

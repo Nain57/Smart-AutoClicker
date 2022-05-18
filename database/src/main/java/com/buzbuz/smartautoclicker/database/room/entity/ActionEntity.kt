@@ -68,7 +68,7 @@ import kotlinx.serialization.Serializable
     )]
 )
 @Serializable
-internal data class ActionEntity(
+data class ActionEntity(
     @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "priority") var priority: Int = 0,
@@ -106,7 +106,7 @@ internal data class ActionEntity(
  *
  * /!\ DO NOT RENAME: ActionType enum name is used in the database.
  */
-internal enum class ActionType {
+enum class ActionType {
     /** A single tap on the screen. */
     CLICK,
     /** A swipe on the screen. */
@@ -135,7 +135,7 @@ internal class ActionTypeStringConverter {
  * @param intentExtras
  */
 @Serializable
-internal data class CompleteActionEntity(
+data class CompleteActionEntity(
     @Embedded val action: ActionEntity,
     @Relation(
         parentColumn = "id",

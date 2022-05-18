@@ -47,7 +47,7 @@ import kotlinx.serialization.Serializable
     )]
 )
 @Serializable
-internal data class IntentExtraEntity(
+data class IntentExtraEntity(
     @PrimaryKey(autoGenerate = true) var id: Long,
     @ColumnInfo(name = "action_id") var actionId: Long,
     @ColumnInfo(name = "type") val type: IntentExtraType,

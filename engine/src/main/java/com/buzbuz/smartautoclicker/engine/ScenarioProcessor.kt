@@ -19,9 +19,16 @@ package com.buzbuz.smartautoclicker.engine
 import android.graphics.Bitmap
 import android.media.Image
 
-import com.buzbuz.smartautoclicker.database.domain.*
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
+import com.buzbuz.smartautoclicker.domain.AND
+import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.ConditionOperator
+import com.buzbuz.smartautoclicker.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.EXACT
+import com.buzbuz.smartautoclicker.domain.OR
+import com.buzbuz.smartautoclicker.domain.WHOLE_SCREEN
 
 import kotlinx.coroutines.yield
 
