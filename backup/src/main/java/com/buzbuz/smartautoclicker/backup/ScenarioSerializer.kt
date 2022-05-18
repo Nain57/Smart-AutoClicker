@@ -189,7 +189,7 @@ internal class ScenarioSerializer {
             name = getString("name") ?: "",
             conditionOperator = getInt("conditionOperator") ?: 0,
             priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
-            stopAfter = getInt("stopAfter")?.coerceAtLeast(0) ?: 0,
+            stopAfter = getInt("stopAfter")?.coerceAtLeast(0),
         )
     }
 
