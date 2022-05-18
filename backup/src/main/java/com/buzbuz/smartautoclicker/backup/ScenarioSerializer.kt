@@ -20,7 +20,7 @@ import android.graphics.Point
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.backup.ext.getBoolean
-import com.buzbuz.smartautoclicker.backup.ext.getEnumFromString
+import com.buzbuz.smartautoclicker.backup.ext.getEnum
 import com.buzbuz.smartautoclicker.backup.ext.getInt
 import com.buzbuz.smartautoclicker.backup.ext.getJsonArray
 import com.buzbuz.smartautoclicker.backup.ext.getJsonObject
@@ -164,13 +164,13 @@ internal class ScenarioSerializer {
 
             val conditions = getJsonArray("conditions")?.deserializeConditionsCompat()
             if (conditions.isNullOrEmpty()) {
-                Log.i(com.buzbuz.smartautoclicker.backup.TAG, "Can't deserialize this complete event, there is no conditions")
+                Log.i(TAG, "Can't deserialize this complete event, there is no conditions")
                 return@mapNotNull null
             }
 
             val completeActions = getJsonArray("actions")?.deserializeCompleteActionsCompat()
             if (completeActions.isNullOrEmpty()) {
-                Log.i(com.buzbuz.smartautoclicker.backup.TAG, "Can't deserialize this complete event, there is no actions")
+                Log.i(TAG, "Can't deserialize this complete event, there is no actions")
                 return@mapNotNull null
             }
 
@@ -234,7 +234,7 @@ internal class ScenarioSerializer {
 
     /** @return the deserialized action. */
     private fun JsonObject.deserializeActionCompat(): ActionEntity? =
-        when (getEnumFromString<ActionType>("type", true)) {
+        when (getEnum<ActionType>("type", true)) {
             ActionType.CLICK -> deserializeClickActionCompat()
             ActionType.SWIPE -> deserializeSwipeActionCompat()
             ActionType.PAUSE -> deserializePauseActionCompat()
@@ -335,7 +335,7 @@ internal class ScenarioSerializer {
         with (extra.jsonObject) {
             val id = getLong("id", true) ?: return@mapNotNull null
             val actionId = getLong("actionId", true) ?: return@mapNotNull null
-            val type = getEnumFromString<IntentExtraType>("type", true) ?: return@mapNotNull null
+            val type = getEnum<IntentExtraType>("type", true) ?: return@mapNotNull null
             val key = getString("key", true) ?: return@mapNotNull null
             val value = getString("value", true) ?: return@mapNotNull null
 

@@ -40,7 +40,7 @@ internal fun JsonObject.getJsonObject(key: String, shouldLogError: Boolean = fal
         try {
             it.jsonObject
         } catch (iaEx: IllegalArgumentException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a JsonObject")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a JsonObject")
             null
         }
     }
@@ -56,7 +56,7 @@ internal fun JsonObject.getJsonArray(key: String, shouldLogError: Boolean = fals
         try {
             it.jsonArray
         } catch (iaEx: IllegalArgumentException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a JsonArray")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a JsonArray")
             null
         }
     }
@@ -72,10 +72,10 @@ internal fun JsonObject.getBoolean(key: String, shouldLogError: Boolean = false)
         try {
             it.jsonPrimitive.boolean
         } catch (iaEx: IllegalArgumentException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a primitive")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a primitive")
             null
         } catch (isEx: IllegalStateException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a boolean")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a boolean")
             null
         }
     }
@@ -91,10 +91,10 @@ internal fun JsonObject.getInt(key: String, shouldLogError: Boolean = false): In
         try {
             it.jsonPrimitive.int
         } catch (iaEx: IllegalArgumentException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a primitive")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a primitive")
             null
         } catch (isEx: NumberFormatException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a int")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a int")
             null
         }
     }
@@ -110,10 +110,10 @@ internal fun JsonObject.getLong(key: String, shouldLogError: Boolean = false): L
         try {
             it.jsonPrimitive.long
         } catch (iaEx: IllegalArgumentException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a primitive")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a primitive")
             null
         } catch (nfEx: NumberFormatException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a long")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a long")
             null
         }
     }
@@ -127,9 +127,9 @@ internal fun JsonObject.getLong(key: String, shouldLogError: Boolean = false): L
 internal fun JsonObject.getString(key: String, shouldLogError: Boolean = false): String? =
     getValue(key, shouldLogError)?.let {
         try {
-            it.jsonPrimitive.toString()
+            if (it.jsonPrimitive.isString) it.jsonPrimitive.content else null
         } catch (iaEx: IllegalArgumentException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Value for $key is not a primitive")
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a primitive")
             null
         }
     }
@@ -141,12 +141,12 @@ internal fun JsonObject.getString(key: String, shouldLogError: Boolean = false):
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal inline fun <reified T : Enum<T>> JsonObject.getEnumFromString(key: String, shouldLogError: Boolean = false): T? =
+internal inline fun <reified T : Enum<T>> JsonObject.getEnum(key: String, shouldLogError: Boolean = false): T? =
     getString(key, shouldLogError)?.let { stringEnum ->
         try {
             enumValueOf<T>(stringEnum)
         } catch (iae: IllegalArgumentException) {
-            if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Can't create IntentExtraType, value $stringEnum is invalid")
+            if (shouldLogError) Log.w(TAG, "Can't create IntentExtraType, value $stringEnum is invalid")
             null
         }
     }
@@ -158,7 +158,7 @@ internal inline fun <reified T : Enum<T>> JsonObject.getEnumFromString(key: Stri
  * @return the child value for the given key, or null if not found.
  */
 private fun JsonObject.getValue(key: String, shouldLogError: Boolean = false) = get(key) ?:let {
-    if (shouldLogError) Log.w(com.buzbuz.smartautoclicker.backup.ext.TAG, "Can't find $key")
+    if (shouldLogError) Log.w(TAG, "Can't find $key")
     null
 }
 
