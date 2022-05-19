@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.backup
 
 import android.graphics.Point
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.backup.ext.getBoolean
 import com.buzbuz.smartautoclicker.backup.ext.getEnum
@@ -113,7 +114,8 @@ internal class ScenarioSerializer {
      *
      * @return the complete scenario, if the deserialization is a success, or null if not.
      */
-    private fun JsonObject.deserializeCompleteScenarioCompat(): CompleteScenario? {
+    @VisibleForTesting
+    internal fun JsonObject.deserializeCompleteScenarioCompat(): CompleteScenario? {
         val jsonCompleteScenario = getJsonObject("scenario") ?: return null
 
         val scenario: ScenarioEntity = jsonCompleteScenario.getJsonObject("scenario")?.deserializeScenarioCompat()
@@ -129,19 +131,25 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized scenario. */
-    private fun JsonObject.deserializeScenarioCompat(): ScenarioEntity? {
+    @VisibleForTesting
+    internal fun JsonObject.deserializeScenarioCompat(): ScenarioEntity? {
         val id = getLong("id", true) ?: return null
 
         return ScenarioEntity(
             id = id,
             name = getString("name") ?: "",
-            detectionQuality = getInt("detectionQuality") ?: 600,
-            endConditionOperator = getInt("endConditionOperator") ?: 0,
+            detectionQuality = getInt("detectionQuality")
+                ?.coerceIn(DETECTION_QUALITY_LOWER_BOUND, DETECTION_QUALITY_UPPER_BOUND)
+                ?: DETECTION_QUALITY_DEFAULT_VALUE,
+            endConditionOperator = getInt("endConditionOperator")
+                ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
+                ?: OPERATOR_DEFAULT_VALUE,
         )
     }
 
     /** @return the deserialized end condition list. */
-    private fun JsonArray.deserializeEndConditionsCompat(): List<EndConditionEntity> = mapNotNull { endCondition ->
+    @VisibleForTesting
+    internal fun JsonArray.deserializeEndConditionsCompat(): List<EndConditionEntity> = mapNotNull { endCondition ->
         with (endCondition.jsonObject) {
             val id = getLong("id", true) ?: return@mapNotNull null
             val scenarioId = getLong("scenarioId", true) ?: return@mapNotNull null
@@ -151,13 +159,14 @@ internal class ScenarioSerializer {
                 id = id,
                 scenarioId = scenarioId,
                 eventId = eventId,
-                executions = getInt("executions") ?: 1
+                executions = getInt("executions") ?: END_CONDITION_EXECUTION_DEFAULT_VALUE
             )
         }
     }
 
     /** @return the deserialized complete event list. */
-    private fun JsonArray.deserializeCompleteEventCompat(): List<CompleteEventEntity> = mapNotNull { completeEvent ->
+    @VisibleForTesting
+    internal fun JsonArray.deserializeCompleteEventCompat(): List<CompleteEventEntity> = mapNotNull { completeEvent ->
         with (completeEvent.jsonObject) {
             val event = getJsonObject("event", true)?.deserializeEventCompat()
                 ?: return@mapNotNull null
@@ -179,7 +188,8 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized event. */
-    private fun JsonObject.deserializeEventCompat(): EventEntity? {
+    @VisibleForTesting
+    internal fun JsonObject.deserializeEventCompat(): EventEntity? {
         val id = getLong("id", true) ?: return null
         val scenarioId = getLong("scenarioId", true) ?: return null
 
@@ -187,14 +197,17 @@ internal class ScenarioSerializer {
             id = id,
             scenarioId = scenarioId,
             name = getString("name") ?: "",
-            conditionOperator = getInt("conditionOperator") ?: 0,
+            conditionOperator = getInt("conditionOperator")
+                ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
+                ?: OPERATOR_DEFAULT_VALUE,
             priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
             stopAfter = getInt("stopAfter")?.coerceAtLeast(0),
         )
     }
 
     /** @return the deserialized condition list. */
-    private fun JsonArray.deserializeConditionsCompat(): List<ConditionEntity> = mapNotNull { condition ->
+    @VisibleForTesting
+    internal fun JsonArray.deserializeConditionsCompat(): List<ConditionEntity> = mapNotNull { condition ->
         with (condition.jsonObject) {
             val id = getLong("id", true) ?: return@mapNotNull null
             val eventId = getLong("eventId", true) ?: return@mapNotNull null
@@ -221,7 +234,8 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized complete action list. */
-    private fun JsonArray.deserializeCompleteActionsCompat(): List<CompleteActionEntity> = mapNotNull { completeActions ->
+    @VisibleForTesting
+    internal fun JsonArray.deserializeCompleteActionsCompat(): List<CompleteActionEntity> = mapNotNull { completeActions ->
         with (completeActions.jsonObject) {
             val action = getJsonObject("action")?.deserializeActionCompat() ?: return@mapNotNull null
 
@@ -233,7 +247,8 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized action. */
-    private fun JsonObject.deserializeActionCompat(): ActionEntity? =
+    @VisibleForTesting
+    internal fun JsonObject.deserializeActionCompat(): ActionEntity? =
         when (getEnum<ActionType>("type", true)) {
             ActionType.CLICK -> deserializeClickActionCompat()
             ActionType.SWIPE -> deserializeSwipeActionCompat()
@@ -243,7 +258,8 @@ internal class ScenarioSerializer {
         }
 
     /** @return the deserialized click action. */
-    private fun JsonObject.deserializeClickActionCompat(): ActionEntity? {
+    @VisibleForTesting
+    internal fun JsonObject.deserializeClickActionCompat(): ActionEntity? {
         val id = getLong("id", true) ?: return null
         val eventId = getLong("eventId", true) ?: return null
 
@@ -272,7 +288,8 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized swipe action. */
-    private fun JsonObject.deserializeSwipeActionCompat(): ActionEntity? {
+    @VisibleForTesting
+    internal fun JsonObject.deserializeSwipeActionCompat(): ActionEntity? {
         val id = getLong("id", true) ?: return null
         val eventId = getLong("eventId", true) ?: return null
 
@@ -296,7 +313,8 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized pause action. */
-    private fun JsonObject.deserializePauseActionCompat(): ActionEntity? {
+    @VisibleForTesting
+    internal fun JsonObject.deserializePauseActionCompat(): ActionEntity? {
         val id = getLong("id", true) ?: return null
         val eventId = getLong("eventId", true) ?: return null
 
@@ -311,7 +329,8 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized intent action. */
-    private fun JsonObject.deserializeIntentActionCompat(): ActionEntity? {
+    @VisibleForTesting
+    internal fun JsonObject.deserializeIntentActionCompat(): ActionEntity? {
         val id = getLong("id", true) ?: return null
         val eventId = getLong("eventId", true) ?: return null
         val intentAction = getString("intentAction", true) ?: return null
@@ -331,7 +350,8 @@ internal class ScenarioSerializer {
     }
 
     /** @return the deserialized intent extra. */
-    private fun JsonArray.deserializeIntentExtrasCompat(): List<IntentExtraEntity> = mapNotNull { extra ->
+    @VisibleForTesting
+    internal fun JsonArray.deserializeIntentExtrasCompat(): List<IntentExtraEntity> = mapNotNull { extra ->
         with (extra.jsonObject) {
             val id = getLong("id", true) ?: return@mapNotNull null
             val actionId = getLong("actionId", true) ?: return@mapNotNull null
@@ -343,6 +363,17 @@ internal class ScenarioSerializer {
         }
     }
 }
+
+const val DETECTION_QUALITY_LOWER_BOUND = 400
+const val DETECTION_QUALITY_UPPER_BOUND = 1200
+const val DETECTION_QUALITY_DEFAULT_VALUE = 600
+
+const val OPERATOR_LOWER_BOUND = 1
+const val OPERATOR_UPPER_BOUND = 2
+const val OPERATOR_DEFAULT_VALUE = OPERATOR_LOWER_BOUND
+
+const val END_CONDITION_EXECUTION_DEFAULT_VALUE = 1
+
 
 /** Tag for logs. */
 private const val TAG = "ScenarioDeserializer"

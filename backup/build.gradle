@@ -60,6 +60,7 @@ android {
 }
 
 dependencies {
+    implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}"
 
