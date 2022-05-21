@@ -43,48 +43,30 @@ class ScreenMetrics(private val context: Context) {
             else WindowManager.LayoutParams.TYPE_PHONE
     }
 
-    /** */
+    /** The Android display manager. */
     private val displayManager = context.getSystemService(DisplayManager::class.java)
     /** The display to get the value from. It will always be the first one available. */
     private val display = displayManager.getDisplay(0)
     /** The listener upon orientation changes. */
     private var orientationListener: ((Context) -> Unit)? = null
 
-    /** The orientation of the display. */
-    var orientation = computeOrientation()
-        private set
-    /** The screen size. */
-    var screenSize: Point = computeScreenSize()
-        private set
-
     /** Listen to the configuration changes and calls [orientationListener] when needed. */
     private val configChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            updateScreenMetrics()
+            if (updateScreenConfig()) {
+                orientationListener?.invoke(context)
+            }
         }
     }
 
-    /** @return the limit y position in screen coordinates where it is safe to draw (notch, status bar...) */
-    fun getTopSafeArea(): Int {
-        var topSafeArea = 0
+    /** The orientation of the display. */
+    var orientation: Int = -1
+        private set
+    /** The screen size. */
+    var screenSize: Point = Point(0, 0)
+        private set
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            topSafeArea = display.cutout?.safeInsetTop ?: 0
-        }
-
-        if (topSafeArea == 0 && Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
-            topSafeArea = context.getSystemService(WindowManager::class.java)
-                .currentWindowMetrics.windowInsets.displayCutout?.safeInsetTop ?: 0
-        }
-
-        if (topSafeArea == 0) {
-            topSafeArea = context.resources.getDimensionPixelSize(
-                context.resources.getIdentifier("status_bar_height", "dimen", "android")
-            )
-        }
-
-        return topSafeArea
-    }
+    init { updateScreenConfig() }
 
     /**
      * Register a new orientation listener.
@@ -110,26 +92,14 @@ class ScreenMetrics(private val context: Context) {
         }
     }
 
-    /** Update orientation and screen size, if needed. Should be called after a configuration change. */
-    private fun updateScreenMetrics() {
-        val newOrientation = computeOrientation()
-        if (orientation != newOrientation) {
-            orientation = newOrientation
-            screenSize = computeScreenSize()
-            orientationListener?.invoke(context)
-        }
-    }
+    /** @return true if the screen config have changed, false if not. */
+    private fun updateScreenConfig(): Boolean {
+        val newOrientation = getCurrentOrientation()
+        if (newOrientation == orientation) return false
 
-    /** @return the size of the display, in pixels. */
-    private fun computeScreenSize(): Point =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val currentWindowMetricsBound = context.getSystemService(WindowManager::class.java)
-                .currentWindowMetrics.bounds
-
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                Point(currentWindowMetricsBound.right, currentWindowMetricsBound.bottom)
-            } else {
-                Point(currentWindowMetricsBound.bottom, currentWindowMetricsBound.right)
+        val newSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            context.getSystemService(WindowManager::class.java).currentWindowMetrics.bounds.let { windowBound ->
+                Point(windowBound.width(), windowBound.height())
             }
         } else {
             val realSize = Point()
@@ -137,8 +107,18 @@ class ScreenMetrics(private val context: Context) {
             realSize
         }
 
+        orientation = newOrientation
+        screenSize = if (newSize == screenSize) {
+            Point(newSize.y, newSize.x)
+        } else {
+            newSize
+        }
+
+        return true
+    }
+
     /**  @return the orientation of the screen. */
-    private fun computeOrientation(): Int = when (display.rotation) {
+    private fun getCurrentOrientation(): Int = when (display.rotation) {
         Surface.ROTATION_0, Surface.ROTATION_180 -> Configuration.ORIENTATION_PORTRAIT
         Surface.ROTATION_90, Surface.ROTATION_270 -> Configuration.ORIENTATION_LANDSCAPE
         else -> Configuration.ORIENTATION_UNDEFINED
