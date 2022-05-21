@@ -71,7 +71,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     private lateinit var listBinding: MergeLoadableListBinding
     /** Adapter displaying the click scenarios as a list. */
     private lateinit var scenariosAdapter: ScenarioAdapter
-    /** The action menu for this fragment*/
+    /** The action menu for this fragment. */
     private lateinit var menu: Menu
     /** The result launcher for the projection permission dialog. */
     private lateinit var projectionActivityResult: ActivityResultLauncher<Intent>
@@ -132,6 +132,14 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 override fun onViewAttachedToWindow(arg0: View?) {}
             })
         }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scenarioViewModel.menuUiState.collect { menuState ->
+                    updateMenu(menuState)
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -147,16 +155,8 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    scenarioViewModel.scenarioList.collect {
-                        onNewScenarioList(it)
-                    }
-                }
-
-                launch {
-                    scenarioViewModel.menuUiState.collect { menuState ->
-                        updateMenu(menuState)
-                    }
+                scenarioViewModel.scenarioList.collect {
+                    onNewScenarioList(it)
                 }
             }
         }
