@@ -227,8 +227,12 @@ internal class ScenarioSerializer {
                 areaBottom = areaBottom,
                 name = getString("name") ?: "",
                 shouldBeDetected = getBoolean("shouldBeDetected") ?: true,
-                detectionType = getInt("detectionType") ?: 0,
-                threshold = getInt("threshold")?.coerceIn(0, 20) ?: 4,
+                detectionType = getInt("detectionType")
+                    ?.coerceIn(DETECTION_TYPE_LOWER_BOUND, DETECTION_TYPE_UPPER_BOUND)
+                    ?: DETECTION_TYPE_DEFAULT_VALUE,
+                threshold = getInt("threshold")
+                    ?.coerceIn(CONDITION_THRESHOLD_LOWER_BOUND, CONDITION_THRESHOLD_UPPER_BOUND)
+                    ?: CONDITION_THRESHOLD_DEFAULT_VALUE,
             )
         }
     }
@@ -278,12 +282,12 @@ internal class ScenarioSerializer {
             id = id,
             eventId = eventId,
             name = getString("name") ?: "",
-            priority = getInt("priority") ?: 0,
+            priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.CLICK,
             clickOnCondition = clickOnCondition,
             x = x,
             y = y,
-            pressDuration = getLong("pressDuration") ?: 0,
+            pressDuration = getLong("pressDuration")?.coerceAtLeast(0) ?: DEFAULT_CLICK_DURATION,
         )
     }
 
@@ -302,13 +306,13 @@ internal class ScenarioSerializer {
             id = id,
             eventId = eventId,
             name = getString("name") ?: "",
-            priority = getInt("priority") ?: 0,
+            priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.SWIPE,
             fromX = fromX,
             fromY = fromY,
             toX = toX,
             toY = toY,
-            swipeDuration = getLong("swipeDuration") ?: 250,
+            swipeDuration = getLong("swipeDuration")?.coerceAtLeast(0) ?: DEFAULT_SWIPE_DURATION,
         )
     }
 
@@ -322,9 +326,9 @@ internal class ScenarioSerializer {
             id = id,
             eventId = eventId,
             name = getString("name") ?: "",
-            priority = getInt("priority") ?: 0,
+            priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.PAUSE,
-            pauseDuration = getLong("pauseDuration") ?: 50,
+            pauseDuration = getLong("pauseDuration")?.coerceAtLeast(0) ?: DEFAULT_PAUSE_DURATION,
         )
     }
 
@@ -339,13 +343,13 @@ internal class ScenarioSerializer {
             id = id,
             eventId = eventId,
             name = getString("name") ?: "",
-            priority = getInt("priority") ?: 0,
+            priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.INTENT,
             isAdvanced = getBoolean("isAdvanced") ?: false,
             isBroadcast = getBoolean("isBroadcast") ?: false,
             intentAction = intentAction,
             componentName = getString("componentName"),
-            flags = getInt("flags") ?: 0,
+            flags = getInt("flags")?.coerceAtLeast(0) ?: 0,
         )
     }
 
@@ -364,16 +368,43 @@ internal class ScenarioSerializer {
     }
 }
 
+/** Scenario detection quality lower bound on compat deserialization. */
 const val DETECTION_QUALITY_LOWER_BOUND = 400
+/** Scenario detection quality upper bound on compat deserialization. */
 const val DETECTION_QUALITY_UPPER_BOUND = 1200
+/** Scenario detection quality default value on compat deserialization. */
 const val DETECTION_QUALITY_DEFAULT_VALUE = 600
 
+/** Operators lower bound on compat deserialization. */
 const val OPERATOR_LOWER_BOUND = 1
+/** Operators upper bound on compat deserialization. */
 const val OPERATOR_UPPER_BOUND = 2
+/** Operators default value on compat deserialization. */
 const val OPERATOR_DEFAULT_VALUE = OPERATOR_LOWER_BOUND
 
+/** Detection type lower bound on compat deserialization. */
+const val DETECTION_TYPE_LOWER_BOUND = 1
+/** Detection type upper bound on compat deserialization. */
+const val DETECTION_TYPE_UPPER_BOUND = 2
+/** Detection type default value on compat deserialization. */
+const val DETECTION_TYPE_DEFAULT_VALUE = DETECTION_TYPE_LOWER_BOUND
+
+/** Condition threshold lower bound on compat deserialization. */
+const val CONDITION_THRESHOLD_LOWER_BOUND = 0
+/** Condition threshold upper bound on compat deserialization. */
+const val CONDITION_THRESHOLD_UPPER_BOUND = 20
+/** Condition threshold default value on compat deserialization. */
+const val CONDITION_THRESHOLD_DEFAULT_VALUE = 4
+
+/** End condition executions default value on compat deserialization. */
 const val END_CONDITION_EXECUTION_DEFAULT_VALUE = 1
 
+/** Default click duration in ms on compat deserialization. */
+const val DEFAULT_CLICK_DURATION = 1L
+/** Default swipe duration in ms on compat deserialization. */
+const val DEFAULT_SWIPE_DURATION = 250L
+/** Default pause duration in ms on compat deserialization. */
+const val DEFAULT_PAUSE_DURATION = 50L
 
 /** Tag for logs. */
 private const val TAG = "ScenarioDeserializer"

@@ -208,7 +208,6 @@ class ScenarioSerializerTests {
             assertEquals(OPERATOR_LOWER_BOUND, jsonScenarioLower.deserializeScenarioCompat()?.endConditionOperator)
             assertEquals(OPERATOR_UPPER_BOUND, jsonScenarioUpper.deserializeScenarioCompat()?.endConditionOperator)
             assertEquals(OPERATOR_DEFAULT_VALUE, jsonScenarioNull.deserializeScenarioCompat()?.endConditionOperator)
-
         }
     }
 
@@ -260,7 +259,7 @@ class ScenarioSerializerTests {
     }
 
     @Test
-    fun deserialization_event_mandatory_id() {
+    fun deserialization_event_mandatory_ids() {
         val jsonEventNullId = JsonObject(mapOf(
             "id" to NULL_NUMBER_JSON_PRIMITIVE,
             "scenarioId" to JsonPrimitive(1),
@@ -322,10 +321,641 @@ class ScenarioSerializerTests {
             "priority" to NULL_NUMBER_JSON_PRIMITIVE,
             "stopAfter" to NULL_NUMBER_JSON_PRIMITIVE,
         ))
+        val jsonEventDefault = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "scenarioId" to JsonPrimitive(2),
+            "name" to NULL_STRING_JSON_PRIMITIVE,
+            "conditionOperator" to NULL_NUMBER_JSON_PRIMITIVE,
+            "priority" to NULL_NUMBER_JSON_PRIMITIVE,
+            "stopAfter" to NULL_NUMBER_JSON_PRIMITIVE,
+        ))
 
         ScenarioSerializer().apply {
             assertEquals(OPERATOR_LOWER_BOUND, jsonEventLower.deserializeEventCompat()?.conditionOperator)
             assertEquals(OPERATOR_UPPER_BOUND, jsonEventUpper.deserializeEventCompat()?.conditionOperator)
+            assertEquals(OPERATOR_DEFAULT_VALUE, jsonEventDefault.deserializeEventCompat()?.conditionOperator)
+        }
+    }
+
+    @Test
+    fun deserialization_condition_mandatory_ids() {
+        val jsonConditionNullId = JsonObject(mapOf(
+            "id" to NULL_NUMBER_JSON_PRIMITIVE,
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Toto"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+        val jsonConditionNullEventId = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to NULL_NUMBER_JSON_PRIMITIVE,
+            "path" to JsonPrimitive("/Toto/tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Toto"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+
+        ScenarioSerializer().apply {
+            assertEquals(
+                emptyList<ConditionEntity>(),
+                JsonArray(listOf(jsonConditionNullId, jsonConditionNullEventId)).deserializeConditionsCompat()
+            )
+        }
+    }
+
+    @Test
+    fun deserialization_condition_mandatory_path() {
+        val jsonConditionNullPath = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to NULL_STRING_JSON_PRIMITIVE,
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Toto"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+
+        ScenarioSerializer().apply {
+            assertEquals(
+                emptyList<ConditionEntity>(),
+                JsonArray(listOf(jsonConditionNullPath)).deserializeConditionsCompat()
+            )
+        }
+    }
+
+    @Test
+    fun deserialization_condition_mandatory_area() {
+        val jsonConditionNullLeft = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/tutu"),
+            "areaLeft" to NULL_NUMBER_JSON_PRIMITIVE,
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Toto"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+        val jsonConditionNullTop = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to NULL_NUMBER_JSON_PRIMITIVE,
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Toto"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+        val jsonConditionNullRight = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to NULL_NUMBER_JSON_PRIMITIVE,
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Toto"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+        val jsonConditionNullBottom = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to NULL_NUMBER_JSON_PRIMITIVE,
+            "name" to JsonPrimitive("Toto"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+
+        ScenarioSerializer().apply {
+            assertEquals(
+                emptyList<ConditionEntity>(),
+                JsonArray(listOf(
+                    jsonConditionNullLeft,
+                    jsonConditionNullTop,
+                    jsonConditionNullRight,
+                    jsonConditionNullBottom
+                )).deserializeEndConditionsCompat()
+            )
+        }
+    }
+
+    @Test
+    fun deserialization_condition_optional_name() {
+        val jsonConditionNullName = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to NULL_STRING_JSON_PRIMITIVE,
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+
+        ScenarioSerializer().apply {
+            assertEquals(
+                "",
+                JsonArray(listOf(jsonConditionNullName)).deserializeConditionsCompat().first().name
+            )
+        }
+    }
+
+    @Test
+    fun deserialization_condition_optional_shouldBeDetected() {
+        val jsonConditionNullShouldBeDetected = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Tutu"),
+            "shouldBeDetected" to NULL_BOOLEAN_JSON_PRIMITIVE,
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(10),
+        ))
+
+        ScenarioSerializer().apply {
+            assertEquals(
+                true,
+                JsonArray(listOf(jsonConditionNullShouldBeDetected)).deserializeConditionsCompat()
+                    .first().shouldBeDetected
+            )
+        }
+    }
+
+    @Test
+    fun deserialization_condition_optional_detection_type() {
+        val jsonConditionLower = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Tutu"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(Integer.MIN_VALUE),
+            "threshold" to JsonPrimitive(10),
+        ))
+        val jsonConditionUpper = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Tutu"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(Integer.MAX_VALUE),
+            "threshold" to JsonPrimitive(10),
+        ))
+        val jsonConditionDefault = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Tutu"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to NULL_NUMBER_JSON_PRIMITIVE,
+            "threshold" to JsonPrimitive(10),
+        ))
+
+        ScenarioSerializer().apply {
+            val conditions = JsonArray(listOf(jsonConditionLower, jsonConditionUpper, jsonConditionDefault))
+                .deserializeConditionsCompat()
+
+            assertEquals(DETECTION_TYPE_LOWER_BOUND, conditions[0].detectionType)
+            assertEquals(DETECTION_TYPE_UPPER_BOUND, conditions[1].detectionType)
+            assertEquals(DETECTION_TYPE_DEFAULT_VALUE, conditions[2].detectionType)
+        }
+    }
+
+    @Test
+    fun deserialization_condition_optional_threshold() {
+        val jsonConditionLower = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Tutu"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(Integer.MIN_VALUE),
+        ))
+        val jsonConditionUpper = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Tutu"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to JsonPrimitive(Integer.MAX_VALUE),
+        ))
+        val jsonConditionDefault = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "path" to JsonPrimitive("/Toto/Tutu"),
+            "areaLeft" to JsonPrimitive(1),
+            "areaTop" to JsonPrimitive(2),
+            "areaRight" to JsonPrimitive(10),
+            "areaBottom" to JsonPrimitive(20),
+            "name" to JsonPrimitive("Tutu"),
+            "shouldBeDetected" to JsonPrimitive(true),
+            "detectionType" to JsonPrimitive(1),
+            "threshold" to NULL_NUMBER_JSON_PRIMITIVE,
+        ))
+
+        ScenarioSerializer().apply {
+            val conditions = JsonArray(listOf(jsonConditionLower, jsonConditionUpper, jsonConditionDefault))
+                .deserializeConditionsCompat()
+
+            assertEquals(CONDITION_THRESHOLD_LOWER_BOUND, conditions[0].threshold)
+            assertEquals(CONDITION_THRESHOLD_UPPER_BOUND, conditions[1].threshold)
+            assertEquals(CONDITION_THRESHOLD_DEFAULT_VALUE, conditions[2].threshold)
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_mandatory_ids() {
+        val jsonClickNullId = JsonObject(mapOf(
+            "id" to NULL_NUMBER_JSON_PRIMITIVE,
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(false),
+            "x" to JsonPrimitive(5),
+            "y" to JsonPrimitive(5),
+            "pressDuration" to JsonPrimitive(1),
+        ))
+        val jsonClickNullEventId = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to NULL_NUMBER_JSON_PRIMITIVE,
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(false),
+            "x" to JsonPrimitive(5),
+            "y" to JsonPrimitive(5),
+            "pressDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonClickNullId.deserializeClickActionCompat())
+            assertNull(jsonClickNullEventId.deserializeClickActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_mandatory_coordinates() {
+        val clickOnCondition = false
+        val jsonClickNullX = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(clickOnCondition),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
+            "y" to JsonPrimitive(5),
+            "pressDuration" to JsonPrimitive(1),
+        ))
+        val jsonClickNullY = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(clickOnCondition),
+            "x" to JsonPrimitive(5),
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
+            "pressDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonClickNullX.deserializeClickActionCompat())
+            assertNull(jsonClickNullY.deserializeClickActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_optional_coordinates() {
+        val clickOnCondition = true
+        val jsonClickNullX = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(clickOnCondition),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
+            "y" to JsonPrimitive(5),
+            "pressDuration" to JsonPrimitive(1),
+        ))
+        val jsonClickNullY = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(clickOnCondition),
+            "x" to JsonPrimitive(5),
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
+            "pressDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNotNull(jsonClickNullX.deserializeClickActionCompat())
+            assertNotNull(jsonClickNullY.deserializeClickActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_optional_others() {
+        val jsonClick = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to NULL_STRING_JSON_PRIMITIVE,
+            "priority" to NULL_NUMBER_JSON_PRIMITIVE,
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(false),
+            "x" to JsonPrimitive(5),
+            "y" to JsonPrimitive(5),
+            "pressDuration" to NULL_NUMBER_JSON_PRIMITIVE,
+        ))
+
+        ScenarioSerializer().apply {
+            assertNotNull(jsonClick.deserializeClickActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_swipe_mandatory_ids() {
+        val jsonSwipeNullId = JsonObject(mapOf(
+            "id" to NULL_NUMBER_JSON_PRIMITIVE,
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to JsonPrimitive(5),
+            "toX" to JsonPrimitive(10),
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to JsonPrimitive(1),
+        ))
+        val jsonSwipeNullEventId = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to NULL_NUMBER_JSON_PRIMITIVE,
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to JsonPrimitive(5),
+            "toX" to JsonPrimitive(10),
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonSwipeNullId.deserializeSwipeActionCompat())
+            assertNull(jsonSwipeNullEventId.deserializeSwipeActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_swipe_mandatory_coordinates() {
+        val jsonSwipeNullFromX = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to NULL_NUMBER_JSON_PRIMITIVE,
+            "fromY" to JsonPrimitive(5),
+            "toX" to JsonPrimitive(10),
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to JsonPrimitive(1),
+        ))
+        val jsonSwipeNullFromY = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to NULL_NUMBER_JSON_PRIMITIVE,
+            "toX" to JsonPrimitive(10),
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to JsonPrimitive(1),
+        ))
+        val jsonSwipeNullToX = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to JsonPrimitive(5),
+            "toX" to NULL_NUMBER_JSON_PRIMITIVE,
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to JsonPrimitive(1),
+        ))
+        val jsonSwipeNullToY = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to JsonPrimitive(5),
+            "toX" to JsonPrimitive(10),
+            "toY" to NULL_NUMBER_JSON_PRIMITIVE,
+            "swipeDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonSwipeNullFromX.deserializeSwipeActionCompat())
+            assertNull(jsonSwipeNullFromY.deserializeSwipeActionCompat())
+            assertNull(jsonSwipeNullToX.deserializeSwipeActionCompat())
+            assertNull(jsonSwipeNullToY.deserializeSwipeActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_swipe_optionals() {
+        val jsonSwipe = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to NULL_STRING_JSON_PRIMITIVE,
+            "priority" to NULL_NUMBER_JSON_PRIMITIVE,
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to JsonPrimitive(5),
+            "toX" to JsonPrimitive(10),
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to NULL_NUMBER_JSON_PRIMITIVE,
+        ))
+
+        ScenarioSerializer().apply {
+            assertNotNull(jsonSwipe.deserializeSwipeActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_pause_mandatory_ids() {
+        val jsonPauseNullId = JsonObject(mapOf(
+            "id" to NULL_NUMBER_JSON_PRIMITIVE,
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.PAUSE.name),
+            "pauseDuration" to JsonPrimitive(1),
+        ))
+        val jsonPauseNullEventId = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to NULL_NUMBER_JSON_PRIMITIVE,
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.PAUSE.name),
+            "pauseDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonPauseNullId.deserializePauseActionCompat())
+            assertNull(jsonPauseNullEventId.deserializePauseActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_pause_optionals() {
+        val jsonPause = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to NULL_STRING_JSON_PRIMITIVE,
+            "priority" to NULL_NUMBER_JSON_PRIMITIVE,
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "pauseDuration" to NULL_NUMBER_JSON_PRIMITIVE,
+        ))
+
+        ScenarioSerializer().apply {
+            assertNotNull(jsonPause.deserializePauseActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_intent_mandatory_ids() {
+        val jsonIntentNullId = JsonObject(mapOf(
+            "id" to NULL_NUMBER_JSON_PRIMITIVE,
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.INTENT.name),
+            "isAdvanced" to JsonPrimitive(false),
+            "isBroadcast" to JsonPrimitive(false),
+            "intentAction" to JsonPrimitive("com.tutu.ACTION"),
+            "componentName" to JsonPrimitive("com.toto/com.toto.tutu"),
+            "flags" to JsonPrimitive(1),
+        ))
+        val jsonIntentNullEventId = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to NULL_NUMBER_JSON_PRIMITIVE,
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.INTENT.name),
+            "isAdvanced" to JsonPrimitive(false),
+            "isBroadcast" to JsonPrimitive(false),
+            "intentAction" to JsonPrimitive("com.tutu.ACTION"),
+            "componentName" to JsonPrimitive("com.toto/com.toto.tutu"),
+            "flags" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonIntentNullId.deserializeIntentActionCompat())
+            assertNull(jsonIntentNullEventId.deserializeIntentActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_intent_mandatory_intentAction() {
+        val jsonIntentNullAction = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.INTENT.name),
+            "isAdvanced" to JsonPrimitive(false),
+            "isBroadcast" to JsonPrimitive(false),
+            "intentAction" to NULL_STRING_JSON_PRIMITIVE,
+            "componentName" to JsonPrimitive("com.toto/com.toto.tutu"),
+            "flags" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonIntentNullAction.deserializeIntentActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_intent_optionals() {
+        val jsonIntentNullAction = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to NULL_STRING_JSON_PRIMITIVE,
+            "priority" to NULL_NUMBER_JSON_PRIMITIVE,
+            "type" to JsonPrimitive(ActionType.INTENT.name),
+            "isAdvanced" to NULL_BOOLEAN_JSON_PRIMITIVE,
+            "isBroadcast" to NULL_BOOLEAN_JSON_PRIMITIVE,
+            "intentAction" to JsonPrimitive("com.tutu.ACTION"),
+            "componentName" to NULL_STRING_JSON_PRIMITIVE,
+            "flags" to NULL_NUMBER_JSON_PRIMITIVE,
+        ))
+
+        ScenarioSerializer().apply {
+            assertNotNull(jsonIntentNullAction.deserializeIntentActionCompat())
         }
     }
 }
