@@ -41,6 +41,8 @@ allprojects {
 }
 
 ext {
+    compileSdkVersion = 32
+    minSdkVersion = 24
     androidxAppCompatVersion = '1.4.1'
     androidxAnnotationVersion = '1.3.0'
     androidxCoreVersion = '1.7.0'

@@ -29,12 +29,12 @@ if (signingPropertiesFile.exists()) {
 
 android {
     namespace 'com.buzbuz.smartautoclicker'
-    compileSdkVersion 31
+    compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.buzbuz.smartautoclicker"
-        minSdkVersion 24
-        targetSdkVersion 31
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.compileSdkVersion
         versionCode 15
         versionName "1.4.0"
 
