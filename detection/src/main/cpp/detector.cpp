@@ -57,8 +57,34 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     // Get the condition image information from the android bitmap format, and scale it to the processing size
     auto condition = scale(*bitmapRGBA888ToMat(env, conditionImage), scaleRatio);
 
-    // Try to match the condition somewhere on the screen
-    matchCondition(*currentImageScaled, *condition, threshold);
+    // Get the matching results for the whole screen
+    auto matchingResults = matchTemplate(*currentImageScaled, *condition);
+
+    Rect roi;
+    detectionResult.isDetected = false;
+    // Until a condition is detected or none fits
+    while (!detectionResult.isDetected) {
+        // Find the max value and its position in the result
+        locateMinMax(*matchingResults, detectionResult);
+        // If the maximum for the whole picture is below the threshold, we will never find.
+        if (!isValidMatching(detectionResult, threshold)) break;
+
+        // Candidate region of interest
+        roi = Rect(detectionResult.maxLoc.x, detectionResult.maxLoc.y,
+                   detectionResult.maxLoc.x + condition->cols <= matchingResults->cols ?
+                        condition->cols : matchingResults->cols - detectionResult.maxLoc.x,
+                   detectionResult.maxLoc.y + condition->rows <= matchingResults->rows ?
+                        condition->rows : matchingResults->rows - detectionResult.maxLoc.y);
+
+        // Check if the colors are matching in the candidate area.
+        double colorDiff = getColorDiff(Mat(*currentImageScaled, roi), *condition);
+        if (colorDiff < threshold) {
+            detectionResult.isDetected = true;
+        } else {
+            // Colors are invalid, modify the matching result to indicate that.
+            matchingResults.get()->operator()(roi).setTo(1 - colorDiff / 100);
+        }
+    }
 
     // If the condition is detected, compute the position of the detection and add it to the results.
     if (detectionResult.isDetected) {
@@ -95,33 +121,58 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     // Get the condition image information from the android bitmap format. This image as the same size than the
     // croppedImage one.
     auto condition = bitmapRGBA888ToMat(env, conditionImage);
+    // Apply template matching of the condition on the cropped image and find the best match
+    locateMinMax(*matchTemplate(croppedImage, *condition), detectionResult);
 
-    // Check if both images are the same.
-    matchCondition(croppedImage, *condition, threshold);
-
-    // If the condition is detected, compute the position of the detection and add it to the results.
-    if (detectionResult.isDetected) {
-        detectionResult.centerX = x + (int)(width / 2);
-        detectionResult.centerY = y + (int)(height / 2);
-    } else {
+    // Check if both images have the same shapes.
+    if (!isValidMatching(detectionResult, threshold)) {
+        detectionResult.isDetected = false;
         detectionResult.centerX = 0;
         detectionResult.centerY = 0;
+        return detectionResult;
     }
+
+    // Now check to colors
+    double colorDiff = getColorDiff(croppedImage, *condition);
+    if (colorDiff < threshold) {
+        // Valid color, its a detection !
+        detectionResult.isDetected = true;
+    } else {
+        // Invalid color. Update the confidence rate and false as not detected.
+        detectionResult.maxVal = 1 - colorDiff / 100;
+        detectionResult.isDetected = false;
+    }
+
+    // Update detection coordinates.
+    detectionResult.centerX = x + (int)(width / 2);
+    detectionResult.centerY = y + (int)(height / 2);
 
     return detectionResult;
 }
 
-void Detector::matchCondition(cv::Mat& image, cv::Mat& condition, int threshold) {
-    int result_cols = image.cols - condition.cols + 1;
-    int result_rows = image.rows - condition.rows + 1;
-    Mat resultMat = Mat(result_rows, result_cols, CV_8UC4);
+std::unique_ptr<Mat> Detector::matchTemplate(const Mat& image, const Mat& condition) {
+    std::unique_ptr<Mat> resultMat(new Mat(image.rows - condition.rows + 1,image.cols - condition.cols + 1,CV_8UC4));
+    cv::matchTemplate(image, condition, *resultMat, TM_CCOEFF_NORMED);
+    return resultMat;
+}
 
-    matchTemplate(image, condition, resultMat, TM_CCOEFF_NORMED);
+void Detector::locateMinMax(const Mat& matchingResult, DetectionResult& results) {
+    minMaxLoc(matchingResult, &results.minVal, &results.maxVal, &results.minLoc, &results.maxLoc, Mat());
+}
 
-    minMaxLoc(resultMat, &detectionResult.minVal, &detectionResult.maxVal, &detectionResult.minLoc,
-              &detectionResult.maxLoc, Mat());
+bool Detector::isValidMatching(const DetectionResult& results, const int threshold) {
+    return results.maxVal > ((double) (100 - threshold) / 100);
+}
 
-    detectionResult.isDetected = detectionResult.maxVal > ((double) (100 - threshold) / 100);
+double Detector::getColorDiff(const cv::Mat& image, const cv::Mat& condition) {
+    auto imageColorMeans = mean(image);
+    auto conditionColorMeans = mean(condition);
+
+    double diff = 0;
+    for (int i = 0; i < 3; i++) {
+        diff += abs(imageColorMeans.val[i] - conditionColorMeans.val[i]);
+    }
+    return (diff * 100) / (255 * 3);
 }
 
 std::unique_ptr<Mat> Detector::bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap) {
@@ -139,9 +190,9 @@ std::unique_ptr<Mat> Detector::bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap) {
     } catch (...) {
         AndroidBitmap_unlockPixels(env, bitmap);
         __android_log_print(ANDROID_LOG_ERROR, "native-lib",
-                            "bitmapRGBA888ToMat2 caught an exception");
+                            "bitmapRGBA888ToMat caught an exception");
         jclass je = env->FindClass("java/lang/Exception");
-        env->ThrowNew(je, "Unknown exception in JNI code {bitmapRGBA888ToMat2}");
+        env->ThrowNew(je, "Unknown exception in JNI code {bitmapRGBA888ToMat}");
         return nullptr;
     }
 }
