@@ -23,6 +23,7 @@ plugins {
 apply from: 'fetchSources.gradle'
 
 android {
+    namespace 'com.buzbuz.smartautoclicker.detection'
     compileSdk 31
 
     defaultConfig {

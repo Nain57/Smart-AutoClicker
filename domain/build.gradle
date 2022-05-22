@@ -21,6 +21,7 @@ plugins {
 }
 
 android {
+    namespace 'com.buzbuz.smartautoclicker.domain'
     compileSdk 32
 
     defaultConfig {

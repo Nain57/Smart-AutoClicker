@@ -19,6 +19,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'com.buzbuz.smartautoclicker.extensions'
     compileSdkVersion 31
 
     defaultConfig {

@@ -28,6 +28,7 @@ if (signingPropertiesFile.exists()) {
 }
 
 android {
+    namespace 'com.buzbuz.smartautoclicker'
     compileSdkVersion 31
 
     defaultConfig {
@@ -81,7 +82,6 @@ android {
             excludes += ['META-INF/atomicfu.kotlin_module']
         }
     }
-
 }
 
 dependencies {
