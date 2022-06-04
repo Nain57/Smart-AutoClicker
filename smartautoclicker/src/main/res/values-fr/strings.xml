@@ -77,6 +77,7 @@
     <string name="toast_configure_single_click">Appuyez sur la position à cliquer.</string>
     <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>
     <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée.</string>
+    <string name="toast_denied_screen_sharing_permission">L\'utilisateur a refusé l\'autorisation de partage d\'écran</string>
     <string name="dialog_event_config_title">Configuration de l\'évènement</string>
     <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
         que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée

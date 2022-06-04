@@ -100,7 +100,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
         projectionActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode != AppCompatActivity.RESULT_OK) {
-                Toast.makeText(requireContext(), "User denied screen sharing permission", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
             } else {
                 requestedScenario?.let { scenario ->
                     scenarioViewModel.loadScenario(result.resultCode, result.data!!, scenario)

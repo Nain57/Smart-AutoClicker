@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2021 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="app_name" translatable="false">智能点击器</string>
+
+    <string name="activity_scenario_title">脚本列表</string>
+    <string name="menu_search_item_title">搜索</string>
+    <string name="no_scenarios">无自动脚本\n点击 \'+\' 以新建</string>
+    <plurals name="scenario_sub_text">
+        <item quantity="other">包含 %d 组动作</item>
+    </plurals>
+
+    <string name="dialog_permissions_title">需要以下权限</string>
+    <string name="dialog_permissions_header">智能点击器将使用以下权限</string>
+    <string name="dialog_permission_overlay">显示在其他应用的上层</string>
+    <string name="dialog_permission_overlay_desc">允许该应用显示在其他应用的上层以得知您点按的位置</string>
+    <string name="dialog_permission_accessibility">无障碍服务</string>
+    <string name="dialog_permission_accessibility_desc">通过”无障碍“服务模拟点击某个位置。</string>
+
+    <string name="notification_channel_name" translatable="false">智能点击器</string>
+    <string name="notification_title">脚本: %1$s</string>
+    <string name="notification_message">点击停止运行</string>
+
+    <string name="dialog_add_scenario_title">新建脚本</string>
+    <string name="dialog_add_scenario_name_hint">名称</string>
+    <string name="dialog_delete_scenario_title">删除脚本</string>
+    <string name="dialog_delete_scenario_message">是否删除脚本 %1$s ？</string>
+    <string name="dialog_rename_scenario_title">重命名脚本</string>
+
+    <string name="dialog_event_list_title">动作组</string>
+    <string name="dialog_event_list_add">新建</string>
+    <string name="dialog_event_list_reorder">排序</string>
+    <string name="dialog_event_list_no_events">无动作</string>
+
+    <string name="dialog_event_add_title">添加新动作</string>
+    <string name="dialog_event_add_create">创建</string>
+    <string name="dialog_event_add_copy">从现有动作中复制</string>
+
+    <string name="dialog_event_copy_header_event">此脚本中的动作</string>
+    <string name="dialog_event_copy_header_all">所有脚本中的动作</string>
+    <string name="dialog_event_copy_search">按动作名搜索</string>
+    <string name="dialog_event_copy_empty">没找到动作</string>
+
+    <string name="dialog_event_config_title">动作配置</string>
+    <string name="dialog_event_config_name_title">名称</string>
+    <string name="dialog_event_config_condition_title">需匹配的图像</string>
+    <string name="dialog_event_config_actions_title">操作</string>
+
+    <string name="dialog_event_config_stop_after_executions">循环次数</string>
+    <string name="dialog_event_config_executions_hint">默认无限次</string>
+
+    <string name="dialog_condition_operator_title">条件类型</string>
+    <string name="condition_operator_and">所有条件</string>
+    <string name="condition_operator_or">仅需一个条件</string>
+    <string name="condition_operator_and_desc">满足所有条件</string>
+    <string name="condition_operator_or_desc">至少满足一个条件</string>
+
+    <string name="dialog_action_type_title">动作类型</string>
+    <string name="dialog_action_type_click">单击</string>
+    <string name="dialog_action_type_swipe">滑动</string>
+    <string name="dialog_action_type_pause">等待</string>
+    <string name="dialog_action_type_intent">意图</string>
+
+    <string name="dialog_action_config_click_press_duration_title">点击持续时间(ms)</string>
+    <string name="dialog_action_config_click_position_title">点击位置</string>
+    <string name="dialog_action_config_click_position_on_condition">识别并点击已保存的图片</string>
+    <string name="dialog_action_config_click_position_select_position">屏幕上的位置</string>
+    <string name="dialog_action_config_click_position_none">点击以添加位置</string>
+    <string name="dialog_action_config_click_position">点击 %1$d, %2$d</string>
+    <string name="dialog_action_config_swipe_duration_title">滑动持续时间(ms)</string>
+    <string name="dialog_action_config_swipe_position_title">滑动轨迹</string>
+    <string name="dialog_action_config_swipe_position_none">添加滑动轨迹</string>
+    <string name="dialog_action_config_swipe_position">从 %1$d, %2$d 滑动到 %3$d, %4$d</string>
+    <string name="dialog_action_config_pause_duration_title">暂停时长(ms)</string>
+
+    <string name="dialog_action_config_intent_config_type_title">类型</string>
+    <string name="dialog_action_config_intent_config_type_simple">简易模式</string>
+    <string name="dialog_action_config_intent_config_type_advanced">高级模式</string>
+    <string name="dialog_action_config_intent_simple_start_app_title">启动应用程序</string>
+    <string name="dialog_action_config_intent_simple_start_app_no_app">没有应用程序被选择</string>
+    <string name="dialog_action_config_intent_advanced_send_type_title">意图类型</string>
+
+    <string name="dialog_action_config_intent_advanced_send_type_start_app" translatable="false">启动活动</string>
+    <string name="dialog_action_config_intent_advanced_send_type_broadcast" translatable="false">传递广播</string>
+    <string name="dialog_action_config_intent_advanced_action_title" translatable="false">动作</string>
+    <string name="dialog_action_config_intent_advanced_flags_title" translatable="false">标识</string>
+    <string name="dialog_action_config_intent_advanced_comp_name_title" translatable="false">组件名</string>
+    <string name="dialog_action_config_intent_advanced_extras_title" translatable="false">附加参数</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_title" translatable="false">附加参数</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_boolean_true" translatable="false">True</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_boolean_false" translatable="false">False</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_key">参数名</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value">参数值</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value_type">参数值类型</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">选择一个参数类型</string>
+
+    <string name="dialog_application_select_title">选择一个应用程序</string>
+    <string name="dialog_application_select_empty">没有应用程序被选择</string>
+
+    <string name="dialog_action_new_title">添加新动作</string>
+    <string name="dialog_action_new_create">新建</string>
+    <string name="dialog_action_new_copy">复制已有的动作</string>
+    <string name="dialog_action_copy_empty">找不到动作</string>
+    <string name="dialog_action_copy_click_details">持续 %1$s 在 [%2$d, %3$d]</string>
+    <string name="dialog_action_copy_swipe_details">持续 %1$s 从 [%2$d, %3$d] 到 [%4$d, %5$d]</string>
+    <string name="dialog_action_copy_pause_details">持续 %1$s</string>
+    <string name="dialog_action_copy_intent_details_action">发送 %1$s</string>
+    <string name="dialog_action_copy_intent_details_action_component">发送 %1$s 到 %2$s</string>
+    <string name="dialog_action_copy_header_event">此脚本下的动作</string>
+    <string name="dialog_action_copy_header_all">所有脚本下的动作</string>
+    <string name="dialog_action_copy_search">通过动作名寻找</string>
+
+    <string name="dialog_condition_title">条件</string>
+    <string name="dialog_condition_name_title">名字</string>
+    <string name="dialog_condition_detection_details_title">检测细节</string>
+    <string name="dialog_condition_delete">删除</string>
+    <string name="dialog_condition_at">位置 [%1$d,%2$d] [%3$d,%4$d]</string>
+    <string name="dialog_condition_type_title">检测类型</string>
+    <string name="dialog_condition_type_whole_screen">屏幕上的任意位置</string>
+    <string name="dialog_condition_type_exact_position">在相同位置</string>
+    <string name="dialog_condition_threshold_title">容差</string>
+    <string name="dialog_condition_threshold_value">容差: %1$d %%</string>
+    <string name="dialog_condition_should_be_detected">当图像可见时点击</string>
+    <string name="dialog_condition_should_not_be_detected">当图像不可见时点击</string>
+    <string name="dialog_condition_error">条件图像未能找到</string>
+    <string name="dialog_condition_new_title">新条件</string>
+    <string name="dialog_condition_new_create">创建</string>
+    <string name="dialog_condition_new_copy">从其他条件复制</string>
+    <string name="dialog_condition_copy_empty">不能拷贝，现在没有其他条件。</string>
+    <string name="dialog_condition_copy_threshold">%1$d%%</string>
+
+    <string name="toast_configure_single_click">触摸要点击的位置。</string>
+    <string name="toast_configure_swipe_from">请点击滑动开始的位置。</string>
+    <string name="toast_configure_swipe_to">请点击滑动结束的位置。</string>
+    <string name="toast_denied_screen_sharing_permission">用户拒绝屏幕共享权限</string>
+
+    <string name="accessibility_service_description">该应用需要无障碍服务来实现自动点击。
+        一旦条件被检测到，便会执行由你创建的，位于其他应用上的点击列表。\n\n 该应用没有收集任何数据。 您可以自行访问我们的GitHub，代码是开源的!</string>
+
+    <string name="content_desc_add_scenario">创建一个新脚本</string>
+    <string name="content_desc_image_condition">要被检测的图像</string>
+    <string name="content_desc_event_action_btn">编辑此脚本</string>
+    <string name="content_desc_delete_scenario">删除脚本</string>
+    <string name="content_desc_play_pause_scenario">开始或者停止该脚本</string>
+    <string name="content_desc_stop_clicker">停止自动点击器</string>
+    <string name="content_desc_open_event_list">打开脚本列表</string>
+    <string name="content_desc_move_menu">移动悬浮窗菜单</string>
+    <string name="content_desc_confirm">确认</string>
+    <string name="content_desc_go_back">返回到对话框</string>
+    <string name="content_desc_overlay_state">悬浮窗权限状态</string>
+    <string name="content_desc_accessibility_state">无障碍服务权限状态</string>
+    <string name="content_desc_action">要被执行的动作</string>
+    <string name="content_desc_action_icon">这个图标标注动作类型</string>
+    <string name="content_desc_dialog_title_icon">对话框标题图标</string>
+    <string name="content_desc_application_icon">应用图标</string>
+
+    <string name="dialog_unit_ms" translatable="false">ms</string>
+    <string name="dialog_copy_title">复制自</string>
+
+    <string name="dialog_scenario_settings_title">脚本设置</string>
+    <string name="dialog_scenario_settings_quality_title">检测质量</string>
+    <string name="dialog_scenario_settings_quality_speed">速度</string>
+    <string name="dialog_scenario_settings_quality_precision">精准度</string>
+    <string name="dialog_scenario_settings_end_condition_title">终止条件</string>
+    <string name="dialog_scenario_settings_end_condition_card_executions" translatable="false">x%1$d</string>
+    <string name="dialog_scenario_settings_end_condition_no_events">没有可用的脚本</string>
+    <string name="dialog_end_condition_config_title">终止条件</string>
+    <string name="dialog_end_condition_config_event_title">动作</string>
+    <string name="dialog_end_condition_config_event_no_selection">没有动作被选择</string>
+    <string name="dialog_end_condition_config_event_none_in_scenario">没有在脚本中创建动作</string>
+    <string name="dialog_end_condition_config_executions_title">执行次数</string>
+    <string name="dialog_end_condition_event_select_title">选择一个动作</string>
+
+    <string name="dialog_backup_create_title">创建备份</string>
+    <string name="dialog_backup_create_select_file">选择保存路径</string>
+    <string name="dialog_backup_create_progress">创建备份: %1$d/%2$d</string>
+    <string name="dialog_backup_create_completed">备份完成</string>
+    <string name="dialog_backup_create_error">发生错误，备份导出已取消</string>
+    <string name="dialog_backup_import_title">导入备份</string>
+    <string name="dialog_backup_import_select_file">选择备份文件</string>
+    <string name="dialog_backup_import_progress">导入备份: %1$d</string>
+    <string name="dialog_backup_import_verification">数据验证</string>
+    <string name="dialog_backup_import_completed">导入已完成\n%1$d 方案已导入</string>
+    <string name="dialog_backup_import_completed_with_error">已完成导入 \n%1$d 个方案，错误 \n%2d 个</string>
+    <string name="dialog_backup_import_error">发生错误，备份导入已取消</string>
+    <string name="dialog_backup_import_compatibility">某些导入的场景是从具有不同屏幕的设备生成的，这可能会导致检测和操作坐标出现问题。\n\n要修复它，您需要根据您的情况创建新的屏幕截图并更新您的点击/滑动位置。</string>
+</resources>
