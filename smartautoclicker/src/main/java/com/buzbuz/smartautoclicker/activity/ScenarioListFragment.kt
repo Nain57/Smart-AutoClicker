@@ -344,6 +344,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 .newInstance(isImport, scenariosToBackup)
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }
+        scenarioViewModel.setMenuState(MenuState.SELECTION)
     }
 }
 
