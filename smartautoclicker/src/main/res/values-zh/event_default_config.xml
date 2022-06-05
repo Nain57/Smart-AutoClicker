@@ -16,22 +16,10 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <integer name="default_detection_quality">600</integer>
-
     <string name="default_event_name">默认情景</string>
-
     <string name="default_click_name">点击</string>
-    <integer name="default_click_press_duration">1</integer>
-
     <string name="default_swipe_name">滑动</string>
-    <integer name="default_swipe_duration">500</integer>
-
     <string name="default_pause_name">等待</string>
-    <integer name="default_pause_duration">50</integer>
-
     <string name="default_intent_name">意图</string>
-    <bool name="default_intent_isAdvanced">false</bool>
-
     <string name="default_condition_name">默认条件</string>
-    <integer name="default_condition_threshold">4</integer>
 </resources>
