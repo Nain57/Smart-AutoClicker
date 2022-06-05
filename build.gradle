@@ -44,15 +44,15 @@ ext {
     compileSdkVersion = 32
     minSdkVersion = 24
 
-    androidxAppCompatVersion = '1.4.1'
+    androidxAppCompatVersion = '1.4.2'
     androidxAnnotationVersion = '1.3.0'
-    androidxCoreVersion = '1.7.0'
+    androidxCoreVersion = '1.8.0'
     androidxLifecycleVersion = '2.4.1'
     androidxLifecycleExtensionVersion = '2.2.0'
     androidxRecyclerViewVersion = '1.2.1'
     androidxFragmentVersion = '1.4.1'
     androidxRoomVersion = '2.4.2'
-    googleMaterialVersion = '1.6.0'
+    googleMaterialVersion = '1.6.1'
     kotlinSerializationVersion = '1.3.2'
 
     openCvVersion = '4.5.5'
