@@ -37,6 +37,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -60,7 +62,7 @@ import kotlinx.coroutines.launch
  * Fragment displaying the list of click scenario and the creation dialog.
  * If the list is empty, it will hide the list and displays the empty list view.
  */
-class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDialogListener {
+class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDialogListener, MenuProvider {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by activityViewModels()
@@ -89,7 +91,6 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
 
         scenariosAdapter = ScenarioAdapter(
             startScenarioListener = ::onStartClicked,
@@ -110,9 +111,31 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as MenuHost).addMenuProvider(this)
+
+        listBinding.list.apply {
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = scenariosAdapter
+        }
+
+        listBinding.empty.setText(R.string.no_scenarios)
+        viewBinding.add.setOnClickListener { onCreateClicked() }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scenarioViewModel.scenarioList.collect {
+                    onNewScenarioList(it)
+                }
+            }
+        }
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         this.menu = menu
-        inflater.inflate(R.menu.menu_scenario_fragment, menu)
+        menuInflater.inflate(R.menu.menu_scenario_fragment, menu)
 
         (menu.findItem(R.id.action_search).actionView as SearchView).apply {
             setIconifiedByDefault(true)
@@ -142,31 +165,11 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        listBinding.list.apply {
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = scenariosAdapter
-        }
-
-        listBinding.empty.setText(R.string.no_scenarios)
-        viewBinding.add.setOnClickListener { onCreateClicked() }
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                scenarioViewModel.scenarioList.collect {
-                    onNewScenarioList(it)
-                }
-            }
-        }
-    }
-
     override fun onPermissionsGranted() {
         showMediaProjectionWarning()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_export ->
                 if (scenarioViewModel.menuState.value == MenuState.EXPORT) {
@@ -178,7 +181,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
             R.id.action_cancel -> scenarioViewModel.setMenuState(MenuState.SELECTION)
             R.id.action_search -> scenarioViewModel.setMenuState(MenuState.SEARCH)
             R.id.action_select_all -> scenarioViewModel.toggleAllScenarioSelectionForBackup()
-            else -> return super.onOptionsItemSelected(item)
+            else -> return false
         }
 
         return true
