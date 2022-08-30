@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 
 /**
  * Detects [Event] conditions on a display and execute its actions.
@@ -211,7 +212,7 @@ class DetectorEngine(context: Context) {
     /**
      * Capture the provided area on the next [Image] of the screen.
      *
-     * After calling this method, the next [Image] processed by the [processLatestImage] will be cropped to the provided area
+     * After calling this method, the next [Image] processed by the [processScreenImages] will be cropped to the provided area
      * and a bitmap will be generated from it, then notified through the provided callback.
      * [isScreenRecording] should be true to capture. Calling [stopScreenRecord] will drop any capture info provided here.
      *
@@ -290,7 +291,7 @@ class DetectorEngine(context: Context) {
                 debugEngine = if (debugMode) debugEngine else null,
             )
 
-            processLatestImage()
+            processScreenImages()
         }
     }
 
@@ -357,20 +358,20 @@ class DetectorEngine(context: Context) {
             screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
 
             processingJob = processingScope?.launch {
-                processLatestImage()
+                scenarioProcessor?.invalidateScreenMetrics()
+                processScreenImages()
             }
         }
     }
 
-    /** Process the latest image provided by the [ScreenRecorder]. */
-    private suspend fun processLatestImage() {
-        screenRecorder.acquireLatestImage()?.use { image ->
-            scenarioProcessor?.process(image)
-        }
+    /** Process the latest images provided by the [ScreenRecorder]. */
+    private suspend fun processScreenImages() {
+        while (true) {
+            screenRecorder.acquireLatestImage()?.use { image ->
+                scenarioProcessor?.process(image)
+            }
 
-        // This screen image processing is done, go to the next one.
-        processingJob = processingScope?.launch {
-            processLatestImage()
+            yield()
         }
     }
 
