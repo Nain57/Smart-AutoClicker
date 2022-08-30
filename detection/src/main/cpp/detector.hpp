@@ -47,18 +47,17 @@ namespace smartautoclicker {
     class Detector {
 
     private:
-        constexpr static const double SCALED_IMAGE_MIN_SIZE_PIXEL = 400;
-
         double scaleRatio = 1;
 
         std::unique_ptr<cv::Mat> currentImage = nullptr;
-        std::unique_ptr<cv::Mat> currentImageScaled = nullptr;
+        std::unique_ptr<cv::Mat> currentImageScaled = std::make_unique<cv::Mat>();
+        std::unique_ptr<cv::Mat> currentCondition = std::make_unique<cv::Mat>();
 
         DetectionResult detectionResult;
 
         static std::unique_ptr<cv::Mat> bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap);
 
-        static std::unique_ptr<cv::Mat> scale(const cv::Mat& mat, const double& ratio);
+        static void scale(const cv::Mat& src, cv::Mat& dest, const double& ratio);
 
         static std::unique_ptr<cv::Mat> matchTemplate(const cv::Mat& image, const cv::Mat& condition);
 
@@ -66,13 +65,15 @@ namespace smartautoclicker {
 
         static bool isValidMatching(const DetectionResult& results, const int threshold);
 
-        double getColorDiff(const cv::Mat& image, const cv::Mat& condition);
+        static double getColorDiff(const cv::Mat& image, const cv::Mat& condition);
 
     public:
 
         Detector() = default;
 
-        void setScreenImage(JNIEnv *env, jobject screenImage, double detectionQuality);
+        void setScreenMetrics(JNIEnv *env, jobject screenImage, double detectionQuality);
+
+        void setScreenImage(JNIEnv *env, jobject screenImage);
 
         DetectionResult detectCondition(JNIEnv *env, jobject conditionImage, int threshold);
 

@@ -28,17 +28,24 @@ import androidx.annotation.Keep
 interface ImageDetector : AutoCloseable {
 
     /**
-     * Set the bitmap for the screen.
-     * All following calls to [detectCondition] methods will be verified against this bitmap.
+     * Set the current metrics of the screen.
+     * This MUST be called before the first detection, with the first bitmap provided by the screen. All orientation
+     * changes must also trigger a call to this method.
+     * All following calls to [detectCondition] methods will be verified against the metrics of this bitmap.
      *
      * @param screenBitmap the content of the screen as a bitmap.
      * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
      *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
      */
-    fun setupDetection(
-        screenBitmap: Bitmap,
-        detectionQuality: Double,
-    )
+    fun setScreenMetrics(screenBitmap: Bitmap, detectionQuality: Double)
+
+    /**
+     * Set the bitmap for the screen.
+     * All following calls to [detectCondition] methods will be verified against this bitmap.
+     *
+     * @param screenBitmap the content of the screen as a bitmap.
+     */
+    fun setupDetection(screenBitmap: Bitmap)
 
     /**
      * Detect if the bitmap is in the whole current screen bitmap.

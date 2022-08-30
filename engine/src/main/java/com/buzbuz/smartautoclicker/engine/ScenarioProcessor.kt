@@ -62,8 +62,15 @@ internal class ScenarioProcessor(
     /** Verifies the end conditions of a scenario. */
     private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onEndConditionReached)
 
+    /** Tells if the screen metrics have been invalidated and should be updated. */
+    private var invalidateScreenMetrics = true
     /** The bitmap of the currently processed image. Kept in order to avoid instantiating a new one everytime. */
     private var processedScreenBitmap: Bitmap? = null
+
+    /** Drop all current cache related to screen metrics. */
+    fun invalidateScreenMetrics() {
+        invalidateScreenMetrics = true
+    }
 
     /**
      * Find an event with the conditions fulfilled on the current image.
@@ -74,8 +81,15 @@ internal class ScenarioProcessor(
      */
     suspend fun process(screenImage: Image) {
         // Set the current screen image
-        processedScreenBitmap = screenImage.toBitmap(processedScreenBitmap).apply {
-            imageDetector.setupDetection(this, detectionQuality.toDouble())
+        processedScreenBitmap = screenImage.toBitmap(processedScreenBitmap).let { screenBitmap ->
+            if (invalidateScreenMetrics) {
+                imageDetector.setScreenMetrics(screenBitmap, detectionQuality.toDouble())
+                invalidateScreenMetrics = false
+            }
+
+            imageDetector.setupDetection(screenBitmap)
+
+            screenBitmap
         }
 
         for (event in events) {
@@ -111,7 +125,7 @@ internal class ScenarioProcessor(
     }
 
     /**
-     * Verifies if all conditions of a events are fulfilled.
+     * Verifies if all conditions of an event are fulfilled.
      *
      * Applies the provided conditions the currently processed [Image] according to the provided operator.
      *

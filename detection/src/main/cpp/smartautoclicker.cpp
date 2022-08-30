@@ -61,13 +61,21 @@ extern "C" {
         return reinterpret_cast<jlong>(new Detector());
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_setScreenImage(
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_updateScreenMetrics(
             JNIEnv *env,
             jobject self,
             jobject screenBitmap,
             jdouble detectionQuality
     ) {
-        getObject(env, self)->setScreenImage(env, screenBitmap, detectionQuality);
+        getObject(env, self)->setScreenMetrics(env, screenBitmap, detectionQuality);
+    }
+
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_setScreenImage(
+            JNIEnv *env,
+            jobject self,
+            jobject screenBitmap
+    ) {
+        getObject(env, self)->setScreenImage(env, screenBitmap);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_detection_NativeDetector_detect(

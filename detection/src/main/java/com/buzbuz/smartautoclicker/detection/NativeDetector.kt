@@ -41,23 +41,42 @@ class NativeDetector : ImageDetector {
 
     /** Native pointer of the detector object. */
     @Keep
-    private val nativePtr: Long = newDetector()
+    private var nativePtr: Long = newDetector()
 
-    override fun close() = deleteDetector()
+    private var isClosed: Boolean = false
 
-    override fun setupDetection(screenBitmap: Bitmap, detectionQuality: Double) {
+    override fun close() {
+        if (isClosed) return
+
+        isClosed = true
+        deleteDetector()
+    }
+
+    override fun setScreenMetrics(screenBitmap: Bitmap, detectionQuality: Double) {
+        if (isClosed) return
+
         if (detectionQuality < DETECTION_QUALITY_MIN || detectionQuality > DETECTION_QUALITY_MAX)
             throw IllegalArgumentException("Invalid detection quality")
 
-        setScreenImage(screenBitmap, detectionQuality)
+        updateScreenMetrics(screenBitmap, detectionQuality)
+    }
+
+    override fun setupDetection(screenBitmap: Bitmap) {
+        if (isClosed) return
+
+        setScreenImage(screenBitmap)
     }
 
     override fun detectCondition(conditionBitmap: Bitmap, threshold: Int): DetectionResult {
+        if (isClosed) return detectionResult.copy()
+
         detect(conditionBitmap, threshold, detectionResult)
         return detectionResult.copy()
     }
 
     override fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): DetectionResult {
+        if (isClosed) return detectionResult.copy()
+
         detectAt(conditionBitmap, position.left, position.top, position.width(), position.height(), threshold, detectionResult)
         return detectionResult.copy()
     }
@@ -77,13 +96,20 @@ class NativeDetector : ImageDetector {
     private external fun deleteDetector()
 
     /**
-     * Native method for detection setup.
+     * Native method for screen metrics setup.
      *
      * @param screenBitmap the content of the screen as a bitmap.
      * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
      *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
      */
-    private external fun setScreenImage(screenBitmap: Bitmap, detectionQuality: Double)
+    private external fun updateScreenMetrics(screenBitmap: Bitmap, detectionQuality: Double)
+
+    /**
+     * Native method for detection setup.
+     *
+     * @param screenBitmap the content of the screen as a bitmap.
+     */
+    private external fun setScreenImage(screenBitmap: Bitmap)
 
     /**
      * Native method for detecting if the bitmap is in the whole current screen bitmap.

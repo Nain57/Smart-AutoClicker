@@ -22,7 +22,7 @@
 using namespace cv;
 using namespace smartautoclicker;
 
-void Detector::setScreenImage(JNIEnv *env, jobject screenImage, double detectionQuality) {
+void Detector::setScreenMetrics(JNIEnv *env, jobject screenImage, double detectionQuality) {
     // Get screen info from the android bitmap format
     currentImage = bitmapRGBA888ToMat(env, screenImage);
 
@@ -37,8 +37,15 @@ void Detector::setScreenImage(JNIEnv *env, jobject screenImage, double detection
         scaleRatio = 1;
     }
 
-    // Scale down the image and store it apart
-    currentImageScaled = scale(*currentImage, scaleRatio);
+    // Set the current scaled image size
+    scale(*currentImage, *currentImageScaled, scaleRatio);
+}
+
+void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
+    // Get screen info from the android bitmap format
+    currentImage = bitmapRGBA888ToMat(env, screenImage);
+    // Scale down the image and store it apart (the cache image is not resized)
+    resize(*currentImage, *currentImageScaled, currentImageScaled->size(), scaleRatio, scaleRatio, INTER_AREA);
 }
 
 DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, int threshold) {
@@ -55,10 +62,10 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     }
 
     // Get the condition image information from the android bitmap format, and scale it to the processing size
-    auto condition = scale(*bitmapRGBA888ToMat(env, conditionImage), scaleRatio);
+    scale(*bitmapRGBA888ToMat(env, conditionImage), *currentCondition, scaleRatio);
 
     // Get the matching results for the whole screen
-    auto matchingResults = matchTemplate(*currentImageScaled, *condition);
+    auto matchingResults = matchTemplate(*currentImageScaled, *currentCondition);
 
     Rect roi;
     detectionResult.isDetected = false;
@@ -71,25 +78,25 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
 
         // Candidate region of interest
         roi = Rect(detectionResult.maxLoc.x, detectionResult.maxLoc.y,
-                   detectionResult.maxLoc.x + condition->cols <= matchingResults->cols ?
-                        condition->cols : matchingResults->cols - detectionResult.maxLoc.x,
-                   detectionResult.maxLoc.y + condition->rows <= matchingResults->rows ?
-                        condition->rows : matchingResults->rows - detectionResult.maxLoc.y);
+                   detectionResult.maxLoc.x + currentCondition->cols <= matchingResults->cols ?
+                        currentCondition->cols : matchingResults->cols - detectionResult.maxLoc.x,
+                   detectionResult.maxLoc.y + currentCondition->rows <= matchingResults->rows ?
+                        currentCondition->rows : matchingResults->rows - detectionResult.maxLoc.y);
 
         // Check if the colors are matching in the candidate area.
-        double colorDiff = getColorDiff(Mat(*currentImageScaled, roi), *condition);
+        double colorDiff = getColorDiff(Mat(*currentImageScaled, roi), *currentCondition);
         if (colorDiff < threshold) {
             detectionResult.isDetected = true;
         } else {
             // Colors are invalid, modify the matching result to indicate that.
-            matchingResults.get()->operator()(roi).setTo(1 - colorDiff / 100);
+            matchingResults->operator()(roi).setTo(1 - colorDiff / 100);
         }
     }
 
     // If the condition is detected, compute the position of the detection and add it to the results.
     if (detectionResult.isDetected) {
-        detectionResult.centerX = (detectionResult.maxLoc.x + (int)(condition->cols / 2)) / scaleRatio;
-        detectionResult.centerY = (detectionResult.maxLoc.y + (int)(condition->rows / 2)) / scaleRatio;
+        detectionResult.centerX = (detectionResult.maxLoc.x + (int)(currentCondition->cols / 2)) / scaleRatio;
+        detectionResult.centerY = (detectionResult.maxLoc.y + (int)(currentCondition->rows / 2)) / scaleRatio;
     } else {
         detectionResult.centerX = 0;
         detectionResult.centerY = 0;
@@ -197,8 +204,6 @@ std::unique_ptr<Mat> Detector::bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap) {
     }
 }
 
-std::unique_ptr<Mat> Detector::scale(const cv::Mat& mat, const double& ratio) {
-    std::unique_ptr<Mat> imageResized(new Mat);
-    resize(mat, *imageResized, Size(), ratio, ratio, INTER_AREA);
-    return imageResized;
+void Detector::scale(const cv::Mat& src, cv::Mat& dest, const double& ratio) {
+    resize(src, dest, Size(), ratio, ratio, INTER_AREA);
 }
