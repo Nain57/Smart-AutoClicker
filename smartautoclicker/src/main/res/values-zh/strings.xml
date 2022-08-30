@@ -196,7 +196,7 @@
     <string name="dialog_backup_import_progress">导入备份: %1$d</string>
     <string name="dialog_backup_import_verification">数据验证</string>
     <string name="dialog_backup_import_completed">导入已完成\n%1$d 方案已导入</string>
-    <string name="dialog_backup_import_completed_with_error">已完成导入 \n%1$d 个方案，错误 \n%2d 个</string>
+    <string name="dialog_backup_import_completed_with_error">已完成导入 \n%1$d 个方案，错误 \n%2$d 个</string>
     <string name="dialog_backup_import_error">发生错误，备份导入已取消</string>
     <string name="dialog_backup_import_compatibility">某些导入的场景是从具有不同屏幕的设备生成的，这可能会导致检测和操作坐标出现问题。\n\n要修复它，您需要根据您的情况创建新的屏幕截图并更新您的点击/滑动位置。</string>
 </resources>

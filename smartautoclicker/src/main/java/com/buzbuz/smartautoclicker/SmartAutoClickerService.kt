@@ -124,7 +124,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             }
 
             rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario).apply {
-                create(::stop)
+                create { this@LocalService.stop() }
             }
         }
 
