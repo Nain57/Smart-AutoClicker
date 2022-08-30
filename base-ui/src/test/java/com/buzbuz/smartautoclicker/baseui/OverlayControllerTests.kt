@@ -219,7 +219,7 @@ class OverlayControllerTests {
         verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onDismissed()
         verify(dismissListener, never()).onDismissed()
-        assertEquals(Lifecycle.State.DESTROYED, overlayController.lifecycle.currentState)
+        assertEquals(Lifecycle.State.INITIALIZED, overlayController.lifecycle.currentState)
     }
 
     @Test

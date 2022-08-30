@@ -128,7 +128,6 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      */
     fun dismiss() {
         if (lifecycleRegistry.currentState < Lifecycle.State.CREATED) {
-            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
             return
         }
 
