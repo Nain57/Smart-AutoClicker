@@ -183,7 +183,6 @@ class SmartAutoClickerService : AccessibilityService() {
             .setContentText(getString(R.string.notification_message))
             .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .setSmallIcon(R.drawable.ic_notification)
-            .setOngoing(true)
             .setCategory(Notification.CATEGORY_SERVICE)
             .setOngoing(true)
             .setLocalOnly(true)
