@@ -28,18 +28,23 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-
 import androidx.core.app.NotificationCompat
 
+import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
+import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
+import com.buzbuz.smartautoclicker.SmartAutoClickerService.LocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.baseui.OverlayController
-import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
+import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
+
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * AccessibilityService implementation for the SmartAutoClicker.
@@ -190,8 +195,20 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             .build()
     }
 
-    override fun executeGesture(gestureDescription: GestureDescription) {
-        dispatchGesture(gestureDescription, null, null)
+    override suspend fun executeGesture(gestureDescription: GestureDescription) {
+        suspendCoroutine<Unit?> { continuation ->
+            dispatchGesture(
+                gestureDescription,
+                object : GestureResultCallback() {
+                    override fun onCompleted(gestureDescription: GestureDescription?) = continuation.resume(null)
+                    override fun onCancelled(gestureDescription: GestureDescription?) {
+                        Log.w(TAG, "Gesture cancelled: $gestureDescription")
+                        continuation.resume(null)
+                    }
+                },
+                null,
+            )
+        }
     }
 
     override fun executeStartActivity(intent: Intent) {

@@ -24,26 +24,22 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.engine.utils.anyNotNull
-
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.*
 
 import org.junit.After
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.Mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when` as mockWhen
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.*
 
 import org.robolectric.annotation.Config
 
@@ -62,12 +58,12 @@ class ActionExecutorTests {
         private const val TEST_Y1 = 88
         private const val TEST_Y2 = 76
 
-        fun getNewDefaultClick(id: Long, clickOnCondition: Boolean) =
-            com.buzbuz.smartautoclicker.domain.Action.Click(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, clickOnCondition)
+        fun getNewDefaultClick(id: Long, clickOnCondition: Boolean, duration: Long = TEST_DURATION) =
+            Action.Click(id, TEST_EVENT_ID, TEST_NAME, duration, TEST_X1, TEST_Y1, clickOnCondition)
         fun getNewDefaultSwipe(id: Long) =
-            com.buzbuz.smartautoclicker.domain.Action.Swipe(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
+            Action.Swipe(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
         fun getNewDefaultPause(id: Long) =
-            com.buzbuz.smartautoclicker.domain.Action.Pause(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
+            Action.Pause(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
     }
 
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
@@ -159,5 +155,27 @@ class ActionExecutorTests {
         verify(mockAndroidExecutor, times(2)).executeGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.firstValue)
         assertActionGesture(gestureCaptor.lastValue)
+    }
+
+    @Test
+    fun execute_click_delay() = runTest {
+        val executionDurationMs = 10L
+        var isCompleted = false
+        mockWhen(mockAndroidExecutor.executeGesture(anyNotNull())).doAnswer {
+            runBlocking {
+                // The execution is set to 10ms, but we simulate an input lag for a worst case scenario
+                delay(executionDurationMs * 10)
+                isCompleted = true
+            }
+        }
+
+        launch(Dispatchers.IO) {
+            actionExecutor.executeActions(
+                listOf(getNewDefaultClick(1, false, executionDurationMs)),
+                Point()
+            )
+
+            assertTrue("Action execution have not completed yet", isCompleted)
+        }.join()
     }
 }

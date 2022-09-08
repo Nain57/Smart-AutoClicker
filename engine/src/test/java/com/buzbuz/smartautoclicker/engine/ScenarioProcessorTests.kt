@@ -131,7 +131,7 @@ class ScenarioProcessorTests {
     }
 
     /** */
-    private fun assertActionGesture(expectedDuration: Long) {
+    private suspend fun assertActionGesture(expectedDuration: Long) {
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
         val gesture = gestureCaptor.lastValue

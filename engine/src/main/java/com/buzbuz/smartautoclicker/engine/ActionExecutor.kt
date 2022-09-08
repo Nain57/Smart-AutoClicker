@@ -78,7 +78,6 @@ internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
         withContext(Dispatchers.Main) {
             androidExecutor.executeGesture(clickBuilder.build())
         }
-        delay(click.pressDuration!!)
     }
 
     /**
@@ -96,7 +95,6 @@ internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
         withContext(Dispatchers.Main) {
             androidExecutor.executeGesture(clickBuilder.build())
         }
-        delay(swipe.swipeDuration!!)
     }
 
     /**
@@ -140,8 +138,11 @@ internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
 /** Execute the actions related to Android. */
 interface AndroidExecutor {
 
-    /** Execute the provided gesture. */
-    fun executeGesture(gestureDescription: GestureDescription)
+    /**
+     * Execute the provided gesture.
+     *
+     */
+    suspend fun executeGesture(gestureDescription: GestureDescription)
 
     /** Start the activity defined by the provided intent. */
     fun executeStartActivity(intent: Intent)
