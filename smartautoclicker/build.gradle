@@ -19,6 +19,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+// Only apply gms/firebase plugins if we are building for the play store
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("PlayStore")) {
+    apply plugin: "com.google.gms.google-services"
+    apply plugin: "com.google.firebase.crashlytics"
+}
+
 // Read signing.properties file to find signing configuration
 def signingProperties = new Properties()
 def signingStoreFile = file('./smartautoclicker.jks')
@@ -69,8 +75,20 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
         debug {
             applicationIdSuffix '.debug'
+        }
+    }
+
+    // Specifies one flavor dimension.
+    flavorDimensions += "version"
+    productFlavors {
+        create("fDroid") {
+            dimension = "version"
+        }
+        create("playStore") {
+            dimension = "version"
         }
     }
 
@@ -100,6 +118,10 @@ dependencies {
 
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+
+    // Google Play Store version dependencies only
+    playStoreImplementation platform('com.google.firebase:firebase-bom:30.4.0')
+    playStoreImplementation 'com.google.firebase:firebase-crashlytics-ktx'
 
     implementation project(path: ':base-ui')
     implementation project(path: ':domain')
