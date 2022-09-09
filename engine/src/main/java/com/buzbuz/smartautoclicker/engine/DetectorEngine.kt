@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.detection.NativeDetector
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.engine.debugging.DebugEngine
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,8 +40,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -130,7 +133,9 @@ class DetectorEngine(context: Context) {
     val isDebugging: StateFlow<Boolean> = _isDebugging
 
     /** Engine for debugging purposes. */
-    val debugEngine = DebugEngine()
+    private val _debugEngine = MutableStateFlow<DebugEngine?>(null)
+    var debugEngine: Flow<DebugEngine> = _debugEngine
+        .filterNotNull()
 
     /** The current scenario. */
     private val _scenario = MutableStateFlow<Scenario?>(null)
@@ -139,7 +144,7 @@ class DetectorEngine(context: Context) {
         .flatMapLatest {
             it?.let { event ->
                 scenarioRepository.getCompleteEventList(event.id)
-            } ?: flow { emit(emptyList<Event>()) }
+            } ?: flow { emit(emptyList()) }
         }
         .stateIn(
             detectorEngineScope,
@@ -272,6 +277,8 @@ class DetectorEngine(context: Context) {
 
         processingJob = processingScope?.launch {
             imageDetector = NativeDetector()
+            _debugEngine.value = if (debugMode) DebugEngine(_scenario.value!!, scenarioEvents.value) else null
+
             scenarioProcessor = ScenarioProcessor(
                 imageDetector = imageDetector!!,
                 detectionQuality = scenarioEndConditions.value!!.first.detectionQuality,
@@ -285,10 +292,8 @@ class DetectorEngine(context: Context) {
                 androidExecutor = androidExecutor!!,
                 endConditionOperator = scenarioEndConditions.value!!.first.endConditionOperator,
                 endConditions =  scenarioEndConditions.value!!.second,
-                onEndConditionReached = {
-                    stopDetection()
-                },
-                debugEngine = if (debugMode) debugEngine else null,
+                onEndConditionReached = { stopDetection() },
+                debugEngine = _debugEngine.value,
             )
 
             processScreenImages()
@@ -314,7 +319,8 @@ class DetectorEngine(context: Context) {
             imageDetector?.close()
             imageDetector = null
             scenarioProcessor = null
-            debugEngine.clear()
+            _debugEngine.value?.onSessionEnded()
+            _debugEngine.value = null
         }
     }
 

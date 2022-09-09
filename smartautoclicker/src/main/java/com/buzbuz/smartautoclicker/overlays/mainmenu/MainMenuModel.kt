@@ -50,17 +50,30 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
     /** Tells if the current detection is running in debug mode. */
     val isDebugging = detectorEngine.isDebugging
 
+    /** The last result of detection. Only available if in debug detection. */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val debugLastResult = detectorEngine.debugEngine
+        .flatMapLatest { it.lastResult }
+
     /** The confidence rate on the last detection, positive or negative. */
     @OptIn(FlowPreview::class)
-    val debugLastConfidenceRate: Flow<String?> = detectorEngine.debugEngine.lastResult
+    val debugLastConfidenceRate: Flow<String?> = debugLastResult
         .sample(CONFIDENCE_RATE_SAMPLING_TIME_MS)
         .map { lastDebugInfo ->
             lastDebugInfo.detectionResult.confidenceRate.formatConfidenceRate()
         }
 
+    /** The coordinates of the last positive detection. */
+    val debugLastPositiveCoordinates: Flow<Rect> = debugLastResult
+        .map { debugInfo ->
+            if (debugInfo.detectionResult.isDetected) debugInfo.conditionArea
+            else Rect()
+        }
+
     /** The info on the last positive detection. */
     @OptIn(ExperimentalCoroutinesApi::class)
-    val debugLastPositive: Flow<LastPositiveDebugInfo> = detectorEngine.debugEngine.lastPositiveInfo
+    val debugLastPositive: Flow<LastPositiveDebugInfo> = detectorEngine.debugEngine
+        .flatMapLatest { it.lastPositiveInfo }
         .flatMapLatest { debugInfo ->
             flow {
                 emit(LastPositiveDebugInfo(
@@ -72,13 +85,6 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
                 delay(POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)
                 emit(LastPositiveDebugInfo())
             }
-        }
-
-    /** The coordinates of the last positive detection. */
-    val debugLastPositiveCoordinates: Flow<Rect> = detectorEngine.debugEngine.lastResult
-        .map { debugInfo ->
-            if (debugInfo.detectionResult.isDetected) debugInfo.conditionArea
-            else Rect()
         }
 
     /** Start/Stop the detection. */

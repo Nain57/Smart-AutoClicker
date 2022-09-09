@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.EXACT
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.domain.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.engine.debugging.DebugEngine
 
 import kotlinx.coroutines.yield
 
@@ -80,6 +81,8 @@ internal class ScenarioProcessor(
      * @return the first Event with all conditions fulfilled, or null if none has been found.
      */
     suspend fun process(screenImage: Image) {
+        debugEngine?.onImageProcessingStarted()
+
         // Set the current screen image
         processedScreenBitmap = screenImage.toBitmap(processedScreenBitmap).let { screenBitmap ->
             if (invalidateScreenMetrics) {
@@ -98,12 +101,13 @@ internal class ScenarioProcessor(
                 continue
             }
 
-            // If conditions are fulfilled, execute this event's actions !
+            // Event conditions verification
+            debugEngine?.onEventProcessingStarted(event)
             val result = verifyConditions(event)
-            if (result.eventMatched) {
-                // If scenario debug mode is ON, notifies its engine.
-                debugEngine?.sendNewResult(result)
+            debugEngine?.onEventProcessingCompleted(result)
 
+            // If conditions are fulfilled, execute this event's actions !
+            if (result.eventMatched) {
                 event.actions?.let { actions ->
                     actionExecutor.executeActions(actions, result.detectionResult?.position)
                 }
@@ -112,15 +116,13 @@ internal class ScenarioProcessor(
                 if (endConditionVerifier.onEventTriggered(event)) return
 
                 break
-            } else {
-                // If scenario debug mode is ON, notifies its engine, even for detection failure
-                debugEngine?.sendNewResult(result)
             }
 
             // Stop processing if requested
             yield()
         }
 
+        debugEngine?.onImageProcessingCompleted()
         return
     }
 
@@ -134,7 +136,9 @@ internal class ScenarioProcessor(
     private suspend fun verifyConditions(event: Event) : ProcessorResult {
         event.conditions?.forEachIndexed { index, condition ->
             // Verify if the condition is fulfilled.
+            debugEngine?.onConditionProcessingStarted(condition)
             val result = checkCondition(condition) ?: return ProcessorResult(false)
+            debugEngine?.onConditionProcessingCompleted(result.isDetected)
 
             if (result.isDetected xor condition.shouldBeDetected) {
                 if (event.conditionOperator == AND) {
@@ -217,23 +221,13 @@ internal class ScenarioProcessor(
 }
 
 /**
- * Send a new detection result to the debug engine, if any.
- * @param result the results to be sent.
- */
-private suspend fun DebugEngine?.sendNewResult(result: ProcessorResult) = this?.let { debug ->
-    if (result.event != null && result.condition != null && result.detectionResult != null) {
-        debug.onNewDetectionResult(result.event, result.condition, result.detectionResult)
-    }
-}
-
-/**
  * The results of a the scenario processing.
  * @param eventMatched true if the event conditions have been matched.
  * @param event the event tested.
  * @param condition the condition detected.
  * @param detectionResult the results of the detection.
  */
-private data class ProcessorResult(
+internal data class ProcessorResult(
     val eventMatched: Boolean,
     val event: Event? = null,
     val condition: Condition? = null,
