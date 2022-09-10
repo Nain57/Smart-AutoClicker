@@ -170,5 +170,19 @@
     <string name="dialog_backup_import_completed_with_error">Import effectué, des erreurs ont survenues:\n%1$d scenarios importés\n%2$d erreurs</string>
     <string name="dialog_backup_import_error">Une erreur est survenue et l\'import a été annulée</string>
     <string name="dialog_backup_import_compatibility">Certains scenarios ont été généré par un téléphone avec un écran différent, ce qui peut causer des problèmes avec la détection et les coordonées des actions.\n\nPour régler le problème, vous devez refaire les screenshots de vos conditions et mettre à jour les coordonées de vos actions.</string>
-
+    <string name="dialog_debug_report_title">Rapport de debug</string>
+    <string name="dialog_debug_report_total_duration">Durée totale</string>
+    <string name="dialog_debug_report_image_processed">Images analysées</string>
+    <string name="dialog_debug_report_avg_image_processing_duration">Temps moyen d\'analyse</string>
+    <string name="dialog_debug_report_total_event_trigger_count">Évènements activés</string>
+    <string name="dialog_debug_report_detection_count">Conditions détectés</string>
+    <string name="dialog_debug_report_event_trigger_count">Activé</string>
+    <string name="dialog_debug_report_event_processing_count">Analysé</string>
+    <string name="dialog_debug_report_condition_detected_count">Détecté</string>
+    <string name="dialog_debug_report_condition_processing_count">Analysé</string>
+    <string name="dialog_debug_report_timing_title">Temps d\'analyse</string>
+    <string name="dialog_debug_report_timing_min">Min</string>
+    <string name="dialog_debug_report_timing_max">Max</string>
+    <string name="dialog_debug_report_timing_avg">Moy</string>
+    <string name="dialog_debug_report_empty">Aucun rapport de debug !</string>
 </resources>

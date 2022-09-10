@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.menu.OverlayMenuController
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.overlays.debugging.DebugReportDialog
 import com.buzbuz.smartautoclicker.overlays.eventlist.EventListDialog
 
 import kotlinx.coroutines.Job
@@ -97,6 +98,12 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
                 launch {
                     viewModel?.isDebugging?.collect { isDebugging ->
                         changeDebugState(isDebugging)
+                    }
+                }
+
+                launch {
+                    viewModel?.isDebugReportReady?.collect { reportReady ->
+                        if (reportReady) showSubOverlay(DebugReportDialog(ContextThemeWrapper(context, R.style.AppTheme)))
                     }
                 }
             }

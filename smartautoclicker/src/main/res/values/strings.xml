@@ -203,4 +203,20 @@
     <string name="dialog_backup_import_completed_with_error">Import completed\n%1$d scenarios imported\n%2$d errors</string>
     <string name="dialog_backup_import_error">An error has occurred and the backup import has been cancelled</string>
     <string name="dialog_backup_import_compatibility">Some of the imported scenarios have been generated from a device with a different screen and this might cause issues with the detection and action coordinates.\n\nTo fix it, you need to take new screenshots for your conditions and update your click/swipe positions.</string>
+
+    <string name="dialog_debug_report_title">Debug report</string>
+    <string name="dialog_debug_report_total_duration">Total duration</string>
+    <string name="dialog_debug_report_image_processed">Images processed</string>
+    <string name="dialog_debug_report_avg_image_processing_duration">Average processing duration</string>
+    <string name="dialog_debug_report_total_event_trigger_count">Events triggered</string>
+    <string name="dialog_debug_report_detection_count">Conditions detected</string>
+    <string name="dialog_debug_report_event_trigger_count">Triggered</string>
+    <string name="dialog_debug_report_event_processing_count">Processed</string>
+    <string name="dialog_debug_report_condition_detected_count">Detected</string>
+    <string name="dialog_debug_report_condition_processing_count">Processed</string>
+    <string name="dialog_debug_report_timing_title">Processing timing</string>
+    <string name="dialog_debug_report_timing_min">Min</string>
+    <string name="dialog_debug_report_timing_max">Max</string>
+    <string name="dialog_debug_report_timing_avg">Avg</string>
+    <string name="dialog_debug_report_empty">No debug report !</string>
 </resources>

@@ -199,4 +199,21 @@
     <string name="dialog_backup_import_completed_with_error">已完成导入 \n%1$d 个方案，错误 \n%2$d 个</string>
     <string name="dialog_backup_import_error">发生错误，备份导入已取消</string>
     <string name="dialog_backup_import_compatibility">某些导入的场景是从具有不同屏幕的设备生成的，这可能会导致检测和操作坐标出现问题。\n\n要修复它，您需要根据您的情况创建新的屏幕截图并更新您的点击/滑动位置。</string>
+
+    <string name="dialog_debug_report_title">Debug report</string>
+    <string name="dialog_debug_report_total_duration">Total duration</string>
+    <string name="dialog_debug_report_image_processed">Images processed</string>
+    <string name="dialog_debug_report_avg_image_processing_duration">Average processing duration</string>
+    <string name="dialog_debug_report_total_event_trigger_count">Events triggered</string>
+    <string name="dialog_debug_report_detection_count">Conditions detected</string>
+    <string name="dialog_debug_report_event_trigger_count">Triggered</string>
+    <string name="dialog_debug_report_event_processing_count">Processed</string>
+    <string name="dialog_debug_report_condition_detected_count">Detected</string>
+    <string name="dialog_debug_report_condition_processing_count">Processed</string>
+    <string name="dialog_debug_report_timing_title">Processing timing</string>
+    <string name="dialog_debug_report_timing_min">Min</string>
+    <string name="dialog_debug_report_timing_max">Max</string>
+    <string name="dialog_debug_report_timing_avg">Avg</string>
+    <string name="dialog_debug_report_empty">No debug report !</string>
+
 </resources>

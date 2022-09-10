@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.sample
  * View model for the [MainMenu].
  * @param context the Android context.
  */
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class MainMenuModel(context: Context) : OverlayViewModel(context) {
 
     /** The detector engine. */
@@ -51,12 +52,10 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
     val isDebugging = detectorEngine.isDebugging
 
     /** The last result of detection. Only available if in debug detection. */
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val debugLastResult = detectorEngine.debugEngine
         .flatMapLatest { it.lastResult }
 
     /** The confidence rate on the last detection, positive or negative. */
-    @OptIn(FlowPreview::class)
     val debugLastConfidenceRate: Flow<String?> = debugLastResult
         .sample(CONFIDENCE_RATE_SAMPLING_TIME_MS)
         .map { lastDebugInfo ->
@@ -71,7 +70,6 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
         }
 
     /** The info on the last positive detection. */
-    @OptIn(ExperimentalCoroutinesApi::class)
     val debugLastPositive: Flow<LastPositiveDebugInfo> = detectorEngine.debugEngine
         .flatMapLatest { it.lastPositiveInfo }
         .flatMapLatest { debugInfo ->
@@ -86,6 +84,11 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
                 emit(LastPositiveDebugInfo())
             }
         }
+
+    /** True when a debug report is available. */
+    val isDebugReportReady: Flow<Boolean> = detectorEngine.debugEngine
+        .flatMapLatest { it.debugReport }
+        .map { it != null }
 
     /** Start/Stop the detection. */
     fun toggleDetection(debugMode: Boolean = false) {
