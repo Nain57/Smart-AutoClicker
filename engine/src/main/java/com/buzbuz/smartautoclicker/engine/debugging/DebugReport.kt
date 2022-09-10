@@ -24,8 +24,10 @@ data class DebugReport internal constructor(
     val scenario: Scenario,
     val sessionInfo: ProcessingDebugInfo,
     val imageProcessedInfo: ProcessingDebugInfo,
+    val eventsTriggeredCount: Long,
     val eventsProcessedInfo: List<Pair<Event, ProcessingDebugInfo>>,
-    val conditionsProcessedInfo: List<Pair<Condition, ProcessingDebugInfo>>,
+    val conditionsDetectedCount: Long,
+    val conditionsProcessedInfo: Map<Long, Pair<Condition, ProcessingDebugInfo>>,
 )
 
 data class ProcessingDebugInfo internal constructor(

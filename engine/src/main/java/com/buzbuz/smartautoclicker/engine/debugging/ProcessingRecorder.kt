@@ -19,16 +19,22 @@ package com.buzbuz.smartautoclicker.engine.debugging
 import kotlin.math.max
 import kotlin.math.min
 
-/** */
+/** Record the processing of an event. */
 internal class ProcessingRecorder {
 
+    /** The time in milliseconds of the last call to [onProcessingStart]. */
     private var currentRecordStartTimeMs: Long = INVALID_TIME_VALUE
-
-    private var count: Long = 0L
-    private var successCount: Long = 0L
+    /** The total processing time of all events. */
     private var totalTimeMs: Long = 0L
+    /** The minimum processing time of an event. */
     private var minTimeMs: Long = Long.MAX_VALUE
+    /** The maximum processing time of an event. */
     private var maxTimeMs: Long = Long.MIN_VALUE
+    /** The number of event processed. */
+    private var count: Long = 0L
+    /** The number of event processed with a success. */
+    var successCount: Long = 0L
+        private set
 
     fun onProcessingStart() {
         currentRecordStartTimeMs = System.currentTimeMillis()

@@ -320,7 +320,6 @@ class DetectorEngine(context: Context) {
             imageDetector = null
             scenarioProcessor = null
             _debugEngine.value?.onSessionEnded()
-            _debugEngine.value = null
         }
     }
 

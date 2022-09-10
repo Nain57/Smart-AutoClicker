@@ -28,6 +28,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 /** Engine for the debugging of a scenario processing. */
+@OptIn(ExperimentalCoroutinesApi::class)
 class DebugEngine(
     private val scenario: Scenario,
     private val events: List<Event>,
@@ -48,7 +49,7 @@ class DebugEngine(
 
     /** The debug report. Set once the detection session is complete. */
     private val _debugReport = MutableStateFlow<DebugReport?>(null)
-    val debugReport: Flow<DebugReport> = _debugReport.filterNotNull()
+    val debugReport: Flow<DebugReport?> = _debugReport
 
     /** The DebugInfo for the current image. */
     private val currentInfo = MutableSharedFlow<DebugInfo>()
@@ -122,27 +123,41 @@ class DebugEngine(
     internal fun onSessionEnded() {
         sessionRecorder.onProcessingEnd()
 
+        var eventsTriggeredCount = 0L
+        var conditionsDetectedCount = 0L
         val conditions = mutableListOf<Condition>()
+
         val eventsReport = events.map { event ->
             event.conditions?.let { conditions.addAll(it) }
-            event to (eventsRecorderMap[event.id]?.toProcessingDebugInfo() ?: ProcessingDebugInfo())
-        }
-        val conditionReport = conditions.map { condition ->
-            condition to (conditionsRecorderMap[condition.id]?.toProcessingDebugInfo() ?: ProcessingDebugInfo())
+
+            val debugInfo = eventsRecorderMap[event.id]?.let { processingRecorder ->
+                eventsTriggeredCount += processingRecorder.successCount
+                processingRecorder.toProcessingDebugInfo()
+            } ?: ProcessingDebugInfo()
+
+            event to debugInfo
+        }.sortedBy { it.first.priority }
+
+        val conditionReport = HashMap<Long, Pair<Condition, ProcessingDebugInfo>>()
+        conditions.forEach { condition ->
+            val debugInfo = conditionsRecorderMap[condition.id]?.let { processingRecorder ->
+                conditionsDetectedCount += processingRecorder.successCount
+                processingRecorder.toProcessingDebugInfo()
+            } ?: ProcessingDebugInfo()
+
+            conditionReport[condition.id] = condition to debugInfo
         }
 
         _debugReport.value = DebugReport(
             scenario,
             sessionRecorder.toProcessingDebugInfo(),
             imageRecorder.toProcessingDebugInfo(),
+            eventsTriggeredCount,
             eventsReport,
+            conditionsDetectedCount,
             conditionReport,
         )
-    }
 
-    /** Clear the values in the engine. */
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun clear() {
         currentInfo.resetReplayCache()
     }
 }
