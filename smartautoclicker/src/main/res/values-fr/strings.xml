@@ -176,6 +176,8 @@
     <string name="dialog_debug_report_avg_image_processing_duration">Temps moyen d\'analyse</string>
     <string name="dialog_debug_report_total_event_trigger_count">Évènements activés</string>
     <string name="dialog_debug_report_detection_count">Conditions détectés</string>
+    <string name="dialog_debug_report_event_list">Évènements</string>
+    <string name="dialog_debug_report_condition_list">Conditions</string>
     <string name="dialog_debug_report_event_trigger_count">Activé</string>
     <string name="dialog_debug_report_event_processing_count">Analysé</string>
     <string name="dialog_debug_report_condition_detected_count">Détecté</string>

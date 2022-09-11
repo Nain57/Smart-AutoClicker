@@ -15,48 +15,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.cardview.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/margin_horizontal_small"
-    android:layout_marginEnd="@dimen/margin_horizontal_small"
-    android:layout_marginTop="@dimen/margin_vertical_large"
-    android:layout_marginBottom="@dimen/margin_vertical_large"
-    style="@style/HeaderCardView">
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/merge_debug_collapsible_header"/>
+    <include layout="@layout/include_view_separator"/>
 
     <LinearLayout
+        android:id="@+id/collapsible_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/title"
-            style="@style/HeaderTitle"
+        <!-- Trigger/Processing count -->
+        <include
+            android:id="@+id/trigger_count_root"
+            layout="@layout/merge_debug_triggered_processed"/>
+        <include
+            layout="@layout/include_view_separator"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Condition name" />
-
-        <include layout="@layout/include_view_separator"/>
-
-        <!-- Match count -->
-        <include
-            android:id="@+id/match_count_root"
-            layout="@layout/merge_debug_info"/>
-        <include layout="@layout/include_view_separator"/>
-
-        <!-- Processing count -->
-        <include
-            android:id="@+id/processed_count_root"
-            layout="@layout/merge_debug_info"/>
-        <include layout="@layout/include_view_separator"/>
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:layout_marginEnd="@dimen/margin_horizontal_default" />
 
         <!-- Processing timing -->
         <include
             android:id="@+id/processing_timing_root"
             layout="@layout/merge_debug_timing"/>
+        <include layout="@layout/include_view_separator"/>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</LinearLayout>

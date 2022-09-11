@@ -20,22 +20,26 @@ import android.content.Context
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
+import com.buzbuz.smartautoclicker.engine.debugging.DebugReport
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 /** */
 @OptIn(ExperimentalCoroutinesApi::class)
 class DebugReportModel(context: Context) : OverlayViewModel(context) {
 
-    /** */
-    val reportItems: Flow<List<DebugReportItem>> = DetectorEngine.getDetectorEngine(context).debugEngine
+    private val debugReport: Flow<DebugReport?> = DetectorEngine.getDetectorEngine(context).debugEngine
         .flatMapLatest { it.debugReport }
-        .map { report ->
-            report ?: return@map emptyList()
+
+    private val expandedEventsMap = MutableStateFlow<MutableSet<Long>>(mutableSetOf())
+    private val expandedConditionsMap = MutableStateFlow<MutableSet<Long>>(mutableSetOf())
+
+    val reportItems =
+        combine(debugReport, expandedEventsMap, expandedConditionsMap) { report, expandedEvents, expandedCondition ->
+            report ?: return@combine emptyList()
 
             buildList {
                 add(DebugReportItem.ScenarioReportItem(
@@ -46,9 +50,12 @@ class DebugReportModel(context: Context) : OverlayViewModel(context) {
                     averageImageProcessingTime = report.imageProcessedInfo.avgProcessingTimeMs.milliseconds.toString(),
                     eventsTriggered = report.eventsTriggeredCount.toString(),
                     conditionsDetected = report.conditionsDetectedCount.toString(),
+                    isExpanded = true,
                 ))
 
                 report.eventsProcessedInfo.forEach { (event, debugInfo) ->
+                    val eventExpanded = expandedEvents.contains(event.id)
+
                     add(DebugReportItem.EventReportItem(
                         id = event.id,
                         name = event.name,
@@ -57,35 +64,63 @@ class DebugReportModel(context: Context) : OverlayViewModel(context) {
                         avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
                         minProcessingDuration = debugInfo.minProcessingTimeMs.milliseconds.toString(),
                         maxProcessingDuration = debugInfo.maxProcessingTimeMs.milliseconds.toString(),
+                        isExpanded = eventExpanded,
                     ))
 
-                    event.conditions?.forEach { condition ->
-                        report.conditionsProcessedInfo[condition.id]?.let { (condition, condDebugInfo) ->
-                            add(DebugReportItem.ConditionReportItem(
-                                id = condition.id,
-                                name = condition.name,
-                                matchCount = condDebugInfo.successCount.toString(),
-                                processingCount = condDebugInfo.processingCount.toString(),
-                                avgProcessingDuration = condDebugInfo.avgProcessingTimeMs.milliseconds.toString(),
-                                minProcessingDuration = condDebugInfo.minProcessingTimeMs.milliseconds.toString(),
-                                maxProcessingDuration = condDebugInfo.maxProcessingTimeMs.milliseconds.toString(),
-                            ))
+                    if (eventExpanded) {
+                        event.conditions?.forEach { condition ->
+                            report.conditionsProcessedInfo[condition.id]?.let { (condition, condDebugInfo) ->
+                                add(DebugReportItem.ConditionReportItem(
+                                    id = condition.id,
+                                    name = condition.name,
+                                    matchCount = condDebugInfo.successCount.toString(),
+                                    processingCount = condDebugInfo.processingCount.toString(),
+                                    avgProcessingDuration = condDebugInfo.avgProcessingTimeMs.milliseconds.toString(),
+                                    minProcessingDuration = condDebugInfo.minProcessingTimeMs.milliseconds.toString(),
+                                    maxProcessingDuration = condDebugInfo.maxProcessingTimeMs.milliseconds.toString(),
+                                    isExpanded = expandedCondition.contains(condition.id)
+                                ))
+                            }
                         }
                     }
+
                 }
             }
         }
+
+    fun collapseExpandEvent(eventId: Long) {
+        viewModelScope.launch {
+            expandedEventsMap.emit(
+                expandedEventsMap.value.toMutableSet().apply {
+                    if (contains(eventId)) remove(eventId)
+                    else add(eventId)
+                }
+            )
+        }
+    }
+
+    fun collapseExpandCondition(conditionId: Long) {
+        viewModelScope.launch {
+            expandedConditionsMap.emit(
+                expandedConditionsMap.value.toMutableSet().apply {
+                    if (contains(conditionId)) remove(conditionId)
+                    else add(conditionId)
+                }
+            )
+        }
+    }
 }
 
 sealed class DebugReportItem {
 
     abstract val id: Long
-
     abstract val name: String
+    abstract val isExpanded: Boolean
 
     data class ScenarioReportItem(
         override val id: Long,
         override val name: String,
+        override val isExpanded: Boolean,
         val duration: String,
         val imageProcessed: String,
         val averageImageProcessingTime: String,
@@ -96,6 +131,7 @@ sealed class DebugReportItem {
     data class EventReportItem(
         override val id: Long,
         override val name: String,
+        override val isExpanded: Boolean,
         val triggerCount: String,
         val processingCount: String,
         val avgProcessingDuration: String,
@@ -106,6 +142,7 @@ sealed class DebugReportItem {
     data class ConditionReportItem(
         override val id: Long,
         override val name: String,
+        override val isExpanded: Boolean,
         val matchCount: String,
         val processingCount: String,
         val avgProcessingDuration: String,

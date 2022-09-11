@@ -24,12 +24,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogDebugReportBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+
 import kotlinx.coroutines.launch
 
 class DebugReportDialog(context: Context): LoadableListDialog(context) {
@@ -42,7 +42,10 @@ class DebugReportDialog(context: Context): LoadableListDialog(context) {
     private lateinit var viewBinding: DialogDebugReportBinding
 
     /** Adapter for the report */
-    private val reportAdapter = DebugReportAdapter()
+    private val reportAdapter = DebugReportAdapter(
+        viewModel!!::collapseExpandEvent,
+        viewModel!!::collapseExpandCondition,
+    )
 
     override val emptyTextId: Int = R.string.dialog_debug_report_empty
     override fun getListBindingRoot(): View = viewBinding.root
@@ -53,7 +56,7 @@ class DebugReportDialog(context: Context): LoadableListDialog(context) {
         return AlertDialog.Builder(context)
             .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_debug_report_title)
             .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.cancel, null)
+            .setPositiveButton(android.R.string.ok, null)
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
@@ -69,5 +72,10 @@ class DebugReportDialog(context: Context): LoadableListDialog(context) {
                 }
             }
         }
+    }
+
+    override fun onDialogDismissed() {
+        super.onDialogDismissed()
+        viewModel = null
     }
 }

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.debugging
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.StringRes
@@ -25,29 +26,40 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.databinding.MergeDebugCollapsibleHeaderBinding
 import com.buzbuz.smartautoclicker.databinding.MergeDebugInfoBinding
 import com.buzbuz.smartautoclicker.databinding.MergeDebugTimingBinding
-import com.buzbuz.smartautoclicker.databinding.ItemConditionDebugInfoCardBinding
-import com.buzbuz.smartautoclicker.databinding.ItemEventDebugInfoCardBinding
-import com.buzbuz.smartautoclicker.databinding.ItemScenarioDebugInfoCardBinding
+import com.buzbuz.smartautoclicker.databinding.MergeDebugTriggeredProcessedBinding
+import com.buzbuz.smartautoclicker.databinding.ItemConditionDebugInfoBinding
+import com.buzbuz.smartautoclicker.databinding.ItemEventDebugInfoBinding
+import com.buzbuz.smartautoclicker.databinding.ItemScenarioDebugInfoBinding
 
-class DebugReportAdapter : ListAdapter<DebugReportItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
+class DebugReportAdapter(
+    private val onCollapseExpandEvent: (eventId: Long) -> Unit,
+    private val onCollapseExpandCondition: (conditionId: Long) -> Unit,
+) : ListAdapter<DebugReportItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is DebugReportItem.ScenarioReportItem -> R.layout.item_scenario_debug_info_card
-            is DebugReportItem.EventReportItem -> R.layout.item_event_debug_info_card
-            is DebugReportItem.ConditionReportItem -> R.layout.item_condition_debug_info_card
+            is DebugReportItem.ScenarioReportItem -> R.layout.item_scenario_debug_info
+            is DebugReportItem.EventReportItem -> R.layout.item_event_debug_info
+            is DebugReportItem.ConditionReportItem -> R.layout.item_condition_debug_info
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_scenario_debug_info_card -> ScenarioDebugInfoViewHolder(
-                ItemScenarioDebugInfoCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            R.layout.item_event_debug_info_card -> EventDebugInfoViewHolder(
-                ItemEventDebugInfoCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            R.layout.item_condition_debug_info_card -> ConditionDebugInfoViewHolder(
-                ItemConditionDebugInfoCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_scenario_debug_info -> ScenarioDebugInfoViewHolder(
+                ItemScenarioDebugInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+
+            R.layout.item_event_debug_info -> EventDebugInfoViewHolder(
+                ItemEventDebugInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                onCollapseExpandEvent,
+            )
+
+            R.layout.item_condition_debug_info -> ConditionDebugInfoViewHolder(
+                ItemConditionDebugInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                onCollapseExpandCondition,
+            )
             else -> throw IllegalArgumentException("Unsupported view type !")
         }
 
@@ -71,7 +83,7 @@ private object DiffUtilCallback: DiffUtil.ItemCallback<DebugReportItem>() {
 }
 
 class ScenarioDebugInfoViewHolder(
-    private val viewBinding: ItemScenarioDebugInfoCardBinding,
+    private val viewBinding: ItemScenarioDebugInfoBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(item: DebugReportItem.ScenarioReportItem) {
@@ -102,56 +114,113 @@ class ScenarioDebugInfoViewHolder(
 }
 
 class EventDebugInfoViewHolder(
-    private val viewBinding: ItemEventDebugInfoCardBinding,
+    private val viewBinding: ItemEventDebugInfoBinding,
+    private val onCollapseExpandEvent: (eventId: Long) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(item: DebugReportItem.EventReportItem) {
         viewBinding.apply {
-            title.text = item.name
-            triggerCountRoot.setValue(
-                R.string.dialog_debug_report_event_trigger_count,
-                item.triggerCount,
-            )
-            processedCountRoot.setValue(
-                R.string.dialog_debug_report_event_processing_count,
-                item.processingCount,
-            )
-            processingTimingRoot.setValues(
-                item.minProcessingDuration,
-                item.avgProcessingDuration,
-                item.maxProcessingDuration,
-            )
+            header.apply {
+                setValues(item.name, item.triggerCount, item.processingCount, item.isExpanded)
+                root.setOnClickListener { onCollapseExpandEvent(item.id) }
+            }
+
+            if (item.isExpanded) {
+                triggerCountRoot.apply {
+                    setValues(
+                        R.string.dialog_debug_report_event_trigger_count,
+                        item.triggerCount,
+                        R.string.dialog_debug_report_event_processing_count,
+                        item.processingCount,
+                    )
+                }
+
+                processingTimingRoot.setValues(
+                    item.minProcessingDuration,
+                    item.avgProcessingDuration,
+                    item.maxProcessingDuration,
+                )
+
+                collapsibleLayout.visibility = View.VISIBLE
+            } else {
+                collapsibleLayout.visibility = View.GONE
+            }
         }
     }
 }
 
 class ConditionDebugInfoViewHolder(
-    private val viewBinding: ItemConditionDebugInfoCardBinding,
+    private val viewBinding: ItemConditionDebugInfoBinding,
+    private val onCollapseExpandCondition: (eventId: Long) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(item: DebugReportItem.ConditionReportItem) {
         viewBinding.apply {
-            title.text = item.name
-            matchCountRoot.setValue(
-                R.string.dialog_debug_report_event_trigger_count,
-                item.matchCount,
-            )
-            processedCountRoot.setValue(
-                R.string.dialog_debug_report_event_processing_count,
-                item.processingCount,
-            )
-            processingTimingRoot.setValues(
-                item.minProcessingDuration,
-                item.avgProcessingDuration,
-                item.maxProcessingDuration,
-            )
+            header.apply {
+                setValues(item.name, item.matchCount, item.processingCount, item.isExpanded)
+                root.setOnClickListener { onCollapseExpandCondition(item.id) }
+            }
+
+            if (item.isExpanded) {
+                triggerCountRoot.apply {
+                    setValues(
+                        R.string.dialog_debug_report_condition_detected_count,
+                        item.matchCount,
+                        R.string.dialog_debug_report_condition_processing_count,
+                        item.processingCount,
+                    )
+                }
+
+                processingTimingRoot.setValues(
+                    item.minProcessingDuration,
+                    item.avgProcessingDuration,
+                    item.maxProcessingDuration,
+                )
+
+                collapsibleLayout.visibility = View.VISIBLE
+            } else {
+                collapsibleLayout.visibility = View.GONE
+            }
         }
     }
+}
+
+private fun MergeDebugCollapsibleHeaderBinding.setValues(
+    title: String,
+    leftVal: String,
+    rightVal: String,
+    isExpanded: Boolean,
+) {
+    name.text = title
+    triggeredProcessed.apply {
+        text = triggeredProcessed.context.getString(
+            R.string.dialog_debug_report_trigger_processed,
+            leftVal,
+            rightVal,
+        )
+        visibility = if (isExpanded) View.GONE else View.VISIBLE
+    }
+    collapseExpand.setImageResource(
+        if (isExpanded) R.drawable.ic_chevron_top
+        else R.drawable.ic_chevron_bottom
+    )
 }
 
 private fun MergeDebugInfoBinding.setValue(@StringRes desc: Int, v: String) {
     description.setText(desc)
     value.text = v
+}
+
+private fun MergeDebugTriggeredProcessedBinding.setValues(
+    @StringRes leftDesc: Int,
+    leftVal: String,
+    @StringRes rightDesc: Int,
+    rightVal: String,
+) {
+    triggeredTitle.setText(leftDesc)
+    triggeredCount.text = leftVal
+    processedTitle.setText(rightDesc)
+    processedCount.text = rightVal
 }
 
 private fun MergeDebugTimingBinding.setValues(min: String, avg: String, max: String) {

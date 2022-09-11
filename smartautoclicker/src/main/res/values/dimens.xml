@@ -41,6 +41,7 @@
     <dimen name="dialog_width">600dp</dimen>
     <dimen name="dialog_height">1000dp</dimen>
     <dimen name="dialog_button_size">50dp</dimen>
+    <dimen name="dialog_chevron_size">36dp</dimen>
     <dimen name="dialog_item_condition_height">100dp</dimen>
     <dimen name="dialog_item_condition_width">100dp</dimen>
     <dimen name="dialog_condition_max_height">600dp</dimen>
