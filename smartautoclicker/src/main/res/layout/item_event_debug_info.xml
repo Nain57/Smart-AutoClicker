@@ -46,7 +46,7 @@
         <!-- Processing timing -->
         <include
             android:id="@+id/processing_timing_root"
-            layout="@layout/merge_debug_timing"/>
+            layout="@layout/merge_debug_min_avg_max"/>
         <include layout="@layout/include_view_separator"/>
 
     </LinearLayout>

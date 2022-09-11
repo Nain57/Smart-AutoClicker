@@ -81,7 +81,18 @@
         <!-- Processing timing -->
         <include
             android:id="@+id/processing_timing_root"
-            layout="@layout/merge_debug_timing" />
+            layout="@layout/merge_debug_min_avg_max" />
+        <include
+            layout="@layout/include_view_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:layout_marginEnd="@dimen/margin_horizontal_default" />
+
+        <!-- Detection confidence rate -->
+        <include
+            android:id="@+id/confidence_root"
+            layout="@layout/merge_debug_min_avg_max" />
         <include
             layout="@layout/include_view_separator" />
 

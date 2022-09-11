@@ -39,7 +39,7 @@
         android:textSize="@dimen/text_size_list_item_text_big"
         android:textStyle="bold"
         android:singleLine="true"
-        android:text="@string/dialog_debug_report_timing_title"/>
+        tools:text="@string/dialog_debug_report_timing_title"/>
 
     <TextView
         android:id="@+id/minTitle"

@@ -27,7 +27,7 @@ data class DebugReport internal constructor(
     val eventsTriggeredCount: Long,
     val eventsProcessedInfo: List<Pair<Event, ProcessingDebugInfo>>,
     val conditionsDetectedCount: Long,
-    val conditionsProcessedInfo: Map<Long, Pair<Condition, ProcessingDebugInfo>>,
+    val conditionsProcessedInfo: Map<Long, Pair<Condition, ConditionProcessingDebugInfo>>,
 )
 
 data class ProcessingDebugInfo internal constructor(
@@ -37,5 +37,17 @@ data class ProcessingDebugInfo internal constructor(
     val avgProcessingTimeMs: Long = 0,
     val minProcessingTimeMs: Long = 0,
     val maxProcessingTimeMs: Long = 0,
+)
+
+data class ConditionProcessingDebugInfo internal constructor(
+    val processingCount: Long = 0,
+    val successCount: Long = 0,
+    val totalProcessingTimeMs: Long = 0,
+    val avgProcessingTimeMs: Long = 0,
+    val minProcessingTimeMs: Long = 0,
+    val maxProcessingTimeMs: Long = 0,
+    val avgConfidenceRate: Double = 0.0,
+    val minConfidenceRate: Double = 0.0,
+    val maxConfidenceRate: Double = 0.0,
 )
 

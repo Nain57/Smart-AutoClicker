@@ -217,6 +217,7 @@
     <string name="dialog_debug_report_condition_detected_count">Detected</string>
     <string name="dialog_debug_report_condition_processing_count">Processed</string>
     <string name="dialog_debug_report_timing_title">Processing timing</string>
+    <string name="dialog_debug_report_confidence_title">Detection confidence rate</string>
     <string name="dialog_debug_report_timing_min">Min</string>
     <string name="dialog_debug_report_timing_max">Max</string>
     <string name="dialog_debug_report_timing_avg">Avg</string>

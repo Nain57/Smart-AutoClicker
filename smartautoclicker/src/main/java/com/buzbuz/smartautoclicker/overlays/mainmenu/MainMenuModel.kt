@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
+import com.buzbuz.smartautoclicker.overlays.debugging.formatConfidenceRate
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -119,9 +120,6 @@ data class LastPositiveDebugInfo(
     val conditionName: String = "",
     val confidenceRateText: String = "",
 )
-
-/** Format this value as a displayable confidence rate. */
-private fun Double.formatConfidenceRate(): String = "${String.format("%.2f", this * 100)} % "
 
 /** Delay before removing the last positive result display in debug. */
 private const val POSITIVE_VALUE_DISPLAY_TIMEOUT_MS = 1500L

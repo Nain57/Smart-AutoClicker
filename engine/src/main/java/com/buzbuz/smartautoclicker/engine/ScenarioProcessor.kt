@@ -138,7 +138,7 @@ internal class ScenarioProcessor(
             // Verify if the condition is fulfilled.
             debugEngine?.onConditionProcessingStarted(condition)
             val result = checkCondition(condition) ?: return ProcessorResult(false)
-            debugEngine?.onConditionProcessingCompleted(result.isDetected)
+            debugEngine?.onConditionProcessingCompleted(result)
 
             if (result.isDetected xor condition.shouldBeDetected) {
                 if (event.conditionOperator == AND) {

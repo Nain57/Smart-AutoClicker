@@ -34,13 +34,13 @@ class DebugEngine(
     private val events: List<Event>,
 ) {
     /** Record the detection session duration. */
-    private val sessionRecorder = ProcessingRecorder()
+    private val sessionRecorder = Recorder()
     /** Record all images processed. */
-    private val imageRecorder = ProcessingRecorder()
+    private val imageRecorder = Recorder()
     /** Map of event id to their recorder. */
-    private val eventsRecorderMap: MutableMap<Long, ProcessingRecorder> = mutableMapOf()
+    private val eventsRecorderMap: MutableMap<Long, Recorder> = mutableMapOf()
     /** Map of condition id to their recorder. */
-    private val conditionsRecorderMap: MutableMap<Long, ProcessingRecorder> = mutableMapOf()
+    private val conditionsRecorderMap: MutableMap<Long, ConditionRecorder> = mutableMapOf()
 
     /** The event currently processed. */
     private var currProcEvtId: Long? = null
@@ -71,7 +71,7 @@ class DebugEngine(
 
         currProcEvtId = event.id
         if (!eventsRecorderMap.containsKey(event.id)) {
-            eventsRecorderMap[event.id] = ProcessingRecorder()
+            eventsRecorderMap[event.id] = Recorder()
         }
         eventsRecorderMap[event.id]!!.onProcessingStart()
     }
@@ -81,15 +81,18 @@ class DebugEngine(
 
         currProcCondId = condition.id
         if (!conditionsRecorderMap.containsKey(condition.id)) {
-            conditionsRecorderMap[condition.id] = ProcessingRecorder()
+            conditionsRecorderMap[condition.id] = ConditionRecorder()
         }
         conditionsRecorderMap[condition.id]!!.onProcessingStart()
     }
 
-    internal fun onConditionProcessingCompleted(detected: Boolean) {
+    internal fun onConditionProcessingCompleted(detectionResult: DetectionResult) {
         if (currProcCondId == null) throw IllegalStateException("completed called before start")
 
-        conditionsRecorderMap[currProcCondId]?.onProcessingEnd(detected)
+        conditionsRecorderMap[currProcCondId]?.onProcessingEnd(
+            detectionResult.isDetected,
+            detectionResult.confidenceRate
+        )
         currProcCondId = null
     }
 
@@ -138,12 +141,12 @@ class DebugEngine(
             event to debugInfo
         }.sortedBy { it.first.priority }
 
-        val conditionReport = HashMap<Long, Pair<Condition, ProcessingDebugInfo>>()
+        val conditionReport = HashMap<Long, Pair<Condition, ConditionProcessingDebugInfo>>()
         conditions.forEach { condition ->
             val debugInfo = conditionsRecorderMap[condition.id]?.let { processingRecorder ->
                 conditionsDetectedCount += processingRecorder.successCount
-                processingRecorder.toProcessingDebugInfo()
-            } ?: ProcessingDebugInfo()
+                processingRecorder.toConditionProcessingDebugInfo()
+            } ?: ConditionProcessingDebugInfo()
 
             conditionReport[condition.id] = condition to debugInfo
         }

@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.MergeDebugCollapsibleHeaderBinding
 import com.buzbuz.smartautoclicker.databinding.MergeDebugInfoBinding
-import com.buzbuz.smartautoclicker.databinding.MergeDebugTimingBinding
+import com.buzbuz.smartautoclicker.databinding.MergeDebugMinAvgMaxBinding
 import com.buzbuz.smartautoclicker.databinding.MergeDebugTriggeredProcessedBinding
 import com.buzbuz.smartautoclicker.databinding.ItemConditionDebugInfoBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventDebugInfoBinding
@@ -136,6 +136,7 @@ class EventDebugInfoViewHolder(
                 }
 
                 processingTimingRoot.setValues(
+                    R.string.dialog_debug_report_timing_title,
                     item.minProcessingDuration,
                     item.avgProcessingDuration,
                     item.maxProcessingDuration,
@@ -172,9 +173,17 @@ class ConditionDebugInfoViewHolder(
                 }
 
                 processingTimingRoot.setValues(
+                    R.string.dialog_debug_report_timing_title,
                     item.minProcessingDuration,
                     item.avgProcessingDuration,
                     item.maxProcessingDuration,
+                )
+
+                confidenceRoot.setValues(
+                    R.string.dialog_debug_report_confidence_title,
+                    item.minConfidence,
+                    item.avgConfidence,
+                    item.maxConfidence,
                 )
 
                 collapsibleLayout.visibility = View.VISIBLE
@@ -223,7 +232,8 @@ private fun MergeDebugTriggeredProcessedBinding.setValues(
     processedCount.text = rightVal
 }
 
-private fun MergeDebugTimingBinding.setValues(min: String, avg: String, max: String) {
+private fun MergeDebugMinAvgMaxBinding.setValues(@StringRes descId: Int, min: String, avg: String, max: String) {
+    description.setText(descId)
     minValue.text = min
     avgValue.text = avg
     maxValue.text = max

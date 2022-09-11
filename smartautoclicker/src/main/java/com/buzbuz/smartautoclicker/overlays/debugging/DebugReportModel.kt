@@ -20,7 +20,9 @@ import android.content.Context
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
+import com.buzbuz.smartautoclicker.engine.debugging.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.engine.debugging.DebugReport
+import com.buzbuz.smartautoclicker.engine.debugging.ProcessingDebugInfo
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -42,43 +44,20 @@ class DebugReportModel(context: Context) : OverlayViewModel(context) {
             report ?: return@combine emptyList()
 
             buildList {
-                add(DebugReportItem.ScenarioReportItem(
-                    id = report.scenario.id,
-                    name = report.scenario.name,
-                    duration = report.sessionInfo.totalProcessingTimeMs.milliseconds.toString(),
-                    imageProcessed = report.imageProcessedInfo.processingCount.toString(),
-                    averageImageProcessingTime = report.imageProcessedInfo.avgProcessingTimeMs.milliseconds.toString(),
-                    eventsTriggered = report.eventsTriggeredCount.toString(),
-                    conditionsDetected = report.conditionsDetectedCount.toString(),
-                    isExpanded = true,
-                ))
+                add(newScenarioItem(report))
 
                 report.eventsProcessedInfo.forEach { (event, debugInfo) ->
                     val eventExpanded = expandedEvents.contains(event.id)
-
-                    add(DebugReportItem.EventReportItem(
-                        id = event.id,
-                        name = event.name,
-                        triggerCount = debugInfo.successCount.toString(),
-                        processingCount = debugInfo.processingCount.toString(),
-                        avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
-                        minProcessingDuration = debugInfo.minProcessingTimeMs.milliseconds.toString(),
-                        maxProcessingDuration = debugInfo.maxProcessingTimeMs.milliseconds.toString(),
-                        isExpanded = eventExpanded,
-                    ))
+                    add(newEventItem(event.id, event.name, debugInfo, eventExpanded))
 
                     if (eventExpanded) {
                         event.conditions?.forEach { condition ->
                             report.conditionsProcessedInfo[condition.id]?.let { (condition, condDebugInfo) ->
-                                add(DebugReportItem.ConditionReportItem(
-                                    id = condition.id,
-                                    name = condition.name,
-                                    matchCount = condDebugInfo.successCount.toString(),
-                                    processingCount = condDebugInfo.processingCount.toString(),
-                                    avgProcessingDuration = condDebugInfo.avgProcessingTimeMs.milliseconds.toString(),
-                                    minProcessingDuration = condDebugInfo.minProcessingTimeMs.milliseconds.toString(),
-                                    maxProcessingDuration = condDebugInfo.maxProcessingTimeMs.milliseconds.toString(),
-                                    isExpanded = expandedCondition.contains(condition.id)
+                                add(newConditionItem(
+                                    condition.id,
+                                    condition.name,
+                                    condDebugInfo,
+                                    expandedCondition.contains(condition.id),
                                 ))
                             }
                         }
@@ -109,6 +88,45 @@ class DebugReportModel(context: Context) : OverlayViewModel(context) {
             )
         }
     }
+
+    private fun newScenarioItem(debugInfo: DebugReport) =
+        DebugReportItem.ScenarioReportItem(
+            id = debugInfo.scenario.id,
+            name = debugInfo.scenario.name,
+            duration = debugInfo.sessionInfo.totalProcessingTimeMs.milliseconds.toString(),
+            imageProcessed = debugInfo.imageProcessedInfo.processingCount.toString(),
+            averageImageProcessingTime = debugInfo.imageProcessedInfo.avgProcessingTimeMs.milliseconds.toString(),
+            eventsTriggered = debugInfo.eventsTriggeredCount.toString(),
+            conditionsDetected = debugInfo.conditionsDetectedCount.toString(),
+            isExpanded = true,
+        )
+
+    private fun newEventItem(id: Long, name: String, debugInfo: ProcessingDebugInfo, expanded: Boolean) =
+        DebugReportItem.EventReportItem(
+            id = id,
+            name = name,
+            triggerCount = debugInfo.successCount.toString(),
+            processingCount = debugInfo.processingCount.toString(),
+            avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
+            minProcessingDuration = debugInfo.minProcessingTimeMs.milliseconds.toString(),
+            maxProcessingDuration = debugInfo.maxProcessingTimeMs.milliseconds.toString(),
+            isExpanded = expanded,
+        )
+
+    private fun newConditionItem(id: Long, name: String, debugInfo: ConditionProcessingDebugInfo, expanded: Boolean) =
+        DebugReportItem.ConditionReportItem(
+            id = id,
+            name = name,
+            matchCount = debugInfo.successCount.toString(),
+            processingCount = debugInfo.processingCount.toString(),
+            avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
+            minProcessingDuration = debugInfo.minProcessingTimeMs.milliseconds.toString(),
+            maxProcessingDuration = debugInfo.maxProcessingTimeMs.milliseconds.toString(),
+            avgConfidence = debugInfo.avgConfidenceRate.formatConfidenceRate(),
+            minConfidence = debugInfo.minConfidenceRate.formatConfidenceRate(),
+            maxConfidence = debugInfo.maxConfidenceRate.formatConfidenceRate(),
+            isExpanded = expanded,
+        )
 }
 
 sealed class DebugReportItem {
@@ -148,5 +166,11 @@ sealed class DebugReportItem {
         val avgProcessingDuration: String,
         val minProcessingDuration: String,
         val maxProcessingDuration: String,
+        val avgConfidence: String,
+        val minConfidence: String,
+        val maxConfidence: String,
     ): DebugReportItem()
 }
+
+/** Format this value as a displayable confidence rate. */
+fun Double.formatConfidenceRate(): String = "${String.format("%.2f", this * 100)} % "
