@@ -26,10 +26,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.MergeDebugCollapsibleHeaderBinding
-import com.buzbuz.smartautoclicker.databinding.MergeDebugInfoBinding
-import com.buzbuz.smartautoclicker.databinding.MergeDebugMinAvgMaxBinding
-import com.buzbuz.smartautoclicker.databinding.MergeDebugTriggeredProcessedBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeDebugCollapsibleHeaderBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeDebugInfoBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeDebugMinAvgMaxBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeDebugTriggeredProcessedBinding
 import com.buzbuz.smartautoclicker.databinding.ItemConditionDebugInfoBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventDebugInfoBinding
 import com.buzbuz.smartautoclicker.databinding.ItemScenarioDebugInfoBinding
@@ -194,7 +194,7 @@ class ConditionDebugInfoViewHolder(
     }
 }
 
-private fun MergeDebugCollapsibleHeaderBinding.setValues(
+private fun IncludeDebugCollapsibleHeaderBinding.setValues(
     title: String,
     leftVal: String,
     rightVal: String,
@@ -215,12 +215,12 @@ private fun MergeDebugCollapsibleHeaderBinding.setValues(
     )
 }
 
-private fun MergeDebugInfoBinding.setValue(@StringRes desc: Int, v: String) {
+private fun IncludeDebugInfoBinding.setValue(@StringRes desc: Int, v: String) {
     description.setText(desc)
     value.text = v
 }
 
-private fun MergeDebugTriggeredProcessedBinding.setValues(
+private fun IncludeDebugTriggeredProcessedBinding.setValues(
     @StringRes leftDesc: Int,
     leftVal: String,
     @StringRes rightDesc: Int,
@@ -232,7 +232,7 @@ private fun MergeDebugTriggeredProcessedBinding.setValues(
     processedCount.text = rightVal
 }
 
-private fun MergeDebugMinAvgMaxBinding.setValues(@StringRes descId: Int, min: String, avg: String, max: String) {
+private fun IncludeDebugMinAvgMaxBinding.setValues(@StringRes descId: Int, min: String, avg: String, max: String) {
     description.setText(descId)
     minValue.text = min
     avgValue.text = avg

@@ -33,7 +33,7 @@
 
     <include
         android:id="@+id/header"
-        layout="@layout/merge_debug_collapsible_header"
+        layout="@layout/include_debug_collapsible_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_default"
@@ -70,7 +70,7 @@
         <!-- Match/Processing count -->
         <include
             android:id="@+id/trigger_count_root"
-            layout="@layout/merge_debug_triggered_processed" />
+            layout="@layout/include_debug_triggered_processed" />
         <include
             layout="@layout/include_view_separator"
             android:layout_width="match_parent"
@@ -81,7 +81,7 @@
         <!-- Processing timing -->
         <include
             android:id="@+id/processing_timing_root"
-            layout="@layout/merge_debug_min_avg_max" />
+            layout="@layout/include_debug_min_avg_max" />
         <include
             layout="@layout/include_view_separator"
             android:layout_width="match_parent"
@@ -92,7 +92,7 @@
         <!-- Detection confidence rate -->
         <include
             android:id="@+id/confidence_root"
-            layout="@layout/merge_debug_min_avg_max" />
+            layout="@layout/include_debug_min_avg_max" />
         <include
             layout="@layout/include_view_separator" />
 

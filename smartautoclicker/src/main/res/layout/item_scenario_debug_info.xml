@@ -34,31 +34,31 @@
     <!-- Total duration -->
     <include
         android:id="@+id/duration_root"
-        layout="@layout/merge_debug_info"/>
+        layout="@layout/include_debug_info"/>
     <include layout="@layout/include_view_separator"/>
 
     <!-- Image processed count -->
     <include
         android:id="@+id/img_proc_count_root"
-        layout="@layout/merge_debug_info"/>
+        layout="@layout/include_debug_info"/>
     <include layout="@layout/include_view_separator"/>
 
     <!-- Average image processing duration -->
     <include
         android:id="@+id/avg_img_proc_dur_root"
-        layout="@layout/merge_debug_info"/>
+        layout="@layout/include_debug_info"/>
     <include layout="@layout/include_view_separator"/>
 
     <!-- Events trigger count -->
     <include
         android:id="@+id/evt_trigger_count_root"
-        layout="@layout/merge_debug_info"/>
+        layout="@layout/include_debug_info"/>
     <include layout="@layout/include_view_separator"/>
 
     <!-- Conditions trigger count -->
     <include
         android:id="@+id/cond_trigger_count_root"
-        layout="@layout/merge_debug_info"/>
+        layout="@layout/include_debug_info"/>
 
     <TextView
         style="@style/HeaderTitle"
