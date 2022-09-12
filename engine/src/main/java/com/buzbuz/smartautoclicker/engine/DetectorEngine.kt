@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.debugging.DebugEngine
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -51,7 +52,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 
 /**
  * Detects [Event] conditions on a display and execute its actions.
@@ -71,6 +71,12 @@ class DetectorEngine(context: Context) {
 
         /** Tag for logs */
         private const val TAG = "DetectorEngine"
+        /**
+         * Waiting delay after getting a null image.
+         * This is to avoid spamming when there is no image.
+         */
+        private const val NO_IMAGE_DELAY_MS = 20L
+
         /** Singleton preventing multiple instances of the repository at the same time. */
         @Volatile
         private var INSTANCE: DetectorEngine? = null
@@ -374,12 +380,10 @@ class DetectorEngine(context: Context) {
 
     /** Process the latest images provided by the [ScreenRecorder]. */
     private suspend fun processScreenImages() {
-        while (true) {
+        while (processingJob?.isActive == true) {
             screenRecorder.acquireLatestImage()?.use { image ->
                 scenarioProcessor?.process(image)
-            }
-
-            yield()
+            } ?: delay(NO_IMAGE_DELAY_MS)
         }
     }
 
