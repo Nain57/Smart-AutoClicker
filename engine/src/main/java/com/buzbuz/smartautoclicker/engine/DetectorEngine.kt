@@ -197,7 +197,6 @@ class DetectorEngine(context: Context) {
         Log.i(TAG, "startScreenRecord")
 
         this.androidExecutor = androidExecutor
-        screenMetrics.registerOrientationListener(::onOrientationChanged)
 
         processingScope = CoroutineScope(Dispatchers.Default.limitedParallelism(1))
 
@@ -274,6 +273,7 @@ class DetectorEngine(context: Context) {
 
         _isDetecting.value = true
         _isDebugging.value = debugMode
+        screenMetrics.registerOrientationListener(::onOrientationChanged)
 
         processingJob = processingScope?.launch {
             imageDetector = NativeDetector()
@@ -311,6 +311,7 @@ class DetectorEngine(context: Context) {
         processingScope?.launch {
             Log.i(TAG, "stopDetection")
 
+            screenMetrics.unregisterOrientationListener()
             _isDetecting.value = false
             _isDebugging.value = false
 
@@ -339,7 +340,6 @@ class DetectorEngine(context: Context) {
 
         Log.i(TAG, "stopScreenRecord")
 
-        screenMetrics.unregisterOrientationListener()
         processingScope?.launch {
             screenRecorder.stopProjection()
             isScreenRecording.emit(false)
@@ -356,6 +356,8 @@ class DetectorEngine(context: Context) {
      * @param context the Android context.
      */
     private fun onOrientationChanged(context: Context) {
+        if (!isDetecting.value) return
+
         processingScope?.launch {
             processingJob?.cancelAndJoin()
 
