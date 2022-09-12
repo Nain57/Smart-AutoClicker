@@ -33,7 +33,9 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.menu.OverlayMenuController
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.overlays.debugging.DebugModel
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugReportDialog
+import com.buzbuz.smartautoclicker.overlays.debugging.DebugOverlayView
 import com.buzbuz.smartautoclicker.overlays.eventlist.EventListDialog
 
 import kotlinx.coroutines.Job
@@ -57,6 +59,10 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     private var viewModel: MainMenuModel? = MainMenuModel(context).apply {
         attachToLifecycle(this@MainMenu)
     }
+    /** The view model for the debugging features. */
+    private var debuggingViewModel: DebugModel? = DebugModel(context).apply {
+        attachToLifecycle(this@MainMenu)
+    }
 
     /** Animation from play to pause. */
     private val playToPauseDrawable =
@@ -73,7 +79,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
         layoutInflater.inflate(R.layout.overlay_menu, null) as ViewGroup
 
-    override fun onCreateOverlayView(): DebugView = DebugView(context)
+    override fun onCreateOverlayView(): DebugOverlayView = DebugOverlayView(context)
 
     override fun onCreateOverlayViewLayoutParams(): WindowManager.LayoutParams =
         super.onCreateOverlayViewLayoutParams().apply {
@@ -96,13 +102,13 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
                 launch { viewModel?.detectionState?.collect { onDetectionStateChanged(it) } }
 
                 launch {
-                    viewModel?.isDebugging?.collect { isDebugging ->
+                    debuggingViewModel?.isDebugging?.collect { isDebugging ->
                         changeDebugState(isDebugging)
                     }
                 }
 
                 launch {
-                    viewModel?.isDebugReportReady?.collect { reportReady ->
+                    debuggingViewModel?.isDebugReportReady?.collect { reportReady ->
                         if (reportReady) showSubOverlay(DebugReportDialog(ContextThemeWrapper(context, R.style.AppTheme)))
                     }
                 }
@@ -184,7 +190,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
 
             getMenuItemView<View>(R.id.layout_debug)?.visibility = View.GONE
             setOverlayViewVisibility(View.GONE)
-            (screenOverlayView as DebugView).clear()
+            (screenOverlayView as DebugOverlayView).clear()
         }
     }
 
@@ -195,7 +201,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     private fun observeDebugValues() = lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
-                viewModel?.debugLastPositive?.collect { debugInfo ->
+                debuggingViewModel?.debugLastPositive?.collect { debugInfo ->
                     getMenuItemView<TextView>(R.id.debug_event_name)?.text = debugInfo.eventName
                     getMenuItemView<TextView>(R.id.debug_condition_name)?.text = debugInfo.conditionName
                     getMenuItemView<TextView>(R.id.debug_confidence_rate)?.text = debugInfo.confidenceRateText
@@ -203,13 +209,13 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
             }
 
             launch {
-                viewModel?.debugLastPositiveCoordinates?.collect { coordinates ->
-                    (screenOverlayView as DebugView).setPositiveResult(coordinates)
+                debuggingViewModel?.debugLastPositiveCoordinates?.collect { coordinates ->
+                    (screenOverlayView as DebugOverlayView).setPositiveResult(coordinates)
                 }
             }
 
             launch {
-                viewModel?.debugLastConfidenceRate?.collect { confRate ->
+                debuggingViewModel?.debugLastConfidenceRate?.collect { confRate ->
                     getMenuItemView<TextView>(R.id.debug_current_confidence_rate)?.text = confRate
                 }
             }

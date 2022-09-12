@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.mainmenu
+package com.buzbuz.smartautoclicker.overlays.debugging
 
 import android.content.Context
 import android.graphics.Canvas
@@ -27,7 +27,7 @@ import android.view.View
  * Displays a rectangle at the selected position to represents the detection.
  * @param context the Android context.
  */
-class DebugView(context: Context) : View(context) {
+class DebugOverlayView(context: Context) : View(context) {
 
     /** The paint for the condition border. */
     private val conditionBordersPaint = Paint().apply {

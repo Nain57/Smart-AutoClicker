@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.sample
  * View model for the [MainMenu].
  * @param context the Android context.
  */
-@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class MainMenuModel(context: Context) : OverlayViewModel(context) {
 
     /** The detector engine. */
@@ -49,47 +48,6 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
     val detectionState: Flow<Boolean> = detectorEngine.isDetecting
     /** The current list of event in the detector engine. */
     val eventList: Flow<List<Event>?> = detectorEngine.scenarioEvents
-    /** Tells if the current detection is running in debug mode. */
-    val isDebugging = detectorEngine.isDebugging
-
-    /** The last result of detection. Only available if in debug detection. */
-    private val debugLastResult = detectorEngine.debugEngine
-        .flatMapLatest { it.lastResult }
-
-    /** The confidence rate on the last detection, positive or negative. */
-    val debugLastConfidenceRate: Flow<String?> = debugLastResult
-        .sample(CONFIDENCE_RATE_SAMPLING_TIME_MS)
-        .map { lastDebugInfo ->
-            lastDebugInfo.detectionResult.confidenceRate.formatConfidenceRate()
-        }
-
-    /** The coordinates of the last positive detection. */
-    val debugLastPositiveCoordinates: Flow<Rect> = debugLastResult
-        .map { debugInfo ->
-            if (debugInfo.detectionResult.isDetected) debugInfo.conditionArea
-            else Rect()
-        }
-
-    /** The info on the last positive detection. */
-    val debugLastPositive: Flow<LastPositiveDebugInfo> = detectorEngine.debugEngine
-        .flatMapLatest { it.lastPositiveInfo }
-        .flatMapLatest { debugInfo ->
-            flow {
-                emit(LastPositiveDebugInfo(
-                    debugInfo.event.name,
-                    debugInfo.condition.name,
-                    debugInfo.detectionResult.confidenceRate.formatConfidenceRate(),
-                ))
-
-                delay(POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)
-                emit(LastPositiveDebugInfo())
-            }
-        }
-
-    /** True when a debug report is available. */
-    val isDebugReportReady: Flow<Boolean> = detectorEngine.debugEngine
-        .flatMapLatest { it.debugReport }
-        .map { it != null }
 
     /** Start/Stop the detection. */
     fun toggleDetection(debugMode: Boolean = false) {
@@ -108,20 +66,3 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
         repository = null
     }
 }
-
-/**
- * Info on the last positive detection.
- * @param eventName name of the event
- * @param conditionName the name of the condition detected.
- * @param confidenceRateText the text to display for the confidence rate
- */
-data class LastPositiveDebugInfo(
-    val eventName: String = "",
-    val conditionName: String = "",
-    val confidenceRateText: String = "",
-)
-
-/** Delay before removing the last positive result display in debug. */
-private const val POSITIVE_VALUE_DISPLAY_TIMEOUT_MS = 1500L
-/** Sampling on the current confidence rate for the display. */
-private const val CONFIDENCE_RATE_SAMPLING_TIME_MS = 450L
