@@ -17,10 +17,13 @@
 package com.buzbuz.smartautoclicker.overlays.debugging
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
+import com.buzbuz.smartautoclicker.overlays.utils.getDebugConfigPreferences
+import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugViewEnabled
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -35,6 +38,8 @@ import kotlinx.coroutines.flow.sample
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class DebugModel(context: Context) : OverlayViewModel(context) {
 
+    /** Debug configuration shared preferences. */
+    private val sharedPreferences: SharedPreferences = context.getDebugConfigPreferences()
     /** The detector engine. */
     private var detectorEngine: DetectorEngine = DetectorEngine.getDetectorEngine(context)
 
@@ -43,7 +48,9 @@ class DebugModel(context: Context) : OverlayViewModel(context) {
         .flatMapLatest { it.lastResult }
 
     /** Tells if the current detection is running in debug mode. */
-    val isDebugging = detectorEngine.isDebugging
+    val isDebugging = detectorEngine.isDebugging.map { debugging ->
+        debugging && sharedPreferences.getIsDebugViewEnabled(context)
+    }
 
     /** The confidence rate on the last detection, positive or negative. */
     val debugLastConfidenceRate: Flow<String?> = debugLastResult

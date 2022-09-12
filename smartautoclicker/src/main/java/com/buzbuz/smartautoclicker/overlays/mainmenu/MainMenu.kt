@@ -103,7 +103,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
 
                 launch {
                     debuggingViewModel?.isDebugging?.collect { isDebugging ->
-                        changeDebugState(isDebugging)
+                        setDebugOverlayViewVisibility(isDebugging)
                     }
                 }
 
@@ -113,15 +113,6 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
                     }
                 }
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        getMenuItemView<View>(R.id.btn_play)?.setOnLongClickListener {
-            viewModel?.toggleDetection(true)
-            true
         }
     }
 
@@ -176,15 +167,15 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
 
     /**
      * Change the debug state of this UI.
-     * @param isDebugging true is the debug mode is active, false if not.
+     * @param isVisible true when the debug view should be shown, false to hide it.
      */
-    private fun changeDebugState(isDebugging: Boolean) {
-        if (isDebugging && debugObservableJob == null) {
+    private fun setDebugOverlayViewVisibility(isVisible: Boolean) {
+        if (isVisible && debugObservableJob == null) {
             getMenuItemView<View>(R.id.layout_debug)?.visibility = View.VISIBLE
             setOverlayViewVisibility(View.VISIBLE)
             debugObservableJob = observeDebugValues()
 
-        } else if (!isDebugging && debugObservableJob != null) {
+        } else if (!isVisible && debugObservableJob != null) {
             debugObservableJob?.cancel()
             debugObservableJob = null
 

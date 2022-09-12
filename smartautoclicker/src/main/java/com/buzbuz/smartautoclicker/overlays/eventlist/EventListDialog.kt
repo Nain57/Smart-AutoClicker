@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEventListBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeEventListButtonsBinding
 import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyDialog
+import com.buzbuz.smartautoclicker.overlays.debugging.DebugConfigDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
 import com.buzbuz.smartautoclicker.overlays.scenariosettings.ScenarioSettingsDialog
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
@@ -82,15 +83,15 @@ class EventListDialog(
             btnNewEvent.setOnClickListener { onButtonClicked(it.id) }
             btnScenarioSettings.setOnClickListener { onButtonClicked(it.id) }
         }
+        viewBinding.btnDebugging.setOnClickListener { showDebugConfigDialog() }
 
         return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_event_list_title)
             .setView(viewBinding.root)
     }
 
     override fun onDialogCreated(dialog: AlertDialog) {
         super.onDialogCreated(dialog)
-        eventAdapter = EventListAdapter(::openEventConfigDialog) { deletedEvent ->
+        eventAdapter = EventListAdapter(::showEventConfigDialog) { deletedEvent ->
             viewModel?.deleteEvent(deletedEvent)
         }
 
@@ -143,7 +144,7 @@ class EventListDialog(
 
     private fun onButtonClicked(@IdRes viewId: Int) {
         when (viewId) {
-            R.id.btn_new_event -> viewModel?.getNewEvent(context)?.let { openEventConfigDialog(it) }
+            R.id.btn_new_event -> viewModel?.getNewEvent(context)?.let { showEventConfigDialog(it) }
             R.id.btn_copy_event -> showEventCopyDialog()
             R.id.btn_move_events ->  viewModel?.setUiMode(REORDER)
             R.id.btn_scenario_settings -> showScenarioSettingsDialog()
@@ -221,13 +222,13 @@ class EventListDialog(
             showSubOverlay(EventCopyDialog(
                 context = context,
                 scenarioId = it.scenarioId.value!!,
-                onEventSelected = ::openEventConfigDialog
+                onEventSelected = ::showEventConfigDialog
             ))
         }
     }
 
     /** Opens the dialog allowing the user to add a new click. */
-    private fun openEventConfigDialog(event: Event) {
+    private fun showEventConfigDialog(event: Event) {
         showSubOverlay(
             overlayController = EventConfigDialog(
                 context = context,
@@ -246,6 +247,14 @@ class EventListDialog(
                 context = context,
                 scenarioId = viewModel?.scenarioId?.value!!
             ),
+            hideCurrent = false,
+        )
+    }
+
+    /** Opens the debug configuration dialog. */
+    private fun showDebugConfigDialog() {
+        showSubOverlay(
+            overlayController = DebugConfigDialog(context),
             hideCurrent = false,
         )
     }

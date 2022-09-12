@@ -17,9 +17,40 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dialog_width"
-    android:layout_height="@dimen/dialog_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/primaryDark"
+        tools:viewBindingIgnore="true">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/DialogTitle"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_debugging"
+            android:text="@string/dialog_event_list_title"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_debugging"
+            style="@style/DialogButton"
+            android:contentDescription="@string/dialog_action_new_create"
+            android:src="@drawable/ic_debugging"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/title"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/layout_list"

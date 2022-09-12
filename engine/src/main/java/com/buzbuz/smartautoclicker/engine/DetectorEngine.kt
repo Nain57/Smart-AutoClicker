@@ -264,9 +264,10 @@ class DetectorEngine(context: Context) {
      * callback.
      * [isScreenRecording] should be true to capture. Detection can be stopped with [stopDetection] or [stopScreenRecord].
      *
-     * @param debugMode true to get the debug info via the [debugEngine], false if not.
+     * @param debugInstantData true to get the debug info via the [debugEngine], false if not.
+     * @param debugReport true to generate a debug report at the end of the session, false if not.
      */
-    fun startDetection(debugMode: Boolean = false) {
+    fun startDetection(debugInstantData: Boolean = false, debugReport: Boolean = false) {
         if (!isScreenRecording.value) {
             Log.w(TAG, "captureArea: Screen record is not started.")
             return
@@ -278,12 +279,14 @@ class DetectorEngine(context: Context) {
         Log.i(TAG, "startDetection")
 
         _isDetecting.value = true
-        _isDebugging.value = debugMode
+        _isDebugging.value = debugInstantData
         screenMetrics.registerOrientationListener(::onOrientationChanged)
 
         processingJob = processingScope?.launch {
             imageDetector = NativeDetector()
-            _debugEngine.value = if (debugMode) DebugEngine(_scenario.value!!, scenarioEvents.value) else null
+            _debugEngine.value =
+                if (debugInstantData || debugReport) DebugEngine(debugInstantData, debugReport, _scenario.value!!, scenarioEvents.value)
+                else null
 
             scenarioProcessor = ScenarioProcessor(
                 imageDetector = imageDetector!!,

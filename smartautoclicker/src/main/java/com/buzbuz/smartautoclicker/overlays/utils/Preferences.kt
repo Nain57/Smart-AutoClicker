@@ -68,6 +68,33 @@ fun SharedPreferences.getIntentIsAdvancedConfig(context: Context) : Boolean = ge
 fun SharedPreferences.Editor.putIntentIsAdvancedConfig(isAdvanced: Boolean) : SharedPreferences.Editor =
     putBoolean(PREF_LAST_INTENT_IS_ADVANCED, isAdvanced)
 
+/** @return the shared preferences for the debug config. */
+fun Context.getDebugConfigPreferences(): SharedPreferences =
+    getSharedPreferences(
+        DEBUG_CONFIGURATION_PREFERENCES_NAME,
+        Context.MODE_PRIVATE
+    )
+
+/** @return the isEnabled value for the debug view. */
+fun SharedPreferences.getIsDebugViewEnabled(context: Context) : Boolean = getBoolean(
+    PREF_DEBUG_VIEW_ENABLED,
+    context.resources.getBoolean(R.bool.default_debug_view_enabled),
+)
+
+/** Save a new enabled value for the debug view. */
+fun SharedPreferences.Editor.putIsDebugViewEnabled(enabled: Boolean) : SharedPreferences.Editor =
+    putBoolean(PREF_DEBUG_VIEW_ENABLED, enabled)
+
+/** @return the isEnabled value for the debug report. */
+fun SharedPreferences.getIsDebugReportEnabled(context: Context) : Boolean = getBoolean(
+    PREF_DEBUG_REPORT_ENABLED,
+    context.resources.getBoolean(R.bool.default_debug_report_enabled),
+)
+
+/** Save a new enabled value for the debug report. */
+fun SharedPreferences.Editor.putIsDebugReportEnabled(enabled: Boolean) : SharedPreferences.Editor =
+    putBoolean(PREF_DEBUG_REPORT_ENABLED, enabled)
+
 /** Event default configuration SharedPreference name. */
 private const val EVENT_CONFIG_PREFERENCES_NAME = "EventConfigPreferences"
 /** User last click press duration key in the SharedPreferences. */
@@ -78,3 +105,10 @@ private const val PREF_LAST_SWIPE_DURATION = "Last_Swipe_Duration"
 private const val PREF_LAST_PAUSE_DURATION = "Last_Pause_Duration"
 /** User last pause press duration key in the SharedPreferences. */
 private const val PREF_LAST_INTENT_IS_ADVANCED = "Last_Intent_IsAdvanced"
+
+/** Debug configuration SharedPreference name. */
+private const val DEBUG_CONFIGURATION_PREFERENCES_NAME = "DebugConfigPreferences"
+/** User selection for the debug view visibility in the SharedPreferences. */
+private const val PREF_DEBUG_VIEW_ENABLED = "Debug_View_Enabled"
+/** User selection for the debug report in the SharedPreferences. */
+private const val PREF_DEBUG_REPORT_ENABLED = "Debug_Report_Enabled"

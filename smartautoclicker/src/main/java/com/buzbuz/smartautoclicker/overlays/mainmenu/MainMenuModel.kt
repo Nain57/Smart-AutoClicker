@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.mainmenu
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
@@ -24,6 +25,9 @@ import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.overlays.debugging.formatConfidenceRate
+import com.buzbuz.smartautoclicker.overlays.utils.getDebugConfigPreferences
+import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugReportEnabled
+import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugViewEnabled
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -40,6 +44,8 @@ import kotlinx.coroutines.flow.sample
  */
 class MainMenuModel(context: Context) : OverlayViewModel(context) {
 
+    /** Debug configuration shared preferences. */
+    private val sharedPreferences: SharedPreferences = context.getDebugConfigPreferences()
     /** The detector engine. */
     private var detectorEngine: DetectorEngine = DetectorEngine.getDetectorEngine(context)
     /** The repository for the scenarios. */
@@ -50,12 +56,15 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
     val eventList: Flow<List<Event>?> = detectorEngine.scenarioEvents
 
     /** Start/Stop the detection. */
-    fun toggleDetection(debugMode: Boolean = false) {
+    fun toggleDetection() {
         detectorEngine.apply {
             if (isDetecting.value) {
                 stopDetection()
             } else {
-                startDetection(debugMode)
+                startDetection(
+                    sharedPreferences.getIsDebugViewEnabled(context),
+                    sharedPreferences.getIsDebugReportEnabled(context),
+                )
             }
         }
     }

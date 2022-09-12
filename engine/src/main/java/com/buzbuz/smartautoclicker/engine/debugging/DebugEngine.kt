@@ -30,6 +30,8 @@ import kotlinx.coroutines.flow.*
 /** Engine for the debugging of a scenario processing. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class DebugEngine(
+    val instantData: Boolean,
+    val generateReport: Boolean,
     private val scenario: Scenario,
     private val events: List<Event>,
 ) {
@@ -60,16 +62,22 @@ class DebugEngine(
         .filter { it.detectionResult.isDetected }
 
     /** Start the session recorder at the DebugEngine creation. */
-    init { sessionRecorder.onProcessingStart() }
+    init {
+        if (generateReport) sessionRecorder.onProcessingStart()
+    }
 
     internal fun onImageProcessingStarted() {
+        if (!generateReport) return
+
         imageRecorder.onProcessingStart()
     }
 
     internal fun onEventProcessingStarted(event: Event) {
-        if (currProcEvtId != null) throw IllegalStateException("start called without a complete")
+        if (!generateReport) return
 
+        if (currProcEvtId != null) throw IllegalStateException("start called without a complete")
         currProcEvtId = event.id
+
         if (!eventsRecorderMap.containsKey(event.id)) {
             eventsRecorderMap[event.id] = Recorder()
         }
@@ -77,9 +85,11 @@ class DebugEngine(
     }
 
     internal fun onConditionProcessingStarted(condition: Condition) {
-        if (currProcCondId != null) throw IllegalStateException("start called without a complete")
+        if (!generateReport) return
 
+        if (currProcCondId != null) throw IllegalStateException("start called without a complete")
         currProcCondId = condition.id
+
         if (!conditionsRecorderMap.containsKey(condition.id)) {
             conditionsRecorderMap[condition.id] = ConditionRecorder()
         }
@@ -87,6 +97,8 @@ class DebugEngine(
     }
 
     internal fun onConditionProcessingCompleted(detectionResult: DetectionResult) {
+        if (!generateReport) return
+
         if (currProcCondId == null) throw IllegalStateException("completed called before start")
 
         conditionsRecorderMap[currProcCondId]?.onProcessingEnd(
@@ -97,13 +109,15 @@ class DebugEngine(
     }
 
     internal suspend fun onEventProcessingCompleted(result: ProcessorResult) {
-        if (currProcEvtId == null) throw IllegalStateException("completed called before start")
+        if (generateReport) {
+            if (currProcEvtId == null) throw IllegalStateException("completed called before start")
 
-        eventsRecorderMap[currProcEvtId]?.onProcessingEnd(result.eventMatched && result.event != null)
-        currProcEvtId = null
+            eventsRecorderMap[currProcEvtId]?.onProcessingEnd(result.eventMatched && result.event != null)
+            currProcEvtId = null
+        }
 
         // Notify current detection progress
-        if (result.event != null && result.condition != null && result.detectionResult != null) {
+        if (instantData && result.event != null && result.condition != null && result.detectionResult != null) {
             val halfWidth = result.condition.area.width() / 2
             val halfHeight = result.condition.area.height() / 2
 
@@ -120,10 +134,15 @@ class DebugEngine(
     }
 
     internal fun onImageProcessingCompleted() {
+        if (!generateReport) return
+
         imageRecorder.onProcessingEnd()
     }
 
     internal fun onSessionEnded() {
+        currentInfo.resetReplayCache()
+        if (!generateReport) return
+
         sessionRecorder.onProcessingEnd()
 
         var eventsTriggeredCount = 0L
@@ -160,8 +179,6 @@ class DebugEngine(
             conditionsDetectedCount,
             conditionReport,
         )
-
-        currentInfo.resetReplayCache()
     }
 
     internal fun cancelCurrentProcessing() {

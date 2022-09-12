@@ -219,4 +219,8 @@
     <string name="dialog_debug_report_timing_avg">Avg</string>
     <string name="dialog_debug_report_empty">No debug report !</string>
 
+    <string name="dialog_debug_config_title">Debugging</string>
+    <string name="dialog_debug_config_show_view">Show debug view</string>
+    <string name="dialog_debug_config_generate_report">Generate a report</string>
+
 </resources>

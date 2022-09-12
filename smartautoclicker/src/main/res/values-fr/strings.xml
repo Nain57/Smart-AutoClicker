@@ -188,4 +188,7 @@
     <string name="dialog_debug_report_timing_max">Max</string>
     <string name="dialog_debug_report_timing_avg">Moy</string>
     <string name="dialog_debug_report_empty">Aucun rapport de debug !</string>
+    <string name="dialog_debug_config_title">Debugging</string>
+    <string name="dialog_debug_config_show_view">Overlay de débug</string>
+    <string name="dialog_debug_config_generate_report">Générer un rapport</string>
 </resources>
