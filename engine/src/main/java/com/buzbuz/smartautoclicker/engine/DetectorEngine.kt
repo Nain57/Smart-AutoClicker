@@ -279,13 +279,13 @@ class DetectorEngine(context: Context) {
         Log.i(TAG, "startDetection")
 
         _isDetecting.value = true
-        _isDebugging.value = debugInstantData
+        _isDebugging.value = debugInstantData || debugReport
         screenMetrics.registerOrientationListener(::onOrientationChanged)
 
         processingJob = processingScope?.launch {
             imageDetector = NativeDetector()
             _debugEngine.value =
-                if (debugInstantData || debugReport) DebugEngine(debugInstantData, debugReport, _scenario.value!!, scenarioEvents.value)
+                if ( _isDebugging.value) DebugEngine(debugInstantData, debugReport, _scenario.value!!, scenarioEvents.value)
                 else null
 
             scenarioProcessor = ScenarioProcessor(
