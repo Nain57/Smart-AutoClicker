@@ -360,6 +360,7 @@ class DetectorEngine(context: Context) {
             processingJob?.cancelAndJoin()
 
             screenRecorder.stopScreenRecord()
+            _debugEngine.value?.cancelCurrentProcessing()
             screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
 
             processingJob = processingScope?.launch {

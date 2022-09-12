@@ -163,6 +163,11 @@ class DebugEngine(
 
         currentInfo.resetReplayCache()
     }
+
+    internal fun cancelCurrentProcessing() {
+        currProcEvtId = null
+        currProcCondId = null
+    }
 }
 
 /** Debug information for the scenario processing */
