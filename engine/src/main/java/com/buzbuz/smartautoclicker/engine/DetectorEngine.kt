@@ -204,7 +204,7 @@ class DetectorEngine(context: Context) {
 
         this.androidExecutor = androidExecutor
 
-        processingScope = CoroutineScope(Dispatchers.Default.limitedParallelism(1))
+        processingScope = CoroutineScope(Dispatchers.IO)
 
         screenRecorder.apply {
             startProjection(context, resultCode, data) {
