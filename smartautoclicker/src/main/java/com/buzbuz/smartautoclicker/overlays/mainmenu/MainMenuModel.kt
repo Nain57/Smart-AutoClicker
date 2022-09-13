@@ -18,25 +18,18 @@ package com.buzbuz.smartautoclicker.overlays.mainmenu
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
-import com.buzbuz.smartautoclicker.overlays.debugging.formatConfidenceRate
+import com.buzbuz.smartautoclicker.engine.DetectorState
 import com.buzbuz.smartautoclicker.overlays.utils.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugViewEnabled
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.sample
 
 /**
  * View model for the [MainMenu].
@@ -51,20 +44,21 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
     /** The repository for the scenarios. */
     private var repository: Repository? = Repository.getRepository(context)
     /** The current of the detection. */
-    val detectionState: Flow<Boolean> = detectorEngine.isDetecting
+    val detectionState: Flow<Boolean> = detectorEngine.state
+        .map { it == DetectorState.DETECTING }
     /** The current list of event in the detector engine. */
     val eventList: Flow<List<Event>?> = detectorEngine.scenarioEvents
 
     /** Start/Stop the detection. */
     fun toggleDetection() {
         detectorEngine.apply {
-            if (isDetecting.value) {
-                stopDetection()
-            } else {
-                startDetection(
+            when (state.value) {
+                DetectorState.DETECTING -> stopDetection()
+                DetectorState.RECORDING -> startDetection(
                     sharedPreferences.getIsDebugViewEnabled(context),
                     sharedPreferences.getIsDebugReportEnabled(context),
                 )
+                else -> { /* Nothing to do */ }
             }
         }
     }
