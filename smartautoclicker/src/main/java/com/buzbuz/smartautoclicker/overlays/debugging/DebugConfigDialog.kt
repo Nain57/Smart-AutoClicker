@@ -61,17 +61,13 @@ class DebugConfigDialog(context: Context): OverlayDialogController(context) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel?.isDebugViewEnabled?.collect { debugViewEnabled ->
-                        viewBinding.debugViewToggle.setRightCompoundDrawable(
-                            getEnableStateDrawableId(debugViewEnabled)
-                        )
+                       viewBinding.debugViewToggle.isChecked = debugViewEnabled
                     }
                 }
 
                 launch {
                     viewModel?.isDebugReportEnabled?.collect { debugReportEnabled ->
-                        viewBinding.debugReportToggle.setRightCompoundDrawable(
-                            getEnableStateDrawableId(debugReportEnabled)
-                        )
+                        viewBinding.debugReportToggle.isChecked = debugReportEnabled
                     }
                 }
             }
@@ -82,8 +78,4 @@ class DebugConfigDialog(context: Context): OverlayDialogController(context) {
         super.onDialogDismissed()
         viewModel = null
     }
-
-    private fun getEnableStateDrawableId(isEnabled: Boolean) =
-        if (isEnabled) R.drawable.ic_confirm
-        else R.drawable.ic_cancel
 }

@@ -17,14 +17,13 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_vertical_default"
     android:layout_marginBottom="@dimen/margin_vertical_default"
     android:orientation="vertical">
 
-    <TextView
+    <CheckedTextView
         android:id="@+id/debug_view_toggle"
         style="@style/ItemView.Small"
         android:paddingStart="@dimen/margin_horizontal_default"
@@ -32,12 +31,12 @@
         android:gravity="center_vertical"
         android:text="@string/dialog_debug_config_show_view"
         android:textSize="@dimen/text_size_list_item_text"
-        android:drawablePadding="@dimen/margin_horizontal_small"
-        tools:drawableEnd="@drawable/ic_confirm"/>
+        android:background="@android:color/transparent"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"/>
 
     <include layout="@layout/include_view_separator"/>
 
-    <TextView
+    <CheckedTextView
         android:id="@+id/debug_report_toggle"
         style="@style/ItemView.Small"
         android:paddingStart="@dimen/margin_horizontal_default"
@@ -45,8 +44,8 @@
         android:gravity="center_vertical"
         android:text="@string/dialog_debug_config_generate_report"
         android:textSize="@dimen/text_size_list_item_text"
-        android:drawablePadding="@dimen/margin_horizontal_small"
-        tools:drawableEnd="@drawable/ic_confirm"/>
+        android:background="@android:color/transparent"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"/>
 
     <include layout="@layout/include_view_separator"/>
 
