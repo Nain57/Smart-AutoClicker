@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugViewEnabled
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /**
@@ -46,6 +47,7 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
     /** The current of the detection. */
     val detectionState: Flow<Boolean> = detectorEngine.state
         .map { it == DetectorState.DETECTING }
+        .distinctUntilChanged()
     /** The current list of event in the detector engine. */
     val eventList: Flow<List<Event>?> = detectorEngine.scenarioEvents
 
