@@ -417,10 +417,19 @@ class DetectorEngine(context: Context) {
     }
 }
 
+/** The different states of the [DetectorEngine]. */
 enum class DetectorState {
+    /** The engine is created and ready to be used. */
     CREATED,
+    /**
+     * The engine is transitioning between two states.
+     * During this state, all call to the engine will be ignored.
+     */
     TRANSITIONING,
+    /** The screen is being recorded. */
     RECORDING,
+    /** The screen is being recorded and the detection is running. */
     DETECTING,
+    /** The engine is destroyed and can no longer be used. */
     DESTROYED,
 }
