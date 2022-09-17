@@ -44,9 +44,9 @@ ext {
     compileSdkVersion = 33
     minSdkVersion = 24
 
-    androidxAppCompatVersion = '1.5.0'
+    androidxAppCompatVersion = '1.5.1'
     androidxAnnotationVersion = '1.4.0'
-    androidxCoreVersion = '1.8.0'
+    androidxCoreVersion = '1.9.0'
     androidxLifecycleVersion = '2.5.1'
     androidxLifecycleExtensionVersion = '2.2.0'
     androidxRecyclerViewVersion = '1.2.1'
