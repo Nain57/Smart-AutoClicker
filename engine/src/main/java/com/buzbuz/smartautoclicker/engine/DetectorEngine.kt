@@ -280,10 +280,12 @@ class DetectorEngine(context: Context) {
 
         processingJob = processingScope?.launch {
             imageDetector = NativeDetector()
+
+            val shouldDebug = debugInstantData || debugReport
             _debugEngine.value =
-                if ( _isDebugging.value) DebugEngine(debugInstantData, debugReport, _scenario.value!!, scenarioEvents.value)
+                if (shouldDebug) DebugEngine(debugInstantData, debugReport, _scenario.value!!, scenarioEvents.value)
                 else null
-            _isDebugging.emit(debugInstantData || debugReport)
+            _isDebugging.emit(shouldDebug)
 
             scenarioProcessor = ScenarioProcessor(
                 imageDetector = imageDetector!!,
