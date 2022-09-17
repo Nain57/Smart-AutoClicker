@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
+import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
 import android.view.View
@@ -60,6 +61,8 @@ class ConditionSelectorView(
     /** Controls the animations. */
     private lateinit var animations: Animations
 
+    /** Tells if the view have ignored a touch event due to a animation running or being hidden. */
+    private var haveTouchEventIgnored = false
     /** Tells if the selector is at a valid position relatively to the capture position. */
     private var isSelectorValid = false
     /** Used during selector validation. kept here to avoid instantiation at each touch event. */
@@ -172,8 +175,14 @@ class ConditionSelectorView(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null || animations.isShowSelectorAnimationRunning()) {
+        if (event == null || hide || animations.isShowSelectorAnimationRunning()) {
+            haveTouchEventIgnored = true
             return false
+        }
+
+        if (haveTouchEventIgnored) {
+            event.action = ACTION_DOWN
+            haveTouchEventIgnored = false
         }
 
         selector.currentGesture?.let { gestureType ->
