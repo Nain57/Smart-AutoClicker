@@ -31,6 +31,8 @@
     <string name="dialog_permission_overlay_desc">允许该应用显示在其他应用的上层以得知您点按的位置</string>
     <string name="dialog_permission_accessibility">无障碍服务</string>
     <string name="dialog_permission_accessibility_desc">通过”无障碍“服务模拟点击某个位置。</string>
+    <string name="dialog_permission_notification">Notification</string>
+    <string name="dialog_permission_notification_desc">Optional: Shows the notification while the application is running.</string>
 
     <string name="notification_channel_name" translatable="false">智能点击器</string>
     <string name="notification_title">脚本: %1$s</string>

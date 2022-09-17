@@ -22,6 +22,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Needed to display the overlay_menu over other apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <!-- Needed to prompt the permission request at the right time -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <!-- Needed to get the list of applications to start when creating an intent action.-->
     <queries>

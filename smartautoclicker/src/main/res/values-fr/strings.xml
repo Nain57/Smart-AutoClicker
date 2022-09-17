@@ -33,6 +33,8 @@
     <string name="dialog_permission_accessibility">Service d\'accessibilité</string>
     <string name="dialog_permission_accessibility_desc">Le service d\'accessibilité permet à cette application de
                                                         cliquer pour vous sur les autres applications.</string>
+    <string name="dialog_permission_notification">Notification</string>
+    <string name="dialog_permission_notification_desc">Optionnel: Affiche une notification pendant que l\'application est lancée.</string>
     <string name="notification_title">Scenario : %1$s</string>
     <string name="notification_message">Appuyez pour changer le scenario</string>
     <string name="dialog_add_scenario_title">Nouveau scenario</string>

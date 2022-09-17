@@ -34,6 +34,8 @@
     <string name="dialog_permission_accessibility">Accessibility service</string>
     <string name="dialog_permission_accessibility_desc">The accessibility service allows this application to click on
                                                         other apps for you.</string>
+    <string name="dialog_permission_notification">Notification</string>
+    <string name="dialog_permission_notification_desc">Optional: Shows the notification while the application is running.</string>
 
     <string name="notification_channel_name" translatable="false">Smart AutoClicker</string>
     <string name="notification_title">Scenario: %1$s</string>

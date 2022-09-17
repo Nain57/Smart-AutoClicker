@@ -17,11 +17,13 @@
 package com.buzbuz.smartautoclicker.activity
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.provider.Settings
-import androidx.annotation.IntRange
 
+import androidx.annotation.IntRange
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -119,8 +121,16 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
             emptyList()
         )
 
+    /** The Android notification manager. Initialized only if needed.*/
+    private val notificationManager: NotificationManager?
+
     init {
         SmartAutoClickerService.getLocalService(serviceConnection)
+
+        notificationManager =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                application.getSystemService(NotificationManager::class.java)
+            else null
     }
 
     override fun onCleared() {
@@ -144,10 +154,14 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
 
     /**
      * Tells if all application permission are granted.
+     * This only concerns the mandatory permissions.
      *
      * @return true if they are all granted, false if at least one is not.
      */
     fun arePermissionsGranted(): Boolean = isOverlayPermissionValid() && isAccessibilityPermissionValid()
+
+    /** Tells if the optional notification permission is granted or not. */
+    fun isNotificationPermissionGranted(): Boolean = notificationManager?.areNotificationsEnabled() ?: true
 
     /**
      * Create a new click scenario.
