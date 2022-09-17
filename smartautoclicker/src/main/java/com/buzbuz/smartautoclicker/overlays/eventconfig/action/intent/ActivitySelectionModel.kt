@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 
 import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
+import com.buzbuz.smartautoclicker.extensions.queryIntentActivitiesCompat
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -33,7 +34,7 @@ class ActivitySelectionModel(context: Context) : OverlayViewModel(context) {
 
     /** Retrieves the list of activities visible on the Android launcher. */
     val activities = flow {
-        val resolveInfoList = context.packageManager.queryIntentActivities(
+        val resolveInfoList = context.packageManager.queryIntentActivitiesCompat(
             Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
             0,
         )

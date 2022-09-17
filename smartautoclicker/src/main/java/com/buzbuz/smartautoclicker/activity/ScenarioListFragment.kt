@@ -147,12 +147,12 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 }
             })
             addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-                override fun onViewDetachedFromWindow(arg0: View?) {
+                override fun onViewDetachedFromWindow(arg0: View) {
                     scenarioViewModel.updateSearchQuery(null)
                     scenarioViewModel.setMenuState(MenuState.SELECTION)
                 }
 
-                override fun onViewAttachedToWindow(arg0: View?) {}
+                override fun onViewAttachedToWindow(arg0: View) {}
             })
         }
 

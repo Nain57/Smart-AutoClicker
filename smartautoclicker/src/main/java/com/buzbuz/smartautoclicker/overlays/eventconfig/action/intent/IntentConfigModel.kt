@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable
 
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.IntentExtra
+import com.buzbuz.smartautoclicker.extensions.resolveActivityCompat
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionModel
 
 import kotlinx.coroutines.CoroutineScope
@@ -113,7 +114,7 @@ class IntentConfigModel(
         .map { intent ->
             if (intent.componentName == null) return@map null
 
-            packageManager.resolveActivity(Intent(intent.intentAction).setComponent(intent.componentName!!), 0)
+            packageManager.resolveActivityCompat(Intent(intent.intentAction).setComponent(intent.componentName!!), 0)
                 ?.getActivityDisplayInfo(packageManager)
         }
 

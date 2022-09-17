@@ -57,11 +57,11 @@ internal class Selector(
     /** Listener for the [gestureDetector] handling the move/resize gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
 
-        override fun onDown(e: MotionEvent?): Boolean {
-            return e?.let { onNewDownEvent(e.x, e.y) } ?: false
+        override fun onDown(e: MotionEvent): Boolean {
+            return onNewDownEvent(e.x, e.y)
         }
 
-        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+        override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             if (currentGesture == null) return false
             onTranslateSelector(-distanceX, -distanceY)
             return true

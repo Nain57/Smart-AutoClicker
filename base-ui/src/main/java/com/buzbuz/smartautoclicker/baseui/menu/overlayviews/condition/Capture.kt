@@ -52,7 +52,7 @@ internal class Capture(
 
     /** Listener for the [gestureDetector] handling the move gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+        override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             translateCapture(-distanceX, -distanceY)
             return true
         }
@@ -66,9 +66,7 @@ internal class Capture(
         /** Focus position of the gesture to be used as scaling pivot. */
         private val scaleFocus = PointF()
 
-        override fun onScale(scaleGestureDetector: ScaleGestureDetector?): Boolean {
-            scaleGestureDetector?: return false
-
+        override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
             scaleFocus.apply {
                 x = scaleGestureDetector.focusX
                 y = scaleGestureDetector.focusY
