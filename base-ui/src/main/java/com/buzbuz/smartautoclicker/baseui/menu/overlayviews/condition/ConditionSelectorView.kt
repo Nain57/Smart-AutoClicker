@@ -175,16 +175,11 @@ class ConditionSelectorView(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null || hide || animations.isShowSelectorAnimationRunning()) {
-            haveTouchEventIgnored = true
+        if (event == null || hide) {
             return false
         }
 
-        if (haveTouchEventIgnored) {
-            event.action = ACTION_DOWN
-            haveTouchEventIgnored = false
-        }
-
+        // Refresh the hints depending on the last gesture detected for the selector
         selector.currentGesture?.let { gestureType ->
             hintsIcons.show(gestureType)
             animations.cancelHideHintsAnimation()
@@ -194,7 +189,22 @@ class ConditionSelectorView(
             }
         }
 
-        return selector.onTouchEvent(event) || capture.onTouchEvent(event)
+        // If the selector consume the event, return now
+        if (selector.onTouchEvent(event)) return true
+
+        // The event is on the capture and it's animating, ignore the event.
+        if (animations.isShowSelectorAnimationRunning()) {
+            haveTouchEventIgnored = true
+            return false
+        }
+
+        // An event was ignored, force this first event to down
+        if (haveTouchEventIgnored) {
+            event.action = ACTION_DOWN
+            haveTouchEventIgnored = false
+        }
+
+        return capture.onTouchEvent(event)
     }
 
     override fun onDraw(canvas: Canvas) {
