@@ -205,6 +205,7 @@ class DetectorEngine(context: Context) {
 
         this.androidExecutor = androidExecutor
         processingScope = CoroutineScope(Dispatchers.IO)
+        screenMetrics.registerOrientationListener(::onOrientationChanged)
 
         screenRecorder.apply {
             startProjection(context, resultCode, data) {
@@ -276,7 +277,6 @@ class DetectorEngine(context: Context) {
         _state.value = DetectorState.TRANSITIONING
 
         Log.i(TAG, "startDetection")
-        screenMetrics.registerOrientationListener(::onOrientationChanged)
 
         processingJob = processingScope?.launch {
             imageDetector = NativeDetector()
@@ -309,6 +309,32 @@ class DetectorEngine(context: Context) {
     }
 
     /**
+     * Called when the orientation of the screen changes.
+     * As we now have different screen metrics, we need to stop and start the virtual display with the correct one.
+     *
+     * @param context the Android context.
+     */
+    private fun onOrientationChanged(context: Context) {
+        if (_state.value != DetectorState.DETECTING && _state.value != DetectorState.RECORDING) return
+
+        processingScope?.launch {
+            if (_state.value == DetectorState.DETECTING) {
+                processingJob?.cancelAndJoin()
+            }
+
+            screenRecorder.stopScreenRecord()
+            _debugEngine.value?.cancelCurrentProcessing()
+            screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
+
+            if (_state.value == DetectorState.DETECTING) {
+                processingJob = processingScope?.launch {
+                    processScreenImages()
+                }
+            }
+        }
+    }
+
+    /**
      * Stop the screen detection started with [startDetection].
      *
      * After a call to this method, the events provided in the start method will no longer be checked on the current
@@ -325,7 +351,6 @@ class DetectorEngine(context: Context) {
         processingShutdownJob = processingScope?.launch {
             Log.i(TAG, "stopDetection")
 
-            screenMetrics.unregisterOrientationListener()
             processingJob?.cancelAndJoin()
             processingJob = null
             imageDetector?.close()
@@ -358,6 +383,7 @@ class DetectorEngine(context: Context) {
         Log.i(TAG, "stopScreenRecord")
         _state.value = DetectorState.TRANSITIONING
 
+        screenMetrics.unregisterOrientationListener()
         processingScope?.launch {
             processingShutdownJob?.join()
 
@@ -366,28 +392,6 @@ class DetectorEngine(context: Context) {
 
             processingScope?.cancel()
             processingScope = null
-        }
-    }
-
-    /**
-     * Called when the orientation of the screen changes.
-     * As we now have different screen metrics, we need to stop and start the virtual display with the correct one.
-     *
-     * @param context the Android context.
-     */
-    private fun onOrientationChanged(context: Context) {
-        if (_state.value != DetectorState.DETECTING) return
-
-        processingScope?.launch {
-            processingJob?.cancelAndJoin()
-
-            screenRecorder.stopScreenRecord()
-            _debugEngine.value?.cancelCurrentProcessing()
-            screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
-
-            processingJob = processingScope?.launch {
-                processScreenImages()
-            }
         }
     }
 
