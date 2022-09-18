@@ -64,6 +64,11 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     // Get the condition image information from the android bitmap format, and scale it to the processing size
     scale(*bitmapRGBA888ToMat(env, conditionImage), *currentCondition, scaleRatio);
 
+    // If the condition is bigger than the screen image, it can't match.
+    if (currentCondition->rows >= currentImageScaled->rows || currentCondition->cols >= currentImageScaled->cols) {
+        return detectionResult;
+    }
+
     // Get the matching results for the whole screen
     auto matchingResults = matchTemplate(*currentImageScaled, *currentCondition);
 

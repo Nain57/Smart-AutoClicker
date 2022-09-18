@@ -376,7 +376,7 @@ class DetectorEngine(context: Context) {
      * @param context the Android context.
      */
     private fun onOrientationChanged(context: Context) {
-        if (_state.value == DetectorState.DETECTING) return
+        if (_state.value != DetectorState.DETECTING) return
 
         processingScope?.launch {
             processingJob?.cancelAndJoin()
@@ -386,7 +386,6 @@ class DetectorEngine(context: Context) {
             screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
 
             processingJob = processingScope?.launch {
-                scenarioProcessor?.invalidateScreenMetrics()
                 processScreenImages()
             }
         }
@@ -396,6 +395,7 @@ class DetectorEngine(context: Context) {
     private suspend fun processScreenImages() {
         _state.emit(DetectorState.DETECTING)
 
+        scenarioProcessor?.invalidateScreenMetrics()
         while (processingJob?.isActive == true) {
             screenRecorder.acquireLatestImage()?.use { image ->
                 scenarioProcessor?.process(image)
