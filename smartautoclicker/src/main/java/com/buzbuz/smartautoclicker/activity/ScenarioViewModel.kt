@@ -182,9 +182,8 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * @param name the new name of the scenario
      */
     fun renameScenario(scenario: Scenario, name: String) {
-        scenario.name = name
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateScenario(scenario)
+            repository.updateScenario(scenario.copy(name = name))
         }
     }
 
