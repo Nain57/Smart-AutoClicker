@@ -99,7 +99,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         super.onCreate()
 
         // Ensure the debug view state is correct
-        getMenuItemView<View>(R.id.layout_debug)?.visibility = View.GONE
+        viewBinding.layoutDebug.visibility = View.GONE
         setOverlayViewVisibility(View.GONE)
 
         lifecycleScope.launch {
@@ -154,33 +154,30 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
      * Refresh the play menu item according to the event count.
      */
     private fun onEventListChanged(events: List<Event>?) =
-        setMenuItemViewEnabled(R.id.btn_play, !events.isNullOrEmpty())
+        setMenuItemViewEnabled(viewBinding.btnPlay, !events.isNullOrEmpty())
 
     /** Change the UI state to detecting. */
     private fun toDetectingState() {
         animateLayoutChanges {
-            setMenuItemViewEnabled(R.id.btn_click_list, false)
-            setMenuItemViewDrawable(R.id.btn_play, playToPauseDrawable)
-            setMenuItemVisibility(R.id.btn_stop, false)
-            setMenuItemVisibility(R.id.btn_click_list, false)
+            viewBinding.btnPlay.setImageDrawable(playToPauseDrawable)
+            setMenuItemVisibility(viewBinding.btnStop, false)
+            setMenuItemVisibility(viewBinding.btnClickList, false)
             playToPauseDrawable.start()
         }
     }
 
     /** Change the UI state to idle. */
     private fun toIdleState() {
-        setMenuItemViewEnabled(R.id.btn_click_list, true)
-
         if (isFirstStateUpdate) {
-            setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_play_arrow)
+            viewBinding.btnPlay.setImageResource(R.drawable.ic_play_arrow)
             isFirstStateUpdate = false
             return
         }
 
         animateLayoutChanges {
-            setMenuItemViewDrawable(R.id.btn_play, pauseToPlayDrawable)
-            setMenuItemVisibility(R.id.btn_stop, true)
-            setMenuItemVisibility(R.id.btn_click_list, true)
+            viewBinding.btnPlay.setImageDrawable(pauseToPlayDrawable)
+            setMenuItemVisibility(viewBinding.btnStop, true)
+            setMenuItemVisibility(viewBinding.btnClickList, true)
             pauseToPlayDrawable.start()
         }
     }

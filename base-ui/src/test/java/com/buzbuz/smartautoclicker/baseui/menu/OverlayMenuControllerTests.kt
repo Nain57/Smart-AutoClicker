@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,7 +23,6 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Point
-import android.graphics.drawable.Drawable
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.view.Display
@@ -35,7 +34,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -87,14 +85,8 @@ class OverlayMenuControllerTests {
             super.onStart()
             impl.onShow()
         }
-        fun publicSetMenuItemViewEnabled(@IdRes viewId: Int, enabled: Boolean, clickable: Boolean = false) {
-            setMenuItemViewEnabled(viewId, enabled, clickable)
-        }
-        fun publicSetMenuItemViewImageResource(@IdRes viewId: Int, @DrawableRes imageId: Int) {
-            setMenuItemViewImageResource(viewId, imageId)
-        }
-        fun publicSetMenuItemViewDrawable(@IdRes viewId: Int, drawable: Drawable) {
-            setMenuItemViewDrawable(viewId, drawable)
+        fun publicSetMenuItemViewEnabled(view: View, enabled: Boolean, clickable: Boolean = false) {
+            setMenuItemViewEnabled(view, enabled, clickable)
         }
     }
 
@@ -424,15 +416,14 @@ class OverlayMenuControllerTests {
     @Test
     fun setMenuItemDisabledNotClickable() {
         overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
-        val itemId = 42
-        val item = createMockMenuItemView(itemId)
+        val item = createMockMenuItemView(42)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             item,
         )))
         overlayMenuController.create()
 
-        overlayMenuController.publicSetMenuItemViewEnabled(itemId, false, false)
+        overlayMenuController.publicSetMenuItemViewEnabled(item, false, false)
 
         verify(item).isEnabled = false
         verify(item).alpha = TEST_DATA_DISABLED_ALPHA
@@ -441,15 +432,14 @@ class OverlayMenuControllerTests {
     @Test
     fun setMenuItemDisabledClickable() {
         overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
-        val itemId = 42
-        val item = createMockMenuItemView(itemId)
+        val item = createMockMenuItemView(42)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             item,
         )))
         overlayMenuController.create()
 
-        overlayMenuController.publicSetMenuItemViewEnabled(itemId, false, true)
+        overlayMenuController.publicSetMenuItemViewEnabled(item, false, true)
 
         verify(item).isEnabled = true
         verify(item).alpha = TEST_DATA_DISABLED_ALPHA
@@ -458,52 +448,17 @@ class OverlayMenuControllerTests {
     @Test
     fun setMenuItemEnabled() {
         overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
-        val itemId = 42
-        val item = createMockMenuItemView(itemId)
+        val item = createMockMenuItemView(51)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             item,
         )))
         overlayMenuController.create()
 
-        overlayMenuController.publicSetMenuItemViewEnabled(itemId, true)
+        overlayMenuController.publicSetMenuItemViewEnabled(item, true)
 
         verify(item).isEnabled = true
         verify(item).alpha = 1f
-    }
-
-    @Test
-    fun setItemImageDrawable() {
-        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
-        val itemId = 42
-        val item = createMockMenuItemView(itemId)
-        mockViewsFromImpl(createMockMenuView(sequenceOf(
-            createMockMenuItemView(),
-            item,
-        )))
-        overlayMenuController.create()
-
-        val drawable = mock(Drawable::class.java)
-        overlayMenuController.publicSetMenuItemViewDrawable(itemId, drawable)
-
-        verify(item).setImageDrawable(drawable)
-    }
-
-    @Test
-    fun setItemImageResource() {
-        overlayMenuController = OverlayMenuControllerTestImpl(mockContext, overlayMenuControllerImpl)
-        val itemId = 42
-        val item = createMockMenuItemView(itemId)
-        mockViewsFromImpl(createMockMenuView(sequenceOf(
-            createMockMenuItemView(),
-            item,
-        )))
-        overlayMenuController.create()
-
-        val drawableId = 51
-        overlayMenuController.publicSetMenuItemViewImageResource(itemId, drawableId)
-
-        verify(item).setImageResource(drawableId)
     }
 
     @Test
