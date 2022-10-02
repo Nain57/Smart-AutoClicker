@@ -30,6 +30,7 @@ import androidx.annotation.IntDef
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.menu.OverlayMenuController
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ConditionSelectorView
+import com.buzbuz.smartautoclicker.databinding.OverlayValidationMenuBinding
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 
 /**
@@ -60,6 +61,8 @@ class ConditionSelectorMenu(
         private const val ADJUST = 3
     }
 
+    /** The view binding for the overlay menu. */
+    private lateinit var viewBinding: OverlayValidationMenuBinding
     /** The view displaying the screenshot and the selector for the capture. */
     private val selectorView = ConditionSelectorView(context, screenMetrics, ::onSelectorValidityChanged)
 
@@ -70,7 +73,7 @@ class ConditionSelectorMenu(
             field = value
             when (value) {
                 SELECTION -> {
-                    setMenuItemViewImageResource(R.id.btn_confirm, R.drawable.ic_screenshot)
+                    viewBinding.btnConfirm.setImageResource(R.drawable.ic_screenshot)
                     setMenuVisibility(View.VISIBLE)
                     setOverlayViewVisibility(View.GONE)
                     selectorView.hide = true
@@ -81,15 +84,17 @@ class ConditionSelectorMenu(
                     selectorView.hide = true
                 }
                 ADJUST -> {
-                    setMenuItemViewImageResource(R.id.btn_confirm, R.drawable.ic_confirm)
+                    viewBinding.btnConfirm.setImageResource(R.drawable.ic_confirm)
                     setMenuVisibility(View.VISIBLE)
                     selectorView.hide = false
                 }
             }
         }
 
-    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
-        layoutInflater.inflate(R.layout.overlay_validation_menu, null) as ViewGroup
+    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
+        viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
+        return viewBinding.root
+    }
 
     override fun onCreateOverlayView(): View = selectorView
 
@@ -112,7 +117,7 @@ class ConditionSelectorMenu(
      * @param isValid validity of the selector.
      */
     private fun onSelectorValidityChanged(isValid: Boolean) {
-        setMenuItemViewEnabled(R.id.btn_confirm, isValid, isValid)
+        setMenuItemViewEnabled(viewBinding.btnConfirm, isValid, isValid)
     }
 
     /**

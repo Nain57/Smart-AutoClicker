@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.PixelFormat
-import android.graphics.drawable.Drawable
 import android.util.Size
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
@@ -29,15 +28,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.ImageView
 
 import androidx.annotation.CallSuper
-import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.forEach
-import com.buzbuz.smartautoclicker.baseui.OverlayController
 
+import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
@@ -108,6 +105,10 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     private lateinit var menuLayout: ViewGroup
     /** Handles the window size computing when animating a resize of the overlay. */
     private lateinit var resizeController: OverlayWindowResizeController
+    /** The hide overlay button, if provided. */
+    private var hideOverlayButton: View? = null
+    /** The move button, if provided. */
+    private var moveButton: View? = null
 
     /**
      * The view to be displayed between the current activity and the overlay menu.
@@ -174,8 +175,12 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         buttonsContainer.forEach { view ->
             @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
             when (view.id) {
-                R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
+                R.id.btn_move -> {
+                    moveButton = view
+                    view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
+                }
                 R.id.btn_hide_overlay -> {
+                    hideOverlayButton = view
                     haveHideButton = true
                     view.setOnClickListener { onHideOverlayClicked() }
                 }
@@ -213,7 +218,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
             windowManager.addView(it, overlayLayoutParams)
         }
         windowManager.addView(menuLayout, menuLayoutParams)
-        setMenuItemViewEnabled(R.id.btn_hide_overlay, false , true)
+        hideOverlayButton?.let { setMenuItemViewEnabled(it, false , true) }
     }
 
     @CallSuper
@@ -260,41 +265,27 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     }
 
     /**
-     * Change the overlay view visibility, allowing the user the click on the Activity bellow the overlays.
-     * Updates the hide button state, if any.
-     *
-     * @param newVisibility the new visibility to apply.
-     */
-    protected fun setOverlayViewVisibility(newVisibility: Int) {
-        screenOverlayView?.apply {
-            visibility = newVisibility
-            if (haveHideButton) {
-                setMenuItemViewEnabled(R.id.btn_hide_overlay, visibility == View.VISIBLE , true)
-            }
-        }
-    }
-
-    /**
      * Set the enabled state of a menu item.
      *
-     * @param viewId the view identifier of the menu item to change the state of.
+     * @param view the view of the menu item to change the state of.
      * @param enabled true to enable the view, false to disable it.
      * @param clickable true to keep the view clickable, false to ignore all clicks on the view. False by default.
      */
-    protected fun setMenuItemViewEnabled(@IdRes viewId: Int, enabled: Boolean, clickable: Boolean = false) {
-        menuLayout.findViewById<View>(viewId)?.apply {
+    protected fun setMenuItemViewEnabled(view: View, enabled: Boolean, clickable: Boolean = false) {
+        view.apply {
             isEnabled = enabled || clickable
             alpha = if (enabled) 1.0f else disabledItemAlpha
         }
     }
 
     /**
+     * Set the visibility of a menu item.
      *
+     * @param view the view of the menu item to change the visibility of.
+     * @param visible true for visible, false for gone.
      */
-    protected fun setMenuItemVisibility(@IdRes viewId: Int, visible: Boolean) {
-        menuLayout.findViewById<View>(viewId)?.apply {
-            visibility = if (visible) View.VISIBLE else View.GONE
-        }
+    protected fun setMenuItemVisibility(view: View, visible: Boolean) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     /**
@@ -309,28 +300,9 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     }
 
     /**
-     * Set the drawable resource of a menu item.
-     *
-     * @param viewId the view identifier of the menu item to change the drawable of.
-     * @param imageId the identifier of the new drawable.
+     * Handle the click on the hide overlay button.
+     * Toggle the visible state of the overlay view.
      */
-    protected fun setMenuItemViewImageResource(@IdRes viewId: Int, @DrawableRes imageId: Int) {
-        (menuLayout.findViewById<View>(viewId) as ImageView).setImageResource(imageId)
-    }
-
-    /**
-     * Set the drawable of a menu item.
-     *
-     * @param viewId the view identifier of the menu item to change the drawable of.
-     * @param drawable the new drawable.
-     */
-    protected fun setMenuItemViewDrawable(@IdRes viewId: Int, drawable: Drawable) {
-        (menuLayout.findViewById<View>(viewId) as ImageView).setImageDrawable(drawable)
-    }
-
-    /** */
-    protected fun <T: View> getMenuItemView(@IdRes viewId: Int): T? = menuLayout.findViewById(viewId)
-
     private fun onHideOverlayClicked() {
         if (resizeController.isAnimating) return
 
@@ -339,6 +311,23 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
                 setOverlayViewVisibility(View.GONE)
             } else {
                 setOverlayViewVisibility(View.VISIBLE)
+            }
+        }
+    }
+
+    /**
+     * Change the overlay view visibility, allowing the user the click on the Activity bellow the overlays.
+     * Updates the hide button state, if any.
+     *
+     * @param newVisibility the new visibility to apply.
+     */
+    protected fun setOverlayViewVisibility(newVisibility: Int) {
+        screenOverlayView?.apply {
+            visibility = newVisibility
+            if (haveHideButton) {
+                hideOverlayButton?.let {
+                    setMenuItemViewEnabled(it, visibility == View.VISIBLE , true)
+                }
             }
         }
     }

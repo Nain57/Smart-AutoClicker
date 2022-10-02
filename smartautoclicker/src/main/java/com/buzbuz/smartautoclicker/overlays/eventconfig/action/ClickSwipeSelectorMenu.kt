@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.ClickSelectorView
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.FIRST
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.SECOND
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.SelectionIndex
+import com.buzbuz.smartautoclicker.databinding.OverlayValidationMenuBinding
 
 /**
  * [OverlayMenuController] implementation for displaying the click area selection menu and its overlay view.
@@ -48,16 +49,21 @@ class ClickSwipeSelectorMenu(
     private val onCoordinatesSelected: (CoordinatesSelector) -> Unit
 ) : OverlayMenuController(context) {
 
+    /** The view binding for the overlay menu. */
+    private lateinit var viewBinding: OverlayValidationMenuBinding
+
     /** The view model for this dialog. */
     @SuppressLint("ClickableViewAccessibility")
     private val selectorView = ClickSelectorView(context).apply {
         onTouchListener = {
-            setMenuItemViewEnabled(R.id.btn_confirm, true, true)
+            setMenuItemViewEnabled(viewBinding.btnConfirm, true, true)
         }
     }
 
-    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
-        layoutInflater.inflate(R.layout.overlay_validation_menu, null) as ViewGroup
+    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
+        viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
+        return viewBinding.root
+    }
 
     override fun onCreateOverlayView(): ClickSelectorView = selectorView
 
@@ -79,7 +85,7 @@ class ClickSwipeSelectorMenu(
      */
     private fun toSelectionStep(@SelectionIndex step: Int) {
         selectorView.toSelectionStep(step)
-        setMenuItemViewEnabled(R.id.btn_confirm, false)
+        setMenuItemViewEnabled(viewBinding.btnConfirm, false)
 
         val toastStringId = when {
             step == FIRST && selector is CoordinatesSelector.One -> R.string.toast_configure_single_click
