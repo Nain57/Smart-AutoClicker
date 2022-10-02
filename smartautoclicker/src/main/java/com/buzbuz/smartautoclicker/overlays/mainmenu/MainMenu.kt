@@ -17,12 +17,12 @@
 package com.buzbuz.smartautoclicker.overlays.mainmenu
 
 import android.content.Context
+import android.util.Size
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
 import android.view.WindowManager
-import android.widget.TextView
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,11 +31,12 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.menu.OverlayMenuController
+import com.buzbuz.smartautoclicker.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugModel
-import com.buzbuz.smartautoclicker.overlays.debugging.DebugReportDialog
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugOverlayView
+import com.buzbuz.smartautoclicker.overlays.debugging.DebugReportDialog
 import com.buzbuz.smartautoclicker.overlays.eventlist.EventListDialog
 
 import kotlinx.coroutines.Job
@@ -76,8 +77,13 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
 
-    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
-        layoutInflater.inflate(R.layout.overlay_menu, null) as ViewGroup
+    /** View binding for the content of the overlay. */
+    private lateinit var viewBinding: OverlayMenuBinding
+
+    override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
+        viewBinding = OverlayMenuBinding.inflate(layoutInflater)
+        return viewBinding.root
+    }
 
     override fun onCreateOverlayView(): DebugOverlayView = DebugOverlayView(context)
 
@@ -99,7 +105,12 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel?.eventList?.collect { onEventListChanged(it) } }
-                launch { viewModel?.detectionState?.collect { onDetectionStateChanged(it) } }
+
+                launch {
+                    viewModel?.detectionState?.collect { isDetecting ->
+                        if (isDetecting) toDetectingState() else toIdleState()
+                    }
+                }
 
                 launch {
                     debuggingViewModel?.isDebugging?.collect { isDebugging ->
@@ -130,6 +141,14 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         }
     }
 
+    override fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
+        val bgSize = super.getWindowMaximumSize(backgroundView)
+        return Size(
+            bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_panel_width),
+            bgSize.height,
+        )
+    }
+
     /**
      * Handles changes on the event list.
      * Refresh the play menu item according to the event count.
@@ -137,31 +156,32 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     private fun onEventListChanged(events: List<Event>?) =
         setMenuItemViewEnabled(R.id.btn_play, !events.isNullOrEmpty())
 
-    /**
-     * Handles the changes in the detection state.
-     * Animate the detection icon according to the new state if that's not the first start.
-     *
-     * @param enabled true if we are detecting, false if not.
-     */
-    private fun onDetectionStateChanged(enabled: Boolean) {
-        if (enabled) {
+    /** Change the UI state to detecting. */
+    private fun toDetectingState() {
+        animateLayoutChanges {
             setMenuItemViewEnabled(R.id.btn_click_list, false)
-            if (isFirstStateUpdate) {
-                setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_pause)
-                isFirstStateUpdate = false
-            } else {
-                setMenuItemViewDrawable(R.id.btn_play, playToPauseDrawable)
-                playToPauseDrawable.start()
-            }
-        } else {
-            setMenuItemViewEnabled(R.id.btn_click_list, true)
-            if (isFirstStateUpdate) {
-                setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_play_arrow)
-                isFirstStateUpdate = false
-            } else {
-                setMenuItemViewDrawable(R.id.btn_play, pauseToPlayDrawable)
-                pauseToPlayDrawable.start()
-            }
+            setMenuItemViewDrawable(R.id.btn_play, playToPauseDrawable)
+            setMenuItemVisibility(R.id.btn_stop, false)
+            setMenuItemVisibility(R.id.btn_click_list, false)
+            playToPauseDrawable.start()
+        }
+    }
+
+    /** Change the UI state to idle. */
+    private fun toIdleState() {
+        setMenuItemViewEnabled(R.id.btn_click_list, true)
+
+        if (isFirstStateUpdate) {
+            setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_play_arrow)
+            isFirstStateUpdate = false
+            return
+        }
+
+        animateLayoutChanges {
+            setMenuItemViewDrawable(R.id.btn_play, pauseToPlayDrawable)
+            setMenuItemVisibility(R.id.btn_stop, true)
+            setMenuItemVisibility(R.id.btn_click_list, true)
+            pauseToPlayDrawable.start()
         }
     }
 
@@ -171,7 +191,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
      */
     private fun setDebugOverlayViewVisibility(isVisible: Boolean) {
         if (isVisible && debugObservableJob == null) {
-            getMenuItemView<View>(R.id.layout_debug)?.visibility = View.VISIBLE
+            viewBinding.layoutDebug.visibility = View.VISIBLE
             setOverlayViewVisibility(View.VISIBLE)
             debugObservableJob = observeDebugValues()
 
@@ -179,7 +199,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
             debugObservableJob?.cancel()
             debugObservableJob = null
 
-            getMenuItemView<View>(R.id.layout_debug)?.visibility = View.GONE
+            viewBinding.layoutDebug.visibility = View.GONE
             setOverlayViewVisibility(View.GONE)
             (screenOverlayView as DebugOverlayView).clear()
         }
@@ -193,21 +213,15 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
                 debuggingViewModel?.debugLastPositive?.collect { debugInfo ->
-                    getMenuItemView<TextView>(R.id.debug_event_name)?.text = debugInfo.eventName
-                    getMenuItemView<TextView>(R.id.debug_condition_name)?.text = debugInfo.conditionName
-                    getMenuItemView<TextView>(R.id.debug_confidence_rate)?.text = debugInfo.confidenceRateText
+                    viewBinding.debugEventName.text = debugInfo.eventName
+                    viewBinding.debugConditionName.text = debugInfo.conditionName
+                    viewBinding.debugConfidenceRate.text = debugInfo.confidenceRateText
                 }
             }
 
             launch {
                 debuggingViewModel?.debugLastPositiveCoordinates?.collect { coordinates ->
                     (screenOverlayView as DebugOverlayView).setPositiveResult(coordinates)
-                }
-            }
-
-            launch {
-                debuggingViewModel?.debugLastConfidenceRate?.collect { confRate ->
-                    getMenuItemView<TextView>(R.id.debug_current_confidence_rate)?.text = confRate
                 }
             }
         }

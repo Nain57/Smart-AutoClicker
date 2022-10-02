@@ -15,14 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/OverlayCardView"
-    tools:viewBindingIgnore="true">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="false">
 
-    <LinearLayout
-        android:id="@+id/view_group_buttons"
-        style="@style/OverlayButtonsLayout">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/menu_background"
+        style="@style/OverlayCardView"
+        tools:viewBindingIgnore="true">
+
+        <LinearLayout
+            android:id="@+id/menu_items"
+            style="@style/OverlayButtonsLayout">
 
             <ImageButton
                 android:id="@+id/btn_confirm"
@@ -42,6 +49,7 @@
                 android:src="@drawable/ic_move"
                 android:contentDescription="@string/content_desc_move_menu" />
 
-    </LinearLayout>
+        </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

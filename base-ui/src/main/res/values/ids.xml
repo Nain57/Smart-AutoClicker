@@ -17,7 +17,9 @@
 -->
 <resources>
     <!-- Id for view group containing the menu items in the OverlayMenuController -->
-    <item name="view_group_buttons" type="id"/>
+    <item name="menu_background" type="id"/>
+    <!-- Id for view group containing the menu items in the OverlayMenuController -->
+    <item name="menu_items" type="id"/>
     <!-- Id for the move button in the OverlayMenuController -->
     <item name="btn_move" type="id"/>
     <!-- Id for the hide button in the OverlayMenuController -->
