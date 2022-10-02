@@ -383,7 +383,7 @@ class OverlayMenuControllerTests {
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_LANDSCAPE, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         overlayMenuController.create()
 
-        overlayMenuController.dismiss()
+        overlayMenuController.dismissNoAnimation()
 
         verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_X_LANDSCAPE_KEY, TEST_DATA_X_POS)
         verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_Y_LANDSCAPE_KEY, TEST_DATA_Y_POS)
@@ -402,7 +402,7 @@ class OverlayMenuControllerTests {
         mockSharedPrefsPosition(mockSharedPrefs, Configuration.ORIENTATION_PORTRAIT, TEST_DATA_X_POS, TEST_DATA_Y_POS)
         overlayMenuController.create()
 
-        overlayMenuController.dismiss()
+        overlayMenuController.dismissNoAnimation()
 
         verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_X_PORTRAIT_KEY, TEST_DATA_X_POS)
         verify(mockSharedPrefsEditor).putInt(OverlayMenuController.PREFERENCE_MENU_Y_PORTRAIT_KEY, TEST_DATA_Y_POS)

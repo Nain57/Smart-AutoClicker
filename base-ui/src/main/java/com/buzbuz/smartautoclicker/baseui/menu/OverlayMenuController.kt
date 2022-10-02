@@ -28,11 +28,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
 
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.forEach
+import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
@@ -103,6 +107,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
     /** The root view of the menu overlay. Retrieved from [onCreateMenu] implementation. */
     private lateinit var menuLayout: ViewGroup
+    /** The view displaying the background of the overlay. */
+    private lateinit var menuBackground: ViewGroup
     /** Handles the window size computing when animating a resize of the overlay. */
     private lateinit var resizeController: OverlayWindowResizeController
     /** The hide overlay button, if provided. */
@@ -170,7 +176,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         overlayLayoutParams = onCreateOverlayViewLayoutParams()
 
         // Set the clicks listener on the menu items
-        val backgroundView = menuLayout.findViewById<ViewGroup>(R.id.menu_background)
+        menuBackground = menuLayout.findViewById<ViewGroup>(R.id.menu_background)
         val buttonsContainer = menuLayout.findViewById<ViewGroup>(R.id.menu_items)
         buttonsContainer.forEach { view ->
             @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
@@ -198,9 +204,9 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
         // Handle window resize animations
         resizeController = OverlayWindowResizeController(
-            backgroundViewGroup = backgroundView,
+            backgroundViewGroup = menuBackground,
             resizedContainer = buttonsContainer,
-            maximumSize = getWindowMaximumSize(backgroundView),
+            maximumSize = getWindowMaximumSize(menuBackground),
             windowSizeListener = { size ->
                 menuLayoutParams.width = size.width
                 menuLayoutParams.height = size.height
@@ -219,6 +225,14 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         }
         windowManager.addView(menuLayout, menuLayoutParams)
         hideOverlayButton?.let { setMenuItemViewEnabled(it, false , true) }
+
+        // Start the show animation
+        menuBackground.startAnimation(
+            AlphaAnimation(0f, 1f).apply {
+                duration = SHOW_ANIMATION_DURATION_MS
+                interpolator = DecelerateInterpolator()
+            }
+        )
     }
 
     @CallSuper
@@ -230,6 +244,30 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         windowManager.removeView(menuLayout)
 
         screenMetrics.unregisterOrientationListener()
+    }
+
+    final override fun dismiss() {
+        if (lifecycle.currentState < Lifecycle.State.CREATED) {
+            return
+        }
+
+        // Start the hide animation
+        menuBackground.startAnimation(AlphaAnimation(1f, 0f).apply {
+            duration = DISMISS_ANIMATION_DURATION_MS
+            interpolator = DecelerateInterpolator()
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationRepeat(animation: Animation?) {}
+                override fun onAnimationEnd(animation: Animation?) {
+                    super@OverlayMenuController.dismiss()
+                }
+            })
+        })
+    }
+
+    @VisibleForTesting
+    internal fun dismissNoAnimation() {
+        super.dismiss()
     }
 
     @CallSuper
@@ -435,3 +473,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         }
     }
 }
+
+/** Duration of the show overlay menu animation. */
+private const val SHOW_ANIMATION_DURATION_MS = 250L
+/** Duration of the dismiss overlay menu animation. */
+private const val DISMISS_ANIMATION_DURATION_MS = 125L
