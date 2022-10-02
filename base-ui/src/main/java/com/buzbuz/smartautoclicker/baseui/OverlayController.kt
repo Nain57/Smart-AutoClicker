@@ -126,7 +126,8 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      * Dismiss the ui object. If not hidden, hide it first.
      * If the lifecycle doesn't allows it, does nothing.
      */
-    fun dismiss() {
+    @CallSuper
+    open fun dismiss() {
         if (lifecycleRegistry.currentState < Lifecycle.State.CREATED) {
             return
         }

@@ -23,6 +23,8 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.core.app.NotificationCompat
@@ -125,9 +127,11 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 startScreenRecord(this@SmartAutoClickerService, resultCode, data, scenario, this@SmartAutoClickerService)
             }
 
-            rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario).apply {
-                create { this@LocalService.stop() }
-            }
+            Handler(Looper.getMainLooper()).postDelayed({
+                rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario).apply {
+                    create { this@LocalService.stop() }
+                }
+            }, 350)
         }
 
         /** Stop the overlay UI and release all associated resources. */
