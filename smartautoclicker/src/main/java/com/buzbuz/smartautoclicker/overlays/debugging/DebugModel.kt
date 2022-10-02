@@ -73,10 +73,10 @@ class DebugModel(context: Context) : OverlayViewModel(context) {
             flow {
                 emit(
                     LastPositiveDebugInfo(
-                    debugInfo.event.name,
-                    debugInfo.condition.name,
-                    debugInfo.detectionResult.confidenceRate.formatConfidenceRate(),
-                )
+                        debugInfo.event.name,
+                        debugInfo.condition.name,
+                        debugInfo.detectionResult.confidenceRate.formatConfidenceRate(),
+                    )
                 )
 
                 delay(POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)

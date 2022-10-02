@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
+import android.util.Size
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
@@ -48,9 +49,14 @@ import com.buzbuz.smartautoclicker.ui.R
  * management and the moving of the menu by pressing the move item. It also provides the management of an overlay view,
  * a view that can be shown/hide as an overlay over the currently displayed activity.
  *
- * The menu is created by the abstract method [onCreateMenu]. This layout MUST contains a view group within a depth of
- * 2 that contains all menu items. The two items supported by default are not mandatory and if you not need it, you just
- * have to not declare it in your layout. Two basic menu items management are provided out of the box:
+ * Using this class impose some restrictions on the provided views:
+ * - The root layout must be a FrameLayout with the size set to wrap content.
+ * - The root layout must have only one child. This child should show the background of the overlay window and should
+ * have the view id [R.id.menu_background].
+ * - The layout containing all menu buttons should have the view id [R.id.menu_items].
+ *
+ * Two menu items are supported by default and are not mandatory (if you don't need it, don't declare it in your layout).
+ * Those items must be a direct child of [R.id.menu_items]:
  * - [R.id.btn_move]: the button allowing the move the overlay menu when drag and drop by the user.
  * - [R.id.btn_hide_overlay]: the button allowing to show/hide the overlay view on the screen. When hidden, the user can
  * click on the activity overlaid.
@@ -99,7 +105,10 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     private val disabledItemAlpha = context.resources.getFraction(R.dimen.alpha_menu_item_disabled, 1, 1)
 
     /** The root view of the menu overlay. Retrieved from [onCreateMenu] implementation. */
-    private var menuLayout: ViewGroup? = null
+    private lateinit var menuLayout: ViewGroup
+    /** Handles the window size computing when animating a resize of the overlay. */
+    private lateinit var resizeController: OverlayWindowResizeController
+
     /**
      * The view to be displayed between the current activity and the overlay menu.
      * It can be shown/hidden by pressing on the menu item with the id [R.id.btn_hide_overlay]. If null, pressing this
@@ -160,25 +169,19 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         overlayLayoutParams = onCreateOverlayViewLayoutParams()
 
         // Set the clicks listener on the menu items
-        menuLayout!!.let {
-            val parentLayout = it.findViewById<ViewGroup>(R.id.view_group_buttons)
-            parentLayout.forEach { view ->
-                @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
-                when (view.id) {
-                    R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
-                    R.id.btn_hide_overlay -> {
-                        haveHideButton = true
-                        view.setOnClickListener {
-                            screenOverlayView?.let { view ->
-                                if (view.visibility == View.VISIBLE) {
-                                    setOverlayViewVisibility(View.GONE)
-                                } else {
-                                    setOverlayViewVisibility(View.VISIBLE)
-                                }
-                            }
-                        }
-                    }
-                    else -> view.setOnClickListener { v -> onMenuItemClicked(v.id) }
+        val backgroundView = menuLayout.findViewById<ViewGroup>(R.id.menu_background)
+        val buttonsContainer = menuLayout.findViewById<ViewGroup>(R.id.menu_items)
+        buttonsContainer.forEach { view ->
+            @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
+            when (view.id) {
+                R.id.btn_move -> view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
+                R.id.btn_hide_overlay -> {
+                    haveHideButton = true
+                    view.setOnClickListener { onHideOverlayClicked() }
+                }
+                else -> view.setOnClickListener { v ->
+                    if (resizeController.isAnimating) return@setOnClickListener
+                    onMenuItemClicked(v.id)
                 }
             }
         }
@@ -187,9 +190,19 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
         loadMenuPosition(screenMetrics.orientation)
-    }
 
-    protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit? = null
+        // Handle window resize animations
+        resizeController = OverlayWindowResizeController(
+            backgroundViewGroup = backgroundView,
+            resizedContainer = buttonsContainer,
+            maximumSize = getWindowMaximumSize(backgroundView),
+            windowSizeListener = { size ->
+                menuLayoutParams.width = size.width
+                menuLayoutParams.height = size.height
+                windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+            }
+        )
+    }
 
     @CallSuper
     override fun onStart() {
@@ -219,8 +232,23 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
         // Save last user position
         saveMenuPosition(screenMetrics.orientation)
 
-        menuLayout = null
+        resizeController.release()
         screenOverlayView = null
+    }
+
+    /**
+     * Called when an item (other than move/hide) in the menu have been pressed.
+     * @param viewId the pressed view identifier.
+     */
+    protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit? = null
+
+    /**
+     * Get the maximum size the window can take.
+     * @param backgroundView the background view.
+     */
+    protected open fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
+        backgroundView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        return Size(backgroundView.measuredWidth, backgroundView.measuredHeight)
     }
 
     /**
@@ -228,7 +256,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * @param visibility the new visibility to apply.
      */
     protected fun setMenuVisibility(visibility: Int) {
-        menuLayout?.visibility = visibility
+        menuLayout.visibility = visibility
     }
 
     /**
@@ -254,10 +282,30 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * @param clickable true to keep the view clickable, false to ignore all clicks on the view. False by default.
      */
     protected fun setMenuItemViewEnabled(@IdRes viewId: Int, enabled: Boolean, clickable: Boolean = false) {
-        menuLayout?.findViewById<View>(viewId)?.apply {
+        menuLayout.findViewById<View>(viewId)?.apply {
             isEnabled = enabled || clickable
             alpha = if (enabled) 1.0f else disabledItemAlpha
         }
+    }
+
+    /**
+     *
+     */
+    protected fun setMenuItemVisibility(@IdRes viewId: Int, visible: Boolean) {
+        menuLayout.findViewById<View>(viewId)?.apply {
+            visibility = if (visible) View.VISIBLE else View.GONE
+        }
+    }
+
+    /**
+     * Animates the provided layout changes.
+     * Allow to use the xml property animateLayoutChanges. All changes triggering a window resize should be made using
+     * this method.
+     *
+     * @param layoutChanges the changes triggering a resize.
+     */
+    protected fun animateLayoutChanges(layoutChanges: () -> Unit) {
+        resizeController.animateLayoutChanges(layoutChanges)
     }
 
     /**
@@ -267,7 +315,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * @param imageId the identifier of the new drawable.
      */
     protected fun setMenuItemViewImageResource(@IdRes viewId: Int, @DrawableRes imageId: Int) {
-        (menuLayout?.findViewById<View>(viewId) as ImageView).setImageResource(imageId)
+        (menuLayout.findViewById<View>(viewId) as ImageView).setImageResource(imageId)
     }
 
     /**
@@ -277,11 +325,23 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * @param drawable the new drawable.
      */
     protected fun setMenuItemViewDrawable(@IdRes viewId: Int, drawable: Drawable) {
-        (menuLayout?.findViewById<View>(viewId) as ImageView).setImageDrawable(drawable)
+        (menuLayout.findViewById<View>(viewId) as ImageView).setImageDrawable(drawable)
     }
 
     /** */
-    protected fun <T: View> getMenuItemView(@IdRes viewId: Int): T? = menuLayout?.findViewById(viewId)
+    protected fun <T: View> getMenuItemView(@IdRes viewId: Int): T? = menuLayout.findViewById(viewId)
+
+    private fun onHideOverlayClicked() {
+        if (resizeController.isAnimating) return
+
+        screenOverlayView?.let { view ->
+            if (view.visibility == View.VISIBLE) {
+                setOverlayViewVisibility(View.GONE)
+            } else {
+                setOverlayViewVisibility(View.VISIBLE)
+            }
+        }
+    }
 
     /**
      * Called when the user touch the [R.id.btn_move] menu item.
@@ -292,9 +352,11 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      * @return true if the event is handled, false if not.
      */
     private fun onMoveTouched(event: MotionEvent) : Boolean {
+        if (resizeController.isAnimating) return false
+
         return when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                menuLayout!!.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                menuLayout.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                 moveInitialMenuPosition = menuLayoutParams.x to menuLayoutParams.y
                 moveInitialTouchPosition = event.rawX.toInt() to event.rawY.toInt()
                 true
@@ -319,8 +381,8 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
      */
     private fun setMenuLayoutPosition(x: Int, y: Int) {
         val displaySize = screenMetrics.screenSize
-        menuLayoutParams.x = x.coerceIn(0, displaySize.x - menuLayout!!.width)
-        menuLayoutParams.y = y.coerceIn(0, displaySize.y - menuLayout!!.height)
+        menuLayoutParams.x = x.coerceIn(0, displaySize.x - menuLayout.width)
+        menuLayoutParams.y = y.coerceIn(0, displaySize.y - menuLayout.height)
     }
 
     /**

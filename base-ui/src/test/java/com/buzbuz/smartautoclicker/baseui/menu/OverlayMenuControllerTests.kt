@@ -155,7 +155,8 @@ class OverlayMenuControllerTests {
      * @param mockOverlay the overlay view.
      */
     private fun mockViewsFromImpl(mockMenu: ViewGroup = mock(ViewGroup::class.java), mockOverlay: View? = null) {
-        mockWhen(mockMenu.findViewById<ViewGroup>(R.id.view_group_buttons)).thenReturn(mockMenu)
+        mockWhen(mockMenu.findViewById<ViewGroup>(R.id.menu_items)).thenReturn(mockMenu)
+        mockWhen(mockMenu.findViewById<ViewGroup>(R.id.menu_background)).thenReturn(mockMenu)
         mockWhen(overlayMenuControllerImpl.onCreateMenu(mockLayoutInflater)).thenReturn(mockMenu)
         mockWhen(overlayMenuControllerImpl.onCreateOverlayView()).thenReturn(mockOverlay)
     }
