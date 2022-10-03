@@ -21,6 +21,7 @@ import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.RectF
@@ -128,7 +129,10 @@ internal class Selector(
     }
     /** The transparency of the background color of the selector. */
     private val selectorBackgroundAlpha: Int = backgroundPaint.color.shr(24)
-
+    /** The path for drawing the selector transparent background and content. */
+    private val selectorDrawingPath = Path().apply {
+        fillType = Path.FillType.EVEN_ODD
+    }
     /** The minimum size of the selector. Size is relative to the [maxArea]. */
     private val selectorMinimumSize = PointF()
     /** The area where the selector should be drawn. */
@@ -288,9 +292,29 @@ internal class Selector(
         }
     }
 
+    override fun invalidate() {
+        selectorDrawingPath.apply {
+            reset()
+
+            moveTo(maxArea.left, maxArea.top)
+            lineTo(maxArea.right, maxArea.top)
+            lineTo(maxArea.right, maxArea.bottom)
+            lineTo(maxArea.left, maxArea.bottom)
+            close()
+
+            moveTo(selectedArea.left, selectedArea.top)
+            lineTo(selectedArea.right, selectedArea.top)
+            lineTo(selectedArea.right, selectedArea.bottom)
+            lineTo(selectedArea.left, selectedArea.bottom)
+            close()
+        }
+
+        super.invalidate()
+    }
+
     override fun onDraw(canvas: Canvas) {
+        canvas.drawPath(selectorDrawingPath, backgroundPaint)
         canvas.drawRoundRect(selectorArea, cornerRadius, cornerRadius, selectorPaint)
-        canvas.drawRect(selectedArea, backgroundPaint)
     }
 
     override fun onReset() {

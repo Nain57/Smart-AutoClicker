@@ -80,5 +80,6 @@ internal abstract class SelectorViewComponent(
     abstract fun onReset()
 
     /** Invalidates the view containing the component. */
-    protected fun invalidate() = viewInvalidator.invoke()
+    @CallSuper
+    protected open fun invalidate() = viewInvalidator.invoke()
 }
