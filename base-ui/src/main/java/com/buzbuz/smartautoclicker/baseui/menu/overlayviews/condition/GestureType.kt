@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition
 
 import android.graphics.RectF
 
@@ -27,7 +27,8 @@ internal sealed class GestureType {
      * @param handleSize the size of the view handle
      * @param innerHandleSize the inner size of the handle.
      */
-    abstract fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF
+    open fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
+        viewArea
 
     /**
      * Tells if the selector is big enough to consider using part of it as gesture area.
@@ -81,7 +82,6 @@ internal object ResizeBottom: GestureType() {
         )
 }
 
-internal object Move: GestureType() {
-    override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
-        viewArea
-}
+internal object MoveSelector: GestureType()
+
+internal object ZoomCapture: GestureType()
