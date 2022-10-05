@@ -210,7 +210,10 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
             windowSizeListener = { size ->
                 menuLayoutParams.width = size.width
                 menuLayoutParams.height = size.height
-                windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+
+                if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                    windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+                }
             }
         )
     }
