@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -31,8 +31,6 @@ import android.view.MotionEvent
 
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ConditionSelectorView
-import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.SelectorViewComponent
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.extensions.translate
 import com.buzbuz.smartautoclicker.ui.R
@@ -229,8 +227,8 @@ internal class Selector(
                 ResizeRight
             ResizeBottom.getGestureArea(selectedArea, handleSize, innerHandleSize).contains(eventX, eventY) ->
                 ResizeBottom
-            Move.getGestureArea(selectedArea, handleSize, innerHandleSize).contains(eventX, eventY) ->
-                Move
+            MoveSelector.getGestureArea(selectedArea, handleSize, innerHandleSize).contains(eventX, eventY) ->
+                MoveSelector
             else -> null
         }
 
@@ -265,7 +263,7 @@ internal class Selector(
                     selectorArea.bottom + translateY,
                     selectorArea.top + selectorMinimumSize.y
                 )
-                Move -> {
+                MoveSelector -> {
                     moveResult.set(selectorArea)
                     moveResult.translate(translateX, translateY)
 
@@ -273,6 +271,7 @@ internal class Selector(
                         selectorArea.set(moveResult)
                     }
                 }
+                ZoomCapture -> return
             }
 
             verifyBounds()

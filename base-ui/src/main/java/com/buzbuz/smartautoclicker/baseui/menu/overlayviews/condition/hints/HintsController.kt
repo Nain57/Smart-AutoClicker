@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector
+package com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.hints
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -27,6 +27,13 @@ import androidx.core.graphics.toRect
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ConditionSelectorView
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.SelectorViewComponent
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.GestureType
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.MoveSelector
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ResizeBottom
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ResizeLeft
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ResizeRight
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ResizeTop
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ZoomCapture
 import com.buzbuz.smartautoclicker.ui.R
 
 /**
@@ -54,6 +61,11 @@ internal class HintsController(
         R.styleable.ConditionSelectorView_hintsIconsSize,
         DEFAULT_HINTS_ICON_SIZE
     )
+    /** The margin between the top of the selector and the pinch hint. */
+    private val pinchIconMargin: Int = styledAttrs.getDimensionPixelSize(
+        R.styleable.ConditionSelectorView_hintsPinchIconMargin,
+        DEFAULT_HINTS_PINCH_ICON_MARGIN
+    )
 
     /** Map between a gesture type and its hint. */
     private val hintsIcons: Map<GestureType, Hint>
@@ -63,6 +75,7 @@ internal class HintsController(
     /** Initialize the list of hints. */
     init {
         val moveIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintMoveIcon, 0)
+        val pinchIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintPinchIcon, 0)
         val upIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeUpIcon, 0)
         val downIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeDownIcon, 0)
         val leftIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeLeftIcon, 0)
@@ -70,12 +83,19 @@ internal class HintsController(
         maxRect.set(maxArea.toRect())
 
         hintsIcons = mapOf(
-            Move to SingleHint(
+            MoveSelector to SingleHint(
                 context,
                 iconsSize,
                 maxRect,
                 moveIcon,
                 booleanArrayOf(true)
+            ),
+            ZoomCapture to SingleHint(
+                context,
+                iconsSize,
+                maxRect,
+                pinchIcon,
+                booleanArrayOf(false)
             ),
             ResizeBottom to DoubleHint(
                 context,
@@ -160,8 +180,10 @@ internal class HintsController(
         val allShown = iconsShown.size == hintsIcons.size
         hintsIcons.forEach { (hintType, hint) ->
             when(hintType) {
-                Move -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
+                MoveSelector -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
                     newSelectorArea.centerY())
+                ZoomCapture -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
+                    newSelectorArea.top - pinchIconMargin)
                 ResizeTop -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
                     newSelectorArea.top, booleanArrayOf(false, allShown))
                 ResizeBottom -> hint.invalidate(newSelectorArea, newSelectorArea.centerX(),
@@ -198,3 +220,5 @@ internal class HintsController(
 private const val DEFAULT_HINTS_ICON_MARGIN = 5
 /** The default size of the icons for the hints. */
 private const val DEFAULT_HINTS_ICON_SIZE = 10
+/** The default margin between the top of the selector and the pinch hint. */
+private const val DEFAULT_HINTS_PINCH_ICON_MARGIN = 100

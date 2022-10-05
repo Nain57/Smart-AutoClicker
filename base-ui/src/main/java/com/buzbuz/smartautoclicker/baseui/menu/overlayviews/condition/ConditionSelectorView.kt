@@ -31,8 +31,7 @@ import android.view.View
 import androidx.core.content.res.use
 import androidx.core.graphics.minus
 
-import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector.Selector
-import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.selector.HintsController
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.hints.HintsController
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
