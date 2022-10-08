@@ -43,12 +43,12 @@ import kotlin.math.min
  * @param screenMetrics provides information about current display.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
-internal class Capture(
+internal class CaptureComponent(
     context: Context,
     styledAttrs: TypedArray,
     screenMetrics: ScreenMetrics,
     viewInvalidator: () -> Unit,
-): SelectorViewComponent(screenMetrics, viewInvalidator) {
+): ViewComponent(screenMetrics, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {

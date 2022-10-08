@@ -31,7 +31,7 @@ import android.view.View
 import androidx.core.content.res.use
 import androidx.core.graphics.minus
 
-import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.hints.HintsController
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.hints.HintsComponent
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.ui.R
 
@@ -52,11 +52,11 @@ class ConditionSelectorView(
 ) : View(context) {
 
     /** Controls the display of the bitmap captured. */
-    private lateinit var capture: Capture
+    private lateinit var capture: CaptureComponent
     /** Controls the display of the selector. */
     private lateinit var selector: Selector
     /** Controls the display of the user hints around the selector. */
-    private lateinit var hintsIcons: HintsController
+    private lateinit var hintsIcons: HintsComponent
     /** Controls the animations. */
     private lateinit var animations: Animations
 
@@ -71,9 +71,9 @@ class ConditionSelectorView(
     init {
         context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
             animations = Animations(ta)
-            capture = Capture(context, ta, screenMetrics, ::invalidate)
+            capture = CaptureComponent(context, ta, screenMetrics, ::invalidate)
             selector = Selector(context, ta, screenMetrics, ::invalidate)
-            hintsIcons = HintsController(context, ta, screenMetrics, ::invalidate)
+            hintsIcons = HintsComponent(context, ta, screenMetrics, ::invalidate)
         }
     }
 
