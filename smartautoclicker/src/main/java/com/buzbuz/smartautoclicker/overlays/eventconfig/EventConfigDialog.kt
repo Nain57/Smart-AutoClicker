@@ -43,6 +43,7 @@ import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.copy.conditions.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -112,18 +113,19 @@ class EventConfigDialog(
         },
     )
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogEventConfigBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_event_config_title)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_event_config_title)
+            setContentView(viewBinding.root)
+            /*setPositiveButton(android.R.string.ok, null)
+            setNegativeButton(android.R.string.cancel, null)*/
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.apply {
             root.setOnTouchListener(hideSoftInputTouchListener)
 
@@ -193,11 +195,11 @@ class EventConfigDialog(
                 // Allow/Forbid the access to "OK" depending on the validity of event
                 launch {
                     viewModel?.isValidEvent?.collect { isValid ->
-                        changeButtonState(
+                        /*changeButtonState(
                             button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
                             visibility = if (isValid) View.VISIBLE else View.INVISIBLE,
                             listener = { onOkClicked() }
-                        )
+                        )*/
                     }
                 }
 

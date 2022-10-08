@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.action.pause.setupPauseU
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.swipe.SwipeConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.swipe.setupSwipeUi
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -78,24 +79,25 @@ class ActionConfigDialog(
         is Action.Intent -> R.string.dialog_action_type_intent to R.drawable.ic_intent
     }
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogActionConfigBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(
+        return BottomSheetDialog(context).apply {
+            /*setCustomTitle(
                 R.layout.view_dialog_title,
                 title.first,
                 title.second,
                 R.color.overlayViewPrimary,
-            )
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(R.string.dialog_condition_delete) { _, _ -> onDeleteClicked.invoke() }
+            )*/
+            setContentView(viewBinding.root)
+            /*setPositiveButton(android.R.string.ok, null)
+            setNegativeButton(android.R.string.cancel, null)
+            setNeutralButton(R.string.dialog_condition_delete) { _, _ -> onDeleteClicked.invoke() }*/
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.apply {
             root.setOnTouchListener(hideSoftInputTouchListener)
             editName.apply {
@@ -140,11 +142,11 @@ class ActionConfigDialog(
 
                 launch {
                     viewModel?.isValidAction?.collect { isValid ->
-                        changeButtonState(
+                        /*changeButtonState(
                             button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
                             visibility = if (isValid) View.VISIBLE else View.INVISIBLE,
                             listener = { onOkClicked() }
-                        )
+                        )*/
                     }
                 }
             }

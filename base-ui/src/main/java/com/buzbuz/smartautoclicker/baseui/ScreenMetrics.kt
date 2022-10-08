@@ -43,6 +43,8 @@ class ScreenMetrics(private val context: Context) {
             else WindowManager.LayoutParams.TYPE_PHONE
     }
 
+    /** The Android window manager. */
+    private val windowManager = context.getSystemService(WindowManager::class.java)
     /** The Android display manager. */
     private val displayManager = context.getSystemService(DisplayManager::class.java)
     /** The display to get the value from. It will always be the first one available. */
@@ -98,7 +100,7 @@ class ScreenMetrics(private val context: Context) {
         if (newOrientation == orientation) return false
 
         val newSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            context.getSystemService(WindowManager::class.java).currentWindowMetrics.bounds.let { windowBound ->
+            windowManager.currentWindowMetrics.bounds.let { windowBound ->
                 Point(windowBound.width(), windowBound.height())
             }
         } else {

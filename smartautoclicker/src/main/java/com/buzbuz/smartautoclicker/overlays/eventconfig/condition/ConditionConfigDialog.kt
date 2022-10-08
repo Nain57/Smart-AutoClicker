@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.domain.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.databinding.DialogConditionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -70,19 +71,20 @@ class ConditionConfigDialog(
     /** The coroutine job fetching asynchronously the condition bitmap. */
     private var bitmapLoadingJob: Job? = null
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogConditionConfigBinding.inflate(LayoutInflater.from(context))
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_condition_title)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(R.string.dialog_condition_delete) { _: DialogInterface, _: Int ->
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_condition_title)
+            setContentView(viewBinding.root)
+            /*setPositiveButton(android.R.string.ok, null)
+            setNegativeButton(android.R.string.cancel, null)
+            setNeutralButton(R.string.dialog_condition_delete) { _: DialogInterface, _: Int ->
                 onDeleteClicked.invoke()
-            }
+            }*/
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         condition.let { condition ->
             viewBinding.editName.apply {
                 setSelectAllOnFocus(true)
@@ -123,7 +125,7 @@ class ConditionConfigDialog(
                             setTint(Color.RED)
                         }
                     )
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+                    //dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
                     viewBinding.conditionDetectionType.setText(R.string.dialog_condition_error)
                 }
             }
@@ -190,11 +192,11 @@ class ConditionConfigDialog(
 
                     launch {
                         viewModel?.isValidCondition?.collect { isValid ->
-                            changeButtonState(
+                            /*changeButtonState(
                                 button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
                                 visibility = if (isValid) View.VISIBLE else View.INVISIBLE,
                                 listener = { onOkClicked() }
-                            )
+                            )*/
                         }
                     }
                 }

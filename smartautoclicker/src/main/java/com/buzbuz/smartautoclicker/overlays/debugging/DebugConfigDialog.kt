@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogDebugConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setRightCompoundDrawable
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -41,19 +42,19 @@ class DebugConfigDialog(context: Context): OverlayDialogController(context) {
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogDebugConfigBinding
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogDebugConfigBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_debug_config_title)
-            .setView(viewBinding.root)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewModel?.saveConfig()
-            }
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_debug_config_title)
+            setContentView(viewBinding.root)
+            /*setNegativeButton(android.R.string.cancel, null)
+            setPositiveButton(android.R.string.ok) { _, _ ->
+                viewModel?.saveConfig()*/
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.debugViewToggle.setOnClickListener { viewModel?.toggleIsDebugViewEnabled() }
         viewBinding.debugReportToggle.setOnClickListener { viewModel?.toggleIsDebugReportEnabled() }
 

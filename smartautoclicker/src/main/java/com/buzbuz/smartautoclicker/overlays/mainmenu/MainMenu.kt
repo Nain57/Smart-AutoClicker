@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugModel
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugOverlayView
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugReportDialog
-import com.buzbuz.smartautoclicker.overlays.eventlist.EventListDialog
+import com.buzbuz.smartautoclicker.overlays.scenario.ScenarioDialog
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -135,8 +135,8 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> viewModel?.toggleDetection()
-            R.id.btn_click_list -> showSubOverlay(
-                EventListDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
+            R.id.btn_click_list -> showSubOverlay(ScenarioDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
+                //EventListDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
             R.id.btn_stop -> dismiss()
         }
     }

@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogMultiChoiceBinding
 import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
  * [OverlayDialogController] implementation for a dialog displaying a list of choices to the user.
@@ -55,16 +56,17 @@ class MultiChoiceDialog<T : DialogChoice>(
         dismiss()
     }
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogMultiChoiceBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, dialogTitle)
-            .setView(viewBinding.root)
-            .setNegativeButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, dialogTitle)
+            setContentView(viewBinding.root)
+            //setNegativeButton(android.R.string.cancel, null)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.list.adapter = adapter
     }
 }

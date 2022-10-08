@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogIntentExtraTypeBinding
 import com.buzbuz.smartautoclicker.databinding.ItemIntentExtraTypeBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlin.reflect.KClass
 
@@ -46,16 +47,17 @@ class ExtraTypeSelectionDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogIntentExtraTypeBinding
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogIntentExtraTypeBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_action_config_intent_advanced_extras_config_value_type)
-            .setView(viewBinding.root)
-            .setNegativeButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_action_config_intent_advanced_extras_config_value_type)
+            setContentView(viewBinding.root)
+            //setNegativeButton(android.R.string.cancel, null)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.typeList.apply {
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = ExtraTypeAdapter { selectedType ->

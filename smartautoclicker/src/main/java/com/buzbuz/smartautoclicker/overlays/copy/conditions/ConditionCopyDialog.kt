@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.databinding.DialogConditionCopyBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -61,16 +62,17 @@ class ConditionCopyDialog(
 
     override fun getListBindingRoot(): View = viewBinding.root
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogConditionCopyBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_copy_title)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_copy_title)
+            setContentView(viewBinding.root)
+            //setPositiveButton(android.R.string.cancel, null)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         super.onDialogCreated(dialog)
 
         conditionAdapter = ConditionCopyAdapter(

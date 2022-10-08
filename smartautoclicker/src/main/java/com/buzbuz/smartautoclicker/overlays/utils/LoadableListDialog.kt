@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
  * [OverlayDialogController] implementation for a dialog displaying a list of loadable items.
@@ -43,7 +44,7 @@ abstract class LoadableListDialog(
     protected abstract fun getListBindingRoot(): View
 
     @CallSuper
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         listBinding = MergeLoadableListBinding.bind(getListBindingRoot()).apply {
             empty.setText(emptyTextId)
         }
