@@ -35,7 +35,8 @@ import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.databinding.DialogEndConditionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setRightCompoundDrawable
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
+//import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -66,21 +67,22 @@ class EndConditionConfigDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEndConditionConfigBinding
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogEndConditionConfigBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_end_condition_config_title)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(R.string.dialog_condition_delete) { _, _ -> onDeleteClicked() }
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_end_condition_config_title)
+            setContentView(viewBinding.root)
+            /*setPositiveButton(android.R.string.ok, null)
+            setNegativeButton(android.R.string.cancel, null)
+            setNeutralButton(R.string.dialog_condition_delete) { _, _ -> onDeleteClicked() }*/
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.apply {
             includeSelectedEvent.root.setOnClickListener { showEventSelectionDialog() }
-            viewBinding.includeSelectedEvent.btnAction.isClickable = false
+           // viewBinding.includeSelectedEvent.btnAction.isClickable = false
 
             editExecutions.apply {
                 setSelectAllOnFocus(true)
@@ -126,7 +128,7 @@ class EndConditionConfigDialog(
                                     viewBinding.textNoEvent.visibility = View.GONE
                                     viewBinding.includeSelectedEvent.apply {
                                         root.visibility = View.VISIBLE
-                                        bindEvent(event = event, itemClickedListener = { showEventSelectionDialog() })
+                                        ///bindEvent(event = event, itemClickedListener = { showEventSelectionDialog() })
                                     }
                                 }
                             }
@@ -145,11 +147,11 @@ class EndConditionConfigDialog(
 
                 launch {
                     viewModel?.isValidEndCondition?.collect { isValid ->
-                        changeButtonState(
+                        /*changeButtonState(
                             button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
                             visibility = if (isValid) View.VISIBLE else View.INVISIBLE,
                             listener = { onOkClicked() }
-                        )
+                        )*/
                     }
                 }
             }

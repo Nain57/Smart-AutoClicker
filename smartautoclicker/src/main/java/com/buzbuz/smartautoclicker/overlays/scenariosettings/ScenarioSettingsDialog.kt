@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.databinding.DialogScenarioSettingsBinding
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.scenariosettings.endcondition.EndConditionConfigDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -81,17 +82,18 @@ class ScenarioSettingsDialog(
         }
     )
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogScenarioSettingsBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_scenario_settings_title)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok) { _, _ -> onOkClicked() }
-            .setNegativeButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_scenario_settings_title)
+            setContentView(viewBinding.root)
+            /*setPositiveButton(android.R.string.ok) { _, _ -> onOkClicked() }
+            setNegativeButton(android.R.string.cancel, null)*/
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.apply {
             textSpeed.setOnClickListener { viewModel?.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel?.increaseDetectionQuality() }

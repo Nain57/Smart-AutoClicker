@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
-import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
 
 import java.util.Collections
 
@@ -118,7 +117,7 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
         itemClickedListener: (Event) -> Unit,
         deleteClickedListener: (Event) -> Unit,
     ) {
-        holderViewBinding.bindEvent(event, mode, itemClickedListener, deleteClickedListener)
+        //holderViewBinding.bindEvent(event, mode, itemClickedListener, deleteClickedListener)
     }
 }
 

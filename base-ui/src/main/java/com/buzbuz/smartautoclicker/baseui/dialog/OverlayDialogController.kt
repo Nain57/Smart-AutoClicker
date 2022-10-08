@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,10 +25,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 
 import androidx.annotation.CallSuper
-import androidx.appcompat.app.AlertDialog
-import com.buzbuz.smartautoclicker.baseui.OverlayController
 
+import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
+
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
  * Controller for a dialog opened from a service as an overlay.
@@ -54,7 +55,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      * The dialog currently displayed by this controller.
      * Null until [onCreate] is called, or if it has been dismissed.
      */
-    protected var dialog: AlertDialog? = null
+    protected var dialog: BottomSheetDialog? = null
         private set
 
     /**
@@ -64,7 +65,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      *
      * @return the builder for the dialog to be created.
      */
-    protected abstract fun onCreateDialog(): AlertDialog.Builder
+    protected abstract fun onCreateDialog(): BottomSheetDialog
 
     /**
      * Setup the dialog view.
@@ -72,34 +73,33 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      *
      * @param dialog the newly created dialog.
      */
-    protected abstract fun onDialogCreated(dialog: AlertDialog)
+    protected abstract fun onDialogCreated(dialog: BottomSheetDialog)
 
     final override fun onCreate() {
-        dialog = onCreateDialog()
-            .setOnDismissListener {
-                dismiss()
+        dialog = onCreateDialog().apply {
+            setOnDismissListener {
+                this@OverlayDialogController.dismiss()
                 onDialogDismissed()
             }
-            .setCancelable(false)
-            .setOnKeyListener { _, keyCode, event ->
+            setCancelable(false)
+            setOnKeyListener { _, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                    dismiss()
+                    this@OverlayDialogController.dismiss()
                     true
                 } else {
                     false
                 }
             }
-            .create()
-            .also {
-                it.window?.apply {
-                    setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
-                    setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-                    decorView.setOnTouchListener(hideSoftInputTouchListener)
-                }
-
-                isShowing = true
-                it.show()
+            create()
+            window?.apply {
+                setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
+                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+                decorView.setOnTouchListener(hideSoftInputTouchListener)
             }
+
+            this@OverlayDialogController.isShowing = true
+            show()
+        }
 
         onDialogCreated(dialog!!)
     }

@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionCopyBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -63,16 +64,16 @@ class ActionCopyDialog(
 
     override fun getListBindingRoot(): View = viewBinding.root
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogActionCopyBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(null)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            setContentView(viewBinding.root)
+            //setPositiveButton(android.R.string.cancel, null)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         super.onDialogCreated(dialog)
 
         viewBinding.search.apply {

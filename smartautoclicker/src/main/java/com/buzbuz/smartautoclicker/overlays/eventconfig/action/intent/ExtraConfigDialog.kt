@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.databinding.DialogIntentExtraConfigBinding
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
@@ -66,24 +67,25 @@ class ExtraConfigDialog(
     /** The currently selected type for the extra value. */
     private var currentType: KClass<out Any>? = null
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogIntentExtraConfigBinding.inflate(LayoutInflater.from(context))
 
-        val builder = AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_action_config_intent_advanced_extras_config_title)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(android.R.string.cancel, null)
-
-        if (onDeleteClicked != null) {
-            builder.setNeutralButton(R.string.dialog_condition_delete) { _, _ -> onDeleteClicked.invoke() }
+        val builder = BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_action_config_intent_advanced_extras_config_title)
+            setContentView(viewBinding.root)
+            //setPositiveButton(android.R.string.ok, null)
+            //setNegativeButton(android.R.string.cancel, null)
         }
+
+        /*if (onDeleteClicked != null) {
+            builder.setNeutralButton(R.string.dialog_condition_delete) { _, _ -> onDeleteClicked.invoke() }
+        }*/
 
         return builder
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewBinding.apply {
             root.setOnTouchListener(hideSoftInputTouchListener)
 
@@ -138,11 +140,11 @@ class ExtraConfigDialog(
 
                 launch {
                     viewModel?.isExtraValid?.collect { isExtraValid ->
-                        changeButtonState(
+                        /*changeButtonState(
                             button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
                             visibility = if (isExtraValid) View.VISIBLE else View.INVISIBLE,
                             listener = { onOkClicked() }
-                        )
+                        )*/
                     }
                 }
             }

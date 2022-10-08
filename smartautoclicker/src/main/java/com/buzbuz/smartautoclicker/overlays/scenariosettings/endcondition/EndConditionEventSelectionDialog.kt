@@ -21,20 +21,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.DialogEndConditionEventSelectBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.scenariosettings.EndConditionAdapter
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
-import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
+//import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
+
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
  * Display the list of selectable events for a end condition.
@@ -58,16 +58,17 @@ class EndConditionEventSelectionDialog(
 
     override fun getListBindingRoot(): View = viewBinding.root
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogEndConditionEventSelectBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_end_condition_event_select_title)
-            .setView(viewBinding.root)
-            .setNegativeButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_end_condition_event_select_title)
+            setContentView(viewBinding.root)
+            //setNegativeButton(android.R.string.cancel, null)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         super.onDialogCreated(dialog)
 
         updateLayoutState(eventList)
@@ -126,8 +127,8 @@ private class EndConditionEventViewHolder(
 ): RecyclerView.ViewHolder(viewBinding.root) {
     fun onBind(event: Event) {
         viewBinding.apply {
-            bindEvent(event = event, itemClickedListener = onEventSelected)
-            btnAction.isClickable = false
+            //bindEvent(event = event, itemClickedListener = onEventSelected)
+            //btnAction.isClickable = false
         }
     }
 }

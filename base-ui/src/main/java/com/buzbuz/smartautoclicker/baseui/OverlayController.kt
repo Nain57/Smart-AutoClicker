@@ -154,7 +154,7 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
      * @param hideCurrent true to hide the current overlay, false to display the new overlay over it.
      */
     @CallSuper
-    protected open fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
+    open fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
         if (lifecycleRegistry.currentState < Lifecycle.State.STARTED) {
             Log.e(TAG, "Can't show ${overlayController.hashCode()}, parent ${hashCode()} is not created")
             return

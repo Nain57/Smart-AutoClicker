@@ -105,14 +105,14 @@ class EventViewHolder(private val viewBinding: ItemEventBinding) : RecyclerView.
     fun onBind(item: EventCopyItem.EventItem, eventClickedListener: (Event) -> Unit) {
         item.event?.let { event ->
             viewBinding.apply {
-                name.text = event.name
+                /*name.text = event.name
 
                 actionsLayout.removeAllViews()
                 event.actions?.forEach { action ->
                     View.inflate(itemView.context, R.layout.view_action_icon, actionsLayout)
                     (actionsLayout.getChildAt(actionsLayout.childCount - 1) as ImageView)
                         .setImageResource(action.getIconRes())
-                }
+                }*/
             }
 
             itemView.setOnClickListener { eventClickedListener(event) }

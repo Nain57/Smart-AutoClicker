@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.databinding.DialogActivitySelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemApplicationBinding
 import com.buzbuz.smartautoclicker.overlays.scenariosettings.EndConditionAdapter
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -69,16 +70,17 @@ class ActivitySelectionDialog(
 
     override fun getListBindingRoot(): View = viewBinding.root
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogActivitySelectionBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_application_select_title)
-            .setView(viewBinding.root)
-            .setNegativeButton(android.R.string.cancel, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_application_select_title)
+            setContentView(viewBinding.root)
+            //setNegativeButton(android.R.string.cancel, null)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         super.onDialogCreated(dialog)
 
         listBinding.list.adapter = adapter

@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogDebugReportBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -50,16 +51,17 @@ class DebugReportDialog(context: Context): LoadableListDialog(context) {
     override val emptyTextId: Int = R.string.dialog_debug_report_empty
     override fun getListBindingRoot(): View = viewBinding.root
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogDebugReportBinding.inflate(LayoutInflater.from(context))
 
-        return AlertDialog.Builder(context)
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_debug_report_title)
-            .setView(viewBinding.root)
-            .setPositiveButton(android.R.string.ok, null)
+        return BottomSheetDialog(context).apply {
+            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_debug_report_title)
+            setContentView(viewBinding.root)
+            //setPositiveButton(android.R.string.ok, null)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         super.onDialogCreated(dialog)
 
         listBinding.list.adapter = reportAdapter

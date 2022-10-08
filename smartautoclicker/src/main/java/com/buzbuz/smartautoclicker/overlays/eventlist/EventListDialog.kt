@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.IdRes
 
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,7 +28,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Scenario
@@ -40,6 +38,7 @@ import com.buzbuz.smartautoclicker.overlays.debugging.DebugConfigDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
 import com.buzbuz.smartautoclicker.overlays.scenariosettings.ScenarioSettingsDialog
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
@@ -73,7 +72,7 @@ class EventListDialog(
 
     override fun getListBindingRoot(): View = viewBinding.layoutList
 
-    override fun onCreateDialog(): AlertDialog.Builder {
+    override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogEventListBinding.inflate(LayoutInflater.from(context))
         buttonsViewBinding = viewBinding.includeButtons.apply {
             btnCancel.setOnClickListener { onButtonClicked(it.id) }
@@ -85,11 +84,12 @@ class EventListDialog(
         }
         viewBinding.btnDebugging.setOnClickListener { showDebugConfigDialog() }
 
-        return AlertDialog.Builder(context)
-            .setView(viewBinding.root)
+        return BottomSheetDialog(context).apply {
+            setContentView(viewBinding.root)
+        }
     }
 
-    override fun onDialogCreated(dialog: AlertDialog) {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         super.onDialogCreated(dialog)
         eventAdapter = EventListAdapter(::showEventConfigDialog) { deletedEvent ->
             viewModel?.deleteEvent(deletedEvent)
