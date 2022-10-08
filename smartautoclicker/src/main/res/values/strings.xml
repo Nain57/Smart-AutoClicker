@@ -229,4 +229,9 @@
     <string name="dialog_debug_config_title">Debugging</string>
     <string name="dialog_debug_config_show_view">Show debug view</string>
     <string name="dialog_debug_config_generate_report">Generate a report</string>
+
+    <string name="dialog_label_scenario_name">Scenario name</string>
+    <string name="dialog_buttons_copy">Copy</string>
+    <string name="dialog_button_condition_or">One</string>
+    <string name="dialog_button_condition_and">All</string>
 </resources>

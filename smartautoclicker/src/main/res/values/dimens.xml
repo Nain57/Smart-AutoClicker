@@ -16,6 +16,8 @@
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <dimen name="bottom_sheet_min_height">600dp</dimen>
+
     <dimen name="text_size_item_title">14sp</dimen>
     <dimen name="text_size_list_item_text_small">14sp</dimen>
     <dimen name="text_size_list_item_text">16sp</dimen>

@@ -50,6 +50,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
 
     implementation project(path: ':extensions')
+    implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"

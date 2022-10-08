@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/dialog_item_condition_width"
@@ -29,41 +29,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/new_item"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/dialog_action_new_create"
-            android:src="@drawable/ic_add"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/separator"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_chainStyle="spread"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/copy_item"
+            app:icon="@drawable/ic_add"/>
 
-        <View
-            android:id="@+id/separator"
-            style="@style/Separator"
-            android:layout_width="1dp"
-            android:layout_height="0dp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/copy_item"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/new_item"
-            app:layout_constraintEnd_toStartOf="@id/copy_item" />
-
-        <ImageView
-            android:id="@+id/copy_item"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="centerInside"
-            android:contentDescription="@string/dialog_action_new_copy"
-            android:src="@drawable/ic_copy"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/separator"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:icon="@drawable/ic_copy"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

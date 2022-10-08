@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2022 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_horizontal_default">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/scenario_name_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/detection_quality_card"
+            app:endIconMode="clear_text"
+            android:hint="@string/dialog_label_scenario_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/scenario_name_input_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="My cool scenario name"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/detection_quality_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scenario_name_input_layout"
+            app:layout_constraintBottom_toTopOf="@id/end_conditions_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                android:layout_marginVertical="@dimen/margin_horizontal_default">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/detection_quality_title"
+                    style="@style/TextAppearance.Material3.TitleMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_vertical_large"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/text_quality_value"
+                    android:text="@string/dialog_scenario_settings_quality_title" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/text_quality_value"
+                    style="@style/ItemView.Small"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_list_item_text"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detection_quality_title"
+                    app:layout_constraintBottom_toTopOf="@id/seekbar_quality"
+                    tools:text="600"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/text_speed"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/text_quality_value"
+                    app:layout_constraintBottom_toBottomOf="@id/text_quality_value"
+                    app:icon="@drawable/ic_chevron_inverted"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/dialog_scenario_settings_quality_speed"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/text_precision"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/text_quality_value"
+                    app:layout_constraintBottom_toBottomOf="@id/text_quality_value"
+                    app:icon="@drawable/ic_chevron"
+                    app:iconGravity="end"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/dialog_scenario_settings_quality_precision"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/seekbar_quality"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_precision"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:labelBehavior="gone"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/end_conditions_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detection_quality_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                android:layout_marginVertical="@dimen/margin_horizontal_default"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/end_conditions_title"
+                    style="@style/TextAppearance.Material3.TitleMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_vertical_large"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_button"
+                    android:text="@string/dialog_scenario_settings_end_condition_title" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/end_conditions_operator_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/end_conditions_title"
+                    app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/end_conditions_and_button"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_button_condition_and" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/end_conditions_or_button"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_button_condition_or"/>
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/end_conditions_operator_desc"
+                    style="@style/TextAppearance.Material3.BodyMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_horizontal_default"
+                    app:layout_constraintStart_toEndOf="@id/end_conditions_operator_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/end_conditions_operator_button"
+                    app:layout_constraintBottom_toBottomOf="@id/end_conditions_operator_button"
+                    android:text="@string/condition_operator_and_desc"
+                    android:textAlignment="center"
+                    android:maxLines="2"/>
+
+                <FrameLayout
+                    android:id="@+id/end_conditions_list_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/end_conditions_operator_button"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/end_conditions_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        android:scrollbars="horizontal"
+                        tools:listitem="@layout/item_end_condition_card"
+                        tools:itemCount="1"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/end_conditions_no_events"
+                        style="@style/TextAppearance.Material3.HeadlineSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/margin_vertical_large"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/dialog_scenario_settings_end_condition_no_events"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

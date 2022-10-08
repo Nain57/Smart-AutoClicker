@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.scenariosettings
+package com.buzbuz.smartautoclicker.overlays.scenario.config
 
 import android.view.LayoutInflater
 import android.view.View
