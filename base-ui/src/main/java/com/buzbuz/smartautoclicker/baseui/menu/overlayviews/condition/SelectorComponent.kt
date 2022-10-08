@@ -51,7 +51,7 @@ internal class Selector(
     styledAttrs: TypedArray,
     screenMetrics: ScreenMetrics,
     viewInvalidator: () -> Unit,
-): SelectorViewComponent(screenMetrics, viewInvalidator) {
+): ViewComponent(screenMetrics, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move/resize gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {

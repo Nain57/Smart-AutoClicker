@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
  * @param screenMetrics provides information about current display.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
-internal abstract class SelectorViewComponent(
+internal abstract class ViewComponent(
     private val screenMetrics: ScreenMetrics,
     private val viewInvalidator: () -> Unit,
 ) {
@@ -81,5 +81,5 @@ internal abstract class SelectorViewComponent(
 
     /** Invalidates the view containing the component. */
     @CallSuper
-    protected open fun invalidate() = viewInvalidator.invoke()
+    protected open fun invalidate() = viewInvalidator()
 }

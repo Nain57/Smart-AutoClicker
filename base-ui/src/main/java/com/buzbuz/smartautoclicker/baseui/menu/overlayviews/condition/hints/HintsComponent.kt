@@ -25,7 +25,7 @@ import android.view.MotionEvent
 import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ConditionSelectorView
-import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.SelectorViewComponent
+import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.ViewComponent
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.GestureType
 import com.buzbuz.smartautoclicker.baseui.menu.overlayviews.condition.MoveSelector
@@ -44,12 +44,12 @@ import com.buzbuz.smartautoclicker.ui.R
  * @param screenMetrics object providing the current screen size.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
-internal class HintsController(
+internal class HintsComponent(
     context: Context,
     styledAttrs: TypedArray,
     screenMetrics: ScreenMetrics,
     viewInvalidator: () -> Unit,
-): SelectorViewComponent(screenMetrics, viewInvalidator) {
+): ViewComponent(screenMetrics, viewInvalidator) {
 
     /** The distance between the hint and the selector border. */
     private val iconsMargin: Int = styledAttrs.getDimensionPixelSize(
