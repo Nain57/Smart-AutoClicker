@@ -22,16 +22,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Material3.HeadlineSmall"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_gravity="center"
         android:gravity="center"
-        android:minHeight="@dimen/empty_min_height"
         android:visibility="gone"
-        android:textSize="@dimen/text_size_list_item_text_big"
-        tools:visibility="gone"
+        tools:visibility="visible"
         tools:text="@string/no_scenarios"/>
 
     <ProgressBar

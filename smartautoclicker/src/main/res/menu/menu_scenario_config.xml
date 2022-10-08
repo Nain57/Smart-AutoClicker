@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/page_events"
+        android:enabled="true"
+        android:icon="@drawable/ic_click_list"
+        android:title="Events"/>
+    <item
+        android:id="@+id/page_config"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:title="Config"/>
+    <item
+        android:id="@+id/page_debug"
+        android:enabled="true"
+        android:icon="@drawable/ic_debugging"
+        android:title="Debug"/>
+</menu>

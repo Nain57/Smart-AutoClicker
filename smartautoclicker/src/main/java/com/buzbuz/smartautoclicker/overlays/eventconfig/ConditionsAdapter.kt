@@ -120,9 +120,6 @@ class AddConditionViewHolder(
         viewBinding.copyItem.visibility =
             if (action.shouldDisplayCopy) View.VISIBLE
             else View.GONE
-        viewBinding.separator.visibility =
-            if (action.shouldDisplayCopy) View.VISIBLE
-            else View.GONE
     }
 }
 
