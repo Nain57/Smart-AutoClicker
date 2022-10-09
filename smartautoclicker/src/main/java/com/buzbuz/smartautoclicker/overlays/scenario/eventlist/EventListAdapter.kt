@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.eventconfig.ActionsAdapter
+import com.buzbuz.smartautoclicker.overlays.utils.bind
 
 import java.util.Collections
 
@@ -38,8 +39,8 @@ import java.util.Collections
  */
 class EventListAdapter(
     private val itemClickedListener: (Event) -> Unit,
-    private val itemReorderListener: (List<EventItem>) -> Unit,
-) : ListAdapter<EventItem, EventViewHolder>(EventDiffUtilCallback) {
+    private val itemReorderListener: (List<Event>) -> Unit,
+) : ListAdapter<Event, EventViewHolder>(EventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -79,14 +80,8 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
      * @param item the item providing the binding data.
      * @param itemClickedListener listener called when an event is clicked.
      */
-    fun bindEvent(item: EventItem, itemClickedListener: (Event) -> Unit) {
-        holderViewBinding.apply {
-            textName.text = item.name
-            textEnabled.text = "Enabled"
-            textConditionsCount.text = item.conditionsCount.toString()
-            textActionsCount.text = item.actionsCount.toString()
-            root.setOnClickListener { itemClickedListener(item.event) }
-        }
+    fun bindEvent(item: Event, itemClickedListener: (Event) -> Unit) {
+        holderViewBinding.bind(item, true, itemClickedListener)
     }
 }
 
@@ -126,10 +121,10 @@ class EventReorderTouchHelper
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [ActionsAdapter] list. */
-object EventDiffUtilCallback: DiffUtil.ItemCallback<EventItem>() {
-    override fun areItemsTheSame(oldItem: EventItem, newItem: EventItem): Boolean =
-        oldItem.event.id == newItem.event.id
+object EventDiffUtilCallback: DiffUtil.ItemCallback<Event>() {
+    override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean =
+        oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: EventItem, newItem: EventItem): Boolean =
+    override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean =
         oldItem == newItem
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.scenariosettings.endcondition
+package com.buzbuz.smartautoclicker.overlays.endcondition
 
 import android.content.Context
 
@@ -22,7 +22,6 @@ import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.overlays.scenariosettings.ScenarioSettingsDialog
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
@@ -35,7 +34,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 
 /**
- * View model for the [ScenarioSettingsDialog].
+ * View model for the [EndConditionConfigDialog].
  *
  * @param context the Android context.
  */
@@ -61,6 +60,10 @@ class EndConditionConfigModel(context: Context) : OverlayViewModel(context) {
         .filterNotNull()
         .map { it.executions }
         .take(1)
+    /** Tells if the configured end condition can be deleted. */
+    val canBeDeleted = configuredEndCondition
+        .filterNotNull()
+        .map { it.id != 0L }
     /** True if this end condition is valid and can be saved, false if not. */
     val isValidEndCondition = configuredEndCondition.map { endCondition ->
         endCondition != null && endCondition.eventId != 0L && endCondition.executions > 0
@@ -82,10 +85,21 @@ class EndConditionConfigModel(context: Context) : OverlayViewModel(context) {
             emptyList()
         )
     /** The event selected for the end condition. Null if none is. */
-    val selectedEvent = configuredEndCondition
+    val eventViewState = configuredEndCondition
         .combine(events) { endCondition, events ->
             events.find { event -> endCondition?.eventId == event.id }
         }
+        .combine(eventsAvailable) { selectedEvent, scenarioEvents ->
+            when {
+                scenarioEvents.isEmpty() -> EndConditionEventViewState.NoEvents
+                selectedEvent == null -> EndConditionEventViewState.NoSelection
+                else -> EndConditionEventViewState.Selected(selectedEvent)
+            }
+        }
+
+    /** Tells if the delete button should be shown. */
+    fun shouldShowDeleteButton(): Boolean =
+        configuredEndCondition.value?.id?.equals(0L) == false
 
     /**
      * Set the end condition to be configured.
@@ -115,4 +129,10 @@ class EndConditionConfigModel(context: Context) : OverlayViewModel(context) {
 
     /** @return the end condition currently configured. */
     fun getConfiguredEndCondition(): EndCondition = configuredEndCondition.value!!
+}
+
+sealed class EndConditionEventViewState {
+    object NoEvents : EndConditionEventViewState()
+    object NoSelection: EndConditionEventViewState()
+    data class Selected(val event: Event): EndConditionEventViewState()
 }

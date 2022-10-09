@@ -62,14 +62,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_horizontal_default">
+                android:layout_marginVertical="@dimen/margin_vertical_large">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
-                    style="@style/TextAppearance.Material3.TitleMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_vertical_large"
+                    style="@style/AppTheme.TextAppearance.Header"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -139,37 +136,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_vertical_large"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detection_quality_card">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_horizontal_default"
+                android:layout_marginVertical="@dimen/margin_vertical_large"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_conditions_title"
-                    style="@style/TextAppearance.Material3.TitleMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_vertical_large"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/AppTheme.TextAppearance.Header"
+                    android:text="@string/dialog_scenario_settings_end_condition_title"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_button"
-                    android:text="@string/dialog_scenario_settings_end_condition_title" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/end_conditions_operator_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/margin_vertical_default"
+                    app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/end_conditions_title"
-                    app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
                     app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
@@ -184,7 +179,7 @@
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/dialog_button_condition_or"/>
+                        android:text="@string/dialog_button_condition_or" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -194,44 +189,44 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_horizontal_default"
-                    app:layout_constraintStart_toEndOf="@id/end_conditions_operator_button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/end_conditions_operator_button"
-                    app:layout_constraintBottom_toBottomOf="@id/end_conditions_operator_button"
+                    android:maxLines="2"
                     android:text="@string/condition_operator_and_desc"
                     android:textAlignment="center"
-                    android:maxLines="2"/>
+                    app:layout_constraintBottom_toBottomOf="@id/end_conditions_operator_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/end_conditions_operator_button"
+                    app:layout_constraintTop_toTopOf="@id/end_conditions_operator_button" />
 
                 <FrameLayout
                     android:id="@+id/end_conditions_list_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/margin_vertical_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/end_conditions_operator_button"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/end_conditions_operator_button">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/end_conditions_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:orientation="horizontal"
                         android:scrollbars="horizontal"
-                        tools:listitem="@layout/item_end_condition_card"
-                        tools:itemCount="1"/>
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_end_condition_card" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/end_conditions_no_events"
                         style="@style/TextAppearance.Material3.HeadlineSmall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="@dimen/margin_vertical_large"
                         android:layout_gravity="center"
+                        android:layout_marginVertical="@dimen/margin_vertical_large"
                         android:gravity="center"
                         android:text="@string/dialog_scenario_settings_end_condition_no_events"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                 </FrameLayout>
 

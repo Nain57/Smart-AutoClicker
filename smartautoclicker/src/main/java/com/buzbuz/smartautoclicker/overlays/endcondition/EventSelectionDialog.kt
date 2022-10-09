@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.scenariosettings.endcondition
+package com.buzbuz.smartautoclicker.overlays.endcondition
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -27,56 +27,57 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogEndConditionEventSelectBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
-import com.buzbuz.smartautoclicker.overlays.scenariosettings.EndConditionAdapter
-import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
-//import com.buzbuz.smartautoclicker.overlays.utils.bindEvent
+import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.overlays.utils.LoadableListController
+import com.buzbuz.smartautoclicker.overlays.utils.bind
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-/**
- * Display the list of selectable events for a end condition.
- *
- * @param context the Android Context for the dialog shown by this controller.
- * @param eventList the list of selectable events for the end condition.
- * @param onEventClicked called when the user select an event.
- */
-class EndConditionEventSelectionDialog(
+
+class EventSelectionDialog(
     context: Context,
     private val eventList: List<Event>,
     private val onEventClicked: (Event) -> Unit,
-): LoadableListDialog(context) {
+): OverlayDialogController(context) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEndConditionEventSelectBinding
+    /** Controls the display state of the event list (empty, loading, loaded). */
+    private lateinit var listController: LoadableListController<Event, EndConditionEventViewHolder>
+
     /** Adapter for the list of events. */
     private val eventsAdapter = EndConditionEventsAdapter(::onEventSelected)
 
-    override val emptyTextId: Int = R.string.dialog_event_list_no_events
-
-    override fun getListBindingRoot(): View = viewBinding.root
-
     override fun onCreateDialog(): BottomSheetDialog {
-        viewBinding = DialogEndConditionEventSelectBinding.inflate(LayoutInflater.from(context))
+        viewBinding = DialogEndConditionEventSelectBinding.inflate(LayoutInflater.from(context)).apply {
+            layoutTopBar.apply {
+                dialogTitle.setText(R.string.dialog_end_condition_event_select_title)
+                buttonSave.visibility = View.GONE
+                buttonDismiss.setOnClickListener { dismiss() }
+            }
+        }
+
+        listController = LoadableListController(
+            owner = this,
+            root = viewBinding.layoutList,
+            adapter = eventsAdapter,
+            emptyTextId = R.string.dialog_event_list_no_events,
+        )
+        listController.listView.apply {
+            adapter = eventsAdapter
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        }
 
         return BottomSheetDialog(context).apply {
-            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_end_condition_event_select_title)
             setContentView(viewBinding.root)
-            //setNegativeButton(android.R.string.cancel, null)
         }
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        super.onDialogCreated(dialog)
-
-        updateLayoutState(eventList)
-        listBinding.list.apply{
-            adapter = eventsAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        }
-        eventsAdapter.submitList(eventList)
+        listController.submitList(eventList)
     }
 
     /**
@@ -109,7 +110,7 @@ private class EndConditionEventsAdapter(
         holder.onBind(getItem(position))
 }
 
-/** DiffUtil Callback comparing two EndConditionListItem when updating the [EndConditionAdapter] list. */
+/** DiffUtil Callback comparing two EndConditionListItem when updating the [EndConditionEventsAdapter] list. */
 private object EndConditionEventDiffUtilCallback: DiffUtil.ItemCallback<Event>() {
     override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean = oldItem.id != 0L && oldItem.id == newItem.id
     override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean = oldItem == newItem
@@ -125,10 +126,8 @@ private class EndConditionEventViewHolder(
     private val viewBinding: ItemEventBinding,
     private val onEventSelected: (Event) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {
+
     fun onBind(event: Event) {
-        viewBinding.apply {
-            //bindEvent(event = event, itemClickedListener = onEventSelected)
-            //btnAction.isClickable = false
-        }
+        viewBinding.bind(event, false, onEventSelected)
     }
 }

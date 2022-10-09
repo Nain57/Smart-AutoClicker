@@ -17,6 +17,14 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="AppTheme.TextAppearance" />
+
+    <style name="AppTheme.TextAppearance.Header" parent="@style/TextAppearance.Material3.TitleMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_large</item>
+    </style>
+
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/textTitle</item>
         <item name="actionMenuTextColor">@color/textTitle</item>

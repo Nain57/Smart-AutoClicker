@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -33,10 +32,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogActivitySelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemApplicationBinding
-import com.buzbuz.smartautoclicker.overlays.scenariosettings.EndConditionAdapter
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

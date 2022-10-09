@@ -74,3 +74,26 @@ class NumberInputFilter<T : Number>(private val type: KClass<T>): InputFilter {
         }
     } catch (nfe: NumberFormatException) { false }
 }
+
+/** Input filter for a number between a min and a max. */
+class MinMaxInputFilter(
+    private val min: Int,
+    private val max: Int,
+) : InputFilter {
+
+    override fun filter(
+        source: CharSequence?,
+        start: Int,
+        end: Int,
+        dest: Spanned?,
+        dstart: Int,
+        dend: Int
+    ): CharSequence? {
+        try {
+            val input = (dest.toString() + source.toString()).toInt()
+            if (input in min..max) return null
+        } catch (nfe: NumberFormatException) { }
+        return ""
+    }
+
+}

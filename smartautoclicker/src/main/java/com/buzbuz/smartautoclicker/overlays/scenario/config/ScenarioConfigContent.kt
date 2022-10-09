@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.DialogButton
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.scenariosettings.endcondition.EndConditionConfigDialog
+import com.buzbuz.smartautoclicker.overlays.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.launch
