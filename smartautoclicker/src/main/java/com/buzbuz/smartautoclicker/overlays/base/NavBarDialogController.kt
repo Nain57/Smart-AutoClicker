@@ -24,7 +24,7 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogBaseBinding
+import com.buzbuz.smartautoclicker.databinding.DialogNavBarBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -35,7 +35,7 @@ abstract class NavBarDialogController(
     /** Map of navigation bar item id to their content view. */
     private val contentInfoMap: MutableMap<Int, NavBarContentInfo> = mutableMapOf()
     /** */
-    private lateinit var baseViewBinding: DialogBaseBinding
+    private lateinit var baseViewBinding: DialogNavBarBinding
 
     /** */
     abstract val navigationMenuId: Int
@@ -45,7 +45,7 @@ abstract class NavBarDialogController(
     abstract fun onDialogButtonPressed(buttonType: DialogButton)
 
     override fun onCreateDialog(): BottomSheetDialog {
-        baseViewBinding = DialogBaseBinding.inflate(LayoutInflater.from(context)).apply {
+        baseViewBinding = DialogNavBarBinding.inflate(LayoutInflater.from(context)).apply {
             bottomNavigation.apply {
                 inflateMenu(R.menu.menu_scenario_config)
                 setOnItemSelectedListener { item ->
@@ -54,9 +54,11 @@ abstract class NavBarDialogController(
                 }
             }
 
-            buttonPositive.setOnClickListener { handleButtonClick(DialogButton.SAVE) }
-            buttonNegative.setOnClickListener { handleButtonClick(DialogButton.DISMISS) }
-            buttonNeutral.setOnClickListener { handleButtonClick(DialogButton.DELETE) }
+            layoutTopBar.apply {
+                buttonSave.setOnClickListener { handleButtonClick(DialogButton.SAVE) }
+                buttonDismiss.setOnClickListener { handleButtonClick(DialogButton.DISMISS) }
+                buttonDelete.setOnClickListener { handleButtonClick(DialogButton.DELETE) }
+            }
         }
 
         updateContentView(
@@ -103,7 +105,15 @@ abstract class NavBarDialogController(
     }
 
     protected fun setTitle(title: String) {
-        baseViewBinding.dialogTitle.text = title
+        baseViewBinding.layoutTopBar.dialogTitle.text = title
+    }
+
+    protected fun setButtonVisibility(buttonType: DialogButton, visibility: Int) {
+        when (buttonType) {
+            DialogButton.SAVE -> baseViewBinding.layoutTopBar.buttonSave.visibility = visibility
+            DialogButton.DISMISS -> baseViewBinding.layoutTopBar.buttonDismiss.visibility = visibility
+            DialogButton.DELETE -> baseViewBinding.layoutTopBar.buttonDelete.visibility = visibility
+        }
     }
 
     private fun updateSaveButtonState() {
@@ -112,7 +122,7 @@ abstract class NavBarDialogController(
             isEnabled = isEnabled && navBarContentInfo.saveEnabled
         }
 
-        baseViewBinding.buttonPositive.isEnabled = isEnabled
+        baseViewBinding.layoutTopBar.buttonSave.isEnabled = isEnabled
     }
 
     /**

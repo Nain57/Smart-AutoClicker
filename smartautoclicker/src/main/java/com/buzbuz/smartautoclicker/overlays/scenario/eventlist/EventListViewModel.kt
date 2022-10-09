@@ -25,7 +25,6 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Scenario
-import com.buzbuz.smartautoclicker.extensions.mapList
 import com.buzbuz.smartautoclicker.overlays.utils.newDefaultEvent
 
 import kotlinx.coroutines.Dispatchers
@@ -55,19 +54,10 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
         )
 
     /** List of events for the scenario specified in [scenario]. */
-    val eventsItems: StateFlow<List<EventItem>?> = scenario
+    val eventsItems: StateFlow<List<Event>?> = scenario
         .filterNotNull()
         .flatMapLatest { scenario ->
             repository.getCompleteEventList(scenario.id)
-        }
-        .mapList { event ->
-            EventItem(
-                event = event,
-                name = event.name,
-                enabled = true,
-                conditionsCount = event.conditions?.size ?: 0,
-                actionsCount = event.actions?.size ?: 0,
-            )
         }
         .stateIn(
             viewModelScope,
@@ -109,16 +99,14 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
      * @param events the events, ordered by their new priorities. They must be in the current scenario and have a
      *               defined id.
      */
-    fun updateEventsPriority(events: List<EventItem>) {
+    fun updateEventsPriority(events: List<Event>) {
         if (scenario.value == null || events.isEmpty()) {
             Log.e(TAG, "Can't update click priorities, scenario is not matching.")
             return
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateEventsPriority(
-                events.map { item -> item.event }
-            )
+            repository.updateEventsPriority(events)
         }
     }
 
@@ -137,30 +125,6 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
     }
-
-    /**
-     * Delete an event.
-     *
-     * @param event the event to delete.
-     */
-    fun deleteEvent(event: Event) {
-        if (scenario.value == null) {
-            Log.e(
-                TAG, "Can't delete click with scenario id $event.scenarioId, " +
-                    "invalid model scenario ${scenario.value}")
-            return
-        }
-
-        viewModelScope.launch(Dispatchers.IO) { repository.removeEvent(event) }
-    }
 }
-
-data class EventItem(
-    val event: Event,
-    val name: String,
-    val enabled: Boolean,
-    val conditionsCount: Int,
-    val actionsCount: Int,
-)
 
 private const val TAG = "EventListViewModel"

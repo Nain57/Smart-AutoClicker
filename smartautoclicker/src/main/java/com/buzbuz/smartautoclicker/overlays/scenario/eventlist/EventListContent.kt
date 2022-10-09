@@ -47,7 +47,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentEventListBinding
     /** Controls the display state of the event list (empty, loading, loaded). */
-    private lateinit var listController: LoadableListController<EventItem, EventViewHolder>
+    private lateinit var listController: LoadableListController<Event, EventViewHolder>
     /** Adapter for the list of events. */
     private lateinit var eventAdapter: EventListAdapter
 

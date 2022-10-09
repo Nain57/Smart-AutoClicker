@@ -15,89 +15,131 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.core.widget.NestedScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/layout_top_bar"
+        layout="@layout/include_dialog_top_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layout_content"
+        app:layout_constraintVertical_chainStyle="spread_inside"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_top_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scrollbars="vertical">
 
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/HeaderCardView">
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_large"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/event_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scenario_name_input_layout"
+                app:layout_constraintBottom_toTopOf="@id/end_conditions_card">
 
-                <TextView
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_end_condition_config_event_title"
-                    style="@style/HeaderTitle"/>
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_large">
 
-                <include layout="@layout/include_view_separator"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/event_title"
+                        style="@style/AppTheme.TextAppearance.Header"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="@string/dialog_end_condition_config_event_title" />
 
-                <include
-                    android:id="@+id/include_selected_event"
-                    layout="@layout/item_event"/>
+                    <include
+                        android:id="@+id/include_selected_event"
+                        layout="@layout/item_event"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/item_height_big"
+                        android:layout_marginTop="@dimen/margin_vertical_large"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/event_title"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        tools:visibility="visible"/>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/text_no_event"
-                    style="@style/ItemView.Big"
-                    android:gravity="center_vertical"
-                    android:textSize="@dimen/text_size_list_item_text"
-                    android:text="@string/dialog_end_condition_config_event_no_selection"
-                    android:drawablePadding="@dimen/margin_horizontal_small"
-                    app:drawableEndCompat="@drawable/ic_chevron"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/event_empty"
+                        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_large"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/event_title"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="@string/dialog_end_condition_config_event_no_selection"
+                        android:textAlignment="center"
+                        tools:visibility="gone"/>
 
-            </LinearLayout>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/event_none"
+                        style="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_large"
+                        android:layout_marginBottom="@dimen/margin_vertical_default"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/event_title"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="@string/dialog_end_condition_config_event_none_in_scenario"
+                        android:textAlignment="center"
+                        tools:visibility="gone"/>
 
-        </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <include layout="@layout/include_view_separator"/>
+            </com.google.android.material.card.MaterialCardView>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/HeaderCardView">
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/execution_count_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/detection_quality_card"
+                app:endIconMode="clear_text"
+                android:hint="@string/dialog_end_condition_config_executions_title">
 
-                <TextView
-                    android:id="@+id/text_executions_title"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/execution_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_end_condition_config_executions_title"
-                    style="@style/HeaderTitle"/>
-
-                <include layout="@layout/include_view_separator"/>
-
-                <EditText
-                    android:id="@+id/edit_executions"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_height"
-                    android:layout_marginStart="@dimen/margin_horizontal_small"
-                    android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:inputType="number"
                     android:importantForAutofill="no"
-                    android:hint="@string/dialog_end_condition_config_executions_title" />
+                    tools:text="3"/>
 
-            </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

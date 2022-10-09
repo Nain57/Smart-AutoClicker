@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.scenario
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -46,11 +47,10 @@ class ScenarioDialog(
 
     override val navigationMenuId: Int = R.menu.menu_scenario_config
 
-    override fun onCreateContent(navItemId: Int): NavBarDialogContent = when (navItemId) {
-        R.id.page_events -> EventListContent(scenario.id)
-        R.id.page_config -> ScenarioConfigContent(scenario.id)
-        R.id.page_debug -> DebugConfigContent()
-        else -> throw IllegalArgumentException("Unknown menu id $navItemId")
+    override fun onCreateDialog(): BottomSheetDialog {
+        return super.onCreateDialog().also {
+            setButtonVisibility(DialogButton.SAVE, View.VISIBLE)
+        }
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -59,6 +59,13 @@ class ScenarioDialog(
                 viewModel?.scenarioName?.collect(::updateDialogTitle)
             }
         }
+    }
+
+    override fun onCreateContent(navItemId: Int): NavBarDialogContent = when (navItemId) {
+        R.id.page_events -> EventListContent(scenario.id)
+        R.id.page_config -> ScenarioConfigContent(scenario.id)
+        R.id.page_debug -> DebugConfigContent()
+        else -> throw IllegalArgumentException("Unknown menu id $navItemId")
     }
 
     override fun onDialogButtonPressed(buttonType: DialogButton) = dismiss()
