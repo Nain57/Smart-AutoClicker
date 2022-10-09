@@ -31,8 +31,8 @@
     <string name="dialog_permission_overlay_desc">允许该应用显示在其他应用的上层以得知您点按的位置</string>
     <string name="dialog_permission_accessibility">无障碍服务</string>
     <string name="dialog_permission_accessibility_desc">通过”无障碍“服务模拟点击某个位置。</string>
-    <string name="dialog_permission_notification">Notification</string>
-    <string name="dialog_permission_notification_desc">Optional: Shows the notification while the application is running.</string>
+    <string name="dialog_permission_notification">通知</string>
+    <string name="dialog_permission_notification_desc">可选：在应用程序运行时显示通知。</string>
 
     <string name="notification_channel_name" translatable="false">智能点击器</string>
     <string name="notification_title">脚本: %1$s</string>
@@ -221,8 +221,8 @@
     <string name="dialog_debug_report_timing_avg">Avg</string>
     <string name="dialog_debug_report_empty">No debug report !</string>
 
-    <string name="dialog_debug_config_title">Debugging</string>
-    <string name="dialog_debug_config_show_view">Show debug view</string>
-    <string name="dialog_debug_config_generate_report">Generate a report</string>
+    <string name="dialog_debug_config_title">调试设置</string>
+    <string name="dialog_debug_config_show_view">显示调试窗口</string>
+    <string name="dialog_debug_config_generate_report">生成调试报告</string>
 
 </resources>
