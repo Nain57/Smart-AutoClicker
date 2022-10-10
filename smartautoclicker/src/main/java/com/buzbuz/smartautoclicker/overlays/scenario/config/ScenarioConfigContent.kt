@@ -34,7 +34,9 @@ import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.DialogButton
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.endcondition.EndConditionConfigDialog
+import com.buzbuz.smartautoclicker.overlays.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.launch
@@ -43,7 +45,13 @@ import kotlin.math.roundToInt
 class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent() {
 
     /** View model for this content. */
-    private val viewModel: ScenarioConfigViewModel by lazy { ViewModelProvider(this).get(ScenarioConfigViewModel::class.java) }
+    private val viewModel: ScenarioConfigViewModel by lazy {
+        ViewModelProvider(this).get(ScenarioConfigViewModel::class.java)
+    }
+    /** View model for the container dialog. */
+    private val dialogViewModel: ScenarioDialogViewModel by lazy {
+        ViewModelProvider(dialogViewModelStoreOwner).get(ScenarioDialogViewModel::class.java)
+    }
 
     private lateinit var viewBinding: ContentScenarioConfigBinding
     private lateinit var endConditionAdapter: EndConditionAdapter
@@ -105,7 +113,7 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
     }
 
     private fun updateSaveButton(isEnabled: Boolean) {
-        navBarDialog.setSaveButtonState(navBarId, isEnabled)
+        dialogViewModel.setSaveButtonState(navBarId, isEnabled)
     }
 
     private fun updateScenarioName(name: String?) {
@@ -159,23 +167,31 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
 
     private fun onAddEndConditionClicked() {
         viewModel.createNewEndCondition().let { endCondition ->
-            navBarDialog.showSubOverlayController(EndConditionConfigDialog(
-                context = context,
-                endCondition = endCondition,
-                endConditions = viewModel.configuredEndConditions.value,
-                onConfirmClicked = { newEndCondition -> viewModel.addEndCondition(newEndCondition) },
-                onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
-            ))
+            dialogViewModel.requestSubOverlay(
+                NavigationRequest(
+                    EndConditionConfigDialog(
+                        context = context,
+                        endCondition = endCondition,
+                        endConditions = viewModel.configuredEndConditions.value,
+                        onConfirmClicked = { newEndCondition -> viewModel.addEndCondition(newEndCondition) },
+                        onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
+                    )
+                )
+            )
         }
     }
 
     private fun onEndConditionClicked(endCondition: EndCondition, index: Int) {
-        navBarDialog.showSubOverlayController(EndConditionConfigDialog(
-            context = context,
-            endCondition = endCondition,
-            endConditions = viewModel.configuredEndConditions.value,
-            onConfirmClicked = { newEndCondition -> viewModel.updateEndCondition(newEndCondition, index) },
-            onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
-        ))
+        dialogViewModel.requestSubOverlay(
+            NavigationRequest(
+                EndConditionConfigDialog(
+                    context = context,
+                    endCondition = endCondition,
+                    endConditions = viewModel.configuredEndConditions.value,
+                    onConfirmClicked = { newEndCondition -> viewModel.updateEndCondition(newEndCondition, index) },
+                    onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
+                )
+            )
+        )
     }
 }

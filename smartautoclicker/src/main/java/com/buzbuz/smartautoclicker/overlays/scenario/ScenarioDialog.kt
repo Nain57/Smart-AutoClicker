@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.scenario
 
 import android.content.Context
 import android.view.View
+
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -28,12 +29,14 @@ import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.DialogButton
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogController
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenuModel
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.scenario.config.ScenarioConfigContent
 import com.buzbuz.smartautoclicker.overlays.scenario.debug.DebugConfigContent
 import com.buzbuz.smartautoclicker.overlays.scenario.eventlist.EventListContent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.flow.collect
+
 import kotlinx.coroutines.launch
 
 class ScenarioDialog(
@@ -63,7 +66,9 @@ class ScenarioDialog(
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.scenarioName.collect(::updateDialogTitle)
+                launch { viewModel.saveEnabledState.collect(::updateSaveButtonState) }
+                launch { viewModel.scenarioName.collect(::updateDialogTitle) }
+                launch { viewModel.subOverlayRequest.collect(::onNewSubOverlayRequest) }
             }
         }
     }
@@ -71,7 +76,19 @@ class ScenarioDialog(
     override fun onDialogButtonPressed(buttonType: DialogButton) = dismiss()
 
     /** */
+    private fun updateSaveButtonState(isEnabled: Boolean) {
+        setButtonEnabledState(DialogButton.SAVE, isEnabled)
+    }
+
+    /** */
     private fun updateDialogTitle(scenarioName: String) {
         setTitle(scenarioName)
+    }
+
+    private fun onNewSubOverlayRequest(request: NavigationRequest?) {
+        if (request == null) return
+
+        showSubOverlay(request.overlay, request.hideCurrent)
+        viewModel.consumeRequest()
     }
 }

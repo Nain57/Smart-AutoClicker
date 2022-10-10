@@ -22,7 +22,6 @@ import androidx.annotation.StringRes
 
 import androidx.lifecycle.Lifecycle
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogNavBarBinding
@@ -31,7 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 abstract class NavBarDialogController(
     context: Context,
-) : OverlayDialogController(context), NavBarDialog {
+) : OverlayDialogController(context) {
 
     /** Map of navigation bar item id to their content view. */
     private val contentInfoMap: MutableMap<Int, NavBarContentInfo> = mutableMapOf()
@@ -87,22 +86,6 @@ abstract class NavBarDialogController(
         contentInfoMap.values.forEach { contentInfo ->
             contentInfo.content.destroy()
         }
-    }
-
-    override fun showSubOverlayController(overlay: OverlayController, hideCurrent: Boolean) {
-        showSubOverlay(overlay, hideCurrent)
-    }
-
-    override fun setSaveButtonState(contentId: Int, changed: Boolean) {
-        var haveChanged = false
-        contentInfoMap[contentId]?.let { contentInfo ->
-            if (contentInfo.saveEnabled != changed) {
-                contentInfo.saveEnabled = changed
-                haveChanged = true
-            }
-        }
-
-        if (haveChanged) updateSaveButtonState()
     }
 
     protected fun setTitle(title: String) {
@@ -181,3 +164,9 @@ private class NavBarContentInfo(
     val content: NavBarDialogContent,
     var saveEnabled: Boolean = true,
 )
+
+enum class DialogButton {
+    DISMISS,
+    DELETE,
+    SAVE,
+}

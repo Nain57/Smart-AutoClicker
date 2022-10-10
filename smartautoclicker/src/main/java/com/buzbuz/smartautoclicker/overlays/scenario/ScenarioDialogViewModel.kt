@@ -19,19 +19,26 @@ package com.buzbuz.smartautoclicker.overlays.scenario
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
+import com.buzbuz.smartautoclicker.baseui.OverlayController
 
 import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.overlays.base.NavigationViewModel
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ScenarioDialogViewModel(application: Application) : AndroidViewModel(application) {
+class ScenarioDialogViewModel(application: Application) : NavigationViewModel(application) {
 
     /** */
     private val repository: Repository = Repository.getRepository(application)
     /** */
     private val configuredScenarioId: MutableStateFlow<Long?> = MutableStateFlow(null)
+
+    private val contentSaveState: MutableMap<Int, Boolean> = mutableMapOf()
+
+    private val _saveEnabledState = MutableStateFlow(true)
+    val saveEnabledState: StateFlow<Boolean> = _saveEnabledState
 
     val scenarioName: Flow<String> = configuredScenarioId
         .filterNotNull()
@@ -41,5 +48,18 @@ class ScenarioDialogViewModel(application: Application) : AndroidViewModel(appli
     /** */
     fun setConfiguredScenario(scenarioId: Long) {
         configuredScenarioId.value = scenarioId
+    }
+
+    fun setSaveButtonState(contentId: Int, newState: Boolean) {
+        if (contentSaveState[contentId] == newState) return
+
+        contentSaveState[contentId] = newState
+
+        var isEnabled = true
+        contentSaveState.values.forEach { enabledForContent ->
+            isEnabled = isEnabled && enabledForContent
+        }
+
+        _saveEnabledState.value = isEnabled
     }
 }
