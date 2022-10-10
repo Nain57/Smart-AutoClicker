@@ -31,9 +31,10 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentEventListBinding
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.event.EventDialog
-import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
+import com.buzbuz.smartautoclicker.overlays.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListController
 
 import kotlinx.coroutines.launch
@@ -41,7 +42,14 @@ import kotlinx.coroutines.launch
 class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
 
     /** View model for this content. */
-    private val viewModel: EventListViewModel by lazy { ViewModelProvider(this).get(EventListViewModel::class.java) }
+    private val viewModel: EventListViewModel by lazy {
+        ViewModelProvider(this).get(EventListViewModel::class.java)
+    }
+    /** View model for the container dialog. */
+    private val dialogViewModel: ScenarioDialogViewModel by lazy {
+        ViewModelProvider(dialogViewModelStoreOwner).get(ScenarioDialogViewModel::class.java)
+    }
+
     /** TouchHelper applied to [eventAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(EventReorderTouchHelper())
 
@@ -103,25 +111,29 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
 
     /** Opens the dialog allowing the user to copy a click. */
     private fun showEventCopyDialog() {
-        navBarDialog.showSubOverlayController(
-            EventCopyDialog(
-                context = context,
-                scenarioId = viewModel.scenarioId.value!!,
-                onEventSelected = ::showEventConfigDialog,
+        dialogViewModel.requestSubOverlay(
+            NavigationRequest(
+                EventCopyDialog(
+                    context = context,
+                    scenarioId = viewModel.scenarioId.value!!,
+                    onEventSelected = ::showEventConfigDialog,
+                ),
             )
         )
     }
 
     /** Opens the dialog allowing the user to add a new click. */
     private fun showEventConfigDialog(event: Event) {
-        navBarDialog.showSubOverlayController(
-            overlay = EventDialog(
-                context = context,
-                event = event,
-                onConfigComplete = viewModel::addOrUpdateEvent,
-                onDelete = viewModel::deleteEvent,
-            ),
-            hideCurrent = true
+        dialogViewModel.requestSubOverlay(
+            NavigationRequest(
+                overlay = EventDialog(
+                    context = context,
+                    event = event,
+                    onConfigComplete = viewModel::addOrUpdateEvent,
+                    onDelete = viewModel::deleteEvent,
+                ),
+                hideCurrent = true
+            )
         )
     }
 }

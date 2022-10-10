@@ -45,8 +45,8 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
     /** The root view of the content. Provided by the implementation via [onCreateView]. */
     private lateinit var root: ViewGroup
 
-    /** The dialog displaying this content. */
-    protected lateinit var navBarDialog: NavBarDialog
+    /** The view model store owner of the dialog. */
+    protected lateinit var dialogViewModelStoreOwner: ViewModelStoreOwner
     /** The identifier of this content in the navigation bar. */
     protected var navBarId: Int = -1
         private set
@@ -58,15 +58,15 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
      * Creates the content.
      * The views will be inflated, but not attached nor shown yet.
      *
-     * @param dialog the dialog displaying this content.
+     * @param owner the view model store owner of the dialog.
      * @param container the container view for this content.
      * @param identifier the identifier of this content in the parent navigation bar.
      */
-    fun create(dialog: NavBarDialog, container: ViewGroup, identifier: Int) {
+    fun create(owner: ViewModelStoreOwner, container: ViewGroup, identifier: Int) {
         if (lifecycleRegistry.currentState != Lifecycle.State.INITIALIZED) return
 
         navBarId = identifier
-        navBarDialog = dialog
+        dialogViewModelStoreOwner = owner
         rootContainer = container
         root = onCreateView(container)
 
@@ -132,4 +132,6 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
     protected open fun onStart() = Unit
 
     open fun onDialogButtonClicked(buttonType: DialogButton) = Unit
+
+
 }
