@@ -16,9 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.overlays.endcondition
 
-import android.content.Context
+import android.app.Application
 
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.Event
@@ -36,13 +38,13 @@ import kotlinx.coroutines.flow.take
 /**
  * View model for the [EndConditionConfigDialog].
  *
- * @param context the Android context.
+ * @param application the Android application.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class EndConditionConfigModel(context: Context) : OverlayViewModel(context) {
+class EndConditionConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(context)
+    private val repository = Repository.getRepository(application)
 
     /** The configured end condition. */
     private val configuredEndCondition = MutableStateFlow<EndCondition?>(null)

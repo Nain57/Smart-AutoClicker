@@ -24,6 +24,7 @@ import android.view.View
 
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -50,15 +51,14 @@ import kotlin.reflect.KClass
  */
 class ExtraConfigDialog(
     context: Context,
-    extra: IntentExtra<out Any>,
+    private val extra: IntentExtra<out Any>,
     private val onConfigComplete: (IntentExtra<out Any>) -> Unit,
     private val onDeleteClicked: (() -> Unit)? = null,
 ) : OverlayDialogController(context) {
 
     /** The view model for the data displayed in this dialog. */
-    private var viewModel: ExtraConfigModel? = ExtraConfigModel(context).apply {
-        attachToLifecycle(this@ExtraConfigDialog)
-        setConfigExtra(extra)
+    private val viewModel: ExtraConfigModel by lazy {
+        ViewModelProvider(this).get(ExtraConfigModel::class.java)
     }
 
     /** ViewBinding containing the views for this dialog. */
@@ -69,6 +69,7 @@ class ExtraConfigDialog(
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogIntentExtraConfigBinding.inflate(LayoutInflater.from(context))
+        viewModel.setConfigExtra(extra)
 
         val builder = BottomSheetDialog(context).apply {
             //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_action_config_intent_advanced_extras_config_title)
@@ -203,10 +204,5 @@ class ExtraConfigDialog(
         }
 
         dismiss()
-    }
-
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
     }
 }

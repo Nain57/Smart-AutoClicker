@@ -17,18 +17,18 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/page_events"
-        android:enabled="true"
-        android:icon="@drawable/ic_click_list"
-        android:title="Events"/>
-    <item
-        android:id="@+id/page_config"
+        android:id="@+id/page_event"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="Config"/>
+        android:title="Configuration"/>
     <item
-        android:id="@+id/page_debug"
+        android:id="@+id/page_conditions"
         android:enabled="true"
-        android:icon="@drawable/ic_debugging"
-        android:title="Debug"/>
+        android:icon="@drawable/ic_condition"
+        android:title="Conditions"/>
+    <item
+        android:id="@+id/page_actions"
+        android:enabled="true"
+        android:icon="@drawable/ic_click"
+        android:title="Actions"/>
 </menu>

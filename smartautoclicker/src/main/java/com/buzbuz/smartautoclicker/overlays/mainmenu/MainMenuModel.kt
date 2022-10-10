@@ -16,10 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.overlays.mainmenu
 
-import android.content.Context
+import android.app.Application
 import android.content.SharedPreferences
 
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
+import androidx.lifecycle.AndroidViewModel
+
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
@@ -34,16 +35,16 @@ import kotlinx.coroutines.flow.map
 
 /**
  * View model for the [MainMenu].
- * @param context the Android context.
+ * @param application the Android application.
  */
-class MainMenuModel(context: Context) : OverlayViewModel(context) {
+class MainMenuModel(application: Application) : AndroidViewModel(application) {
 
     /** Debug configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = context.getDebugConfigPreferences()
+    private val sharedPreferences: SharedPreferences = application.getDebugConfigPreferences()
     /** The detector engine. */
-    private var detectorEngine: DetectorEngine = DetectorEngine.getDetectorEngine(context)
+    private var detectorEngine: DetectorEngine = DetectorEngine.getDetectorEngine(application)
     /** The repository for the scenarios. */
-    private var repository: Repository? = Repository.getRepository(context)
+    private var repository: Repository? = Repository.getRepository(application)
     /** The current of the detection. */
     val detectionState: Flow<Boolean> = detectorEngine.state
         .map { it == DetectorState.DETECTING }
@@ -57,8 +58,8 @@ class MainMenuModel(context: Context) : OverlayViewModel(context) {
             when (state.value) {
                 DetectorState.DETECTING -> stopDetection()
                 DetectorState.RECORDING -> startDetection(
-                    sharedPreferences.getIsDebugViewEnabled(context),
-                    sharedPreferences.getIsDebugReportEnabled(context),
+                    sharedPreferences.getIsDebugViewEnabled(getApplication<Application>()),
+                    sharedPreferences.getIsDebugReportEnabled(getApplication<Application>()),
                 )
                 else -> { /* Nothing to do */ }
             }

@@ -16,12 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.overlays.copy.events
 
-import android.content.Context
+import android.app.Application
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.utils.getIconRes
@@ -38,13 +39,13 @@ import kotlinx.coroutines.flow.stateIn
 /**
  * View model for the [EventCopyDialog].
  *
- * @param context the Android context.
+ * @param application the Android application.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class EventCopyModel(context: Context) : OverlayViewModel(context) {
+class EventCopyModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(context)
+    private val repository = Repository.getRepository(application)
 
 
     /** The currently searched event name. Null if no is. */

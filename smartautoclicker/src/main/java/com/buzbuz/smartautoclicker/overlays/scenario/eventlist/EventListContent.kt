@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.databinding.ContentEventListBinding
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyDialog
+import com.buzbuz.smartautoclicker.overlays.event.EventDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigDialog
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListController
 
@@ -106,7 +107,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
             EventCopyDialog(
                 context = context,
                 scenarioId = viewModel.scenarioId.value!!,
-                onEventSelected = ::showEventConfigDialog
+                onEventSelected = ::showEventConfigDialog,
             )
         )
     }
@@ -114,10 +115,11 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     /** Opens the dialog allowing the user to add a new click. */
     private fun showEventConfigDialog(event: Event) {
         navBarDialog.showSubOverlayController(
-            overlay = EventConfigDialog(
+            overlay = EventDialog(
                 context = context,
                 event = event,
                 onConfigComplete = viewModel::addOrUpdateEvent,
+                onDelete = viewModel::deleteEvent,
             ),
             hideCurrent = true
         )

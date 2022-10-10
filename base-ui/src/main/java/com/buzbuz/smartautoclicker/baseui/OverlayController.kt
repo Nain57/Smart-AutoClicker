@@ -16,13 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.baseui
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 
 import androidx.annotation.CallSuper
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.*
 
 import java.io.PrintWriter
 
@@ -34,7 +33,8 @@ import java.io.PrintWriter
  * Back stack management is ensured by the method [showSubOverlay], resuming the parent ui object once the child is
  * dismissed.
  */
-abstract class OverlayController(protected val context: Context) : LifecycleOwner {
+abstract class OverlayController(protected val context: Context)
+    : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
 
     private companion object {
         /** Tag for logs. */
@@ -44,6 +44,12 @@ abstract class OverlayController(protected val context: Context) : LifecycleOwne
     /** The lifecycle of the ui component controlled by this class */
     private val lifecycleRegistry: LifecycleRegistry by lazy { LifecycleRegistry(this) }
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
+    /** The store for the view models of the [OverlayController] implementations. */
+    private val modelStore: ViewModelStore by lazy { ViewModelStore() }
+    override fun getViewModelStore(): ViewModelStore = modelStore
+    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory =
+        ViewModelProvider.AndroidViewModelFactory.getInstance((context.applicationContext as Application))
 
     /** Tells if the overlay is shown. */
     private var isShown: Boolean = false

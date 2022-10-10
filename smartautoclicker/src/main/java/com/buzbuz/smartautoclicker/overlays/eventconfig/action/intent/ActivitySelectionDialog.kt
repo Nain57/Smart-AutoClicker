@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DiffUtil
@@ -51,8 +52,8 @@ class ActivitySelectionDialog(
 ) : LoadableListDialog(context) {
 
     /** The view model for this dialog. */
-    private var viewModel: ActivitySelectionModel? = ActivitySelectionModel(context).apply {
-        attachToLifecycle(this@ActivitySelectionDialog)
+    private val viewModel: ActivitySelectionModel by lazy {
+        ViewModelProvider(this).get(ActivitySelectionModel::class.java)
     }
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogActivitySelectionBinding
@@ -85,17 +86,12 @@ class ActivitySelectionDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel?.activities?.collect { activityList ->
+                viewModel.activities.collect { activityList ->
                     updateLayoutState(activityList)
                     adapter.submitList(activityList)
                 }
             }
         }
-    }
-
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
     }
 }
 

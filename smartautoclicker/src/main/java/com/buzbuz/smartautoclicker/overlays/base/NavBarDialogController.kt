@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.base
 
 import android.content.Context
 import android.view.LayoutInflater
+import androidx.annotation.StringRes
 
 import androidx.lifecycle.Lifecycle
 
@@ -47,7 +48,7 @@ abstract class NavBarDialogController(
     override fun onCreateDialog(): BottomSheetDialog {
         baseViewBinding = DialogNavBarBinding.inflate(LayoutInflater.from(context)).apply {
             bottomNavigation.apply {
-                inflateMenu(R.menu.menu_scenario_config)
+                inflateMenu(navigationMenuId)
                 setOnItemSelectedListener { item ->
                     updateContentView(item.itemId)
                     true
@@ -106,6 +107,18 @@ abstract class NavBarDialogController(
 
     protected fun setTitle(title: String) {
         baseViewBinding.layoutTopBar.dialogTitle.text = title
+    }
+
+    protected fun setTitle(@StringRes titleRes: Int) {
+        baseViewBinding.layoutTopBar.dialogTitle.setText(titleRes)
+    }
+
+    protected fun setButtonEnabledState(buttonType: DialogButton, enabled: Boolean) {
+        when (buttonType) {
+            DialogButton.SAVE -> baseViewBinding.layoutTopBar.buttonSave.isEnabled = enabled
+            DialogButton.DISMISS -> baseViewBinding.layoutTopBar.buttonDismiss.isEnabled = enabled
+            DialogButton.DELETE -> baseViewBinding.layoutTopBar.buttonDelete.isEnabled = enabled
+        }
     }
 
     protected fun setButtonVisibility(buttonType: DialogButton, visibility: Int) {

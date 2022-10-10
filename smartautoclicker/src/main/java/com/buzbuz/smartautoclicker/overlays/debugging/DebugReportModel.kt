@@ -16,9 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.overlays.debugging
 
-import android.content.Context
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.debugging.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.engine.debugging.DebugReport
@@ -31,9 +32,9 @@ import kotlin.time.Duration.Companion.milliseconds
 
 /** */
 @OptIn(ExperimentalCoroutinesApi::class)
-class DebugReportModel(context: Context) : OverlayViewModel(context) {
+class DebugReportModel(application: Application) : AndroidViewModel(application) {
 
-    private val debugReport: Flow<DebugReport?> = DetectorEngine.getDetectorEngine(context).debugEngine
+    private val debugReport: Flow<DebugReport?> = DetectorEngine.getDetectorEngine(application).debugEngine
         .flatMapLatest { it.debugReport }
 
     private val expandedEventsMap = MutableStateFlow<MutableSet<Long>>(mutableSetOf())

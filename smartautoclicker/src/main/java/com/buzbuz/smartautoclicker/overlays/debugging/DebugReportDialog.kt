@@ -20,32 +20,30 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogDebugReportBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
 class DebugReportDialog(context: Context): LoadableListDialog(context) {
 
-    /** The view model for this dialog. */
-    private var viewModel: DebugReportModel? = DebugReportModel(context).apply {
-        attachToLifecycle(this@DebugReportDialog)
-    }
+    /** View model for this dialog. */
+    private val viewModel: DebugReportModel by lazy { ViewModelProvider(this).get(DebugReportModel::class.java) }
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogDebugReportBinding
 
     /** Adapter for the report */
     private val reportAdapter = DebugReportAdapter(
-        viewModel!!::collapseExpandEvent,
-        viewModel!!::collapseExpandCondition,
+        viewModel::collapseExpandEvent,
+        viewModel::collapseExpandCondition,
     )
 
     override val emptyTextId: Int = R.string.dialog_debug_report_empty
@@ -68,16 +66,11 @@ class DebugReportDialog(context: Context): LoadableListDialog(context) {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel?.reportItems?.collect { reportItems ->
+                viewModel.reportItems.collect { reportItems ->
                     updateLayoutState(reportItems)
                     reportAdapter.submitList(reportItems)
                 }
             }
         }
-    }
-
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
     }
 }

@@ -16,10 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.overlays.eventconfig.condition
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.domain.EXACT
@@ -40,10 +42,10 @@ import kotlinx.coroutines.withContext
  * View model for the [ConditionConfigDialog].
  * @param context the Android context.
  */
-class ConditionConfigModel(context: Context) : OverlayViewModel(context) {
+class ConditionConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the database. */
-    private val repository = Repository.getRepository(context)
+    private val repository = Repository.getRepository(application)
 
     /** The condition being configured by the user. Defined using [setConfigCondition]. */
     private val configuredCondition = MutableStateFlow<Condition?>(null)

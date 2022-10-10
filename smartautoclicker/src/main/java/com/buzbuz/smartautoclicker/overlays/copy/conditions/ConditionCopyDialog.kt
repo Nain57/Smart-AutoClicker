@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ import android.view.View
 
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,6 +31,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.databinding.DialogConditionCopyBinding
+import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyModel
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -44,15 +46,13 @@ import kotlinx.coroutines.launch
  */
 class ConditionCopyDialog(
     context: Context,
-    conditions: List<Condition>,
+    private val conditions: List<Condition>,
     private val onConditionSelected: (Condition) -> Unit,
 ) : LoadableListDialog(context)  {
 
-    /** The view model for this dialog. */
-    private var viewModel: ConditionCopyModel? = ConditionCopyModel(context).apply {
-            attachToLifecycle(this@ConditionCopyDialog)
-            setCurrentEventConditions(conditions)
-        }
+    /** View model for this content. */
+    private val viewModel: ConditionCopyModel by lazy { ViewModelProvider(this).get(ConditionCopyModel::class.java) }
+
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConditionCopyBinding
     /** Adapter displaying the list of conditions. */
@@ -64,6 +64,7 @@ class ConditionCopyDialog(
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogConditionCopyBinding.inflate(LayoutInflater.from(context))
+        viewModel.setCurrentEventConditions(conditions)
 
         return BottomSheetDialog(context).apply {
             //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_copy_title)
@@ -77,13 +78,13 @@ class ConditionCopyDialog(
 
         conditionAdapter = ConditionCopyAdapter(
             conditionClickedListener = { selectedCondition ->
-                viewModel?.let {
+                viewModel.let {
                     onConditionSelected(it.getNewConditionForCopy(selectedCondition))
                     dismiss()
                 }
             },
             bitmapProvider = { bitmap, onLoaded ->
-                viewModel?.getConditionBitmap(bitmap, onLoaded)
+                viewModel.getConditionBitmap(bitmap, onLoaded)
             },
         )
 
@@ -97,16 +98,11 @@ class ConditionCopyDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel?.conditionList?.collect { actionList ->
+                viewModel.conditionList.collect { actionList ->
                     updateLayoutState(actionList)
                     conditionAdapter.submitList(if (actionList == null) ArrayList() else ArrayList(actionList))
                 }
             }
         }
-    }
-
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
     }
 }

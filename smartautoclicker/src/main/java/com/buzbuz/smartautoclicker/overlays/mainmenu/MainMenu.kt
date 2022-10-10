@@ -25,6 +25,7 @@ import android.view.View
 import android.view.WindowManager
 
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -57,13 +58,9 @@ import kotlinx.coroutines.launch
 class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuController(context) {
 
     /** The view model for this menu. */
-    private var viewModel: MainMenuModel? = MainMenuModel(context).apply {
-        attachToLifecycle(this@MainMenu)
-    }
+    private val viewModel: MainMenuModel by lazy { ViewModelProvider(this).get(MainMenuModel::class.java) }
     /** The view model for the debugging features. */
-    private var debuggingViewModel: DebugModel? = DebugModel(context).apply {
-        attachToLifecycle(this@MainMenu)
-    }
+    private val debuggingViewModel: DebugModel  by lazy { ViewModelProvider(this).get(DebugModel::class.java) }
 
     /** Animation from play to pause. */
     private val playToPauseDrawable =
@@ -104,22 +101,22 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel?.eventList?.collect { onEventListChanged(it) } }
+                launch { viewModel.eventList.collect { onEventListChanged(it) } }
 
                 launch {
-                    viewModel?.detectionState?.collect { isDetecting ->
+                    viewModel.detectionState.collect { isDetecting ->
                         if (isDetecting) toDetectingState() else toIdleState()
                     }
                 }
 
                 launch {
-                    debuggingViewModel?.isDebugging?.collect { isDebugging ->
+                    debuggingViewModel.isDebugging.collect { isDebugging ->
                         setDebugOverlayViewVisibility(isDebugging)
                     }
                 }
 
                 launch {
-                    debuggingViewModel?.isDebugReportReady?.collect { reportReady ->
+                    debuggingViewModel.isDebugReportReady.collect { reportReady ->
                         if (reportReady) showSubOverlay(DebugReportDialog(ContextThemeWrapper(context, R.style.AppTheme)))
                     }
                 }
@@ -127,14 +124,9 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         }
     }
 
-    override fun onDismissed() {
-        super.onDismissed()
-        viewModel = null
-    }
-
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_play -> viewModel?.toggleDetection()
+            R.id.btn_play -> viewModel.toggleDetection()
             R.id.btn_click_list -> showSubOverlay(ScenarioDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
                 //EventListDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
             R.id.btn_stop -> dismiss()
@@ -209,7 +201,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     private fun observeDebugValues() = lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
-                debuggingViewModel?.debugLastPositive?.collect { debugInfo ->
+                debuggingViewModel.debugLastPositive.collect { debugInfo ->
                     viewBinding.debugEventName.text = debugInfo.eventName
                     viewBinding.debugConditionName.text = debugInfo.conditionName
                     viewBinding.debugConfidenceRate.text = debugInfo.confidenceRateText
@@ -217,7 +209,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
             }
 
             launch {
-                debuggingViewModel?.debugLastPositiveCoordinates?.collect { coordinates ->
+                debuggingViewModel.debugLastPositiveCoordinates?.collect { coordinates ->
                     (screenOverlayView as DebugOverlayView).setPositiveResult(coordinates)
                 }
             }

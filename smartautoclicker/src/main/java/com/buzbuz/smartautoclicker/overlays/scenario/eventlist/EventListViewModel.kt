@@ -125,6 +125,21 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
     }
+
+    /**
+     * Delete an event.
+     *
+     * @param event the event to delete.
+     */
+    fun deleteEvent(event: Event) {
+        if (scenario.value == null) {
+            Log.e(TAG, "Can't delete click with scenario id $event.scenarioId, " +
+                    "invalid model scenario ${scenario.value}")
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) { repository.removeEvent(event) }
+    }
 }
 
 private const val TAG = "EventListViewModel"

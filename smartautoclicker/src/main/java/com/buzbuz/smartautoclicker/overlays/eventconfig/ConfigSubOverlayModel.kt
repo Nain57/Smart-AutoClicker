@@ -16,9 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.overlays.eventconfig
 
-import android.content.Context
+import android.app.Application
 
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Condition
 
@@ -30,7 +32,7 @@ import kotlinx.coroutines.launch
  * View model for the [EventConfigDialog] sub overlays.
  * @param context the Android context.
  */
-class ConfigSubOverlayModel(context: Context) : OverlayViewModel(context) {
+class ConfigSubOverlayModel(application: Application) : AndroidViewModel(application) {
 
     /** Backing field for [subOverlayRequest]. */
     private val _subOverlayRequest = MutableStateFlow<SubOverlay>(SubOverlay.None)

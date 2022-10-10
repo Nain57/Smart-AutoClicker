@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -48,21 +49,21 @@ import kotlinx.coroutines.launch
  */
 class EndConditionConfigDialog(
     context: Context,
-    endCondition: EndCondition,
-    endConditions: List<EndCondition>,
+    private val endCondition: EndCondition,
+    private val endConditions: List<EndCondition>,
     private val onConfirmClicked: (EndCondition) -> Unit,
     private val onDeleteClicked: () -> Unit
 ): OverlayDialogController(context) {
 
-    /** The view model for this dialog. */
-    private var viewModel: EndConditionConfigModel? = EndConditionConfigModel(context).apply {
-        attachToLifecycle(this@EndConditionConfigDialog)
-        setEndCondition(endCondition, endConditions)
-    }
+    /** View model for this dialog. */
+    private val viewModel: EndConditionConfigModel by lazy { ViewModelProvider(this).get(EndConditionConfigModel::class.java) }
+
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEndConditionConfigBinding
 
     override fun onCreateDialog(): BottomSheetDialog {
+        viewModel.setEndCondition(endCondition, endConditions)
+
         viewBinding = DialogEndConditionConfigBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_end_condition_config_title)
@@ -83,7 +84,7 @@ class EndConditionConfigDialog(
                         } catch (nfe: java.lang.NumberFormatException) {
                             0
                         }
-                        viewModel?.setExecutions(executions)
+                        viewModel.setExecutions(executions)
                     }
                 })
             }
@@ -97,10 +98,10 @@ class EndConditionConfigDialog(
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel?.canBeDeleted?.collect(::updateDeleteButton) }
-                launch { viewModel?.eventViewState?.collect(::updateEvent) }
-                launch { viewModel?.executions?.collect(::updateExecutionCount) }
-                launch { viewModel?.isValidEndCondition?.collect(::updateSaveButton) }
+                launch { viewModel.canBeDeleted.collect(::updateDeleteButton) }
+                launch { viewModel.eventViewState.collect(::updateEvent) }
+                launch { viewModel.executions.collect(::updateExecutionCount) }
+                launch { viewModel.isValidEndCondition.collect(::updateSaveButton) }
             }
         }
     }
@@ -110,9 +111,7 @@ class EndConditionConfigDialog(
      * Propagate the configured event to the provided listener and dismiss the dialog.
      */
     private fun onSaveButtonClicked() {
-        viewModel?.let { model ->
-            onConfirmClicked(model.getConfiguredEndCondition())
-        }
+        onConfirmClicked(viewModel.getConfiguredEndCondition())
         dismiss()
     }
 
@@ -172,8 +171,8 @@ class EndConditionConfigDialog(
         showSubOverlay(
             EventSelectionDialog(
                 context = context,
-                eventList = viewModel?.eventsAvailable?.value ?: emptyList(),
-                onEventClicked = { event -> viewModel?.setEvent(event) }
+                eventList = viewModel.eventsAvailable.value,
+                onEventClicked = { event -> viewModel.setEvent(event) }
             )
         )
     }
