@@ -16,10 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent
 
-import android.content.Context
+import android.app.Application
 import android.content.Intent
 
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
+import androidx.lifecycle.AndroidViewModel
+
 import com.buzbuz.smartautoclicker.extensions.queryIntentActivitiesCompat
 
 import kotlinx.coroutines.Dispatchers
@@ -30,18 +31,18 @@ import kotlinx.coroutines.flow.flowOn
  * View model for the [ActivitySelectionDialog].
  * @param context the Android context.
  */
-class ActivitySelectionModel(context: Context) : OverlayViewModel(context) {
+class ActivitySelectionModel(application: Application) : AndroidViewModel(application) {
 
     /** Retrieves the list of activities visible on the Android launcher. */
     val activities = flow {
-        val resolveInfoList = context.packageManager.queryIntentActivitiesCompat(
+        val resolveInfoList = application.packageManager.queryIntentActivitiesCompat(
             Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
             0,
         )
 
         emit(
             resolveInfoList
-                .mapNotNull { it.getActivityDisplayInfo(context.packageManager) }
+                .mapNotNull { it.getActivityDisplayInfo(application.packageManager) }
                 .sortedBy { it.name.lowercase() }
         )
     }.flowOn(Dispatchers.IO)

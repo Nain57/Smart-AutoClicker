@@ -28,6 +28,7 @@ import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -39,6 +40,7 @@ import com.buzbuz.smartautoclicker.domain.EXACT
 import com.buzbuz.smartautoclicker.domain.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.databinding.DialogConditionConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
+import com.buzbuz.smartautoclicker.overlays.eventconfig.EventConfigModel
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -61,9 +63,8 @@ class ConditionConfigDialog(
 ) : OverlayDialogController(context) {
 
     /** The view model for this dialog. */
-    private var viewModel: ConditionConfigModel? = ConditionConfigModel(context).apply {
-        attachToLifecycle(this@ConditionConfigDialog)
-        setConfigCondition(condition)
+    private val viewModel: ConditionConfigModel by lazy {
+        ViewModelProvider(this).get(ConditionConfigModel::class.java)
     }
 
     /** ViewBinding containing the views for this dialog. */
@@ -73,6 +74,8 @@ class ConditionConfigDialog(
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogConditionConfigBinding.inflate(LayoutInflater.from(context))
+        viewModel.setConfigCondition(condition)
+
         return BottomSheetDialog(context).apply {
             //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_condition_title)
             setContentView(viewBinding.root)
@@ -90,17 +93,17 @@ class ConditionConfigDialog(
                 setSelectAllOnFocus(true)
                 addTextChangedListener(object : OnAfterTextChangedListener() {
                     override fun afterTextChanged(s: Editable?) {
-                        viewModel?.setName(s.toString())
+                        viewModel.setName(s.toString())
                     }
                 })
             }
 
             viewBinding.conditionDetectionShouldAppear.setOnClickListener {
-                viewModel?.toggleShouldBeDetected()
+                viewModel.toggleShouldBeDetected()
             }
 
             viewBinding.conditionDetectionType.setOnClickListener {
-                viewModel?.toggleDetectionType()
+                viewModel.toggleDetectionType()
             }
 
             viewBinding.seekbarDiffThreshold.apply {
@@ -108,7 +111,7 @@ class ConditionConfigDialog(
                 progress = condition.threshold
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        viewModel?.setThreshold(progress)
+                        viewModel.setThreshold(progress)
                     }
                     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
                     override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -116,7 +119,7 @@ class ConditionConfigDialog(
             }
 
             bitmapLoadingJob?.cancel()
-            bitmapLoadingJob = viewModel?.getConditionBitmap(condition) { bitmap ->
+            bitmapLoadingJob = viewModel.getConditionBitmap(condition) { bitmap ->
                 if (bitmap != null) {
                     viewBinding.imageCondition.setImageBitmap(bitmap)
                 } else {
@@ -133,7 +136,7 @@ class ConditionConfigDialog(
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     launch {
-                        viewModel?.name?.collect { name ->
+                        viewModel.name?.collect { name ->
                             viewBinding.editName.apply {
                                 setText(name)
                                 setSelection(name?.length ?: 0)
@@ -142,7 +145,7 @@ class ConditionConfigDialog(
                     }
 
                     launch {
-                        viewModel?.shouldBeDetected?.collect { shouldBeDetected ->
+                        viewModel.shouldBeDetected.collect { shouldBeDetected ->
                             viewBinding.conditionDetectionShouldAppear.apply {
                                 if (shouldBeDetected) {
                                     setText(R.string.dialog_condition_should_be_detected)
@@ -156,7 +159,7 @@ class ConditionConfigDialog(
                     }
 
                     launch {
-                        viewModel?.detectionType?.collect { conditionType ->
+                        viewModel.detectionType.collect { conditionType ->
                             viewBinding.conditionDetectionType.apply {
                                 when (conditionType) {
                                     EXACT -> {
@@ -182,7 +185,7 @@ class ConditionConfigDialog(
                     }
 
                     launch {
-                        viewModel?.threshold?.collect { threshold ->
+                        viewModel.threshold.collect { threshold ->
                             viewBinding.textDiffThreshold.text = context.getString(
                                 R.string.dialog_condition_threshold_value,
                                 threshold
@@ -191,7 +194,7 @@ class ConditionConfigDialog(
                     }
 
                     launch {
-                        viewModel?.isValidCondition?.collect { isValid ->
+                        viewModel.isValidCondition.collect { isValid ->
                             /*changeButtonState(
                                 button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
                                 visibility = if (isValid) View.VISIBLE else View.INVISIBLE,
@@ -204,15 +207,9 @@ class ConditionConfigDialog(
         }
     }
 
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        bitmapLoadingJob?.cancel()
-        viewModel = null
-    }
-
     /** Called when the user press the OK button of the dialog. */
     private fun onOkClicked() {
-        viewModel?.let {
+        viewModel.let {
             onConfirmClicked.invoke(it.getConfiguredCondition())
         }
         dismiss()

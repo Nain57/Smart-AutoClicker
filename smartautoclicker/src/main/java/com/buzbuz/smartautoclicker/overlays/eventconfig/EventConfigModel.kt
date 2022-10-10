@@ -16,12 +16,15 @@
  */
 package com.buzbuz.smartautoclicker.overlays.eventconfig
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.AND
@@ -43,11 +46,10 @@ import kotlinx.coroutines.withContext
  *
  * @param context the Android context.
  */
-@OptIn(FlowPreview::class, ExperimentalStdlibApi::class)
-class EventConfigModel(context: Context) : OverlayViewModel(context) {
+class EventConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(context)
+    private val repository = Repository.getRepository(application)
     /** The event being configured by the user. Defined using [setConfigEvent]. */
     private val configuredEvent = MutableStateFlow<Event?>(null)
 

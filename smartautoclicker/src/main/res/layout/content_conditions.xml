@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2022 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/layout_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_new">
+
+        <include layout="@layout/merge_loadable_list"/>
+    </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_new"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_vertical_default"
+        app:layout_constraintTop_toBottomOf="@id/layout_list"
+        app:layout_constraintBottom_toTopOf="@id/conditions_operator_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_copy"
+        android:text="@string/dialog_event_list_add"
+        app:icon="@drawable/ic_add"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_copy"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/button_new"
+        app:layout_constraintBottom_toBottomOf="@id/button_new"
+        app:layout_constraintStart_toEndOf="@id/button_new"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/dialog_buttons_copy"
+        app:icon="@drawable/ic_copy"/>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/conditions_operator_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical_default"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        app:layout_constraintTop_toBottomOf="@id/button_new"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/conditions_operator_desc"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/conditions_and_button"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_button_condition_and" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/conditions_or_button"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_button_condition_or" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/conditions_operator_desc"
+        style="@style/TextAppearance.Material3.BodyMedium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        app:layout_constraintTop_toTopOf="@id/conditions_operator_button"
+        app:layout_constraintBottom_toBottomOf="@id/conditions_operator_button"
+        app:layout_constraintStart_toEndOf="@id/conditions_operator_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:maxLines="2"
+        android:text="@string/condition_operator_and_desc"
+        android:textAlignment="center" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

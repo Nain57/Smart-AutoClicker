@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.scenario
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -27,6 +28,7 @@ import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.DialogButton
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogController
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenuModel
 import com.buzbuz.smartautoclicker.overlays.scenario.config.ScenarioConfigContent
 import com.buzbuz.smartautoclicker.overlays.scenario.debug.DebugConfigContent
 import com.buzbuz.smartautoclicker.overlays.scenario.eventlist.EventListContent
@@ -40,24 +42,14 @@ class ScenarioDialog(
 ) : NavBarDialogController(context) {
 
     /** The view model for this dialog. */
-    private var viewModel: ScenarioDialogViewModel? = ScenarioDialogViewModel(context).apply {
-        attachToLifecycle(this@ScenarioDialog)
-        setConfiguredScenario(scenario.id)
-    }
+    private val viewModel: ScenarioDialogViewModel by lazy { ViewModelProvider(this).get(ScenarioDialogViewModel::class.java) }
 
     override val navigationMenuId: Int = R.menu.menu_scenario_config
 
     override fun onCreateDialog(): BottomSheetDialog {
+        viewModel.setConfiguredScenario(scenario.id)
         return super.onCreateDialog().also {
             setButtonVisibility(DialogButton.SAVE, View.VISIBLE)
-        }
-    }
-
-    override fun onDialogCreated(dialog: BottomSheetDialog) {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel?.scenarioName?.collect(::updateDialogTitle)
-            }
         }
     }
 
@@ -66,6 +58,14 @@ class ScenarioDialog(
         R.id.page_config -> ScenarioConfigContent(scenario.id)
         R.id.page_debug -> DebugConfigContent()
         else -> throw IllegalArgumentException("Unknown menu id $navItemId")
+    }
+
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.scenarioName.collect(::updateDialogTitle)
+            }
+        }
     }
 
     override fun onDialogButtonPressed(buttonType: DialogButton) = dismiss()

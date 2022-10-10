@@ -20,16 +20,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
 import android.view.LayoutInflater
-import android.view.View
 
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionConfigBinding
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.click.ClickConfigModel
@@ -41,6 +39,7 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.action.pause.setupPauseU
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.swipe.SwipeConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.swipe.setupSwipeUi
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
@@ -64,9 +63,8 @@ class ActionConfigDialog(
 ) : OverlayDialogController(context) {
 
     /** The view model for this dialog. */
-    private var viewModel: ActionConfigModel? = ActionConfigModel(context).apply {
-        attachToLifecycle(this@ActionConfigDialog)
-        setConfigAction(action)
+    private val viewModel: ActionConfigModel by lazy {
+        ViewModelProvider(this).get(ActionConfigModel::class.java)
     }
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogActionConfigBinding
@@ -104,7 +102,7 @@ class ActionConfigDialog(
                 setSelectAllOnFocus(true)
                 addTextChangedListener(object : OnAfterTextChangedListener() {
                     override fun afterTextChanged(s: Editable?) {
-                        viewModel?.setName(viewBinding.editName.text.toString())
+                        viewModel.setName(viewBinding.editName.text.toString())
                     }
                 })
             }
@@ -113,7 +111,7 @@ class ActionConfigDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel?.name?.collect { name ->
+                    viewModel.name.collect { name ->
                         viewBinding.editName.apply {
                             setText(name)
                             setSelection(name?.length ?: 0)
@@ -122,7 +120,7 @@ class ActionConfigDialog(
                 }
 
                 launch {
-                    viewModel?.actionModel?.collect { actionValues ->
+                    viewModel.actionModel.collect { actionValues ->
                         when (actionValues) {
                             is ClickConfigModel -> viewBinding.includeClickConfig.setupClickUi(
                                 context, actionValues, this@ActionConfigDialog, lifecycleScope, ::showSubOverlay
@@ -141,7 +139,7 @@ class ActionConfigDialog(
                 }
 
                 launch {
-                    viewModel?.isValidAction?.collect { isValid ->
+                    viewModel.isValidAction.collect { isValid ->
                         /*changeButtonState(
                             button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
                             visibility = if (isValid) View.VISIBLE else View.INVISIBLE,
@@ -153,17 +151,10 @@ class ActionConfigDialog(
         }
     }
 
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
-    }
-
     /** Notify the confirm listener and dismiss the dialog. */
     private fun onOkClicked() {
-        viewModel?.let { model ->
-            model.saveLastConfig()
-            onConfirmClicked(model.getConfiguredAction())
-        }
+        viewModel.saveLastConfig()
+        onConfirmClicked(viewModel.getConfiguredAction())
         dismiss()
     }
 }

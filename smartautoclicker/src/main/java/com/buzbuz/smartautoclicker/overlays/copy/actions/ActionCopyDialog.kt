@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -31,6 +32,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.DialogActionCopyBinding
+import com.buzbuz.smartautoclicker.overlays.event.actions.ActionsViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -46,15 +48,13 @@ import kotlinx.coroutines.launch
  */
 class ActionCopyDialog(
     context: Context,
-    actions: List<Action>,
+    private val actions: List<Action>,
     private val onActionSelected: (Action) -> Unit,
 ) : LoadableListDialog(context) {
 
-    /** The view model for this dialog. */
-    private var viewModel: ActionCopyModel? = ActionCopyModel(context).apply {
-        attachToLifecycle(this@ActionCopyDialog)
-        setCurrentEventActions(actions)
-    }
+    /** View model for this content. */
+    private val viewModel: ActionCopyModel by lazy { ViewModelProvider(this).get(ActionCopyModel::class.java) }
+
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogActionCopyBinding
     /** Adapter displaying the list of events. */
@@ -66,6 +66,7 @@ class ActionCopyDialog(
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogActionCopyBinding.inflate(LayoutInflater.from(context))
+        viewModel.setCurrentEventActions(actions)
 
         return BottomSheetDialog(context).apply {
             setContentView(viewBinding.root)
@@ -83,14 +84,14 @@ class ActionCopyDialog(
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?) = false
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    viewModel?.updateSearchQuery(newText)
+                    viewModel.updateSearchQuery(newText)
                     return true
                 }
             })
         }
 
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->
-            viewModel?.let {
+            viewModel.let {
                 onActionSelected(it.getNewActionForCopy(selectedAction))
                 dismiss()
             }
@@ -103,16 +104,11 @@ class ActionCopyDialog(
         
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel?.actionList?.collect { actionList ->
+                viewModel.actionList.collect { actionList ->
                     updateLayoutState(actionList)
                     actionCopyAdapter.submitList(if (actionList == null) ArrayList() else ArrayList(actionList))
                 }
             }
         }
-    }
-
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,10 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.overlays.copy.conditions
 
-import android.content.Context
+import android.app.Application
 import android.graphics.Bitmap
 
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
 
@@ -34,12 +36,12 @@ import kotlinx.coroutines.withContext
 
 /**
  * View model for the [ConditionCopyDialog].
- * @param context the Android context.
+ * @param application the Android application.
  */
-class ConditionCopyModel(context: Context) : OverlayViewModel(context) {
+class ConditionCopyModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(context)
+    private val repository = Repository.getRepository(application)
 
     /** The list of condition for the configured event. They are not all available yet in the database. */
     private val eventConditions = MutableStateFlow<List<Condition>?>(null)

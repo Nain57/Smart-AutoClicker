@@ -16,12 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent
 
-import android.content.Context
+import android.app.Application
 import android.text.InputFilter
 import android.text.InputType
 
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.utils.NumberInputFilter
 
@@ -37,7 +39,7 @@ import kotlin.reflect.KClass
  *
  * @param context the Android context.
  */
-class ExtraConfigModel(context: Context) : OverlayViewModel(context) {
+class ExtraConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** The extra currently configured. */
     private val configuredExtra = MutableStateFlow<IntentExtra<out Any>?>(null)
@@ -51,7 +53,7 @@ class ExtraConfigModel(context: Context) : OverlayViewModel(context) {
         .map {
             when (val value = it?.value) {
                 null -> ExtraValueInputState.NoTypeSelected(
-                    context.getString(R.string.dialog_action_config_intent_advanced_extras_config_value_type_none),
+                    application.getString(R.string.dialog_action_config_intent_advanced_extras_config_value_type_none),
                 )
                 is Boolean -> ExtraValueInputState.BooleanInputTypeSelected(
                     value::class.simpleName!!,

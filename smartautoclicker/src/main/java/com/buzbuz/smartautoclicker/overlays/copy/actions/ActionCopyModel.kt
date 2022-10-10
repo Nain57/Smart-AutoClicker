@@ -16,14 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.overlays.copy.actions
 
-import android.content.Context
+import android.app.Application
 import android.util.Log
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Action
 
@@ -36,12 +36,12 @@ import kotlin.time.ExperimentalTime
 /**
  * View model for the [ActionCopyDialog].
  *
- * @param context the Android context.
+ * @param application the Android application.
  */
-class ActionCopyModel(context: Context) : OverlayViewModel(context) {
+class ActionCopyModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(context)
+    private val repository = Repository.getRepository(application)
 
     /** The list of actions for the configured event. They are not all available yet in the database. */
     private val eventActions = MutableStateFlow<List<Action>?>(null)
@@ -136,9 +136,9 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             is Action.Click -> ActionCopyItem.ActionItem(
                 icon = R.drawable.ic_click,
                 name = name!!,
-                details =
-                if (clickOnCondition) context.getString(R.string.dialog_action_config_click_position_on_condition)
-                else context.getString(
+                details = if (clickOnCondition) getApplication<Application>().getString(
+                    R.string.dialog_action_config_click_position_on_condition
+                ) else getApplication<Application>().getString(
                     R.string.dialog_action_copy_click_details,
                     formatDuration(pressDuration!!), x, y
                 ),
@@ -147,7 +147,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             is Action.Swipe -> ActionCopyItem.ActionItem(
                 icon = R.drawable.ic_swipe,
                 name = name!!,
-                details = context.getString(
+                details = getApplication<Application>().getString(
                     R.string.dialog_action_copy_swipe_details,
                     formatDuration(swipeDuration!!), fromX, fromY, toX, toY
                 ),
@@ -156,7 +156,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             is Action.Pause -> ActionCopyItem.ActionItem(
                 icon = R.drawable.ic_wait,
                 name = name!!,
-                details = context.getString(
+                details = getApplication<Application>().getString(
                     R.string.dialog_action_copy_pause_details,
                     formatDuration(pauseDuration!!)
                 ),
@@ -222,7 +222,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
 
                     componentName = componentName.substring(dotIndex2 + 1)
                     if (componentName.length < INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT) {
-                        return context.getString(
+                        return getApplication<Application>().getString(
                             R.string.dialog_action_copy_intent_details_action_component,
                             action,
                             componentName,
@@ -232,7 +232,7 @@ class ActionCopyModel(context: Context) : OverlayViewModel(context) {
             }
         }
 
-        return context.getString(R.string.dialog_action_copy_intent_details_action, action)
+        return getApplication<Application>().getString(R.string.dialog_action_copy_intent_details_action, action)
     }
 
     /** Types of items in the action copy list. */

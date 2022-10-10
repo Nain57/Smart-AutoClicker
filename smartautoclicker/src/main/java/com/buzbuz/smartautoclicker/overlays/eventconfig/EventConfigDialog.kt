@@ -24,6 +24,7 @@ import android.view.View
 
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -41,6 +42,7 @@ import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelec
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.copy.conditions.ConditionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -64,18 +66,17 @@ import kotlinx.coroutines.launch
  */
 class EventConfigDialog(
     context: Context,
-    event: Event,
+    private val event: Event,
     private val onConfigComplete: (Event) -> Unit,
 ) : OverlayDialogController(context) {
 
     /** The view model for the data displayed in this dialog. */
-    private var viewModel: EventConfigModel? = EventConfigModel(context).apply {
-        attachToLifecycle(this@EventConfigDialog)
-        setConfigEvent(event)
+    private val viewModel: EventConfigModel by lazy {
+        ViewModelProvider(this).get(EventConfigModel::class.java)
     }
     /** The view model managing this dialog sub overlays. */
-    private var subOverlayViewModel: ConfigSubOverlayModel? = ConfigSubOverlayModel(context).apply {
-        attachToLifecycle(this@EventConfigDialog)
+    private val subOverlayViewModel: ConfigSubOverlayModel by lazy {
+        ViewModelProvider(this).get(ConfigSubOverlayModel::class.java)
     }
 
     /** ViewBinding containing the views for this dialog. */
@@ -115,6 +116,7 @@ class EventConfigDialog(
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogEventConfigBinding.inflate(LayoutInflater.from(context))
+        viewModel.setConfigEvent(event)
 
         return BottomSheetDialog(context).apply {
             //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_event_config_title)
@@ -208,12 +210,6 @@ class EventConfigDialog(
                 }
             }
         }
-    }
-
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
-        subOverlayViewModel = null
     }
 
     /**

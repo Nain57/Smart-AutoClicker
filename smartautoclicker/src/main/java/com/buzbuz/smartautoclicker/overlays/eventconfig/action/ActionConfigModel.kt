@@ -16,12 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.overlays.eventconfig.action
 
-import android.content.Context
+import android.app.Application
 import android.content.SharedPreferences
 import android.util.Log
 
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.OverlayViewModel
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.click.ClickConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent.IntentConfigModel
@@ -51,12 +53,12 @@ import kotlinx.coroutines.launch
  * @param context the Android context.
  */
 @OptIn(FlowPreview::class)
-class ActionConfigModel(context: Context) : OverlayViewModel(context) {
+class ActionConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** The action being configured by the user. Defined using [setConfigAction]. */
     private val configuredAction = MutableStateFlow<Action?>(null)
     /** Event configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
+    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
     /** The name of the action. */
     val name: Flow<String?> = configuredAction
@@ -72,7 +74,7 @@ class ActionConfigModel(context: Context) : OverlayViewModel(context) {
                 is Action.Click -> ClickConfigModel(viewModelScope, configuredAction)
                 is Action.Swipe -> SwipeConfigModel(viewModelScope, configuredAction)
                 is Action.Pause -> PauseConfigModel(viewModelScope, configuredAction)
-                is Action.Intent -> IntentConfigModel(viewModelScope, configuredAction, context.packageManager)
+                is Action.Intent -> IntentConfigModel(viewModelScope, configuredAction, application.packageManager)
             }
         }
         .take(1)

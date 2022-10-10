@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +21,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -33,7 +33,9 @@ import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.DialogEventCopyBinding
 import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
+
 import com.google.android.material.bottomsheet.BottomSheetDialog
+
 import kotlinx.coroutines.launch
 
 /**
@@ -41,15 +43,12 @@ import kotlinx.coroutines.launch
  */
 class EventCopyDialog(
     context: Context,
-    scenarioId: Long,
+    private val scenarioId: Long,
     private val onEventSelected: (Event) -> Unit,
 ) : LoadableListDialog(context) {
 
-    /** The view model for this dialog. */
-    private var viewModel: EventCopyModel? = EventCopyModel(context).apply {
-        attachToLifecycle(this@EventCopyDialog)
-        setCurrentScenario(scenarioId)
-    }
+    /** View model for this content. */
+    private val viewModel: EventCopyModel by lazy { ViewModelProvider(this).get(EventCopyModel::class.java) }
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEventCopyBinding
     /** Adapter displaying the list of events. */
@@ -61,6 +60,7 @@ class EventCopyDialog(
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogEventCopyBinding.inflate(LayoutInflater.from(context))
+        viewModel.setCurrentScenario(scenarioId)
 
         return BottomSheetDialog(context).apply {
             //setCustomTitle(null)
@@ -79,14 +79,14 @@ class EventCopyDialog(
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?) = false
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    viewModel?.updateSearchQuery(newText)
+                    viewModel.updateSearchQuery(newText)
                     return true
                 }
             })
         }
 
         eventCopyAdapter = EventCopyAdapter { selectedEvent ->
-            viewModel?.let {
+            viewModel.let {
                 onEventSelected(it.getCopyEvent(selectedEvent))
                 dismiss()
             }
@@ -99,16 +99,11 @@ class EventCopyDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel?.eventList?.collect { eventList ->
+                viewModel.eventList.collect { eventList ->
                     updateLayoutState(eventList)
                     eventCopyAdapter.submitList(if (eventList == null) ArrayList() else ArrayList(eventList))
                 }
             }
         }
-    }
-
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
-        viewModel = null
     }
 }
