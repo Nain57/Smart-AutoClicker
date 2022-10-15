@@ -22,9 +22,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
+    <include layout="@layout/include_dialog_navigation_top_bar"
         android:id="@+id/layout_top_bar"
-        layout="@layout/include_dialog_top_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

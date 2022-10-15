@@ -54,7 +54,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
-import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
 
 import kotlinx.coroutines.launch
 
@@ -70,7 +70,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     /** ViewBinding containing the views for this fragment. */
     private lateinit var viewBinding: FragmentScenariosBinding
     /** ViewBinding containing the views for the loadable list merge layout. */
-    private lateinit var listBinding: MergeLoadableListBinding
+    private lateinit var listBinding: IncludeLoadableListBinding
     /** Adapter displaying the click scenarios as a list. */
     private lateinit var scenariosAdapter: ScenarioAdapter
     /** The action menu for this fragment. */
@@ -85,7 +85,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewBinding = FragmentScenariosBinding.inflate(inflater, container, false)
-        listBinding = MergeLoadableListBinding.bind(viewBinding.root)
+        listBinding = IncludeLoadableListBinding.bind(viewBinding.root)
         return viewBinding.root
     }
 

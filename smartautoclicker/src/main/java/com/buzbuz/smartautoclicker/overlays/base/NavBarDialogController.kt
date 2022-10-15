@@ -22,7 +22,6 @@ import androidx.annotation.StringRes
 
 import androidx.lifecycle.Lifecycle
 
-import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogNavBarBinding
 

@@ -30,9 +30,8 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_skipCollapsed="true">
 
-        <include
+        <include layout="@layout/include_dialog_navigation_top_bar"
             android:id="@+id/layout_top_bar"
-            layout="@layout/include_dialog_top_bar"
             app:layout_constraintBottom_toTopOf="@+id/dialog_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

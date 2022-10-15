@@ -165,7 +165,8 @@
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/end_conditions_title"
-                    app:singleSelection="true">
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/end_conditions_and_button"

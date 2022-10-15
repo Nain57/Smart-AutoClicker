@@ -32,10 +32,11 @@ import com.buzbuz.smartautoclicker.databinding.ContentEventListBinding
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
-import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyDialog
+import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.overlays.bindings.updateState
+import com.buzbuz.smartautoclicker.overlays.event.copy.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.event.EventDialog
 import com.buzbuz.smartautoclicker.overlays.scenario.ScenarioDialogViewModel
-import com.buzbuz.smartautoclicker.overlays.utils.LoadableListController
 
 import kotlinx.coroutines.launch
 
@@ -55,8 +56,6 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentEventListBinding
-    /** Controls the display state of the event list (empty, loading, loaded). */
-    private lateinit var listController: LoadableListController<Event, EventViewHolder>
     /** Adapter for the list of events. */
     private lateinit var eventAdapter: EventListAdapter
 
@@ -73,16 +72,13 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
             itemReorderListener = viewModel::updateEventsPriority,
         )
 
-        listController = LoadableListController(
-            owner = this,
-            root = viewBinding.layoutList,
-            adapter = eventAdapter,
-            emptyTextId = R.string.dialog_event_list_no_events,
-        )
-        listController.listView.apply {
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            itemTouchHelper.attachToRecyclerView(this)
-            adapter = eventAdapter
+        viewBinding.layoutList.apply {
+            setEmptyText(R.string.dialog_event_list_no_events)
+            list.apply {
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                itemTouchHelper.attachToRecyclerView(this)
+                adapter = eventAdapter
+            }
         }
 
         return viewBinding.root
@@ -91,8 +87,8 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.eventsItems.collect(listController::submitList) }
-                launch { viewModel.copyButtonIsVisible.collect(::setCopyButtonVisibility) }
+                launch { viewModel.eventsItems.collect(::updateEventList) }
+                launch { viewModel.copyButtonIsVisible.collect(::updateCopyButtonVisibility) }
             }
         }
     }
@@ -105,7 +101,12 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
         showEventCopyDialog()
     }
 
-    private fun setCopyButtonVisibility(isVisible: Boolean) {
+    private fun updateEventList(newItems: List<Event>?) {
+        viewBinding.layoutList.updateState(newItems)
+        eventAdapter.submitList(newItems)
+    }
+
+    private fun updateCopyButtonVisibility(isVisible: Boolean) {
         viewBinding.buttonCopy.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
@@ -116,6 +117,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
                 EventCopyDialog(
                     context = context,
                     scenarioId = viewModel.scenarioId.value!!,
+                    events = viewModel.eventsItems.value ?: emptyList(),
                     onEventSelected = ::showEventConfigDialog,
                 ),
             )

@@ -17,8 +17,36 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Base style for the dialog views. -->
+    <style name="AppTheme.Dialog" />
+
+    <!-- Style for the dialog top bar root layout. -->
+    <style name="AppTheme.Dialog.TopBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">65dp</item>
+    </style>
+
+    <!-- Style for the dialog title. -->
+    <style name="AppTheme.Dialog.Title">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_small</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_default</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_default</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.DialogTitle</item>
+    </style>
+
+
+    <!-- Base text appearance. -->
     <style name="AppTheme.TextAppearance" />
 
+    <!-- Text appearance for the dialog title. -->
+    <style name="AppTheme.TextAppearance.DialogTitle" parent="@style/TextAppearance.Material3.TitleLarge"/>
+
+    <!-- Text appearance for the dialog header. -->
     <style name="AppTheme.TextAppearance.Header" parent="@style/TextAppearance.Material3.TitleMedium">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

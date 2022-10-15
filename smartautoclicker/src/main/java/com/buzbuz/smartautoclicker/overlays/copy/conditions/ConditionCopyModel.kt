@@ -19,16 +19,14 @@ package com.buzbuz.smartautoclicker.overlays.copy.conditions
 import android.app.Application
 import android.graphics.Bitmap
 
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.overlays.base.CopyViewModel
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -38,16 +36,11 @@ import kotlinx.coroutines.withContext
  * View model for the [ConditionCopyDialog].
  * @param application the Android application.
  */
-class ConditionCopyModel(application: Application) : AndroidViewModel(application) {
+class ConditionCopyModel(application: Application) : CopyViewModel<Condition>(application) {
 
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application)
-
-    /** The list of condition for the configured event. They are not all available yet in the database. */
-    private val eventConditions = MutableStateFlow<List<Condition>?>(null)
     /** List of all conditions. */
     val conditionList: Flow<List<Condition>?> = repository.getAllConditions()
-        .combine(eventConditions) { dbConditions, eventConditions ->
+        .combine(itemsFromCurrentContainer) { dbConditions, eventConditions ->
             if (eventConditions == null) return@combine null
 
             val allConditions = mutableListOf<Condition>()
@@ -61,14 +54,6 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
 
             allConditions
         }
-
-    /**
-     * Set the current event conditions.
-     * @param conditions the conditions.
-     */
-    fun setCurrentEventConditions(conditions: List<Condition>) {
-        eventConditions.value = conditions
-    }
 
     /**
      * Get a new condition based on the provided one.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,61 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.copy.events
+package com.buzbuz.smartautoclicker.overlays.event.copy
 
 import android.app.Application
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.overlays.base.CopyViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.getIconRes
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
 
 /**
  * View model for the [EventCopyDialog].
  *
  * @param application the Android application.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
-class EventCopyModel(application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application)
-
-
-    /** The currently searched event name. Null if no is. */
-    private val scenarioId = MutableStateFlow<Long?>(null)
-    /** The list of events for the configured scenario. They might be not all available yet in the database. */
-    private val scenarioEvents = scenarioId
-        .filterNotNull()
-        .flatMapLatest { repository.getCompleteEventList(it) }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            emptyList()
-        )
-
-    /** The currently searched event name. Null if no is. */
-    private val searchQuery = MutableStateFlow<String?>(null)
+class EventCopyModel(application: Application) : CopyViewModel<Event>(application) {
 
     /**
      * List of displayed event items.
      * This list can contains all events with headers, or the search result depending on the current search query.
      */
     val eventList: Flow<List<EventCopyItem>?> =
-        combine(repository.getAllEvents(), scenarioEvents, searchQuery) { dbEvents, scenarioEvents, query ->
+        combine(repository.getAllEvents(), itemsFromCurrentContainer, searchQuery) { dbEvents, scenarioEvents, query ->
             if (query.isNullOrEmpty()) getAllItems(dbEvents, scenarioEvents) else getSearchedItems(dbEvents, query)
         }
 
@@ -78,11 +50,12 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      * @param scenarioEvents all actions in the current event.
      * @return the complete list of action items.
      */
-    private fun getAllItems(dbEvents: List<Event>, scenarioEvents: List<Event>): List<EventCopyItem> {
+    private fun getAllItems(dbEvents: List<Event>, scenarioEvents: List<Event>?): List<EventCopyItem> {
         val allItems = mutableListOf<EventCopyItem>()
 
         // First, add the events from the current scenario
-        val eventItems = scenarioEvents.sortedBy { it.name }.map { it.toEventItem() }.distinct()
+        val eventItems = scenarioEvents?.sortedBy { it.name }?.map { it.toEventItem() }?.distinct()
+            ?: emptyList()
         if (eventItems.isNotEmpty()) allItems.add(EventCopyItem.HeaderItem(R.string.dialog_event_copy_header_event))
         allItems.addAll(eventItems)
 
@@ -115,30 +88,14 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
         .distinct()
 
     /**
-     * Set the current scenario events.
-     * @param id the scenario identifier.
-     */
-    fun setCurrentScenario(id: Long) {
-        scenarioId.value = id
-    }
-
-    /**
-     * Update the events search query.
-     * @param query the new query.
-     */
-    fun updateSearchQuery(query: String?) {
-        searchQuery.value = query
-    }
-
-    /**
      * Get a copy of the provided event.
      *
      * @param event the event to get the copy of.
      */
-    fun getCopyEvent(event: Event): Event {
+    fun getCopyEvent(scenario: Long, event: Event): Event {
         return event.deepCopy().apply {
-            priority = scenarioEvents.value.size
-            scenarioId = this@EventCopyModel.scenarioId.value!!
+            priority = itemsFromCurrentContainer.value?.size ?: 0
+            scenarioId = scenario
             cleanUpIds()
         }
     }
