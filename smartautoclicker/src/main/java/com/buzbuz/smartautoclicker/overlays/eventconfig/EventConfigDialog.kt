@@ -20,9 +20,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
 import android.view.LayoutInflater
-import android.view.View
 
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -31,7 +29,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.AND
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.OR
@@ -40,9 +37,8 @@ import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
-import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyDialog
-import com.buzbuz.smartautoclicker.overlays.copy.conditions.ConditionCopyDialog
-import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
+import com.buzbuz.smartautoclicker.overlays.action.copy.ActionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetDialog

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.copy.conditions
+package com.buzbuz.smartautoclicker.overlays.condition.copy
 
 import android.content.Context
 
@@ -56,7 +56,7 @@ class ConditionCopyDialog(
         viewModel.setItemsFromContainer(conditions)
 
         conditionAdapter = ConditionCopyAdapter(
-            conditionClickedListener = { selectedCondition ->
+            conditionClickedListener = { selectedCondition, _ ->
                 viewModel.let {
                     onConditionSelected(it.getNewConditionForCopy(selectedCondition))
                     dismiss()
@@ -69,10 +69,13 @@ class ConditionCopyDialog(
 
         viewBinding.layoutLoadableList.list.apply {
             adapter = conditionAdapter
+
             layoutManager = GridLayoutManager(
                 context,
                 2,
-            )
+            ).apply {
+                spanSizeLookup = conditionAdapter.spanSizeLookup
+            }
         }
 
         lifecycleScope.launch {
@@ -86,7 +89,7 @@ class ConditionCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
-    private fun updateConditionList(newItems: List<Condition>?) {
+    private fun updateConditionList(newItems: List<ConditionCopyModel.ConditionCopyItem>?) {
         viewBinding.layoutLoadableList.updateState(newItems)
         conditionAdapter.submitList(if (newItems == null) ArrayList() else ArrayList(newItems))
     }

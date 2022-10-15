@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.copy.actions
+package com.buzbuz.smartautoclicker.overlays.action.copy
 
 import android.app.Application
 
@@ -43,55 +43,8 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
     val actionList: Flow<List<ActionCopyItem>?> =
         combine(repository.getAllActions(), itemsFromCurrentContainer, searchQuery) { dbActions, eventActions, query ->
             eventActions ?: return@combine null
-            if (query.isNullOrEmpty()) getAllItems(dbActions, eventActions) else getSearchedItems(dbActions, query)
+            if (query.isNullOrEmpty()) getAllItems(dbActions, eventActions) else dbActions.toCopyItemsFromSearch(query)
         }
-
-    /**
-     * Get all items with the headers.
-     * @param dbActions all actions in the database.
-     * @param eventActions all actions in the current event.
-     * @return the complete list of action items.
-     */
-    private fun getAllItems(dbActions: List<Action>, eventActions: List<Action>): List<ActionCopyItem> {
-        val allItems = mutableListOf<ActionCopyItem>()
-
-        // First, add the actions from the current event
-        val eventItems = eventActions
-            .sortedBy { it.name }
-            .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-            .distinct()
-        if (eventItems.isNotEmpty()) allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
-        allItems.addAll(eventItems)
-
-        // Then, add all other actions. Remove the one already in this event.
-        val actions = dbActions
-            .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-            .toMutableList()
-            .apply {
-                removeIf { allItem ->
-                    eventItems.find {
-                        allItem.actionDetails.action.id == it.actionDetails.action.id || allItem == it
-                    } != null
-                }
-            }
-            .distinct()
-        if (actions.isNotEmpty()) allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
-        allItems.addAll(actions)
-
-        return allItems
-    }
-
-    /**
-     * Get the result of the search query.
-     * @param dbActions all actions in the database.
-     * @param query the current search query.
-     */
-    private fun getSearchedItems(dbActions: List<Action>, query: String): List<ActionCopyItem> = dbActions
-        .filter { action ->
-            action.name!!.contains(query, true)
-        }
-        .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-        .distinct()
 
     /**
      * Get a new action based on the provided one.
@@ -104,6 +57,59 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
             is Action.Pause -> action.copy(id = 0, name = "" + action.name)
             is Action.Intent -> action.copy(id = 0, name = "" + action.name)
         }
+
+    /**
+     * Get all items with the headers.
+     * @param dbActions all actions in the database.
+     * @param eventActions all actions in the current event.
+     * @return the complete list of action items.
+     */
+    private fun getAllItems(dbActions: List<Action>, eventActions: List<Action>): List<ActionCopyItem> {
+        val allItems = mutableListOf<ActionCopyItem>()
+
+        // First, add the actions from the current event
+        val eventItems = eventActions.toCopyItemsFromCurrentEvent()
+        if (eventItems.isNotEmpty()) {
+            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
+            allItems.addAll(eventItems)
+        }
+
+        // Then, add all other actions. Remove the one already in this event.
+        val actions = dbActions.toCopyItemsFromOtherEvents(eventItems)
+        if (actions.isNotEmpty()) {
+            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
+            allItems.addAll(actions)
+        }
+
+        return allItems
+    }
+
+    /**
+     * Get the result of the search query.
+     * @param query the current search query.
+     */
+    private fun List<Action>.toCopyItemsFromSearch(query: String) =
+        filter { action -> action.name!!.contains(query, true) }
+        .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
+        .distinct()
+
+    /** */
+    private fun List<Action>.toCopyItemsFromCurrentEvent() =
+        sortedBy { it.name }
+            .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
+            .distinct()
+
+    private fun List<Action>.toCopyItemsFromOtherEvents(eventItems: List<ActionCopyItem.ActionItem>) =
+        map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
+            .toMutableList()
+            .apply {
+                removeIf { allItem ->
+                    eventItems.find {
+                        allItem.actionDetails.action.id == it.actionDetails.action.id || allItem == it
+                    } != null
+                }
+            }
+            .distinct()
 
     /** Types of items in the action copy list. */
     sealed class ActionCopyItem {
