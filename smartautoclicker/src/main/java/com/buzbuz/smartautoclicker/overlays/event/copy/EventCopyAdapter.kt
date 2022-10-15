@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemCopyHeaderBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
+import com.buzbuz.smartautoclicker.overlays.bindings.bind
 import com.buzbuz.smartautoclicker.overlays.event.copy.EventCopyModel.EventCopyItem
 
 /**
@@ -61,12 +62,12 @@ class EventCopyAdapter(
 }
 
 /** DiffUtil Callback comparing two items when updating the [EventCopyAdapter] list. */
-private object DiffUtilCallback: DiffUtil.ItemCallback<EventCopyItem>(){
+private object DiffUtilCallback: DiffUtil.ItemCallback<EventCopyItem>() {
     override fun areItemsTheSame(oldItem: EventCopyItem, newItem: EventCopyItem): Boolean =
         when {
             oldItem is EventCopyItem.HeaderItem && newItem is EventCopyItem.HeaderItem -> true
             oldItem is EventCopyItem.EventItem && newItem is EventCopyItem.EventItem ->
-                oldItem.event!!.id == newItem.event!!.id
+                oldItem.event.id == newItem.event.id
             else -> false
         }
 
@@ -100,19 +101,6 @@ class EventViewHolder(private val viewBinding: ItemEventBinding) : RecyclerView.
      * @param eventClickedListener listener notified upon user click on this item.
      */
     fun onBind(item: EventCopyItem.EventItem, eventClickedListener: (Event) -> Unit) {
-        item.event?.let { event ->
-            viewBinding.apply {
-                /*name.text = event.name
-
-                actionsLayout.removeAllViews()
-                event.actions?.forEach { action ->
-                    View.inflate(itemView.context, R.layout.view_action_icon, actionsLayout)
-                    (actionsLayout.getChildAt(actionsLayout.childCount - 1) as ImageView)
-                        .setImageResource(action.getIconRes())
-                }*/
-            }
-
-            itemView.setOnClickListener { eventClickedListener(event) }
-        }
+        viewBinding.bind(item.event, false, eventClickedListener)
     }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.copy.actions
+package com.buzbuz.smartautoclicker.overlays.action.copy
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemCopyHeaderBinding
 import com.buzbuz.smartautoclicker.overlays.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyModel.ActionCopyItem
+import com.buzbuz.smartautoclicker.overlays.action.copy.ActionCopyModel.ActionCopyItem
 
 /**
  * Adapter displaying all actions in a list.

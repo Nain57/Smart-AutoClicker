@@ -65,7 +65,7 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
             .toMutableList()
             .apply {
                 removeIf { allItem ->
-                    eventItems.find { allItem.event!!.id == it.event!!.id || allItem == it } != null
+                    eventItems.find { allItem.event.id == it.event.id || allItem == it } != null
                 }
             }
             .distinct()
@@ -101,11 +101,12 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
     }
 
     /** @return the [EventCopyItem.EventItem] corresponding to this event. */
-    private fun Event.toEventItem(): EventCopyItem.EventItem {
-        val item = EventCopyItem.EventItem(name, actions!!.map { it.getIconRes() })
-        item.event = this
-        return item
-    }
+    private fun Event.toEventItem(): EventCopyItem.EventItem =
+        EventCopyItem.EventItem(
+            name = name,
+            actionsIcons = actions!!.map { it.getIconRes() },
+            event = this,
+        )
 
     /** Types of items in the event copy list. */
     sealed class EventCopyItem {
@@ -121,15 +122,13 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
         /**
          * Event item.
          * @param name the name of the event.
-         * @param actions the icon resources for the actions of the event.
+         * @param actionsIcons the icon resources for the actions of the event.
+         * @param event event represented by this item.
          */
         data class EventItem (
             val name: String,
-            val actions: List<Int>,
-        ) : EventCopyItem() {
-
-            /** Event represented by this item. */
-            var event: Event? = null
-        }
+            val actionsIcons: List<Int>,
+            val event: Event,
+        ) : EventCopyItem()
     }
 }

@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.bindings.updateState
-import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.action.copy.ActionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
