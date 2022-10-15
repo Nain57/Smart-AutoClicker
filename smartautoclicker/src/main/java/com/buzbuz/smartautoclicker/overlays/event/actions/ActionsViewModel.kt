@@ -25,7 +25,8 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.overlays.bindings.ActionDetails
+import com.buzbuz.smartautoclicker.overlays.bindings.toActionDetails
 import com.buzbuz.smartautoclicker.overlays.utils.*
 
 import kotlinx.coroutines.flow.*
@@ -33,34 +34,28 @@ import kotlinx.coroutines.launch
 
 class ActionsViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application.applicationContext)
-
     /** The event currently configured. */
     private lateinit var configuredEvent: MutableStateFlow<Event?>
 
-    /** Backing property for [actions]. */
-    private val _action by lazy {
+    /** List of [actions]. */
+    val actions: StateFlow<List<Action>> by lazy {
         configuredEvent
-            .map { it?.actions }
+            .map { it?.actions ?: emptyList() }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(),
                 emptyList()
             )
     }
-    /** The event actions currently edited by the user. */
-    val actions: StateFlow<List<Action>?> get() = _action
-    /** The item to be displayed in the action list. Last item is always the add actions . */
-    val actionListItems: Flow<List<ActionListItem>> by lazy {
-        _action.combine(repository.getActionsCount()) { actions, actionsCount ->
-            buildList {
-                actions?.let { actionList ->
-                    addAll(actionList.map { ActionListItem.ActionItem(it) })
-                }
-                add(ActionListItem.AddActionItem(actionsCount > 0))
-            }
-        }
+    /** List of action details. */
+    val actionDetails: StateFlow<List<ActionDetails>> by lazy {
+        configuredEvent
+            .map { it?.actions?.map { action -> action.toActionDetails(application) } ?: emptyList() }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(),
+                emptyList()
+            )
     }
 
     /** Set the event currently configured by the UI. */
@@ -137,27 +132,13 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
      * Update the priority of the actions.
      * @param actions the new actions order.
      */
-    fun updateActionOrder(actions: List<ActionListItem>) {
+    fun updateActionOrder(actions: List<ActionDetails>) {
         configuredEvent.value?.let { event ->
             viewModelScope.launch {
-                val newActions = actions.mapNotNull {
-                    when (it) {
-                        is ActionListItem.AddActionItem -> null
-                        is ActionListItem.ActionItem -> it.action
-                    }
-                }.toMutableList()
-                configuredEvent.value = event.copy(actions = newActions)
+                configuredEvent.value = event.copy(actions = actions.map { it.action }.toMutableList())
             }
         }
     }
-}
-
-/** Items displayed in the action list. */
-sealed class ActionListItem {
-    /** The add action item. */
-    data class AddActionItem(val shouldDisplayCopy: Boolean) : ActionListItem()
-    /** Item representing a created action. */
-    data class ActionItem(val action: Action) : ActionListItem()
 }
 
 /** Choices for the action type selection dialog. */

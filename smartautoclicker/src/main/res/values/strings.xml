@@ -233,6 +233,7 @@
     <string name="dialog_label_scenario_name">Scenario name</string>
     <string name="dialog_conditions_empty">No condition</string>
     <string name="dialog_actions_empty">No action</string>
+    <string name="dialog_copy_empty">Nothing to copy</string>
 
     <string name="dialog_buttons_copy">Copy</string>
     <string name="dialog_button_condition_or">One</string>

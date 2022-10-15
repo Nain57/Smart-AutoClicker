@@ -20,10 +20,9 @@ import android.content.Context
 import android.view.View
 
 import androidx.annotation.CallSuper
-import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.MergeLoadableListBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
@@ -35,17 +34,17 @@ abstract class LoadableListDialog(
 ) : OverlayDialogController(context) {
 
     /** ViewBinding containing the views for the loadable list merge layout. */
-    protected lateinit var listBinding: MergeLoadableListBinding
+    protected lateinit var listBinding: IncludeLoadableListBinding
 
     /** String res id for the case where the list is empty. */
     protected abstract val emptyTextId: Int
 
-    /** @return the root view for the [MergeLoadableListBinding]. */
-    protected abstract fun getListBindingRoot(): View
+    /** @return the root view for the [IncludeLoadableListBinding]. */
+    protected abstract fun onCreateListBinging(): IncludeLoadableListBinding
 
     @CallSuper
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        listBinding = MergeLoadableListBinding.bind(getListBindingRoot()).apply {
+        listBinding = onCreateListBinging().apply {
             empty.setText(emptyTextId)
         }
     }

@@ -18,21 +18,22 @@ package com.buzbuz.smartautoclicker.overlays.event
 
 import android.app.Application
 
-import androidx.lifecycle.AndroidViewModel
-
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.overlays.base.NavigationViewModel
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class EventDialogViewModel(application: Application) : AndroidViewModel(application) {
+class EventDialogViewModel(application: Application) : NavigationViewModel(application) {
 
-    /** */
+    /** The event currently configured. */
     val configuredEvent: MutableStateFlow<Event?> = MutableStateFlow(null)
 
     /** Tells if the configured event is valid and can be saved. */
     val isValidEvent: Flow<Boolean> = configuredEvent.map { event ->
         event != null && event.name.isNotEmpty() && !event.actions.isNullOrEmpty() && !event.conditions.isNullOrEmpty()
     }
+
+
 }

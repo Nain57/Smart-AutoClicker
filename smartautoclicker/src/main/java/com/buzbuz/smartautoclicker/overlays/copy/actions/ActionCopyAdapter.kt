@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.overlays.copy.actions
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.recyclerview.widget.DiffUtil
@@ -28,6 +27,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemCopyHeaderBinding
+import com.buzbuz.smartautoclicker.overlays.bindings.bind
 import com.buzbuz.smartautoclicker.overlays.copy.actions.ActionCopyModel.ActionCopyItem
 
 /**
@@ -67,7 +67,7 @@ object DiffUtilCallback: DiffUtil.ItemCallback<ActionCopyItem>(){
         when {
             oldItem is ActionCopyItem.HeaderItem && newItem is ActionCopyItem.HeaderItem -> true
             oldItem is ActionCopyItem.ActionItem && newItem is ActionCopyItem.ActionItem ->
-                oldItem.action!!.id == newItem.action!!.id
+                oldItem.actionDetails.action.id == newItem.actionDetails.action.id
             else -> false
         }
 
@@ -100,13 +100,6 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param actionClickedListener listener notified upon user click on this item.
      */
     fun onBind(item: ActionCopyItem.ActionItem, actionClickedListener: (Action) -> Unit) {
-        viewBinding.apply {
-            actionName.visibility = View.VISIBLE
-            actionTypeIcon.setImageResource(item.icon)
-            actionName.text = item.name
-            actionDetails.text = item.details
-        }
-
-        itemView.setOnClickListener { actionClickedListener.invoke(item.action!!) }
+        viewBinding.bind(item.actionDetails, bindingAdapterPosition) { action, _ -> actionClickedListener(action) }
     }
 }

@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.ScenarioActivity">
 
-    <include layout="@layout/merge_loadable_list" />
+    <include layout="@layout/include_loadable_list" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"

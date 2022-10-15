@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.DialogButton
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogController
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.event.actions.ActionsContent
 import com.buzbuz.smartautoclicker.overlays.event.conditions.ConditionsContent
 import com.buzbuz.smartautoclicker.overlays.event.config.EventConfigContent
@@ -62,9 +63,9 @@ class EventDialog(
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent {
         return when (navItemId) {
-            R.id.page_event -> EventConfigContent(viewModel.configuredEvent)
-            R.id.page_conditions -> ConditionsContent(viewModel.configuredEvent)
-            R.id.page_actions -> ActionsContent(viewModel.configuredEvent)
+            R.id.page_event -> EventConfigContent()
+            R.id.page_conditions -> ConditionsContent()
+            R.id.page_actions -> ActionsContent()
             else -> throw IllegalArgumentException("Unknown menu id $navItemId")
         }
     }
@@ -73,6 +74,7 @@ class EventDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isValidEvent.collect(::updateSaveButton) }
+                launch { viewModel.subOverlayRequest.collect(::onNewSubOverlayRequest) }
             }
         }
     }
@@ -91,5 +93,12 @@ class EventDialog(
 
     private fun updateSaveButton(enabled: Boolean) {
         setButtonEnabledState(DialogButton.SAVE, enabled)
+    }
+
+    private fun onNewSubOverlayRequest(request: NavigationRequest?) {
+        if (request == null) return
+
+        showSubOverlay(request.overlay, request.hideCurrent)
+        viewModel.consumeRequest()
     }
 }

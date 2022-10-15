@@ -47,7 +47,7 @@ class DebugReportDialog(context: Context): LoadableListDialog(context) {
     )
 
     override val emptyTextId: Int = R.string.dialog_debug_report_empty
-    override fun getListBindingRoot(): View = viewBinding.root
+    override fun onCreateListBinging() = viewBinding.layoutList
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogDebugReportBinding.inflate(LayoutInflater.from(context))

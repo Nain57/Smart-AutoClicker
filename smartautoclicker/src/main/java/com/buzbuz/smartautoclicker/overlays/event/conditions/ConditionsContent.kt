@@ -23,35 +23,40 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentConditionsBinding
-import com.buzbuz.smartautoclicker.domain.AND
-import com.buzbuz.smartautoclicker.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.OR
+import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.eventconfig.SubOverlay
-import com.buzbuz.smartautoclicker.overlays.utils.LoadableListController
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
+import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.overlays.bindings.updateState
+import com.buzbuz.smartautoclicker.overlays.copy.conditions.ConditionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
+import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfigDialog
+import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelectorMenu
 
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class ConditionsContent(private val event: MutableStateFlow<Event?>) : NavBarDialogContent() {
+class ConditionsContent : NavBarDialogContent() {
 
+    /** View model for the container dialog. */
+    private val dialogViewModel: EventDialogViewModel by lazy {
+        ViewModelProvider(dialogViewModelStoreOwner).get(EventDialogViewModel::class.java)
+    }
     /** View model for this content. */
-    private val viewModel: ConditionsViewModel by lazy { ViewModelProvider(this).get(ConditionsViewModel::class.java) }
+    private val viewModel: ConditionsViewModel by lazy {
+        ViewModelProvider(this).get(ConditionsViewModel::class.java)
+    }
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentConditionsBinding
-    /** Controls the display state of the condition list (empty, loading, loaded). */
-    private lateinit var listController: LoadableListController<ConditionListItem, RecyclerView.ViewHolder>
     /** Adapter for the list of conditions. */
     private lateinit var conditionsAdapter: ConditionAdapter
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setConfiguredEvent(event)
+        viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
 
         viewBinding = ContentConditionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
             buttonNew.setOnClickListener { onNewButtonClicked() }
@@ -60,32 +65,27 @@ class ConditionsContent(private val event: MutableStateFlow<Event?>) : NavBarDia
             conditionsOperatorButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (!isChecked) return@addOnButtonCheckedListener
                 when (checkedId) {
-                    R.id.end_conditions_and_button -> viewModel.setConditionOperator(AND)
-                    R.id.end_conditions_or_button -> viewModel.setConditionOperator(OR)
+                    R.id.conditions_and_button -> viewModel.setConditionOperator(AND)
+                    R.id.conditions_or_button -> viewModel.setConditionOperator(OR)
                 }
             }
         }
 
         conditionsAdapter = ConditionAdapter(
-            addConditionClickedListener = {
-                //subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCapture)
-            },
-            copyConditionClickedListener = {
-                //subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionCopy)
-            },
-            conditionClickedListener = { index, condition ->
-                //subOverlayViewModel?.requestSubOverlay(SubOverlay.ConditionConfig(condition, index))
-            },
+            conditionClickedListener = ::onConditionClicked,
             bitmapProvider = viewModel::getConditionBitmap,
         )
 
-        listController = LoadableListController(
-            owner = this,
-            root = viewBinding.layoutList,
-            adapter = conditionsAdapter,
-            emptyTextId = R.string.dialog_conditions_empty,
-        )
-        listController.listView.adapter = conditionsAdapter
+        viewBinding.layoutList.apply {
+            setEmptyText(R.string.dialog_conditions_empty)
+            list.apply {
+                adapter = conditionsAdapter
+                layoutManager = GridLayoutManager(
+                    context,
+                    2,
+                )
+            }
+        }
 
         return viewBinding.root
     }
@@ -93,25 +93,34 @@ class ConditionsContent(private val event: MutableStateFlow<Event?>) : NavBarDia
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.conditionListItems.collect(listController::submitList) }
+                launch { viewModel.conditions.collect(::updateConditionList) }
                 launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
             }
         }
     }
 
     private fun onNewButtonClicked() {
-
+        dialogViewModel.requestSubOverlay(newConditionSelectorNavigationRequest())
     }
 
     private fun onCopyButtonClicked() {
+        dialogViewModel.requestSubOverlay(newConditionCopyNavigationRequest())
+    }
 
+    private fun onConditionClicked(condition: Condition, index: Int) {
+        dialogViewModel.requestSubOverlay(newConditionConfigNavigationRequest(condition, index))
+    }
+
+    private fun updateConditionList(newItems: List<Condition>?) {
+        viewBinding.layoutList.updateState(newItems)
+        conditionsAdapter.submitList(newItems)
     }
 
     private fun updateConditionOperator(@ConditionOperator operator: Int?) {
         viewBinding.apply {
             val (text, buttonId) = when (operator) {
-                AND -> context.getString(R.string.condition_operator_and) to R.id.end_conditions_and_button
-                OR -> context.getString(R.string.condition_operator_or) to R.id.end_conditions_or_button
+                AND -> context.getString(R.string.condition_operator_and) to R.id.conditions_and_button
+                OR -> context.getString(R.string.condition_operator_or) to R.id.conditions_or_button
                 else -> return@apply
             }
 
@@ -121,4 +130,45 @@ class ConditionsContent(private val event: MutableStateFlow<Event?>) : NavBarDia
             }
         }
     }
+
+    private fun newConditionSelectorNavigationRequest() = NavigationRequest(
+        overlay = ConditionSelectorMenu(
+            context = context,
+            onConditionSelected = { area, bitmap ->
+                dialogViewModel.requestSubOverlay(
+                    newConditionConfigNavigationRequest(
+                        viewModel.createCondition(context, area, bitmap)
+                    )
+                )
+            }
+        ),
+        hideCurrent = true,
+    )
+
+    private fun newConditionCopyNavigationRequest() = NavigationRequest(
+        ConditionCopyDialog(
+            context = context,
+            conditions = viewModel.conditions.value!!,
+            onConditionSelected = { conditionSelected ->
+                dialogViewModel.requestSubOverlay(
+                    newConditionConfigNavigationRequest(conditionSelected)
+                )
+            }
+        )
+    )
+
+    private fun newConditionConfigNavigationRequest(condition: Condition, index: Int = -1) = NavigationRequest(
+        ConditionConfigDialog(
+            context = context,
+            condition = condition,
+            onConfirmClicked = {
+                if (index != -1) {
+                    viewModel.updateCondition(it, index)
+                } else {
+                    viewModel.addCondition(it)
+                }
+            },
+            onDeleteClicked = { viewModel.removeCondition(condition) }
+        )
+    )
 }

@@ -47,7 +47,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/background_condition_info"/>
+            android:background="@drawable/background_fade_bottom"/>
 
         <ImageView
             android:id="@+id/condition_should_be_detected"

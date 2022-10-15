@@ -21,17 +21,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <include layout="@layout/include_loadable_list"
         android:id="@+id/layout_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/button_new">
-
-        <include layout="@layout/merge_loadable_list"/>
-    </FrameLayout>
+        app:layout_constraintBottom_toTopOf="@id/button_new"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_new"

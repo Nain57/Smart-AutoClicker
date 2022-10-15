@@ -50,17 +50,6 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     }
     /** The event conditions currently edited by the user. */
     val conditions: StateFlow<List<Condition>?> get() = _conditions
-    /** The item to be displayed in the condition list. Last item is always the add conditions. */
-    val conditionListItems: Flow<List<ConditionListItem>> by lazy {
-        _conditions.combine(repository.getConditionsCount()) { conditions, conditionsCount ->
-            buildList {
-                conditions?.let { conditionList ->
-                    addAll(conditionList.map { ConditionListItem.ConditionItem(it) })
-                }
-                add(ConditionListItem.AddConditionItem(conditionsCount > 0))
-            }
-        }
-    }
 
     /** The event condition operator currently edited by the user. */
     val conditionOperator: Flow<Int?> by lazy {
@@ -75,6 +64,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     /** Toggle the condition operator between AND and OR. */
     fun setConditionOperator(@ConditionOperator operator: Int) {
         configuredEvent.value?.let { event ->
+            println("TOTO: new operator $operator")
             configuredEvent.value = event.copy(conditionOperator = operator)
         }
     }
@@ -172,12 +162,4 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
         return null
     }
 
-}
-
-/** Items displayed in the condition list. */
-sealed class ConditionListItem {
-    /** The add condition item. */
-    data class AddConditionItem(val shouldDisplayCopy: Boolean) : ConditionListItem()
-    /** Item representing a created condition. */
-    data class ConditionItem(val condition: Condition) : ConditionListItem()
 }

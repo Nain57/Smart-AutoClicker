@@ -20,16 +20,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_top_bar"
-    android:layout_width="match_parent"
-    android:layout_height="65dp">
+    style="@style/AppTheme.Dialog.TopBar">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/dialog_title"
-        style="@style/TextAppearance.Material3.TitleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_small"
-        android:layout_marginVertical="@dimen/margin_vertical_default"
+        style="@style/AppTheme.Dialog.Title"
         app:layout_constraintBottom_toTopOf="@id/title_divider"
         app:layout_constraintEnd_toStartOf="@id/button_delete"
         app:layout_constraintStart_toEndOf="@id/button_dismiss"

@@ -30,9 +30,9 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogEndConditionConfigBinding
 import com.buzbuz.smartautoclicker.domain.EndCondition
+import com.buzbuz.smartautoclicker.overlays.bindings.bind
 import com.buzbuz.smartautoclicker.overlays.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.utils.bind
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

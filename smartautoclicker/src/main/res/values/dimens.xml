@@ -47,7 +47,7 @@
     <dimen name="dialog_condition_max_height">600dp</dimen>
     <dimen name="dialog_condition_max_width">400dp</dimen>
     <dimen name="dialog_item_condition_copy_icons_height">30dp</dimen>
-    <dimen name="dialog_item_condition_copy_condition_height">100dp</dimen>
+    <dimen name="dialog_item_condition_copy_condition_size">100dp</dimen>
     <dimen name="dialog_item_action_height">100dp</dimen>
     <dimen name="dialog_item_action_width">100dp</dimen>
     <dimen name="dialog_item_action_icon_size">50dp</dimen>

@@ -28,21 +28,28 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.databinding.ContentEventConfigBinding
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class EventConfigContent(private val event: MutableStateFlow<Event?>) : NavBarDialogContent() {
+class EventConfigContent : NavBarDialogContent() {
 
+    /** View model for the container dialog. */
+    private val dialogViewModel: EventDialogViewModel by lazy {
+        ViewModelProvider(dialogViewModelStoreOwner).get(EventDialogViewModel::class.java)
+    }
     /** View model for this content. */
-    private val viewModel: EventConfigViewModel by lazy { ViewModelProvider(this).get(EventConfigViewModel::class.java) }
+    private val viewModel: EventConfigViewModel by lazy {
+        ViewModelProvider(this).get(EventConfigViewModel::class.java)
+    }
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentEventConfigBinding
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setConfiguredEvent(event)
+        viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
 
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             eventNameInputEditText.apply {

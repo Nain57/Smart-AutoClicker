@@ -31,8 +31,9 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogEndConditionEventSelectBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.overlays.utils.LoadableListController
-import com.buzbuz.smartautoclicker.overlays.utils.bind
+import com.buzbuz.smartautoclicker.overlays.bindings.bind
+import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.overlays.bindings.updateState
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -45,8 +46,6 @@ class EventSelectionDialog(
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogEndConditionEventSelectBinding
-    /** Controls the display state of the event list (empty, loading, loaded). */
-    private lateinit var listController: LoadableListController<Event, EndConditionEventViewHolder>
 
     /** Adapter for the list of events. */
     private val eventsAdapter = EndConditionEventsAdapter(::onEventSelected)
@@ -60,15 +59,12 @@ class EventSelectionDialog(
             }
         }
 
-        listController = LoadableListController(
-            owner = this,
-            root = viewBinding.layoutList,
-            adapter = eventsAdapter,
-            emptyTextId = R.string.dialog_event_list_no_events,
-        )
-        listController.listView.apply {
-            adapter = eventsAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        viewBinding.layoutList.apply {
+            setEmptyText(R.string.dialog_event_list_no_events)
+            list.apply {
+                adapter = eventsAdapter
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            }
         }
 
         return BottomSheetDialog(context).apply {
@@ -77,7 +73,8 @@ class EventSelectionDialog(
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        listController.submitList(eventList)
+        viewBinding.layoutList.updateState(eventList)
+        eventsAdapter.submitList(eventList)
     }
 
     /**

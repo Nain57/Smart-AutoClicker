@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.copy.actions
+package com.buzbuz.smartautoclicker.overlays.event.copy
 
 import android.content.Context
 
@@ -24,7 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.CopyDialog
 
@@ -33,40 +33,38 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 /**
- * [CopyDialog] implementation for displaying the whole list of actions for a copy.
  *
- * @param context the Android Context for the dialog shown by this controller.
- * @param actions the list of edited actions for the configured event.
- * @param onActionSelected the listener called when the user select an Action.
  */
-class ActionCopyDialog(
+class EventCopyDialog(
     context: Context,
-    private val actions: List<Action>,
-    private val onActionSelected: (Action) -> Unit,
+    private val scenarioId: Long,
+    private val events: List<Event>,
+    private val onEventSelected: (Event) -> Unit,
 ) : CopyDialog(context) {
 
     /** View model for this content. */
-    private val viewModel: ActionCopyModel by lazy { ViewModelProvider(this).get(ActionCopyModel::class.java) }
-
+    private val viewModel: EventCopyModel by lazy { ViewModelProvider(this).get(EventCopyModel::class.java) }
     /** Adapter displaying the list of events. */
-    private lateinit var actionCopyAdapter: ActionCopyAdapter
+    private lateinit var eventCopyAdapter: EventCopyAdapter
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        viewModel.setItemsFromContainer(actions)
+        viewModel.setItemsFromContainer(events)
 
-        actionCopyAdapter = ActionCopyAdapter { selectedAction ->
-            onActionSelected(viewModel.getNewActionForCopy(selectedAction))
-            dismiss()
+        eventCopyAdapter = EventCopyAdapter { selectedEvent ->
+            viewModel.let {
+                onEventSelected(it.getCopyEvent(scenarioId, selectedEvent))
+                dismiss()
+            }
         }
 
         viewBinding.layoutLoadableList.list.apply {
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = actionCopyAdapter
+            adapter = eventCopyAdapter
         }
-        
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.actionList.collect(::updateActionList)
+                viewModel.eventList.collect(::updateEventList)
             }
         }
     }
@@ -75,8 +73,8 @@ class ActionCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
-    private fun updateActionList(newList: List<ActionCopyModel.ActionCopyItem>?) {
-        viewBinding.layoutLoadableList.updateState(newList)
-        actionCopyAdapter.submitList(if (newList == null) ArrayList() else ArrayList(newList))
+    private fun updateEventList(newItems: List<EventCopyModel.EventCopyItem>?) {
+        viewBinding.layoutLoadableList.updateState(newItems)
+        eventCopyAdapter.submitList(newItems)
     }
 }

@@ -66,7 +66,7 @@ class ActivitySelectionDialog(
 
     override val emptyTextId: Int = R.string.dialog_application_select_empty
 
-    override fun getListBindingRoot(): View = viewBinding.root
+    override fun onCreateListBinging() = viewBinding.layoutList
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogActivitySelectionBinding.inflate(LayoutInflater.from(context))

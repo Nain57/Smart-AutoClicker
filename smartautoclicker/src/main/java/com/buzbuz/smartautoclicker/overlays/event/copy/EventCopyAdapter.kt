@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.copy.events
+package com.buzbuz.smartautoclicker.overlays.event.copy
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -29,8 +27,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemCopyHeaderBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
-import com.buzbuz.smartautoclicker.overlays.copy.events.EventCopyModel.EventCopyItem
-import com.buzbuz.smartautoclicker.overlays.utils.getIconRes
+import com.buzbuz.smartautoclicker.overlays.event.copy.EventCopyModel.EventCopyItem
 
 /**
  * Adapter displaying all events in a list.
