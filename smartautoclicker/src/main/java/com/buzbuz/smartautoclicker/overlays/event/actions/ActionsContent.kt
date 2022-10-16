@@ -59,8 +59,10 @@ class ActionsContent : NavBarDialogContent() {
         viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
 
         viewBinding = ContentActionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            buttonNew.setOnClickListener { onNewButtonClicked() }
-            buttonCopy.setOnClickListener { onCopyButtonClicked() }
+            createCopyButtons.apply {
+                buttonNew.setOnClickListener { onNewButtonClicked() }
+                buttonCopy.setOnClickListener { onCopyButtonClicked() }
+            }
         }
 
         actionAdapter = ActionAdapter(
