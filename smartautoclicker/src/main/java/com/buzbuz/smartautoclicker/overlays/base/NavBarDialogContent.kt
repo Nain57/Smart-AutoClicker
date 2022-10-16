@@ -27,6 +27,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
 
 abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
 
@@ -131,7 +132,7 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
 
     protected open fun onStart() = Unit
 
-    open fun onDialogButtonClicked(buttonType: DialogButton) = Unit
+    open fun onDialogButtonClicked(buttonType: DialogNavigationButton) = Unit
 
 
 }

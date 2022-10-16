@@ -32,9 +32,12 @@ import com.buzbuz.smartautoclicker.domain.AND
 import com.buzbuz.smartautoclicker.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.OR
-import com.buzbuz.smartautoclicker.overlays.base.DialogButton
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
+import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.overlays.bindings.addOnCheckedListener
+import com.buzbuz.smartautoclicker.overlays.bindings.setButtonsText
+import com.buzbuz.smartautoclicker.overlays.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
@@ -70,17 +73,17 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
-            seekbarQuality.apply {
-                addOnChangeListener { _, value, fromUser ->
-                    if (fromUser) viewModel.setDetectionQuality(value.roundToInt())
-                }
+            seekbarQuality.addOnChangeListener { _, value, fromUser ->
+                if (fromUser) viewModel.setDetectionQuality(value.roundToInt())
             }
 
-            endConditionsOperatorButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
-                if (!isChecked) return@addOnButtonCheckedListener
-                when (checkedId) {
-                    R.id.end_conditions_and_button -> viewModel.setConditionOperator(AND)
-                    R.id.end_conditions_or_button -> viewModel.setConditionOperator(OR)
+            endConditionsOperatorButton.apply {
+                setButtonsText(R.string.dialog_button_condition_and, R.string.dialog_button_condition_or)
+                addOnCheckedListener { checkedId ->
+                    when (checkedId) {
+                        R.id.left_button -> viewModel.setConditionOperator(AND)
+                        R.id.right_button -> viewModel.setConditionOperator(OR)
+                    }
                 }
             }
 
@@ -106,8 +109,8 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
         }
     }
 
-    override fun onDialogButtonClicked(buttonType: DialogButton) {
-        if (buttonType == DialogButton.SAVE) {
+    override fun onDialogButtonClicked(buttonType: DialogNavigationButton) {
+        if (buttonType == DialogNavigationButton.SAVE) {
             viewModel.saveModifications()
         }
     }
@@ -137,16 +140,10 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
     }
 
     private fun updateEndConditionOperator(@ConditionOperator operator: Int?) {
-        viewBinding.apply {
-            val (text, buttonId) = when (operator) {
-                AND -> context.getString(R.string.condition_operator_and) to R.id.end_conditions_and_button
-                OR -> context.getString(R.string.condition_operator_or) to R.id.end_conditions_or_button
-                else -> return@apply
-            }
-
-            endConditionsOperatorDesc.text = text
-            if (endConditionsOperatorButton.checkedButtonId != buttonId) {
-                endConditionsOperatorButton.check(buttonId)
+        viewBinding.endConditionsOperatorButton.apply {
+            when (operator) {
+                AND -> setChecked(R.id.left_button, R.string.condition_operator_and_desc)
+                OR -> setChecked(R.id.right_button, R.string.condition_operator_or_desc)
             }
         }
     }

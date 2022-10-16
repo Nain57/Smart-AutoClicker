@@ -52,6 +52,15 @@
         <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListHeaderText</item>
     </style>
 
+    <!-- Style for the list headers text. -->
+    <style name="AppTheme.Dialog.ToggleButtonDesc">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body</item>
+    </style>
+
 
     <!-- Base text appearance. -->
     <style name="AppTheme.TextAppearance" />
@@ -68,6 +77,9 @@
 
     <!-- Text appearance for the dialog header. -->
     <style name="AppTheme.TextAppearance.ListHeaderText" parent="@style/TextAppearance.Material3.TitleMedium"/>
+
+    <!-- Text appearance for the dialog body text. -->
+    <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>
 
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/textTitle</item>

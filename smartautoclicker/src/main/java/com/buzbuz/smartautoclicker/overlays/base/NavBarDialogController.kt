@@ -18,12 +18,13 @@ package com.buzbuz.smartautoclicker.overlays.base
 
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.annotation.StringRes
 
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogNavBarBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeDialogNavigationTopBarBinding
+import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -32,16 +33,18 @@ abstract class NavBarDialogController(
 ) : OverlayDialogController(context) {
 
     /** Map of navigation bar item id to their content view. */
-    private val contentInfoMap: MutableMap<Int, NavBarContentInfo> = mutableMapOf()
+    private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()
     /** */
     private lateinit var baseViewBinding: DialogNavBarBinding
+    /** */
+    protected lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
 
     /** */
     abstract val navigationMenuId: Int
     /** */
     abstract fun onCreateContent(navItemId: Int): NavBarDialogContent
     /** */
-    abstract fun onDialogButtonPressed(buttonType: DialogButton)
+    abstract fun onDialogButtonPressed(buttonType: DialogNavigationButton)
 
     override fun onCreateDialog(): BottomSheetDialog {
         baseViewBinding = DialogNavBarBinding.inflate(LayoutInflater.from(context)).apply {
@@ -54,11 +57,12 @@ abstract class NavBarDialogController(
             }
 
             layoutTopBar.apply {
-                buttonSave.setOnClickListener { handleButtonClick(DialogButton.SAVE) }
-                buttonDismiss.setOnClickListener { handleButtonClick(DialogButton.DISMISS) }
-                buttonDelete.setOnClickListener { handleButtonClick(DialogButton.DELETE) }
+                buttonSave.setOnClickListener { handleButtonClick(DialogNavigationButton.SAVE) }
+                buttonDismiss.setOnClickListener { handleButtonClick(DialogNavigationButton.DISMISS) }
+                buttonDelete.setOnClickListener { handleButtonClick(DialogNavigationButton.DELETE) }
             }
         }
+        topBarBinding = baseViewBinding.layoutTopBar
 
         updateContentView(
             itemId = baseViewBinding.bottomNavigation.selectedItemId,
@@ -72,52 +76,19 @@ abstract class NavBarDialogController(
 
     override fun onStart() {
         super.onStart()
-        contentInfoMap[baseViewBinding.bottomNavigation.selectedItemId]?.content?.resume()
+        contentMap[baseViewBinding.bottomNavigation.selectedItemId]?.resume()
     }
 
     override fun onStop() {
         super.onStop()
-        contentInfoMap[baseViewBinding.bottomNavigation.selectedItemId]?.content?.pause()
+        contentMap[baseViewBinding.bottomNavigation.selectedItemId]?.pause()
     }
 
     override fun onDialogDismissed() {
         super.onDialogDismissed()
-        contentInfoMap.values.forEach { contentInfo ->
-            contentInfo.content.destroy()
+        contentMap.values.forEach { content ->
+            content.destroy()
         }
-    }
-
-    protected fun setTitle(title: String) {
-        baseViewBinding.layoutTopBar.dialogTitle.text = title
-    }
-
-    protected fun setTitle(@StringRes titleRes: Int) {
-        baseViewBinding.layoutTopBar.dialogTitle.setText(titleRes)
-    }
-
-    protected fun setButtonEnabledState(buttonType: DialogButton, enabled: Boolean) {
-        when (buttonType) {
-            DialogButton.SAVE -> baseViewBinding.layoutTopBar.buttonSave.isEnabled = enabled
-            DialogButton.DISMISS -> baseViewBinding.layoutTopBar.buttonDismiss.isEnabled = enabled
-            DialogButton.DELETE -> baseViewBinding.layoutTopBar.buttonDelete.isEnabled = enabled
-        }
-    }
-
-    protected fun setButtonVisibility(buttonType: DialogButton, visibility: Int) {
-        when (buttonType) {
-            DialogButton.SAVE -> baseViewBinding.layoutTopBar.buttonSave.visibility = visibility
-            DialogButton.DISMISS -> baseViewBinding.layoutTopBar.buttonDismiss.visibility = visibility
-            DialogButton.DELETE -> baseViewBinding.layoutTopBar.buttonDelete.visibility = visibility
-        }
-    }
-
-    private fun updateSaveButtonState() {
-        var isEnabled = true
-        contentInfoMap.values.forEach { navBarContentInfo ->
-            isEnabled = isEnabled && navBarContentInfo.saveEnabled
-        }
-
-        baseViewBinding.layoutTopBar.buttonSave.isEnabled = isEnabled
     }
 
     /**
@@ -127,16 +98,16 @@ abstract class NavBarDialogController(
         if (!forceUpdate && baseViewBinding.bottomNavigation.selectedItemId == itemId) return
 
         // Get the current content and stop it, if any.
-        contentInfoMap[baseViewBinding.bottomNavigation.selectedItemId]?.content?.apply {
+        contentMap[baseViewBinding.bottomNavigation.selectedItemId]?.apply {
             pause()
             stop()
         }
 
         // Get new content. If it does not exist yet, create it.
-        var content = contentInfoMap[itemId]?.content
+        var content = contentMap[itemId]
         if (content == null) {
             content = createContentView(itemId)
-            contentInfoMap[itemId] = NavBarContentInfo(content)
+            contentMap[itemId] = content
         }
 
         content.start()
@@ -148,24 +119,13 @@ abstract class NavBarDialogController(
             create(this@NavBarDialogController, baseViewBinding.dialogContent, itemId)
         }
 
-    private fun handleButtonClick(buttonType: DialogButton) {
+    private fun handleButtonClick(buttonType: DialogNavigationButton) {
         // First notify the contents.
-        contentInfoMap.values.forEach { contentInfo ->
-            contentInfo.content.onDialogButtonClicked(buttonType)
+        contentMap.values.forEach { contentInfo ->
+            contentInfo.onDialogButtonClicked(buttonType)
         }
 
         // Then, notify the dialog
         onDialogButtonPressed(buttonType)
     }
-}
-
-private class NavBarContentInfo(
-    val content: NavBarDialogContent,
-    var saveEnabled: Boolean = true,
-)
-
-enum class DialogButton {
-    DISMISS,
-    DELETE,
-    SAVE,
 }
