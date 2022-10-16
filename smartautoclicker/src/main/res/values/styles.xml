@@ -49,7 +49,7 @@
         <item name="android:layout_marginEnd">@dimen/margin_vertical_large</item>
         <item name="android:maxLines">1</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListHeaderText</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListItem.Title</item>
     </style>
 
     <!-- Style for the list headers text. -->
@@ -61,6 +61,24 @@
         <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body</item>
     </style>
 
+    <!-- Style for the list headers text. -->
+    <style name="AppTheme.Dialog.ListItem"/>
+
+    <!-- Style for the list headers text. -->
+    <style name="AppTheme.Dialog.ListItem.Title">
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_default</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_vertical_large</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListItem.Title</item>
+    </style>
+
+    <style name="AppTheme.Dialog.ListItem.SubText">
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_vertical_large</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListItem.SubText</item>
+    </style>
 
     <!-- Base text appearance. -->
     <style name="AppTheme.TextAppearance" />
@@ -75,8 +93,10 @@
         <item name="android:layout_marginBottom">@dimen/margin_vertical_large</item>
     </style>
 
-    <!-- Text appearance for the dialog header. -->
-    <style name="AppTheme.TextAppearance.ListHeaderText" parent="@style/TextAppearance.Material3.TitleMedium"/>
+    <!--  -->
+    <style name="AppTheme.TextAppearance.ListItem"/>
+    <style name="AppTheme.TextAppearance.ListItem.Title" parent="@style/TextAppearance.Material3.TitleMedium"/>
+    <style name="AppTheme.TextAppearance.ListItem.SubText" parent="@style/TextAppearance.Material3.BodyMedium"/>
 
     <!-- Text appearance for the dialog body text. -->
     <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>

@@ -33,9 +33,9 @@ import com.buzbuz.smartautoclicker.overlays.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.action.copy.ActionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.base.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
-import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 
 import kotlinx.coroutines.launch
 
@@ -106,7 +106,7 @@ class ActionsContent : NavBarDialogContent() {
     private fun newActionTypeSelectionNavigationRequest() = NavigationRequest(
         MultiChoiceDialog(
             context = context,
-            dialogTitle = R.string.dialog_action_type_title,
+            dialogTitleText = R.string.dialog_action_type_title,
             choices = listOf(ActionTypeChoice.Click, ActionTypeChoice.Swipe, ActionTypeChoice.Pause, ActionTypeChoice.Intent),
             onChoiceSelected = { choiceClicked ->
                 dialogViewModel.requestSubOverlay(

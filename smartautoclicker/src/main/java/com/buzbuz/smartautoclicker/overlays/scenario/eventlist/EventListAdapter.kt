@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.eventconfig.ActionsAdapter
 
 import java.util.Collections
 

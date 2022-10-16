@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.overlays.base.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.bindings.toActionDetails
 import com.buzbuz.smartautoclicker.overlays.utils.*
@@ -142,13 +143,29 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
 }
 
 /** Choices for the action type selection dialog. */
-sealed class ActionTypeChoice(title: Int, iconId: Int?): DialogChoice(title, iconId) {
+sealed class ActionTypeChoice(title: Int, description: Int, iconId: Int?): DialogChoice(title, description, iconId) {
     /** Click Action choice. */
-    object Click : ActionTypeChoice(R.string.dialog_action_type_click, R.drawable.ic_click)
+    object Click : ActionTypeChoice(
+        R.string.dialog_action_type_click,
+        R.string.dialog_desc_click,
+        R.drawable.ic_click,
+    )
     /** Swipe Action choice. */
-    object Swipe : ActionTypeChoice(R.string.dialog_action_type_swipe, R.drawable.ic_swipe)
+    object Swipe : ActionTypeChoice(
+        R.string.dialog_action_type_swipe,
+        R.string.dialog_desc_swipe,
+        R.drawable.ic_swipe,
+    )
     /** Pause Action choice. */
-    object Pause : ActionTypeChoice(R.string.dialog_action_type_pause, R.drawable.ic_wait)
+    object Pause : ActionTypeChoice(
+        R.string.dialog_action_type_pause,
+        R.string.dialog_desc_pause,
+        R.drawable.ic_wait,
+    )
     /** Intent Action choice. */
-    object Intent : ActionTypeChoice(R.string.dialog_action_type_intent, R.drawable.ic_intent)
+    object Intent : ActionTypeChoice(
+        R.string.dialog_action_type_intent,
+        R.string.dialog_desc_intent,
+        R.drawable.ic_intent,
+    )
 }

@@ -25,12 +25,12 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.overlays.base.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.click.ClickConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent.IntentConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.pause.PauseConfigModel
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.swipe.SwipeConfigModel
 import com.buzbuz.smartautoclicker.overlays.utils.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.overlays.utils.DialogChoice
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapConcat
@@ -139,7 +139,7 @@ abstract class ActionModel {
 }
 
 /** Choices for the target of the click. */
-sealed class ClickTargetChoice(title: Int): DialogChoice(title, null) {
+sealed class ClickTargetChoice(title: Int): DialogChoice(title) {
     /** Click on the detected condition. */
     object OnCondition : ClickTargetChoice(R.string.dialog_action_config_click_position_on_condition)
     /** Click at a specific location. */
