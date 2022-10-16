@@ -28,11 +28,11 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.databinding.IncludeClickConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
+import com.buzbuz.smartautoclicker.overlays.base.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ClickTargetChoice
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.CoordinatesSelector
 import com.buzbuz.smartautoclicker.overlays.utils.DurationInputFilter
-import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +54,7 @@ fun IncludeClickConfigBinding.setupClickUi(
         showSubOverlay(
             MultiChoiceDialog(
                 context = context,
-                dialogTitle = R.string.dialog_condition_type_title,
+                dialogTitleText = R.string.dialog_condition_type_title,
                 choices = listOf(ClickTargetChoice.OnCondition, ClickTargetChoice.AtPosition),
                 onChoiceSelected = { choiceClicked ->
                     when (choiceClicked) {

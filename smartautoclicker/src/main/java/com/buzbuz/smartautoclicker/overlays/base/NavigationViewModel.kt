@@ -22,7 +22,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.baseui.OverlayController
-import com.buzbuz.smartautoclicker.overlays.eventconfig.SubOverlay
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

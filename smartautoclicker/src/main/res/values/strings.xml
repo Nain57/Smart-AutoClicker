@@ -249,4 +249,10 @@
     <string name="dialog_desc_detection_type_screen">The condition must be detected anywhere the screen</string>
     <string name="dialog_desc_should_be_detected">The condition must be found on the screen</string>
     <string name="dialog_desc_should_not_be_detected">The condition must be not found on the screen</string>
+
+    <string name="dialog_desc_click">Click somewhere on the screen</string>
+    <string name="dialog_desc_swipe">Swipe from a position on the screen to another</string>
+    <string name="dialog_desc_pause">Pause the detection execution</string>
+    <string name="dialog_desc_intent">Interact with another application</string>
+
 </resources>
