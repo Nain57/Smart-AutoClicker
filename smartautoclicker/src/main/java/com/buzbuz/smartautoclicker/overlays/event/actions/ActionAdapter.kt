@@ -56,7 +56,7 @@ class ActionAdapter(
      * @param from the position of the click to be moved.
      * @param to the new position of the click to be moved.
      */
-    fun moveEvents(from: Int, to: Int) {
+    fun moveActions(from: Int, to: Int) {
         val newList = currentList.toMutableList()
         Collections.swap(newList, from, to)
         submitList(newList)
@@ -89,12 +89,12 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param actionClickedListener listener notified upon user click on this item.
      */
     fun onBind(action: ActionDetails, actionClickedListener: (Action, Int) -> Unit) {
-        viewBinding.bind(action, bindingAdapterPosition, actionClickedListener)
+        viewBinding.bind(action, bindingAdapterPosition, true, actionClickedListener)
     }
 }
 
 /** ItemTouchHelper attached to the adapter */
-class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(0, 0) {
+class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
     /** Tells if the user is currently dragging an item. */
     private var isDragging: Boolean = false
@@ -105,7 +105,7 @@ class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(0, 0) {
         target: RecyclerView.ViewHolder
     ): Boolean {
         isDragging = true
-        (recyclerView.adapter as ActionAdapter).moveEvents(
+        (recyclerView.adapter as ActionAdapter).moveActions(
             viewHolder.bindingAdapterPosition,
             target.bindingAdapterPosition
         )

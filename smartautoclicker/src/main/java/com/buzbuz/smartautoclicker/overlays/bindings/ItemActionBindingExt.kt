@@ -30,6 +30,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun ItemActionBinding.bind(
     details: ActionDetails,
     bindingAdapterPosition: Int,
+    canDrag: Boolean,
     actionClickedListener: (Action, Int) -> Unit,
 ) {
     root.setOnClickListener { actionClickedListener.invoke(details.action, bindingAdapterPosition) }
@@ -38,6 +39,8 @@ fun ItemActionBinding.bind(
     actionTypeIcon.setImageResource(details.icon)
     actionName.text = details.name
     actionDetails.text = details.details
+
+    btnReorder.visibility = if (canDrag) View.VISIBLE else View.GONE
 }
 
 /**
