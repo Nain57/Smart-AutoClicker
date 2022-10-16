@@ -14,35 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.condition
+package com.buzbuz.smartautoclicker.overlays.condition
 
 import android.app.Application
-import android.content.Context
 import android.graphics.Bitmap
+
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.domain.*
 
-import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.domain.EXACT
-import com.buzbuz.smartautoclicker.domain.WHOLE_SCREEN
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-/**
- * View model for the [ConditionConfigDialog].
- * @param context the Android context.
- */
-class ConditionConfigModel(application: Application) : AndroidViewModel(application) {
+class ConditionViewModel (application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the database. */
     private val repository = Repository.getRepository(application)
@@ -57,6 +41,15 @@ class ConditionConfigModel(application: Application) : AndroidViewModel(applicat
     val detectionType: Flow<Int> = configuredCondition.mapNotNull { it?.detectionType }
     /** The condition threshold value currently edited by the user. */
     val threshold: Flow<Int> = configuredCondition.mapNotNull { it?.threshold }
+    /** The bitmap for the configured condition. */
+    val conditionBitmap: Flow<Bitmap?> = configuredCondition.map { condition ->
+        if (condition == null) return@map null
+        if (condition.bitmap != null) return@map condition.bitmap
+
+        condition.path?.let { path ->
+            repository.getBitmap(path, condition.area.width(), condition.area.height())
+        }
+    }
     /** Tells if the configured condition is valid and can be saved. */
     val isValidCondition: Flow<Boolean> = configuredCondition.map { condition ->
         condition != null && condition.name.isNotEmpty()
@@ -89,18 +82,16 @@ class ConditionConfigModel(application: Application) : AndroidViewModel(applicat
     }
 
     /** Toggle between true and false for the shouldBeDetected value of the condition. */
-    fun toggleShouldBeDetected() {
+    fun setShouldBeDetected(newShouldBeDetected: Boolean) {
         configuredCondition.value?.let { condition ->
-            configuredCondition.value = condition.copy(shouldBeDetected = !condition.shouldBeDetected)
+            configuredCondition.value = condition.copy(shouldBeDetected = newShouldBeDetected)
         } ?: throw IllegalStateException("Can't toggle condition should be detected, condition is null!")
     }
 
     /** Toggle between exact and whole screen for the detection type. */
-    fun toggleDetectionType() {
+    fun setDetectionType(@DetectionType newType: Int) {
         configuredCondition.value?.let { condition ->
-            configuredCondition.value = condition.copy(
-                detectionType = if (condition.detectionType == EXACT) WHOLE_SCREEN else EXACT
-            )
+            configuredCondition.value = condition.copy(detectionType = newType)
         } ?: throw IllegalStateException("Can't toggle condition should be detected, condition is null!")
     }
 
@@ -113,36 +104,7 @@ class ConditionConfigModel(application: Application) : AndroidViewModel(applicat
             configuredCondition.value = condition.copy(threshold = value)
         }
     }
-
-    /**
-     * Get the bitmap corresponding to a condition.
-     * Loading is async and the result notified via the onBitmapLoaded argument.
-     *
-     * @param condition the condition to load the bitmap of.
-     * @param onBitmapLoaded the callback notified upon completion.
-     */
-    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
-        if (condition.bitmap != null) {
-            onBitmapLoaded.invoke(condition.bitmap)
-            return null
-        }
-
-        if (condition.path != null) {
-            return viewModelScope.launch(Dispatchers.IO) {
-                val bitmap = repository.getBitmap(condition.path!!, condition.area.width(), condition.area.height())
-
-                if (isActive) {
-                    withContext(Dispatchers.Main) {
-                        onBitmapLoaded.invoke(bitmap)
-                    }
-                }
-            }
-        }
-
-        onBitmapLoaded.invoke(null)
-        return null
-    }
 }
 
 /** The maximum threshold value selectable by the user. */
-const val MAX_THRESHOLD = 20
+const val MAX_THRESHOLD = 20f

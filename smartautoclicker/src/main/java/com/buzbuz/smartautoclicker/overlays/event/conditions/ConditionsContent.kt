@@ -30,12 +30,11 @@ import com.buzbuz.smartautoclicker.databinding.ContentConditionsBinding
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
-import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.overlays.bindings.updateState
+import com.buzbuz.smartautoclicker.overlays.bindings.*
+import com.buzbuz.smartautoclicker.overlays.condition.ConditionDialog
+import com.buzbuz.smartautoclicker.overlays.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfigDialog
-import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelectorMenu
 
 import kotlinx.coroutines.launch
 
@@ -62,11 +61,13 @@ class ConditionsContent : NavBarDialogContent() {
             buttonNew.setOnClickListener { onNewButtonClicked() }
             buttonCopy.setOnClickListener { onCopyButtonClicked() }
 
-            conditionsOperatorButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
-                if (!isChecked) return@addOnButtonCheckedListener
-                when (checkedId) {
-                    R.id.conditions_and_button -> viewModel.setConditionOperator(AND)
-                    R.id.conditions_or_button -> viewModel.setConditionOperator(OR)
+            conditionsOperatorButton.apply {
+                setButtonsText(R.string.dialog_button_condition_and, R.string.dialog_button_condition_or)
+                addOnCheckedListener { checkedId ->
+                    when (checkedId) {
+                        R.id.left_button -> viewModel.setConditionOperator(AND)
+                        R.id.right_button -> viewModel.setConditionOperator(OR)
+                    }
                 }
             }
         }
@@ -117,16 +118,10 @@ class ConditionsContent : NavBarDialogContent() {
     }
 
     private fun updateConditionOperator(@ConditionOperator operator: Int?) {
-        viewBinding.apply {
-            val (text, buttonId) = when (operator) {
-                AND -> context.getString(R.string.condition_operator_and) to R.id.conditions_and_button
-                OR -> context.getString(R.string.condition_operator_or) to R.id.conditions_or_button
-                else -> return@apply
-            }
-
-            conditionsOperatorDesc.text = text
-            if (conditionsOperatorButton.checkedButtonId != buttonId) {
-                conditionsOperatorButton.check(buttonId)
+        viewBinding.conditionsOperatorButton.apply {
+            when (operator) {
+                AND -> setChecked(R.id.left_button, R.string.condition_operator_and_desc)
+                OR -> setChecked(R.id.right_button, R.string.condition_operator_or_desc)
             }
         }
     }
@@ -158,7 +153,7 @@ class ConditionsContent : NavBarDialogContent() {
     )
 
     private fun newConditionConfigNavigationRequest(condition: Condition, index: Int = -1) = NavigationRequest(
-        ConditionConfigDialog(
+        ConditionDialog(
             context = context,
             condition = condition,
             onConfirmClicked = {

@@ -157,46 +157,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.button.MaterialButtonToggleGroup
+                <include layout="@layout/include_toggle_button"
                     android:id="@+id/end_conditions_operator_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/end_conditions_title"
-                    app:singleSelection="true"
-                    app:selectionRequired="true">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/end_conditions_and_button"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dialog_button_condition_and" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/end_conditions_or_button"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dialog_button_condition_or" />
-
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/end_conditions_operator_desc"
-                    style="@style/TextAppearance.Material3.BodyMedium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_horizontal_default"
-                    android:maxLines="2"
-                    android:text="@string/condition_operator_and_desc"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/end_conditions_operator_button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/end_conditions_operator_button"
-                    app:layout_constraintTop_toTopOf="@id/end_conditions_operator_button" />
+                    app:layout_constraintTop_toBottomOf="@id/end_conditions_title"/>
 
                 <FrameLayout
                     android:id="@+id/end_conditions_list_layout"

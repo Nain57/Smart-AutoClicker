@@ -55,9 +55,9 @@
         android:text="@string/dialog_buttons_copy"
         app:icon="@drawable/ic_copy"/>
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
+    <include layout="@layout/include_toggle_button"
         android:id="@+id/conditions_operator_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_default"
         android:layout_marginBottom="@dimen/margin_vertical_large"
@@ -65,38 +65,6 @@
         app:layout_constraintTop_toBottomOf="@id/button_new"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/conditions_operator_desc"
-        app:singleSelection="true"
-        app:selectionRequired="true">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/conditions_and_button"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_button_condition_and" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/conditions_or_button"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_button_condition_or" />
-
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/conditions_operator_desc"
-        style="@style/TextAppearance.Material3.BodyMedium"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
-        app:layout_constraintTop_toTopOf="@id/conditions_operator_button"
-        app:layout_constraintBottom_toBottomOf="@id/conditions_operator_button"
-        app:layout_constraintStart_toEndOf="@id/conditions_operator_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:maxLines="2"
-        android:text="@string/condition_operator_and_desc"
-        android:textAlignment="center" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

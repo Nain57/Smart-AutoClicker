@@ -26,16 +26,17 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Scenario
-import com.buzbuz.smartautoclicker.overlays.base.DialogButton
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogController
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
+import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.overlays.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.overlays.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.overlays.scenario.config.ScenarioConfigContent
 import com.buzbuz.smartautoclicker.overlays.scenario.debug.DebugConfigContent
 import com.buzbuz.smartautoclicker.overlays.scenario.eventlist.EventListContent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.flow.collect
 
 import kotlinx.coroutines.launch
 
@@ -52,7 +53,7 @@ class ScenarioDialog(
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setConfiguredScenario(scenario.id)
         return super.onCreateDialog().also {
-            setButtonVisibility(DialogButton.SAVE, View.VISIBLE)
+            topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
         }
     }
 
@@ -73,16 +74,16 @@ class ScenarioDialog(
         }
     }
 
-    override fun onDialogButtonPressed(buttonType: DialogButton) = dismiss()
+    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) = dismiss()
 
     /** */
     private fun updateSaveButtonState(isEnabled: Boolean) {
-        setButtonEnabledState(DialogButton.SAVE, isEnabled)
+        topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, isEnabled)
     }
 
     /** */
     private fun updateDialogTitle(scenarioName: String) {
-        setTitle(scenarioName)
+        topBarBinding.dialogTitle.text = scenarioName
     }
 
     private fun onNewSubOverlayRequest(request: NavigationRequest?) {

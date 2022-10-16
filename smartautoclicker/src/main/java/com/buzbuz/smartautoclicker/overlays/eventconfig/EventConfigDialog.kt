@@ -34,10 +34,10 @@ import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.databinding.DialogEventConfigBinding
 import com.buzbuz.smartautoclicker.extensions.setLeftRightCompoundDrawables
-import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionConfigDialog
-import com.buzbuz.smartautoclicker.overlays.eventconfig.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.action.copy.ActionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.condition.ConditionDialog
+import com.buzbuz.smartautoclicker.overlays.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.utils.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
@@ -295,7 +295,7 @@ class EventConfigDialog(
             }
 
             is SubOverlay.ConditionConfig -> {
-                showSubOverlay(ConditionConfigDialog(
+                showSubOverlay(ConditionDialog(
                     context = context,
                     condition = overlayType.condition,
                     onConfirmClicked = {
