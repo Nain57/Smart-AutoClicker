@@ -23,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentActionsBinding
@@ -50,6 +51,8 @@ class ActionsContent : NavBarDialogContent() {
         ViewModelProvider(this).get(ActionsViewModel::class.java)
     }
 
+    /** TouchHelper applied to [actionAdapter] allowing to drag and drop the items. */
+    private val itemTouchHelper = ItemTouchHelper(ActionReorderTouchHelper())
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentActionsBinding
     /** Adapter for the list of actions. */
@@ -71,8 +74,11 @@ class ActionsContent : NavBarDialogContent() {
         )
 
         viewBinding.layoutList.apply {
-            setEmptyText(R.string.dialog_conditions_empty)
-            list.adapter = actionAdapter
+            setEmptyText(R.string.dialog_actions_empty)
+            list.apply {
+                itemTouchHelper.attachToRecyclerView(this)
+                adapter = actionAdapter
+            }
         }
 
         return viewBinding.root

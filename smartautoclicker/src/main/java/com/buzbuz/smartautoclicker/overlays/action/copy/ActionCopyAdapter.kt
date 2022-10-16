@@ -100,6 +100,8 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param actionClickedListener listener notified upon user click on this item.
      */
     fun onBind(item: ActionCopyItem.ActionItem, actionClickedListener: (Action) -> Unit) {
-        viewBinding.bind(item.actionDetails, bindingAdapterPosition) { action, _ -> actionClickedListener(action) }
+        viewBinding.bind(item.actionDetails, bindingAdapterPosition, false) { action, _ ->
+            actionClickedListener(action)
+        }
     }
 }
