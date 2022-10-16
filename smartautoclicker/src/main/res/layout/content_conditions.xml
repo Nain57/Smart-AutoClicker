@@ -28,30 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/conditions_operator_button"/>
-
-    <include layout="@layout/include_toggle_button"
-        android:id="@+id/conditions_operator_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical_default"
-        android:layout_marginBottom="@dimen/margin_vertical_large"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        app:layout_constraintTop_toBottomOf="@id/layout_list"
-        app:layout_constraintBottom_toTopOf="@id/create_copy_buttons"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider_create_copy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetEnd="@dimen/margin_horizontal_large"
-        app:dividerInsetStart="@dimen/margin_horizontal_large"
-        app:layout_constraintTop_toBottomOf="@id/conditions_operator_button"
-        app:layout_constraintBottom_toTopOf="@id/create_copy_buttons"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/create_copy_buttons"/>
 
     <include layout="@layout/include_create_copy_buttons"
         android:id="@+id/create_copy_buttons"
@@ -59,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_small"
         android:layout_marginBottom="@dimen/margin_vertical_default"
-        app:layout_constraintTop_toBottomOf="@id/conditions_operator_button"
+        app:layout_constraintTop_toBottomOf="@id/layout_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

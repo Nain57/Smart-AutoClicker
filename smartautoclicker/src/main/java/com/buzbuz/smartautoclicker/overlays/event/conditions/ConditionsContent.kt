@@ -62,16 +62,6 @@ class ConditionsContent : NavBarDialogContent() {
                 buttonNew.setOnClickListener { onNewButtonClicked() }
                 buttonCopy.setOnClickListener { onCopyButtonClicked() }
             }
-
-            conditionsOperatorButton.apply {
-                setButtonsText(R.string.dialog_button_condition_and, R.string.dialog_button_condition_or)
-                addOnCheckedListener { checkedId ->
-                    when (checkedId) {
-                        R.id.left_button -> viewModel.setConditionOperator(AND)
-                        R.id.right_button -> viewModel.setConditionOperator(OR)
-                    }
-                }
-            }
         }
 
         conditionsAdapter = ConditionAdapter(
@@ -97,7 +87,6 @@ class ConditionsContent : NavBarDialogContent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.conditions.collect(::updateConditionList) }
-                launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
             }
         }
     }
@@ -117,15 +106,6 @@ class ConditionsContent : NavBarDialogContent() {
     private fun updateConditionList(newItems: List<Condition>?) {
         viewBinding.layoutList.updateState(newItems)
         conditionsAdapter.submitList(newItems)
-    }
-
-    private fun updateConditionOperator(@ConditionOperator operator: Int?) {
-        viewBinding.conditionsOperatorButton.apply {
-            when (operator) {
-                AND -> setChecked(R.id.left_button, R.string.condition_operator_and_desc)
-                OR -> setChecked(R.id.right_button, R.string.condition_operator_or_desc)
-            }
-        }
     }
 
     private fun newConditionSelectorNavigationRequest() = NavigationRequest(
