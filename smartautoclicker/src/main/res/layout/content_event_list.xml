@@ -28,32 +28,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/button_new"/>
+        app:layout_constraintBottom_toTopOf="@id/create_copy_buttons"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_new"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:layout_width="wrap_content"
+    <include layout="@layout/include_create_copy_buttons"
+        android:id="@+id/create_copy_buttons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/margin_vertical_default"
+        android:layout_marginBottom="@dimen/margin_vertical_default"
         app:layout_constraintTop_toBottomOf="@id/layout_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_copy"
-        android:text="@string/dialog_event_list_add"
-        app:icon="@drawable/ic_add"/>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_copy"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/margin_vertical_default"
-        app:layout_constraintTop_toBottomOf="@id/layout_list"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_new"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/dialog_buttons_copy"
-        app:icon="@drawable/ic_copy"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

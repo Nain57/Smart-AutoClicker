@@ -58,8 +58,10 @@ class ConditionsContent : NavBarDialogContent() {
         viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
 
         viewBinding = ContentConditionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            buttonNew.setOnClickListener { onNewButtonClicked() }
-            buttonCopy.setOnClickListener { onCopyButtonClicked() }
+            createCopyButtons.apply {
+                buttonNew.setOnClickListener { onNewButtonClicked() }
+                buttonCopy.setOnClickListener { onCopyButtonClicked() }
+            }
 
             conditionsOperatorButton.apply {
                 setButtonsText(R.string.dialog_button_condition_and, R.string.dialog_button_condition_or)

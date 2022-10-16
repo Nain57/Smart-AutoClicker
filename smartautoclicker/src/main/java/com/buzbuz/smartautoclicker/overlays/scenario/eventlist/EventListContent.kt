@@ -63,8 +63,10 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
         viewModel.setScenarioId(scenarioId)
 
         viewBinding = ContentEventListBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            buttonNew.setOnClickListener { onNewEventButtonPressed() }
-            buttonCopy.setOnClickListener { onCopyEventButtonPressed() }
+            createCopyButtons.apply {
+                buttonNew.setOnClickListener { onNewEventButtonPressed() }
+                buttonCopy.setOnClickListener { onCopyEventButtonPressed() }
+            }
         }
 
         eventAdapter = EventListAdapter(
@@ -107,7 +109,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     }
 
     private fun updateCopyButtonVisibility(isVisible: Boolean) {
-        viewBinding.buttonCopy.visibility = if (isVisible) View.VISIBLE else View.GONE
+        viewBinding.createCopyButtons.buttonCopy.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     /** Opens the dialog allowing the user to copy a click. */
