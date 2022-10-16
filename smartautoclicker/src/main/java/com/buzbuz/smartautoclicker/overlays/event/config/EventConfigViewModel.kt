@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.event.config
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
+import com.buzbuz.smartautoclicker.domain.ConditionOperator
 
 import com.buzbuz.smartautoclicker.domain.Event
 
@@ -32,6 +33,11 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** The event currently configured. */
     private lateinit var configuredEvent: MutableStateFlow<Event?>
+
+    /** The event condition operator currently edited by the user. */
+    val conditionOperator: Flow<Int?> by lazy {
+        configuredEvent.map { it?.conditionOperator }
+    }
 
     /** The event name value currently edited by the user. */
     val eventName: Flow<String?> by lazy {
@@ -50,6 +56,13 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     fun setEventName(newName: String) {
         configuredEvent.value?.let { event ->
             configuredEvent.value = event.copy(name = newName)
+        }
+    }
+
+    /** Toggle the condition operator between AND and OR. */
+    fun setConditionOperator(@ConditionOperator operator: Int) {
+        configuredEvent.value?.let { event ->
+            configuredEvent.value = event.copy(conditionOperator = operator)
         }
     }
 }

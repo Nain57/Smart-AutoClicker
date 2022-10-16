@@ -25,13 +25,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentEventConfigBinding
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.AND
+import com.buzbuz.smartautoclicker.domain.ConditionOperator
+import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.bindings.addOnCheckedListener
+import com.buzbuz.smartautoclicker.overlays.bindings.setButtonsText
+import com.buzbuz.smartautoclicker.overlays.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
 
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class EventConfigContent : NavBarDialogContent() {
@@ -59,6 +64,16 @@ class EventConfigContent : NavBarDialogContent() {
                     }
                 })
             }
+
+            conditionsOperatorButton.apply {
+                setButtonsText(R.string.dialog_button_condition_and, R.string.dialog_button_condition_or)
+                addOnCheckedListener { checkedId ->
+                    when (checkedId) {
+                        R.id.left_button -> viewModel.setConditionOperator(AND)
+                        R.id.right_button -> viewModel.setConditionOperator(OR)
+                    }
+                }
+            }
         }
 
         return viewBinding.root
@@ -68,11 +83,21 @@ class EventConfigContent : NavBarDialogContent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.eventName.collect(::updateEventName) }
+                launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
             }
         }
     }
 
     private fun updateEventName(name: String?) {
         viewBinding.eventNameInputEditText.setText(name)
+    }
+
+    private fun updateConditionOperator(@ConditionOperator operator: Int?) {
+        viewBinding.conditionsOperatorButton.apply {
+            when (operator) {
+                AND -> setChecked(R.id.left_button, R.string.condition_operator_and_desc)
+                OR -> setChecked(R.id.right_button, R.string.condition_operator_or_desc)
+            }
+        }
     }
 }

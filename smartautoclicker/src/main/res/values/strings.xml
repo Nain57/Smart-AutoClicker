@@ -243,6 +243,8 @@
     <string name="dialog_button_should_be_detected">Present</string>
     <string name="dialog_button_should_not_be_detected">Absent</string>
 
+    <string name="dialog_header_condition_operator">Conditions detection</string>
+
     <string name="dialog_desc_detection_type_exact">The condition must be detected at position [%1$d,%2$d]&#160;[%3$d,%4$d]</string>
     <string name="dialog_desc_detection_type_screen">The condition must be detected anywhere the screen</string>
     <string name="dialog_desc_should_be_detected">The condition must be found on the screen</string>

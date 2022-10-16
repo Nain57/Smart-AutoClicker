@@ -51,22 +51,9 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     /** The event conditions currently edited by the user. */
     val conditions: StateFlow<List<Condition>?> get() = _conditions
 
-    /** The event condition operator currently edited by the user. */
-    val conditionOperator: Flow<Int?> by lazy {
-        configuredEvent.map { it?.conditionOperator }
-    }
-
     /** Set the event currently configured by the UI. */
     fun setConfiguredEvent(event: MutableStateFlow<Event?>) {
         configuredEvent = event
-    }
-
-    /** Toggle the condition operator between AND and OR. */
-    fun setConditionOperator(@ConditionOperator operator: Int) {
-        configuredEvent.value?.let { event ->
-            println("TOTO: new operator $operator")
-            configuredEvent.value = event.copy(conditionOperator = operator)
-        }
     }
 
     /**
