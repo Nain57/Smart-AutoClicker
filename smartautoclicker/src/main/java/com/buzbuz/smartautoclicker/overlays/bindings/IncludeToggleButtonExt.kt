@@ -18,9 +18,13 @@ package com.buzbuz.smartautoclicker.overlays.bindings
 
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.R
+import androidx.core.view.children
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.IncludeToggleButtonBinding
+
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 
 
 fun IncludeToggleButtonBinding.setButtonsText(@StringRes left: Int, @StringRes right: Int) {
@@ -36,31 +40,24 @@ fun IncludeToggleButtonBinding.addOnCheckedListener(listener: (checkedId: Int) -
 }
 
 fun IncludeToggleButtonBinding.setChecked(@IdRes newCheckedButtonId: Int, @StringRes description: Int) {
-    setCheckedButton(newCheckedButtonId)
-    if (buttonGroup.checkedButtonId != newCheckedButtonId) {
-        buttonGroup.check(newCheckedButtonId)
-    }
+    buttonGroup.setChecked(newCheckedButtonId)
     descriptionText.setText(description)
 }
 
 fun IncludeToggleButtonBinding.setChecked(@IdRes newCheckedButtonId: Int, description: String) {
-    setCheckedButton(newCheckedButtonId)
-    if (buttonGroup.checkedButtonId != newCheckedButtonId) {
-        buttonGroup.check(newCheckedButtonId)
-    }
+    buttonGroup.setChecked(newCheckedButtonId)
     descriptionText.text = description
 }
 
-private fun IncludeToggleButtonBinding.setCheckedButton(@IdRes newCheckedButtonId: Int) {
-    when (newCheckedButtonId) {
-        R.id.left_button -> {
-            leftButton.setIconResource(R.drawable.ic_confirm)
-            rightButton.setIconResource(0)
-        }
+fun MaterialButtonToggleGroup.setChecked(@IdRes newCheckedButtonId: Int) {
+    children.forEach { button ->
+        (button as MaterialButton).setIconResource(
+            if (button.id == newCheckedButtonId) R.drawable.ic_confirm
+            else 0
+        )
+    }
 
-        R.id.right_button -> {
-            leftButton.setIconResource(0)
-            rightButton.setIconResource(R.drawable.ic_confirm)
-        }
+    if (checkedButtonId != newCheckedButtonId) {
+        check(newCheckedButtonId)
     }
 }

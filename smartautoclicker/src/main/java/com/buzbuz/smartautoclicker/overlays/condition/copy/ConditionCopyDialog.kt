@@ -27,14 +27,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.overlays.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.CopyDialog
-import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
 /**
- * [LoadableListDialog] implementation for displaying the whole list of conditions for a copy.
+ * [CopyDialog] implementation for displaying the whole list of conditions for a copy.
  *
  * @param context the Android Context for the dialog shown by this controller.
  * @param conditions the list of edited conditions for the configured event.

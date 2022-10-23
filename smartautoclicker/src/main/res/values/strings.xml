@@ -243,6 +243,7 @@
     <string name="dialog_button_should_be_detected">Present</string>
     <string name="dialog_button_should_not_be_detected">Absent</string>
 
+
     <string name="dialog_header_condition_operator">Conditions detection</string>
 
     <string name="dialog_desc_detection_type_exact">The condition must be detected at position [%1$d,%2$d]&#160;[%3$d,%4$d]</string>
@@ -254,5 +255,19 @@
     <string name="dialog_desc_swipe">Swipe from a position on the screen to another</string>
     <string name="dialog_desc_pause">Pause the detection execution</string>
     <string name="dialog_desc_intent">Interact with another application</string>
+
+    <string name="dialog_click_config_click_on_header">Click on</string>
+    <string name="dialog_button_click_on_condition">Condition</string>
+    <string name="dialog_click_config_on_condition_desc">Click on the detected condition</string>
+    <string name="dialog_button_click_on_position">Position</string>
+    <string name="dialog_click_config_on_position_select">Select the position</string>
+    <string name="dialog_click_config_label_press_duration">Press duration (ms)</string>
+    <string name="dialog_swipe_config_positions_select">Select the positions</string>
+    <string name="dialog_swipe_config_label_duration">Swipe duration (ms)</string>
+    <string name="dialog_pause_config_label_duration">Pause duration (ms)</string>
+
+    <string name="dialog_button_intent_start_activity">Activity</string>
+    <string name="dialog_button_intent_send_broadcast">Broadcast</string>
+
 
 </resources>

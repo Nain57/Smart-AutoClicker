@@ -45,3 +45,6 @@ fun ImageView.setIconTint(@ColorRes color: Int) {
         android.graphics.PorterDuff.Mode.SRC_IN
     )
 }
+
+/** Check if this duration value is valid for an action. */
+fun Long?.isValidDuration(): Boolean = this != null && this > 0L

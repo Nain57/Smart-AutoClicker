@@ -14,19 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent
+package com.buzbuz.smartautoclicker.overlays.action.intent.extras
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogIntentExtraTypeBinding
 import com.buzbuz.smartautoclicker.databinding.ItemIntentExtraTypeBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog

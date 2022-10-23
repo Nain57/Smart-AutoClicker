@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent
+package com.buzbuz.smartautoclicker.overlays.action.intent.activities
 
 import android.app.Application
 import android.content.Intent
@@ -22,6 +22,7 @@ import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.extensions.queryIntentActivitiesCompat
+import com.buzbuz.smartautoclicker.overlays.action.intent.getActivityDisplayInfo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -29,7 +30,7 @@ import kotlinx.coroutines.flow.flowOn
 
 /**
  * View model for the [ActivitySelectionDialog].
- * @param context the Android context.
+ * @param application the Android application.
  */
 class ActivitySelectionModel(application: Application) : AndroidViewModel(application) {
 

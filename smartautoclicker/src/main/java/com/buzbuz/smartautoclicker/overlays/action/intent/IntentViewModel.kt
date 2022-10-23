@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent
+package com.buzbuz.smartautoclicker.overlays.action.intent
 
+import android.app.Application
 import android.content.ComponentName
 import android.content.Intent
 import android.content.SharedPreferences
@@ -23,73 +24,63 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 
+import androidx.lifecycle.AndroidViewModel
+
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.extensions.resolveActivityCompat
-import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionModel
+import com.buzbuz.smartautoclicker.overlays.utils.getEventConfigPreferences
+import com.buzbuz.smartautoclicker.overlays.utils.putIntentIsAdvancedConfig
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.*
 
-/**
- * Allow to observe/edit the values a intent action.
- *
- * @param viewModelScope the scope for the view model holding this model.
- * @param configuredAction the flow on the edited action.
- */
-class IntentConfigModel(
-    private val viewModelScope: CoroutineScope,
-    val configuredAction: MutableStateFlow<Action?>,
-    private val packageManager: PackageManager,
-) : ActionModel() {
+class IntentViewModel(application: Application) : AndroidViewModel(application) {
 
-    override val isValidAction: Flow<Boolean> = configuredAction
-        .map { action ->
-            action is Action.Intent
-                    && !action.name.isNullOrEmpty()
-                    && action.isAdvanced != null && action.intentAction != null && action.flags != null
-                    && (action.isBroadcast == true || (action.isBroadcast == false && action.componentName != null))
-        }
+    /** The action being configured by the user. Defined using [setConfiguredIntent]. */
+    private val configuredIntent = MutableStateFlow<Action.Intent?>(null)
+    /** Event configuration shared preferences. */
+    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
+    /** The Android package manager. */
+    private val packageManager: PackageManager = application.packageManager
 
-    override fun saveLastConfig(eventConfigPrefs: SharedPreferences) {
-        // Nothing to do
-    }
+    /** The name of the pause. */
+    val name: Flow<String?> = configuredIntent
+        .filterNotNull()
+        .map { it.name }
+        .take(1)
 
     /** True if the intent creation mode is advanced, false if not. */
-    val isAdvanced: Flow<Boolean> = configuredAction
-        .filterIsInstance<Action.Intent>()
+    val isAdvanced: Flow<Boolean> = configuredIntent
+        .filterNotNull()
         .map { it.isAdvanced ?: false }
         .distinctUntilChanged()
+
     /* The intent action. */
-    val action: Flow<String?> = configuredAction
-        .filterIsInstance<Action.Intent>()
+    val action: Flow<String?> = configuredIntent
+        .filterNotNull()
         .map { it.intentAction }
         .take(1)
+
     /** The flags for this intent. */
-    val flags: Flow<String?> = configuredAction
-        .filterIsInstance<Action.Intent>()
+    val flags: Flow<String> = configuredIntent
+        .filterNotNull()
         .map { it.flags.toString() }
         .take(1)
+
     /** The component name for the intent. */
-    val componentName: Flow<String?> = configuredAction
-        .filterIsInstance<Action.Intent>()
+    val componentName: Flow<String?> = configuredIntent
+        .filterNotNull()
         .map { it.componentName?.flattenToString() }
         .take(1)
+
     /** True if this intent is a broadcast, false for a start activity. */
-    val isBroadcast: Flow<Boolean> = configuredAction
-        .filterIsInstance<Action.Intent>()
+    val isBroadcast: Flow<Boolean> = configuredIntent
+        .filterNotNull()
         .map { it.isBroadcast ?: false }
 
     /** The list of extra items to be displayed. */
-    val extras: Flow<List<ExtraListItem>> = configuredAction
-        .filterIsInstance<Action.Intent>()
+    val extras: Flow<List<ExtraListItem>> = configuredIntent
+        .filterNotNull()
         .map { intent ->
             buildList {
                 intent.extras?.forEach { extra ->
@@ -108,8 +99,8 @@ class IntentConfigModel(
         }
 
     /** Name and icon of the selected application in simple edition mode. */
-    val activityInfo: Flow<ActivityDisplayInfo?> = configuredAction
-        .filterIsInstance<Action.Intent>()
+    val activityInfo: Flow<ActivityDisplayInfo?> = configuredIntent
+        .filterNotNull()
         .filter { it.isAdvanced == false }
         .map { intent ->
             if (intent.componentName == null) return@map null
@@ -118,16 +109,46 @@ class IntentConfigModel(
                 ?.getActivityDisplayInfo(packageManager)
         }
 
-    /** Toggle between Advanced and Simple edition mode. */
-    fun toggleIsAdvanced() {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                val isAdvanced =  !(intent.isAdvanced ?: false)
-                configuredAction.value = intent.copy(
-                    isAdvanced = isAdvanced,
-                    isBroadcast = if(!isAdvanced) false else intent.isBroadcast
-                )
-            }
+    /** Tells if the configured intent is valid and can be saved. */
+    val isValidAction: Flow<Boolean> = configuredIntent
+        .map { intent ->
+            intent != null
+                    && !intent.name.isNullOrEmpty()
+                    && intent.isAdvanced != null && intent.intentAction != null && intent.flags != null
+                    && (intent.isBroadcast == true || (intent.isBroadcast == false && intent.componentName != null))
+        }
+
+    /**
+     * Set the configured intent.
+     * This will update all values represented by this view model.
+     *
+     * @param intent the intent to configure.
+     */
+    fun setConfiguredIntent(intent: Action.Intent) {
+        configuredIntent.value = intent.deepCopy()
+    }
+
+    /** @return the intent containing all user changes. */
+    fun getConfiguredIntent(): Action.Intent =
+        configuredIntent.value ?: throw IllegalStateException("Can't get the configured intent, none were defined.")
+
+    /**
+     * Set the name of the intent.
+     * @param name the new name.
+     */
+    fun setName(name: String) {
+        configuredIntent.value?.let { intent ->
+            configuredIntent.value = intent.copy(name = "" + name)
+        }
+    }
+
+    /** Set the configuration mode. */
+    fun setIsAdvancedConfiguration(isAdvanced: Boolean) {
+        configuredIntent.value?.let { intent ->
+            configuredIntent.value = intent.copy(
+                isAdvanced = isAdvanced,
+                isBroadcast = if(!isAdvanced) false else intent.isBroadcast
+            )
         }
     }
 
@@ -138,8 +159,8 @@ class IntentConfigModel(
      * @param componentName component name of the selected activity.
      */
     fun setActivitySelected(componentName: ComponentName) {
-        (configuredAction.value as Action.Intent).let { intent ->
-            configuredAction.value = intent.copy(
+        configuredIntent.value?.let { intent ->
+            configuredIntent.value = intent.copy(
                 isBroadcast = false,
                 intentAction = Intent.ACTION_MAIN,
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP,
@@ -150,54 +171,51 @@ class IntentConfigModel(
 
     /** Set the action for the intent. */
     fun setIntentAction(action: String) {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                configuredAction.value = intent.copy(intentAction = action)
-            }
+        configuredIntent.value?.let { intent ->
+            configuredIntent.value = intent.copy(intentAction = action)
         }
     }
 
     /** Set the action for the intent. */
-    fun setFlagsAction(flags: Int?) {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                configuredAction.value = intent.copy(flags = flags)
-            }
+    fun setIntentFlags(flags: Int?) {
+        configuredIntent.value?.let { intent ->
+            configuredIntent.value = intent.copy(flags = flags)
         }
     }
 
     /** Set the component name for the intent. */
     fun setComponentName(componentName: String) {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                configuredAction.value = intent.copy(componentName = ComponentName.unflattenFromString(componentName))
-            }
+        configuredIntent.value?.let { intent ->
+            configuredIntent.value = intent.copy(componentName = ComponentName.unflattenFromString(componentName))
         }
     }
 
     /** Toggle between a broadcast and start activity. */
-    fun toggleIsBroadcast() {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                configuredAction.value = intent.copy(isBroadcast = !(intent.isBroadcast ?: false))
-            }
+    fun setIsBroadcast(isBroadcast: Boolean) {
+        configuredIntent.value?.let { intent ->
+            configuredIntent.value = intent.copy(isBroadcast = isBroadcast)
         }
     }
 
     /** @return creates a new extra for this intent. */
-    fun getNewExtra() = IntentExtra(0L, configuredAction.value!!.id, null, null)
+    fun getNewExtra() = configuredIntent.value?.let { IntentExtra(0L, it.id, null, null) }
+        ?: throw IllegalStateException("Can't create new extra, no configured intent defined.")
+
+
+    fun addUpdateExtra(extra: IntentExtra<out Any>, index: Int) {
+        if (index != -1) updateExtra(extra, index)
+        else addNewExtra(extra)
+    }
 
     /**
      * Add a new extra to the configured intent.
      * @param extra the new extra to add.
      */
-    fun addNewExtra(extra: IntentExtra<out Any>) {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                val newList = intent.extras?.toMutableList() ?: mutableListOf()
-                newList.add(extra)
-                configuredAction.value = intent.copy(extras = newList)
-            }
+    private fun addNewExtra(extra: IntentExtra<out Any>) {
+        configuredIntent.value?.let { intent ->
+            val newList = intent.extras?.toMutableList() ?: mutableListOf()
+            newList.add(extra)
+            configuredIntent.value = intent.copy(extras = newList)
         }
     }
 
@@ -206,13 +224,11 @@ class IntentConfigModel(
      * @param extra the extra to update.
      * @param index the index of the extra in the extra list.
      */
-    fun updateExtra(extra: IntentExtra<out Any>, index: Int) {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                val newList = intent.extras?.toMutableList() ?: return@launch
-                newList[index] = extra
-                configuredAction.value = intent.copy(extras = newList)
-            }
+    private fun updateExtra(extra: IntentExtra<out Any>, index: Int) {
+        configuredIntent.value?.let { intent ->
+            val newList = intent.extras?.toMutableList() ?: return
+            newList[index] = extra
+            configuredIntent.value = intent.copy(extras = newList)
         }
     }
 
@@ -221,12 +237,16 @@ class IntentConfigModel(
      * @param index the index of the extra in the extra list.
      */
     fun deleteExtra(index: Int) {
-        (configuredAction.value as Action.Intent).let { intent ->
-            viewModelScope.launch {
-                val newList = intent.extras?.toMutableList() ?: return@launch
-                newList.removeAt(index)
-                configuredAction.value = intent.copy(extras = newList)
-            }
+        configuredIntent.value?.let { intent ->
+            val newList = intent.extras?.toMutableList() ?: return
+            newList.removeAt(index)
+            configuredIntent.value = intent.copy(extras = newList)
+        }
+    }
+
+    fun saveLastConfig() {
+        configuredIntent.value?.let { intent ->
+            sharedPreferences.edit().putIntentIsAdvancedConfig(intent.isAdvanced == true).apply()
         }
     }
 }

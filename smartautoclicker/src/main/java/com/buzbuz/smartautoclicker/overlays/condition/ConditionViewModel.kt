@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.domain.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-class ConditionViewModel (application: Application) : AndroidViewModel(application) {
+class ConditionViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the database. */
     private val repository = Repository.getRepository(application)
