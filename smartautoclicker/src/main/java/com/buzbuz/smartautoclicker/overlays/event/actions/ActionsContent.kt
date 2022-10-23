@@ -28,15 +28,18 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentActionsBinding
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.overlays.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.overlays.base.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.action.copy.ActionCopyDialog
+import com.buzbuz.smartautoclicker.overlays.action.intent.IntentDialog
+import com.buzbuz.smartautoclicker.overlays.action.pause.PauseDialog
+import com.buzbuz.smartautoclicker.overlays.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.overlays.base.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.overlays.eventconfig.action.ActionConfigDialog
 
 import kotlinx.coroutines.launch
 
@@ -134,16 +137,28 @@ class ActionsContent : NavBarDialogContent() {
         )
     )
 
-    private fun newActionConfigNavigationRequest(action: Action, index: Int = -1) = NavigationRequest(
-        overlay = ActionConfigDialog(
-            context= context,
-            action = action,
-            onConfirmClicked = { confirmedAction ->
-                if (index != -1)  viewModel.updateAction(confirmedAction, index)
-                else viewModel.addAction(confirmedAction)
-            },
-            onDeleteClicked = { viewModel.removeAction(action) }
-        ),
-        hideCurrent = true,
-    )
+    private fun newActionConfigNavigationRequest(action: Action, index: Int = -1): NavigationRequest {
+        val overlay = when (action) {
+            is Action.Click -> ClickDialog(context, action, viewModel::removeAction) { savedClick ->
+                viewModel.addUpdateAction(savedClick, index)
+            }
+
+            is Action.Swipe -> SwipeDialog(context, action, viewModel::removeAction) { savedSwipe ->
+                viewModel.addUpdateAction(savedSwipe, index)
+            }
+
+            is Action.Pause -> PauseDialog(context, action, viewModel::removeAction) { savedPause ->
+                viewModel.addUpdateAction(savedPause, index)
+            }
+
+            is Action.Intent -> IntentDialog(context, action, viewModel::removeAction) { savedIntent ->
+                viewModel.addUpdateAction(savedIntent, index)
+            }
+        }
+
+        return NavigationRequest(
+            overlay = overlay,
+            hideCurrent = true,
+        )
+    }
 }

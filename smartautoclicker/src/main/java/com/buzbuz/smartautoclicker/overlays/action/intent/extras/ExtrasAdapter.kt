@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent
+package com.buzbuz.smartautoclicker.overlays.action.intent.extras
 
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.databinding.ItemIntentExtraCardBinding
 import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
+import com.buzbuz.smartautoclicker.overlays.action.intent.ExtraListItem
 
 /**
  * Adapter displaying a list of intent extra.

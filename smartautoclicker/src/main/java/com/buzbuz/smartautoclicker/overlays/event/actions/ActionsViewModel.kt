@@ -83,11 +83,16 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
         } ?: throw IllegalStateException("Can't create an action, event is null!")
     }
 
+    fun addUpdateAction(action: Action, index: Int) {
+        if (index != -1)  updateAction(action, index)
+        else addAction(action)
+    }
+
     /**
      * Add a new action to the event.
      * @param action the new action.
      */
-    fun addAction(action: Action) {
+    private fun addAction(action: Action) {
         configuredEvent.value?.let { event ->
             val newActions = event.actions?.let { ArrayList(it) } ?: ArrayList()
             newActions.add(action)
@@ -102,7 +107,7 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
      * Update an action in the event.
      * @param action the updated action.
      */
-    fun updateAction(action: Action, index: Int) {
+    private fun updateAction(action: Action, index: Int) {
         configuredEvent.value?.let { event ->
             val newActions = event.actions?.let { ArrayList(it) } ?: ArrayList()
             newActions[index] = action

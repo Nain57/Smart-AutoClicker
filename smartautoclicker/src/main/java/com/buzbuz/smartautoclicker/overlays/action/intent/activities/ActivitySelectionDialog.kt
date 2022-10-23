@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.eventconfig.action.intent
+package com.buzbuz.smartautoclicker.overlays.action.intent.activities
 
 import android.content.ComponentName
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -31,11 +30,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogActivitySelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemApplicationBinding
-import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+import com.buzbuz.smartautoclicker.overlays.action.intent.ActivityDisplayInfo
+import com.buzbuz.smartautoclicker.overlays.bindings.bind
+import com.buzbuz.smartautoclicker.overlays.bindings.updateState
+
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
@@ -49,7 +50,7 @@ import kotlinx.coroutines.launch
 class ActivitySelectionDialog(
     context: Context,
     private val onApplicationSelected: (ComponentName) -> Unit,
-) : LoadableListDialog(context) {
+) : OverlayDialogController(context) {
 
     /** The view model for this dialog. */
     private val viewModel: ActivitySelectionModel by lazy {
@@ -59,39 +60,37 @@ class ActivitySelectionDialog(
     private lateinit var viewBinding: DialogActivitySelectionBinding
 
     /** Handle the binding between the application list and the views displaying them. */
-    private val adapter = ApplicationAdapter { selectedComponentName ->
-        onApplicationSelected(selectedComponentName)
-        dismiss()
-    }
-
-    override val emptyTextId: Int = R.string.dialog_application_select_empty
-
-    override fun onCreateListBinging() = viewBinding.layoutList
+    private lateinit var activitiesAdapter: ApplicationAdapter
 
     override fun onCreateDialog(): BottomSheetDialog {
-        viewBinding = DialogActivitySelectionBinding.inflate(LayoutInflater.from(context))
+        viewBinding = DialogActivitySelectionBinding.inflate(LayoutInflater.from(context)).apply {
+            activitiesAdapter = ApplicationAdapter { selectedComponentName ->
+                onApplicationSelected(selectedComponentName)
+                dismiss()
+            }
+
+            layoutLoadableList.list.apply {
+                adapter = activitiesAdapter
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            }
+        }
 
         return BottomSheetDialog(context).apply {
-            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_application_select_title)
             setContentView(viewBinding.root)
-            //setNegativeButton(android.R.string.cancel, null)
         }
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        super.onDialogCreated(dialog)
-
-        listBinding.list.adapter = adapter
-        listBinding.list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.activities.collect { activityList ->
-                    updateLayoutState(activityList)
-                    adapter.submitList(activityList)
-                }
+                viewModel.activities.collect(::updateActivityList)
             }
         }
+    }
+
+    private fun updateActivityList(activities: List<ActivityDisplayInfo>) {
+        viewBinding.layoutLoadableList.updateState(activities)
+        activitiesAdapter.submitList(activities)
     }
 }
 
@@ -113,7 +112,7 @@ private class ApplicationAdapter(
         holder.onBind(getItem(position))
 }
 
-/** DiffUtil Callback comparing two EndConditionListItem when updating the [EndConditionAdapter] list. */
+/** DiffUtil Callback comparing two lists when updating the [ApplicationAdapter]. */
 private object ApplicationDiffUtilCallback: DiffUtil.ItemCallback<ActivityDisplayInfo>() {
     override fun areItemsTheSame(oldItem: ActivityDisplayInfo, newItem: ActivityDisplayInfo):
             Boolean = oldItem == newItem
@@ -134,11 +133,6 @@ private class ApplicationViewHolder(
 
     /** Binds this view holder views to the provided activity. */
     fun onBind(activity: ActivityDisplayInfo) {
-        viewBinding.apply {
-            textApp.text = activity.name
-            iconApp.setImageDrawable(activity.icon)
-
-            root.setOnClickListener { onApplicationSelected(activity.componentName) }
-        }
+        viewBinding.bind(activity, onApplicationSelected)
     }
 }
