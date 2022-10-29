@@ -20,10 +20,13 @@ import android.widget.ImageView
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
+import kotlin.reflect.KClass
 
 /**
  * Get the icon for a given action.
@@ -44,6 +47,19 @@ fun ImageView.setIconTint(@ColorRes color: Int) {
         ContextCompat.getColor(context, color),
         android.graphics.PorterDuff.Mode.SRC_IN
     )
+}
+
+@StringRes
+fun KClass<out Any>.getDisplayNameRes() : Int = when (this) {
+    Byte::class -> R.string.dialog_intent_extra_type_byte
+    Boolean::class -> R.string.dialog_intent_extra_type_boolean
+    Char::class -> R.string.dialog_intent_extra_type_char
+    Double::class -> R.string.dialog_intent_extra_type_double
+    Int::class -> R.string.dialog_intent_extra_type_int
+    Float::class -> R.string.dialog_intent_extra_type_float
+    Short::class -> R.string.dialog_intent_extra_type_short
+    String::class -> R.string.dialog_intent_extra_type_string
+    else -> 0
 }
 
 /** Check if this duration value is valid for an action. */

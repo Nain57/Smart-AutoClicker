@@ -269,5 +269,16 @@
     <string name="dialog_button_intent_start_activity">Activity</string>
     <string name="dialog_button_intent_send_broadcast">Broadcast</string>
 
+    <string name="dialog_button_intent_extra_boolean_true" translatable="false">True</string>
+    <string name="dialog_button_intent_extra_boolean_false" translatable="false">False</string>
+
+    <string name="dialog_intent_extra_type_boolean" translatable="false">Boolean</string>
+    <string name="dialog_intent_extra_type_byte" translatable="false">Byte</string>
+    <string name="dialog_intent_extra_type_char" translatable="false">Char</string>
+    <string name="dialog_intent_extra_type_double" translatable="false">Double</string>
+    <string name="dialog_intent_extra_type_int" translatable="false">Int</string>
+    <string name="dialog_intent_extra_type_float" translatable="false">Float</string>
+    <string name="dialog_intent_extra_type_short" translatable="false">Short</string>
+    <string name="dialog_intent_extra_type_string" translatable="false">String</string>
 
 </resources>

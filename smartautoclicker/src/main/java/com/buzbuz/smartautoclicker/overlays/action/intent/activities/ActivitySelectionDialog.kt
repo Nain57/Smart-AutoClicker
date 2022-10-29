@@ -64,6 +64,8 @@ class ActivitySelectionDialog(
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewBinding = DialogActivitySelectionBinding.inflate(LayoutInflater.from(context)).apply {
+            // TODO config dialog top bar
+
             activitiesAdapter = ApplicationAdapter { selectedComponentName ->
                 onApplicationSelected(selectedComponentName)
                 dismiss()

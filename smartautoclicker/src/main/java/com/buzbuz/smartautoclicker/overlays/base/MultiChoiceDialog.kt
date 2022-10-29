@@ -24,17 +24,20 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogMultiChoiceBinding
 import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceBinding
+import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceSmallBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
  * [OverlayDialogController] implementation for a dialog displaying a list of choices to the user.
  *
- * @param T the type of choices in the list.
+ * @param T the type of choices in the list. Must extends [DialogChoice].
  * @param context the Android Context for the dialog shown by this controller.
  * @param dialogTitleText the title of the dialog.
  * @param choices the choices to be displayed.
@@ -86,27 +89,56 @@ class MultiChoiceDialog<T : DialogChoice>(
 private class ChoiceAdapter<T : DialogChoice>(
     private val choices: List<T>,
     private val onChoiceSelected: (T) -> Unit,
-): RecyclerView.Adapter<ChoiceViewHolder<T>>() {
+): RecyclerView.Adapter<MultiChoiceViewHolder<T>>() {
 
     override fun getItemCount(): Int = choices.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChoiceViewHolder<T> =
-        ChoiceViewHolder<T>(ItemMultiChoiceBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun getItemViewType(position: Int): Int {
+        val item = choices[position]
 
-    override fun onBindViewHolder(holder: ChoiceViewHolder<T>, position: Int) {
-        holder.onBind(choices[position], onChoiceSelected)
+        return when {
+            item.description == null && item.iconId == null -> R.layout.item_multi_choice_small
+            else -> R.layout.item_multi_choice
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MultiChoiceViewHolder<T> =
+        when (viewType) {
+            R.layout.item_multi_choice_small ->
+                SmallChoiceViewHolder(ItemMultiChoiceSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_multi_choice ->
+                ChoiceViewHolder(ItemMultiChoiceBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            else -> throw IllegalArgumentException("Unsupported view type !")
+        }
+
+    override fun onBindViewHolder(holder: MultiChoiceViewHolder<T>, position: Int) {
+         holder.onBind(choices[position], onChoiceSelected)
     }
 }
 
 /**
- * View holder for a choice.
+ * Base view holder for a choice.
+ * @param itemView the root view of the item.
+ */
+private abstract class MultiChoiceViewHolder<T : DialogChoice>(itemView: View): ViewHolder(itemView) {
+
+    /**
+     * Binds a choice to this view holder.
+     * @param choice the choice object to be bound.
+     * @param onChoiceSelected listener upon user click on the choice item.
+     */
+    abstract fun onBind(choice: T, onChoiceSelected: (T) -> Unit)
+}
+
+/**
+ * View holder for a choice with an icon and a description.
  * @param holderViewBinding the view binding containing the holder root view.
  */
 private class ChoiceViewHolder<T : DialogChoice>(
     val holderViewBinding: ItemMultiChoiceBinding,
-) : RecyclerView.ViewHolder(holderViewBinding.root) {
+) : MultiChoiceViewHolder<T>(holderViewBinding.root) {
 
-    fun onBind(choice: T, onChoiceSelected: (T) -> Unit) {
+    override fun onBind(choice: T, onChoiceSelected: (T) -> Unit) {
         holderViewBinding.apply {
             root.setOnClickListener { onChoiceSelected.invoke(choice) }
 
@@ -117,7 +149,6 @@ private class ChoiceViewHolder<T : DialogChoice>(
                     setText(choice.description)
                 } else {
                     visibility = View.GONE
-                    setText(0)
                 }
             }
             choiceIcon.apply {
@@ -129,6 +160,22 @@ private class ChoiceViewHolder<T : DialogChoice>(
                     setImageResource(0)
                 }
             }
+        }
+    }
+}
+
+/**
+ * View holder for a choice with only a title.
+ * @param holderViewBinding the view binding containing the holder root view.
+ */
+private class SmallChoiceViewHolder<T : DialogChoice>(
+    val holderViewBinding: ItemMultiChoiceSmallBinding,
+) : MultiChoiceViewHolder<T>(holderViewBinding.root) {
+
+    override fun onBind(choice: T, onChoiceSelected: (T) -> Unit) {
+        holderViewBinding.apply {
+            root.setOnClickListener { onChoiceSelected.invoke(choice) }
+            choiceTitle.setText(choice.title)
         }
     }
 }
