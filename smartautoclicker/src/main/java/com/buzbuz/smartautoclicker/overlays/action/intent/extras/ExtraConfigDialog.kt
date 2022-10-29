@@ -31,8 +31,14 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.databinding.DialogIntentExtraConfigBinding
+import com.buzbuz.smartautoclicker.overlays.base.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.overlays.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.overlays.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
+
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
 
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
@@ -62,92 +68,73 @@ class ExtraConfigDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogIntentExtraConfigBinding
 
-    /** The currently selected type for the extra value. */
-    private var currentType: KClass<out Any>? = null
-
     override fun onCreateDialog(): BottomSheetDialog {
-        viewBinding = DialogIntentExtraConfigBinding.inflate(LayoutInflater.from(context))
         viewModel.setConfigExtra(extra)
 
-        val builder = BottomSheetDialog(context).apply {
-            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_action_config_intent_advanced_extras_config_title)
-            setContentView(viewBinding.root)
-            //setPositiveButton(android.R.string.ok, null)
-            //setNegativeButton(android.R.string.cancel, null)
+        viewBinding = DialogIntentExtraConfigBinding.inflate(LayoutInflater.from(context)).apply {
+            layoutTopBar.apply {
+                dialogTitle.setText(R.string.dialog_action_config_intent_advanced_extras_config_title)
+
+                buttonDismiss.setOnClickListener { dismiss() }
+                buttonSave.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener { onSaveButtonClicked() }
+                }
+                buttonDelete.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener { onDeleteButtonClicked() }
+                }
+            }
+
+            editKeyText.addTextChangedListener(object : OnAfterTextChangedListener() {
+                override fun afterTextChanged(s: Editable?) {
+                    viewModel.setKey(s.toString())
+                }
+            })
+
+            buttonSelectType.setOnClickListener { showExtraTypeSelectionDialog() }
+            textValueType.setOnClickListener { showExtraTypeSelectionDialog() }
+
+            editValueText.addTextChangedListener(object : OnAfterTextChangedListener() {
+                override fun afterTextChanged(s: Editable?) {
+                    viewModel.setValue(s.toString())
+                }
+            })
+
+            booleanValueButtonGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (!isChecked) return@addOnButtonCheckedListener
+                viewModel.setBooleanValue(checkedId == R.id.left_button)
+            }
         }
 
-        /*if (onDeleteClicked != null) {
-            builder.setNeutralButton(R.string.dialog_condition_delete) { _, _ -> onDeleteClicked.invoke() }
-        }*/
-
-        return builder
+        return BottomSheetDialog(context).apply {
+            setContentView(viewBinding.root)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        viewBinding.apply {
-            root.setOnTouchListener(hideSoftInputTouchListener)
-
-            editKey.apply {
-                setSelectAllOnFocus(true)
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        viewModel?.setKey(text.toString())
-                    }
-                })
-            }
-
-            editValue.apply {
-                setSelectAllOnFocus(true)
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        viewModel?.setValue(text.toString())
-                    }
-                })
-            }
-
-            editBooleanValue.setOnClickListener {
-                viewModel?.toggleBooleanValue()
-            }
-
-            textValueType.setOnClickListener {
-                showSubOverlay(
-                    ExtraTypeSelectionDialog(
-                        context = context,
-                        onTypeSelected = { type -> viewModel?.setType(type) }
-                    )
-                )
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel?.key?.collect { key ->
-                        viewBinding.editKey.apply {
-                            setText(key)
-                            setSelection(key?.length ?: 0)
-                        }
-                    }
-                }
-
-                launch {
-                    viewModel?.valueInputState?.collect { typeState ->
-                        updateValueInputViews(typeState)
-                    }
-                }
-
-                launch {
-                    viewModel?.isExtraValid?.collect { isExtraValid ->
-                        /*changeButtonState(
-                            button = dialog.getButton(AlertDialog.BUTTON_POSITIVE),
-                            visibility = if (isExtraValid) View.VISIBLE else View.INVISIBLE,
-                            listener = { onOkClicked() }
-                        )*/
-                    }
-                }
+                launch { viewModel.key.collect(::updateExtraKey) }
+                launch { viewModel.valueInputState.collect(::updateExtraValue) }
+                launch { viewModel.isExtraValid.collect(::updateSaveButton) }
             }
         }
+    }
+
+    private fun onSaveButtonClicked() {
+        onConfigComplete(viewModel.getConfiguredExtra())
+        dismiss()
+    }
+
+    private fun onDeleteButtonClicked() {
+        onDeleteClicked?.invoke()
+        dismiss()
+    }
+
+    private fun updateExtraKey(newKey: String?) {
+        viewBinding.editKeyText.setText(newKey)
     }
 
     /**
@@ -155,52 +142,90 @@ class ExtraConfigDialog(
      * For each extra value type, a different configuration is applied (different IME flags, filters ...) to provide
      * the correct experience to the user.
      *
-     * @param state the new state of the input views.
+     * @param valueState the new state of the input views.
      */
-    private fun updateValueInputViews(state: ExtraValueInputState) = viewBinding.apply {
-        textValueType.text = state.typeSelectionText
+    private fun updateExtraValue(valueState: ExtraValueInputState) {
+        when (valueState) {
+            ExtraValueInputState.NoTypeSelected -> toNoExtraTypeSelected()
 
-        when (state) {
-            is ExtraValueInputState.NoTypeSelected -> {
-                layoutValue.visibility = View.GONE
-                currentType = null
-            }
-
-            is ExtraValueInputState.BooleanInputTypeSelected -> {
-                layoutValue.visibility = View.VISIBLE
-                editValue.visibility = View.GONE
-                editBooleanValue.apply {
-                    visibility = View.VISIBLE
-                    setText(
-                        if (state.isTrue) R.string.dialog_action_config_intent_advanced_extras_config_boolean_true
-                        else R.string.dialog_action_config_intent_advanced_extras_config_boolean_false
-                    )
-                }
-                currentType = Boolean::class
-            }
-
-            is ExtraValueInputState.TextInputTypeSelected -> {
-                layoutValue.visibility = View.VISIBLE
-                editValue.apply {
-                    visibility = View.VISIBLE
-                    if (currentType != state.value::class) {
-                        setText(state.valueStr)
-                        inputType = state.inputType
-                        filters = state.inputFilter?.let { arrayOf(it) } ?: emptyArray()
+            is ExtraValueInputState.TypeSelected -> {
+                viewBinding.apply {
+                    layoutValueInput.visibility = View.VISIBLE
+                    buttonSelectType.visibility = View.GONE
+                    textValueType.apply {
+                        visibility = View.VISIBLE
+                        setText(valueState.typeText)
                     }
                 }
-                editBooleanValue.visibility = View.GONE
-                currentType = state.value::class
+
+                when (valueState) {
+                    is ExtraValueInputState.BooleanInputTypeSelected -> toExtraTypeBooleanSelected(valueState)
+                    is ExtraValueInputState.TextInputTypeSelected -> toExtraTypeTextInputSelected(valueState)
+                }
             }
         }
     }
 
-    /** Called when the user press OK. */
-    private fun onOkClicked() {
-        viewModel?.let {
-            onConfigComplete(it.getConfiguredExtra())
+    private fun toNoExtraTypeSelected() {
+        viewBinding.apply {
+            textValueType.visibility = View.GONE
+            layoutValueInput.visibility = View.GONE
+            buttonSelectType.visibility = View.VISIBLE
         }
+    }
 
-        dismiss()
+    private fun toExtraTypeBooleanSelected(state: ExtraValueInputState.BooleanInputTypeSelected) {
+        viewBinding.apply {
+            editValueLayout.visibility = View.GONE
+            editValueText.clearInputClass()
+            booleanValueButtonGroup.apply {
+                visibility = View.VISIBLE
+                setChecked(
+                    if (state.value) R.id.true_button
+                    else R.id.false_button
+                )
+            }
+        }
+    }
+
+    private fun toExtraTypeTextInputSelected(state: ExtraValueInputState.TextInputTypeSelected) {
+        viewBinding.apply {
+            booleanValueButtonGroup.visibility = View.GONE
+            editValueLayout.visibility = View.VISIBLE
+            editValueText.setInputClass(state)
+        }
+    }
+
+    private fun updateSaveButton(isValidExtra: Boolean) {
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidExtra)
+    }
+
+    private fun showExtraTypeSelectionDialog() {
+        showSubOverlay(
+            overlayController = MultiChoiceDialog(
+                context = context,
+                dialogTitleText = R.string.dialog_action_config_intent_advanced_extras_config_value_type,
+                choices = ExtraTypeChoice.getAllChoices(),
+                onChoiceSelected = viewModel::setType
+            ),
+            hideCurrent = false,
+        )
+    }
+
+    private fun TextInputEditText.clearInputClass() {
+        tag = null
+    }
+
+    private fun TextInputEditText.setInputClass(state: ExtraValueInputState.TextInputTypeSelected) {
+        val currentClass = tag as KClass<out Any>?
+        val newClass = state.value::class
+
+        if (newClass != currentClass) {
+            setText(state.valueStr)
+            inputType = state.inputType
+            filters = state.inputFilter?.let { arrayOf(it) } ?: emptyArray()
+
+            tag = newClass
+        }
     }
 }

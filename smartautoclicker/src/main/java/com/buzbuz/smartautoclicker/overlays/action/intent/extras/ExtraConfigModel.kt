@@ -20,24 +20,25 @@ import android.app.Application
 import android.text.InputFilter
 import android.text.InputType
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.IntentExtra
+import com.buzbuz.smartautoclicker.overlays.base.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.utils.NumberInputFilter
+import com.buzbuz.smartautoclicker.overlays.utils.getDisplayNameRes
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import kotlin.reflect.KClass
 
 /**
  * View model for the [ExtraConfigDialog].
  *
- * @param context the Android context.
+ * @param application the Android application.
  */
 class ExtraConfigModel(application: Application) : AndroidViewModel(application) {
 
@@ -52,17 +53,15 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
     val valueInputState: Flow<ExtraValueInputState> = configuredExtra
         .map {
             when (val value = it?.value) {
-                null -> ExtraValueInputState.NoTypeSelected(
-                    application.getString(R.string.dialog_action_config_intent_advanced_extras_config_value_type_none),
-                )
+                null -> ExtraValueInputState.NoTypeSelected
                 is Boolean -> ExtraValueInputState.BooleanInputTypeSelected(
-                    value::class.simpleName!!,
+                    value::class.getDisplayNameRes(),
                     value,
                 )
                 else -> {
                     val inputInfo = getInputInfo(value)
                     ExtraValueInputState.TextInputTypeSelected(
-                        value::class.simpleName!!,
+                        value::class.getDisplayNameRes(),
                         inputInfo.second,
                         inputInfo.first,
                         value.toString(),
@@ -108,12 +107,12 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /** Toggle between true and false. Should be called for a Boolean extra only. */
-    fun toggleBooleanValue() {
+    /** Set the value to true or false. Should be called for a Boolean extra only. */
+    fun setBooleanValue(value: Boolean) {
         viewModelScope.launch {
             val extraValue = configuredExtra.value?.value?: return@launch
             if (extraValue is Boolean) {
-                configuredExtra.value = configuredExtra.value?.copy(value = !extraValue)
+                configuredExtra.value = configuredExtra.value?.copy(value = value)
             }
         }
     }
@@ -124,20 +123,19 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
      *
      * @throws IllegalArgumentException if the type is not supported.
      */
-    fun setType(type: KClass<out Any>) {
+    fun setType(type: ExtraTypeChoice) {
         viewModelScope.launch {
             val oldValue = configuredExtra.value ?: return@launch
 
             configuredExtra.value = when (type) {
-                Byte::class -> oldValue.copy<Byte>(value = 0)
-                Boolean::class -> oldValue.copy(value = false)
-                Char::class -> oldValue.copy(value = 'a')
-                Double::class -> oldValue.copy(value = 0.0)
-                Int::class -> oldValue.copy(value = 0)
-                Float::class -> oldValue.copy(value = 0f)
-                Short::class -> oldValue.copy<Short>(value = 0)
-                String::class -> oldValue.copy(value = "")
-                else -> throw IllegalArgumentException("Unsupported value type")
+                ExtraTypeChoice.ByteChoice -> oldValue.copy<Byte>(value = 0)
+                ExtraTypeChoice.BooleanChoice -> oldValue.copy(value = false)
+                ExtraTypeChoice.CharChoice -> oldValue.copy(value = 'a')
+                ExtraTypeChoice.DoubleChoice -> oldValue.copy(value = 0.0)
+                ExtraTypeChoice.IntChoice -> oldValue.copy(value = 0)
+                ExtraTypeChoice.FloatChoice -> oldValue.copy(value = 0f)
+                ExtraTypeChoice.ShortChoice -> oldValue.copy<Short>(value = 0)
+                ExtraTypeChoice.StringChoice -> oldValue.copy(value = "")
             }
         }
     }
@@ -190,11 +188,13 @@ private fun IntentExtra<out Any>.copyFromString(strValue: String): IntentExtra<o
 /** State of the extra value input views. */
 sealed class ExtraValueInputState {
 
-    /** The text to be displayed in the type selection view. */
-    abstract val typeSelectionText: String
-
     /** There is no types selected, no input views displayed. */
-    data class NoTypeSelected(override val typeSelectionText: String): ExtraValueInputState()
+    object NoTypeSelected: ExtraValueInputState()
+
+    sealed class TypeSelected : ExtraValueInputState() {
+        /** The name of the selected type. */
+        abstract val typeText: Int
+    }
 
     /**
      * Selected type requires a text input with the IME.
@@ -205,20 +205,37 @@ sealed class ExtraValueInputState {
      * @param value the raw current value.
      */
     data class TextInputTypeSelected(
-        override val typeSelectionText: String,
+        @StringRes override val typeText: Int,
         val inputType: Int,
         val inputFilter: InputFilter?,
         val valueStr: String,
         val value: Any,
-    ): ExtraValueInputState()
+    ): TypeSelected()
 
     /**
      * Selected type requires a selection between two parameters.
      *
-     * @param isTrue true for option 1, false for option 2.
+     * @param value value of the extra
      */
     data class BooleanInputTypeSelected(
-        override val typeSelectionText: String,
-        val isTrue: Boolean,
-    ): ExtraValueInputState()
+        @StringRes override val typeText: Int,
+        val value: Boolean,
+    ): TypeSelected()
+}
+
+/** Choices for the extra type selection dialog. */
+sealed class ExtraTypeChoice(title: Int): DialogChoice(title) {
+    object BooleanChoice : ExtraTypeChoice(Boolean::class.getDisplayNameRes())
+    object ByteChoice : ExtraTypeChoice(Byte::class.getDisplayNameRes())
+    object CharChoice : ExtraTypeChoice(Char::class.getDisplayNameRes())
+    object DoubleChoice : ExtraTypeChoice(Double::class.getDisplayNameRes())
+    object FloatChoice : ExtraTypeChoice(Float::class.getDisplayNameRes())
+    object IntChoice : ExtraTypeChoice(Int::class.getDisplayNameRes())
+    object ShortChoice : ExtraTypeChoice(Short::class.getDisplayNameRes())
+    object StringChoice: ExtraTypeChoice(String::class.getDisplayNameRes())
+
+    companion object {
+        fun getAllChoices() = listOf(BooleanChoice, ByteChoice, CharChoice, DoubleChoice, FloatChoice, IntChoice,
+            ShortChoice, StringChoice)
+    }
 }
