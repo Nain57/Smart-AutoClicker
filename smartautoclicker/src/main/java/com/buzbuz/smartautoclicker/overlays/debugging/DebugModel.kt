@@ -23,8 +23,8 @@ import android.graphics.Rect
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
-import com.buzbuz.smartautoclicker.overlays.utils.getDebugConfigPreferences
-import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugViewEnabled
+import com.buzbuz.smartautoclicker.overlays.base.utils.getDebugConfigPreferences
+import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
