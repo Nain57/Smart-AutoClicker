@@ -30,7 +30,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.IntentExtra
-import com.buzbuz.smartautoclicker.databinding.DialogIntentExtraConfigBinding
+import com.buzbuz.smartautoclicker.databinding.DialogConfigActionIntentExtraBinding
 import com.buzbuz.smartautoclicker.overlays.base.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.bindings.setButtonEnabledState
@@ -66,12 +66,12 @@ class ExtraConfigDialog(
     }
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogIntentExtraConfigBinding
+    private lateinit var viewBinding: DialogConfigActionIntentExtraBinding
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setConfigExtra(extra)
 
-        viewBinding = DialogIntentExtraConfigBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigActionIntentExtraBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_config_intent_advanced_extras_config_title)
 

@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogNavBarBinding
+import com.buzbuz.smartautoclicker.databinding.DialogBaseNavBarBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeDialogNavigationTopBarBinding
 import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
 
@@ -35,7 +35,7 @@ abstract class NavBarDialogController(
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()
     /** */
-    private lateinit var baseViewBinding: DialogNavBarBinding
+    private lateinit var baseViewBinding: DialogBaseNavBarBinding
     /** */
     protected lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
 
@@ -47,7 +47,7 @@ abstract class NavBarDialogController(
     abstract fun onDialogButtonPressed(buttonType: DialogNavigationButton)
 
     override fun onCreateDialog(): BottomSheetDialog {
-        baseViewBinding = DialogNavBarBinding.inflate(LayoutInflater.from(context)).apply {
+        baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
             bottomNavigation.apply {
                 inflateMenu(navigationMenuId)
                 setOnItemSelectedListener { item ->

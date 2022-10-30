@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogEndConditionEventSelectBinding
+import com.buzbuz.smartautoclicker.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.bindings.bind
@@ -45,13 +45,13 @@ class EventSelectionDialog(
 ): OverlayDialogController(context) {
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogEndConditionEventSelectBinding
+    private lateinit var viewBinding: DialogBaseSelectionBinding
 
     /** Adapter for the list of events. */
     private val eventsAdapter = EndConditionEventsAdapter(::onEventSelected)
 
     override fun onCreateDialog(): BottomSheetDialog {
-        viewBinding = DialogEndConditionEventSelectBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_end_condition_event_select_title)
                 buttonSave.visibility = View.GONE
@@ -59,7 +59,7 @@ class EventSelectionDialog(
             }
         }
 
-        viewBinding.layoutList.apply {
+        viewBinding.layoutLoadableList.apply {
             setEmptyText(R.string.dialog_event_list_no_events)
             list.apply {
                 adapter = eventsAdapter
@@ -73,7 +73,7 @@ class EventSelectionDialog(
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        viewBinding.layoutList.updateState(eventList)
+        viewBinding.layoutLoadableList.updateState(eventList)
         eventsAdapter.submitList(eventList)
     }
 

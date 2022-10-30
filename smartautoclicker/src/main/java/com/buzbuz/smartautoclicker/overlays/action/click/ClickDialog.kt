@@ -29,7 +29,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogClickConfigBinding
+import com.buzbuz.smartautoclicker.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.action.CoordinatesSelector
@@ -56,12 +56,12 @@ class ClickDialog(
     }
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogClickConfigBinding
+    private lateinit var viewBinding: DialogConfigActionClickBinding
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setConfiguredClick(click)
 
-        viewBinding = DialogClickConfigBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigActionClickBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_click)
 

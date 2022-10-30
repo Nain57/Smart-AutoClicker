@@ -28,7 +28,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogPauseConfigBinding
+import com.buzbuz.smartautoclicker.databinding.DialogConfigActionPauseBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.bindings.setButtonEnabledState
@@ -52,12 +52,12 @@ class PauseDialog(
     }
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogPauseConfigBinding
+    private lateinit var viewBinding: DialogConfigActionPauseBinding
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setConfiguredSwipe(pause)
 
-        viewBinding = DialogPauseConfigBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigActionPauseBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_pause)
 

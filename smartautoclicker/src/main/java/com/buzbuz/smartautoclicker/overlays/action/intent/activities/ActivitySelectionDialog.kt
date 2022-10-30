@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogActivitySelectionBinding
+import com.buzbuz.smartautoclicker.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemApplicationBinding
 import com.buzbuz.smartautoclicker.overlays.action.intent.ActivityDisplayInfo
 import com.buzbuz.smartautoclicker.overlays.bindings.bind
@@ -57,13 +57,13 @@ class ActivitySelectionDialog(
         ViewModelProvider(this).get(ActivitySelectionModel::class.java)
     }
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogActivitySelectionBinding
+    private lateinit var viewBinding: DialogBaseSelectionBinding
 
     /** Handle the binding between the application list and the views displaying them. */
     private lateinit var activitiesAdapter: ApplicationAdapter
 
     override fun onCreateDialog(): BottomSheetDialog {
-        viewBinding = DialogActivitySelectionBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             // TODO config dialog top bar
 
             activitiesAdapter = ApplicationAdapter { selectedComponentName ->

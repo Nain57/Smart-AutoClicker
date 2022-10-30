@@ -28,7 +28,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogEndConditionConfigBinding
+import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.overlays.bindings.bind
 import com.buzbuz.smartautoclicker.overlays.utils.MinMaxInputFilter
@@ -59,12 +59,12 @@ class EndConditionConfigDialog(
     private val viewModel: EndConditionConfigModel by lazy { ViewModelProvider(this).get(EndConditionConfigModel::class.java) }
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogEndConditionConfigBinding
+    private lateinit var viewBinding: DialogConfigEndConditionBinding
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setEndCondition(endCondition, endConditions)
 
-        viewBinding = DialogEndConditionConfigBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigEndConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_end_condition_config_title)
                 buttonDismiss.setOnClickListener { dismiss() }

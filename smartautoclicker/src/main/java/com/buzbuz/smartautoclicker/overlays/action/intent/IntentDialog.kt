@@ -28,7 +28,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogIntentConfigBinding
+import com.buzbuz.smartautoclicker.databinding.DialogConfigActionIntentBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.action.intent.activities.ActivitySelectionDialog
@@ -53,14 +53,14 @@ class IntentDialog(
     }
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogIntentConfigBinding
+    private lateinit var viewBinding: DialogConfigActionIntentBinding
     /** The adapter for the list of extras in advanced configuration mode. */
     private lateinit var extrasAdapter: ExtrasAdapter
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setConfiguredIntent(intent)
 
-        viewBinding = DialogIntentConfigBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigActionIntentBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_intent)
 
