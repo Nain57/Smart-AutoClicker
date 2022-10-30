@@ -24,7 +24,7 @@ import androidx.appcompat.widget.SearchView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogCopyBinding
+import com.buzbuz.smartautoclicker.databinding.DialogBaseCopyBinding
 import com.buzbuz.smartautoclicker.overlays.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.utils.setIconTint
 
@@ -35,10 +35,10 @@ abstract class CopyDialog(
 ) : OverlayDialogController(context) {
 
     /** ViewBinding containing the views for this dialog. */
-    protected lateinit var viewBinding: DialogCopyBinding
+    protected lateinit var viewBinding: DialogBaseCopyBinding
 
     final override fun onCreateDialog(): BottomSheetDialog {
-        viewBinding = DialogCopyBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogBaseCopyBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_copy_title)
                 buttonDismiss.setOnClickListener { dismiss() }

@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogMultiChoiceBinding
+import com.buzbuz.smartautoclicker.databinding.DialogBaseMultiChoiceBinding
 import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceBinding
 import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceSmallBinding
 
@@ -51,12 +51,12 @@ class MultiChoiceDialog<T : DialogChoice>(
 ) : OverlayDialogController(context) {
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogMultiChoiceBinding
+    private lateinit var viewBinding: DialogBaseMultiChoiceBinding
     /** The adapter displaying the choices. */
     private lateinit var adapter: ChoiceAdapter<T>
 
     override fun onCreateDialog(): BottomSheetDialog {
-        viewBinding = DialogMultiChoiceBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogBaseMultiChoiceBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(dialogTitleText)
                 buttonDismiss.setOnClickListener { dismiss() }

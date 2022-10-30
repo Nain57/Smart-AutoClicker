@@ -29,7 +29,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogSwipeConfigBinding
+import com.buzbuz.smartautoclicker.databinding.DialogConfigActionSwipeBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.action.CoordinatesSelector
@@ -55,12 +55,12 @@ class SwipeDialog(
     }
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogSwipeConfigBinding
+    private lateinit var viewBinding: DialogConfigActionSwipeBinding
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setConfiguredSwipe(swipe)
 
-        viewBinding = DialogSwipeConfigBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigActionSwipeBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_swipe)
 

@@ -31,7 +31,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogConditionConfigBinding
+import com.buzbuz.smartautoclicker.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.bindings.*
 import com.buzbuz.smartautoclicker.overlays.utils.OnAfterTextChangedListener
@@ -54,12 +54,12 @@ class ConditionDialog(
     }
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogConditionConfigBinding
+    private lateinit var viewBinding: DialogConfigConditionBinding
 
     override fun onCreateDialog(): BottomSheetDialog {
         viewModel.setConfigCondition(condition)
 
-        viewBinding = DialogConditionConfigBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_condition_title)
 
