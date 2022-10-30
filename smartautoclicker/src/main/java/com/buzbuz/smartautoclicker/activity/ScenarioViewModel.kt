@@ -30,7 +30,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Scenario
-import com.buzbuz.smartautoclicker.overlays.utils.newDefaultScenario
+import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultScenario
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine

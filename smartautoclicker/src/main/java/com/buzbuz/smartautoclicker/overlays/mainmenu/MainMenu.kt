@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugModel
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugOverlayView
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugReportDialog
-import com.buzbuz.smartautoclicker.overlays.scenario.ScenarioDialog
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialog
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

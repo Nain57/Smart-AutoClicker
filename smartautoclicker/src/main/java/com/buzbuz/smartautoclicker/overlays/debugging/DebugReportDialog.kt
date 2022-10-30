@@ -27,7 +27,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.DialogDebugReportBinding
-import com.buzbuz.smartautoclicker.overlays.utils.LoadableListDialog
+import com.buzbuz.smartautoclicker.overlays.base.utils.LoadableListDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

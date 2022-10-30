@@ -25,9 +25,9 @@ import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.DetectorState
-import com.buzbuz.smartautoclicker.overlays.utils.getDebugConfigPreferences
-import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugReportEnabled
-import com.buzbuz.smartautoclicker.overlays.utils.getIsDebugViewEnabled
+import com.buzbuz.smartautoclicker.overlays.base.utils.getDebugConfigPreferences
+import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugReportEnabled
+import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
