@@ -17,12 +17,17 @@
 package com.buzbuz.smartautoclicker.overlays.base.dialog
 
 import android.content.Context
+import android.content.res.Configuration
+import android.view.Gravity
 import android.view.LayoutInflater
 
+import androidx.annotation.CallSuper
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseNavBarBinding
+import com.buzbuz.smartautoclicker.databinding.ViewBottomNavBarBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeDialogNavigationTopBarBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 
@@ -34,10 +39,15 @@ abstract class NavBarDialogController(
 
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()
+
     /** */
     private lateinit var baseViewBinding: DialogBaseNavBarBinding
     /** */
+    private lateinit var navBarViewBinding: ViewBottomNavBarBinding
+    /** */
     protected lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
+    /** */
+    private lateinit var dialogCoordinatorLayout: CoordinatorLayout
 
     /** */
     abstract val navigationMenuId: Int
@@ -48,13 +58,6 @@ abstract class NavBarDialogController(
 
     override fun onCreateDialog(): BottomSheetDialog {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
-            bottomNavigation.apply {
-                inflateMenu(navigationMenuId)
-                setOnItemSelectedListener { item ->
-                    updateContentView(item.itemId)
-                    true
-                }
-            }
 
             layoutTopBar.apply {
                 buttonSave.setOnClickListener { handleButtonClick(DialogNavigationButton.SAVE) }
@@ -62,26 +65,51 @@ abstract class NavBarDialogController(
                 buttonDelete.setOnClickListener { handleButtonClick(DialogNavigationButton.DELETE) }
             }
         }
-        topBarBinding = baseViewBinding.layoutTopBar
 
-        updateContentView(
-            itemId = baseViewBinding.bottomNavigation.selectedItemId,
-            forceUpdate = true,
-        )
+        navBarViewBinding = ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).apply {
+            root.apply {
+                inflateMenu(navigationMenuId)
+                setOnItemSelectedListener { item ->
+                    updateContentView(item.itemId)
+                    true
+                }
+            }
+        }
+
+        topBarBinding = baseViewBinding.layoutTopBar
 
         return BottomSheetDialog(context).apply {
             setContentView(baseViewBinding.root)
         }
     }
 
+    @CallSuper
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
+        dialogCoordinatorLayout = (baseViewBinding.root.parent.parent as CoordinatorLayout)
+        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) addBottomNavigationView()
+
+        updateContentView(
+            itemId = navBarViewBinding.root.selectedItemId,
+            forceUpdate = true,
+        )
+    }
+
     override fun onStart() {
         super.onStart()
-        contentMap[baseViewBinding.bottomNavigation.selectedItemId]?.resume()
+        contentMap[navBarViewBinding.root.selectedItemId]?.resume()
+    }
+
+    override fun onOrientationChanged() {
+        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            addBottomNavigationView()
+        } else {
+            removeBottomNavigationView()
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        contentMap[baseViewBinding.bottomNavigation.selectedItemId]?.pause()
+        contentMap[navBarViewBinding.root.selectedItemId]?.pause()
     }
 
     override fun onDialogDismissed() {
@@ -95,10 +123,10 @@ abstract class NavBarDialogController(
      *
      */
     private fun updateContentView(itemId: Int, forceUpdate: Boolean = false) {
-        if (!forceUpdate && baseViewBinding.bottomNavigation.selectedItemId == itemId) return
+        if (!forceUpdate && navBarViewBinding.root.selectedItemId == itemId) return
 
         // Get the current content and stop it, if any.
-        contentMap[baseViewBinding.bottomNavigation.selectedItemId]?.apply {
+        contentMap[navBarViewBinding.root.selectedItemId]?.apply {
             pause()
             stop()
         }
@@ -127,5 +155,21 @@ abstract class NavBarDialogController(
 
         // Then, notify the dialog
         onDialogButtonPressed(buttonType)
+    }
+
+    private fun addBottomNavigationView() {
+        dialogCoordinatorLayout.addView(
+            navBarViewBinding.root,
+            CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+            ).apply {
+                gravity = Gravity.BOTTOM
+            }
+        )
+    }
+
+    private fun removeBottomNavigationView() {
+        dialogCoordinatorLayout.removeView(navBarViewBinding.root)
     }
 }

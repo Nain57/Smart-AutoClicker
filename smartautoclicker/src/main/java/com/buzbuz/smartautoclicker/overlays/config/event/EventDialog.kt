@@ -74,6 +74,8 @@ class EventDialog(
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
+        super.onDialogCreated(dialog)
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isValidEvent.collect(::updateSaveButton) }

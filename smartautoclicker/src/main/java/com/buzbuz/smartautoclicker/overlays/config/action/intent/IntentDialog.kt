@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.databinding.DialogConfigActionIntentBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.activities.ActivitySelectionDialog
-import com.buzbuz.smartautoclicker.overlays.bindings.*
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.extras.ExtraConfigDialog
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener

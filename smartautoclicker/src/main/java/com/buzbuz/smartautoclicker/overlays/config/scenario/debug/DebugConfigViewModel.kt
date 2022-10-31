@@ -18,10 +18,10 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario.debug
 
 import android.app.Application
 import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
-import com.buzbuz.smartautoclicker.overlays.base.utils.*
 
-import com.buzbuz.smartautoclicker.overlays.utils.*
+import androidx.lifecycle.AndroidViewModel
+
+import com.buzbuz.smartautoclicker.overlays.base.utils.*
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

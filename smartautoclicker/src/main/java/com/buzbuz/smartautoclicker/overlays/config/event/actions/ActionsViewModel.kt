@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultClick
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultIntent
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultPause
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultSwipe
-import com.buzbuz.smartautoclicker.overlays.utils.*
 
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

@@ -48,6 +48,11 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
         hideSoftInput()
         view.performClick()
     }
+    /** */
+    protected val screenMetrics = ScreenMetrics.getInstance(context)
+    private val orientationListener: (Context) -> Unit = { context ->
+        onOrientationChanged()
+    }
 
     /** Tells if the dialog is visible. */
     private var isShowing = false
@@ -75,7 +80,12 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      */
     protected abstract fun onDialogCreated(dialog: BottomSheetDialog)
 
+    /** Called when the device orientation have changed. */
+    protected open fun onOrientationChanged() = Unit
+
     final override fun onCreate() {
+        screenMetrics.addOrientationListener(orientationListener)
+
         dialog = onCreateDialog().apply {
             setOnDismissListener {
                 this@OverlayDialogController.dismiss()
@@ -147,6 +157,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
     /** Handle the dialog dismissing. */
     @CallSuper
     protected open fun onDialogDismissed() {
+        screenMetrics.removeOrientationListener(orientationListener)
         isShowing = false
         dialog = null
     }
