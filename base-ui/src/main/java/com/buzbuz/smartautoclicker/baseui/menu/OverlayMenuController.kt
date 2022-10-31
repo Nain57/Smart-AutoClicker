@@ -86,7 +86,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
     }
 
     /** Monitors the state of the screen. */
-    protected val screenMetrics = ScreenMetrics(context)
+    protected val screenMetrics = ScreenMetrics.getInstance(context)
     /** The layout parameters of the menu layout. */
     private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
@@ -220,7 +220,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
     @CallSuper
     override fun onStart() {
-        screenMetrics.registerOrientationListener(orientationListener)
+        screenMetrics.addOrientationListener(orientationListener)
 
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
         screenOverlayView?.let {
@@ -246,7 +246,7 @@ abstract class OverlayMenuController(context: Context) : OverlayController(conte
 
         windowManager.removeView(menuLayout)
 
-        screenMetrics.unregisterOrientationListener()
+        screenMetrics.removeOrientationListener(orientationListener)
     }
 
     final override fun dismiss() {

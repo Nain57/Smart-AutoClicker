@@ -116,7 +116,7 @@ class ScreenMetricsTests {
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
 
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
         mockGetDisplaySize(DISPLAY_SIZE_Y, DISPLAY_SIZE_X)
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
@@ -130,7 +130,7 @@ class ScreenMetricsTests {
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
 
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
         mockGetDisplaySize(DISPLAY_SIZE_X, DISPLAY_SIZE_Y)
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
@@ -155,7 +155,7 @@ class ScreenMetricsTests {
         mockLegacyGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
 
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
         mockLegacyGetDisplaySize(DISPLAY_SIZE_Y, DISPLAY_SIZE_X)
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
@@ -170,7 +170,7 @@ class ScreenMetricsTests {
         mockLegacyGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
 
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
         mockLegacyGetDisplaySize(DISPLAY_SIZE_X, DISPLAY_SIZE_Y)
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
@@ -232,7 +232,7 @@ class ScreenMetricsTests {
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
 
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
 
@@ -245,7 +245,7 @@ class ScreenMetricsTests {
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
 
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
 
         verify(mockOrientationListener, never()).onOrientationChanged()
@@ -256,7 +256,7 @@ class ScreenMetricsTests {
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
 
-        screenMetrics.registerOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         val receiver = getBroadcastOrientationReceiver()
 
         screenMetrics.unregisterOrientationListener()

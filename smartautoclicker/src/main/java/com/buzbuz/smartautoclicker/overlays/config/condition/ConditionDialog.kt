@@ -34,7 +34,6 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
-import com.buzbuz.smartautoclicker.overlays.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

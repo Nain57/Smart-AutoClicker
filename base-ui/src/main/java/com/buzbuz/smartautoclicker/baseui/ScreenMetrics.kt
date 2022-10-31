@@ -30,10 +30,12 @@ import android.view.WindowManager
 
 /**
  * Provides metrics for the screen such as orientation or display size.
+ * In order for the metrics to be updated upon screen rotation, you must call [startMonitoring] first. Once the metrics
+ * are no longer needed, call [stopMonitoring] to release all resources.
  *
  * @param context the Android context.
  */
-class ScreenMetrics(private val context: Context) {
+class ScreenMetrics private constructor(context: Context) {
 
     companion object {
         /** WindowManager LayoutParams type for a window over applications. */
@@ -41,6 +43,26 @@ class ScreenMetrics(private val context: Context) {
         val TYPE_COMPAT_OVERLAY =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             else WindowManager.LayoutParams.TYPE_PHONE
+
+
+        /** Singleton preventing multiple instances at the same time. */
+        @Volatile
+        private var INSTANCE: ScreenMetrics? = null
+
+        /**
+         * Get the ScreenMetrics singleton, or instantiates it if it wasn't yet.
+         *
+         * @param context the Android context.
+         *
+         * @return the ScreenMetrics singleton.
+         */
+        fun getInstance(context: Context): ScreenMetrics {
+            return INSTANCE ?: synchronized(this) {
+                val instance = ScreenMetrics(context)
+                INSTANCE = instance
+                instance
+            }
+        }
     }
 
     /** The Android window manager. */
@@ -49,49 +71,53 @@ class ScreenMetrics(private val context: Context) {
     private val displayManager = context.getSystemService(DisplayManager::class.java)
     /** The display to get the value from. It will always be the first one available. */
     private val display = displayManager.getDisplay(0)
-    /** The listener upon orientation changes. */
-    private var orientationListener: ((Context) -> Unit)? = null
 
-    /** Listen to the configuration changes and calls [orientationListener] when needed. */
+    /** The listeners upon orientation changes. */
+    private val orientationListeners: MutableSet<((Context) -> Unit)> = mutableSetOf()
+
+    /** Listen to the configuration changes and calls [orientationListeners] when needed. */
     private val configChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (updateScreenConfig()) {
-                orientationListener?.invoke(context)
+                orientationListeners.forEach { it.invoke(context) }
             }
         }
     }
 
     /** The orientation of the display. */
-    var orientation: Int = -1
+    var orientation: Int = Configuration.ORIENTATION_UNDEFINED
         private set
     /** The screen size. */
     var screenSize: Point = Point(0, 0)
         private set
 
-    init { updateScreenConfig() }
+    init {
+        updateScreenConfig()
+    }
 
-    /**
-     * Register a new orientation listener.
-     * If a previous listener was registered, the new one will replace it.
-     *
-     * @param listener the listener to be registered.
-     */
-    fun registerOrientationListener(listener: (Context) -> Unit) {
-        if (listener == orientationListener) {
-            return
-        }
-
-        unregisterOrientationListener()
-        orientationListener = listener
+    /** Start the monitoring of the screen metrics. */
+    fun startMonitoring(context: Context) {
         context.registerReceiver(configChangedReceiver, IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED))
     }
 
+    /** Stop the monitoring of the screen metrics. All listeners will be unregistered. */
+    fun stopMonitoring(context: Context) {
+        context.unregisterReceiver(configChangedReceiver)
+        orientationListeners.clear()
+    }
+
+    /**
+     * Register a new orientation listener.
+     *
+     * @param listener the listener to be registered.
+     */
+    fun addOrientationListener(listener: (Context) -> Unit) {
+        orientationListeners.add(listener)
+    }
+
     /** Unregister a previously registered listener. */
-    fun unregisterOrientationListener() {
-        orientationListener?.let {
-            context.unregisterReceiver(configChangedReceiver)
-            orientationListener = null
-        }
+    fun removeOrientationListener(listener: (Context) -> Unit) {
+        orientationListeners.remove(listener)
     }
 
     /** @return true if the screen config have changed, false if not. */

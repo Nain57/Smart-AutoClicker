@@ -108,7 +108,9 @@ class DetectorEngine(context: Context) {
     /** Repository providing data for the scenario. */
     private val scenarioRepository = Repository.getRepository(context)
     /** Monitors the state of the screen. */
-    private val screenMetrics = ScreenMetrics(context)
+    private val screenMetrics = ScreenMetrics.getInstance(context)
+    /** Listener upon orientation changes. */
+    private val orientationListener = ::onOrientationChanged
 
     /** Record the screen and provide images via [ScreenRecorder.acquireLatestImage]. */
     private val screenRecorder = ScreenRecorder()
@@ -205,7 +207,7 @@ class DetectorEngine(context: Context) {
 
         this.androidExecutor = androidExecutor
         processingScope = CoroutineScope(Dispatchers.IO)
-        screenMetrics.registerOrientationListener(::onOrientationChanged)
+        screenMetrics.addOrientationListener(orientationListener)
 
         screenRecorder.apply {
             startProjection(context, resultCode, data) {
@@ -383,7 +385,7 @@ class DetectorEngine(context: Context) {
         Log.i(TAG, "stopScreenRecord")
         _state.value = DetectorState.TRANSITIONING
 
-        screenMetrics.unregisterOrientationListener()
+        screenMetrics.removeOrientationListener(orientationListener)
         processingScope?.launch {
             processingShutdownJob?.join()
 

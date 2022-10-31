@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalSer
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.LocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.baseui.OverlayController
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
@@ -91,6 +92,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         }
     }
 
+    /** The metrics of the device screen. */
+    private var screenMetrics: ScreenMetrics? = null
     /** The engine for the detection. */
     private var detectorEngine: DetectorEngine? = null
     /** The root controller for the overlay ui. */
@@ -123,6 +126,10 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             isStarted = true
             startForeground(NOTIFICATION_ID, createNotification(scenario.name))
 
+            screenMetrics = ScreenMetrics.getInstance(this@SmartAutoClickerService).apply {
+                startMonitoring(this@SmartAutoClickerService)
+            }
+
             detectorEngine = DetectorEngine.getDetectorEngine(this@SmartAutoClickerService).apply {
                 startScreenRecord(this@SmartAutoClickerService, resultCode, data, scenario, this@SmartAutoClickerService)
             }
@@ -150,6 +157,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 detector.clear()
             }
             detectorEngine = null
+
+            screenMetrics?.stopMonitoring(this@SmartAutoClickerService)
+            screenMetrics = null
 
             stopForeground(Service.STOP_FOREGROUND_REMOVE)
         }

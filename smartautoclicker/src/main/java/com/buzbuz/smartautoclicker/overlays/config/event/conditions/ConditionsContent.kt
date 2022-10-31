@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
-import com.buzbuz.smartautoclicker.overlays.bindings.*
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionDialog
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.condition.copy.ConditionCopyDialog

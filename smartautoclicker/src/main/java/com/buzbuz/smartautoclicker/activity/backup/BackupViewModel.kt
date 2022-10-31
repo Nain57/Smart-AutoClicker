@@ -48,7 +48,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
     /** The repository providing access to the database. */
     private val repository = Repository.getRepository(application)
     /** The metrics of the screen.  */
-    private val screenMetrics = ScreenMetrics(application.applicationContext)
+    private val screenMetrics = ScreenMetrics.getInstance(application.applicationContext)
 
     /** The state of the backup. Null if not started yet. */
     private val _backupState = MutableStateFlow<BackupDialogUiState?>(null)

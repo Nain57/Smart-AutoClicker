@@ -209,7 +209,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
             }
 
             launch {
-                debuggingViewModel.debugLastPositiveCoordinates?.collect { coordinates ->
+                debuggingViewModel.debugLastPositiveCoordinates.collect { coordinates ->
                     (screenOverlayView as DebugOverlayView).setPositiveResult(coordinates)
                 }
             }
