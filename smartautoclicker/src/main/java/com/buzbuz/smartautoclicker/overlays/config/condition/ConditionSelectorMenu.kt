@@ -138,7 +138,7 @@ class ConditionSelectorMenu(
         } else {
             val selection = selectorView.getSelection()
             onConditionSelected(selection.first, selection.second)
-            dismiss()
+            destroy()
         }
     }
 
@@ -148,7 +148,7 @@ class ConditionSelectorMenu(
      */
     private fun onCancel() {
         when (state) {
-            SELECTION -> dismiss()
+            SELECTION -> destroy()
             ADJUST -> state = SELECTION
         }
     }

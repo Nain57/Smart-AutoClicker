@@ -20,6 +20,7 @@ import android.content.Context
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -44,7 +45,7 @@ class PauseDialog(
     private val pause: Action.Pause,
     private val onDeleteClicked: (Action.Pause) -> Unit,
     private val onConfirmClicked: (Action.Pause) -> Unit,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: PauseViewModel by lazy {
@@ -54,14 +55,14 @@ class PauseDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionPauseBinding
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setConfiguredSwipe(pause)
 
         viewBinding = DialogConfigActionPauseBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_pause)
 
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -88,9 +89,7 @@ class PauseDialog(
             }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -106,12 +105,12 @@ class PauseDialog(
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
         onConfirmClicked(viewModel.getConfiguredPause())
-        dismiss()
+        destroy()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked(pause)
-        dismiss()
+        destroy()
     }
 
     private fun updateClickName(newName: String?) {

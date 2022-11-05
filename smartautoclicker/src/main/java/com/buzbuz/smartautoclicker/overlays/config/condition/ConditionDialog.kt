@@ -22,6 +22,7 @@ import android.graphics.Color
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -46,7 +47,7 @@ class ConditionDialog(
     private val condition: Condition,
     private val onConfirmClicked: (Condition) -> Unit,
     private val onDeleteClicked: () -> Unit
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ConditionViewModel by lazy {
@@ -56,26 +57,26 @@ class ConditionDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigConditionBinding
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setConfigCondition(condition)
 
         viewBinding = DialogConfigConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_condition_title)
 
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener {
                         onConfirmClicked(viewModel.getConfiguredCondition())
-                        dismiss()
+                        destroy()
                     }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
                     setOnClickListener {
                         onDeleteClicked()
-                        dismiss()
+                        destroy()
                     }
                 }
             }
@@ -115,9 +116,7 @@ class ConditionDialog(
             }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {

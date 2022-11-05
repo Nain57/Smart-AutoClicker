@@ -50,7 +50,7 @@ class OverlayControllerTests {
         override fun onCreate() { impl?.onCreate() }
         override fun onStart() { impl?.onStart() }
         override fun onStop() { impl?.onStop() }
-        override fun onDismissed() { impl?.onDismissed() }
+        override fun onDestroyed() { impl?.onDismissed() }
         fun publicShowSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
             showSubOverlay(overlayController, hideCurrent)
         }
@@ -116,7 +116,7 @@ class OverlayControllerTests {
         overlayController.create()
         clearInvocations(overlayControllerImpl)
 
-        overlayController.stop()
+        overlayController.hide()
 
         verify(overlayControllerImpl).onStop()
         verify(overlayControllerImpl, never()).onCreate()
@@ -128,7 +128,7 @@ class OverlayControllerTests {
     @Test
     fun hideNotCreated() {
         val expectedState = overlayController.lifecycle.currentState
-        overlayController.stop()
+        overlayController.hide()
 
         verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onCreate()
@@ -140,11 +140,11 @@ class OverlayControllerTests {
     @Test
     fun hideAlreadyHidden() {
         overlayController.create()
-        overlayController.stop()
+        overlayController.hide()
         clearInvocations(overlayControllerImpl)
         val expectedState = overlayController.lifecycle.currentState
 
-        overlayController.stop()
+        overlayController.hide()
 
         verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onCreate()
@@ -156,10 +156,10 @@ class OverlayControllerTests {
     @Test
     fun show() {
         overlayController.create()
-        overlayController.stop()
+        overlayController.hide()
         clearInvocations(overlayControllerImpl)
 
-        overlayController.start()
+        overlayController.show()
 
         verify(overlayControllerImpl).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -171,7 +171,7 @@ class OverlayControllerTests {
     @Test
     fun showNotCreated() {
         val expectedState = overlayController.lifecycle.currentState
-        overlayController.start()
+        overlayController.show()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -186,7 +186,7 @@ class OverlayControllerTests {
         clearInvocations(overlayControllerImpl)
         val expectedState = overlayController.lifecycle.currentState
 
-        overlayController.start()
+        overlayController.show()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -200,7 +200,7 @@ class OverlayControllerTests {
         overlayController.create(dismissListener::onDismissed)
         clearInvocations(overlayControllerImpl)
 
-        overlayController.dismiss()
+        overlayController.destroy()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -212,7 +212,7 @@ class OverlayControllerTests {
 
     @Test
     fun dismissNotCreated() {
-        overlayController.dismiss()
+        overlayController.destroy()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -225,10 +225,10 @@ class OverlayControllerTests {
     @Test
     fun dismissNotShown() {
         overlayController.create(dismissListener::onDismissed)
-        overlayController.stop()
+        overlayController.hide()
         clearInvocations(overlayControllerImpl)
 
-        overlayController.dismiss()
+        overlayController.destroy()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -284,7 +284,7 @@ class OverlayControllerTests {
         overlayController.publicShowSubOverlay(subOverlay, false)
         clearInvocations(overlayControllerImpl)
 
-        subOverlay.dismiss()
+        subOverlay.destroy()
 
         verify(overlayControllerImpl).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -300,7 +300,7 @@ class OverlayControllerTests {
         overlayController.publicShowSubOverlay(subOverlay, true)
         clearInvocations(overlayControllerImpl)
 
-        subOverlay.dismiss()
+        subOverlay.destroy()
 
         verify(overlayControllerImpl).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -316,7 +316,7 @@ class OverlayControllerTests {
         overlayController.publicShowSubOverlay(subOverlay)
         clearInvocations(overlayControllerImpl)
 
-        overlayController.dismiss()
+        overlayController.destroy()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -333,7 +333,7 @@ class OverlayControllerTests {
         overlayController.publicShowSubOverlay(subOverlay, true)
         clearInvocations(overlayControllerImpl)
 
-        overlayController.dismiss()
+        overlayController.destroy()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()

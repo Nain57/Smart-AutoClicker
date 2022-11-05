@@ -17,22 +17,35 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minHeight="@dimen/bottom_sheet_min_height"
     android:orientation="vertical">
 
-        <include layout="@layout/include_dialog_navigation_top_bar"
-            android:id="@+id/layout_top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"/>
+    <include layout="@layout/include_dialog_navigation_top_bar"
+        android:id="@+id/layout_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.google.android.material.navigationrail.NavigationRailView
+            android:id="@+id/nav_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:menu="@menu/menu_scenario_config"/>
 
         <FrameLayout
             android:id="@+id/dialog_content"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="80dp" />
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
 </LinearLayout>

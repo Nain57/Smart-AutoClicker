@@ -21,6 +21,7 @@ import android.graphics.Point
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -47,7 +48,7 @@ class SwipeDialog(
     private val swipe: Action.Swipe,
     private val onDeleteClicked: (Action.Swipe) -> Unit,
     private val onConfirmClicked: (Action.Swipe) -> Unit,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: SwipeViewModel by lazy {
@@ -57,14 +58,14 @@ class SwipeDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionSwipeBinding
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setConfiguredSwipe(swipe)
 
         viewBinding = DialogConfigActionSwipeBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_swipe)
 
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -93,9 +94,7 @@ class SwipeDialog(
             onPositionSelectButton.setOnClickListener { showPositionSelector() }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -112,12 +111,12 @@ class SwipeDialog(
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
         onConfirmClicked(viewModel.getConfiguredSwipe())
-        dismiss()
+        destroy()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked(swipe)
-        dismiss()
+        destroy()
     }
 
     private fun updateClickName(newName: String?) {

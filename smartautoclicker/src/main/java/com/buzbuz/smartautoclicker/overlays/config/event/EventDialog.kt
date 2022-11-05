@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.config.event
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -48,14 +49,16 @@ class EventDialog(
 ): NavBarDialogController(context) {
 
     /** View model for this dialog. */
-    private val viewModel: EventDialogViewModel by lazy { ViewModelProvider(this).get(EventDialogViewModel::class.java) }
+    private val viewModel: EventDialogViewModel by lazy {
+        ViewModelProvider(this).get(EventDialogViewModel::class.java)
+    }
 
     override val navigationMenuId: Int = R.menu.menu_event_config
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.configuredEvent.value = event
 
-        return super.onCreateDialog().also {
+        return super.onCreateView().also {
             topBarBinding.apply {
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 if (event.id != 0L) setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
@@ -93,7 +96,7 @@ class EventDialog(
             else -> {}
         }
 
-        dismiss()
+        destroy()
     }
 
     private fun updateSaveButton(enabled: Boolean) {

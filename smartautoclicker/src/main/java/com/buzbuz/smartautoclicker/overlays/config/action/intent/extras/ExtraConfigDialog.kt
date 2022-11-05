@@ -21,6 +21,7 @@ import android.content.Context
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -58,7 +59,7 @@ class ExtraConfigDialog(
     private val extra: IntentExtra<out Any>,
     private val onConfigComplete: (IntentExtra<out Any>) -> Unit,
     private val onDeleteClicked: (() -> Unit)? = null,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for the data displayed in this dialog. */
     private val viewModel: ExtraConfigModel by lazy {
@@ -68,14 +69,14 @@ class ExtraConfigDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionIntentExtraBinding
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setConfigExtra(extra)
 
         viewBinding = DialogConfigActionIntentExtraBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_config_intent_advanced_extras_config_title)
 
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -107,9 +108,7 @@ class ExtraConfigDialog(
             }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -125,12 +124,12 @@ class ExtraConfigDialog(
 
     private fun onSaveButtonClicked() {
         onConfigComplete(viewModel.getConfiguredExtra())
-        dismiss()
+        destroy()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked?.invoke()
-        dismiss()
+        destroy()
     }
 
     private fun updateExtraKey(newKey: String?) {

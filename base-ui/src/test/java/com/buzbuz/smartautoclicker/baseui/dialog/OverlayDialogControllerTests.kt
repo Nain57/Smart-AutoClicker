@@ -62,7 +62,7 @@ class OverlayDialogControllerTests {
      * @param impl the mock called for each abstract method calls.
      */
     class OverlayDialogControllerTestImpl(context: Context, private val impl: OverlayDialogControllerImpl) : OverlayDialogController(context) {
-        override fun onCreateDialog(): BottomSheetDialog = impl.onCreateDialog()
+        override fun onCreateView(): BottomSheetDialog = impl.onCreateDialog()
         override fun onDialogCreated(dialog: BottomSheetDialog) = impl.onDialogCreated(dialog)
         override fun onVisibilityChanged(visible: Boolean): Unit = impl.onVisibilityChanged(visible)
         fun publicGetDialog() = dialog
@@ -164,7 +164,7 @@ class OverlayDialogControllerTests {
         overlayDialogController.create()
         clearMockitoInvocations()
 
-        overlayDialogController.stop(true)
+        overlayDialogController.hide(true)
 
         verify(mockInputMethodManager).hideSoftInputFromWindow(mockDialogWindowToken, 0)
         verify(mockDialog).hide()
@@ -174,10 +174,10 @@ class OverlayDialogControllerTests {
     @Test
     fun hideFromHidden() {
         overlayDialogController.create()
-        overlayDialogController.stop()
+        overlayDialogController.hide()
         clearMockitoInvocations()
 
-        overlayDialogController.stop()
+        overlayDialogController.hide()
 
         verifyNoMocksInteractions()
     }
@@ -187,7 +187,7 @@ class OverlayDialogControllerTests {
         overlayDialogController.create()
         clearMockitoInvocations()
 
-        overlayDialogController.start()
+        overlayDialogController.show()
 
         verifyNoMocksInteractions()
     }
@@ -195,10 +195,10 @@ class OverlayDialogControllerTests {
     @Test
     fun showFromHidden() {
         overlayDialogController.create()
-        overlayDialogController.stop(true)
+        overlayDialogController.hide(true)
         clearMockitoInvocations()
 
-        overlayDialogController.start()
+        overlayDialogController.show()
 
         verify(mockDialog).show()
         verify(overlayDialogControllerImpl).onVisibilityChanged(true)
@@ -209,7 +209,7 @@ class OverlayDialogControllerTests {
         overlayDialogController.create()
         clearMockitoInvocations()
 
-        overlayDialogController.dismiss()
+        overlayDialogController.destroy()
 
         verify(mockDialog).dismiss()
     }

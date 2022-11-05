@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.base.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.ImageView
 
 import androidx.appcompat.widget.SearchView
@@ -28,20 +29,18 @@ import com.buzbuz.smartautoclicker.databinding.DialogBaseCopyBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.utils.setIconTint
 
-import com.google.android.material.bottomsheet.BottomSheetDialog
-
 abstract class CopyDialog(
     context: Context,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** ViewBinding containing the views for this dialog. */
     protected lateinit var viewBinding: DialogBaseCopyBinding
 
-    final override fun onCreateDialog(): BottomSheetDialog {
+    final override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseCopyBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_copy_title)
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
 
                 search.apply {
                     findViewById<ImageView>(androidx.appcompat.R.id.search_button).setIconTint(R.color.overlayViewPrimary)
@@ -60,9 +59,7 @@ abstract class CopyDialog(
             layoutLoadableList.setEmptyText(R.string.dialog_copy_empty)
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     abstract fun onSearchQueryChanged(newText: String?)

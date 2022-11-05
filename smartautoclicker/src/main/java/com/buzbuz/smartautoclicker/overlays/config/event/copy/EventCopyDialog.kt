@@ -53,7 +53,7 @@ class EventCopyDialog(
         eventCopyAdapter = EventCopyAdapter { selectedEvent ->
             viewModel.let {
                 onEventSelected(it.getCopyEvent(scenarioId, selectedEvent))
-                dismiss()
+                destroy()
             }
         }
 

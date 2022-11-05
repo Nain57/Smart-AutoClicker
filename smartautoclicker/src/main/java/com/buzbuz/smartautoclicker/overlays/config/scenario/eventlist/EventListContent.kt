@@ -96,7 +96,6 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     }
 
     private fun onNewEventButtonPressed() {
-        println("TOTO: ${viewBinding.root}")
         showEventConfigDialog(viewModel.getNewEvent(context))
     }
 

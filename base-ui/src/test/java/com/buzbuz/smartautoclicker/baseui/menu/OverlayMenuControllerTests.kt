@@ -356,7 +356,7 @@ class OverlayMenuControllerTests {
         mockViewsFromImpl(menuView)
         overlayMenuController.create()
 
-        overlayMenuController.stop()
+        overlayMenuController.hide()
 
         verify(mockWindowManager).removeView(menuView)
     }
@@ -369,7 +369,7 @@ class OverlayMenuControllerTests {
         mockViewsFromImpl(menuView, overlayView)
         overlayMenuController.create()
 
-        overlayMenuController.stop()
+        overlayMenuController.hide()
 
         verify(mockWindowManager).removeView(menuView)
         verify(mockWindowManager).removeView(overlayView)

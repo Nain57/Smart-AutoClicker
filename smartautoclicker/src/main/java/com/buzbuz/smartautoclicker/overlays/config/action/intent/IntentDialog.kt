@@ -20,6 +20,7 @@ import android.content.Context
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -45,7 +46,7 @@ class IntentDialog(
     private val intent: Action.Intent,
     private val onDeleteClicked: (Action.Intent) -> Unit,
     private val onConfirmClicked: (Action.Intent) -> Unit,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: IntentViewModel by lazy {
@@ -57,14 +58,14 @@ class IntentDialog(
     /** The adapter for the list of extras in advanced configuration mode. */
     private lateinit var extrasAdapter: ExtrasAdapter
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setConfiguredIntent(intent)
 
         viewBinding = DialogConfigActionIntentBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_intent)
 
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -90,9 +91,7 @@ class IntentDialog(
         onCreateSimpleConfigView()
         onCreateAdvancedConfigView()
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     private fun onCreateSimpleConfigView() {
@@ -163,12 +162,12 @@ class IntentDialog(
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
         onConfirmClicked(viewModel.getConfiguredIntent())
-        dismiss()
+        destroy()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked(intent)
-        dismiss()
+        destroy()
     }
 
     private fun updateClickName(newName: String?) {

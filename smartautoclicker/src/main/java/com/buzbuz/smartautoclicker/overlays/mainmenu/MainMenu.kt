@@ -69,8 +69,6 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     private val pauseToPlayDrawable =
         AnimatedVectorDrawableCompat.create(context, R.drawable.anim_pause_play)!!
 
-    /** Tells if the detecting state have never been updated. Use to skip animation the first time. */
-    private var isFirstStateUpdate = true
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
 
@@ -101,25 +99,10 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.eventList.collect { onEventListChanged(it) } }
-
-                launch {
-                    viewModel.detectionState.collect { isDetecting ->
-                        if (isDetecting) toDetectingState() else toIdleState()
-                    }
-                }
-
-                launch {
-                    debuggingViewModel.isDebugging.collect { isDebugging ->
-                        setDebugOverlayViewVisibility(isDebugging)
-                    }
-                }
-
-                launch {
-                    debuggingViewModel.isDebugReportReady.collect { reportReady ->
-                        if (reportReady) showSubOverlay(DebugReportDialog(ContextThemeWrapper(context, R.style.AppTheme)))
-                    }
-                }
+                launch { viewModel.eventList.collect(::updatePlayPauseButtonEnabledState) }
+                launch { viewModel.detectionState.collect(::updateDetectionState) }
+                launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
+                launch { debuggingViewModel.isDebugReportReady.collect(::showDebugReportDialog) }
             }
         }
     }
@@ -127,9 +110,10 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> viewModel.toggleDetection()
-            R.id.btn_click_list -> showSubOverlay(ScenarioDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
-                //EventListDialog(ContextThemeWrapper(context, R.style.AppTheme), scenario), true)
-            R.id.btn_stop -> dismiss()
+            R.id.btn_click_list -> {
+                showSubOverlay(ScenarioDialog(context, scenario), true)
+            }
+            R.id.btn_stop -> destroy()
         }
     }
 
@@ -141,36 +125,42 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         )
     }
 
-    /**
-     * Handles changes on the event list.
-     * Refresh the play menu item according to the event count.
-     */
-    private fun onEventListChanged(events: List<Event>?) =
+    /** Refresh the play menu item according to the event count. */
+    private fun updatePlayPauseButtonEnabledState(events: List<Event>?) =
         setMenuItemViewEnabled(viewBinding.btnPlay, !events.isNullOrEmpty())
 
-    /** Change the UI state to detecting. */
-    private fun toDetectingState() {
-        animateLayoutChanges {
-            viewBinding.btnPlay.setImageDrawable(playToPauseDrawable)
-            setMenuItemVisibility(viewBinding.btnStop, false)
-            setMenuItemVisibility(viewBinding.btnClickList, false)
-            playToPauseDrawable.start()
-        }
-    }
+    /** Refresh the menu layout according to the detection state. */
+    private fun updateDetectionState(newState: UiState) {
+        val currentState = viewBinding.btnPlay.tag
+        if (currentState == newState) return
 
-    /** Change the UI state to idle. */
-    private fun toIdleState() {
-        if (isFirstStateUpdate) {
-            viewBinding.btnPlay.setImageResource(R.drawable.ic_play_arrow)
-            isFirstStateUpdate = false
-            return
-        }
+        viewBinding.btnPlay.tag = newState
+        when (newState) {
+            UiState.Idle -> {
+                if (currentState == null) {
+                    viewBinding.btnPlay.setImageResource(R.drawable.ic_play_arrow)
+                } else {
+                    animateLayoutChanges {
+                        setMenuItemVisibility(viewBinding.btnStop, true)
+                        setMenuItemVisibility(viewBinding.btnClickList, true)
+                        viewBinding.btnPlay.setImageDrawable(pauseToPlayDrawable)
+                        pauseToPlayDrawable.start()
+                    }
+                }
+            }
 
-        animateLayoutChanges {
-            viewBinding.btnPlay.setImageDrawable(pauseToPlayDrawable)
-            setMenuItemVisibility(viewBinding.btnStop, true)
-            setMenuItemVisibility(viewBinding.btnClickList, true)
-            pauseToPlayDrawable.start()
+            UiState.Detecting -> {
+                if (currentState == null) {
+                    viewBinding.btnPlay.setImageResource(R.drawable.ic_pause)
+                } else {
+                    animateLayoutChanges {
+                        setMenuItemVisibility(viewBinding.btnStop, false)
+                        setMenuItemVisibility(viewBinding.btnClickList, false)
+                        viewBinding.btnPlay.setImageDrawable(playToPauseDrawable)
+                        playToPauseDrawable.start()
+                    }
+                }
+            }
         }
     }
 
@@ -178,7 +168,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
      * Change the debug state of this UI.
      * @param isVisible true when the debug view should be shown, false to hide it.
      */
-    private fun setDebugOverlayViewVisibility(isVisible: Boolean) {
+    private fun updateDebugOverlayViewVisibility(isVisible: Boolean) {
         if (isVisible && debugObservableJob == null) {
             viewBinding.layoutDebug.visibility = View.VISIBLE
             setOverlayViewVisibility(View.VISIBLE)
@@ -214,5 +204,10 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
                 }
             }
         }
+    }
+
+    private fun showDebugReportDialog(reportReady: Boolean) {
+        if (!reportReady) return
+        showSubOverlay(DebugReportDialog(context))
     }
 }

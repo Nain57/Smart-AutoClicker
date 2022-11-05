@@ -56,7 +56,7 @@ class ActionCopyDialog(
 
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->
             onActionSelected(viewModel.getNewActionForCopy(selectedAction))
-            dismiss()
+            destroy()
         }
 
         viewBinding.layoutLoadableList.list.apply {

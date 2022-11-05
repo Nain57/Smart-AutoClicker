@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseSelectionBinding
@@ -50,7 +51,7 @@ import kotlinx.coroutines.launch
 class ActivitySelectionDialog(
     context: Context,
     private val onApplicationSelected: (ComponentName) -> Unit,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ActivitySelectionModel by lazy {
@@ -62,13 +63,13 @@ class ActivitySelectionDialog(
     /** Handle the binding between the application list and the views displaying them. */
     private lateinit var activitiesAdapter: ApplicationAdapter
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             // TODO config dialog top bar
 
             activitiesAdapter = ApplicationAdapter { selectedComponentName ->
                 onApplicationSelected(selectedComponentName)
-                dismiss()
+                destroy()
             }
 
             layoutLoadableList.list.apply {
@@ -77,9 +78,7 @@ class ActivitySelectionDialog(
             }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {

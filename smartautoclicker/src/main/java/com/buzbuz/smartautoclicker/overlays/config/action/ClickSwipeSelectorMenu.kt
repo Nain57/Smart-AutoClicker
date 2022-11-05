@@ -107,7 +107,7 @@ class ClickSwipeSelectorMenu(
             selectorView.selectionStep == FIRST && selector is CoordinatesSelector.One -> {
                 selector.coordinates = selectorView.position1!!.toPoint()
                 onCoordinatesSelected.invoke(selector)
-                dismiss()
+                destroy()
             }
             selectorView.selectionStep == FIRST && selector is CoordinatesSelector.Two -> {
                 toSelectionStep(SECOND)
@@ -116,7 +116,7 @@ class ClickSwipeSelectorMenu(
                 selector.coordinates1 = selectorView.position1!!.toPoint()
                 selector.coordinates2 = selectorView.position2!!.toPoint()
                 onCoordinatesSelected.invoke(selector)
-                dismiss()
+                destroy()
             }
         }
     }
@@ -127,7 +127,7 @@ class ClickSwipeSelectorMenu(
      */
     private fun onCancel() {
         when (selectorView.selectionStep) {
-            FIRST -> dismiss()
+            FIRST -> destroy()
             SECOND -> toSelectionStep(FIRST)
         }
     }
