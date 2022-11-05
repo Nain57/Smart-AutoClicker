@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.ContentEventListBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
@@ -54,7 +54,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     private val itemTouchHelper = ItemTouchHelper(EventReorderTouchHelper())
 
     /** View binding for all views in this content. */
-    private lateinit var viewBinding: ContentEventListBinding
+    private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of events. */
     private lateinit var eventAdapter: EventListAdapter
 
@@ -68,14 +68,12 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
             itemReorderListener = viewModel::updateEventsPriority,
         )
 
-        viewBinding = ContentEventListBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            layoutList.apply {
-                setEmptyText(R.string.dialog_event_list_no_events)
-                list.apply {
-                    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-                    itemTouchHelper.attachToRecyclerView(this)
-                    adapter = eventAdapter
-                }
+        viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            setEmptyText(R.string.dialog_event_list_no_events)
+            list.apply {
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                itemTouchHelper.attachToRecyclerView(this)
+                adapter = eventAdapter
             }
         }
 
@@ -100,7 +98,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     }
 
     private fun updateEventList(newItems: List<Event>?) {
-        viewBinding.layoutList.updateState(newItems)
+        viewBinding.updateState(newItems)
         eventAdapter.submitList(newItems)
     }
 

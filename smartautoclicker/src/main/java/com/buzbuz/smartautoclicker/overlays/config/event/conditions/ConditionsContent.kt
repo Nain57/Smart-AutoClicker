@@ -26,7 +26,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.ContentConditionsBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
@@ -51,7 +51,7 @@ class ConditionsContent : NavBarDialogContent() {
     }
 
     /** View binding for all views in this content. */
-    private lateinit var viewBinding: ContentConditionsBinding
+    private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of conditions. */
     private lateinit var conditionsAdapter: ConditionAdapter
 
@@ -65,16 +65,14 @@ class ConditionsContent : NavBarDialogContent() {
             bitmapProvider = viewModel::getConditionBitmap,
         )
 
-        viewBinding = ContentConditionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            layoutList.apply {
-                setEmptyText(R.string.dialog_conditions_empty)
-                list.apply {
-                    adapter = conditionsAdapter
-                    layoutManager = GridLayoutManager(
-                        context,
-                        2,
-                    )
-                }
+        viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            setEmptyText(R.string.dialog_conditions_empty)
+            list.apply {
+                adapter = conditionsAdapter
+                layoutManager = GridLayoutManager(
+                    context,
+                    2,
+                )
             }
         }
 
@@ -109,7 +107,7 @@ class ConditionsContent : NavBarDialogContent() {
     }
 
     private fun updateConditionList(newItems: List<Condition>?) {
-        viewBinding.layoutList.updateState(newItems)
+        viewBinding.updateState(newItems)
         conditionsAdapter.submitList(newItems)
     }
 
