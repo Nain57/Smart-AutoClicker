@@ -26,7 +26,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.ContentActionsBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.config.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
@@ -58,7 +58,7 @@ class ActionsContent : NavBarDialogContent() {
     private val itemTouchHelper = ItemTouchHelper(ActionReorderTouchHelper())
 
     /** View binding for all views in this content. */
-    private lateinit var viewBinding: ContentActionsBinding
+    private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of actions. */
     private lateinit var actionAdapter: ActionAdapter
 
@@ -72,13 +72,11 @@ class ActionsContent : NavBarDialogContent() {
             actionReorderListener = viewModel::updateActionOrder
         )
 
-        viewBinding = ContentActionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            layoutList.apply {
-                setEmptyText(R.string.dialog_actions_empty)
-                list.apply {
-                    itemTouchHelper.attachToRecyclerView(this)
-                    adapter = actionAdapter
-                }
+        viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            setEmptyText(R.string.dialog_actions_empty)
+            list.apply {
+                itemTouchHelper.attachToRecyclerView(this)
+                adapter = actionAdapter
             }
         }
 
@@ -113,7 +111,7 @@ class ActionsContent : NavBarDialogContent() {
     }
 
     private fun updateActionList(newList: List<ActionDetails>?) {
-        viewBinding.layoutList.updateState(newList)
+        viewBinding.updateState(newList)
         actionAdapter.submitList(newList)
     }
 

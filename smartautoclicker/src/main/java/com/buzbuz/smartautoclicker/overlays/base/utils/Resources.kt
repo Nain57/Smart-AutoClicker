@@ -20,12 +20,12 @@ import android.widget.ImageView
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
+
 import kotlin.reflect.KClass
 
 /**
