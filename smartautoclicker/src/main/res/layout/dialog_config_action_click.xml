@@ -124,6 +124,8 @@
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/on_condition_desc"
                             style="@style/AppTheme.Dialog.ToggleButtonDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:text="@string/condition_operator_and_desc"
                             android:visibility="gone"/>
@@ -138,7 +140,6 @@
                             android:visibility="visible"/>
 
                     </FrameLayout>
-
 
                 </LinearLayout>
 

@@ -21,13 +21,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/button_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_vertical_default"
         android:layout_gravity="center"
         app:singleSelection="true"
         app:selectionRequired="true">
@@ -53,6 +52,8 @@
         style="@style/AppTheme.Dialog.ToggleButtonDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_large"
         tools:text="@string/condition_operator_and_desc" />
 
 </LinearLayout>

@@ -22,17 +22,19 @@
     android:minHeight="@dimen/bottom_sheet_min_height"
     android:orientation="vertical">
 
-        <include layout="@layout/include_dialog_navigation_top_bar"
-            android:id="@+id/layout_top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"/>
+    <include layout="@layout/include_dialog_navigation_top_bar"
+        android:id="@+id/layout_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"/>
 
-        <FrameLayout
-            android:id="@+id/dialog_content"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="80dp" />
+    <FrameLayout
+        android:id="@+id/dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="@dimen/android_bottom_navigation_height" />
+
+    <!-- The bottom navigation bar is added programmatically to be at dialog's CoordinatorLayout level -->
 
 </LinearLayout>

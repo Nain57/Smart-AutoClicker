@@ -69,4 +69,5 @@
 
     <dimen name="dialog_choice_item_icon_size">32dp</dimen>
 
+    <dimen name="android_bottom_navigation_height">80dp</dimen>
 </resources>
