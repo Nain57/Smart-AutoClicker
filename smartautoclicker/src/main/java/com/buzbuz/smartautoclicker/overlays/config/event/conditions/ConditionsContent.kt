@@ -43,7 +43,7 @@ class ConditionsContent : NavBarDialogContent() {
 
     /** View model for the container dialog. */
     private val dialogViewModel: EventDialogViewModel by lazy {
-        ViewModelProvider(dialogViewModelStoreOwner).get(EventDialogViewModel::class.java)
+        ViewModelProvider(dialogController).get(EventDialogViewModel::class.java)
     }
     /** View model for this content. */
     private val viewModel: ConditionsViewModel by lazy {
@@ -55,29 +55,26 @@ class ConditionsContent : NavBarDialogContent() {
     /** Adapter for the list of conditions. */
     private lateinit var conditionsAdapter: ConditionAdapter
 
+    override fun createCopyButtonsAreAvailable(): Boolean = true
+
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
-
-        viewBinding = ContentConditionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            createCopyButtons.apply {
-                buttonNew.setOnClickListener { onNewButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
-            }
-        }
 
         conditionsAdapter = ConditionAdapter(
             conditionClickedListener = ::onConditionClicked,
             bitmapProvider = viewModel::getConditionBitmap,
         )
 
-        viewBinding.layoutList.apply {
-            setEmptyText(R.string.dialog_conditions_empty)
-            list.apply {
-                adapter = conditionsAdapter
-                layoutManager = GridLayoutManager(
-                    context,
-                    2,
-                )
+        viewBinding = ContentConditionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            layoutList.apply {
+                setEmptyText(R.string.dialog_conditions_empty)
+                list.apply {
+                    adapter = conditionsAdapter
+                    layoutManager = GridLayoutManager(
+                        context,
+                        2,
+                    )
+                }
             }
         }
 
@@ -87,21 +84,28 @@ class ConditionsContent : NavBarDialogContent() {
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.canCopyCondition.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.conditions.collect(::updateConditionList) }
             }
         }
     }
 
-    private fun onNewButtonClicked() {
+    override fun onCreateButtonClicked() {
         dialogViewModel.requestSubOverlay(newConditionSelectorNavigationRequest())
     }
 
-    private fun onCopyButtonClicked() {
+    override fun onCopyButtonClicked() {
         dialogViewModel.requestSubOverlay(newConditionCopyNavigationRequest())
     }
 
     private fun onConditionClicked(condition: Condition, index: Int) {
         dialogViewModel.requestSubOverlay(newConditionConfigNavigationRequest(condition, index))
+    }
+
+    private fun updateCopyButtonVisibility(isVisible: Boolean) {
+        dialogController.createCopyButtons.buttonCopy.apply {
+            if (isVisible) show() else hide()
+        }
     }
 
     private fun updateConditionList(newItems: List<Condition>?) {

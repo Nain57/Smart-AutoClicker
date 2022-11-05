@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="@dimen/bottom_sheet_min_height"
     android:orientation="vertical">
 
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -39,13 +39,28 @@
             android:id="@+id/nav_bar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dialog_content"
             tools:menu="@menu/menu_scenario_config"/>
 
         <FrameLayout
             android:id="@+id/dialog_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/nav_bar"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    </LinearLayout>
+        <include layout="@layout/include_create_copy_buttons"
+            android:id="@+id/create_copy_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

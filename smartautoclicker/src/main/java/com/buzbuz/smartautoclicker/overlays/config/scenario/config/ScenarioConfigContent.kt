@@ -53,7 +53,7 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
     }
     /** View model for the container dialog. */
     private val dialogViewModel: ScenarioDialogViewModel by lazy {
-        ViewModelProvider(dialogViewModelStoreOwner).get(ScenarioDialogViewModel::class.java)
+        ViewModelProvider(dialogController).get(ScenarioDialogViewModel::class.java)
     }
 
     private lateinit var viewBinding: ContentScenarioConfigBinding

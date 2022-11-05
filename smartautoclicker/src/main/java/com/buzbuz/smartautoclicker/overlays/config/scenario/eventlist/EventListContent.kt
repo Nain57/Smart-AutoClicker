@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.overlays.config.scenario.eventlist
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -48,7 +47,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     }
     /** View model for the container dialog. */
     private val dialogViewModel: ScenarioDialogViewModel by lazy {
-        ViewModelProvider(dialogViewModelStoreOwner).get(ScenarioDialogViewModel::class.java)
+        ViewModelProvider(dialogController).get(ScenarioDialogViewModel::class.java)
     }
 
     /** TouchHelper applied to [eventAdapter] allowing to drag and drop the items. */
@@ -59,27 +58,24 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     /** Adapter for the list of events. */
     private lateinit var eventAdapter: EventListAdapter
 
+    override fun createCopyButtonsAreAvailable(): Boolean = true
+
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewModel.setScenarioId(scenarioId)
-
-        viewBinding = ContentEventListBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            createCopyButtons.apply {
-                buttonNew.setOnClickListener { onNewEventButtonPressed() }
-                buttonCopy.setOnClickListener { onCopyEventButtonPressed() }
-            }
-        }
 
         eventAdapter = EventListAdapter(
             itemClickedListener = ::showEventConfigDialog,
             itemReorderListener = viewModel::updateEventsPriority,
         )
 
-        viewBinding.layoutList.apply {
-            setEmptyText(R.string.dialog_event_list_no_events)
-            list.apply {
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-                itemTouchHelper.attachToRecyclerView(this)
-                adapter = eventAdapter
+        viewBinding = ContentEventListBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            layoutList.apply {
+                setEmptyText(R.string.dialog_event_list_no_events)
+                list.apply {
+                    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                    itemTouchHelper.attachToRecyclerView(this)
+                    adapter = eventAdapter
+                }
             }
         }
 
@@ -89,17 +85,17 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.eventsItems.collect(::updateEventList) }
                 launch { viewModel.copyButtonIsVisible.collect(::updateCopyButtonVisibility) }
+                launch { viewModel.eventsItems.collect(::updateEventList) }
             }
         }
     }
 
-    private fun onNewEventButtonPressed() {
+    override fun onCreateButtonClicked() {
         showEventConfigDialog(viewModel.getNewEvent(context))
     }
 
-    private fun onCopyEventButtonPressed() {
+    override fun onCopyButtonClicked() {
         showEventCopyDialog()
     }
 
@@ -109,7 +105,9 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     }
 
     private fun updateCopyButtonVisibility(isVisible: Boolean) {
-        viewBinding.createCopyButtons.buttonCopy.visibility = if (isVisible) View.VISIBLE else View.GONE
+        dialogController.createCopyButtons.buttonCopy.apply {
+            if (isVisible) show() else hide()
+        }
     }
 
     /** Opens the dialog allowing the user to copy a click. */

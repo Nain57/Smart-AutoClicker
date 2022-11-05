@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.CallSuper
@@ -29,6 +30,7 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseNavBarBinding
+import com.buzbuz.smartautoclicker.databinding.IncludeCreateCopyButtonsBinding
 import com.buzbuz.smartautoclicker.databinding.ViewBottomNavBarBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeDialogNavigationTopBarBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
@@ -47,8 +49,11 @@ abstract class NavBarDialogController(
     private lateinit var baseViewBinding: DialogBaseNavBarBinding
     /** */
     private lateinit var navBarView: NavigationBarView
+
     /** */
-    protected lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
+    lateinit var createCopyButtons: IncludeCreateCopyButtonsBinding
+    /** */
+    lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
 
     /** */
     abstract val navigationMenuId: Int
@@ -71,10 +76,14 @@ abstract class NavBarDialogController(
         // correctly handle the dialog scrolling behaviour without moving the navigation view from the bottom.
         // This issue does not occurs in landscape mode, as the NavigationBar is replaced by a NavigationRail, which
         // is sticky to the dialog start.
-        navBarView = if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).root
+        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            navBarView = ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).root
+            createCopyButtons = IncludeCreateCopyButtonsBinding.inflate(LayoutInflater.from(context))
         } else {
-            baseViewBinding.navBar ?: throw IllegalStateException("Landscape layout must contains a NavigationRailView")
+            navBarView = baseViewBinding.navBar
+                ?: throw IllegalStateException("Landscape layout must contains a NavigationRailView")
+            createCopyButtons = baseViewBinding.createCopyButtons
+                ?: throw IllegalStateException("Landscape layout must contains a create copy buttons")
         }
 
         // Generic setup of the navigation
@@ -94,16 +103,7 @@ abstract class NavBarDialogController(
         // Setup dialog views. We need to do it here as it is the first place where the dialog is created and where we
         // can access its views.
         if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // Add the navigation bar as a child of the dialog's CoordinatorLayout.
-            dialogCoordinatorLayout?.addView(
-                navBarView,
-                CoordinatorLayout.LayoutParams(
-                    CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                ).apply {
-                    gravity = Gravity.BOTTOM
-                }
-            )
+            setupPortraitViews()
         }
 
         updateContentView(
@@ -128,6 +128,32 @@ abstract class NavBarDialogController(
         }
         contentMap.clear()
         super.onDestroyed()
+    }
+
+    private fun setupPortraitViews() {
+        dialogCoordinatorLayout?.apply {
+            // Add the navigation bar.
+            addView(
+                navBarView,
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM
+                }
+            )
+
+            // Add create/copy floating action buttons.
+            addView(
+                createCopyButtons.root,
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM or Gravity.END
+                }
+            )
+        }
     }
 
     private fun createContentView(itemId: Int): NavBarDialogContent =
@@ -155,6 +181,11 @@ abstract class NavBarDialogController(
         }
 
         content.start()
+
+        createCopyButtons.root.visibility =
+            if (content.createCopyButtonsAreAvailable()) View.VISIBLE
+            else View.GONE
+
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) content.resume()
     }
 

@@ -35,6 +35,10 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     /** Repository providing access to the click database. */
     private val repository = Repository.getRepository(application.applicationContext)
 
+    /** Tells if there is at least one condition to copy. */
+    val canCopyCondition: Flow<Boolean> = repository.getAllConditions()
+        .map { it.isNotEmpty() }
+
     /** The event currently configured. */
     private lateinit var configuredEvent: MutableStateFlow<Event?>
 
@@ -148,5 +152,4 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
         onBitmapLoaded.invoke(null)
         return null
     }
-
 }

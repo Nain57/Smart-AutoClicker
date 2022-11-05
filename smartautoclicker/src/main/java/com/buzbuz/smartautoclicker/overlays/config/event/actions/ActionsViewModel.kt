@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.base.bindings.toActionDetails
@@ -38,8 +39,14 @@ import kotlinx.coroutines.launch
 
 class ActionsViewModel(application: Application) : AndroidViewModel(application) {
 
+    /** The repository of the application. */
+    private val repository: Repository = Repository.getRepository(application)
     /** The event currently configured. */
     private lateinit var configuredEvent: MutableStateFlow<Event?>
+
+    /** Tells if there is at least one action to copy. */
+    val canCopyAction: Flow<Boolean> = repository.getAllActions()
+        .map { it.isNotEmpty() }
 
     /** List of [actions]. */
     val actions: StateFlow<List<Action>> by lazy {

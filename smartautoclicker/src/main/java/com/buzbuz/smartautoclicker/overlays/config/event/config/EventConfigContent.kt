@@ -43,7 +43,7 @@ class EventConfigContent : NavBarDialogContent() {
 
     /** View model for the container dialog. */
     private val dialogViewModel: EventDialogViewModel by lazy {
-        ViewModelProvider(dialogViewModelStoreOwner).get(EventDialogViewModel::class.java)
+        ViewModelProvider(dialogController).get(EventDialogViewModel::class.java)
     }
     /** View model for this content. */
     private val viewModel: EventConfigViewModel by lazy {
