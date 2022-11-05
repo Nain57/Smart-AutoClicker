@@ -58,7 +58,7 @@ class ConditionCopyDialog(
             conditionClickedListener = { selectedCondition, _ ->
                 viewModel.let {
                     onConditionSelected(it.getNewConditionForCopy(selectedCondition))
-                    dismiss()
+                    destroy()
                 }
             },
             bitmapProvider = { bitmap, onLoaded ->

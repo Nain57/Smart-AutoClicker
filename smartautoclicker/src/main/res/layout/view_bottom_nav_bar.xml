@@ -15,24 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout
+<com.google.android.material.bottomnavigation.BottomNavigationView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_navigation"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minHeight="@dimen/bottom_sheet_min_height"
-    android:orientation="vertical">
-
-        <include layout="@layout/include_dialog_navigation_top_bar"
-            android:id="@+id/layout_top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"/>
-
-        <FrameLayout
-            android:id="@+id/dialog_content"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="80dp" />
-
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:translationZ="100dp"
+    tools:menu="@menu/menu_scenario_config" />

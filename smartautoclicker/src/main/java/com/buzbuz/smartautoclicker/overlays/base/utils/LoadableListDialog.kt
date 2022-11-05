@@ -20,6 +20,7 @@ import android.content.Context
 import android.view.View
 
 import androidx.annotation.CallSuper
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
@@ -31,7 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  */
 abstract class LoadableListDialog(
     context: Context,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** ViewBinding containing the views for the loadable list merge layout. */
     protected lateinit var listBinding: IncludeLoadableListBinding

@@ -46,8 +46,8 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     /** The repository for the scenarios. */
     private var repository: Repository? = Repository.getRepository(application)
     /** The current of the detection. */
-    val detectionState: Flow<Boolean> = detectorEngine.state
-        .map { it == DetectorState.DETECTING }
+    val detectionState: Flow<UiState> = detectorEngine.state
+        .map { if (it == DetectorState.DETECTING) UiState.Detecting else UiState.Idle }
         .distinctUntilChanged()
     /** The current list of event in the detector engine. */
     val eventList: Flow<List<Event>?> = detectorEngine.scenarioEvents
@@ -71,4 +71,9 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
         repository?.cleanCache()
         repository = null
     }
+}
+
+sealed class UiState {
+    object Detecting: UiState()
+    object Idle: UiState()
 }

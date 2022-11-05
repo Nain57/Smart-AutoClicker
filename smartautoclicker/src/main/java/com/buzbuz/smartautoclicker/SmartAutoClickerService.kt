@@ -21,6 +21,7 @@ import android.accessibilityservice.GestureDescription
 import android.app.*
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Handler
@@ -137,6 +138,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             Handler(Looper.getMainLooper()).postDelayed({
                 rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario).apply {
                     create { this@LocalService.stop() }
+                    show()
                 }
             }, 350)
         }
@@ -149,7 +151,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
             isStarted = false
 
-            rootOverlayController?.dismiss()
+            rootOverlayController?.destroy()
             rootOverlayController = null
 
             detectorEngine?.let { detector ->

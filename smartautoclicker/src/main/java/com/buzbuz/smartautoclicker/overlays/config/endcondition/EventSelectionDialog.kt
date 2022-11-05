@@ -42,7 +42,7 @@ class EventSelectionDialog(
     context: Context,
     private val eventList: List<Event>,
     private val onEventClicked: (Event) -> Unit,
-): OverlayDialogController(context) {
+): OverlayDialogController(context, R.style.AppTheme) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseSelectionBinding
@@ -50,12 +50,12 @@ class EventSelectionDialog(
     /** Adapter for the list of events. */
     private val eventsAdapter = EndConditionEventsAdapter(::onEventSelected)
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_end_condition_event_select_title)
                 buttonSave.visibility = View.GONE
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
             }
         }
 
@@ -67,9 +67,7 @@ class EventSelectionDialog(
             }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -85,7 +83,7 @@ class EventSelectionDialog(
      */
     private fun onEventSelected(event: Event) {
         onEventClicked(event)
-        dismiss()
+        destroy()
     }
 }
 

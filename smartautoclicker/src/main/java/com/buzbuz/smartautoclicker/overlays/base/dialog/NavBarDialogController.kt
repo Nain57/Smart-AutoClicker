@@ -20,11 +20,13 @@ import android.content.Context
 import android.content.res.Configuration
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.ViewGroup
 
 import androidx.annotation.CallSuper
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseNavBarBinding
 import com.buzbuz.smartautoclicker.databinding.ViewBottomNavBarBinding
@@ -32,10 +34,11 @@ import com.buzbuz.smartautoclicker.databinding.IncludeDialogNavigationTopBarBind
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.navigation.NavigationBarView
 
 abstract class NavBarDialogController(
     context: Context,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()
@@ -43,11 +46,9 @@ abstract class NavBarDialogController(
     /** */
     private lateinit var baseViewBinding: DialogBaseNavBarBinding
     /** */
-    private lateinit var navBarViewBinding: ViewBottomNavBarBinding
+    private lateinit var navBarView: NavigationBarView
     /** */
     protected lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
-    /** */
-    private lateinit var dialogCoordinatorLayout: CoordinatorLayout
 
     /** */
     abstract val navigationMenuId: Int
@@ -56,77 +57,92 @@ abstract class NavBarDialogController(
     /** */
     abstract fun onDialogButtonPressed(buttonType: DialogNavigationButton)
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
-
             layoutTopBar.apply {
                 buttonSave.setOnClickListener { handleButtonClick(DialogNavigationButton.SAVE) }
                 buttonDismiss.setOnClickListener { handleButtonClick(DialogNavigationButton.DISMISS) }
                 buttonDelete.setOnClickListener { handleButtonClick(DialogNavigationButton.DELETE) }
             }
         }
+        topBarBinding = baseViewBinding.layoutTopBar
 
-        navBarViewBinding = ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).apply {
-            root.apply {
-                inflateMenu(navigationMenuId)
-                setOnItemSelectedListener { item ->
-                    updateContentView(item.itemId)
-                    true
-                }
+        // In portrait, we need to inject the navigation view as a child of the dialog's CoordinatorLayout in order to
+        // correctly handle the dialog scrolling behaviour without moving the navigation view from the bottom.
+        // This issue does not occurs in landscape mode, as the NavigationBar is replaced by a NavigationRail, which
+        // is sticky to the dialog start.
+        navBarView = if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).root
+        } else {
+            baseViewBinding.navBar ?: throw IllegalStateException("Landscape layout must contains a NavigationRailView")
+        }
+
+        // Generic setup of the navigation
+        navBarView.apply {
+            inflateMenu(navigationMenuId)
+            setOnItemSelectedListener { item ->
+                updateContentView(item.itemId)
+                true
             }
         }
 
-        topBarBinding = baseViewBinding.layoutTopBar
-
-        return BottomSheetDialog(context).apply {
-            setContentView(baseViewBinding.root)
-        }
+        return baseViewBinding.root
     }
 
     @CallSuper
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        dialogCoordinatorLayout = (baseViewBinding.root.parent.parent as CoordinatorLayout)
-        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) addBottomNavigationView()
+        // Setup dialog views. We need to do it here as it is the first place where the dialog is created and where we
+        // can access its views.
+        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // Add the navigation bar as a child of the dialog's CoordinatorLayout.
+            dialogCoordinatorLayout?.addView(
+                navBarView,
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM
+                }
+            )
+        }
 
         updateContentView(
-            itemId = navBarViewBinding.root.selectedItemId,
+            itemId = navBarView.selectedItemId,
             forceUpdate = true,
         )
     }
 
     override fun onStart() {
         super.onStart()
-        contentMap[navBarViewBinding.root.selectedItemId]?.resume()
-    }
-
-    override fun onOrientationChanged() {
-        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            addBottomNavigationView()
-        } else {
-            removeBottomNavigationView()
-        }
+        contentMap[navBarView.selectedItemId]?.resume()
     }
 
     override fun onStop() {
         super.onStop()
-        contentMap[navBarViewBinding.root.selectedItemId]?.pause()
+        contentMap[navBarView.selectedItemId]?.pause()
     }
 
-    override fun onDialogDismissed() {
-        super.onDialogDismissed()
+    override fun onDestroyed() {
         contentMap.values.forEach { content ->
             content.destroy()
         }
+        contentMap.clear()
+        super.onDestroyed()
     }
+
+    private fun createContentView(itemId: Int): NavBarDialogContent =
+        onCreateContent(itemId).apply {
+            create(this@NavBarDialogController, baseViewBinding.dialogContent, itemId)
+        }
 
     /**
      *
      */
     private fun updateContentView(itemId: Int, forceUpdate: Boolean = false) {
-        if (!forceUpdate && navBarViewBinding.root.selectedItemId == itemId) return
+        if (!forceUpdate && navBarView.selectedItemId == itemId) return
 
         // Get the current content and stop it, if any.
-        contentMap[navBarViewBinding.root.selectedItemId]?.apply {
+        contentMap[navBarView.selectedItemId]?.apply {
             pause()
             stop()
         }
@@ -142,11 +158,6 @@ abstract class NavBarDialogController(
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) content.resume()
     }
 
-    private fun createContentView(itemId: Int): NavBarDialogContent =
-        onCreateContent(itemId).apply {
-            create(this@NavBarDialogController, baseViewBinding.dialogContent, itemId)
-        }
-
     private fun handleButtonClick(buttonType: DialogNavigationButton) {
         // First notify the contents.
         contentMap.values.forEach { contentInfo ->
@@ -155,21 +166,5 @@ abstract class NavBarDialogController(
 
         // Then, notify the dialog
         onDialogButtonPressed(buttonType)
-    }
-
-    private fun addBottomNavigationView() {
-        dialogCoordinatorLayout.addView(
-            navBarViewBinding.root,
-            CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-            ).apply {
-                gravity = Gravity.BOTTOM
-            }
-        )
-    }
-
-    private fun removeBottomNavigationView() {
-        dialogCoordinatorLayout.removeView(navBarViewBinding.root)
     }
 }

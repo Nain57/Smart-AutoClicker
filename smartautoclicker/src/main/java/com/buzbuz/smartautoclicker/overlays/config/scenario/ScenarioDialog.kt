@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -46,13 +47,16 @@ class ScenarioDialog(
 ) : NavBarDialogController(context) {
 
     /** The view model for this dialog. */
-    private val viewModel: ScenarioDialogViewModel by lazy { ViewModelProvider(this).get(ScenarioDialogViewModel::class.java) }
+    private val viewModel: ScenarioDialogViewModel by lazy {
+        ViewModelProvider(this).get(ScenarioDialogViewModel::class.java)
+    }
 
     override val navigationMenuId: Int = R.menu.menu_scenario_config
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setConfiguredScenario(scenario.id)
-        return super.onCreateDialog().also {
+
+        return super.onCreateView().also {
             topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
         }
     }
@@ -76,7 +80,7 @@ class ScenarioDialog(
         }
     }
 
-    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) = dismiss()
+    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) = destroy()
 
     /** */
     private fun updateSaveButtonState(isEnabled: Boolean) {

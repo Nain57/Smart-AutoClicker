@@ -17,18 +17,24 @@
 package com.buzbuz.smartautoclicker.baseui.dialog
 
 import android.content.Context
+import android.content.res.Configuration
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.FrameLayout
 
 import androidx.annotation.CallSuper
+import androidx.annotation.StyleRes
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
@@ -39,7 +45,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  * [OverlayController] opened through the [showSubOverlay] methods, allowing to open another dialog from this one and
  * easily go back to this one once the sub dialog is closed.
  */
-abstract class OverlayDialogController(context: Context) : OverlayController(context) {
+abstract class OverlayDialogController(
+    context: Context,
+    @StyleRes theme: Int,
+) : OverlayController(context, theme, recreateOnRotation = true) {
 
     /** The Android InputMethodManger, for ensuring the keyboard dismiss on dialog dismiss. */
     private val inputMethodManager: InputMethodManager = context.getSystemService(InputMethodManager::class.java)
@@ -48,19 +57,22 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
         hideSoftInput()
         view.performClick()
     }
-    /** */
-    protected val screenMetrics = ScreenMetrics.getInstance(context)
-    private val orientationListener: (Context) -> Unit = { context ->
-        onOrientationChanged()
-    }
 
     /** Tells if the dialog is visible. */
     private var isShowing = false
+
     /**
      * The dialog currently displayed by this controller.
-     * Null until [onCreate] is called, or if it has been dismissed.
+     * Null until [onDialogCreated] is called, or if it has been dismissed.
      */
     protected var dialog: BottomSheetDialog? = null
+        private set
+
+    /**
+     * The coordinator layout of the dialog.
+     * Null until [onDialogCreated] is called, or if the dialog has been dismissed.
+     */
+    protected var dialogCoordinatorLayout: CoordinatorLayout? = null
         private set
 
     /**
@@ -70,7 +82,7 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      *
      * @return the builder for the dialog to be created.
      */
-    protected abstract fun onCreateDialog(): BottomSheetDialog
+    protected abstract fun onCreateView(): ViewGroup
 
     /**
      * Setup the dialog view.
@@ -80,86 +92,68 @@ abstract class OverlayDialogController(context: Context) : OverlayController(con
      */
     protected abstract fun onDialogCreated(dialog: BottomSheetDialog)
 
-    /** Called when the device orientation have changed. */
-    protected open fun onOrientationChanged() = Unit
-
     final override fun onCreate() {
-        screenMetrics.addOrientationListener(orientationListener)
+        dialog = BottomSheetDialog(context).apply {
+            val view = onCreateView()
 
-        dialog = onCreateDialog().apply {
-            setOnDismissListener {
-                this@OverlayDialogController.dismiss()
-                onDialogDismissed()
-            }
+            setContentView(view)
             setCancelable(false)
             setOnKeyListener { _, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                    this@OverlayDialogController.dismiss()
+                    this@OverlayDialogController.destroy()
                     true
                 } else {
                     false
                 }
             }
             create()
+
             window?.apply {
                 setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
                 setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                 decorView.setOnTouchListener(hideSoftInputTouchListener)
             }
 
-            this@OverlayDialogController.isShowing = true
-            show()
+            dialogCoordinatorLayout = (view.parent.parent as CoordinatorLayout)
+
+            if (screenMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                behavior.apply {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    isDraggable = false
+
+                }
+            }
         }
 
         onDialogCreated(dialog!!)
     }
 
-    /**
-     * Called when the visibility of the dialog has changed due to a call to [start] or [stop].
-     *
-     * Once the sub element is dismissed, this method will be called again, notifying for the new visibility of the
-     * dialog.
-     *
-     * @param visible the dialog visibility value. True for visible, false for hidden.
-     */
-    protected open fun onVisibilityChanged(visible: Boolean): Unit? = null
+    @CallSuper
+    override fun onStart() {
+        if (isShowing) return
 
-    final override fun start() {
-        if (!isShowing) {
-            isShowing = true
-            dialog?.show()
-            onVisibilityChanged(true)
-        }
-
-        super.start()
+        isShowing = true
+        dialog?.show()
     }
 
-    final override fun stop(hideUi: Boolean) {
-        if (hideUi && isShowing) {
-            hideSoftInput()
-            dialog?.hide()
-            isShowing = false
-            onVisibilityChanged(false)
-        }
+    @CallSuper
+    override fun onStop() {
+        if (!isShowing) return
 
-        super.stop(hideUi)
+        hideSoftInput()
+        dialog?.hide()
+        isShowing = false
     }
 
-    final override fun onDismissed() {
+    @CallSuper
+    override fun onDestroyed() {
         dialog?.dismiss()
+        dialog = null
     }
 
     final override fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean) {
-        super.showSubOverlay(overlayController, hideCurrent)
+        super.showSubOverlay(overlayController, true)
         hideSoftInput()
-    }
-
-    /** Handle the dialog dismissing. */
-    @CallSuper
-    protected open fun onDialogDismissed() {
-        screenMetrics.removeOrientationListener(orientationListener)
-        isShowing = false
-        dialog = null
     }
 
     /**

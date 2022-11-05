@@ -48,30 +48,27 @@ class MultiChoiceDialog<T : DialogChoice>(
     @StringRes private val dialogTitleText: Int,
     private val choices: List<T>,
     private val onChoiceSelected: (T) -> Unit
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseMultiChoiceBinding
     /** The adapter displaying the choices. */
     private lateinit var adapter: ChoiceAdapter<T>
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseMultiChoiceBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(dialogTitleText)
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
             }
 
             adapter = ChoiceAdapter(choices) { choice ->
                 onChoiceSelected.invoke(choice)
-                dismiss()
+                destroy()
             }
         }
 
-
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {

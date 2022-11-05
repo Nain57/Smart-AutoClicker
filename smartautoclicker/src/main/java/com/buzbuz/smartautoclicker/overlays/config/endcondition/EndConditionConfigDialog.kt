@@ -20,6 +20,7 @@ import android.content.Context
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -53,7 +54,7 @@ class EndConditionConfigDialog(
     private val endConditions: List<EndCondition>,
     private val onConfirmClicked: (EndCondition) -> Unit,
     private val onDeleteClicked: () -> Unit
-): OverlayDialogController(context) {
+): OverlayDialogController(context, R.style.AppTheme) {
 
     /** View model for this dialog. */
     private val viewModel: EndConditionConfigModel by lazy { ViewModelProvider(this).get(EndConditionConfigModel::class.java) }
@@ -61,13 +62,13 @@ class EndConditionConfigDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigEndConditionBinding
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setEndCondition(endCondition, endConditions)
 
         viewBinding = DialogConfigEndConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_end_condition_config_title)
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
                 buttonDelete.setOnClickListener { onDeleteButtonClicked() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
@@ -90,9 +91,7 @@ class EndConditionConfigDialog(
             }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -112,7 +111,7 @@ class EndConditionConfigDialog(
      */
     private fun onSaveButtonClicked() {
         onConfirmClicked(viewModel.getConfiguredEndCondition())
-        dismiss()
+        destroy()
     }
 
     /**
@@ -121,7 +120,7 @@ class EndConditionConfigDialog(
      */
     private fun onDeleteButtonClicked() {
         onDeleteClicked()
-        dismiss()
+        destroy()
     }
 
     /** Update the visibility of the delete button. */

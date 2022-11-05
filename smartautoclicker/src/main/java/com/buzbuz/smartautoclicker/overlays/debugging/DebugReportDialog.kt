@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.debugging
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -49,14 +49,9 @@ class DebugReportDialog(context: Context): LoadableListDialog(context) {
     override val emptyTextId: Int = R.string.dialog_debug_report_empty
     override fun onCreateListBinging() = viewBinding.layoutList
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewBinding = DialogDebugReportBinding.inflate(LayoutInflater.from(context))
-
-        return BottomSheetDialog(context).apply {
-            //setCustomTitle(R.layout.view_dialog_title, R.string.dialog_debug_report_title)
-            setContentView(viewBinding.root)
-            //setPositiveButton(android.R.string.ok, null)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {

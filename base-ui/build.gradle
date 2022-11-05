@@ -47,6 +47,7 @@ dependencies {
 
     implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
 
     implementation project(path: ':extensions')

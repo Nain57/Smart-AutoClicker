@@ -21,6 +21,7 @@ import android.graphics.Point
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -48,7 +49,7 @@ class ClickDialog(
     private val click: Action.Click,
     private val onDeleteClicked: (Action.Click) -> Unit,
     private val onConfirmClicked: (Action.Click) -> Unit,
-) : OverlayDialogController(context) {
+) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ClickViewModel by lazy {
@@ -58,14 +59,14 @@ class ClickDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionClickBinding
 
-    override fun onCreateDialog(): BottomSheetDialog {
+    override fun onCreateView(): ViewGroup {
         viewModel.setConfiguredClick(click)
 
         viewBinding = DialogConfigActionClickBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_action_type_click)
 
-                buttonDismiss.setOnClickListener { dismiss() }
+                buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -99,9 +100,7 @@ class ClickDialog(
             onPositionSelectButton.setOnClickListener { showPositionSelector() }
         }
 
-        return BottomSheetDialog(context).apply {
-            setContentView(viewBinding.root)
-        }
+        return viewBinding.root
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -119,12 +118,12 @@ class ClickDialog(
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
         onConfirmClicked(viewModel.getConfiguredClick())
-        dismiss()
+        destroy()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked(click)
-        dismiss()
+        destroy()
     }
 
     private fun updateClickName(newName: String?) {
