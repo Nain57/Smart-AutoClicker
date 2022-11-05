@@ -15,16 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <include layout="@layout/include_loadable_list"
-        android:id="@+id/layout_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-</LinearLayout>
+<resources>
+    <dimen name="dialog_create_copy_buttons_bottom_margin">16dp</dimen>
+</resources>

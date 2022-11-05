@@ -101,6 +101,24 @@
     <!-- Text appearance for the dialog body text. -->
     <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>
 
+    <!-- Base buttons appearance. -->
+    <style name="AppTheme.Button" />
+
+    <!-- Floating Action Buttons -->
+    <style name="AppTheme.Button.Fab" parent="@style/Widget.Material3.FloatingActionButton.Primary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginBottom">@dimen/margin_horizontal_default</item>
+    </style>
+    <style name="AppTheme.Button.Fab.Secondary" parent="@style/Widget.Material3.FloatingActionButton.Small.Primary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/margin_fab_secondary_bottom</item>
+    </style>
+
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/textTitle</item>
         <item name="actionMenuTextColor">@color/textTitle</item>

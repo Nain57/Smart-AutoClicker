@@ -15,34 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:translationZ="100dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_new"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_copy"
-        android:text="@string/dialog_event_list_add"
-        app:icon="@drawable/ic_add"/>
-
-    <com.google.android.material.button.MaterialButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_copy"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_new"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/dialog_buttons_copy"
-        app:icon="@drawable/ic_copy"/>
+        style="@style/AppTheme.Button.Fab.Secondary"
+        app:srcCompat="@drawable/ic_copy"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_new"
+        style="@style/AppTheme.Button.Fab"
+        android:layout_marginBottom="@dimen/dialog_create_copy_buttons_bottom_margin"
+        app:srcCompat="@drawable/ic_add"/>
+
+</LinearLayout>

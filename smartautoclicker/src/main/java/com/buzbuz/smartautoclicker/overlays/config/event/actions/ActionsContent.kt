@@ -47,7 +47,7 @@ class ActionsContent : NavBarDialogContent() {
 
     /** View model for the container dialog. */
     private val dialogViewModel: EventDialogViewModel by lazy {
-        ViewModelProvider(dialogViewModelStoreOwner).get(EventDialogViewModel::class.java)
+        ViewModelProvider(dialogController).get(EventDialogViewModel::class.java)
     }
     /** View model for this content. */
     private val viewModel: ActionsViewModel by lazy {
@@ -56,31 +56,29 @@ class ActionsContent : NavBarDialogContent() {
 
     /** TouchHelper applied to [actionAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(ActionReorderTouchHelper())
+
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentActionsBinding
     /** Adapter for the list of actions. */
     private lateinit var actionAdapter: ActionAdapter
 
+    override fun createCopyButtonsAreAvailable(): Boolean = true
+
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
-
-        viewBinding = ContentActionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            createCopyButtons.apply {
-                buttonNew.setOnClickListener { onNewButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
-            }
-        }
 
         actionAdapter = ActionAdapter(
             actionClickedListener = ::onActionClicked,
             actionReorderListener = viewModel::updateActionOrder
         )
 
-        viewBinding.layoutList.apply {
-            setEmptyText(R.string.dialog_actions_empty)
-            list.apply {
-                itemTouchHelper.attachToRecyclerView(this)
-                adapter = actionAdapter
+        viewBinding = ContentActionsBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            layoutList.apply {
+                setEmptyText(R.string.dialog_actions_empty)
+                list.apply {
+                    itemTouchHelper.attachToRecyclerView(this)
+                    adapter = actionAdapter
+                }
             }
         }
 
@@ -90,21 +88,28 @@ class ActionsContent : NavBarDialogContent() {
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.canCopyAction.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.actionDetails.collect(::updateActionList) }
             }
         }
     }
 
-    private fun onNewButtonClicked() {
+    override fun onCreateButtonClicked() {
         dialogViewModel.requestSubOverlay(newActionTypeSelectionNavigationRequest())
     }
 
-    private fun onCopyButtonClicked() {
+    override fun onCopyButtonClicked() {
         dialogViewModel.requestSubOverlay(newActionCopyNavigationRequest())
     }
 
     private fun onActionClicked(action: Action, index: Int) {
         dialogViewModel.requestSubOverlay(newActionConfigNavigationRequest(action, index))
+    }
+
+    private fun updateCopyButtonVisibility(isVisible: Boolean) {
+        dialogController.createCopyButtons.buttonCopy.apply {
+            if (isVisible) show() else hide()
+        }
     }
 
     private fun updateActionList(newList: List<ActionDetails>?) {
@@ -120,7 +125,7 @@ class ActionsContent : NavBarDialogContent() {
                 ActionTypeChoice.Click,
                 ActionTypeChoice.Swipe,
                 ActionTypeChoice.Pause,
-                ActionTypeChoice.Intent
+                ActionTypeChoice.Intent,
             ),
             onChoiceSelected = { choiceClicked ->
                 dialogViewModel.requestSubOverlay(

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -23,22 +23,7 @@
 
     <include layout="@layout/include_loadable_list"
         android:id="@+id/layout_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/create_copy_buttons"/>
-
-    <include layout="@layout/include_create_copy_buttons"
-        android:id="@+id/create_copy_buttons"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical_small"
-        android:layout_marginBottom="@dimen/margin_vertical_default"
-        app:layout_constraintTop_toBottomOf="@id/layout_list"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_height="match_parent"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

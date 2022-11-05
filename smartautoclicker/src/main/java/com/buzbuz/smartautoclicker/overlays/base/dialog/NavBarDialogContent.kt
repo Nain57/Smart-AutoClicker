@@ -27,6 +27,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 
 abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
@@ -46,8 +47,8 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
     /** The root view of the content. Provided by the implementation via [onCreateView]. */
     private lateinit var root: ViewGroup
 
-    /** The view model store owner of the dialog. */
-    protected lateinit var dialogViewModelStoreOwner: ViewModelStoreOwner
+    /** The owner of the dialog. */
+    protected lateinit var dialogController: NavBarDialogController
     /** The identifier of this content in the navigation bar. */
     protected var navBarId: Int = -1
         private set
@@ -59,15 +60,15 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
      * Creates the content.
      * The views will be inflated, but not attached nor shown yet.
      *
-     * @param owner the view model store owner of the dialog.
+     * @param controller the owner of the dialog.
      * @param container the container view for this content.
      * @param identifier the identifier of this content in the parent navigation bar.
      */
-    fun create(owner: ViewModelStoreOwner, container: ViewGroup, identifier: Int) {
+    fun create(controller: NavBarDialogController, container: ViewGroup, identifier: Int) {
         if (lifecycleRegistry.currentState != Lifecycle.State.INITIALIZED) return
 
         navBarId = identifier
-        dialogViewModelStoreOwner = owner
+        dialogController = controller
         rootContainer = container
         root = onCreateView(container)
 
@@ -83,6 +84,13 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
         if (lifecycleRegistry.currentState != Lifecycle.State.CREATED) return
 
         rootContainer.addView(root)
+
+        if (createCopyButtonsAreAvailable()) {
+            dialogController.createCopyButtons.apply {
+                buttonNew.setOnClickListener { onCreateButtonClicked() }
+                buttonCopy.setOnClickListener { onCopyButtonClicked() }
+            }
+        }
 
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
         onStart()
@@ -134,5 +142,9 @@ abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDef
 
     open fun onDialogButtonClicked(buttonType: DialogNavigationButton) = Unit
 
+    protected open fun onCreateButtonClicked() = Unit
 
+    protected open fun onCopyButtonClicked() = Unit
+
+    open fun createCopyButtonsAreAvailable(): Boolean = false
 }
