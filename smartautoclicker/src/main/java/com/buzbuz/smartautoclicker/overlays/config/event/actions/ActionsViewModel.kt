@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.extensions.mapList
 import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.base.bindings.toActionDetails
@@ -60,8 +61,8 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
     }
     /** List of action details. */
     val actionDetails: StateFlow<List<ActionDetails>> by lazy {
-        configuredEvent
-            .map { it?.actions?.map { action -> action.toActionDetails(application) } ?: emptyList() }
+        actions
+            .mapList { action -> action.toActionDetails(application) }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(),
