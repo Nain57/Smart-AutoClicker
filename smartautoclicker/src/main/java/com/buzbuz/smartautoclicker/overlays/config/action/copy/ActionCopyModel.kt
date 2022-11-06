@@ -90,14 +90,14 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
      */
     private fun List<Action>.toCopyItemsFromSearch(query: String) =
         filter { action -> action.name!!.contains(query, true) }
-        .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-        .distinct()
+            .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
+            .distinctByUiDisplay()
 
     /** */
     private fun List<Action>.toCopyItemsFromCurrentEvent() =
-        sortedBy { it.name }
-            .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-            .distinct()
+        map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
+            .distinctByUiDisplay()
+            .sortedBy { it.actionDetails.name }
 
     private fun List<Action>.toCopyItemsFromOtherEvents(eventItems: List<ActionCopyItem.ActionItem>) =
         map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
@@ -105,11 +105,20 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
             .apply {
                 removeIf { allItem ->
                     eventItems.find {
-                        allItem.actionDetails.action.id == it.actionDetails.action.id || allItem == it
+                        allItem.actionDetails.action.id == it.actionDetails.action.id
+                                || allItem.actionDetails.isSimilar(it.actionDetails)
                     } != null
                 }
             }
-            .distinct()
+            .distinctByUiDisplay()
+
+    private fun ActionDetails.isSimilar(other: ActionDetails): Boolean =
+        name == other.name && details == other.details && icon == other.icon
+
+    private fun List<ActionCopyItem.ActionItem>.distinctByUiDisplay() =
+        distinctBy {
+            it.actionDetails.name.hashCode() + it.actionDetails.details.hashCode() + it.actionDetails.icon.hashCode()
+        }
 
     /** Types of items in the action copy list. */
     sealed class ActionCopyItem {
