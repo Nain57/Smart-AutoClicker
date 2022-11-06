@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.base.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 
@@ -53,6 +54,15 @@ abstract class CopyDialog(
                             return true
                         }
                     })
+                    setOnSearchClickListener {
+                        dialogTitle.visibility = View.GONE
+                        buttonDismiss.visibility = View.GONE
+                    }
+                    setOnCloseListener {
+                        dialogTitle.visibility = View.VISIBLE
+                        buttonDismiss.visibility = View.VISIBLE
+                        false
+                    }
                 }
             }
 
