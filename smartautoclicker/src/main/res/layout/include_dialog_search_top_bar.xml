@@ -47,6 +47,7 @@
         android:id="@+id/search"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
+        android:maxWidth="5000dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
