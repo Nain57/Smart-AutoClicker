@@ -47,9 +47,9 @@ abstract class NavBarDialogController(
 
     /** */
     private lateinit var baseViewBinding: DialogBaseNavBarBinding
-    /** */
-    private lateinit var navBarView: NavigationBarView
 
+    /** */
+    protected lateinit var navBarView: NavigationBarView
     /** */
     lateinit var createCopyButtons: IncludeCreateCopyButtonsBinding
     /** */
@@ -61,6 +61,8 @@ abstract class NavBarDialogController(
     abstract fun onCreateContent(navItemId: Int): NavBarDialogContent
     /** */
     abstract fun onDialogButtonPressed(buttonType: DialogNavigationButton)
+    /** */
+    open fun onContentViewChanged(navItemId: Int) = Unit
 
     override fun onCreateView(): ViewGroup {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
@@ -181,6 +183,7 @@ abstract class NavBarDialogController(
         }
 
         content.start()
+        onContentViewChanged(itemId)
 
         createCopyButtons.root.visibility =
             if (content.createCopyButtonsAreAvailable()) View.VISIBLE
