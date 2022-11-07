@@ -49,12 +49,6 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .map { it.name }
         .take(1)
 
-    /** True if the intent creation mode is advanced, false if not. */
-    val isAdvanced: Flow<Boolean> = configuredIntent
-        .filterNotNull()
-        .map { it.isAdvanced ?: false }
-        .distinctUntilChanged()
-
     /* The intent action. */
     val action: Flow<String?> = configuredIntent
         .filterNotNull()

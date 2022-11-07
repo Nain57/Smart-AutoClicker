@@ -65,7 +65,7 @@ class ActivitySelectionDialog(
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
-            // TODO config dialog top bar
+            layoutTopBar.dialogTitle.setText(R.string.dialog_application_select_title)
 
             activitiesAdapter = ApplicationAdapter { selectedComponentName ->
                 onApplicationSelected(selectedComponentName)
