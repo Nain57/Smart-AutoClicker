@@ -24,7 +24,19 @@
     <include layout="@layout/include_dialog_navigation_top_bar"
         android:id="@+id/layout_top_bar"/>
 
-    <include layout="@layout/include_loadable_list"
-        android:id="@+id/layout_list"/>
+    <!-- Trigger/Processing count -->
+    <include
+        android:id="@+id/root_trigger_count"
+        layout="@layout/include_debug_report_triggered_processed"/>
+
+    <!-- Processing timing -->
+    <include
+        android:id="@+id/root_processing_timing"
+        layout="@layout/include_debug_report_min_avg_max"/>
+
+    <!-- Confidence rate -->
+    <include
+        android:id="@+id/root_confidence_rate"
+        layout="@layout/include_debug_report_min_avg_max"/>
 
 </LinearLayout>

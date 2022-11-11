@@ -14,80 +14,81 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.debugging
+package com.buzbuz.smartautoclicker.overlays.debugging.report
 
 import android.app.Application
+import android.graphics.Bitmap
+
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.debugging.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.engine.debugging.DebugReport
 import com.buzbuz.smartautoclicker.engine.debugging.ProcessingDebugInfo
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
 import kotlin.time.Duration.Companion.milliseconds
 
-/** */
+/** ViewModel for the [DebugReportDialog]. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class DebugReportModel(application: Application) : AndroidViewModel(application) {
 
+    /** Repository providing access to the click database. */
+    private val repository = Repository.getRepository(application.applicationContext)
+    /** The debug report of the last detection session. */
     private val debugReport: Flow<DebugReport?> = DetectorEngine.getDetectorEngine(application).debugEngine
         .flatMapLatest { it.debugReport }
 
-    private val expandedEventsMap = MutableStateFlow<MutableSet<Long>>(mutableSetOf())
-    private val expandedConditionsMap = MutableStateFlow<MutableSet<Long>>(mutableSetOf())
-
-    val reportItems =
-        combine(debugReport, expandedEventsMap, expandedConditionsMap) { report, expandedEvents, expandedCondition ->
-            report ?: return@combine emptyList()
+    /** The dialog is represented by a list. This is the items populating it. */
+    val reportItems = debugReport.map { report ->
+            report ?: return@map emptyList()
 
             buildList {
                 add(newScenarioItem(report))
-
                 report.eventsProcessedInfo.forEach { (event, debugInfo) ->
-                    val eventExpanded = expandedEvents.contains(event.id)
-                    add(newEventItem(event.id, event.name, debugInfo, eventExpanded))
-
-                    if (eventExpanded) {
-                        event.conditions?.forEach { condition ->
-                            report.conditionsProcessedInfo[condition.id]?.let { (condition, condDebugInfo) ->
-                                add(newConditionItem(
-                                    condition.id,
-                                    condition.name,
-                                    condDebugInfo,
-                                    expandedCondition.contains(condition.id),
-                                ))
-                            }
-                        }
-                    }
-
+                    add(newEventItem(event.id, event.name, debugInfo, createConditionReports(event.conditions, report)))
                 }
             }
         }
 
-    fun collapseExpandEvent(eventId: Long) {
-        viewModelScope.launch {
-            expandedEventsMap.emit(
-                expandedEventsMap.value.toMutableSet().apply {
-                    if (contains(eventId)) remove(eventId)
-                    else add(eventId)
-                }
-            )
+    /**
+     * Get the bitmap corresponding to a condition.
+     * Loading is async and the result notified via the onBitmapLoaded argument.
+     *
+     * @param condition the condition to load the bitmap of.
+     * @param onBitmapLoaded the callback notified upon completion.
+     */
+    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+        if (condition.bitmap != null) {
+            onBitmapLoaded.invoke(condition.bitmap)
+            return null
         }
-    }
 
-    fun collapseExpandCondition(conditionId: Long) {
-        viewModelScope.launch {
-            expandedConditionsMap.emit(
-                expandedConditionsMap.value.toMutableSet().apply {
-                    if (contains(conditionId)) remove(conditionId)
-                    else add(conditionId)
+        if (condition.path != null) {
+            return viewModelScope.launch(Dispatchers.IO) {
+                val bitmap = repository.getBitmap(condition.path!!, condition.area.width(), condition.area.height())
+
+                if (isActive) {
+                    withContext(Dispatchers.Main) {
+                        onBitmapLoaded.invoke(bitmap)
+                    }
                 }
-            )
+            }
         }
+
+        onBitmapLoaded.invoke(null)
+        return null
     }
 
     private fun newScenarioItem(debugInfo: DebugReport) =
@@ -99,10 +100,9 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
             averageImageProcessingTime = debugInfo.imageProcessedInfo.avgProcessingTimeMs.milliseconds.toString(),
             eventsTriggered = debugInfo.eventsTriggeredCount.toString(),
             conditionsDetected = debugInfo.conditionsDetectedCount.toString(),
-            isExpanded = true,
         )
 
-    private fun newEventItem(id: Long, name: String, debugInfo: ProcessingDebugInfo, expanded: Boolean) =
+    private fun newEventItem(id: Long, name: String, debugInfo: ProcessingDebugInfo, conditionReports: List<ConditionReport>) =
         DebugReportItem.EventReportItem(
             id = id,
             name = name,
@@ -111,13 +111,21 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
             avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
             minProcessingDuration = debugInfo.minProcessingTimeMs.milliseconds.toString(),
             maxProcessingDuration = debugInfo.maxProcessingTimeMs.milliseconds.toString(),
-            isExpanded = expanded,
+            conditionReports = conditionReports,
         )
 
-    private fun newConditionItem(id: Long, name: String, debugInfo: ConditionProcessingDebugInfo, expanded: Boolean) =
-        DebugReportItem.ConditionReportItem(
+    private fun createConditionReports(conditions: List<Condition>?, debugReport: DebugReport) = buildList {
+        conditions?.forEach { condition ->
+            debugReport.conditionsProcessedInfo[condition.id]?.let { (condition, condDebugInfo) ->
+                add(newConditionReport(condition.id, condition, condDebugInfo))
+            }
+        }
+    }
+
+    private fun newConditionReport(id: Long, condition: Condition, debugInfo: ConditionProcessingDebugInfo) =
+        ConditionReport(
             id = id,
-            name = name,
+            condition = condition,
             matchCount = debugInfo.successCount.toString(),
             processingCount = debugInfo.processingCount.toString(),
             avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
@@ -126,7 +134,6 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
             avgConfidence = debugInfo.avgConfidenceRate.formatConfidenceRate(),
             minConfidence = debugInfo.minConfidenceRate.formatConfidenceRate(),
             maxConfidence = debugInfo.maxConfidenceRate.formatConfidenceRate(),
-            isExpanded = expanded,
         )
 }
 
@@ -134,12 +141,10 @@ sealed class DebugReportItem {
 
     abstract val id: Long
     abstract val name: String
-    abstract val isExpanded: Boolean
 
     data class ScenarioReportItem(
         override val id: Long,
         override val name: String,
-        override val isExpanded: Boolean,
         val duration: String,
         val imageProcessed: String,
         val averageImageProcessingTime: String,
@@ -150,28 +155,27 @@ sealed class DebugReportItem {
     data class EventReportItem(
         override val id: Long,
         override val name: String,
-        override val isExpanded: Boolean,
         val triggerCount: String,
         val processingCount: String,
         val avgProcessingDuration: String,
         val minProcessingDuration: String,
         val maxProcessingDuration: String,
-    ): DebugReportItem()
-
-    data class ConditionReportItem(
-        override val id: Long,
-        override val name: String,
-        override val isExpanded: Boolean,
-        val matchCount: String,
-        val processingCount: String,
-        val avgProcessingDuration: String,
-        val minProcessingDuration: String,
-        val maxProcessingDuration: String,
-        val avgConfidence: String,
-        val minConfidence: String,
-        val maxConfidence: String,
+        val conditionReports: List<ConditionReport>,
     ): DebugReportItem()
 }
+
+data class ConditionReport(
+    val id: Long,
+    val condition: Condition,
+    val matchCount: String,
+    val processingCount: String,
+    val avgProcessingDuration: String,
+    val minProcessingDuration: String,
+    val maxProcessingDuration: String,
+    val avgConfidence: String,
+    val minConfidence: String,
+    val maxConfidence: String,
+)
 
 /** Format this value as a displayable confidence rate. */
 fun Double.formatConfidenceRate(): String = "${String.format("%.2f", this * 100)} % "

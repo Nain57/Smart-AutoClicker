@@ -19,7 +19,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="@dimen/dialog_item_condition_copy_condition_size"
     android:layout_height="@dimen/dialog_item_condition_copy_condition_size"
     android:layout_marginHorizontal="@dimen/margin_horizontal_small"
     android:layout_marginVertical="@dimen/margin_vertical_default">
@@ -76,43 +76,21 @@
             android:textColor="@color/md_theme_light_onPrimary"
             tools:text="Condition name"/>
 
-        <ImageView
-            android:id="@+id/condition_should_be_detected"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            app:layout_constraintTop_toTopOf="@id/background_bottom"
-            app:layout_constraintBottom_toBottomOf="@id/background_bottom"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/condition_detection_type"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            android:src="@drawable/ic_confirm"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/condition_detection_type"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            app:layout_constraintTop_toTopOf="@id/background_bottom"
-            app:layout_constraintBottom_toBottomOf="@id/background_bottom"
-            app:layout_constraintStart_toEndOf="@id/condition_should_be_detected"
-            app:layout_constraintEnd_toStartOf="@id/condition_threshold"
-            android:src="@drawable/ic_detect_exact"
-            tools:ignore="ContentDescription" />
-
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/condition_threshold"
+            android:id="@+id/condition_triggered"
+            style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_small"
             app:layout_constraintTop_toTopOf="@id/background_bottom"
             app:layout_constraintBottom_toBottomOf="@id/background_bottom"
-            app:layout_constraintStart_toStartOf="@id/condition_detection_type"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
-            android:textSize="@dimen/text_size_list_item_text_small"
             android:singleLine="true"
             android:ellipsize="marquee"
-            tools:text="8 %"/>
+            android:textColor="@color/md_theme_light_onPrimary"
+            tools:text="104578 / 145789"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

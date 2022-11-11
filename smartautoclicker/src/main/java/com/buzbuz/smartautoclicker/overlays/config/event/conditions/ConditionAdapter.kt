@@ -44,7 +44,7 @@ import kotlinx.coroutines.Job
  */
 class ConditionAdapter(
     private val conditionClickedListener: (Condition, Int) -> Unit,
-    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
+    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : ListAdapter<Condition, ConditionViewHolder>(ConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
