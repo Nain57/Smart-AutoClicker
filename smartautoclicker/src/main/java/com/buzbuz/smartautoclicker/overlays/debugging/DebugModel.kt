@@ -25,6 +25,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
+import com.buzbuz.smartautoclicker.overlays.debugging.report.formatConfidenceRate
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -35,7 +36,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.sample
 
-/** */
+/** ViewModel for the debug features. */
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class DebugModel(application: Application) : AndroidViewModel(application) {
 

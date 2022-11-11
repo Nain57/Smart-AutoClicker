@@ -30,7 +30,7 @@
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_vertical_small"
+        android:paddingBottom="@dimen/margin_vertical_default"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,11 +52,10 @@
         android:textSize="@dimen/text_size_list_item_text"
         android:text="@string/dialog_debug_report_timing_min"/>
 
-    <View
+    <com.google.android.material.divider.MaterialDivider
         android:id="@+id/separator_left"
         android:layout_width="1dp"
         android:layout_height="0dp"
-        style="@style/Separator"
         app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintStart_toEndOf="@id/minTitle"
         app:layout_constraintEnd_toStartOf="@id/avgTitle"
@@ -73,11 +72,10 @@
         android:textSize="@dimen/text_size_list_item_text"
         android:text="@string/dialog_debug_report_timing_avg"/>
 
-    <View
+    <com.google.android.material.divider.MaterialDivider
         android:id="@+id/separator_right"
         android:layout_width="1dp"
         android:layout_height="0dp"
-        style="@style/Separator"
         app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintStart_toEndOf="@id/avgTitle"
         app:layout_constraintEnd_toStartOf="@id/maxTitle"

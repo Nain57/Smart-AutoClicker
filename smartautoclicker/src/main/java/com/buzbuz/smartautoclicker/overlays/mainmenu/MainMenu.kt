@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.overlays.mainmenu
 
 import android.content.Context
 import android.util.Size
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
@@ -37,7 +36,7 @@ import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugModel
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugOverlayView
-import com.buzbuz.smartautoclicker.overlays.debugging.DebugReportDialog
+import com.buzbuz.smartautoclicker.overlays.debugging.report.DebugReportDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialog
 
 import kotlinx.coroutines.Job

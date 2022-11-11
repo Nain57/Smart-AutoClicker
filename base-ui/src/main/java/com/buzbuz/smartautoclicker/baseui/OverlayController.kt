@@ -17,20 +17,14 @@
 package com.buzbuz.smartautoclicker.baseui
 
 import android.app.Application
+import android.app.UiModeManager
 import android.content.Context
 import android.util.Log
-
 import androidx.annotation.CallSuper
-import androidx.lifecycle.HasDefaultViewModelProviderFactory
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.*
 import androidx.lifecycle.Lifecycle.State
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.ViewModelProvider
-
 import java.io.PrintWriter
+
 
 /**
  * Base class for an overlay based ui providing lifecycle and back stack management.

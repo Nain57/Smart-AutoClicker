@@ -27,41 +27,61 @@
     android:layout_marginEnd="@dimen/margin_horizontal_default">
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/triggered_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_vertical_small"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/collapse_expand"
-        app:layout_constraintBottom_toTopOf="@id/triggered_processed"
-        android:gravity="center_vertical"
+        app:layout_constraintEnd_toStartOf="@id/separator_left"
+        android:gravity="center"
         android:textSize="@dimen/text_size_list_item_text_big"
         android:textStyle="bold"
         android:singleLine="true"
-        tools:text="Event name"/>
+        android:text="@string/dialog_debug_report_timing_min"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/separator_left"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        style="@style/Separator"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/triggered_title"
+        app:layout_constraintEnd_toStartOf="@id/processed_title"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/triggered_processed"
+        android:id="@+id/processed_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/collapse_expand"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/text_size_list_item_text"
-        android:singleLine="true"
-        tools:text="2/9"/>
-
-    <ImageView
-        android:id="@+id/collapse_expand"
-        android:layout_width="@dimen/dialog_chevron_size"
-        android:layout_height="@dimen/dialog_chevron_size"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/name"
+        app:layout_constraintStart_toEndOf="@id/separator_left"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/ic_chevron_bottom"/>
+        android:gravity="center"
+        android:textSize="@dimen/text_size_list_item_text_big"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:text="@string/dialog_debug_report_timing_avg"/>
+
+    <TextView
+        android:id="@+id/triggered_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/triggered_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/processed_count"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_list_item_text"
+        tools:text="2"/>
+
+    <TextView
+        android:id="@+id/processed_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/processed_title"
+        app:layout_constraintStart_toEndOf="@id/triggered_count"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_list_item_text"
+        tools:text="9"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
