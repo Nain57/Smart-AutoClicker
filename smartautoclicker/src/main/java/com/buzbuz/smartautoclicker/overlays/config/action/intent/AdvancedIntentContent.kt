@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.extras.ExtraConfigDialog
 
 import kotlinx.coroutines.launch
@@ -56,10 +56,8 @@ class AdvancedIntentContent : NavBarDialogContent() {
         )
 
         viewBinding = ContentIntentConfigAdvancedBinding.inflate(LayoutInflater.from(context)).apply {
-            editNameText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    dialogViewModel.setName(s.toString())
-                }
+            editNameText.addTextChangedListener(OnAfterTextChangedListener {
+                dialogViewModel.setName(it.toString())
             })
 
             intentSendingTypeButton.apply {
@@ -72,25 +70,19 @@ class AdvancedIntentContent : NavBarDialogContent() {
                 }
             }
 
-            editActionText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    dialogViewModel.setIntentAction(s.toString())
-                }
+            editActionText.addTextChangedListener(OnAfterTextChangedListener {
+                dialogViewModel.setIntentAction(it.toString())
             })
 
-            editFlagsText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    dialogViewModel.setIntentFlags(
-                        try { if (!s.isNullOrEmpty()) s.toString().toInt() else null }
-                        catch (nfe: NumberFormatException) { null }
-                    )
-                }
+            editFlagsText.addTextChangedListener(OnAfterTextChangedListener {
+                dialogViewModel.setIntentFlags(
+                    try { if (it.isNotEmpty()) it.toString().toInt() else null }
+                    catch (nfe: NumberFormatException) { null }
+                )
             })
 
-            editComponentNameText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    dialogViewModel.setComponentName(s.toString())
-                }
+            editComponentNameText.addTextChangedListener(OnAfterTextChangedListener {
+                dialogViewModel.setComponentName(it.toString())
             })
 
             extrasList.adapter = extrasAdapter

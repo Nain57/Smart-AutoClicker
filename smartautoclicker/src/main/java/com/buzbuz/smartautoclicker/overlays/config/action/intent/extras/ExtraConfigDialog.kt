@@ -36,7 +36,7 @@ import com.buzbuz.smartautoclicker.overlays.base.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
@@ -87,19 +87,15 @@ class ExtraConfigDialog(
                 }
             }
 
-            editKeyText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    viewModel.setKey(s.toString())
-                }
+            editKeyText.addTextChangedListener(OnAfterTextChangedListener {
+                viewModel.setKey(it.toString())
             })
 
             buttonSelectType.setOnClickListener { showExtraTypeSelectionDialog() }
             textValueType.setOnClickListener { showExtraTypeSelectionDialog() }
 
-            editValueText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    viewModel.setValue(s.toString())
-                }
+            editValueText.addTextChangedListener(OnAfterTextChangedListener {
+                viewModel.setValue(it.toString())
             })
 
             booleanValueButtonGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
