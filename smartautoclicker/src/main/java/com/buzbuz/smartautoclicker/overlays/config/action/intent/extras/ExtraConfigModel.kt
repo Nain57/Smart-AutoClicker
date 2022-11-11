@@ -24,9 +24,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.baseui.NumberInputFilter
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
-import com.buzbuz.smartautoclicker.overlays.base.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDisplayNameRes
 
 import kotlinx.coroutines.flow.Flow

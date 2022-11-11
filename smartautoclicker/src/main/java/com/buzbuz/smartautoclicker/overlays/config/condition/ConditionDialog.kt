@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -82,10 +82,8 @@ class ConditionDialog(
             }
 
             editNameText.apply {
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        viewModel.setName(s.toString())
-                    }
+                addTextChangedListener(OnAfterTextChangedListener {
+                    viewModel.setName(it.toString())
                 })
             }
 

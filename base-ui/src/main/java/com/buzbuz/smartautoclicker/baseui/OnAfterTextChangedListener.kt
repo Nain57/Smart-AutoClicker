@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Nain57
+ * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,12 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.base.utils
+package com.buzbuz.smartautoclicker.baseui
 
+import android.text.Editable
 import android.text.TextWatcher
 
 /** [TextWatcher] implementation allowing to only declare [TextWatcher.afterTextChanged] in implementation. */
-abstract class OnAfterTextChangedListener : TextWatcher {
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+class OnAfterTextChangedListener(private val callback: (Editable) -> Unit) : TextWatcher {
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+    override fun afterTextChanged(s: Editable?) {
+        s?.let { callback(it) }
+    }
 }

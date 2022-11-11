@@ -28,12 +28,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.base.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -78,15 +78,13 @@ class EndConditionConfigDialog(
 
             executionCount.apply {
                 filters = arrayOf(MinMaxInputFilter(MIN_EXECUTION_COUNT, MAX_EXECUTION_COUNT))
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        val executions = try {
-                            s.toString().toInt()
-                        } catch (nfe: java.lang.NumberFormatException) {
-                            0
-                        }
-                        viewModel.setExecutions(executions)
+                addTextChangedListener(OnAfterTextChangedListener {
+                    val executions = try {
+                        it.toString().toInt()
+                    } catch (nfe: java.lang.NumberFormatException) {
+                        0
                     }
+                    viewModel.setExecutions(executions)
                 })
             }
         }

@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import kotlinx.coroutines.launch
 
@@ -58,10 +58,8 @@ class EventConfigContent : NavBarDialogContent() {
 
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             eventNameInputEditText.apply {
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        viewModel.setEventName(s.toString())
-                    }
+                addTextChangedListener(OnAfterTextChangedListener {
+                    viewModel.setEventName(it.toString())
                 })
             }
 

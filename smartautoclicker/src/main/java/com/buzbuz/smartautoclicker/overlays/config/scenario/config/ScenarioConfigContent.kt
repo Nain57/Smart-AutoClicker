@@ -40,7 +40,7 @@ import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -64,10 +64,8 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
 
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             scenarioNameInputEditText.apply {
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        viewModel.setScenarioName(s.toString())
-                    }
+                addTextChangedListener(OnAfterTextChangedListener {
+                    viewModel.setScenarioName(it.toString())
                 })
             }
 

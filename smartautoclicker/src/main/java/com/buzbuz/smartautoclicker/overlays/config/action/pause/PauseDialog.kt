@@ -28,13 +28,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.DurationInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionPauseBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.overlays.base.utils.DurationInputFilter
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -73,18 +73,14 @@ class PauseDialog(
                 }
             }
 
-            editNameText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    viewModel.setName(s.toString())
-                }
+            editNameText.addTextChangedListener(OnAfterTextChangedListener {
+                viewModel.setName(it.toString())
             })
 
             editPauseDurationText.apply {
                 filters = arrayOf(DurationInputFilter())
-                addTextChangedListener(object : OnAfterTextChangedListener() {
-                    override fun afterTextChanged(s: Editable?) {
-                        viewModel.setPauseDuration(if (!s.isNullOrEmpty()) s.toString().toLong() else null)
-                    }
+                addTextChangedListener(OnAfterTextChangedListener {
+                    viewModel.setPauseDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 })
             }
         }

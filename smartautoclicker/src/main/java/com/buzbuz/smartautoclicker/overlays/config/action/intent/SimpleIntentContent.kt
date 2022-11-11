@@ -29,7 +29,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.databinding.ContentIntentConfigSimpleBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.utils.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.activities.ActivitySelectionDialog
 
 import kotlinx.coroutines.launch
@@ -49,10 +49,8 @@ class SimpleIntentContent : NavBarDialogContent() {
             selectApplicationButton.setOnClickListener { showApplicationSelectionDialog() }
             selectedApplicationLayout.root.setOnClickListener { showApplicationSelectionDialog() }
 
-            editNameText.addTextChangedListener(object : OnAfterTextChangedListener() {
-                override fun afterTextChanged(s: Editable?) {
-                    dialogViewModel.setName(s.toString())
-                }
+            editNameText.addTextChangedListener(OnAfterTextChangedListener {
+                dialogViewModel.setName(it.toString())
             })
         }
 

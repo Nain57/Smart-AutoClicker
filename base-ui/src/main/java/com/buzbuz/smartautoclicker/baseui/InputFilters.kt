@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.base.utils
+package com.buzbuz.smartautoclicker.baseui
 
 import android.text.InputFilter
 import android.text.Spanned
@@ -34,7 +34,7 @@ class DurationInputFilter : InputFilter {
     ): CharSequence? {
         try {
             if (Integer.parseInt(dest.toString() + source.toString()) > 0) return null
-        } catch (nfe: NumberFormatException) { }
+        } catch (_: NumberFormatException) { }
         return ""
     }
 
@@ -57,7 +57,7 @@ class NumberInputFilter<T : Number>(private val type: KClass<T>): InputFilter {
 
         try {
             if (newValue == "-" || isInRange(newValue)) return null
-        } catch (nfe: NumberFormatException) { }
+        } catch (_: NumberFormatException) { }
         return ""
     }
 
@@ -92,7 +92,7 @@ class MinMaxInputFilter(
         try {
             val input = (dest.toString() + source.toString()).toInt()
             if (input in min..max) return null
-        } catch (nfe: NumberFormatException) { }
+        } catch (_: NumberFormatException) { }
         return ""
     }
 
