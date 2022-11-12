@@ -54,7 +54,7 @@ class ScenarioDialog(
     override val navigationMenuId: Int = R.menu.menu_scenario_config
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredScenario(scenario.id)
+        viewModel.setConfiguredScenario(scenario)
 
         return super.onCreateView().also {
             topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
@@ -62,8 +62,8 @@ class ScenarioDialog(
     }
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent = when (navItemId) {
-        R.id.page_events -> EventListContent(scenario.id)
-        R.id.page_config -> ScenarioConfigContent(scenario.id)
+        R.id.page_events -> EventListContent()
+        R.id.page_config -> ScenarioConfigContent()
         R.id.page_debug -> DebugConfigContent()
         else -> throw IllegalArgumentException("Unknown menu id $navItemId")
     }
@@ -73,23 +73,27 @@ class ScenarioDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.saveEnabledState.collect(::updateSaveButtonState) }
-                launch { viewModel.scenarioName.collect(::updateDialogTitle) }
+                launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
+                launch { viewModel.scenarioCanBeSaved.collect(::updateSaveButtonState) }
                 launch { viewModel.subOverlayRequest.collect(::onNewSubOverlayRequest) }
             }
         }
     }
 
-    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) = destroy()
+    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
+        if (buttonType == DialogNavigationButton.SAVE) viewModel.saveScenarioChanges()
+        destroy()
+    }
+
+    private fun updateContentsValidity(itemsValidity: Map<Int, Boolean>) {
+        itemsValidity.forEach { (itemId, isValid) ->
+            setMissingInputBadge(itemId, !isValid)
+        }
+    }
 
     /** */
     private fun updateSaveButtonState(isEnabled: Boolean) {
         topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, isEnabled)
-    }
-
-    /** */
-    private fun updateDialogTitle(scenarioName: String) {
-        topBarBinding.dialogTitle.text = scenarioName
     }
 
     private fun onNewSubOverlayRequest(request: NavigationRequest?) {

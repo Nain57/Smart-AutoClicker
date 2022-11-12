@@ -18,45 +18,104 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario
 
 import android.app.Application
 
+import androidx.lifecycle.viewModelScope
+
+import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationViewModel
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalCoroutinesApi::class)
+/** ViewModel for the [ScenarioDialog] and its content. */
 class ScenarioDialogViewModel(application: Application) : NavigationViewModel(application) {
 
-    /** */
+    /** The repository providing access to the database. */
     private val repository: Repository = Repository.getRepository(application)
-    /** */
-    private val configuredScenarioId: MutableStateFlow<Long?> = MutableStateFlow(null)
 
-    private val contentSaveState: MutableMap<Int, Boolean> = mutableMapOf()
+    /** The scenario currently configured. Shared with all contents view models. */
+    val configuredScenario: MutableStateFlow<ConfiguredScenario?> = MutableStateFlow(null)
 
-    private val _saveEnabledState = MutableStateFlow(true)
-    val saveEnabledState: StateFlow<Boolean> = _saveEnabledState
-
-    val scenarioName: Flow<String> = configuredScenarioId
+    /**
+     * Tells if all content have their field correctly configured.
+     * Used to display the red badge if indicating if there is something missing.
+     */
+    val navItemsValidity: Flow<Map<Int, Boolean>> = configuredScenario
         .filterNotNull()
-        .flatMapLatest { repository.getScenario(it) }
-        .map { it.name }
-
-    /** */
-    fun setConfiguredScenario(scenarioId: Long) {
-        configuredScenarioId.value = scenarioId
-    }
-
-    fun setSaveButtonState(contentId: Int, newState: Boolean) {
-        if (contentSaveState[contentId] == newState) return
-
-        contentSaveState[contentId] = newState
-
-        var isEnabled = true
-        contentSaveState.values.forEach { enabledForContent ->
-            isEnabled = isEnabled && enabledForContent
+        .map { configuredItem ->
+            buildMap {
+                put(R.id.page_events, configuredItem.events.isNotEmpty())
+                put(R.id.page_config, configuredItem.scenario.name.isNotEmpty())
+                put(R.id.page_debug, true)
+            }
         }
 
-        _saveEnabledState.value = isEnabled
+    /** Tells if the configured scenario is valid and can be saved in database. */
+    val scenarioCanBeSaved: Flow<Boolean> = navItemsValidity
+        .map { itemsValidity ->
+            var allValid = true
+            itemsValidity.values.forEach { validity ->
+                allValid = allValid && validity
+            }
+            allValid
+        }
+
+    /** Set the scenario to be configured by this viewModel. */
+    fun setConfiguredScenario(scenario: Scenario) {
+        if (configuredScenario.value != null) return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            configuredScenario.value = ConfiguredScenario(
+                scenario = scenario,
+                events = repository.getCompleteEventList(scenario.id).mapIndexed { index, event ->
+                    ConfiguredEvent(event, index)
+                },
+                endConditions = repository.getScenarioWithEndConditions(scenario.id).second,
+            )
+        }
+    }
+
+    /** Save the configured scenario in the database. */
+    fun saveScenarioChanges() {
+        viewModelScope.launch(Dispatchers.IO) {
+            configuredScenario.value?.let { conf ->
+                repository.updateScenario(conf.scenario)
+
+                val toBeRemoved = repository.getCompleteEventList(conf.scenario.id).toMutableList()
+                conf.events.forEachIndexed { index, configuredEvent ->
+                    configuredEvent.event.priority = index
+
+                    if (configuredEvent.event.id == 0L) {
+                        repository.addEvent(configuredEvent.event)
+                    } else {
+                        repository.updateEvent(configuredEvent.event)
+                        toBeRemoved.removeIf { it.id == configuredEvent.event.id }
+                    }
+                }
+                toBeRemoved.forEach { event -> repository.removeEvent(event) }
+
+                repository.updateEndConditions(conf.scenario.id, conf.endConditions)
+            }
+        }
     }
 }
+
+/** Represents the scenario currently configured. */
+data class ConfiguredScenario(
+    val scenario: Scenario,
+    val events: List<ConfiguredEvent>,
+    val endConditions: List<EndCondition>,
+)
+
+/** Represents the events of the scenario currently configured. */
+data class ConfiguredEvent(val event: Event, val itemId: Int = INVALID_CONFIGURED_EVENT_ITEM_ID)
+
+/** Invalid [ConfiguredEvent] id. The event item object is created but not yet in the list. */
+const val INVALID_CONFIGURED_EVENT_ITEM_ID = -1

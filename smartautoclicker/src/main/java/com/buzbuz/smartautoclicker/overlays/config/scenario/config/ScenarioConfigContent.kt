@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.scenario.config
 
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +33,6 @@ import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
@@ -45,7 +43,7 @@ import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent() {
+class ScenarioConfigContent : NavBarDialogContent() {
 
     /** View model for this content. */
     private val viewModel: ScenarioConfigViewModel by lazy {
@@ -60,7 +58,7 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
     private lateinit var endConditionAdapter: EndConditionAdapter
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setScenario(scenarioId)
+        viewModel.setScenario(dialogViewModel.configuredScenario)
 
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             scenarioNameInputEditText.apply {
@@ -102,19 +100,8 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
                 launch { viewModel.endConditionOperator.collect(::updateEndConditionOperator) }
                 launch { viewModel.endConditions.collect(::updateEndConditions) }
-                launch { viewModel.isValidConfig.collect(::updateSaveButton) }
             }
         }
-    }
-
-    override fun onDialogButtonClicked(buttonType: DialogNavigationButton) {
-        if (buttonType == DialogNavigationButton.SAVE) {
-            viewModel.saveModifications()
-        }
-    }
-
-    private fun updateSaveButton(isEnabled: Boolean) {
-        dialogViewModel.setSaveButtonState(navBarId, isEnabled)
     }
 
     private fun updateScenarioName(name: String?) {
@@ -167,7 +154,7 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
                     EndConditionConfigDialog(
                         context = context,
                         endCondition = endCondition,
-                        endConditions = viewModel.configuredEndConditions.value,
+                        endConditions = viewModel.getConfiguredEndConditionsList(),
                         onConfirmClicked = { newEndCondition -> viewModel.addEndCondition(newEndCondition) },
                         onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
                     )
@@ -182,7 +169,7 @@ class ScenarioConfigContent(private val scenarioId: Long) : NavBarDialogContent(
                 EndConditionConfigDialog(
                     context = context,
                     endCondition = endCondition,
-                    endConditions = viewModel.configuredEndConditions.value,
+                    endConditions = viewModel.getConfiguredEndConditionsList(),
                     onConfirmClicked = { newEndCondition -> viewModel.updateEndCondition(newEndCondition, index) },
                     onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
                 )

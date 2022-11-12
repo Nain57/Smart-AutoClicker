@@ -151,7 +151,7 @@ class DetectorEngine(context: Context) {
     val scenarioEvents: StateFlow<List<Event>> = _scenario
         .flatMapLatest {
             it?.let { event ->
-                scenarioRepository.getCompleteEventList(event.id)
+                scenarioRepository.getCompleteEventListFlow(event.id)
             } ?: flow { emit(emptyList()) }
         }
         .stateIn(

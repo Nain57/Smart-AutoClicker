@@ -136,7 +136,7 @@ interface Repository {
 
     /**
      * Get the list of events for a given scenario.
-     * Note that those events will not have their actions/conditions, use [getCompleteEventList] for that.
+     * Note that those events will not have their actions/conditions, use [getCompleteEventListFlow] for that.
      *
      * @param scenarioId the identifier of the scenario to ge the events from.
      * @return the list of events, ordered by execution priority.
@@ -149,7 +149,15 @@ interface Repository {
      * @param scenarioId the identifier of the scenario to ge the events from.
      * @return the list of complete events, ordered by execution priority.
      */
-    fun getCompleteEventList(scenarioId: Long): Flow<List<Event>>
+    suspend fun getCompleteEventList(scenarioId: Long): List<Event>
+
+    /**
+     * Get the list of complete events for a given scenario.
+     *
+     * @param scenarioId the identifier of the scenario to ge the events from.
+     * @return the list of complete events, ordered by execution priority.
+     */
+    fun getCompleteEventListFlow(scenarioId: Long): Flow<List<Event>>
 
     /**
      * Get the complete version of a given event.

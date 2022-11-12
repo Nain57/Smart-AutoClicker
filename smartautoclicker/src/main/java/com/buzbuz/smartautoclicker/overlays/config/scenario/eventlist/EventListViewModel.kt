@@ -18,80 +18,97 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario.eventlist
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
+
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultEvent
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
+import com.buzbuz.smartautoclicker.overlays.config.scenario.INVALID_CONFIGURED_EVENT_ITEM_ID
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class EventListViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application)
+    /** The event currently configured. */
+    private lateinit var configuredScenario: MutableStateFlow<ConfiguredScenario?>
 
-    /** Backing property for [scenarioId]. */
-    private val _scenarioId = MutableStateFlow<Long?>(null)
-    /** Currently selected scenario via [setScenarioId]. */
-    val scenarioId: StateFlow<Long?> = _scenarioId
-    /** The currently selected scenario. */
-    private val scenario: StateFlow<Scenario?> = scenarioId
-        .flatMapLatest { id ->
-            id?.let { repository.getScenario(it) } ?: emptyFlow()
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
-
-    /** List of events for the scenario specified in [scenario]. */
-    val eventsItems: StateFlow<List<Event>?> = scenario
-        .filterNotNull()
-        .flatMapLatest { scenario ->
-            repository.getCompleteEventList(scenario.id)
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            null,
-        )
-
+    /** List of events for the scenario specified in [configuredScenario]. */
+    val eventsItems: Flow<List<ConfiguredEvent>?> by lazy { configuredScenario.map { it?.events } }
     /** Tells if the copy button should be visible or not. */
-    val copyButtonIsVisible = repository.getEventCount()
-        .map { eventCount ->
-            eventCount > 0
-        }
+    val copyButtonIsVisible: Flow<Boolean> by lazy { configuredScenario.map { it?.events?.isNotEmpty() ?: false } }
 
     /**
      * Set a scenario for this [EventListViewModel].
      * This will modify the content of [eventsItems].
      *
-     * @param scenarioId the scenario value.
+     * @param scenario the scenario flow.
      */
-    fun setScenarioId(scenarioId: Long) {
-        _scenarioId.value = scenarioId
+    fun setScenario(scenario: MutableStateFlow<ConfiguredScenario?>) {
+        configuredScenario = scenario
+    }
+
+    /** Get all events currently configured in this scenario. */
+    fun getConfiguredEventList(): List<Event> = configuredScenario.value?.events?.map { it.event } ?: emptyList()
+
+    /**
+     * Creates a new event item.
+     *
+     * @param context the Android context.
+     * @param event the event represented by this item. Null for a new event.
+     *
+     * @return the new event item.
+     */
+    fun getNewEventItem(context: Context, event: Event? = null): ConfiguredEvent {
+        configuredScenario.value?.let { confScenario ->
+            return ConfiguredEvent(
+                event = event ?: newDefaultEvent(
+                    context = context,
+                    scenarioId = confScenario.scenario.id,
+                    scenarioEventsSize = confScenario.events.size,
+                )
+            )
+        } ?: throw IllegalStateException("No scenario defined !")
     }
 
     /**
-     * Creates a new event.
+     * Add or update an event.
+     * If the event id is unset, it will be added. If not, updated.
      *
-     * @param context the Android context.
-     * @return the new event.
+     * @param item the item to add/update.
      */
-    fun getNewEvent(context: Context) = newDefaultEvent(
-        context = context,
-        scenarioId = scenario.value!!.id,
-        scenarioEventsSize = eventsItems.value!!.size,
-    )
+    fun addOrUpdateEvent(item: ConfiguredEvent) {
+        val items = (configuredScenario.value?.events ?: emptyList()).toMutableList()
+
+        if (item.itemId == INVALID_CONFIGURED_EVENT_ITEM_ID) {
+            items.add(item.copy(itemId = items.size))
+        } else {
+            val itemIndex = items.indexOfFirst { other -> item.itemId == other.itemId }
+            if (itemIndex == -1) return
+
+            items[itemIndex] = item
+        }
+
+        updateConfiguredEventItems(items)
+    }
+
+    /**
+     * Delete an event.
+     *
+     * @param item the item to delete.
+     */
+    fun deleteEvent(item: ConfiguredEvent) {
+        val items = (configuredScenario.value?.events ?: emptyList()).toMutableList()
+
+        val itemIndex = items.indexOfFirst { other -> item.itemId == other.itemId }
+        if (itemIndex == -1) return
+        items.removeAt(itemIndex)
+
+        updateConfiguredEventItems(items)
+    }
 
     /**
      * Update the priority of the events in the scenario.
@@ -99,48 +116,16 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
      * @param events the events, ordered by their new priorities. They must be in the current scenario and have a
      *               defined id.
      */
-    fun updateEventsPriority(events: List<Event>) {
-        if (scenario.value == null || events.isEmpty()) {
-            Log.e(TAG, "Can't update click priorities, scenario is not matching.")
-            return
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateEventsPriority(events)
-        }
+    fun updateEventsPriority(events: List<ConfiguredEvent>) {
+        updateConfiguredEventItems(events)
     }
 
-    /**
-     * Add or update an event.
-     * If the event id is unset, it will be added. If not, updated.
-     *
-     * @param event the event to add/update.
-     */
-    fun addOrUpdateEvent(event: Event) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (event.id == 0L) {
-                repository.addEvent(event)
-            } else {
-                repository.updateEvent(event)
-            }
-        }
-    }
+    private fun updateConfiguredEventItems(newItems: List<ConfiguredEvent>) {
+        val currentConfiguredScenario = configuredScenario.value ?: return
 
-    /**
-     * Delete an event.
-     *
-     * @param event the event to delete.
-     */
-    fun deleteEvent(event: Event) {
-        if (scenario.value == null) {
-            Log.e(
-                TAG, "Can't delete click with scenario id $event.scenarioId, " +
-                    "invalid model scenario ${scenario.value}")
-            return
-        }
-
-        viewModelScope.launch(Dispatchers.IO) { repository.removeEvent(event) }
+        configuredScenario.value = currentConfiguredScenario.copy(
+            scenario = currentConfiguredScenario.scenario.copy(eventCount = newItems.size),
+            events = newItems,
+        )
     }
 }
-
-private const val TAG = "EventListViewModel"

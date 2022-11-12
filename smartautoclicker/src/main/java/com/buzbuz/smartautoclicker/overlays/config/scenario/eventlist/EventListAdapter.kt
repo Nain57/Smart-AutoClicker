@@ -24,9 +24,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
 
 import java.util.Collections
 
@@ -37,9 +37,9 @@ import java.util.Collections
  * @param itemReorderListener listener called when the user finish moving an item.
  */
 class EventListAdapter(
-    private val itemClickedListener: (Event) -> Unit,
-    private val itemReorderListener: (List<Event>) -> Unit,
-) : ListAdapter<Event, EventViewHolder>(EventDiffUtilCallback) {
+    private val itemClickedListener: (ConfiguredEvent) -> Unit,
+    private val itemReorderListener: (List<ConfiguredEvent>) -> Unit,
+) : ListAdapter<ConfiguredEvent, EventViewHolder>(EventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -66,6 +66,15 @@ class EventListAdapter(
     }
 }
 
+/** DiffUtil Callback comparing two ActionItem when updating the [EventListAdapter] list. */
+object EventDiffUtilCallback: DiffUtil.ItemCallback<ConfiguredEvent>() {
+    override fun areItemsTheSame(oldItem: ConfiguredEvent, newItem: ConfiguredEvent): Boolean =
+        oldItem.itemId == newItem.itemId
+
+    override fun areContentsTheSame(oldItem: ConfiguredEvent, newItem: ConfiguredEvent): Boolean =
+        oldItem == newItem
+}
+
 /**
  * View holder displaying a click in the [EventListAdapter].
  * @param holderViewBinding the view binding for this item.
@@ -79,8 +88,8 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
      * @param item the item providing the binding data.
      * @param itemClickedListener listener called when an event is clicked.
      */
-    fun bindEvent(item: Event, itemClickedListener: (Event) -> Unit) {
-        holderViewBinding.bind(item, true, itemClickedListener)
+    fun bindEvent(item: ConfiguredEvent, itemClickedListener: (ConfiguredEvent) -> Unit) {
+        holderViewBinding.bind(item.event, true) { itemClickedListener(item) }
     }
 }
 
@@ -117,13 +126,4 @@ class EventReorderTouchHelper
             isDragging = false
         }
     }
-}
-
-/** DiffUtil Callback comparing two ActionItem when updating the [ActionsAdapter] list. */
-object EventDiffUtilCallback: DiffUtil.ItemCallback<Event>() {
-    override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean =
-        oldItem.id == newItem.id
-
-    override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean =
-        oldItem == newItem
 }
