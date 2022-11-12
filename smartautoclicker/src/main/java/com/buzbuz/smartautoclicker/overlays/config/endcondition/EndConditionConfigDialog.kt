@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.overlays.config.endcondition
 
 import android.content.Context
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +32,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -79,12 +79,8 @@ class EndConditionConfigDialog(
             executionCount.apply {
                 filters = arrayOf(MinMaxInputFilter(MIN_EXECUTION_COUNT, MAX_EXECUTION_COUNT))
                 addTextChangedListener(OnAfterTextChangedListener {
-                    val executions = try {
-                        it.toString().toInt()
-                    } catch (nfe: java.lang.NumberFormatException) {
-                        0
-                    }
-                    viewModel.setExecutions(executions)
+                    try { viewModel.setExecutions(it.toString().toInt()) }
+                    catch (_: java.lang.NumberFormatException) {}
                 })
             }
         }
@@ -97,6 +93,7 @@ class EndConditionConfigDialog(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canBeDeleted.collect(::updateDeleteButton) }
                 launch { viewModel.eventViewState.collect(::updateEvent) }
+                launch { viewModel.executionCountError.collect(viewBinding.executionCountLayout::setError) }
                 launch { viewModel.executions.collect(::updateExecutionCount) }
                 launch { viewModel.isValidEndCondition.collect(::updateSaveButton) }
             }

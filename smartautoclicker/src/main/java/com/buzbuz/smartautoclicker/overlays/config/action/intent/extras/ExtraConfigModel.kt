@@ -70,6 +70,12 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
                 }
             }
         }
+
+    /** Tells if the action name is valid or not. */
+    val keyError: Flow<Boolean> = configuredExtra.map { it?.key?.isEmpty() ?: true }
+    /** Tells if the action name is valid or not. */
+    val valueError: Flow<Boolean> = configuredExtra.map { it?.value == null }
+
     /** Tells if this extra if valid for save or not. */
     val isExtraValid: Flow<Boolean> = configuredExtra
         .map { extra ->

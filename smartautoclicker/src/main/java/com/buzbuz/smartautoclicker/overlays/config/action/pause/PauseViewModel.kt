@@ -44,12 +44,16 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
         .filterNotNull()
         .map { it.name }
         .take(1)
+    /** Tells if the action name is valid or not. */
+    val nameError: Flow<Boolean> = configuredPause.map { it?.name?.isEmpty() ?: true }
 
     /** The duration of the pause in milliseconds. */
     val pauseDuration: Flow<String?> = configuredPause
         .filterNotNull()
         .map { it.pauseDuration?.toString() }
         .take(1)
+    /** Tells if the pause duration value is valid or not. */
+    val pauseDurationError: Flow<Boolean> = configuredPause.map { (it?.pauseDuration ?: -1) <= 0 }
 
     /** Tells if the configured pause is valid and can be saved. */
     val isValidAction: Flow<Boolean> = configuredPause

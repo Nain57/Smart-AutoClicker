@@ -45,12 +45,16 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         .filterNotNull()
         .map { it.name }
         .take(1)
+    /** Tells if the action name is valid or not. */
+    val nameError: Flow<Boolean> = configuredClick.map { it?.name?.isEmpty() ?: true }
 
     /** The duration between the press and release of the click in milliseconds. */
     val pressDuration: Flow<String?> = configuredClick
         .filterNotNull()
         .map { it.pressDuration?.toString() }
         .take(1)
+    /** Tells if the press duration value is valid or not. */
+    val pressDurationError: Flow<Boolean> = configuredClick.map { (it?.pressDuration ?: -1) <= 0 }
 
     /** The position of the click. */
     val position: Flow<Point?> = configuredClick

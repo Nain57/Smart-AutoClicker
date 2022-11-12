@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.overlays.config.action.intent.extras
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +35,7 @@ import com.buzbuz.smartautoclicker.overlays.base.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -112,7 +112,9 @@ class ExtraConfigDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.key.collect(::updateExtraKey) }
+                launch { viewModel.keyError.collect(viewBinding.editKeyLayout::setError) }
                 launch { viewModel.valueInputState.collect(::updateExtraValue) }
+                launch { viewModel.valueError.collect(viewBinding.editValueLayout::setError) }
                 launch { viewModel.isExtraValid.collect(::updateSaveButton) }
             }
         }

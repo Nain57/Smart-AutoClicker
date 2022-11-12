@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
+import com.google.android.material.textfield.TextInputLayout
 
 import kotlin.reflect.KClass
 
@@ -60,6 +61,10 @@ fun KClass<out Any>.getDisplayNameRes() : Int = when (this) {
     Short::class -> R.string.dialog_intent_extra_type_short
     String::class -> R.string.dialog_intent_extra_type_string
     else -> 0
+}
+
+fun TextInputLayout.setError(isError: Boolean) {
+    error = if (isError) context.getString(R.string.error_field_required) else null
 }
 
 /** Check if this duration value is valid for an action. */

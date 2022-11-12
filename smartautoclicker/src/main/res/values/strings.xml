@@ -281,4 +281,6 @@
     <string name="dialog_intent_extra_type_short" translatable="false">Short</string>
     <string name="dialog_intent_extra_type_string" translatable="false">String</string>
 
+    <string name="error_field_required">Required</string>
+
 </resources>

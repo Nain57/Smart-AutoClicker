@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.overlays.config.condition
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +35,7 @@ import com.buzbuz.smartautoclicker.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -121,6 +121,7 @@ class ConditionDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateConditionName) }
+                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
                 launch { viewModel.conditionBitmap.collect(::updateConditionBitmap) }
                 launch { viewModel.shouldBeDetected.collect(::updateShouldBeDetected) }
                 launch { viewModel.detectionType.collect(::updateConditionType) }
