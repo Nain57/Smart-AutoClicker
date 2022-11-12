@@ -57,7 +57,7 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         .take(1)
     /** Tells if the execution count is valid or not. */
     val executionCountError: Flow<Boolean> by lazy {
-        configuredEndCondition.map { (it?.executions ?: -1) > 0 }
+        configuredEndCondition.map { (it?.executions ?: -1) <= 0 }
     }
     /** Tells if the configured end condition can be deleted. */
     val canBeDeleted = configuredEndCondition
