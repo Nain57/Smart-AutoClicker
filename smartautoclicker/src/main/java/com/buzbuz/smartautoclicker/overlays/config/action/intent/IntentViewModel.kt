@@ -48,12 +48,16 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .filterNotNull()
         .map { it.name }
         .take(1)
+    /** Tells if the action name is valid or not. */
+    val nameError: Flow<Boolean> = configuredIntent.map { it?.name?.isEmpty() ?: true }
 
     /* The intent action. */
     val action: Flow<String?> = configuredIntent
         .filterNotNull()
         .map { it.intentAction }
         .take(1)
+    /** Tells if the intent action is valid or not. */
+    val actionError: Flow<Boolean> = configuredIntent.map { it?.intentAction?.isEmpty() ?: true }
 
     /** The flags for this intent. */
     val flags: Flow<String> = configuredIntent
@@ -66,6 +70,11 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .filterNotNull()
         .map { it.componentName?.flattenToString() }
         .take(1)
+    /** Tells if the intent component name is valid or not. */
+    val componentNameError: Flow<Boolean> = configuredIntent.map { intent ->
+        intent ?: return@map true
+        intent.isBroadcast == false && intent.componentName == null
+    }
 
     /** True if this intent is a broadcast, false for a start activity. */
     val isBroadcast: Flow<Boolean> = configuredIntent

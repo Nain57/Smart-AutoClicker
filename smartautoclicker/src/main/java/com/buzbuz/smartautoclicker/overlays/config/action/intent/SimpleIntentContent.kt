@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.databinding.ContentIntentConfigSimpleBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.activities.ActivitySelectionDialog
 
 import kotlinx.coroutines.launch
@@ -61,6 +62,7 @@ class SimpleIntentContent : NavBarDialogContent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { dialogViewModel.name.collect(::updateClickName) }
+                launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { dialogViewModel.activityInfo.collect(::updateActivityInfo) }
             }
         }

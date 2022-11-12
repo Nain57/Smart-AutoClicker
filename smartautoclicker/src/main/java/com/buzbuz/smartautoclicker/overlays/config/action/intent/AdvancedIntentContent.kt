@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.action.intent
 
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -33,6 +32,7 @@ import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.extras.ExtraConfigDialog
 
 import kotlinx.coroutines.launch
@@ -95,10 +95,13 @@ class AdvancedIntentContent : NavBarDialogContent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { dialogViewModel.name.collect(::updateClickName) }
+                launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { dialogViewModel.isBroadcast.collect(::updateIsBroadcast) }
                 launch { dialogViewModel.action.collect(::updateIntentAction) }
+                launch { dialogViewModel.actionError.collect(viewBinding.editActionLayout::setError) }
                 launch { dialogViewModel.flags.collect(::updateIntentFlags) }
                 launch { dialogViewModel.componentName.collect(::updateComponentName) }
+                launch { dialogViewModel.componentNameError.collect(viewBinding.editComponentNameLayout::setError) }
                 launch { dialogViewModel.extras.collect(extrasAdapter::submitList) }
             }
         }

@@ -47,6 +47,11 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
             .take(1)
     }
 
+    /** Tells if the event name is valid or not. */
+    val eventNameError: Flow<Boolean> by lazy {
+        configuredEvent.map { it?.name?.isEmpty() ?: true }
+    }
+
     /** Set the event currently configured by the UI. */
     fun setConfiguredEvent(event: MutableStateFlow<Event?>) {
         configuredEvent = event

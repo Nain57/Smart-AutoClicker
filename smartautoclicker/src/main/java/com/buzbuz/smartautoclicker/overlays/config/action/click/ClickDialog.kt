@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.overlays.config.action.click
 
 import android.content.Context
 import android.graphics.Point
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +37,7 @@ import com.buzbuz.smartautoclicker.overlays.config.action.CoordinatesSelector
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -103,7 +103,9 @@ class ClickDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
+                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { viewModel.pressDuration.collect(::updateClickDuration) }
+                launch { viewModel.pressDurationError.collect(viewBinding.editPressDurationLayout::setError)}
                 launch { viewModel.clickOnCondition.collect(::updateClickType) }
                 launch { viewModel.position.collect(::updateClickOnPositionButtonText) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }

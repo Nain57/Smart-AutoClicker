@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.event.config
 
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -34,6 +33,7 @@ import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 
@@ -80,6 +80,7 @@ class EventConfigContent : NavBarDialogContent() {
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.eventNameError.collect(viewBinding.eventNameInputLayout::setError) }
                 launch { viewModel.eventName.collect(::updateEventName) }
                 launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
             }

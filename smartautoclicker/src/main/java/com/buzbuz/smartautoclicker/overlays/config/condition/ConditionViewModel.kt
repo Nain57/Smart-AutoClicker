@@ -35,6 +35,8 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
     private val configuredCondition = MutableStateFlow<Condition?>(null)
     /** The type of detection currently selected by the user. */
     val name: Flow<String?> = configuredCondition.map { it?.name }.take(1)
+    /** Tells if the condition name is valid or not. */
+    val nameError: Flow<Boolean> = configuredCondition.map { it?.name?.isEmpty() ?: true }
     /** Tells if the condition should be present or not on the screen. */
     val shouldBeDetected: Flow<Boolean> = configuredCondition.mapNotNull { it?.shouldBeDetected }
     /** The type of detection currently selected by the user. */

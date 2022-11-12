@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.overlays.config.action.swipe
 
 import android.content.Context
 import android.graphics.Point
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +37,7 @@ import com.buzbuz.smartautoclicker.overlays.config.action.CoordinatesSelector
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -97,7 +97,9 @@ class SwipeDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
+                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { viewModel.swipeDuration.collect(::updateSwipeDuration) }
+                launch { viewModel.swipeDurationError.collect(viewBinding.editSwipeDurationLayout::setError)}
                 launch { viewModel.positions.collect(::updateSwipePositionsButtonText) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }

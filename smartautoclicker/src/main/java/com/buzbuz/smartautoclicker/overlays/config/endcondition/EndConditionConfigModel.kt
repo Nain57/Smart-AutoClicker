@@ -26,14 +26,7 @@ import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.Event
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.*
 
 /**
  * View model for the [EndConditionConfigDialog].
@@ -62,6 +55,10 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         .filterNotNull()
         .map { it.executions }
         .take(1)
+    /** Tells if the execution count is valid or not. */
+    val executionCountError: Flow<Boolean> by lazy {
+        configuredEndCondition.map { (it?.executions ?: -1) > 0 }
+    }
     /** Tells if the configured end condition can be deleted. */
     val canBeDeleted = configuredEndCondition
         .filterNotNull()

@@ -52,6 +52,10 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
             .filterNotNull()
             .take(1)
     }
+    /** Tells if the scenario name is valid or not. */
+    val scenarioNameError: Flow<Boolean> by lazy {
+        configuredScenario.map { it?.scenario?.name?.isEmpty() ?: true }
+    }
     /** The quality of the detection. */
     val detectionQuality: Flow<Int?> by lazy {
         configuredScenario.map { it?.scenario?.detectionQuality }

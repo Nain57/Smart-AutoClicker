@@ -45,12 +45,17 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
         .filterNotNull()
         .map { it.name }
         .take(1)
+    /** Tells if the action name is valid or not. */
+    val nameError: Flow<Boolean> = configuredSwipe.map { it?.name?.isEmpty() ?: true }
 
     /** The duration between the start and end of the swipe in milliseconds. */
     val swipeDuration: Flow<String?> = configuredSwipe
         .filterNotNull()
         .map { it.swipeDuration?.toString() }
         .take(1)
+    /** Tells if the swipe duration value is valid or not. */
+    val swipeDurationError: Flow<Boolean> = configuredSwipe.map { (it?.swipeDuration ?: -1) <= 0 }
+
     /** The start and end positions of the swipe. */
     val positions: Flow<Pair<Point, Point>?> = configuredSwipe
         .filterNotNull()

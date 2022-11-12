@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.overlays.config.action.pause
 
 import android.content.Context
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +34,7 @@ import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -92,7 +92,9 @@ class PauseDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
+                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { viewModel.pauseDuration.collect(::updatePauseDuration) }
+                launch { viewModel.pauseDurationError.collect(viewBinding.editPauseDurationLayout::setError)}
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }

@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -97,6 +98,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.scenarioName.collect(::updateScenarioName) }
+                launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameInputLayout::setError) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
                 launch { viewModel.endConditionOperator.collect(::updateEndConditionOperator) }
                 launch { viewModel.endConditions.collect(::updateEndConditions) }
