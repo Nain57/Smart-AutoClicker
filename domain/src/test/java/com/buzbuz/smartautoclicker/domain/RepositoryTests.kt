@@ -203,7 +203,7 @@ class RepositoryTests {
 
     @Test
     fun getCompleteEventList() = runTest {
-        mockWhen(mockEventDao.getCompleteEvents(TestsData.SCENARIO_ID)).thenReturn(
+        mockWhen(mockEventDao.getCompleteEventsFlow(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(listOf(
                     CompleteEventEntity(
@@ -225,7 +225,7 @@ class RepositoryTests {
                     conditions = mutableListOf(TestsData.getNewCondition(eventId = TestsData.EVENT_ID))
                 ),
             ),
-            repository.getCompleteEventList(TestsData.SCENARIO_ID).first(),
+            repository.getCompleteEventListFlow(TestsData.SCENARIO_ID).first(),
         )
     }
 

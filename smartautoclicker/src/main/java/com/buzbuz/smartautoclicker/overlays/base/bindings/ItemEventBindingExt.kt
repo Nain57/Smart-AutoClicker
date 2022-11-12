@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.domain.Event
  * Bind the [ItemEventBinding] to an event.
  *
  * @param event the event represented by this view binding.
+ *
  * @param canDrag true to show the drag handle, false to hide it.
  * @param itemClickedListener called when the user clicks on the item.
  */

@@ -132,6 +132,10 @@ abstract class NavBarDialogController(
         super.onDestroyed()
     }
 
+    protected fun setMissingInputBadge(navItemId: Int, haveMissingInput: Boolean) {
+        navBarView.getOrCreateBadge(navItemId).isVisible = haveMissingInput
+    }
+
     private fun setupPortraitViews() {
         dialogCoordinatorLayout?.apply {
             // Add the navigation bar.

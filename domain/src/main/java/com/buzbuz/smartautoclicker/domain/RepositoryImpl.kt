@@ -101,8 +101,11 @@ internal class RepositoryImpl internal constructor(
     override fun getEventList(scenarioId: Long): Flow<List<Event>> =
         eventDao.getEvents(scenarioId).mapList { it.toEvent() }
 
-    override fun getCompleteEventList(scenarioId: Long): Flow<List<Event>> =
-        eventDao.getCompleteEvents(scenarioId).mapList { it.toEvent() }
+    override suspend fun getCompleteEventList(scenarioId: Long): List<Event> =
+        eventDao.getCompleteEvents(scenarioId).map { it.toEvent() }
+
+    override fun getCompleteEventListFlow(scenarioId: Long): Flow<List<Event>> =
+        eventDao.getCompleteEventsFlow(scenarioId).mapList { it.toEvent() }
 
     override suspend fun getCompleteEvent(eventId: Long) = eventDao.getEvent(eventId).toEvent()
 

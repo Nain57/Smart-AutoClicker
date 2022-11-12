@@ -54,7 +54,7 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
     private val events = configuredEndCondition
         .filterNotNull()
         .flatMapLatest {
-            repository.getCompleteEventList(it.scenarioId)
+            repository.getCompleteEventListFlow(it.scenarioId)
         }
 
     /** The number of executions before triggering the end condition. */

@@ -103,7 +103,7 @@ class EventDaoTests {
         )
         database.eventDao().addCompleteEvent(completeEvent)
 
-        val databaseEvent = database.eventDao().getCompleteEvents(TestsData.SCENARIO_ID).first()[0]
+        val databaseEvent = database.eventDao().getCompleteEventsFlow(TestsData.SCENARIO_ID).first()[0]
         assertEquals(databaseEvent.event.id, databaseEvent.actions[0].action.eventId)
         assertEquals(databaseEvent.event.id, databaseEvent.conditions[0].eventId)
         assertEquals(databaseEvent.actions[0].action.id, databaseEvent.actions[0].intentExtras[0].actionId)

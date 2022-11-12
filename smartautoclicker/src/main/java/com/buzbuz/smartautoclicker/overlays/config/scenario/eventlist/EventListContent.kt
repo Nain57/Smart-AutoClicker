@@ -28,18 +28,18 @@ import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
-import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.config.event.copy.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialog
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 
 import kotlinx.coroutines.launch
 
-class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
+class EventListContent : NavBarDialogContent() {
 
     /** View model for this content. */
     private val viewModel: EventListViewModel by lazy {
@@ -61,7 +61,7 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setScenarioId(scenarioId)
+        viewModel.setScenario(dialogViewModel.configuredScenario)
 
         eventAdapter = EventListAdapter(
             itemClickedListener = ::showEventConfigDialog,
@@ -90,14 +90,14 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
     }
 
     override fun onCreateButtonClicked() {
-        showEventConfigDialog(viewModel.getNewEvent(context))
+        showEventConfigDialog(viewModel.getNewEventItem(context))
     }
 
     override fun onCopyButtonClicked() {
         showEventCopyDialog()
     }
 
-    private fun updateEventList(newItems: List<Event>?) {
+    private fun updateEventList(newItems: List<ConfiguredEvent>?) {
         viewBinding.updateState(newItems)
         eventAdapter.submitList(newItems)
     }
@@ -108,29 +108,31 @@ class EventListContent(private val scenarioId: Long) : NavBarDialogContent() {
         }
     }
 
-    /** Opens the dialog allowing the user to copy a click. */
+    /** Opens the dialog allowing the user to copy an event. */
     private fun showEventCopyDialog() {
         dialogViewModel.requestSubOverlay(
             NavigationRequest(
                 EventCopyDialog(
                     context = context,
-                    scenarioId = viewModel.scenarioId.value!!,
-                    events = viewModel.eventsItems.value ?: emptyList(),
-                    onEventSelected = ::showEventConfigDialog,
+                    scenarioId = dialogViewModel.configuredScenario.value!!.scenario.id,
+                    events = viewModel.getConfiguredEventList(),
+                    onEventSelected = { event ->
+                        showEventConfigDialog(viewModel.getNewEventItem(context, event))
+                    }
                 ),
             )
         )
     }
 
-    /** Opens the dialog allowing the user to add a new click. */
-    private fun showEventConfigDialog(event: Event) {
+    /** Opens the dialog allowing the user to add a new event. */
+    private fun showEventConfigDialog(item: ConfiguredEvent) {
         dialogViewModel.requestSubOverlay(
             NavigationRequest(
                 overlay = EventDialog(
                     context = context,
-                    event = event,
-                    onConfigComplete = viewModel::addOrUpdateEvent,
-                    onDelete = viewModel::deleteEvent,
+                    event = item.event,
+                    onConfigComplete = { viewModel.addOrUpdateEvent(item.copy(event = it)) },
+                    onDelete = { viewModel.deleteEvent(item) },
                 ),
                 hideCurrent = true
             )
