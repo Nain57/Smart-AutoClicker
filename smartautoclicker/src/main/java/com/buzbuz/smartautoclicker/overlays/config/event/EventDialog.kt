@@ -56,7 +56,7 @@ class EventDialog(
     override val navigationMenuId: Int = R.menu.menu_event_config
 
     override fun onCreateView(): ViewGroup {
-        viewModel.configuredEvent.value = event
+        viewModel.setConfiguredEvent(event)
 
         return super.onCreateView().also {
             topBarBinding.apply {
@@ -81,7 +81,8 @@ class EventDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isValidEvent.collect(::updateSaveButton) }
+                launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
+                launch { viewModel.eventCanBeSaved.collect(::updateSaveButton) }
                 launch { viewModel.subOverlayRequest.collect(::onNewSubOverlayRequest) }
             }
         }
@@ -97,6 +98,12 @@ class EventDialog(
         }
 
         destroy()
+    }
+
+    private fun updateContentsValidity(itemsValidity: Map<Int, Boolean>) {
+        itemsValidity.forEach { (itemId, isValid) ->
+            setMissingInputBadge(itemId, !isValid)
+        }
     }
 
     private fun updateSaveButton(enabled: Boolean) {
