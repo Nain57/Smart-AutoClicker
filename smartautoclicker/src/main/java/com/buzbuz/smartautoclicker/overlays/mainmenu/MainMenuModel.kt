@@ -20,23 +20,24 @@ import android.app.Application
 import android.content.SharedPreferences
 
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.DetectorState
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
-
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 
 /**
  * View model for the [MainMenu].
  * @param application the Android application.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class MainMenuModel(application: Application) : AndroidViewModel(application) {
 
     /** Debug configuration shared preferences. */
@@ -44,13 +45,30 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     /** The detector engine. */
     private var detectorEngine: DetectorEngine = DetectorEngine.getDetectorEngine(application)
     /** The repository for the scenarios. */
-    private var repository: Repository? = Repository.getRepository(application)
+    private var repository: Repository = Repository.getRepository(application)
     /** The current of the detection. */
     val detectionState: Flow<UiState> = detectorEngine.state
         .map { if (it == DetectorState.DETECTING) UiState.Detecting else UiState.Idle }
         .distinctUntilChanged()
+    /** The current scenario identifier. */
+    private val scenarioId = MutableStateFlow<Long?>(null)
+    val scenario : StateFlow<Scenario?> = scenarioId
+        .flatMapLatest { scenarioId ->
+            scenarioId ?: return@flatMapLatest emptyFlow()
+            repository.getScenario(scenarioId)
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            null,
+        )
     /** The current list of event in the detector engine. */
     val eventList: Flow<List<Event>?> = detectorEngine.scenarioEvents
+
+    /** Set the current scenario. */
+    fun setScenario(id: Long) {
+        scenarioId.value = id
+    }
 
     /** Start/Stop the detection. */
     fun toggleDetection() {
@@ -68,8 +86,7 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
 
     override fun onCleared() {
         super.onCleared()
-        repository?.cleanCache()
-        repository = null
+        repository.cleanCache()
     }
 }
 

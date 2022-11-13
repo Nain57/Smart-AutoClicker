@@ -19,12 +19,12 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario.config
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
-import com.buzbuz.smartautoclicker.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.domain.EndCondition
-import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.*
+import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
 
 import kotlinx.coroutines.flow.combine
@@ -60,9 +60,22 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     val detectionQuality: Flow<Int?> by lazy {
         configuredScenario.map { it?.scenario?.detectionQuality }
     }
+
+    private val conditionAndItem = DropdownItem(R.string.dialog_button_condition_and)
+    private val conditionOrItem = DropdownItem(R.string.dialog_button_condition_or)
+    val endConditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
+
     /** The operator applied to the end conditions. */
-    val endConditionOperator: Flow<Int?> by lazy {
-        configuredScenario.map { it?.scenario?.endConditionOperator }
+    val endConditionOperator: Flow<DropdownItem> by lazy {
+        configuredScenario
+            .map {
+                when (it?.scenario?.endConditionOperator) {
+                    AND -> conditionAndItem
+                    OR -> conditionOrItem
+                    else -> null
+                }
+            }
+            .filterNotNull()
     }
 
     /** Events available for a new end condition. */
@@ -133,8 +146,14 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     }
 
     /** Toggle the end condition operator between AND and OR. */
-    fun setConditionOperator(@ConditionOperator operator: Int) {
+    fun setConditionOperator(operatorItem: DropdownItem) {
         configuredScenario.value?.let { conf ->
+            val operator = when (operatorItem) {
+                conditionAndItem -> AND
+                conditionOrItem -> OR
+                else -> return
+            }
+
             configuredScenario.value = conf.scenario.copy(endConditionOperator = operator).toScenarioConfig(conf)
         }
     }
