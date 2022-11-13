@@ -46,7 +46,9 @@ fun IncludeInputFieldDropdownBinding.setSelectedItem(item: DropdownItem) {
     textField.setText(textField.resources.getString(item.title), false)
 }
 
-class DropdownAdapter(
+data class DropdownItem(@StringRes val title: Int)
+
+private class DropdownAdapter(
     private val items: List<DropdownItem>,
     private val onItemSelected: (DropdownItem) -> Unit,
 ) : Filterable, BaseAdapter() {
@@ -77,5 +79,3 @@ class DropdownAdapter(
     }
     override fun getFilter(): Filter = filter
 }
-
-data class DropdownItem(@StringRes val title: Int)

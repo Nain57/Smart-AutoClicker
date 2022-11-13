@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.action.intent
 
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,12 +24,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.databinding.ContentIntentConfigSimpleBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.activities.ActivitySelectionDialog
 
 import kotlinx.coroutines.launch
@@ -50,9 +52,10 @@ class SimpleIntentContent : NavBarDialogContent() {
             selectApplicationButton.setOnClickListener { showApplicationSelectionDialog() }
             selectedApplicationLayout.root.setOnClickListener { showApplicationSelectionDialog() }
 
-            editNameText.addTextChangedListener(OnAfterTextChangedListener {
-                dialogViewModel.setName(it.toString())
-            })
+            editNameLayout.apply {
+                setLabel(R.string.dialog_event_config_name_title)
+                setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
+            }
         }
 
         return viewBinding.root
@@ -69,7 +72,7 @@ class SimpleIntentContent : NavBarDialogContent() {
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameText.setText(newName)
+        viewBinding.editNameLayout.setText(newName)
     }
 
     private fun updateActivityInfo(activityInfo: ActivityDisplayInfo?) {

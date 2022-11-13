@@ -33,8 +33,10 @@ import com.buzbuz.smartautoclicker.databinding.DialogConfigActionPauseBinding
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -73,15 +75,17 @@ class PauseDialog(
                 }
             }
 
-            editNameText.addTextChangedListener(OnAfterTextChangedListener {
-                viewModel.setName(it.toString())
-            })
+            editNameLayout.apply {
+                setLabel(R.string.dialog_event_config_name_title)
+                setOnTextChangedListener { viewModel.setName(it.toString()) }
+            }
 
-            editPauseDurationText.apply {
-                filters = arrayOf(DurationInputFilter())
-                addTextChangedListener(OnAfterTextChangedListener {
+            editPauseDurationLayout.apply {
+                textField.filters = arrayOf(DurationInputFilter())
+                setLabel(R.string.dialog_pause_config_label_duration)
+                setOnTextChangedListener {
                     viewModel.setPauseDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
-                })
+                }
             }
         }
 
@@ -112,11 +116,11 @@ class PauseDialog(
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameText.setText(newName)
+        viewBinding.editNameLayout.setText(newName)
     }
 
     private fun updatePauseDuration(newDuration: String?) {
-        viewBinding.editPauseDurationText.setText(newDuration)
+        viewBinding.editPauseDurationLayout.setText(newDuration)
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {

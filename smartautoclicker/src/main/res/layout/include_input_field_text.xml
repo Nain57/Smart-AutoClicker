@@ -17,18 +17,18 @@
 -->
 <com.google.android.material.textfield.TextInputLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_input"
-    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:endIconMode="clear_text"
     tools:hint="Label">
 
-    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/text_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="none"
-        tools:text="Option"/>
+        tools:text="Value"/>
 
 </com.google.android.material.textfield.TextInputLayout>
