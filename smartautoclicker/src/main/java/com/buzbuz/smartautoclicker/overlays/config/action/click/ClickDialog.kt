@@ -37,8 +37,10 @@ import com.buzbuz.smartautoclicker.overlays.config.action.CoordinatesSelector
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -77,15 +79,17 @@ class ClickDialog(
                 }
             }
 
-            editNameText.addTextChangedListener(OnAfterTextChangedListener {
-                viewModel.setName(it.toString())
-            })
+            editNameLayout.apply {
+                setLabel(R.string.dialog_event_config_name_title)
+                setOnTextChangedListener { viewModel.setName(it.toString()) }
+            }
 
-            editPressDurationText.apply {
-                filters = arrayOf(DurationInputFilter())
-                addTextChangedListener(OnAfterTextChangedListener {
+            editPressDurationLayout.apply {
+                textField.filters = arrayOf(DurationInputFilter())
+                setLabel(R.string.dialog_click_config_label_press_duration)
+                setOnTextChangedListener {
                     viewModel.setPressDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
-                })
+                }
             }
 
             clickOnButtonGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
@@ -125,11 +129,11 @@ class ClickDialog(
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameText.setText(newName)
+        viewBinding.editNameLayout.setText(newName)
     }
 
     private fun updateClickDuration(newDuration: String?) {
-        viewBinding.editPressDurationText.setText(newDuration)
+        viewBinding.editPressDurationLayout.setText(newDuration)
     }
 
     private fun updateClickType(clickOnCondition: Boolean) {

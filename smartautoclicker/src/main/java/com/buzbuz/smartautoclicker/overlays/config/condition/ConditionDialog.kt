@@ -33,9 +33,15 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.domain.*
-import com.buzbuz.smartautoclicker.overlays.base.bindings.*
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
+import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -81,10 +87,9 @@ class ConditionDialog(
                 }
             }
 
-            editNameText.apply {
-                addTextChangedListener(OnAfterTextChangedListener {
-                    viewModel.setName(it.toString())
-                })
+            editNameLayout.apply {
+                setLabel(R.string.dialog_event_config_name_title)
+                setOnTextChangedListener { viewModel.setName(it.toString()) }
             }
 
             conditionShouldAppearButton.apply {
@@ -132,7 +137,7 @@ class ConditionDialog(
     }
 
     private fun updateConditionName(newName: String?) {
-        viewBinding.editNameText.setText(newName)
+        viewBinding.editNameLayout.setText(newName)
     }
 
     private fun updateConditionBitmap(newBitmap: Bitmap?) {

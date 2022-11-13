@@ -29,23 +29,13 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginVertical="@dimen/margin_horizontal_default">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <include layout="@layout/include_input_field_text"
             android:id="@+id/event_name_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:endIconMode="clear_text"
-            android:hint="@string/dialog_event_config_name_title">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/event_name_input_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="My cool event name"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/end_conditions_card"

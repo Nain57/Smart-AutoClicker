@@ -29,24 +29,14 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginVertical="@dimen/margin_horizontal_default">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/scenario_name_input_layout"
+        <include layout="@layout/include_input_field_text"
+            android:id="@+id/scenario_name_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/detection_quality_card"
-            app:endIconMode="clear_text"
-            android:hint="@string/dialog_label_scenario_name">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/scenario_name_input_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="My cool scenario name"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintBottom_toTopOf="@id/detection_quality_card"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/detection_quality_card"
@@ -55,7 +45,7 @@
             android:layout_marginTop="@dimen/margin_vertical_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scenario_name_input_layout"
+            app:layout_constraintTop_toBottomOf="@id/scenario_name_field"
             app:layout_constraintBottom_toTopOf="@id/end_conditions_card">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -152,13 +142,13 @@
                     android:id="@+id/end_conditions_title"
                     style="@style/AppTheme.TextAppearance.Header"
                     android:text="@string/dialog_scenario_settings_end_condition_title"
-                    app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_button"
+                    app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_field"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <include layout="@layout/include_input_field_dropdown"
-                    android:id="@+id/end_conditions_operator_button"
+                    android:id="@+id/end_conditions_operator_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
@@ -173,7 +163,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/end_conditions_operator_button">
+                    app:layout_constraintTop_toBottomOf="@id/end_conditions_operator_field">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/end_conditions_list"

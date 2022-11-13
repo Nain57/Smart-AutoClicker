@@ -37,21 +37,11 @@
             android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <include layout="@layout/include_input_field_text"
                 android:id="@+id/edit_key_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_horizontal_default"
-                android:hint="@string/dialog_action_config_intent_advanced_extras_config_key"
-                app:endIconMode="clear_text">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_key_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="com.toto.app.EXTRA_TOTO" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginVertical="@dimen/margin_horizontal_default"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

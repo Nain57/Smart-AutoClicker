@@ -32,11 +32,9 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionIntentExtraBinding
 import com.buzbuz.smartautoclicker.overlays.base.dialog.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
@@ -87,9 +85,10 @@ class ExtraConfigDialog(
                 }
             }
 
-            editKeyText.addTextChangedListener(OnAfterTextChangedListener {
-                viewModel.setKey(it.toString())
-            })
+            editKeyLayout.apply {
+                setLabel(R.string.dialog_action_config_intent_advanced_extras_config_key)
+                setOnTextChangedListener { viewModel.setKey(it.toString()) }
+            }
 
             buttonSelectType.setOnClickListener { showExtraTypeSelectionDialog() }
             textValueType.setOnClickListener { showExtraTypeSelectionDialog() }
@@ -131,7 +130,7 @@ class ExtraConfigDialog(
     }
 
     private fun updateExtraKey(newKey: String?) {
-        viewBinding.editKeyText.setText(newKey)
+        viewBinding.editKeyLayout.setText(newKey)
     }
 
     /**

@@ -27,17 +27,12 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
-import com.buzbuz.smartautoclicker.domain.AND
-import com.buzbuz.smartautoclicker.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.domain.EndCondition
-import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -60,10 +55,9 @@ class ScenarioConfigContent : NavBarDialogContent() {
         viewModel.setScenario(dialogViewModel.configuredScenario)
 
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            scenarioNameInputEditText.apply {
-                addTextChangedListener(OnAfterTextChangedListener {
-                    viewModel.setScenarioName(it.toString())
-                })
+            scenarioNameField.apply {
+                setLabel(R.string.dialog_label_scenario_name)
+                setOnTextChangedListener { viewModel.setScenarioName(it.toString()) }
             }
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
@@ -72,7 +66,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
                 if (fromUser) viewModel.setDetectionQuality(value.roundToInt())
             }
 
-            endConditionsOperatorButton.apply {
+            endConditionsOperatorField.apply {
                 setItems(
                     label = context.getString(R.string.dialog_header_condition_operator),
                     items = viewModel.endConditionOperatorsItems,
@@ -96,7 +90,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.scenarioName.collect(::updateScenarioName) }
-                launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameInputLayout::setError) }
+                launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameField::setError) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
                 launch { viewModel.endConditionOperator.collect(::updateEndConditionOperator) }
                 launch { viewModel.endConditions.collect(::updateEndConditions) }
@@ -105,7 +99,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
     }
 
     private fun updateScenarioName(name: String?) {
-        viewBinding.scenarioNameInputEditText.setText(name)
+        viewBinding.scenarioNameField.setText(name)
     }
 
     private fun updateQuality(quality: Int?) {
@@ -125,7 +119,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
     }
 
     private fun updateEndConditionOperator(operatorItem: DropdownItem) {
-        viewBinding.endConditionsOperatorButton.setSelectedItem(operatorItem)
+        viewBinding.endConditionsOperatorField.setSelectedItem(operatorItem)
     }
 
     private fun updateEndConditions(endConditions: List<EndConditionListItem>) {

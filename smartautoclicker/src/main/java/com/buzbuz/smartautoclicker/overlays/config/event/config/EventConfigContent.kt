@@ -30,12 +30,14 @@ import com.buzbuz.smartautoclicker.domain.AND
 import com.buzbuz.smartautoclicker.domain.ConditionOperator
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
-import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 
 import kotlinx.coroutines.launch
 
@@ -57,10 +59,9 @@ class EventConfigContent : NavBarDialogContent() {
         viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
 
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            eventNameInputEditText.apply {
-                addTextChangedListener(OnAfterTextChangedListener {
-                    viewModel.setEventName(it.toString())
-                })
+            eventNameInputLayout.apply {
+                setLabel(R.string.dialog_event_config_name_title)
+                setOnTextChangedListener { viewModel.setEventName(it.toString()) }
             }
 
             conditionsOperatorButton.apply {
@@ -88,7 +89,7 @@ class EventConfigContent : NavBarDialogContent() {
     }
 
     private fun updateEventName(name: String?) {
-        viewBinding.eventNameInputEditText.setText(name)
+        viewBinding.eventNameInputLayout.setText(name)
     }
 
     private fun updateConditionOperator(@ConditionOperator operator: Int?) {
