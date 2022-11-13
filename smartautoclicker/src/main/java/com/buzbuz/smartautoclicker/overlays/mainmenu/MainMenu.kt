@@ -92,6 +92,8 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     override fun onCreate() {
         super.onCreate()
 
+        viewModel.setScenario(scenario.id)
+
         // Ensure the debug view state is correct
         viewBinding.layoutDebug.visibility = View.GONE
         setOverlayViewVisibility(View.GONE)
@@ -110,7 +112,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         when (viewId) {
             R.id.btn_play -> viewModel.toggleDetection()
             R.id.btn_click_list -> {
-                showSubOverlay(ScenarioDialog(context, scenario), true)
+                viewModel.scenario.value?.let { showSubOverlay(ScenarioDialog(context, it), true) }
             }
             R.id.btn_stop -> destroy()
         }

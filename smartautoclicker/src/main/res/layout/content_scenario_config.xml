@@ -157,7 +157,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <include layout="@layout/include_toggle_button"
+                <include layout="@layout/include_input_field_dropdown"
                     android:id="@+id/end_conditions_operator_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

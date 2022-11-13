@@ -33,12 +33,10 @@ import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
-import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import kotlinx.coroutines.launch
@@ -75,13 +73,13 @@ class ScenarioConfigContent : NavBarDialogContent() {
             }
 
             endConditionsOperatorButton.apply {
-                setButtonsText(R.string.dialog_button_condition_and, R.string.dialog_button_condition_or)
-                addOnCheckedListener { checkedId ->
-                    when (checkedId) {
-                        R.id.left_button -> viewModel.setConditionOperator(AND)
-                        R.id.right_button -> viewModel.setConditionOperator(OR)
+                setItems(
+                    label = context.getString(R.string.dialog_header_condition_operator),
+                    items = viewModel.endConditionOperatorsItems,
+                    onItemSelected = { clickedItem ->
+                        viewModel.setConditionOperator(clickedItem)
                     }
-                }
+                )
             }
 
             endConditionAdapter = EndConditionAdapter(
@@ -126,13 +124,8 @@ class ScenarioConfigContent : NavBarDialogContent() {
         }
     }
 
-    private fun updateEndConditionOperator(@ConditionOperator operator: Int?) {
-        viewBinding.endConditionsOperatorButton.apply {
-            when (operator) {
-                AND -> setChecked(R.id.left_button, R.string.condition_operator_and_desc)
-                OR -> setChecked(R.id.right_button, R.string.condition_operator_or_desc)
-            }
-        }
+    private fun updateEndConditionOperator(operatorItem: DropdownItem) {
+        viewBinding.endConditionsOperatorButton.setSelectedItem(operatorItem)
     }
 
     private fun updateEndConditions(endConditions: List<EndConditionListItem>) {
