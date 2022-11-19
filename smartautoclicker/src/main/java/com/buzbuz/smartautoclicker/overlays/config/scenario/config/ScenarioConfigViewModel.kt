@@ -61,8 +61,14 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
         configuredScenario.map { it?.scenario?.detectionQuality }
     }
 
-    private val conditionAndItem = DropdownItem(R.string.dialog_button_condition_and)
-    private val conditionOrItem = DropdownItem(R.string.dialog_button_condition_or)
+    private val conditionAndItem = DropdownItem(
+        title = R.string.dropdown_item_title_condition_and,
+        helperText = R.string.dropdown_helper_text_end_condition_and,
+    )
+    private val conditionOrItem = DropdownItem(
+        title= R.string.dropdown_item_title_condition_or,
+        helperText = R.string.dropdown_helper_text_end_condition_or,
+    )
     val endConditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
 
     /** The operator applied to the end conditions. */

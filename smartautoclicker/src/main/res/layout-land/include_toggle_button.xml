@@ -36,14 +36,14 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/dialog_button_condition_and" />
+            tools:text="@string/dropdown_item_title_condition_and" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/right_button"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/dialog_button_condition_or" />
+            tools:text="@string/dropdown_item_title_condition_or" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

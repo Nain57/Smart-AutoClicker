@@ -150,7 +150,7 @@
                 <include layout="@layout/include_input_field_dropdown"
                     android:id="@+id/end_conditions_operator_field"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dropdown_two_lines_helper_text_height"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/end_conditions_title"/>

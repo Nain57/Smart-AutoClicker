@@ -236,13 +236,15 @@
     <string name="dialog_copy_empty">Nothing to copy</string>
 
     <string name="dialog_buttons_copy">Copy</string>
-    <string name="dialog_button_condition_or">One</string>
-    <string name="dialog_button_condition_and">All</string>
     <string name="dialog_button_detection_type_exact">Exact</string>
     <string name="dialog_button_detection_type_screen">Screen</string>
     <string name="dialog_button_should_be_detected">Present</string>
     <string name="dialog_button_should_not_be_detected">Absent</string>
 
+    <string name="dropdown_item_title_condition_or">One</string>
+    <string name="dropdown_item_title_condition_and">All</string>
+    <string name="dropdown_helper_text_end_condition_or">Only one condition must be fulfilled to stop the scenario</string>
+    <string name="dropdown_helper_text_end_condition_and">All conditions must be fulfilled to stop the scenario</string>
 
     <string name="dialog_header_condition_operator">Conditions detection</string>
 

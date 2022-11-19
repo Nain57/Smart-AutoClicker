@@ -19,10 +19,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_input"
-    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:hint="Label">
+    tools:helperText="Very long helper in order to take two lines just to check how it renders">
 
     <com.google.android.material.textfield.MaterialAutoCompleteTextView
         android:id="@+id/text_field"

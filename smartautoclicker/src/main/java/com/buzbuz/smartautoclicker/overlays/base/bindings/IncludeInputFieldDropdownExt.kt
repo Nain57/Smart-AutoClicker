@@ -33,7 +33,26 @@ fun IncludeInputFieldDropdownBinding.setItems(
     items: List<DropdownItem>,
     onItemSelected: (DropdownItem) -> Unit
 ) {
-    layoutInput.hint = label
+    layoutInput.apply {
+        isHintEnabled = true
+        hint = label
+    }
+    textField.setAdapter(
+        DropdownAdapter(items) { selectedItem ->
+            textField.dismissDropDown()
+            onItemSelected(selectedItem)
+        }
+    )
+}
+
+fun IncludeInputFieldDropdownBinding.setItems(
+    items: List<DropdownItem>,
+    onItemSelected: (DropdownItem) -> Unit
+) {
+    layoutInput.apply {
+        isHintEnabled = false
+        hint = null
+    }
     textField.setAdapter(
         DropdownAdapter(items) { selectedItem ->
             textField.dismissDropDown()
@@ -44,9 +63,10 @@ fun IncludeInputFieldDropdownBinding.setItems(
 
 fun IncludeInputFieldDropdownBinding.setSelectedItem(item: DropdownItem) {
     textField.setText(textField.resources.getString(item.title), false)
+    layoutInput.helperText = layoutInput.resources.getString(item.helperText)
 }
 
-data class DropdownItem(@StringRes val title: Int)
+data class DropdownItem(@StringRes val title: Int, @StringRes val helperText: Int)
 
 private class DropdownAdapter(
     private val items: List<DropdownItem>,
