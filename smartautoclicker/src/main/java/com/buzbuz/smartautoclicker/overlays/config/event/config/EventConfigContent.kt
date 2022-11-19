@@ -65,7 +65,7 @@ class EventConfigContent : NavBarDialogContent() {
             }
 
             conditionsOperatorButton.apply {
-                setButtonsText(R.string.dialog_button_condition_and, R.string.dialog_button_condition_or)
+                setButtonsText(R.string.dropdown_item_title_condition_and, R.string.dropdown_item_title_condition_or)
                 addOnCheckedListener { checkedId ->
                     when (checkedId) {
                         R.id.left_button -> viewModel.setConditionOperator(AND)

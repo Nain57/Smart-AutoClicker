@@ -68,11 +68,8 @@ class ScenarioConfigContent : NavBarDialogContent() {
 
             endConditionsOperatorField.apply {
                 setItems(
-                    label = context.getString(R.string.dialog_header_condition_operator),
                     items = viewModel.endConditionOperatorsItems,
-                    onItemSelected = { clickedItem ->
-                        viewModel.setConditionOperator(clickedItem)
-                    }
+                    onItemSelected = viewModel::setConditionOperator
                 )
             }
 
