@@ -40,7 +40,7 @@
             <include layout="@layout/include_input_field_text"
                 android:id="@+id/edit_key_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dropdown_one_line_helper_text_height"
                 android:layout_marginVertical="@dimen/margin_horizontal_default"/>
 
             <com.google.android.material.card.MaterialCardView

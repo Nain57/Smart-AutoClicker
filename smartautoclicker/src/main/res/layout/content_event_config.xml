@@ -31,7 +31,7 @@
         <include layout="@layout/include_input_field_text"
             android:id="@+id/event_name_input_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/dropdown_one_line_helper_text_height"/>
 
         <include layout="@layout/include_input_field_dropdown"
             android:id="@+id/conditions_operator_field"
