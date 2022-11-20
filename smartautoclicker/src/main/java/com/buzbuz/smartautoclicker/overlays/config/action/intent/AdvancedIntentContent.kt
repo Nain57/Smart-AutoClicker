@@ -27,14 +27,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentIntentConfigAdvancedBinding
 import com.buzbuz.smartautoclicker.domain.IntentExtra
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.extras.ExtraConfigDialog
 
 import kotlinx.coroutines.launch
@@ -63,15 +57,11 @@ class AdvancedIntentContent : NavBarDialogContent() {
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
             }
 
-            intentSendingTypeButton.apply {
-                setButtonsText(
-                    left = R.string.dialog_button_intent_start_activity,
-                    right = R.string.dialog_button_intent_send_broadcast,
-                )
-                addOnCheckedListener { checkedId ->
-                    dialogViewModel.setIsBroadcast(checkedId == R.id.right_button)
-                }
-            }
+            intentSendingTypeField.setItems(
+                label = context.getString(R.string.dropdown_label_intent_sending_type),
+                items = dialogViewModel.sendingTypeItems,
+                onItemSelected = dialogViewModel::setSendingType,
+            )
 
             editActionLayout.apply {
                 setLabel(R.string.dialog_action_config_intent_advanced_action_title)
@@ -119,20 +109,8 @@ class AdvancedIntentContent : NavBarDialogContent() {
         viewBinding.editNameLayout.setText(newName)
     }
 
-    private fun updateIsBroadcast(isBroadcast: Boolean) {
-        viewBinding.apply {
-            if (isBroadcast) {
-                intentSendingTypeButton.setChecked(
-                    R.id.right_button,
-                    R.string.dialog_action_config_intent_advanced_send_type_broadcast,
-                )
-            } else {
-                intentSendingTypeButton.setChecked(
-                    R.id.left_button,
-                    R.string.dialog_action_config_intent_advanced_send_type_start_app,
-                )
-            }
-        }
+    private fun updateIsBroadcast(item: DropdownItem) {
+        viewBinding.intentSendingTypeField.setSelectedItem(item)
     }
 
     private fun updateIntentAction(action: String?) {

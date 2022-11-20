@@ -35,34 +35,11 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_horizontal_default"/>
 
-        <com.google.android.material.card.MaterialCardView
+        <include layout="@layout/include_input_field_dropdown"
+            android:id="@+id/intent_sending_type_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_vertical_large"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/AppTheme.TextAppearance.Header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_action_config_intent_advanced_send_type_title"
-                    android:labelFor="@+id/edit_name"/>
-
-                <include layout="@layout/include_toggle_button"
-                    android:id="@+id/intent_sending_type_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_vertical_large"
-                    android:layout_marginBottom="@dimen/margin_vertical_large"/>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
         <include layout="@layout/include_input_field_text"
             android:id="@+id/edit_action_layout"
