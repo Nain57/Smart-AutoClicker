@@ -28,6 +28,7 @@
 
     <dimen name="margin_horizontal_large">24dp</dimen>
     <dimen name="margin_horizontal_default">16dp</dimen>
+    <dimen name="margin_horizontal_intermediate">12dp</dimen>
     <dimen name="margin_horizontal_small">8dp</dimen>
     <dimen name="margin_horizontal_mini">4dp</dimen>
     <dimen name="margin_vertical_large">12dp</dimen>
@@ -76,4 +77,5 @@
     <dimen name="dialog_create_copy_buttons_bottom_margin">96dp</dimen>
 
     <dimen name="dropdown_two_lines_helper_text_height">96dp</dimen>
+    <dimen name="dropdown_item_icon_size">24dp</dimen>
 </resources>

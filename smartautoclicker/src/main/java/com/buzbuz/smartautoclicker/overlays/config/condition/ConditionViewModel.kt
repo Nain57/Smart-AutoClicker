@@ -21,7 +21,9 @@ import android.graphics.Bitmap
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.*
+import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -30,17 +32,60 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
 
     /** Repository providing access to the database. */
     private val repository = Repository.getRepository(application)
-
     /** The condition being configured by the user. Defined using [setConfigCondition]. */
     private val configuredCondition = MutableStateFlow<Condition?>(null)
+
     /** The type of detection currently selected by the user. */
     val name: Flow<String?> = configuredCondition.map { it?.name }.take(1)
     /** Tells if the condition name is valid or not. */
     val nameError: Flow<Boolean> = configuredCondition.map { it?.name?.isEmpty() ?: true }
+
+    private val shouldBeDetectedItem = DropdownItem(
+        title = R.string.dropdown_item_title_condition_visibility_present,
+        helperText = R.string.dropdown_helper_text_condition_visibility_present,
+        icon = R.drawable.ic_confirm,
+    )
+    private val shouldNotBeDetectedItem = DropdownItem(
+        title= R.string.dropdown_item_title_condition_visibility_absent,
+        helperText = R.string.dropdown_helper_text_condition_visibility_absent,
+        icon = R.drawable.ic_cancel,
+    )
+    /**  Should be detected choices for the dropdown field. */
+    val shouldBeDetectedItems = listOf(shouldBeDetectedItem, shouldNotBeDetectedItem)
     /** Tells if the condition should be present or not on the screen. */
-    val shouldBeDetected: Flow<Boolean> = configuredCondition.mapNotNull { it?.shouldBeDetected }
+    val shouldBeDetected: Flow<DropdownItem> = configuredCondition
+        .mapNotNull { condition ->
+            when (condition?.shouldBeDetected) {
+                true -> shouldBeDetectedItem
+                false -> shouldNotBeDetectedItem
+                null -> null
+            }
+        }
+        .filterNotNull()
+
+    private val detectionTypeExact = DropdownItem(
+        title = R.string.dropdown_item_title_detection_type_exact,
+        helperText = R.string.dropdown_helper_text_detection_type_exact,
+        icon = R.drawable.ic_detect_exact,
+    )
+    private val detectionTypeScreen = DropdownItem(
+        title= R.string.dropdown_item_title_detection_type_screen,
+        helperText = R.string.dropdown_helper_text_detection_type_screen,
+        icon = R.drawable.ic_detect_whole_screen,
+    )
+    /** Detection types choices for the dropdown field. */
+    val detectionTypeItems = listOf(detectionTypeExact, detectionTypeScreen)
     /** The type of detection currently selected by the user. */
-    val detectionType: Flow<Int> = configuredCondition.mapNotNull { it?.detectionType }
+    val detectionType: Flow<DropdownItem> = configuredCondition
+        .map { condition ->
+            when (condition?.detectionType) {
+                EXACT -> detectionTypeExact
+                WHOLE_SCREEN -> detectionTypeScreen
+                else -> null
+            }
+        }
+        .filterNotNull()
+
     /** The condition threshold value currently edited by the user. */
     val threshold: Flow<Int> = configuredCondition.mapNotNull { it?.threshold }
     /** The bitmap for the configured condition. */
@@ -83,17 +128,29 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
         } ?: throw IllegalStateException("Can't set condition name, condition is null!")
     }
 
-    /** Toggle between true and false for the shouldBeDetected value of the condition. */
-    fun setShouldBeDetected(newShouldBeDetected: Boolean) {
+    /** Set the shouldBeDetected value of the condition. */
+    fun setShouldBeDetected(newShouldBeDetected: DropdownItem) {
         configuredCondition.value?.let { condition ->
-            configuredCondition.value = condition.copy(shouldBeDetected = newShouldBeDetected)
+            val shouldBeDetected = when (newShouldBeDetected) {
+                shouldBeDetectedItem -> true
+                shouldNotBeDetectedItem -> false
+                else -> return
+            }
+
+            configuredCondition.value = condition.copy(shouldBeDetected = shouldBeDetected)
         } ?: throw IllegalStateException("Can't toggle condition should be detected, condition is null!")
     }
 
-    /** Toggle between exact and whole screen for the detection type. */
-    fun setDetectionType(@DetectionType newType: Int) {
+    /** Set the detection type. */
+    fun setDetectionType(newType: DropdownItem) {
         configuredCondition.value?.let { condition ->
-            configuredCondition.value = condition.copy(detectionType = newType)
+            val type = when (newType) {
+                detectionTypeExact -> EXACT
+                detectionTypeScreen -> WHOLE_SCREEN
+                else -> return
+            }
+
+            configuredCondition.value = condition.copy(detectionType = type)
         } ?: throw IllegalStateException("Can't toggle condition should be detected, condition is null!")
     }
 

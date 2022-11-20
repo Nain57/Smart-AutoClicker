@@ -82,36 +82,17 @@
                         android:contentDescription="@string/content_desc_image_condition"
                         tools:src="@drawable/ic_click"/>
 
-                    <com.google.android.material.divider.MaterialDivider
+                    <include layout="@layout/include_input_field_dropdown"
+                        android:id="@+id/condition_detection_type"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:dividerInsetEnd="@dimen/margin_horizontal_large"
-                        app:dividerInsetStart="@dimen/margin_horizontal_large"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        android:layout_height="@dimen/dropdown_two_lines_helper_text_height"
+                        android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
-                    <include layout="@layout/include_toggle_button"
-                        android:id="@+id/condition_detection_type_button"
+                    <include layout="@layout/include_input_field_dropdown"
+                        android:id="@+id/condition_should_appear"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_vertical_large"
-                        android:layout_marginBottom="@dimen/margin_vertical_large"/>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:dividerInsetEnd="@dimen/margin_horizontal_large"
-                        app:dividerInsetStart="@dimen/margin_horizontal_large"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <include layout="@layout/include_toggle_button"
-                        android:id="@+id/condition_should_appear_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_vertical_large"/>
+                        android:layout_height="@dimen/dropdown_two_lines_helper_text_height"
+                        android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
                 </LinearLayout>
 

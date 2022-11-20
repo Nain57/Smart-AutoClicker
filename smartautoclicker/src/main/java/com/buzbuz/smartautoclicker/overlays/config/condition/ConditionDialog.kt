@@ -33,15 +33,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.domain.*
-import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -92,27 +84,17 @@ class ConditionDialog(
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
             }
 
-            conditionShouldAppearButton.apply {
-                setButtonsText(
-                    R.string.dialog_button_should_be_detected,
-                    R.string.dialog_button_should_not_be_detected,
-                )
-                addOnCheckedListener { viewModel.setShouldBeDetected(it == R.id.left_button) }
-            }
+            conditionDetectionType.setItems(
+                label = context.getString(R.string.dropdown_label_condition_detection_type),
+                items = viewModel.detectionTypeItems,
+                onItemSelected = viewModel::setDetectionType,
+            )
 
-            conditionDetectionTypeButton.apply {
-                setButtonsText(
-                    R.string.dialog_button_detection_type_exact,
-                    R.string.dialog_button_detection_type_screen,
-                )
-                descriptionText.setLines(2)
-                addOnCheckedListener { checkedId ->
-                    when (checkedId) {
-                        R.id.left_button -> viewModel.setDetectionType(EXACT)
-                        R.id.right_button -> viewModel.setDetectionType(WHOLE_SCREEN)
-                    }
-                }
-            }
+            conditionShouldAppear.setItems(
+                label = context.getString(R.string.dropdown_label_condition_visibility),
+                items = viewModel.shouldBeDetectedItems,
+                onItemSelected = viewModel::setShouldBeDetected,
+            )
 
             seekbarDiffThreshold.addOnChangeListener {  _, value, fromUser ->
                 if (fromUser) viewModel.setThreshold(value.roundToInt())
@@ -152,33 +134,12 @@ class ConditionDialog(
         }
     }
 
-    private fun updateShouldBeDetected(newValue: Boolean) {
-        viewBinding.conditionShouldAppearButton.apply {
-            if (newValue) setChecked(R.id.left_button, R.string.dialog_desc_should_be_detected)
-            else setChecked(R.id.right_button, R.string.dialog_desc_should_not_be_detected)
-        }
+    private fun updateShouldBeDetected(newValue: DropdownItem) {
+        viewBinding.conditionShouldAppear.setSelectedItem(newValue)
     }
 
-    private fun updateConditionType(@DetectionType newType: Int) {
-        viewBinding.conditionDetectionTypeButton.apply {
-            when (newType) {
-                EXACT -> setChecked(
-                    R.id.left_button,
-                    context.getString(
-                        R.string.dialog_desc_detection_type_exact,
-                        condition.area.left,
-                        condition.area.top,
-                        condition.area.right,
-                        condition.area.bottom,
-                    )
-                )
-
-                WHOLE_SCREEN -> setChecked(
-                    R.id.right_button,
-                    R.string.dialog_desc_detection_type_screen,
-                )
-            }
-        }
+    private fun updateConditionType(newValue: DropdownItem) {
+        viewBinding.conditionDetectionType.setSelectedItem(newValue)
     }
 
     private fun updateThreshold(newThreshold: Int) {
