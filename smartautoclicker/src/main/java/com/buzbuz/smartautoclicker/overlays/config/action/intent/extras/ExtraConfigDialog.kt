@@ -32,8 +32,6 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionIntentExtraBinding
 import com.buzbuz.smartautoclicker.overlays.base.dialog.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -93,14 +91,11 @@ class ExtraConfigDialog(
             buttonSelectType.setOnClickListener { showExtraTypeSelectionDialog() }
             textValueType.setOnClickListener { showExtraTypeSelectionDialog() }
 
-            editValueText.addTextChangedListener(OnAfterTextChangedListener {
-                viewModel.setValue(it.toString())
-            })
-
-            booleanValueButtonGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
-                if (!isChecked) return@addOnButtonCheckedListener
-                viewModel.setBooleanValue(checkedId == R.id.left_button)
-            }
+            editValueField.setOnTextChangedListener { viewModel.setValue(it.toString()) }
+            editBooleanValueField.setItems(
+                items = viewModel.booleanItems,
+                onItemSelected = viewModel::setBooleanValue,
+            )
         }
 
         return viewBinding.root
@@ -113,7 +108,7 @@ class ExtraConfigDialog(
                 launch { viewModel.key.collect(::updateExtraKey) }
                 launch { viewModel.keyError.collect(viewBinding.editKeyLayout::setError) }
                 launch { viewModel.valueInputState.collect(::updateExtraValue) }
-                launch { viewModel.valueError.collect(viewBinding.editValueLayout::setError) }
+                launch { viewModel.valueError.collect(viewBinding.editValueField::setError) }
                 launch { viewModel.isExtraValid.collect(::updateSaveButton) }
             }
         }
@@ -171,25 +166,24 @@ class ExtraConfigDialog(
     }
 
     private fun toExtraTypeBooleanSelected(state: ExtraValueInputState.BooleanInputTypeSelected) {
-        viewBinding.apply {
-            editValueLayout.visibility = View.GONE
-            editValueText.clearInputClass()
-            booleanValueButtonGroup.apply {
-                visibility = View.VISIBLE
-                setChecked(
-                    if (state.value) R.id.true_button
-                    else R.id.false_button
-                )
-            }
+        viewBinding.editValueField.apply {
+            root.visibility = View.GONE
+            textField.clearInputClass()
+        }
+
+        viewBinding.editBooleanValueField.apply {
+            root.visibility = View.VISIBLE
+            setSelectedItem(state.value)
         }
     }
 
     private fun toExtraTypeTextInputSelected(state: ExtraValueInputState.TextInputTypeSelected) {
-        viewBinding.apply {
-            booleanValueButtonGroup.visibility = View.GONE
-            editValueLayout.visibility = View.VISIBLE
-            editValueText.setInputClass(state)
+        viewBinding.editValueField.apply {
+            root.visibility = View.VISIBLE
+            textField.setInputClass(state)
         }
+
+        viewBinding.editBooleanValueField.root.visibility = View.GONE
     }
 
     private fun updateSaveButton(isValidExtra: Boolean) {

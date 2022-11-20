@@ -32,15 +32,9 @@ import com.buzbuz.smartautoclicker.baseui.DurationInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.config.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.action.CoordinatesSelector
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -92,10 +86,11 @@ class ClickDialog(
                 }
             }
 
-            clickOnButtonGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
-                if (!isChecked) return@addOnButtonCheckedListener
-                viewModel.setClickOnCondition(checkedId == R.id.on_condition_button)
-            }
+            clickPositionField.setItems(
+                label = context.getString(R.string.dropdown_label_click_position_type),
+                items = viewModel.clickTypeItems,
+                onItemSelected = viewModel::setClickOnCondition,
+            )
 
             onPositionSelectButton.setOnClickListener { showPositionSelector() }
         }
@@ -136,16 +131,19 @@ class ClickDialog(
         viewBinding.editPressDurationLayout.setText(newDuration)
     }
 
-    private fun updateClickType(clickOnCondition: Boolean) {
+    private fun updateClickType(newType: DropdownItem) {
         viewBinding.apply {
-            if (clickOnCondition) {
-                clickOnButtonGroup.setChecked(onConditionButton.id)
-                onConditionDesc.visibility = View.VISIBLE
-                onPositionSelectButton.visibility = View.GONE
-            } else {
-                clickOnButtonGroup.setChecked(onPositionButton.id)
-                onConditionDesc.visibility = View.GONE
-                onPositionSelectButton.visibility = View.VISIBLE
+            clickPositionField.setSelectedItem(newType)
+
+            when (newType) {
+                viewModel.clickTypeItemOnCondition -> {
+                    onConditionDesc.visibility = View.VISIBLE
+                    onPositionSelectButton.visibility = View.GONE
+                }
+                viewModel.clickTypeItemOnPosition -> {
+                    onConditionDesc.visibility = View.GONE
+                    onPositionSelectButton.visibility = View.VISIBLE
+                }
             }
         }
     }

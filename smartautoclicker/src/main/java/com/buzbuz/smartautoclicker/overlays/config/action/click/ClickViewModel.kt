@@ -21,8 +21,10 @@ import android.content.SharedPreferences
 import android.graphics.Point
 
 import androidx.lifecycle.AndroidViewModel
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.isValidDuration
 import com.buzbuz.smartautoclicker.overlays.base.utils.putClickPressDurationConfig
@@ -64,12 +66,24 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
             else null
         }
 
+    val clickTypeItemOnCondition = DropdownItem(
+        title = R.string.dropdown_item_title_click_position_type_on_condition,
+    )
+    val clickTypeItemOnPosition = DropdownItem(
+        title= R.string.dropdown_item_title_click_position_type_on_position,
+    )
+    /** Items for the click type dropdown field. */
+    val clickTypeItems = listOf(clickTypeItemOnCondition, clickTypeItemOnPosition)
     /** If the click should be made on the detected condition. */
-    val clickOnCondition: Flow<Boolean> = configuredClick
-        .filterNotNull()
+    val clickOnCondition: Flow<DropdownItem> = configuredClick
         .map { click ->
-            click.clickOnCondition
+            when (click?.clickOnCondition) {
+                true -> clickTypeItemOnCondition
+                false -> clickTypeItemOnPosition
+                null -> null
+            }
         }
+        .filterNotNull()
 
     /** Tells if the configured click is valid and can be saved. */
     val isValidAction: Flow<Boolean> = configuredClick
@@ -103,13 +117,15 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /**
-     * Set if this click should be made on the detected condition.
-     * @param enabled true to click on the detected condition, false to let the user pick its own location.
-     */
-    fun setClickOnCondition(enabled: Boolean) {
+    /** Set if this click should be made on the detected condition. */
+    fun setClickOnCondition(newItem: DropdownItem) {
         configuredClick.value?.let { click ->
-            configuredClick.value = click.copy(clickOnCondition = enabled)
+            val clickOnCondition = when (newItem) {
+                clickTypeItemOnCondition -> true
+                clickTypeItemOnPosition -> false
+                else -> return
+            }
+            configuredClick.value = click.copy(clickOnCondition = clickOnCondition)
         }
     }
 

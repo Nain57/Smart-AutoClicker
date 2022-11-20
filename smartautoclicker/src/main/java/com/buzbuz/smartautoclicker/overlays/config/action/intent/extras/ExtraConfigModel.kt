@@ -23,9 +23,11 @@ import android.text.InputType
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.baseui.NumberInputFilter
 import com.buzbuz.smartautoclicker.domain.IntentExtra
+import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDisplayNameRes
 
@@ -56,7 +58,7 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
                 null -> ExtraValueInputState.NoTypeSelected
                 is Boolean -> ExtraValueInputState.BooleanInputTypeSelected(
                     value::class.getDisplayNameRes(),
-                    value,
+                    if (value == true) booleanItemTrue else booleanItemFalse,
                 )
                 else -> {
                     val inputInfo = getInputInfo(value)
@@ -70,6 +72,11 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
                 }
             }
         }
+
+    val booleanItemTrue = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_true)
+    val booleanItemFalse = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_false)
+    /** Items for the boolean value dropdown field. */
+    val booleanItems = listOf(booleanItemTrue, booleanItemFalse)
 
     /** Tells if the action name is valid or not. */
     val keyError: Flow<Boolean> = configuredExtra.map { it?.key?.isEmpty() ?: true }
@@ -114,12 +121,18 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
     }
 
     /** Set the value to true or false. Should be called for a Boolean extra only. */
-    fun setBooleanValue(value: Boolean) {
+    fun setBooleanValue(value: DropdownItem) {
+        val current = configuredExtra.value?.value
+        if (current == null || current !is Boolean) return
+
         viewModelScope.launch {
-            val extraValue = configuredExtra.value?.value?: return@launch
-            if (extraValue is Boolean) {
-                configuredExtra.value = configuredExtra.value?.copy(value = value)
+            val extraValue = when (value) {
+                booleanItemTrue -> true
+                booleanItemFalse -> false
+                else -> return@launch
             }
+
+            configuredExtra.value = configuredExtra.value?.copy(value = extraValue)
         }
     }
 
@@ -225,7 +238,7 @@ sealed class ExtraValueInputState {
      */
     data class BooleanInputTypeSelected(
         @StringRes override val typeText: Int,
-        val value: Boolean,
+        val value: DropdownItem,
     ): TypeSelected()
 }
 

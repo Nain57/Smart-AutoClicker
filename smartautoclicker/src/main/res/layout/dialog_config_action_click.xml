@@ -72,30 +72,11 @@
                         style="@style/AppTheme.TextAppearance.Header"
                         android:text="@string/dialog_click_config_click_on_header" />
 
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/click_on_button_group"
-                        android:layout_width="wrap_content"
+                    <include layout="@layout/include_input_field_dropdown"
+                        android:id="@+id/click_position_field"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_vertical_default"
-                        android:layout_gravity="center"
-                        app:singleSelection="true"
-                        app:selectionRequired="true">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/on_condition_button"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/dialog_button_click_on_condition" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/on_position_button"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/dialog_button_click_on_position" />
-
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                        android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
