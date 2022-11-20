@@ -96,7 +96,7 @@ class AdvancedIntentContent : NavBarDialogContent() {
                 launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { dialogViewModel.isBroadcast.collect(::updateIsBroadcast) }
                 launch { dialogViewModel.action.collect(::updateIntentAction) }
-                launch { dialogViewModel.actionError.collect(viewBinding.editNameLayout::setError) }
+                launch { dialogViewModel.actionError.collect(viewBinding.editActionLayout::setError) }
                 launch { dialogViewModel.flags.collect(::updateIntentFlags) }
                 launch { dialogViewModel.componentName.collect(::updateComponentName) }
                 launch { dialogViewModel.componentNameError.collect(viewBinding.editComponentNameLayout::setError) }

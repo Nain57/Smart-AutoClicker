@@ -32,7 +32,7 @@
         <include layout="@layout/include_input_field_text"
             android:id="@+id/scenario_name_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dropdown_one_line_helper_text_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
