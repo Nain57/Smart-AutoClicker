@@ -85,50 +85,21 @@
                     <FrameLayout
                         android:id="@+id/layout_value_input"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height_big"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_vertical_default">
 
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/edit_value_layout"
-                            style="?attr/textInputFilledStyle"
+                        <include layout="@layout/include_input_field_text"
+                            android:id="@+id/edit_value_field"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            app:endIconMode="clear_text"
-                            tools:visibility="visible">
+                            android:layout_height="@dimen/dropdown_one_line_helper_text_height"
+                            android:layout_marginVertical="@dimen/margin_horizontal_default"/>
 
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/edit_value_text"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                tools:text="19875620" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.button.MaterialButtonToggleGroup
-                            android:id="@+id/boolean_value_button_group"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            app:singleSelection="true"
-                            app:selectionRequired="true"
-                            tools:visibility="gone">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/true_button"
-                                style="?attr/materialButtonOutlinedStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/dialog_button_intent_extra_boolean_true" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/false_button"
-                                style="?attr/materialButtonOutlinedStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/dialog_button_intent_extra_boolean_false" />
-
-                        </com.google.android.material.button.MaterialButtonToggleGroup>
+                        <include layout="@layout/include_input_field_dropdown"
+                            android:id="@+id/edit_boolean_value_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dropdown_one_line_helper_text_height"
+                            android:layout_marginVertical="@dimen/margin_vertical_default"
+                            tools:visibility="gone"/>
 
                     </FrameLayout>
 

@@ -279,16 +279,20 @@
     <string name="dropdown_helper_text_condition_visibility_present">The condition must be detected</string>
     <string name="dropdown_helper_text_condition_visibility_absent">The condition must not be detected</string>
 
+    <!-- Dropdown field for selecting the click position type -->
+    <string name="dropdown_label_click_position_type">Click on</string>
+    <string name="dropdown_item_title_click_position_type_on_condition">condition</string>
+    <string name="dropdown_item_title_click_position_type_on_position">selected position</string>
+
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_label_intent_sending_type">Type</string>
-    <!-- DO NOT TRANSLATE the items names, they are part of Android Intent API. -->
+
+    <!-- The following strings should be kept the same in all languages. DO NOT TRANSLATE. -->
     <string name="dropdown_item_title_intent_sending_type_activity" translatable="false">Start Activity</string>
     <string name="dropdown_item_title_intent_sending_type_broadcast" translatable="false">Send Broadcast</string>
 
-    <!-- The following strings should be kept the same in all languages. DO NOT TRANSLATE. -->
-
-    <string name="dialog_button_intent_extra_boolean_true" translatable="false">True</string>
-    <string name="dialog_button_intent_extra_boolean_false" translatable="false">False</string>
+    <string name="dropdown_item_title_extra_boolean_true" translatable="false">True</string>
+    <string name="dropdown_item_title_extra_boolean_false" translatable="false">False</string>
 
     <string name="dialog_intent_extra_type_boolean" translatable="false">Boolean</string>
     <string name="dialog_intent_extra_type_byte" translatable="false">Byte</string>
