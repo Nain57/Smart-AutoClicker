@@ -22,6 +22,8 @@ import android.content.res.Configuration
 import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
 
+import com.google.android.material.color.DynamicColors
+
 /**
  * Create a new context theme wrapper from an Android Application Context.
  *
@@ -37,10 +39,12 @@ internal fun newOverlayContextThemeWrapper(
     applicationContext: Context,
     @StyleRes theme: Int,
     currentOrientation: Int,
-) = ContextThemeWrapper(applicationContext, theme).apply {
-    applyOverrideConfiguration(
-        Configuration(applicationContext.resources.configuration).apply {
-            orientation = currentOrientation
-        }
-    )
-}
+) : Context = DynamicColors.wrapContextIfAvailable(
+    ContextThemeWrapper(applicationContext, theme).apply {
+        applyOverrideConfiguration(
+            Configuration(applicationContext.resources.configuration).apply {
+                orientation = currentOrientation
+            }
+        )
+    }
+)
