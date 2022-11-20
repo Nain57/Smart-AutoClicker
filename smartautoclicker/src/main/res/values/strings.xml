@@ -237,6 +237,23 @@
 
     <string name="dialog_buttons_copy">Copy</string>
 
+    <string name="dialog_desc_click">Click somewhere on the screen</string>
+    <string name="dialog_desc_swipe">Swipe from a position on the screen to another</string>
+    <string name="dialog_desc_pause">Pause the detection execution</string>
+    <string name="dialog_desc_intent">Interact with another application</string>
+
+    <string name="dialog_click_config_click_on_header">Click on</string>
+    <string name="dialog_button_click_on_condition">Condition</string>
+    <string name="dialog_click_config_on_condition_desc">Click on the detected condition</string>
+    <string name="dialog_button_click_on_position">Position</string>
+    <string name="dialog_click_config_on_position_select">Select the position</string>
+    <string name="dialog_click_config_label_press_duration">Press duration (ms)</string>
+    <string name="dialog_swipe_config_positions_select">Select the positions</string>
+    <string name="dialog_swipe_config_label_duration">Swipe duration (ms)</string>
+    <string name="dialog_pause_config_label_duration">Pause duration (ms)</string>
+
+    <string name="error_field_required">Required</string>
+
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">Conditions</string>
     <string name="dropdown_item_title_condition_or">One</string>
@@ -262,23 +279,13 @@
     <string name="dropdown_helper_text_condition_visibility_present">The condition must be detected</string>
     <string name="dropdown_helper_text_condition_visibility_absent">The condition must not be detected</string>
 
-    <string name="dialog_desc_click">Click somewhere on the screen</string>
-    <string name="dialog_desc_swipe">Swipe from a position on the screen to another</string>
-    <string name="dialog_desc_pause">Pause the detection execution</string>
-    <string name="dialog_desc_intent">Interact with another application</string>
+    <!-- Dropdown field for selecting the intent sending type. -->
+    <string name="dropdown_label_intent_sending_type">Type</string>
+    <!-- DO NOT TRANSLATE the items names, they are part of Android Intent API. -->
+    <string name="dropdown_item_title_intent_sending_type_activity" translatable="false">Start Activity</string>
+    <string name="dropdown_item_title_intent_sending_type_broadcast" translatable="false">Send Broadcast</string>
 
-    <string name="dialog_click_config_click_on_header">Click on</string>
-    <string name="dialog_button_click_on_condition">Condition</string>
-    <string name="dialog_click_config_on_condition_desc">Click on the detected condition</string>
-    <string name="dialog_button_click_on_position">Position</string>
-    <string name="dialog_click_config_on_position_select">Select the position</string>
-    <string name="dialog_click_config_label_press_duration">Press duration (ms)</string>
-    <string name="dialog_swipe_config_positions_select">Select the positions</string>
-    <string name="dialog_swipe_config_label_duration">Swipe duration (ms)</string>
-    <string name="dialog_pause_config_label_duration">Pause duration (ms)</string>
-
-    <string name="dialog_button_intent_start_activity">Activity</string>
-    <string name="dialog_button_intent_send_broadcast">Broadcast</string>
+    <!-- The following strings should be kept the same in all languages. DO NOT TRANSLATE. -->
 
     <string name="dialog_button_intent_extra_boolean_true" translatable="false">True</string>
     <string name="dialog_button_intent_extra_boolean_false" translatable="false">False</string>
@@ -287,11 +294,9 @@
     <string name="dialog_intent_extra_type_byte" translatable="false">Byte</string>
     <string name="dialog_intent_extra_type_char" translatable="false">Char</string>
     <string name="dialog_intent_extra_type_double" translatable="false">Double</string>
-    <string name="dialog_intent_extra_type_int" translatable="false">Int</string>
+    <string name="dialog_intent_extra_type_int" translatable="false">Integer</string>
     <string name="dialog_intent_extra_type_float" translatable="false">Float</string>
     <string name="dialog_intent_extra_type_short" translatable="false">Short</string>
     <string name="dialog_intent_extra_type_string" translatable="false">String</string>
-
-    <string name="error_field_required">Required</string>
 
 </resources>

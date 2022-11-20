@@ -76,6 +76,7 @@
     <!-- This must be equals to android_bottom_navigation_height + 16dp-->
     <dimen name="dialog_create_copy_buttons_bottom_margin">96dp</dimen>
 
+    <dimen name="dropdown_no_helper_text_height">96dp</dimen>
     <dimen name="dropdown_two_lines_helper_text_height">96dp</dimen>
     <dimen name="dropdown_item_icon_size">24dp</dimen>
 </resources>

@@ -64,13 +64,22 @@ fun IncludeInputFieldDropdownBinding.setItems(
 
 fun IncludeInputFieldDropdownBinding.setSelectedItem(item: DropdownItem) {
     textField.setText(textField.resources.getString(item.title), false)
-    layoutInput.helperText = layoutInput.resources.getString(item.helperText)
+
+    layoutInput.apply {
+        if (item.helperText != null) {
+            isHelperTextEnabled = true
+            helperText = layoutInput.resources.getString(item.helperText)
+        } else {
+            isHelperTextEnabled = false
+        }
+    }
+
     if (item.icon != null) layoutInput.setStartIconDrawable(item.icon)
 }
 
 data class DropdownItem(
     @StringRes val title: Int,
-    @StringRes val helperText: Int,
+    @StringRes val helperText: Int? = null,
     @DrawableRes val icon: Int? = null,
 )
 

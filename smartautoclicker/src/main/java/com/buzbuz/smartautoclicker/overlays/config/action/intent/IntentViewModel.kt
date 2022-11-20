@@ -26,9 +26,11 @@ import android.graphics.drawable.Drawable
 
 import androidx.lifecycle.AndroidViewModel
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.extensions.resolveActivityCompat
+import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.putIntentIsAdvancedConfig
 
@@ -76,10 +78,20 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         intent.isBroadcast == false && intent.componentName == null
     }
 
-    /** True if this intent is a broadcast, false for a start activity. */
-    val isBroadcast: Flow<Boolean> = configuredIntent
+    private val sendingTypeActivity = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_activity)
+    private val sendingTypeBroadcast = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_broadcast)
+    /** Sending types choices for the dropdown field. */
+    val sendingTypeItems = listOf(sendingTypeActivity, sendingTypeBroadcast)
+    /** Current choice for the sending type dropdown field. */
+    val isBroadcast: Flow<DropdownItem> = configuredIntent
+        .map {
+            when (it?.isBroadcast) {
+                true -> sendingTypeBroadcast
+                false -> sendingTypeActivity
+                null -> null
+            }
+        }
         .filterNotNull()
-        .map { it.isBroadcast ?: false }
 
     /** The list of extra items to be displayed. */
     val extras: Flow<List<ExtraListItem>> = configuredIntent
@@ -193,9 +205,14 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    /** Toggle between a broadcast and start activity. */
-    fun setIsBroadcast(isBroadcast: Boolean) {
+    /** Set the sending type. of the intent */
+    fun setSendingType(newType: DropdownItem) {
         configuredIntent.value?.let { intent ->
+            val isBroadcast = when (newType) {
+                sendingTypeBroadcast -> true
+                sendingTypeActivity -> false
+                else -> return
+            }
             configuredIntent.value = intent.copy(isBroadcast = isBroadcast)
         }
     }
