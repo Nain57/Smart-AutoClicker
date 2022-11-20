@@ -25,7 +25,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/menu_background"
-        style="@style/OverlayCardView"
+        style="@style/AppTheme.Overlay.FloatingMenu.CardView"
         android:animateLayoutChanges="true"
         tools:viewBindingIgnore="true">
 
@@ -36,7 +36,7 @@
 
             <LinearLayout
                 android:id="@+id/menu_items"
-                style="@style/OverlayButtonsLayout"
+                style="@style/AppTheme.Overlay.FloatingMenu.LayoutButtons"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -45,25 +45,25 @@
 
                 <ImageButton
                     android:id="@+id/btn_play"
-                    style="@style/OverlayButton"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                     android:src="@drawable/ic_play_arrow"
                     android:contentDescription="@string/content_desc_play_pause_scenario" />
 
                 <ImageButton
                     android:id="@+id/btn_stop"
-                    style="@style/OverlayButton"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                     android:src="@drawable/ic_stop"
                     android:contentDescription="@string/content_desc_stop_clicker" />
 
                 <ImageButton
                     android:id="@+id/btn_click_list"
-                    style="@style/OverlayButton"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                     android:src="@drawable/ic_click_list"
                     android:contentDescription="@string/content_desc_open_event_list" />
 
                 <ImageButton
                     android:id="@+id/btn_move"
-                    style="@style/OverlayButton"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                     android:src="@drawable/ic_move"
                     android:contentDescription="@string/content_desc_move_menu" />
 

@@ -39,6 +39,7 @@
             app:endIconMode="clear_text"/>
 
         <com.google.android.material.card.MaterialCardView
+            style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -52,7 +53,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/start_app_title"
-                    style="@style/AppTheme.TextAppearance.Header"
+                    style="@style/AppTheme.TextAppearance.CardTitle"
                     android:text="@string/dialog_action_config_intent_simple_start_app_title"/>
 
                 <FrameLayout

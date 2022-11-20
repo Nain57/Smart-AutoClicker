@@ -18,6 +18,7 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppTheme.Widget.CardOutlined"
     android:layout_width="@dimen/dialog_item_condition_width"
     android:layout_height="@dimen/dialog_item_condition_height"
     android:layout_marginStart="@dimen/margin_horizontal_small"

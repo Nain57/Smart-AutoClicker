@@ -24,7 +24,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_header"
-        style="@style/AppTheme.Dialog.ListHeaderText"
+        style="@style/AppTheme.List.HeaderText"
         tools:text="@string/dialog_action_copy_header_all"/>
 
     <com.google.android.material.divider.MaterialDivider

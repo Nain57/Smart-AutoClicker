@@ -42,16 +42,18 @@
                 android:id="@+id/edit_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dropdown_one_line_helper_text_height"
+                android:layout_marginTop="@dimen/margin_horizontal_default"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_horizontal_default"
                 app:endIconMode="clear_text"
                 android:hint="@string/dialog_event_config_name_title"/>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginBottom="@dimen/margin_vertical_large">
+                android:layout_marginBottom="@dimen/margin_vertical_large"
+                android:layout_marginTop="@dimen/margin_vertical_mini">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +63,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        style="@style/AppTheme.TextAppearance.Header"
+                        style="@style/AppTheme.TextAppearance.CardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/dialog_condition_detection_details_title"
@@ -99,6 +101,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default">
@@ -111,7 +114,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        style="@style/AppTheme.TextAppearance.Header"
+                        style="@style/AppTheme.TextAppearance.CardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/dialog_condition_threshold_title"/>

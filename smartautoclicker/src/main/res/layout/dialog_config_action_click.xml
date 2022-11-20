@@ -53,6 +53,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/click_on_card"
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +70,7 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/click_on_title"
-                        style="@style/AppTheme.TextAppearance.Header"
+                        style="@style/AppTheme.TextAppearance.CardTitle"
                         android:text="@string/dialog_click_config_click_on_header" />
 
                     <include layout="@layout/include_input_field_dropdown"
@@ -108,8 +109,6 @@
 
         </LinearLayout>
 
-
     </androidx.core.widget.NestedScrollView>
-
 
 </LinearLayout>

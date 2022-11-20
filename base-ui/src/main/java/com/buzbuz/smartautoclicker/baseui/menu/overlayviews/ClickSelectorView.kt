@@ -68,7 +68,7 @@ class ClickSelectorView(context: Context) : View(context) {
     private var backgroundCircleRadius: Float = 0F
 
     init {
-        context.obtainStyledAttributes(R.style.OverlaySelectorView_Click, R.styleable.ClickSelectorView).use { ta ->
+        context.obtainStyledAttributes(null, R.styleable.ClickSelectorView, R.attr.clickSelectorStyle, 0).use { ta ->
             val thickness = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_thickness, 4).toFloat()
             outerRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_radius, 30).toFloat()
             innerCircleRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_innerRadius, 4)

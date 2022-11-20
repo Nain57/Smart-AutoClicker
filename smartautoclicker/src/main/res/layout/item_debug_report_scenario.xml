@@ -18,6 +18,7 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme.Widget.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/margin_horizontal_default"
@@ -32,7 +33,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_scenario_name"
-            style="@style/AppTheme.TextAppearance.Header"
+            style="@style/AppTheme.TextAppearance.CardTitle"
             tools:text="Scenario name"/>
 
         <!-- Total duration -->

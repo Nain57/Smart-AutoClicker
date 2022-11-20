@@ -44,6 +44,7 @@
                 android:layout_marginVertical="@dimen/margin_horizontal_default"/>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -55,7 +56,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        style="@style/AppTheme.TextAppearance.Header"
+                        style="@style/AppTheme.TextAppearance.CardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/dialog_action_config_intent_advanced_extras_config_value"

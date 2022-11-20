@@ -31,6 +31,7 @@
 
         <include layout="@layout/include_input_field_text"
             android:id="@+id/scenario_name_field"
+            style="@style/AppTheme.Widget.InputText"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dropdown_one_line_helper_text_height"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,9 +41,10 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/detection_quality_card"
+            style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_large"
+            android:layout_marginTop="@dimen/margin_vertical_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/scenario_name_field"
@@ -56,7 +58,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
-                    style="@style/AppTheme.TextAppearance.Header"
+                    style="@style/AppTheme.TextAppearance.CardTitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -123,6 +125,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/end_conditions_card"
+            style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_vertical_large"
@@ -140,7 +143,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_conditions_title"
-                    style="@style/AppTheme.TextAppearance.Header"
+                    style="@style/AppTheme.TextAppearance.CardTitle"
                     android:text="@string/dialog_scenario_settings_end_condition_title"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_field"
                     app:layout_constraintEnd_toEndOf="parent"
