@@ -23,6 +23,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.databinding.IncludeInputFieldDropdownBinding
@@ -64,9 +65,14 @@ fun IncludeInputFieldDropdownBinding.setItems(
 fun IncludeInputFieldDropdownBinding.setSelectedItem(item: DropdownItem) {
     textField.setText(textField.resources.getString(item.title), false)
     layoutInput.helperText = layoutInput.resources.getString(item.helperText)
+    if (item.icon != null) layoutInput.setStartIconDrawable(item.icon)
 }
 
-data class DropdownItem(@StringRes val title: Int, @StringRes val helperText: Int)
+data class DropdownItem(
+    @StringRes val title: Int,
+    @StringRes val helperText: Int,
+    @DrawableRes val icon: Int? = null,
+)
 
 private class DropdownAdapter(
     private val items: List<DropdownItem>,
@@ -87,7 +93,17 @@ private class DropdownAdapter(
 
         itemBinding.apply {
             root.setOnClickListener { onItemSelected(item) }
-            root.setText(item.title)
+            dropdownItemText.setText(item.title)
+
+            dropdownItemIcon.apply {
+                if (item.icon != null) {
+                    setImageResource(item.icon)
+                    visibility = View.VISIBLE
+                } else {
+                    visibility = View.GONE
+                    setImageDrawable(null)
+                }
+            }
         }
 
         return itemBinding.root
