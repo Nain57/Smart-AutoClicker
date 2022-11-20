@@ -20,6 +20,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_input"
+    style="@style/AppTheme.Widget.InputText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:endIconMode="clear_text"

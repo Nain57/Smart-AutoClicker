@@ -24,28 +24,28 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/menu_background"
-        style="@style/OverlayCardView"
+        style="@style/AppTheme.Overlay.FloatingMenu.CardView"
         tools:viewBindingIgnore="true">
 
         <LinearLayout
             android:id="@+id/menu_items"
-            style="@style/OverlayButtonsLayout">
+            style="@style/AppTheme.Overlay.FloatingMenu.LayoutButtons">
 
             <ImageButton
                 android:id="@+id/btn_confirm"
-                style="@style/OverlayButton"
+                style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                 android:src="@drawable/ic_confirm"
                 android:contentDescription="@string/content_desc_confirm" />
 
             <ImageButton
                 android:id="@+id/btn_cancel"
-                style="@style/OverlayButton"
+                style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                 android:src="@drawable/ic_cancel"
                 android:contentDescription="@string/content_desc_go_back" />
 
             <ImageButton
                 android:id="@+id/btn_move"
-                style="@style/OverlayButton"
+                style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                 android:src="@drawable/ic_move"
                 android:contentDescription="@string/content_desc_move_menu" />
 

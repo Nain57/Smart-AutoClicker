@@ -24,8 +24,8 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/dialog_title"
-        style="@style/AppTheme.Dialog.Title"
-        app:layout_constraintBottom_toTopOf="@id/title_divider"
+        style="@style/AppTheme.Dialog.TopBarTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_delete"
         app:layout_constraintStart_toEndOf="@id/button_dismiss"
         app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_small"
         android:layout_marginVertical="@dimen/margin_vertical_default"
-        app:layout_constraintBottom_toTopOf="@id/title_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_save"
         app:layout_constraintTop_toTopOf="parent"
         app:icon="@drawable/ic_delete"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_small"
         android:layout_marginVertical="@dimen/margin_vertical_default"
-        app:layout_constraintBottom_toTopOf="@id/title_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"
@@ -67,19 +67,9 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_small"
         android:layout_marginVertical="@dimen/margin_vertical_default"
         app:icon="@drawable/ic_cancel"
-        app:layout_constraintBottom_toTopOf="@id/title_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/title_divider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetEnd="@dimen/margin_horizontal_large"
-        app:dividerInsetStart="@dimen/margin_horizontal_large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

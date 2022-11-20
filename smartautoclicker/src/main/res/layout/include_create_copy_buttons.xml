@@ -25,12 +25,12 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_copy"
-        style="@style/AppTheme.Button.Fab.Secondary"
+        style="@style/AppTheme.Widget.FabSecondary"
         app:srcCompat="@drawable/ic_copy"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_new"
-        style="@style/AppTheme.Button.Fab"
+        style="@style/AppTheme.Widget.Fab"
         android:layout_marginBottom="@dimen/dialog_create_copy_buttons_bottom_margin"
         app:srcCompat="@drawable/ic_add"/>
 

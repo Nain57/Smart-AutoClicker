@@ -37,7 +37,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/choice_title"
-        style="@style/AppTheme.Dialog.ListItem.Title"
+        style="@style/AppTheme.List.ItemTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_vertical_mini"
@@ -50,7 +50,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/choice_description"
-        style="@style/AppTheme.Dialog.ListItem.SubText"
+        style="@style/AppTheme.List.ItemSubText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/choice_title"

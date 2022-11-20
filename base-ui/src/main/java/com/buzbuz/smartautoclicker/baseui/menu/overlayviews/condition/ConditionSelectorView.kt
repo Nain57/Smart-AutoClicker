@@ -69,7 +69,7 @@ class ConditionSelectorView(
 
     /** Get the attributes from the style file and initialize all components. */
     init {
-        context.obtainStyledAttributes(R.style.OverlaySelectorView_Condition, R.styleable.ConditionSelectorView).use { ta ->
+        context.obtainStyledAttributes(null, R.styleable.ConditionSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
             animations = Animations(ta)
             capture = CaptureComponent(context, ta, screenMetrics, ::invalidate)
             selector = Selector(context, ta, screenMetrics, ::invalidate)

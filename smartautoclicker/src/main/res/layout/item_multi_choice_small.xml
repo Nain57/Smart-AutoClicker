@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/choice_chevron"
-        android:textAppearance="@style/AppTheme.TextAppearance.ListItem.Title"
+        android:textAppearance="@style/AppTheme.TextAppearance.ListItemTitle"
         android:gravity="center_vertical"
         tools:text="@string/dialog_action_type_swipe"
         tools:textColor="@android:color/black"/>

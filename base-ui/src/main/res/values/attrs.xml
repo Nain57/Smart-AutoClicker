@@ -17,6 +17,10 @@
 -->
 <resources>
 
+    <attr format="reference" name="clickSelectorStyle"/>
+
+    <attr format="reference" name="conditionSelectorStyle"/>
+
     <!-- Color for the inner part of an overlay selector. -->
     <attr name="colorInner" format="color" />
     <!-- Primary color for the outline part of an overlay selector. -->

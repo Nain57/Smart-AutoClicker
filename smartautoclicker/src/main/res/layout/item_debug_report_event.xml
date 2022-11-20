@@ -19,6 +19,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppTheme.Widget.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/margin_horizontal_default"
@@ -33,7 +34,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_event_name"
-            style="@style/AppTheme.TextAppearance.Header"
+            style="@style/AppTheme.TextAppearance.CardTitle"
             tools:text="Event name"/>
 
         <!-- Trigger/Processing count -->
