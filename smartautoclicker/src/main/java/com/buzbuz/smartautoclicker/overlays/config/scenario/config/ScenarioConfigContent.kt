@@ -66,12 +66,10 @@ class ScenarioConfigContent : NavBarDialogContent() {
                 if (fromUser) viewModel.setDetectionQuality(value.roundToInt())
             }
 
-            endConditionsOperatorField.apply {
-                setItems(
-                    items = viewModel.endConditionOperatorsItems,
-                    onItemSelected = viewModel::setConditionOperator
-                )
-            }
+            endConditionsOperatorField.setItems(
+                items = viewModel.endConditionOperatorsItems,
+                onItemSelected = viewModel::setConditionOperator,
+            )
 
             endConditionAdapter = EndConditionAdapter(
                 addEndConditionClickedListener = ::onAddEndConditionClicked,

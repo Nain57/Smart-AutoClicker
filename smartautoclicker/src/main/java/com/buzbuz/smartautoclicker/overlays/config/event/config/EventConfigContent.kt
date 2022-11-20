@@ -26,18 +26,9 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentEventConfigBinding
-import com.buzbuz.smartautoclicker.domain.AND
-import com.buzbuz.smartautoclicker.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.domain.OR
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.overlays.base.bindings.addOnCheckedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonsText
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setChecked
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 
 import kotlinx.coroutines.launch
 
@@ -64,15 +55,11 @@ class EventConfigContent : NavBarDialogContent() {
                 setOnTextChangedListener { viewModel.setEventName(it.toString()) }
             }
 
-            conditionsOperatorButton.apply {
-                setButtonsText(R.string.dropdown_item_title_condition_and, R.string.dropdown_item_title_condition_or)
-                addOnCheckedListener { checkedId ->
-                    when (checkedId) {
-                        R.id.left_button -> viewModel.setConditionOperator(AND)
-                        R.id.right_button -> viewModel.setConditionOperator(OR)
-                    }
-                }
-            }
+            conditionsOperatorField.setItems(
+                label = context.getString(R.string.dropdown_label_condition_operator),
+                items = viewModel.conditionOperatorsItems,
+                onItemSelected = viewModel::setConditionOperator,
+            )
         }
 
         return viewBinding.root
@@ -92,12 +79,7 @@ class EventConfigContent : NavBarDialogContent() {
         viewBinding.eventNameInputLayout.setText(name)
     }
 
-    private fun updateConditionOperator(@ConditionOperator operator: Int?) {
-        viewBinding.conditionsOperatorButton.apply {
-            when (operator) {
-                AND -> setChecked(R.id.left_button, R.string.condition_operator_and_desc)
-                OR -> setChecked(R.id.right_button, R.string.condition_operator_or_desc)
-            }
-        }
+    private fun updateConditionOperator(operatorItem: DropdownItem) {
+        viewBinding.conditionsOperatorField.setSelectedItem(operatorItem)
     }
 }

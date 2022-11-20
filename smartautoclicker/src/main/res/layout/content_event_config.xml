@@ -17,57 +17,28 @@
 -->
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        android:layout_marginVertical="@dimen/margin_horizontal_default">
+        android:layout_marginVertical="@dimen/margin_horizontal_default"
+        android:orientation="vertical">
 
         <include layout="@layout/include_input_field_text"
             android:id="@+id/event_name_input_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_height="wrap_content"/>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/end_conditions_card"
+        <include layout="@layout/include_input_field_dropdown"
+            android:id="@+id/conditions_operator_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/event_name_input_layout"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="@dimen/dropdown_two_lines_helper_text_height"
+            android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_vertical_large"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/conditions_operator_title"
-                    style="@style/AppTheme.TextAppearance.Header"
-                    android:text="@string/dialog_header_condition_operator" />
-
-                <include layout="@layout/include_toggle_button"
-                    android:id="@+id/conditions_operator_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
