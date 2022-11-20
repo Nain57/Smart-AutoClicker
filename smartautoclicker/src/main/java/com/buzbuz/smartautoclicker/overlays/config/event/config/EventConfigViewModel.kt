@@ -19,9 +19,12 @@ package com.buzbuz.smartautoclicker.overlays.config.event.config
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
-import com.buzbuz.smartautoclicker.domain.ConditionOperator
 
+import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.domain.AND
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.OR
+import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
@@ -34,9 +37,27 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     /** The event currently configured. */
     private lateinit var configuredEvent: MutableStateFlow<Event?>
 
+    private val conditionAndItem = DropdownItem(
+        title = R.string.dropdown_item_title_condition_and,
+        helperText = R.string.dropdown_helper_text_condition_and,
+    )
+    private val conditionOrItem = DropdownItem(
+        title= R.string.dropdown_item_title_condition_or,
+        helperText = R.string.dropdown_helper_text_condition_or,
+    )
+    val conditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
+
     /** The event condition operator currently edited by the user. */
-    val conditionOperator: Flow<Int?> by lazy {
-        configuredEvent.map { it?.conditionOperator }
+    val conditionOperator: Flow<DropdownItem> by lazy {
+        configuredEvent
+            .map {
+                when (it?.conditionOperator) {
+                    AND -> conditionAndItem
+                    OR -> conditionOrItem
+                    else -> null
+                }
+            }
+            .filterNotNull()
     }
 
     /** The event name value currently edited by the user. */
@@ -64,9 +85,15 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    /** Toggle the condition operator between AND and OR. */
-    fun setConditionOperator(@ConditionOperator operator: Int) {
+    /** Toggle the end condition operator between AND and OR. */
+    fun setConditionOperator(operatorItem: DropdownItem) {
         configuredEvent.value?.let { event ->
+            val operator = when (operatorItem) {
+                conditionAndItem -> AND
+                conditionOrItem -> OR
+                else -> return
+            }
+
             configuredEvent.value = event.copy(conditionOperator = operator)
         }
     }

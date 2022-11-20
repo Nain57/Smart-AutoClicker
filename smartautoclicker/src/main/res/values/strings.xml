@@ -236,22 +236,31 @@
     <string name="dialog_copy_empty">Nothing to copy</string>
 
     <string name="dialog_buttons_copy">Copy</string>
-    <string name="dialog_button_detection_type_exact">Exact</string>
-    <string name="dialog_button_detection_type_screen">Screen</string>
-    <string name="dialog_button_should_be_detected">Present</string>
-    <string name="dialog_button_should_not_be_detected">Absent</string>
 
+    <!-- Dropdown field for selecting the conditions operator -->
+    <string name="dropdown_label_condition_operator">Conditions</string>
     <string name="dropdown_item_title_condition_or">One</string>
     <string name="dropdown_item_title_condition_and">All</string>
+    <string name="dropdown_helper_text_condition_or">Only one condition must be fulfilled to trigger the actions</string>
+    <string name="dropdown_helper_text_condition_and">All conditions must be fulfilled to trigger the actions</string>
+
+    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
     <string name="dropdown_helper_text_end_condition_or">Only one condition must be fulfilled to stop the scenario</string>
     <string name="dropdown_helper_text_end_condition_and">All conditions must be fulfilled to stop the scenario</string>
 
-    <string name="dialog_header_condition_operator">Conditions detection</string>
+    <!-- Dropdown field for selecting the condition detection type. -->
+    <string name="dropdown_label_condition_detection_type">Detection type</string>
+    <string name="dropdown_item_title_detection_type_exact">Exact</string>
+    <string name="dropdown_item_title_detection_type_screen">Screen</string>
+    <string name="dropdown_helper_text_detection_type_exact">The condition detection is made at the captured position</string>
+    <string name="dropdown_helper_text_detection_type_screen">The condition detection is made on the whole screen</string>
 
-    <string name="dialog_desc_detection_type_exact">The condition must be detected at position [%1$d,%2$d]&#160;[%3$d,%4$d]</string>
-    <string name="dialog_desc_detection_type_screen">The condition must be detected anywhere the screen</string>
-    <string name="dialog_desc_should_be_detected">The condition must be found on the screen</string>
-    <string name="dialog_desc_should_not_be_detected">The condition must be not found on the screen</string>
+    <!-- Dropdown field for selecting the condition visibility. -->
+    <string name="dropdown_label_condition_visibility">Visibility</string>
+    <string name="dropdown_item_title_condition_visibility_present">Present</string>
+    <string name="dropdown_item_title_condition_visibility_absent">Absent</string>
+    <string name="dropdown_helper_text_condition_visibility_present">The condition must be detected</string>
+    <string name="dropdown_helper_text_condition_visibility_absent">The condition must not be detected</string>
 
     <string name="dialog_desc_click">Click somewhere on the screen</string>
     <string name="dialog_desc_swipe">Swipe from a position on the screen to another</string>
