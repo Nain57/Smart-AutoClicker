@@ -17,12 +17,25 @@
 package com.buzbuz.smartautoclicker.baseui
 
 import android.app.Application
-import android.app.UiModeManager
 import android.content.Context
 import android.util.Log
+
 import androidx.annotation.CallSuper
-import androidx.lifecycle.*
+import androidx.lifecycle.HasDefaultViewModelProviderFactory
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Lifecycle.State
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 import java.io.PrintWriter
 
 
@@ -174,6 +187,12 @@ abstract class OverlayController internal constructor(
         if (!shouldBeRecreated) {
             onDestroyListener?.invoke()
             onDestroyListener = null
+
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(5000)
+                modelStore.clear()
+                cancel()
+            }
         }
     }
 
