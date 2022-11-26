@@ -43,7 +43,7 @@
         android:id="@+id/separator_left"
         android:layout_width="1dp"
         android:layout_height="0dp"
-        style="@style/Separator"
+        style="@style/AppTheme.Widget.Divider"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/triggered_title"
         app:layout_constraintEnd_toStartOf="@id/processed_title"

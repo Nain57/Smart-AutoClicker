@@ -31,6 +31,7 @@
     <dimen name="margin_horizontal_intermediate">12dp</dimen>
     <dimen name="margin_horizontal_small">8dp</dimen>
     <dimen name="margin_horizontal_mini">4dp</dimen>
+    <dimen name="margin_vertical_extra_large">16dp</dimen>
     <dimen name="margin_vertical_large">12dp</dimen>
     <dimen name="margin_vertical_default">8dp</dimen>
     <dimen name="margin_vertical_small">4dp</dimen>

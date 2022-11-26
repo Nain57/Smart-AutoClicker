@@ -52,6 +52,15 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
     </style>
+    <!-- Style for the dividers. -->
+    <style name="AppTheme.Widget.Divider" parent="@style/Widget.Material3.MaterialDivider"/>
+    <!-- Style for the secondary horizontal dividers. -->
+    <style name="AppTheme.Widget.DividerSecondaryH" parent="@style/Widget.Material3.MaterialDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="dividerInsetStart">@dimen/margin_horizontal_default</item>
+        <item name="dividerInsetEnd">@dimen/margin_horizontal_default</item>
+    </style>
     <!-- Style for the card views. -->
     <style name="AppTheme.Widget.Card" parent="@style/Widget.Material3.CardView.Elevated" />
     <!-- Style for the outlined card views. -->
@@ -60,6 +69,8 @@
     <style name="AppTheme.Widget.CardFilled" parent="@style/Widget.Material3.CardView.Filled" />
     <!-- Style for the input text fields. -->
     <style name="AppTheme.Widget.InputText" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox"/>
+    <!-- Style for the filled input text fields. -->
+    <style name="AppTheme.Widget.InputTextFilled" parent="@style/Widget.Material3.TextInputLayout.FilledBox"/>
     <!-- Style for the input dropdown fields.-->
     <style name="AppTheme.Widget.InputDropdown" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"/>
     <!-- Style for an text button -->
@@ -98,6 +109,21 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_marginBottom">@dimen/margin_fab_secondary_bottom</item>
+    </style>
+    <!-- Style for the collapsible search view. -->
+    <style name="AppTheme.Widget.SearchView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@color/textTitle</item>
+        <item name="android:textColorHint">@color/textHint</item>
+    </style>
+    <!-- Style for the permission item layout -->
+    <style name="AppTheme.Widget.PermissionItemView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_default</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_large</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_default</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <!-- Base style for the list elements. -->
@@ -224,27 +250,12 @@
         <item name="maximumZoomValue">@integer/capture_maximum_zoom</item>
     </style>
 
-    <style name="SearchView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:textColor">@color/textTitle</item>
-        <item name="android:textColorHint">@color/textHint</item>
-    </style>
-
     <style name="AppTheme.Dialog.ToggleButtonDesc">
         <item name="android:maxLines">2</item>
         <item name="android:lines">2</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body</item>
-    </style>
-
-    <style name="PermissionItemView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">@dimen/margin_vertical_small</item>
-        <item name="android:paddingBottom">@dimen/margin_vertical_small</item>
-        <item name="android:paddingStart">@dimen/margin_horizontal_default</item>
-        <item name="android:paddingEnd">@dimen/margin_horizontal_default</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <style name="ItemView">
@@ -269,10 +280,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@android:drawable/divider_horizontal_bright</item>
-    </style>
-
-    <style name="Separator.Light">
-        <item name="android:backgroundTint">@color/overlayMenuButtons</item>
     </style>
 
     <style name="DialogTitle" parent="@android:style/TextAppearance.Widget.TextView">

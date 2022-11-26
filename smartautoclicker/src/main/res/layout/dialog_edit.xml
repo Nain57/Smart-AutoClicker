@@ -17,24 +17,29 @@
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/edit_name"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_input"
+        style="@style/AppTheme.Widget.InputTextFilled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_horizontal_default"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
-        android:layout_marginTop="@dimen/margin_vertical_default"
-        android:layout_marginBottom="@dimen/margin_vertical_default"
-        android:inputType="text"
-        android:hint="@string/dialog_add_scenario_name_hint"
-        android:maxLength="@integer/name_max_length"
-        android:importantForAutofill="no">
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:hint="@string/dialog_label_scenario_name">
 
-        <requestFocus />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Scenario name">
 
-    </EditText>
+            <requestFocus />
+        </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </FrameLayout>
+
