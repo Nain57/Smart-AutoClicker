@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2022 Nain57
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppTheme.Widget.CardOutlined"
+    android:layout_width="@dimen/card_view_width_horizontal_list"
+    android:layout_height="@dimen/card_view_height_horizontal_list"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+    android:layout_marginTop="@dimen/margin_vertical_small"
+    android:layout_marginBottom="@dimen/margin_vertical_small"
+    android:elevation="@dimen/elevation_level_2">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/condition_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            android:background="?attr/colorSurfaceVariant"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/content_desc_image_condition"
+            tools:src="@drawable/ic_condition" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/condition_image"
+            app:layout_constraintBottom_toTopOf="@id/event_name"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/event_name"
+            style="@style/TextAppearance.Material3.BodySmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/event_actions_count"
+            android:gravity="center_horizontal"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            tools:text="Event name"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/event_actions_count"
+            style="@style/AppTheme.TextAppearance.CardItemHText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/event_conditions_count"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:src="@drawable/ic_confirm"
+            android:gravity="center"
+            app:drawableEndCompat="@drawable/ic_click"
+            android:drawablePadding="@dimen/drawable_padding_small"
+            tools:text="4" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/event_conditions_count"
+            style="@style/AppTheme.TextAppearance.CardItemHText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/event_actions_count"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_detect_exact"
+            android:gravity="center"
+            app:drawableEndCompat="@drawable/ic_condition"
+            android:drawablePadding="@dimen/drawable_padding_small"
+            tools:text="42" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

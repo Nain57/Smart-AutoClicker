@@ -52,6 +52,9 @@
         <item name="autoCompleteTextViewStyle">@style/SearchView</item>
         <item name="clickSelectorStyle">@style/AppTheme.Overlay.Selector.Click</item>
         <item name="conditionSelectorStyle">@style/AppTheme.Overlay.Selector.Condition</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
 </resources>

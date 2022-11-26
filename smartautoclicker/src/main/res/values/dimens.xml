@@ -36,6 +36,15 @@
     <dimen name="margin_vertical_small">4dp</dimen>
     <dimen name="margin_vertical_mini">2dp</dimen>
 
+    <dimen name="drawable_padding_small">2dp</dimen>
+
+    <dimen name="elevation_level_1">1dp</dimen>
+    <dimen name="elevation_level_2">3dp</dimen>
+    <dimen name="elevation_level_3">6dp</dimen>
+
+    <dimen name="card_view_width_horizontal_list">100dp</dimen>
+    <dimen name="card_view_height_horizontal_list">100dp</dimen>
+
     <dimen name="empty_min_height">100dp</dimen>
     <dimen name="image_button_size">48dp</dimen>
     <dimen name="item_height">48dp</dimen>

@@ -22,8 +22,6 @@ import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
@@ -37,14 +35,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.PermissionsDialogFragment.Companion.FRAGMENT_TAG_PERMISSION_DIALOG
@@ -54,7 +49,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
-import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
+import com.google.android.material.shape.MaterialShapeDrawable
 
 import kotlinx.coroutines.launch
 
@@ -62,19 +57,15 @@ import kotlinx.coroutines.launch
  * Fragment displaying the list of click scenario and the creation dialog.
  * If the list is empty, it will hide the list and displays the empty list view.
  */
-class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDialogListener, MenuProvider {
+class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDialogListener {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by activityViewModels()
 
     /** ViewBinding containing the views for this fragment. */
     private lateinit var viewBinding: FragmentScenariosBinding
-    /** ViewBinding containing the views for the loadable list merge layout. */
-    private lateinit var listBinding: IncludeLoadableListBinding
     /** Adapter displaying the click scenarios as a list. */
     private lateinit var scenariosAdapter: ScenarioAdapter
-    /** The action menu for this fragment. */
-    private lateinit var menu: Menu
     /** The result launcher for the projection permission dialog. */
     private lateinit var projectionActivityResult: ActivityResultLauncher<Intent>
 
@@ -85,7 +76,6 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewBinding = FragmentScenariosBinding.inflate(inflater, container, false)
-        listBinding = IncludeLoadableListBinding.bind(viewBinding.root)
         return viewBinding.root
     }
 
@@ -93,9 +83,9 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
         super.onCreate(savedInstanceState)
 
         scenariosAdapter = ScenarioAdapter(
+            bitmapProvider = scenarioViewModel::getConditionBitmap,
             startScenarioListener = ::onStartClicked,
             deleteScenarioListener = ::onDeleteClicked,
-            editClickListener = ::onRenameClicked,
             exportClickListener = ::onExportClicked,
         )
 
@@ -114,53 +104,42 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity() as MenuHost).addMenuProvider(this)
+        viewBinding.apply {
+            layoutList.apply {
+                layoutList.list.adapter = scenariosAdapter
+                layoutList.empty.setText(R.string.no_scenarios)
+            }
 
-        listBinding.list.apply {
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = scenariosAdapter
-        }
+            add.setOnClickListener { onCreateClicked() }
 
-        listBinding.empty.setText(R.string.no_scenarios)
-        viewBinding.add.setOnClickListener { onCreateClicked() }
+            appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
+            topAppBar.apply {
+                setOnMenuItemClickListener { onMenuItemSelected(it) }
+                (menu.findItem(R.id.action_search).actionView as SearchView).apply {
+                    setIconifiedByDefault(true)
+                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?) = false
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            scenarioViewModel.updateSearchQuery(newText)
+                            return true
+                        }
+                    })
+                    addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+                        override fun onViewDetachedFromWindow(arg0: View) {
+                            scenarioViewModel.updateSearchQuery(null)
+                            scenarioViewModel.setMenuState(MenuState.SELECTION)
+                        }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                scenarioViewModel.scenarioList.collect {
-                    onNewScenarioList(it)
+                        override fun onViewAttachedToWindow(arg0: View) {}
+                    })
                 }
             }
         }
-    }
-
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        this.menu = menu
-        menuInflater.inflate(R.menu.menu_scenario_fragment, menu)
-
-        (menu.findItem(R.id.action_search).actionView as SearchView).apply {
-            setIconifiedByDefault(true)
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?) = false
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    scenarioViewModel.updateSearchQuery(newText)
-                    return true
-                }
-            })
-            addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-                override fun onViewDetachedFromWindow(arg0: View) {
-                    scenarioViewModel.updateSearchQuery(null)
-                    scenarioViewModel.setMenuState(MenuState.SELECTION)
-                }
-
-                override fun onViewAttachedToWindow(arg0: View) {}
-            })
-        }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                scenarioViewModel.menuUiState.collect { menuState ->
-                    updateMenu(menuState)
-                }
+                launch { scenarioViewModel.scenarioItems.collect(::onNewScenarioList) }
+                launch { scenarioViewModel.menuUiState.collect(::updateMenu) }
             }
         }
     }
@@ -169,7 +148,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
         showMediaProjectionWarning()
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
+    private fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_export ->
                 if (scenarioViewModel.menuState.value == MenuState.EXPORT) {
@@ -192,7 +171,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      * @param menuState the new ui state for the menu.
      */
     private fun updateMenu(menuState: MenuUiState) {
-        menu.apply {
+        viewBinding.topAppBar.menu.apply {
             findItem(R.id.action_search).isVisible = menuState.searchVisibility
             findItem(R.id.action_import).isVisible = menuState.importBackupVisibility
             findItem(R.id.action_cancel).isVisible = menuState.cancelVisibility
@@ -255,7 +234,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      * @param scenario the scenario clicked.
      */
     private fun onExportClicked(scenario: Scenario) {
-        scenarioViewModel.toggleScenarioSelectionForBackup(scenario.id)
+        scenarioViewModel.toggleScenarioSelectionForBackup(scenario)
     }
 
     /**
@@ -292,36 +271,11 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     }
 
     /**
-     * Called when the user clicks on the rename button of a scenario.
-     * Create and show the [dialog]. Upon Ok press, rename the scenario.
-     *
-     * @param scenario the scenario to rename.
-     */
-    private fun onRenameClicked(scenario: Scenario) {
-        val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
-        val dialog = AlertDialog.Builder(requireContext())
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_rename_scenario_title)
-            .setView(dialogViewBinding.root)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                scenarioViewModel.renameScenario(scenario, dialogViewBinding.editName.text.toString())
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-        dialog.setOnShowListener {
-            dialogViewBinding.editName.apply {
-                setText(scenario.name)
-                setSelection(0, scenario.name.length)
-            }
-        }
-        showDialog(dialog)
-    }
-
-    /**
      * Observer upon the list of click scenarios.
      * Will update the list/empty view according to the current click scenarios
      */
-    private fun onNewScenarioList(scenarios: List<ScenarioItem>) {
-        listBinding.apply {
+    private fun onNewScenarioList(scenarios: List<ScenarioListItem>) {
+        viewBinding.layoutList.apply {
             loading.visibility = View.GONE
             if (scenarios.isEmpty()) {
                 list.visibility = View.GONE

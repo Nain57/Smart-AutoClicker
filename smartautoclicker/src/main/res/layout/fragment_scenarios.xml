@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
 -->
-<FrameLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,16 +23,39 @@
     android:layout_height="match_parent"
     tools:context=".activity.ScenarioActivity">
 
-    <include layout="@layout/include_loadable_list" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        style="@style/AppTheme.Widget.AppBarLayout"
+        app:liftOnScrollTargetViewId="@id/list"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            style="@style/AppTheme.Widget.Toolbar"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:title="@string/activity_scenario_title"
+            app:menu="@menu/menu_scenario_fragment" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        android:id="@+id/layout_list"
+        layout="@layout/include_loadable_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"
+        style="@style/AppTheme.Widget.Fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        app:layout_anchor="@id/layout_list"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         android:layout_margin="@dimen/margin_horizontal_default"
         android:tint="@color/textTitle"
         app:srcCompat="@drawable/ic_add"
         android:contentDescription="@string/content_desc_add_scenario"/>
 
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

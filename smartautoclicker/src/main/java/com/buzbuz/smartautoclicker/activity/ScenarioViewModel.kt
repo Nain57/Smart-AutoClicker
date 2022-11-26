@@ -20,6 +20,7 @@ import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Build
 import android.provider.Settings
 
@@ -28,18 +29,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultScenario
+import kotlinx.coroutines.*
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
 class ScenarioViewModel(application: Application) : AndroidViewModel(application) {
@@ -101,19 +102,40 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
 
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
-    /** Flow upon the list of scenarios. */
-    val scenarioList: StateFlow<List<ScenarioItem>> =
-        combine(repository.scenarios, searchQuery, _menuState, selectedForBackup) { scenarios, query, menuState, backupSelection ->
+    /** Flow upon the list of scenarios, filtered with the search query. */
+    private val filteredScenario: Flow<List<Scenario>> = repository.scenarios
+        .combine(searchQuery) { scenarios, query ->
             scenarios.mapNotNull { scenario ->
-                if (query.isNullOrEmpty() || scenario.name.contains(query.toString(), true)) {
-                    ScenarioItem(
-                        scenario = scenario,
-                        exportMode = menuState == MenuState.EXPORT,
-                        checkedForExport = backupSelection.contains(scenario.id)
-                    )
-                } else {
-                    null
+                if (query.isNullOrEmpty() || scenario.name.contains(query.toString(), true)) scenario
+                else null
+            }
+        }
+
+    /** */
+    val scenarioItems: StateFlow<List<ScenarioListItem>> =
+        combine(filteredScenario, _menuState, selectedForBackup) { scenarios, menuState, backupSelection ->
+            scenarios.mapNotNull { scenario ->
+                if (scenario.eventCount == 0) {
+                    return@mapNotNull if (menuState == MenuState.EXPORT) null
+                    else ScenarioListItem.EmptyScenarioItem(scenario)
                 }
+
+                val events = repository.getCompleteEventList(scenario.id).map { event ->
+                    EventItem(
+                        id = event.id,
+                        eventName = event.name,
+                        actionsCount = event.actions?.size ?: 0,
+                        conditionsCount = event.conditions?.size ?: 0,
+                        firstCondition = event.conditions?.first(),
+                    )
+                }
+
+                ScenarioListItem.ScenarioItem(
+                    scenario = scenario,
+                    eventsItems = events,
+                    exportMode = menuState == MenuState.EXPORT,
+                    checkedForExport = backupSelection.contains(scenario.id),
+                )
             }
         }.stateIn(
             viewModelScope,
@@ -176,18 +198,6 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * Rename the selected scenario.
-     *
-     * @param scenario the scenario to be renamed
-     * @param name the new name of the scenario
-     */
-    fun renameScenario(scenario: Scenario, name: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateScenario(scenario.copy(name = name))
-        }
-    }
-
-    /**
      * Delete a click scenario.
      *
      * This will also delete all clicks associated with the scenario.
@@ -209,22 +219,28 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
 
     /**
      * Toggle the selected for backup state of a scenario.
-     * @param scenarioId the identifier of the scenario to be toggled.
+     * @param scenario the scenario to be toggled.
      */
-    fun toggleScenarioSelectionForBackup(scenarioId: Long) {
+    fun toggleScenarioSelectionForBackup(scenario: Scenario) {
+        if (scenario.eventCount == 0) return
+
         val newSelection = selectedForBackup.value.toMutableSet().apply {
-            if (contains(scenarioId)) remove(scenarioId)
-            else add(scenarioId)
+            if (contains(scenario.id)) remove(scenario.id)
+            else add(scenario.id)
         }
         selectedForBackup.value = newSelection
     }
 
     /** Toggle the selected for backup state value for all scenario. */
     fun toggleAllScenarioSelectionForBackup() {
-        if (scenarioList.value.size == selectedForBackup.value.size) {
+        if (scenarioItems.value.size == selectedForBackup.value.size) {
             selectedForBackup.value = emptySet()
         } else {
-            selectedForBackup.value = scenarioList.value.map { it.scenario.id }.toSet()
+            selectedForBackup.value = scenarioItems.value
+                .mapNotNull { item ->
+                    if (item !is ScenarioListItem.ScenarioItem) null
+                    else item.scenario.id
+                }.toSet()
         }
     }
 
@@ -262,6 +278,35 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     fun updateSearchQuery(query: String?) {
         searchQuery.value = query
     }
+
+    /**
+     * Get the bitmap corresponding to a condition.
+     * Loading is async and the result notified via the onBitmapLoaded argument.
+     *
+     * @param condition the condition to load the bitmap of.
+     * @param onBitmapLoaded the callback notified upon completion.
+     */
+    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+        if (condition.bitmap != null) {
+            onBitmapLoaded.invoke(condition.bitmap)
+            return null
+        }
+
+        if (condition.path != null) {
+            return viewModelScope.launch(Dispatchers.IO) {
+                val bitmap = repository.getBitmap(condition.path!!, condition.area.width(), condition.area.height())
+
+                if (isActive) {
+                    withContext(Dispatchers.Main) {
+                        onBitmapLoaded.invoke(bitmap)
+                    }
+                }
+            }
+        }
+
+        onBitmapLoaded.invoke(null)
+        return null
+    }
 }
 
 /** Possible states for the action menu of the ScenarioListFragment. */
@@ -297,15 +342,24 @@ data class MenuUiState(
     @IntRange(from = 0, to = 255) val createBackupAlpha: Int = 255,
 )
 
-/**
- * Item representing a scenario on the list.
- *
- * @param scenario the scenario represented by the item.
- * @param exportMode true if the item should be displayed in export scenario mode.
- * @param checkedForExport true if the scenario is selected for export, false if not.
- */
-data class ScenarioItem(
-    val scenario: Scenario,
-    val exportMode: Boolean,
-    val checkedForExport: Boolean,
+sealed class ScenarioListItem {
+
+    data class EmptyScenarioItem(
+        val scenario: Scenario,
+    ) : ScenarioListItem()
+
+    data class ScenarioItem(
+        val scenario: Scenario,
+        val eventsItems: List<EventItem>,
+        val exportMode: Boolean,
+        val checkedForExport: Boolean,
+    ) : ScenarioListItem()
+}
+
+data class EventItem(
+    val id: Long,
+    val eventName: String,
+    val actionsCount: Int,
+    val conditionsCount: Int,
+    val firstCondition: Condition?,
 )

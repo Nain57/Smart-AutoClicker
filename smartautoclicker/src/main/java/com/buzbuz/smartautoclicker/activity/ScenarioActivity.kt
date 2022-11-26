@@ -20,6 +20,7 @@ import android.os.Bundle
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 
 import com.buzbuz.smartautoclicker.R
 
@@ -35,10 +36,9 @@ class ScenarioActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_scenario)
-        setSupportActionBar(findViewById(R.id.toolbar))
 
-        supportActionBar?.title = resources.getString(R.string.activity_scenario_title)
         scenarioViewModel.stopScenario()
     }
 }
