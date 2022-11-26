@@ -62,6 +62,11 @@
     <style name="AppTheme.Widget.InputText" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox"/>
     <!-- Style for the input dropdown fields.-->
     <style name="AppTheme.Widget.InputDropdown" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"/>
+    <!-- Style for an text button -->
+    <style name="AppTheme.Widget.TextButton" parent="Widget.Material3.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
     <!-- Style for an icon button -->
     <style name="AppTheme.Widget.IconButton" parent="Widget.Material3.Button.IconButton">
         <item name="android:layout_width">wrap_content</item>
@@ -145,6 +150,8 @@
     <style name="AppTheme.TextAppearance.CardItemHText" parent="@style/TextAppearance.Material3.BodyMedium"/>
     <!-- Text appearance for the body text. -->
     <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for the empty lists text. -->
+    <style name="AppTheme.TextAppearance.EmptyText" parent="@style/TextAppearance.Material3.HeadlineSmall"/>
 
     <!-- Base overlays theme. -->
     <style name="AppTheme.Overlay" />
