@@ -45,7 +45,7 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
 
-        <item name="autoCompleteTextViewStyle">@style/SearchView</item>
+        <item name="autoCompleteTextViewStyle">@style/AppTheme.Widget.SearchView</item>
         <item name="clickSelectorStyle">@style/AppTheme.Overlay.Selector.Click</item>
         <item name="conditionSelectorStyle">@style/AppTheme.Overlay.Selector.Condition</item>
 

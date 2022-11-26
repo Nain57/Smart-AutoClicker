@@ -45,10 +45,11 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.PermissionsDialogFragment.Companion.FRAGMENT_TAG_PERMISSION_DIALOG
 import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment
 import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
 
 import kotlinx.coroutines.launch
@@ -241,11 +242,11 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      */
     private fun onCreateClicked() {
         val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
-        showDialog(AlertDialog.Builder(requireContext())
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_add_scenario_title)
+        showDialog(MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.dialog_add_scenario_title)
             .setView(dialogViewBinding.root)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                scenarioViewModel.createScenario(requireContext(), dialogViewBinding.editName.text.toString())
+                scenarioViewModel.createScenario(requireContext(), dialogViewBinding.textField.text.toString())
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create())
@@ -258,8 +259,8 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      * @param scenario the scenario to delete.
      */
     private fun onDeleteClicked(scenario: Scenario) {
-        showDialog(AlertDialog.Builder(requireContext())
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_delete_scenario_title)
+        showDialog(MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.dialog_delete_scenario_title)
             .setMessage(resources.getString(R.string.dialog_delete_scenario_message, scenario.name))
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 scenarioViewModel.deleteScenario(scenario)

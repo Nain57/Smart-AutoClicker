@@ -26,17 +26,18 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.ImageView
+
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.databinding.DialogPermissionsBinding
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * Displays the state of the permission and provide a way to access their respective settings.
@@ -86,8 +87,8 @@ class PermissionsDialogFragment : DialogFragment() {
             setConfigStateDrawable(viewBinding.imgConfigNotificationStatus, granted)
         }
 
-        return AlertDialog.Builder(requireContext())
-            .setCustomTitle(R.layout.view_dialog_title, R.string.dialog_permissions_title)
+        return MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.dialog_permissions_title)
             .setView(viewBinding.root)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 (activity?.supportFragmentManager?.findFragmentByTag(FRAGMENT_TAG_SCENARIO_LIST) as PermissionDialogListener)

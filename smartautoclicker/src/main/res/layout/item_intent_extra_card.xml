@@ -45,7 +45,7 @@
 
         <View
             android:id="@+id/separator"
-            style="@style/Separator"
+            style="@style/AppTheme.Widget.Divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_extra_name"
