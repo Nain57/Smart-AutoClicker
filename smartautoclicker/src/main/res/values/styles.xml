@@ -41,14 +41,44 @@
 
     <!-- Base style for the widgets. -->
     <style name="AppTheme.Widget" />
+    <!-- Style for the app bar layout. -->
+    <style name="AppTheme.Widget.AppBarLayout" parent="@style/Widget.Material3.AppBarLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+    <!-- Style for the toolbar. -->
+    <style name="AppTheme.Widget.Toolbar" parent="@style/Widget.Material3.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
     <!-- Style for the card views. -->
     <style name="AppTheme.Widget.Card" parent="@style/Widget.Material3.CardView.Elevated" />
     <!-- Style for the outlined card views. -->
     <style name="AppTheme.Widget.CardOutlined" parent="@style/Widget.Material3.CardView.Outlined" />
+    <!-- Style for the filled card views. -->
+    <style name="AppTheme.Widget.CardFilled" parent="@style/Widget.Material3.CardView.Filled" />
     <!-- Style for the input text fields. -->
     <style name="AppTheme.Widget.InputText" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox"/>
     <!-- Style for the input dropdown fields.-->
     <style name="AppTheme.Widget.InputDropdown" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"/>
+    <!-- Style for an icon button -->
+    <style name="AppTheme.Widget.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for a filled icon button -->
+    <style name="AppTheme.Widget.IconButtonFilled" parent="Widget.Material3.Button.IconButton.Filled">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for a radio button without text -->
+    <style name="AppTheme.Widget.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
     <!-- Style for the main floating action button. -->
     <style name="AppTheme.Widget.Fab" parent="@style/Widget.Material3.FloatingActionButton.Primary">
         <item name="android:layout_width">wrap_content</item>
@@ -111,6 +141,8 @@
     <style name="AppTheme.TextAppearance.ListItemTitle" parent="@style/TextAppearance.Material3.TitleMedium"/>
     <!-- Text appearance for the list sub text. -->
     <style name="AppTheme.TextAppearance.ListItemSubText" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for a card horizontal item text. -->
+    <style name="AppTheme.TextAppearance.CardItemHText" parent="@style/TextAppearance.Material3.BodyMedium"/>
     <!-- Text appearance for the body text. -->
     <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>
 
@@ -183,15 +215,6 @@
         <item name="showCaptureAnimationDuration">@integer/duration_show_capture_animation_ms</item>
         <item name="minimumZoomValue">@integer/capture_minimum_zoom</item>
         <item name="maximumZoomValue">@integer/capture_maximum_zoom</item>
-    </style>
-
-    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColorPrimary">@color/textTitle</item>
-        <item name="actionMenuTextColor">@color/textTitle</item>
-        <item name="colorAccent">@color/primary</item>
-        <item name="selectableItemBackground">?android:selectableItemBackground</item>
-        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
-        <item name="autoCompleteTextViewStyle">@style/SearchView</item>
     </style>
 
     <style name="SearchView" parent="Widget.AppCompat.Light.AutoCompleteTextView">

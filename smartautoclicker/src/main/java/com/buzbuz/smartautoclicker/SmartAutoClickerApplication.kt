@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+/*
  * Copyright (C) 2022 Nain57
  *
  * This program is free software; you can redistribute it and/or
@@ -14,14 +13,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; If not, see <http://www.gnu.org/licenses/>.
--->
-<androidx.fragment.app.FragmentContainerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment"
-    android:name="com.buzbuz.smartautoclicker.activity.ScenarioListFragment"
-    android:tag="ScenarioList"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout="@layout/fragment_scenarios"/>
+ */
+package com.buzbuz.smartautoclicker
 
+import android.app.Application
+import com.google.android.material.color.DynamicColors
+
+class SmartAutoClickerApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        DynamicColors.applyToActivitiesIfAvailable(this)
+    }
+}

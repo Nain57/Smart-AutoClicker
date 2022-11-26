@@ -39,55 +39,32 @@
             style="@style/AppTheme.TextAppearance.CardTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/button_delete"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/button_delete"
+            app:layout_constraintBottom_toBottomOf="@id/button_delete"
             tools:text="My cool scenario " />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_delete"
             style="@style/AppTheme.Widget.IconButton"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
             app:layout_constraintStart_toEndOf="@id/scenario_name"
-            app:layout_constraintEnd_toStartOf="@id/button_export"
-            app:layout_constraintTop_toTopOf="@id/scenario_name"
-            app:layout_constraintBottom_toBottomOf="@id/scenario_name"
+            app:layout_constraintEnd_toStartOf="@id/button_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:icon="@drawable/ic_delete"
             tools:visibility="visible"/>
-
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/button_export"
-            style="@style/AppTheme.Widget.RadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            app:layout_constraintStart_toEndOf="@id/button_delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/scenario_name"
-            app:layout_constraintBottom_toBottomOf="@id/scenario_name"
-            android:visibility="gone"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_event"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_default"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scenario_name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:orientation="horizontal"
-            android:scrollbars="none"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_event_card"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_start"
             style="@style/AppTheme.Widget.IconButtonFilled"
-            app:elevation="@dimen/elevation_level_3"
+            app:layout_constraintStart_toEndOf="@id/button_delete"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:elevation="@dimen/elevation_level_3"
             app:icon="@drawable/ic_play_arrow"
             tools:visibility="visible"/>
 
