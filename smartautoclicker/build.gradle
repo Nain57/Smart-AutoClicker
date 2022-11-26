@@ -98,6 +98,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}"
 
+    implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
     implementation project(path: ':base-ui')

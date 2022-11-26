@@ -105,11 +105,9 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.apply {
-            layoutList.apply {
-                layoutList.list.adapter = scenariosAdapter
-                layoutList.empty.setText(R.string.no_scenarios)
-            }
+            list.adapter = scenariosAdapter
 
+            emptyCreateButton.setOnClickListener { onCreateClicked() }
             add.setOnClickListener { onCreateClicked() }
 
             appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
@@ -275,14 +273,15 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      * Will update the list/empty view according to the current click scenarios
      */
     private fun onNewScenarioList(scenarios: List<ScenarioListItem>) {
-        viewBinding.layoutList.apply {
-            loading.visibility = View.GONE
+        viewBinding.apply {
             if (scenarios.isEmpty()) {
                 list.visibility = View.GONE
-                empty.visibility = View.VISIBLE
+                add.visibility = View.GONE
+                layoutEmpty.visibility = View.VISIBLE
             } else {
                 list.visibility = View.VISIBLE
-                empty.visibility = View.GONE
+                add.visibility = View.VISIBLE
+                layoutEmpty.visibility = View.GONE
             }
         }
 

@@ -254,6 +254,9 @@
 
     <string name="error_field_required">Required</string>
 
+    <string name="fragment_scenario_empty_list">Create your first scenario and start automatizing tasks on your phone</string>
+    <string name="button_text_create_scenario">Create a scenario</string>
+
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">Conditions</string>
     <string name="dropdown_item_title_condition_or">One</string>

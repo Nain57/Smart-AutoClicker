@@ -54,6 +54,7 @@ ext {
     androidxRoomVersion = '2.4.3'
     googleMaterialVersion = '1.7.0-rc01'
     kotlinSerializationVersion = '1.3.2'
+    lottieVersion = '5.2.0'
 
     openCvVersion = '4.5.5'
 
