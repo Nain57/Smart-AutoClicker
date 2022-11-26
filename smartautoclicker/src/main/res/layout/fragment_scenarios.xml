@@ -42,7 +42,7 @@
         android:id="@+id/layout_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/empty_lottie_view"
@@ -59,7 +59,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/empty_text_title"
-            style="@style/TextAppearance.Material3.TitleLarge"
+            style="@style/AppTheme.TextAppearance.EmptyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_default"
@@ -72,7 +72,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/empty_create_button"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
+            style="@style/AppTheme.Widget.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_large"
@@ -92,7 +92,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_scenario"
-        tools:visibility="visible"/>
+        tools:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"
@@ -106,6 +106,6 @@
         android:tint="@color/textTitle"
         app:srcCompat="@drawable/ic_add"
         android:contentDescription="@string/content_desc_add_scenario"
-        tools:visibility="visible"/>
+        tools:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
