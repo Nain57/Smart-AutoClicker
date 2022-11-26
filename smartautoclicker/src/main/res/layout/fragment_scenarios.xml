@@ -38,24 +38,74 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        android:id="@+id/layout_list"
-        layout="@layout/include_loadable_list"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        tools:visibility="gone">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/empty_lottie_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/empty_text_title"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:lottie_rawRes="@raw/lottie_empty"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/empty_text_title"
+            style="@style/TextAppearance.Material3.TitleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/empty_lottie_view"
+            app:layout_constraintBottom_toTopOf="@id/empty_create_button"
+            android:text="@string/fragment_scenario_empty_list"
+            android:gravity="center_horizontal"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/empty_create_button"
+            style="@style/Widget.Material3.Button.IconButton.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/button_text_create_scenario"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_scenario"
+        tools:visibility="visible"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"
         style="@style/AppTheme.Widget.Fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/layout_list"
+        app:layout_anchor="@id/list"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         android:layout_margin="@dimen/margin_horizontal_default"
         android:tint="@color/textTitle"
         app:srcCompat="@drawable/ic_add"
-        android:contentDescription="@string/content_desc_add_scenario"/>
+        android:contentDescription="@string/content_desc_add_scenario"
+        tools:visibility="visible"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
