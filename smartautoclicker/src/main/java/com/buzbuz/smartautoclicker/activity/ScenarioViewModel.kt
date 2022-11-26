@@ -66,8 +66,8 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     /** Current menu state. */
     val menuState: StateFlow<MenuState> = _menuState
     /** Current menu UI state. */
-    val menuUiState: Flow<MenuUiState> = _menuState
-        .combine(selectedForBackup) { menuState, selection ->
+    val menuUiState: Flow<MenuUiState> =
+        combine(_menuState, selectedForBackup, repository.scenarios) { menuState, selection, scenarios ->
             when (menuState) {
                 MenuState.SEARCH -> MenuUiState(
                     state = menuState,
@@ -90,12 +90,12 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
                 )
                 MenuState.SELECTION -> MenuUiState(
                     state = menuState,
-                    searchVisibility = true,
+                    searchVisibility = scenarios.isNotEmpty(),
                     importBackupVisibility = true,
                     cancelVisibility = false,
                     selectAllVisibility = false,
-                    createBackupVisibility = true,
-                    createBackupEnabled = true,
+                    createBackupVisibility = scenarios.isNotEmpty(),
+                    createBackupEnabled = scenarios.isNotEmpty(),
                 )
             }
         }
@@ -111,7 +111,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
             }
         }
 
-    /** */
+    /** The list of scenario to be displayed. */
     val scenarioItems: StateFlow<List<ScenarioListItem>> =
         combine(filteredScenario, _menuState, selectedForBackup) { scenarios, menuState, backupSelection ->
             scenarios.mapNotNull { scenario ->
