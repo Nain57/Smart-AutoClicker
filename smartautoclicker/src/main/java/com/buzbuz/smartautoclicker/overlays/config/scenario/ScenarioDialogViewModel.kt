@@ -77,7 +77,7 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
                 events = repository.getCompleteEventList(scenario.id).mapIndexed { index, event ->
                     ConfiguredEvent(event, index)
                 },
-                endConditions = repository.getScenarioWithEndConditions(scenario.id).second,
+                endConditions = repository.getScenarioWithEndConditions(scenario.id)?.second ?: emptyList(),
             )
         }
     }

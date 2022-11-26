@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
 /**
@@ -75,17 +75,18 @@ internal class RepositoryImpl internal constructor(
     }
 
     override fun getScenario(scenarioId: Long): Flow<Scenario> = scenarioDao.getScenarioWithEvents(scenarioId)
-        .map { scenarioEntity ->
-            scenarioEntity.toScenario()
+        .mapNotNull { scenarioEntity ->
+            scenarioEntity?.toScenario()
         }
 
     override fun getScenarioWithEndConditionsFlow(scenarioId: Long) = scenarioDao.getScenarioWithEndConditionsFlow(scenarioId)
-        .map { scenarioWithEndConditions ->
+        .mapNotNull { scenarioWithEndConditions ->
+            scenarioWithEndConditions ?: return@mapNotNull null
             scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
         }
 
-    override suspend fun getScenarioWithEndConditions(scenarioId: Long): Pair<Scenario, List<EndCondition>> {
-        val scenarioWithEndConditions = scenarioDao.getScenarioWithEndConditions(scenarioId)
+    override suspend fun getScenarioWithEndConditions(scenarioId: Long): Pair<Scenario, List<EndCondition>>? {
+        val scenarioWithEndConditions = scenarioDao.getScenarioWithEndConditions(scenarioId) ?: return null
         return scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions
             .map { it.toEndCondition() }
     }
@@ -189,7 +190,7 @@ internal class RepositoryImpl internal constructor(
         launch {
             backupEngine.createBackup(
                 zipFileUri,
-                scenarios.map {
+                scenarios.mapNotNull {
                     scenarioDao.getCompleteScenario(it)
                 },
                 screenSize,
