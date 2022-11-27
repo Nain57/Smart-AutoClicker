@@ -28,32 +28,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/text_file_selection"
-            style="@style/ItemView.Big"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/text_size_list_item_text"
-            app:drawableEndCompat="@drawable/ic_chevron"
-            tools:text="@string/dialog_backup_create_select_file"/>
-
         <FrameLayout
-            android:id="@+id/layout_status"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height_big"
-            android:layout_marginTop="@dimen/margin_vertical_large"
-            android:layout_marginBottom="@dimen/margin_vertical_large"
-            android:visibility="gone">
+            android:layout_width="@dimen/dialog_export_icon_status_size"
+            android:layout_height="@dimen/dialog_export_icon_status_size"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/icon_status"
-                android:layout_width="@dimen/item_height_big"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:visibility="gone"/>
+                android:src="@drawable/img_save"
+                android:scaleType="fitCenter"
+                tools:visibility="visible"/>
 
             <ProgressBar
                 android:id="@+id/loading"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:visibility="gone"
@@ -61,40 +52,47 @@
 
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/text_status"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/text_file_selection"
+            style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_horizontal_default"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            tools:text="@string/dialog_backup_create_select_file"
+            tools:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/text_status"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:gravity="center"
             android:text="@string/dialog_backup_create_progress"
-            android:textSize="@dimen/text_size_list_item_text"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <LinearLayout
             android:id="@+id/layout_compat_warning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_extra_large"
+            android:layout_marginBottom="@dimen/margin_vertical_default"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:orientation="vertical"
-            android:visibility="gone">
-
-            <View style="@style/Separator"/>
+            android:visibility="visible">
 
             <TextView
+                style="@style/AppTheme.TextAppearance.BodyLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_horizontal_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_status"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center"
-                android:text="@string/dialog_backup_import_compatibility"
-                android:textSize="@dimen/text_size_list_item_text"/>
+                android:text="@string/dialog_backup_import_compatibility"/>
 
         </LinearLayout>
-
-        <View style="@style/Separator"/>
 
     </LinearLayout>
 

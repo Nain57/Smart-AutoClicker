@@ -78,6 +78,11 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    <!-- Style for an text button -->
+    <style name="AppTheme.Widget.TextButtonOutlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
     <!-- Style for an icon button -->
     <style name="AppTheme.Widget.IconButton" parent="Widget.Material3.Button.IconButton">
         <item name="android:layout_width">wrap_content</item>
@@ -176,6 +181,8 @@
     <style name="AppTheme.TextAppearance.CardItemHText" parent="@style/TextAppearance.Material3.BodyMedium"/>
     <!-- Text appearance for the body text. -->
     <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for the large body text. -->
+    <style name="AppTheme.TextAppearance.BodyLarge" parent="@style/TextAppearance.Material3.BodyLarge"/>
     <!-- Text appearance for the empty lists text. -->
     <style name="AppTheme.TextAppearance.EmptyText" parent="@style/TextAppearance.Material3.HeadlineSmall"/>
 
