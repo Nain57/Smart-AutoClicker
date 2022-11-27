@@ -28,7 +28,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_vertical_extra_large"
+        android:layout_marginTop="@dimen/margin_vertical_large"
         android:layout_marginBottom="@dimen/margin_vertical_extra_large"
         android:scrollbars="vertical">
 
@@ -43,7 +43,7 @@
                 android:id="@+id/edit_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dropdown_one_line_helper_text_height"
-                android:layout_marginVertical="@dimen/margin_vertical_small"/>
+                android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
             <include layout="@layout/include_input_field_text"
                 android:id="@+id/edit_press_duration_layout"

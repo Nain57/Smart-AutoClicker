@@ -31,9 +31,7 @@ import com.buzbuz.smartautoclicker.baseui.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.domain.EndCondition
-import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.base.utils.setError
-import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -76,12 +74,13 @@ class EndConditionConfigDialog(
                 }
             }
 
-            executionCount.apply {
-                filters = arrayOf(MinMaxInputFilter(MIN_EXECUTION_COUNT, MAX_EXECUTION_COUNT))
-                addTextChangedListener(OnAfterTextChangedListener {
+            editExecutionCountLayout.apply {
+                setLabel(R.string.dialog_end_condition_config_executions_title)
+                setOnTextChangedListener {
                     try { viewModel.setExecutions(it.toString().toInt()) }
                     catch (_: java.lang.NumberFormatException) {}
-                })
+                }
+                textField.filters = arrayOf(MinMaxInputFilter(MIN_EXECUTION_COUNT, MAX_EXECUTION_COUNT))
             }
         }
 
@@ -93,7 +92,7 @@ class EndConditionConfigDialog(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canBeDeleted.collect(::updateDeleteButton) }
                 launch { viewModel.eventViewState.collect(::updateEvent) }
-                launch { viewModel.executionCountError.collect(viewBinding.executionCountLayout::setError) }
+                launch { viewModel.executionCountError.collect(viewBinding.editExecutionCountLayout::setError) }
                 launch { viewModel.executions.collect(::updateExecutionCount) }
                 launch { viewModel.isValidEndCondition.collect(::updateSaveButton) }
             }
@@ -157,7 +156,7 @@ class EndConditionConfigDialog(
 
     /** Update the display of the executions count. */
     private fun updateExecutionCount(count: Int) {
-        viewBinding.executionCount.setText(count.toString())
+        viewBinding.editExecutionCountLayout.setText(count.toString())
     }
 
     /** Show the event selection dialog. */

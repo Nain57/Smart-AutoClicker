@@ -19,25 +19,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin_vertical_large"
+    android:layout_marginBottom="@dimen/margin_vertical_extra_large"
     android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        android:layout_marginVertical="@dimen/margin_horizontal_default"
         android:orientation="vertical">
 
         <include layout="@layout/include_input_field_text"
             android:id="@+id/event_name_input_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dropdown_one_line_helper_text_height"/>
+            android:layout_height="@dimen/dropdown_one_line_helper_text_height"
+            android:layout_marginBottom="@dimen/margin_horizontal_small"/>
 
         <include layout="@layout/include_input_field_dropdown"
             android:id="@+id/conditions_operator_field"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dropdown_two_lines_helper_text_height"
-            android:layout_marginVertical="@dimen/margin_vertical_default"/>
+            android:layout_height="@dimen/dropdown_two_lines_helper_text_height"/>
 
     </LinearLayout>
 

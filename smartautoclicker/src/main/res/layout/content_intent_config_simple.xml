@@ -26,6 +26,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
         android:layout_marginStart="@dimen/margin_horizontal_default"
         android:layout_marginEnd="@dimen/margin_horizontal_default"
         android:orientation="vertical">
@@ -33,8 +35,8 @@
         <include layout="@layout/include_input_field_text"
             android:id="@+id/edit_name_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_horizontal_default"
+            android:layout_height="@dimen/dropdown_one_line_helper_text_height"
+            android:layout_marginVertical="@dimen/margin_horizontal_small"
             android:hint="@string/dialog_event_config_name_title"
             app:endIconMode="clear_text"/>
 

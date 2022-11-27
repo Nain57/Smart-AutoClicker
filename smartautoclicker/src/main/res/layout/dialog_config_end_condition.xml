@@ -44,18 +44,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-            android:layout_marginVertical="@dimen/margin_vertical_large"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            android:layout_marginBottom="@dimen/margin_vertical_extra_large"
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/event_card"
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/execution_count_layout"
-                app:layout_constraintBottom_toTopOf="@id/end_conditions_card">
+                android:layout_height="wrap_content">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -116,27 +113,12 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/execution_count_layout"
+            <include layout="@layout/include_input_field_text"
+                android:id="@+id/edit_execution_count_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dropdown_one_line_helper_text_height"
                 android:layout_marginTop="@dimen/margin_vertical_large"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/detection_quality_card"
-                app:endIconMode="clear_text"
-                android:hint="@string/dialog_end_condition_config_executions_title">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/execution_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:importantForAutofill="no"
-                    tools:text="3"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginBottom="@dimen/margin_vertical_small" />
 
         </LinearLayout>
 
