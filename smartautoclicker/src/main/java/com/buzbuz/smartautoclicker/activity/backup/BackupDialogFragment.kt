@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.activity.backup
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,8 +31,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.setCustomTitle
 import com.buzbuz.smartautoclicker.databinding.DialogBackupBinding
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
@@ -104,11 +104,8 @@ class BackupDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewBinding = DialogBackupBinding.inflate(layoutInflater)
 
-        val dialog = AlertDialog.Builder(requireContext())
-            .setCustomTitle(
-                R.layout.view_dialog_title,
-                if (isImport) R.string.dialog_backup_import_title else R.string.dialog_backup_create_title
-            )
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(if (isImport) R.string.dialog_backup_import_title else R.string.dialog_backup_create_title)
             .setView(viewBinding.root)
             .setCancelable(false)
             .setPositiveButton(android.R.string.ok, null)
@@ -154,9 +151,6 @@ class BackupDialogFragment : DialogFragment() {
                 state.iconStatus?.let { setImageResource(it) }
                 state.iconTint?.let { drawable.setTint(it) }
             }
-
-            layoutStatus.visibility = if (iconStatus.visibility == View.VISIBLE || loading.visibility == View.VISIBLE)
-                View.VISIBLE else View.GONE
 
             setDialogButtonsEnabledState(
                 enabledPositive = state.dialogOkButtonEnabled,

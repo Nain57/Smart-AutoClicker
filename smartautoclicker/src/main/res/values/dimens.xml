@@ -46,6 +46,8 @@
     <dimen name="card_view_width_horizontal_list">100dp</dimen>
     <dimen name="card_view_height_horizontal_list">100dp</dimen>
 
+    <dimen name="dialog_export_icon_status_size">72dp</dimen>
+
     <dimen name="empty_min_height">100dp</dimen>
     <dimen name="image_button_size">48dp</dimen>
     <dimen name="item_height">48dp</dimen>
