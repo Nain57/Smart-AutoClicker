@@ -62,15 +62,17 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     val position: Flow<Point?> = configuredClick
         .filterNotNull()
         .map { click ->
-            if (click.x != null && click.y != null) Point(click.x!!, click.y!!)
-            else null
+            if (click.clickOnCondition || click.x == null || click.y == null) null
+            else Point(click.x!!, click.y!!)
         }
 
     val clickTypeItemOnCondition = DropdownItem(
         title = R.string.dropdown_item_title_click_position_type_on_condition,
+        helperText = R.string.dropdown_helper_text_click_position_type_on_condition,
     )
     val clickTypeItemOnPosition = DropdownItem(
         title= R.string.dropdown_item_title_click_position_type_on_position,
+        helperText = R.string.dropdown_helper_text_click_position_type_on_position,
     )
     /** Items for the click type dropdown field. */
     val clickTypeItems = listOf(clickTypeItemOnCondition, clickTypeItemOnPosition)
