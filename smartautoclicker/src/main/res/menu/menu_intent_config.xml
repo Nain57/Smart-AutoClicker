@@ -20,10 +20,10 @@
         android:id="@+id/page_simple"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="@string/dialog_action_config_intent_config_type_simple"/>
+        android:title="@string/menu_item_title_simple"/>
     <item
         android:id="@+id/page_advanced"
         android:enabled="true"
         android:icon="@drawable/ic_settings_advanced"
-        android:title="@string/dialog_action_config_intent_config_type_advanced"/>
+        android:title="@string/menu_item_title_advanced"/>
 </menu>

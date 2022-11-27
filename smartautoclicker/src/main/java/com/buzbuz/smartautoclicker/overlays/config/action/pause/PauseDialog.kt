@@ -76,13 +76,13 @@ class PauseDialog(
             }
 
             editNameLayout.apply {
-                setLabel(R.string.dialog_event_config_name_title)
+                setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
             }
 
             editPauseDurationLayout.apply {
                 textField.filters = arrayOf(DurationInputFilter())
-                setLabel(R.string.dialog_pause_config_label_duration)
+                setLabel(R.string.input_field_label_pause_duration)
                 setOnTextChangedListener {
                     viewModel.setPauseDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }

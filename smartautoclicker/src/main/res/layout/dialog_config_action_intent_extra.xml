@@ -61,7 +61,7 @@
                         style="@style/AppTheme.TextAppearance.CardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/dialog_action_config_intent_advanced_extras_config_value"
+                        android:text="@string/section_title_intent_extras_value"
                         android:labelFor="@+id/edit_name"/>
 
                     <com.google.android.material.button.MaterialButton
@@ -70,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="@string/dialog_action_config_intent_advanced_extras_config_value_type_none"
+                        android:text="@string/button_text_intent_extra_type_select"
                         tools:visibility="gone"/>
 
                     <com.google.android.material.textview.MaterialTextView

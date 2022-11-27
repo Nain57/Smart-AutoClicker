@@ -80,7 +80,7 @@ class ConditionDialog(
             }
 
             editNameLayout.apply {
-                setLabel(R.string.dialog_event_config_name_title)
+                setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
             }
 
@@ -145,7 +145,7 @@ class ConditionDialog(
     private fun updateThreshold(newThreshold: Int) {
         viewBinding.apply {
             textDiffThreshold.text = context.getString(
-                R.string.dialog_condition_threshold_value,
+                R.string.message_condition_threshold_value,
                 newThreshold,
             )
 

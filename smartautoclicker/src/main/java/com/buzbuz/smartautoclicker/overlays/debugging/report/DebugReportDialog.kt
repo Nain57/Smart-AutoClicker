@@ -56,7 +56,7 @@ class DebugReportDialog(context: Context): OverlayDialogController(context, R.st
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogDebugReportBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_debug_report_title)
+                dialogTitle.setText(R.string.dialog_overlay_title_debug_report)
                 buttonSave.visibility = View.GONE
                 buttonDismiss.setOnClickListener { destroy() }
             }

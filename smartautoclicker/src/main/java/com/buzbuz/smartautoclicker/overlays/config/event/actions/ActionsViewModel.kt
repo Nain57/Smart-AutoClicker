@@ -162,26 +162,26 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
 sealed class ActionTypeChoice(title: Int, description: Int, iconId: Int?): DialogChoice(title, description, iconId) {
     /** Click Action choice. */
     object Click : ActionTypeChoice(
-        R.string.dialog_action_type_click,
-        R.string.dialog_desc_click,
+        R.string.item_title_click,
+        R.string.item_desc_click,
         R.drawable.ic_click,
     )
     /** Swipe Action choice. */
     object Swipe : ActionTypeChoice(
-        R.string.dialog_action_type_swipe,
-        R.string.dialog_desc_swipe,
+        R.string.item_title_swipe,
+        R.string.item_desc_swipe,
         R.drawable.ic_swipe,
     )
     /** Pause Action choice. */
     object Pause : ActionTypeChoice(
-        R.string.dialog_action_type_pause,
-        R.string.dialog_desc_pause,
+        R.string.item_title_pause,
+        R.string.item_desc_pause,
         R.drawable.ic_wait,
     )
     /** Intent Action choice. */
     object Intent : ActionTypeChoice(
-        R.string.dialog_action_type_intent,
-        R.string.dialog_desc_intent,
+        R.string.item_title_intent,
+        R.string.item_desc_intent,
         R.drawable.ic_intent,
     )
 }

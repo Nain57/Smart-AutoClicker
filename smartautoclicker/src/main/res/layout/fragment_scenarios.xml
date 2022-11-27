@@ -33,7 +33,7 @@
             android:id="@+id/topAppBar"
             style="@style/AppTheme.Widget.Toolbar"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:title="@string/activity_scenario_title"
+            app:title="@string/activity_title"
             app:menu="@menu/menu_scenario_fragment" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -67,7 +67,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/empty_lottie_view"
             app:layout_constraintBottom_toTopOf="@id/empty_create_button"
-            android:text="@string/fragment_scenario_empty_list"
+            android:text="@string/message_empty_scenario_list"
             android:gravity="center_horizontal"/>
 
         <com.google.android.material.button.MaterialButton

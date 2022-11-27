@@ -70,14 +70,14 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
         // First, add the actions from the current event
         val eventItems = eventActions.toCopyItemsFromCurrentEvent()
         if (eventItems.isNotEmpty()) {
-            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
+            allItems.add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
             allItems.addAll(eventItems)
         }
 
         // Then, add all other actions. Remove the one already in this event.
         val actions = dbActions.toCopyItemsFromOtherEvents(eventItems)
         if (actions.isNotEmpty()) {
-            allItems.add(ActionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
+            allItems.add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
             allItems.addAll(actions)
         }
 

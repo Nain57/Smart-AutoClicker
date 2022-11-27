@@ -52,7 +52,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:iconifiedByDefault="true"
-        app:queryHint="@string/dialog_event_copy_search"
+        app:queryHint="@string/search_view_hint_event_copy"
         android:imeOptions="actionSearch"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

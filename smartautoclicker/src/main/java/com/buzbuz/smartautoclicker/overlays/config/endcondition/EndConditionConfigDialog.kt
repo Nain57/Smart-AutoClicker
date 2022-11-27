@@ -75,7 +75,7 @@ class EndConditionConfigDialog(
             }
 
             editExecutionCountLayout.apply {
-                setLabel(R.string.dialog_end_condition_config_executions_title)
+                setLabel(R.string.input_field_label_execution_count)
                 setOnTextChangedListener {
                     try { viewModel.setExecutions(it.toString().toInt()) }
                     catch (_: java.lang.NumberFormatException) {}

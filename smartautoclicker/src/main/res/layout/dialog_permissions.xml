@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                 android:layout_marginBottom="@dimen/margin_vertical_large"
-                android:text="@string/dialog_permissions_header"
+                android:text="@string/item_desc_permissions"
                 android:textSize="@dimen/text_size_list_item_text"/>
 
             <com.google.android.material.divider.MaterialDivider
@@ -75,10 +75,10 @@
                     android:layout_marginTop="@dimen/margin_vertical_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_permission_overlay"
+                    android:text="@string/item_title_permission_overlay"
                     android:textSize="@dimen/text_size_list_item_text_big"
                     android:textStyle="bold"
-                    tools:text="@string/dialog_permission_overlay"/>
+                    tools:text="@string/item_title_permission_overlay"/>
 
                 <TextView
                     android:id="@+id/text_config_overlay_desc"
@@ -92,7 +92,7 @@
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:layout_marginBottom="@dimen/margin_vertical_small"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_permission_overlay_desc"
+                    android:text="@string/item_desc_permission_overlay"
                     android:textSize="@dimen/text_size_list_item_text_small"
                     android:textStyle="italic"/>
 
@@ -130,7 +130,7 @@
                     android:layout_marginTop="@dimen/margin_vertical_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_permission_accessibility"
+                    android:text="@string/item_title_permission_accessibility"
                     android:textSize="@dimen/text_size_list_item_text_big"
                     android:textStyle="bold"/>
 
@@ -146,7 +146,7 @@
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:layout_marginBottom="@dimen/margin_vertical_small"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_permission_accessibility_desc"
+                    android:text="@string/item_desc_permission_accessibility"
                     android:textSize="@dimen/text_size_list_item_text_small"
                     android:textStyle="italic"/>
 
@@ -184,7 +184,7 @@
                     android:layout_marginTop="@dimen/margin_vertical_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_permission_notification"
+                    android:text="@string/item_title_permission_notification"
                     android:textSize="@dimen/text_size_list_item_text_big"
                     android:textStyle="bold"/>
 
@@ -200,7 +200,7 @@
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:layout_marginBottom="@dimen/margin_vertical_small"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_permission_notification_desc"
+                    android:text="@string/item_desc_permission_notification"
                     android:textSize="@dimen/text_size_list_item_text_small"
                     android:textStyle="italic"/>
 

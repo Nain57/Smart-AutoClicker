@@ -51,7 +51,7 @@ class EventConfigContent : NavBarDialogContent() {
 
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             eventNameInputLayout.apply {
-                setLabel(R.string.dialog_event_config_name_title)
+                setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setEventName(it.toString()) }
             }
 

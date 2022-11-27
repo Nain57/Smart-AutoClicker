@@ -79,13 +79,13 @@ class SwipeDialog(
             }
 
             editNameLayout.apply {
-                setLabel(R.string.dialog_event_config_name_title)
+                setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
             }
 
             editSwipeDurationLayout.apply {
                 textField.filters = arrayOf(DurationInputFilter())
-                setLabel(R.string.dialog_swipe_config_label_duration)
+                setLabel(R.string.input_field_label_swipe_duration)
                 setOnTextChangedListener {
                     viewModel.setSwipeDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
@@ -131,12 +131,12 @@ class SwipeDialog(
 
     private fun updateSwipePositionsButtonText(positions: Pair<Point, Point>?) {
         if (positions == null) {
-            viewBinding.onPositionSelectButton.setText(R.string.dialog_swipe_config_positions_select)
+            viewBinding.onPositionSelectButton.setText(R.string.button_text_swipe_positions_select)
             return
         }
 
         viewBinding.onPositionSelectButton.text = context.getString(
-            R.string.dialog_action_config_swipe_position,
+            R.string.item_desc_swipe_positions,
             positions.first.x,
             positions.first.y,
             positions.second.x,

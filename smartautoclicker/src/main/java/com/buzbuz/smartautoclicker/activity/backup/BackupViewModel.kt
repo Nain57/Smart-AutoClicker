@@ -128,8 +128,8 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
         iconStatusVisibility = View.VISIBLE,
         dialogOkButtonEnabled = false,
         dialogCancelButtonEnabled = true,
-        fileSelectionText = if (isImport) getContext().getString(R.string.dialog_backup_import_select_file)
-                            else getContext().getString(R.string.dialog_backup_create_select_file),
+        fileSelectionText = if (isImport) getContext().getString(R.string.item_title_backup_import_select_file)
+                            else getContext().getString(R.string.item_title_backup_create_select_file),
         iconStatus = if (isImport) R.drawable.img_load else R.drawable.img_save,
     )
 
@@ -147,8 +147,8 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
         iconStatusVisibility = View.GONE,
         dialogOkButtonEnabled = false,
         dialogCancelButtonEnabled = false,
-        textStatusText = if (isImport) getContext().getString(R.string.dialog_backup_import_progress, backup.progress ?: 0)
-                         else getContext().getString(R.string.dialog_backup_create_progress, backup.progress ?: 0, backup.maxProgress ?: 0),
+        textStatusText = if (isImport) getContext().getString(R.string.message_backup_import_progress, backup.progress ?: 0)
+                         else getContext().getString(R.string.message_backup_create_progress, backup.progress ?: 0, backup.maxProgress ?: 0),
     )
 
     /** @return Get the verification backup UI state. */
@@ -160,7 +160,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
         iconStatusVisibility = View.GONE,
         dialogOkButtonEnabled = false,
         dialogCancelButtonEnabled = false,
-        textStatusText = getContext().getString(R.string.dialog_backup_import_verification)
+        textStatusText = getContext().getString(R.string.message_backup_import_verification)
     )
 
     /**
@@ -176,8 +176,8 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
         iconStatusVisibility = View.VISIBLE,
         dialogOkButtonEnabled = false,
         dialogCancelButtonEnabled = true,
-        textStatusText = if (isImport) getContext().getString(R.string.dialog_backup_import_error)
-                         else getContext().getString(R.string.dialog_backup_create_error),
+        textStatusText = if (isImport) getContext().getString(R.string.message_backup_import_error)
+                         else getContext().getString(R.string.message_backup_create_error),
         iconStatus = R.drawable.img_error,
         iconTint = Color.RED,
     )
@@ -191,13 +191,13 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
     private fun getCompletedState(backup: Backup.Completed, isImport: Boolean): BackupDialogUiState {
         var iconStatus = R.drawable.img_success
         val textStatus = when {
-            !isImport -> getContext().getString(R.string.dialog_backup_create_completed)
+            !isImport -> getContext().getString(R.string.message_backup_create_completed)
             backup.failureCount == 0 ->
-                getContext().getString(R.string.dialog_backup_import_completed, backup.successCount)
+                getContext().getString(R.string.message_backup_import_completed, backup.successCount)
             else -> {
                 iconStatus = R.drawable.img_warning
                 getContext().getString(
-                    R.string.dialog_backup_import_completed_with_error,
+                    R.string.message_backup_import_completed_with_error,
                     backup.successCount,
                     backup.failureCount
                 )

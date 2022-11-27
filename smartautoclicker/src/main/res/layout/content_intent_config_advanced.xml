@@ -80,7 +80,7 @@
                     style="@style/AppTheme.TextAppearance.CardTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_action_config_intent_advanced_extras_title"/>
+                    android:text="@string/section_title_intent_extra"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/extras_list"

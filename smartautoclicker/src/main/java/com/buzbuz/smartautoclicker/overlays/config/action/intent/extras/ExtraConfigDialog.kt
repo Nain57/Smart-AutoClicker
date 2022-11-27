@@ -84,7 +84,7 @@ class ExtraConfigDialog(
             }
 
             editKeyLayout.apply {
-                setLabel(R.string.dialog_action_config_intent_advanced_extras_config_key)
+                setLabel(R.string.input_field_label_intent_extra_key)
                 setOnTextChangedListener { viewModel.setKey(it.toString()) }
             }
 
@@ -194,7 +194,7 @@ class ExtraConfigDialog(
         showSubOverlay(
             overlayController = MultiChoiceDialog(
                 context = context,
-                dialogTitleText = R.string.dialog_action_config_intent_advanced_extras_config_value_type,
+                dialogTitleText = R.string.dialog_overlay_title_intent_extras_value_type,
                 choices = ExtraTypeChoice.getAllChoices(),
                 onChoiceSelected = viewModel::setType
             ),

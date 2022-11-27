@@ -95,14 +95,14 @@ class ConditionCopyModel(application: Application) : CopyViewModel<Condition>(ap
         // First, add the actions from the current event
         val eventItems = eventConditions.toCopyItemsFromCurrentEvent()
         if (eventItems.isNotEmpty()) {
-            allItems.add(ConditionCopyItem.HeaderItem(R.string.dialog_action_copy_header_event))
+            allItems.add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
             allItems.addAll(eventItems)
         }
 
         // Then, add all other conditions. Remove the one already in this event.
         val conditions = dbConditions.toCopyItemsFromOtherEvents(eventItems)
         if (conditions.isNotEmpty()) {
-            allItems.add(ConditionCopyItem.HeaderItem(R.string.dialog_action_copy_header_all))
+            allItems.add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
             allItems.addAll(conditions)
         }
 

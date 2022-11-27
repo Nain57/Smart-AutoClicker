@@ -53,22 +53,22 @@ class DebugReportConditionDialog(
         viewBinding.apply {
             rootTriggerCount.apply {
                 setValues(
-                    R.string.dialog_debug_report_condition_detected_count,
+                    R.string.section_title_report_condition_detected_count,
                     conditionReport.matchCount,
-                    R.string.dialog_debug_report_condition_processing_count,
+                    R.string.section_title_report_condition_processing_count,
                     conditionReport.processingCount,
                 )
             }
 
             rootProcessingTiming.setValues(
-                R.string.dialog_debug_report_timing_title,
+                R.string.section_title_report_timing_title,
                 conditionReport.minProcessingDuration,
                 conditionReport.avgProcessingDuration,
                 conditionReport.maxProcessingDuration,
             )
 
             rootConfidenceRate.setValues(
-                R.string.dialog_debug_report_confidence_title,
+                R.string.section_title_report_confidence_title,
                 conditionReport.minConfidence,
                 conditionReport.avgConfidence,
                 conditionReport.maxConfidence,

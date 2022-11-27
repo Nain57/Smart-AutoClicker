@@ -34,7 +34,7 @@
         app:layout_constraintEnd_toStartOf="@id/choice_chevron"
         android:textAppearance="@style/AppTheme.TextAppearance.ListItemTitle"
         android:gravity="center_vertical"
-        tools:text="@string/dialog_action_type_swipe"
+        tools:text="@string/item_title_swipe"
         tools:textColor="@android:color/black"/>
 
     <ImageView
