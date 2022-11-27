@@ -91,7 +91,7 @@
 
                 <TextView
                     android:id="@+id/debug_event_name"
-                    style="@style/DebugText"
+                    style="@style/AppTheme.TextAppearance.DebugOverlayText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
@@ -106,7 +106,7 @@
 
                 <TextView
                     android:id="@+id/debug_condition_name"
-                    style="@style/DebugText"
+                    style="@style/AppTheme.TextAppearance.DebugOverlayText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
@@ -121,7 +121,7 @@
 
                 <TextView
                     android:id="@+id/debug_confidence_rate"
-                    style="@style/DebugText"
+                    style="@style/AppTheme.TextAppearance.DebugOverlayText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_mini"

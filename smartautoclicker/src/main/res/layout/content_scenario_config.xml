@@ -67,11 +67,12 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_quality_value"
-                    style="@style/ItemView.Small"
+                    style="@style/AppTheme.TextAppearance.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_horizontal_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_list_item_text"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/detection_quality_title"

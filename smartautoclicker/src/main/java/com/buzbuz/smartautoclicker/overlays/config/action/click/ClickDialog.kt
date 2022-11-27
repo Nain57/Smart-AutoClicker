@@ -137,11 +137,10 @@ class ClickDialog(
 
             when (newType) {
                 viewModel.clickTypeItemOnCondition -> {
-                    onConditionDesc.visibility = View.VISIBLE
-                    onPositionSelectButton.visibility = View.GONE
+                    onPositionSelectButton.isEnabled = false
                 }
                 viewModel.clickTypeItemOnPosition -> {
-                    onConditionDesc.visibility = View.GONE
+                    onPositionSelectButton.isEnabled = true
                     onPositionSelectButton.visibility = View.VISIBLE
                 }
             }

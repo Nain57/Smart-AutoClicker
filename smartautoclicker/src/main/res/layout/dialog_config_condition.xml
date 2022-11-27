@@ -119,13 +119,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/dialog_condition_threshold_title"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/text_diff_threshold"
-                        style="@style/ItemView.Small"
+                        style="@style/AppTheme.TextAppearance.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_horizontal_small"
                         android:layout_marginEnd="@dimen/margin_horizontal_small"
                         android:gravity="center_vertical"
-                        android:textSize="@dimen/text_size_list_item_text"
                         android:text="@string/dialog_condition_threshold_value"
                         tools:text="Value: 12%"/>
 
