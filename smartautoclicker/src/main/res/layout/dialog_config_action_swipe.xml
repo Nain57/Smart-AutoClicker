@@ -28,7 +28,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/margin_vertical_large"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -42,22 +43,20 @@
                 android:id="@+id/edit_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dropdown_one_line_helper_text_height"
-                android:layout_marginVertical="@dimen/margin_horizontal_default"/>
+                android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
             <include layout="@layout/include_input_field_text"
                 android:id="@+id/edit_swipe_duration_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dropdown_one_line_helper_text_height"
-                android:layout_marginBottom="@dimen/margin_horizontal_default"/>
+                android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/on_position_select_button"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/dialog_swipe_config_positions_select"
-                android:visibility="visible"/>
+                android:text="@string/dialog_swipe_config_positions_select"/>
 
         </LinearLayout>
 
