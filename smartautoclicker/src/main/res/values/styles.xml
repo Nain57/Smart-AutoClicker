@@ -185,6 +185,14 @@
     <style name="AppTheme.TextAppearance.BodyLarge" parent="@style/TextAppearance.Material3.BodyLarge"/>
     <!-- Text appearance for the empty lists text. -->
     <style name="AppTheme.TextAppearance.EmptyText" parent="@style/TextAppearance.Material3.HeadlineSmall"/>
+    <!-- Text appearance for the debug overlay. -->
+    <style name="AppTheme.TextAppearance.DebugOverlayText" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:paddingStart">@dimen/margin_horizontal_mini</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_mini</item>
+        <item name="android:fontFamily">sans-serif-medium"</item>
+        <item name="android:textSize">@dimen/text_size_item_title</item>
+        <item name="android:textColor">@color/textTitle</item>
+    </style>
 
     <!-- Base overlays theme. -->
     <style name="AppTheme.Overlay" />
@@ -255,69 +263,6 @@
         <item name="showCaptureAnimationDuration">@integer/duration_show_capture_animation_ms</item>
         <item name="minimumZoomValue">@integer/capture_minimum_zoom</item>
         <item name="maximumZoomValue">@integer/capture_maximum_zoom</item>
-    </style>
-
-    <style name="AppTheme.Dialog.ToggleButtonDesc">
-        <item name="android:maxLines">2</item>
-        <item name="android:lines">2</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body</item>
-    </style>
-
-    <style name="ItemView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/item_height</item>
-        <item name="android:paddingStart">@dimen/margin_horizontal_default</item>
-        <item name="android:paddingEnd">@dimen/margin_horizontal_default</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-    </style>
-
-    <style name="ItemView.Big">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/item_height_big</item>
-    </style>
-
-    <style name="ItemView.Small">
-        <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
-        <item name="android:paddingEnd">@dimen/margin_horizontal_small</item>
-    </style>
-
-    <style name="Separator">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@android:drawable/divider_horizontal_bright</item>
-    </style>
-
-    <style name="DialogTitle" parent="@android:style/TextAppearance.Widget.TextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/item_height</item>
-        <item name="android:paddingStart">@dimen/margin_horizontal_large</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/textTitle</item>
-        <item name="android:textSize">@dimen/text_size_dialog_title</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="DialogTitleIcon">
-        <item name="android:layout_width">@dimen/item_height</item>
-        <item name="android:layout_height">@dimen/item_height</item>
-        <item name="android:paddingStart">@dimen/margin_horizontal_large</item>
-        <item name="android:gravity">center</item>
-        <item name="android:tint">@color/textTitle</item>
-    </style>
-
-    <style name="DebugText" parent="@android:style/TextAppearance.Widget.TextView">
-        <item name="android:paddingStart">@dimen/margin_horizontal_mini</item>
-        <item name="android:paddingEnd">@dimen/margin_horizontal_mini</item>
-        <item name="android:fontFamily">sans-serif-medium"</item>
-        <item name="android:textSize">@dimen/text_size_item_title</item>
-        <item name="android:textColor">@color/textTitle</item>
-    </style>
-
-    <style name="DebugText.Big">
-        <item name="android:textSize">@dimen/text_size_big</item>
     </style>
 
 </resources>

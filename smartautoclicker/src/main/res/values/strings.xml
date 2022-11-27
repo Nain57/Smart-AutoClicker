@@ -284,8 +284,8 @@
 
     <!-- Dropdown field for selecting the click position type -->
     <string name="dropdown_label_click_position_type">Click on</string>
-    <string name="dropdown_item_title_click_position_type_on_condition">condition</string>
-    <string name="dropdown_item_title_click_position_type_on_position">selected position</string>
+    <string name="dropdown_item_title_click_position_type_on_condition">Condition</string>
+    <string name="dropdown_item_title_click_position_type_on_position">Selected position</string>
 
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_label_intent_sending_type">Type</string>

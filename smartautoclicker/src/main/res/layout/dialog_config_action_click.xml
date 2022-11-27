@@ -79,29 +79,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
-                    <FrameLayout
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/on_position_select_button"
+                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/on_condition_desc"
-                            style="@style/AppTheme.Dialog.ToggleButtonDesc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/condition_operator_and_desc"
-                            android:visibility="gone"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/on_position_select_button"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/dialog_click_config_on_position_select"
-                            android:visibility="visible"/>
-
-                    </FrameLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/dialog_click_config_on_position_select"/>
 
                 </LinearLayout>
 
