@@ -75,7 +75,6 @@
     <string name="condition_operator_and_desc">All conditions are fulfilled</string>
     <string name="condition_operator_or_desc">At least one is fulfilled</string>
 
-    <string name="dialog_action_type_title">Action type</string>
     <string name="dialog_action_type_click">Click</string>
     <string name="dialog_action_type_swipe">Swipe</string>
     <string name="dialog_action_type_pause">Wait</string>
@@ -106,15 +105,13 @@
     <string name="dialog_action_config_intent_advanced_flags_title" translatable="false">Flags</string>
     <string name="dialog_action_config_intent_advanced_comp_name_title" translatable="false">Component name</string>
     <string name="dialog_action_config_intent_advanced_extras_title" translatable="false">Extras</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_title" translatable="false">Extra</string>
     <string name="dialog_action_config_intent_advanced_extras_config_boolean_true" translatable="false">True</string>
     <string name="dialog_action_config_intent_advanced_extras_config_boolean_false" translatable="false">False</string>
     <string name="dialog_action_config_intent_advanced_extras_config_key">Key</string>
     <string name="dialog_action_config_intent_advanced_extras_config_value">Value</string>
     <string name="dialog_action_config_intent_advanced_extras_config_value_type">Value type</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">Choisir un type</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">Select a type</string>
 
-    <string name="dialog_application_select_title">Select an application</string>
     <string name="dialog_application_select_empty">No application detected</string>
 
     <string name="dialog_action_new_title">New Action</string>
@@ -130,7 +127,6 @@
     <string name="dialog_action_copy_header_all">Actions from all events</string>
     <string name="dialog_action_copy_search">Search by action name</string>
 
-    <string name="dialog_condition_title">Condition</string>
     <string name="dialog_condition_name_title">Name</string>
     <string name="dialog_condition_detection_details_title">Detection details</string>
     <string name="dialog_condition_delete">Delete</string>
@@ -176,7 +172,6 @@
     <string name="content_desc_application_icon">The icon of the application to start.</string>
 
     <string name="dialog_unit_ms" translatable="false">ms</string>
-    <string name="dialog_copy_title">Copy from</string>
 
     <string name="dialog_scenario_settings_title">Scenario Settings</string>
     <string name="dialog_scenario_settings_quality_title">Detection quality</string>
@@ -185,12 +180,9 @@
     <string name="dialog_scenario_settings_end_condition_title">End conditions</string>
     <string name="dialog_scenario_settings_end_condition_card_executions" translatable="false">x%1$d</string>
     <string name="dialog_scenario_settings_end_condition_no_events">No events available</string>
-    <string name="dialog_end_condition_config_title">End Condition</string>
-    <string name="dialog_end_condition_config_event_title">Event</string>
     <string name="dialog_end_condition_config_event_no_selection">No Event selected</string>
     <string name="dialog_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
     <string name="dialog_end_condition_config_executions_title">Executions</string>
-    <string name="dialog_end_condition_event_select_title">Select an event</string>
 
     <string name="dialog_backup_create_title">Create backup</string>
     <string name="dialog_backup_create_select_file">Select output file</string>
@@ -257,6 +249,34 @@
     <string name="fragment_scenario_empty_list">Create your first scenario and start automatizing tasks on your phone</string>
     <string name="button_text_create_scenario">Create a scenario</string>
 
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_action_type">Action type</string>
+    <string name="dialog_overlay_title_application_selection">Select an application</string>
+    <string name="dialog_overlay_title_click">Click</string>
+    <string name="dialog_overlay_title_condition_config">Condition</string>
+    <string name="dialog_overlay_title_copy_from">Copy from</string>
+    <string name="dialog_overlay_title_end_condition_config">End Condition</string>
+    <string name="dialog_overlay_title_event_config">Event</string>
+    <string name="dialog_overlay_title_event_selection">Select an event</string>
+    <string name="dialog_overlay_title_extra_type_selection">Select a type</string>
+    <string name="dialog_overlay_title_intent">Intent</string>
+    <string name="dialog_overlay_title_pause">Wait</string>
+    <string name="dialog_overlay_title_scenario_config">Scenario</string>
+    <string name="dialog_overlay_title_swipe">Swipe</string>
+
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">Conditions</string>
     <string name="dropdown_item_title_condition_or">One</string>
@@ -292,7 +312,13 @@
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_label_intent_sending_type">Type</string>
 
-    <!-- The following strings should be kept the same in all languages. DO NOT TRANSLATE. -->
+
+    <!--
+      - The following strings should be kept the same in all languages.
+      - DO NOT TRANSLATE.
+      -->
+    <string name="dialog_overlay_title_extra_config" translatable="false">Extra</string>
+
     <string name="dropdown_item_title_intent_sending_type_activity" translatable="false">Start Activity</string>
     <string name="dropdown_item_title_intent_sending_type_broadcast" translatable="false">Send Broadcast</string>
 

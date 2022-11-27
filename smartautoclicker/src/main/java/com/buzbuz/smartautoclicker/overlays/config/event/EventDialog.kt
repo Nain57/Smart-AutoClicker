@@ -62,7 +62,7 @@ class EventDialog(
             topBarBinding.apply {
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 if (event.id != 0L) setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
-                dialogTitle.setText(R.string.dialog_event_config_title)
+                dialogTitle.setText(R.string.dialog_overlay_title_event_config)
             }
         }
     }

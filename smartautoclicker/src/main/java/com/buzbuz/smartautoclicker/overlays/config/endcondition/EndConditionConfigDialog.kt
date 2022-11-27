@@ -65,7 +65,7 @@ class EndConditionConfigDialog(
 
         viewBinding = DialogConfigEndConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_end_condition_config_title)
+                dialogTitle.setText(R.string.dialog_overlay_title_end_condition_config)
                 buttonDismiss.setOnClickListener { destroy() }
                 buttonDelete.setOnClickListener { onDeleteButtonClicked() }
                 buttonSave.apply {

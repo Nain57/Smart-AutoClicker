@@ -60,7 +60,7 @@ class ClickDialog(
 
         viewBinding = DialogConfigActionClickBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_action_type_click)
+                dialogTitle.setText(R.string.dialog_overlay_title_click)
 
                 buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {

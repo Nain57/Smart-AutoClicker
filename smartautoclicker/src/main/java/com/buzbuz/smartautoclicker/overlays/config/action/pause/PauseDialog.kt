@@ -62,7 +62,7 @@ class PauseDialog(
 
         viewBinding = DialogConfigActionPauseBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_action_type_pause)
+                dialogTitle.setText(R.string.dialog_overlay_title_pause)
 
                 buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {
