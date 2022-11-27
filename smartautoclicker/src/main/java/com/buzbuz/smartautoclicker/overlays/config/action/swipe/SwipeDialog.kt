@@ -65,7 +65,7 @@ class SwipeDialog(
 
         viewBinding = DialogConfigActionSwipeBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_action_type_swipe)
+                dialogTitle.setText(R.string.dialog_overlay_title_swipe)
 
                 buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {

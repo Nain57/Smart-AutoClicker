@@ -53,7 +53,7 @@ class EventSelectionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_end_condition_event_select_title)
+                dialogTitle.setText(R.string.dialog_overlay_title_event_selection)
                 buttonSave.visibility = View.GONE
                 buttonDismiss.setOnClickListener { destroy() }
             }

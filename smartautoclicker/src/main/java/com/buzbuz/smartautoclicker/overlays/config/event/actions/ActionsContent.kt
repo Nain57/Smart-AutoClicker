@@ -118,7 +118,7 @@ class ActionsContent : NavBarDialogContent() {
     private fun newActionTypeSelectionNavigationRequest() = NavigationRequest(
         MultiChoiceDialog(
             context = context,
-            dialogTitleText = R.string.dialog_action_type_title,
+            dialogTitleText = R.string.dialog_overlay_title_action_type,
             choices = listOf(
                 ActionTypeChoice.Click,
                 ActionTypeChoice.Swipe,

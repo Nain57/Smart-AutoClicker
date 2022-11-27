@@ -72,7 +72,6 @@
     <string name="condition_operator_and_desc">满足所有条件</string>
     <string name="condition_operator_or_desc">至少满足一个条件</string>
 
-    <string name="dialog_action_type_title">动作类型</string>
     <string name="dialog_action_type_click">单击</string>
     <string name="dialog_action_type_swipe">滑动</string>
     <string name="dialog_action_type_pause">等待</string>
@@ -103,7 +102,7 @@
     <string name="dialog_action_config_intent_advanced_flags_title" translatable="false">标识</string>
     <string name="dialog_action_config_intent_advanced_comp_name_title" translatable="false">组件名</string>
     <string name="dialog_action_config_intent_advanced_extras_title" translatable="false">附加参数</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_title" translatable="false">附加参数</string>
+    <string name="dialog_overlay_title_extra_config" translatable="false">附加参数</string>
     <string name="dialog_action_config_intent_advanced_extras_config_boolean_true" translatable="false">True</string>
     <string name="dialog_action_config_intent_advanced_extras_config_boolean_false" translatable="false">False</string>
     <string name="dialog_action_config_intent_advanced_extras_config_key">参数名</string>
@@ -111,7 +110,6 @@
     <string name="dialog_action_config_intent_advanced_extras_config_value_type">参数值类型</string>
     <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">选择一个参数类型</string>
 
-    <string name="dialog_application_select_title">选择一个应用程序</string>
     <string name="dialog_application_select_empty">没有应用程序被选择</string>
 
     <string name="dialog_action_new_title">添加新动作</string>
@@ -127,7 +125,6 @@
     <string name="dialog_action_copy_header_all">所有脚本下的动作</string>
     <string name="dialog_action_copy_search">通过动作名寻找</string>
 
-    <string name="dialog_condition_title">条件</string>
     <string name="dialog_condition_name_title">名字</string>
     <string name="dialog_condition_detection_details_title">检测细节</string>
     <string name="dialog_condition_delete">删除</string>
@@ -172,7 +169,6 @@
     <string name="content_desc_application_icon">应用图标</string>
 
     <string name="dialog_unit_ms" translatable="false">ms</string>
-    <string name="dialog_copy_title">复制自</string>
 
     <string name="dialog_scenario_settings_title">脚本设置</string>
     <string name="dialog_scenario_settings_quality_title">检测质量</string>
@@ -181,12 +177,9 @@
     <string name="dialog_scenario_settings_end_condition_title">终止条件</string>
     <string name="dialog_scenario_settings_end_condition_card_executions" translatable="false">x%1$d</string>
     <string name="dialog_scenario_settings_end_condition_no_events">没有可用的脚本</string>
-    <string name="dialog_end_condition_config_title">终止条件</string>
-    <string name="dialog_end_condition_config_event_title">动作</string>
     <string name="dialog_end_condition_config_event_no_selection">没有动作被选择</string>
     <string name="dialog_end_condition_config_event_none_in_scenario">没有在脚本中创建动作</string>
     <string name="dialog_end_condition_config_executions_title">执行次数</string>
-    <string name="dialog_end_condition_event_select_title">选择一个动作</string>
 
     <string name="dialog_backup_create_title">创建备份</string>
     <string name="dialog_backup_create_select_file">选择保存路径</string>
@@ -225,4 +218,65 @@
     <string name="dialog_debug_config_show_view">显示调试窗口</string>
     <string name="dialog_debug_config_generate_report">生成调试报告</string>
 
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_action_type">动作类型</string>
+    <string name="dialog_overlay_title_application_selection">选择一个应用程序</string>
+    <string name="dialog_overlay_title_click">单击</string>
+    <string name="dialog_overlay_title_condition_config">条件</string>
+    <string name="dialog_overlay_title_copy_from">复制自</string>
+    <string name="dialog_overlay_title_end_condition_config">终止条件</string>
+    <string name="dialog_overlay_title_event_config">动作</string>
+    <string name="dialog_overlay_title_event_selection">选择一个动作</string>
+    <string name="dialog_overlay_title_extra_type_selection">选择一个参数类型</string>
+    <string name="dialog_overlay_title_intent">意图</string>
+    <string name="dialog_overlay_title_pause">等待</string>
+    <string name="dialog_overlay_title_scenario_config">脚本</string>
+    <string name="dialog_overlay_title_swipe">滑动</string>
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
+    <!-- Dropdown field for selecting the conditions operator -->
+    <string name="dropdown_label_condition_operator">需匹配的图像</string>
+    <string name="dropdown_item_title_condition_or">One</string>
+    <string name="dropdown_item_title_condition_and">All</string>
+    <string name="dropdown_helper_text_condition_or">Only one condition must be fulfilled to trigger the actions</string>
+    <string name="dropdown_helper_text_condition_and">All conditions must be fulfilled to trigger the actions</string>
+
+    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
+    <string name="dropdown_helper_text_end_condition_or">Only one condition must be fulfilled to stop the scenario</string>
+    <string name="dropdown_helper_text_end_condition_and">All conditions must be fulfilled to stop the scenario</string>
+
+    <!-- Dropdown field for selecting the condition detection type. -->
+    <string name="dropdown_label_condition_detection_type">检测类型</string>
+    <string name="dropdown_item_title_detection_type_exact">Exact</string>
+    <string name="dropdown_item_title_detection_type_screen">Screen</string>
+    <string name="dropdown_helper_text_detection_type_exact">The condition detection is made at the captured position</string>
+    <string name="dropdown_helper_text_detection_type_screen">The condition detection is made on the whole screen</string>
+
+    <!-- Dropdown field for selecting the condition visibility. -->
+    <string name="dropdown_label_condition_visibility">Visibility</string>
+    <string name="dropdown_item_title_condition_visibility_present">Present</string>
+    <string name="dropdown_item_title_condition_visibility_absent">Absent</string>
+    <string name="dropdown_helper_text_condition_visibility_present">The condition must be detected</string>
+    <string name="dropdown_helper_text_condition_visibility_absent">The condition must not be detected</string>
+
+    <!-- Dropdown field for selecting the click position type -->
+    <string name="dropdown_label_click_position_type">Click on</string>
+    <string name="dropdown_item_title_click_position_type_on_condition">条件</string>
+    <string name="dropdown_item_title_click_position_type_on_position">Selected position</string>
+    <string name="dropdown_helper_text_click_position_type_on_condition">Click on the detected condition</string>
+    <string name="dropdown_helper_text_click_position_type_on_position">Click on the selected position</string>
+
+    <!-- Dropdown field for selecting the intent sending type. -->
+    <string name="dropdown_label_intent_sending_type">Type</string>
 </resources>

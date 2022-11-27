@@ -76,7 +76,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="@string/dialog_application_select_title"
+                        android:text="@string/dialog_overlay_title_application_selection"
                         tools:visibility="gone"/>
 
                 </FrameLayout>

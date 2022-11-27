@@ -60,7 +60,7 @@ class ConditionDialog(
 
         viewBinding = DialogConfigConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_condition_title)
+                dialogTitle.setText(R.string.dialog_overlay_title_condition_config)
 
                 buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {

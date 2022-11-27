@@ -70,7 +70,7 @@ class ExtraConfigDialog(
 
         viewBinding = DialogConfigActionIntentExtraBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_action_config_intent_advanced_extras_config_title)
+                dialogTitle.setText(R.string.dialog_overlay_title_extra_config)
 
                 buttonDismiss.setOnClickListener { destroy() }
                 buttonSave.apply {

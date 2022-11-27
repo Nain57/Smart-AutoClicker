@@ -58,6 +58,7 @@ class ScenarioDialog(
 
         return super.onCreateView().also {
             topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+            topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_scenario_config)
         }
     }
 

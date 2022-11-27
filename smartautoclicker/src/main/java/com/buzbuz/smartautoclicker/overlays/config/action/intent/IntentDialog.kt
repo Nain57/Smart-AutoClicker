@@ -55,7 +55,7 @@ class IntentDialog(
         viewModel.setConfiguredIntent(intent)
 
         return super.onCreateView().also {
-            topBarBinding.dialogTitle.setText(R.string.dialog_action_type_intent)
+            topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_intent)
             topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
         }
     }

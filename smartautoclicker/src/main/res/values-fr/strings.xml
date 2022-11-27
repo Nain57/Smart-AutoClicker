@@ -64,7 +64,6 @@
     <string name="condition_operator_or">Une seule condition</string>
     <string name="condition_operator_and_desc">Toutes les conditions sont remplies</string>
     <string name="condition_operator_or_desc">Au moins une des conditions est remplie</string>
-    <string name="dialog_condition_title">Condition d\'évènements</string>
     <string name="dialog_condition_name_title">Nom</string>
     <string name="dialog_condition_delete">Supprimer</string>
     <string name="dialog_condition_at">à la position [%1$d,%2$d] [%3$d,%4$d]</string>
@@ -103,7 +102,6 @@
     <string name="dialog_action_type_pause">Pause</string>
     <string name="dialog_action_type_intent">Intent</string>
     <string name="dialog_event_config_actions_title">Actions</string>
-    <string name="dialog_action_type_title">Type d\'action</string>
     <string name="dialog_action_config_click_position_none">Pas de position définie</string>
     <string name="dialog_action_config_swipe_position_none">Pas de position définie</string>
     <string name="dialog_action_config_click_press_duration_title">Appuyer pendant</string>
@@ -122,11 +120,9 @@
     <string name="dialog_action_config_intent_advanced_extras_config_key">Clé</string>
     <string name="dialog_action_config_intent_advanced_extras_config_value">Valeur</string>
     <string name="dialog_action_config_intent_advanced_extras_config_value_type">Type de la valeur</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">Select a type</string>
+    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">Choisir un type</string>
 
-    <string name="dialog_application_select_title">Choisir une application</string>
     <string name="dialog_application_select_empty">Aucune d\'application détectée</string>
-    <string name="dialog_copy_title">Copier depuis</string>
     <string name="dialog_action_copy_empty">Aucune action trouvée.</string>
     <string name="dialog_action_new_title">Nouvelle action</string>
     <string name="dialog_action_new_create">Créer</string>
@@ -152,12 +148,9 @@
     <string name="dialog_scenario_settings_quality_precision">Précision</string>
     <string name="dialog_scenario_settings_end_condition_title">Conditions de fin</string>
     <string name="dialog_scenario_settings_end_condition_no_events">Aucun évènement disponible</string>
-    <string name="dialog_end_condition_config_title">Condition de fin</string>
-    <string name="dialog_end_condition_config_event_title">Évènement</string>
     <string name="dialog_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
     <string name="dialog_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
     <string name="dialog_end_condition_config_executions_title">Éxecutions</string>
-    <string name="dialog_end_condition_event_select_title">Choisir un évènement</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
     <string name="dialog_backup_create_title">Créer une sauvegarde</string>
     <string name="dialog_backup_create_select_file">Choisir l\'emplacement de sauvegarde</string>
@@ -193,4 +186,67 @@
     <string name="dialog_debug_config_title">Debugging</string>
     <string name="dialog_debug_config_show_view">Overlay de débug</string>
     <string name="dialog_debug_config_generate_report">Générer un rapport</string>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_action_type">Type d\'action</string>
+    <string name="dialog_overlay_title_application_selection">Choisir une application</string>
+    <string name="dialog_overlay_title_click">Clic</string>
+    <string name="dialog_overlay_title_condition_config">Condition</string>
+    <string name="dialog_overlay_title_copy_from">Copier depuis</string>
+    <string name="dialog_overlay_title_end_condition_config">Condition de fin</string>
+    <string name="dialog_overlay_title_event_config">Évènement</string>
+    <string name="dialog_overlay_title_event_selection">Choisir un évènement</string>
+    <string name="dialog_overlay_title_extra_type_selection">Choisir un type</string>
+    <string name="dialog_overlay_title_intent">Intent</string>
+    <string name="dialog_overlay_title_pause">Pause</string>
+    <string name="dialog_overlay_title_scenario_config">Scénario</string>
+    <string name="dialog_overlay_title_swipe">Swipe</string>
+
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
+    <!-- Dropdown field for selecting the conditions operator -->
+    <string name="dropdown_label_condition_operator">Conditions</string>
+    <string name="dropdown_item_title_condition_or">Une</string>
+    <string name="dropdown_item_title_condition_and">Toutes</string>
+    <string name="dropdown_helper_text_condition_or">Une seule des conditions doit être remplie pour déclancher les actions</string>
+    <string name="dropdown_helper_text_condition_and">Toutes les conditions doivent être remplies pour déclancher les actions</string>
+
+    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
+    <string name="dropdown_helper_text_end_condition_or">Une seule des conditions doit être remplie pour arrêter le scenario</string>
+    <string name="dropdown_helper_text_end_condition_and">Toutes les conditions doivent être remplies pour arrêter le scenario</string>
+
+    <!-- Dropdown field for selecting the condition detection type. -->
+    <string name="dropdown_label_condition_detection_type">Type de détection</string>
+    <string name="dropdown_item_title_detection_type_exact">Exacte</string>
+    <string name="dropdown_item_title_detection_type_screen">Tout l\'écran</string>
+    <string name="dropdown_helper_text_detection_type_exact">La condition est cherchée à sa position de capture.</string>
+    <string name="dropdown_helper_text_detection_type_screen">La condition est cherchée sur tout l\'écran</string>
+
+    <!-- Dropdown field for selecting the condition visibility. -->
+    <string name="dropdown_label_condition_visibility">Visibilité</string>
+    <string name="dropdown_item_title_condition_visibility_present">Présente</string>
+    <string name="dropdown_item_title_condition_visibility_absent">Absente</string>
+    <string name="dropdown_helper_text_condition_visibility_present">La condition doit être détectée</string>
+    <string name="dropdown_helper_text_condition_visibility_absent">La condition ne doit pas être détectée</string>
+
+    <!-- Dropdown field for selecting the click position type -->
+    <string name="dropdown_label_click_position_type">Cliquer sur</string>
+    <string name="dropdown_item_title_click_position_type_on_condition">Condition</string>
+    <string name="dropdown_item_title_click_position_type_on_position">Position selectionné</string>
+    <string name="dropdown_helper_text_click_position_type_on_condition">Cliquer sur la condition détectée</string>
+    <string name="dropdown_helper_text_click_position_type_on_position">Cliquer sur la position selectionnée</string>
+
+    <!-- Dropdown field for selecting the intent sending type. -->
+    <string name="dropdown_label_intent_sending_type">Type</string>
 </resources>

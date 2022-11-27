@@ -40,7 +40,7 @@ abstract class CopyDialog(
     final override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseCopyBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_copy_title)
+                dialogTitle.setText(R.string.dialog_overlay_title_copy_from)
                 buttonDismiss.setOnClickListener { destroy() }
 
                 search.apply {
