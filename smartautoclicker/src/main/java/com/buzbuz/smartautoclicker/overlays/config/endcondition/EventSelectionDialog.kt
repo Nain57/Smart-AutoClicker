@@ -60,7 +60,7 @@ class EventSelectionDialog(
         }
 
         viewBinding.layoutLoadableList.apply {
-            setEmptyText(R.string.dialog_event_list_no_events)
+            setEmptyText(R.string.message_empty_event_list)
             list.apply {
                 adapter = eventsAdapter
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))

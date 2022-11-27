@@ -72,7 +72,7 @@ class ConditionDebugInfoViewHolder(
 
             conditionName.text = conditionReport.condition.name
             conditionTriggered.text = itemView.context.resources.getString(
-                R.string.dialog_debug_report_trigger_processed,
+                R.string.item_title_debug_report_trigger_processed,
                 conditionReport.matchCount,
                 conditionReport.processingCount,
             )

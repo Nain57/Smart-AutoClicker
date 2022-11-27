@@ -86,23 +86,23 @@ class ScenarioDebugInfoViewHolder(
         viewBinding.apply {
             textScenarioName.text = item.name
             rootTotalDuration.setValue(
-                R.string.dialog_debug_report_total_duration,
+                R.string.item_title_report_total_duration,
                 item.duration,
             )
             rootImgProcCount.setValue(
-                R.string.dialog_debug_report_image_processed,
+                R.string.item_title_report_image_processed,
                 item.imageProcessed,
             )
             rootAvgImgProcDur.setValue(
-                R.string.dialog_debug_report_avg_image_processing_duration,
+                R.string.item_title_report_avg_image_processing_duration,
                 item.averageImageProcessingTime,
             )
             rootEvtTriggerCount.setValue(
-                R.string.dialog_debug_report_total_event_trigger_count,
+                R.string.item_title_report_total_event_trigger_count,
                 item.eventsTriggered,
             )
             rootCondTriggerCount.setValue(
-                R.string.dialog_debug_report_detection_count,
+                R.string.item_title_report_detection_count,
                 item.conditionsDetected,
             )
         }
@@ -130,14 +130,14 @@ class EventDebugInfoViewHolder(
             textEventName.text = item.name
 
             triggerCountRoot.setValues(
-                R.string.dialog_debug_report_event_trigger_count,
+                R.string.section_title_report_event_trigger_count,
                 item.triggerCount,
-                R.string.dialog_debug_report_event_processing_count,
+                R.string.section_title_report_event_processing_count,
                 item.processingCount,
             )
 
             processingTimingRoot.setValues(
-                R.string.dialog_debug_report_timing_title,
+                R.string.section_title_report_timing_title,
                 item.minProcessingDuration,
                 item.avgProcessingDuration,
                 item.maxProcessingDuration,

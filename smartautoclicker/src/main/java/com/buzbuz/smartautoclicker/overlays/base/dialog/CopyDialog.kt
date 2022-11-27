@@ -66,7 +66,7 @@ abstract class CopyDialog(
                 }
             }
 
-            layoutLoadableList.setEmptyText(R.string.dialog_copy_empty)
+            layoutLoadableList.setEmptyText(R.string.message_empty_copy)
         }
 
         return viewBinding.root

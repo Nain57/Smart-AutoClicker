@@ -56,7 +56,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
 
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             scenarioNameField.apply {
-                setLabel(R.string.dialog_label_scenario_name)
+                setLabel(R.string.input_field_label_scenario_name)
                 setOnTextChangedListener { viewModel.setScenarioName(it.toString()) }
             }
 

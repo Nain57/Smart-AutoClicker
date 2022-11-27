@@ -56,7 +56,7 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
         // First, add the events from the current scenario
         val eventItems = scenarioEvents?.sortedBy { it.name }?.map { it.toEventItem() }?.distinct()
             ?: emptyList()
-        if (eventItems.isNotEmpty()) allItems.add(EventCopyItem.HeaderItem(R.string.dialog_event_copy_header_event))
+        if (eventItems.isNotEmpty()) allItems.add(EventCopyItem.HeaderItem(R.string.list_header_copy_event_this))
         allItems.addAll(eventItems)
 
         // Then, add all other events. Remove the one already in this scenario.
@@ -69,7 +69,7 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
                 }
             }
             .distinct()
-        if (events.isNotEmpty()) allItems.add(EventCopyItem.HeaderItem(R.string.dialog_event_copy_header_all))
+        if (events.isNotEmpty()) allItems.add(EventCopyItem.HeaderItem(R.string.list_header_copy_event_all))
         allItems.addAll(events)
 
         return allItems

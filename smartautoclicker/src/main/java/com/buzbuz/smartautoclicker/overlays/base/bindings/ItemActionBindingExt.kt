@@ -64,9 +64,9 @@ fun Action.toActionDetails(context: Context): ActionDetails {
             icon = R.drawable.ic_click,
             name = name!!,
             details = if (clickOnCondition) context.getString(
-                R.string.dialog_action_config_click_position_on_condition
+                R.string.item_desc_click_position_on_condition
             ) else context.getString(
-                R.string.dialog_action_copy_click_details,
+                R.string.item_desc_click_details,
                 formatDuration(pressDuration!!), x, y
             ),
             action = this,
@@ -76,7 +76,7 @@ fun Action.toActionDetails(context: Context): ActionDetails {
             icon = R.drawable.ic_swipe,
             name = name!!,
             details = context.getString(
-                R.string.dialog_action_copy_swipe_details,
+                R.string.item_desc_swipe_details,
                 formatDuration(swipeDuration!!), fromX, fromY, toX, toY
             ),
             action = this,
@@ -86,7 +86,7 @@ fun Action.toActionDetails(context: Context): ActionDetails {
             icon = R.drawable.ic_wait,
             name = name!!,
             details = context.getString(
-                R.string.dialog_action_copy_pause_details,
+                R.string.item_desc_pause_details,
                 formatDuration(pauseDuration!!)
             ),
             action = this,
@@ -150,7 +150,7 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
                 componentName = componentName.substring(dotIndex2 + 1)
                 if (componentName.length < INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT) {
                     return context.getString(
-                        R.string.dialog_action_copy_intent_details_action_component,
+                        R.string.item_desc_intent_action_component,
                         action,
                         componentName,
                     )
@@ -159,7 +159,7 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
         }
     }
 
-    return context.getString(R.string.dialog_action_copy_intent_details_action, action)
+    return context.getString(R.string.item_desc_intent_action, action)
 }
 
 /** */

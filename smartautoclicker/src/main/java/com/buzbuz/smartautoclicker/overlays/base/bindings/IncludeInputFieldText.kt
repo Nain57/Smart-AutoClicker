@@ -33,7 +33,7 @@ fun IncludeInputFieldTextBinding.setText(text: String?) {
 }
 
 fun IncludeInputFieldTextBinding.setError(isError: Boolean) {
-    layoutInput.error = if (isError) root.context.getString(R.string.error_field_required) else null
+    layoutInput.error = if (isError) root.context.getString(R.string.input_field_error_required) else null
 }
 
 fun IncludeInputFieldTextBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {

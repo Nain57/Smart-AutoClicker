@@ -16,238 +16,28 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+
     <string name="app_name" translatable="false">Smart AutoClicker</string>
-
-    <string name="activity_scenario_title">Scenarios</string>
-    <string name="menu_search_item_title">Search</string>
-    <string name="no_scenarios">No scenario.\nClick on the \'+\' button to create one.</string>
-    <plurals name="scenario_sub_text">
-        <item quantity="one">%d event</item>
-        <item quantity="other">%d events</item>
-    </plurals>
-
-    <string name="dialog_permissions_title">Permissions required</string>
-    <string name="dialog_permissions_header">The following permissions are required to use Smart AutoClicker:</string>
-    <string name="dialog_permission_overlay">Overlay</string>
-    <string name="dialog_permission_overlay_desc">The overlay permission allows this application to display a menu
-                                                  over other apps.</string>
-    <string name="dialog_permission_accessibility">Accessibility service</string>
-    <string name="dialog_permission_accessibility_desc">The accessibility service allows this application to click on
-                                                        other apps for you.</string>
-    <string name="dialog_permission_notification">Notification</string>
-    <string name="dialog_permission_notification_desc">Optional: Shows the notification while the application is running.</string>
-
     <string name="notification_channel_name" translatable="false">Smart AutoClicker</string>
+
+    <!-- Application wide texts. -->
     <string name="notification_title">Scenario: %1$s</string>
     <string name="notification_message">Press to change the scenario</string>
-
-    <string name="dialog_add_scenario_title">New scenario</string>
-    <string name="dialog_add_scenario_name_hint">Name</string>
-    <string name="dialog_delete_scenario_title">Delete scenario</string>
-    <string name="dialog_delete_scenario_message">This will delete %1$s. Are you sure ?</string>
-    <string name="dialog_rename_scenario_title">Rename scenario</string>
-
-    <string name="dialog_event_list_title">Event list</string>
-    <string name="dialog_event_list_add">New</string>
-    <string name="dialog_event_list_reorder">Reorder</string>
-    <string name="dialog_event_list_no_events">No events.\nClick on \'New\' to create one. </string>
-
-    <string name="dialog_event_add_title">Add new event</string>
-    <string name="dialog_event_add_create">Create</string>
-    <string name="dialog_event_add_copy">Copy from an existing event</string>
-
-    <string name="dialog_event_copy_header_event">Events from this scenario</string>
-    <string name="dialog_event_copy_header_all">Events from all scenarios</string>
-    <string name="dialog_event_copy_search">Search by event name</string>
-    <string name="dialog_event_copy_empty">No events found.</string>
-
-    <string name="dialog_event_config_title">Event configuration</string>
-    <string name="dialog_event_config_name_title">Name</string>
-    <string name="dialog_event_config_condition_title">Conditions</string>
-    <string name="dialog_event_config_actions_title">Actions</string>
-
-    <string name="dialog_event_config_stop_after_executions">Executions before scenario end</string>
-    <string name="dialog_event_config_executions_hint">Don\'t stop the scenario</string>
-
-    <string name="dialog_condition_operator_title">Conditions type</string>
-    <string name="condition_operator_and">All conditions</string>
-    <string name="condition_operator_or">Only one condition</string>
-    <string name="condition_operator_and_desc">All conditions are fulfilled</string>
-    <string name="condition_operator_or_desc">At least one is fulfilled</string>
-
-    <string name="dialog_action_type_click">Click</string>
-    <string name="dialog_action_type_swipe">Swipe</string>
-    <string name="dialog_action_type_pause">Wait</string>
-    <string name="dialog_action_type_intent">Intent</string>
-
-    <string name="dialog_action_config_click_press_duration_title">Press duration</string>
-    <string name="dialog_action_config_click_position_title">Click position</string>
-    <string name="dialog_action_config_click_position_on_condition">On condition</string>
-    <string name="dialog_action_config_click_position_select_position">On position…</string>
-    <string name="dialog_action_config_click_position_none">No click position defined</string>
-    <string name="dialog_action_config_click_position">Click on %1$d, %2$d</string>
-    <string name="dialog_action_config_swipe_duration_title">Swipe duration</string>
-    <string name="dialog_action_config_swipe_position_title">Swipe position</string>
-    <string name="dialog_action_config_swipe_position_none">No swipe position defined</string>
-    <string name="dialog_action_config_swipe_position">Swipe from %1$d, %2$d to %3$d, %4$d</string>
-    <string name="dialog_action_config_pause_duration_title">Pause duration</string>
-
-    <string name="dialog_action_config_intent_config_type_title">Configuration type</string>
-    <string name="dialog_action_config_intent_config_type_simple">Simple</string>
-    <string name="dialog_action_config_intent_config_type_advanced">Advanced</string>
-    <string name="dialog_action_config_intent_simple_start_app_title">Start application</string>
-    <string name="dialog_action_config_intent_simple_start_app_no_app">No application selected</string>
-    <string name="dialog_action_config_intent_advanced_send_type_title">Intent sending type</string>
-
-    <string name="dialog_action_config_intent_advanced_send_type_start_app" translatable="false">Start activity</string>
-    <string name="dialog_action_config_intent_advanced_send_type_broadcast" translatable="false">Send broadcast</string>
-    <string name="dialog_action_config_intent_advanced_action_title" translatable="false">Action</string>
-    <string name="dialog_action_config_intent_advanced_flags_title" translatable="false">Flags</string>
-    <string name="dialog_action_config_intent_advanced_comp_name_title" translatable="false">Component name</string>
-    <string name="dialog_action_config_intent_advanced_extras_title" translatable="false">Extras</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_boolean_true" translatable="false">True</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_boolean_false" translatable="false">False</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_key">Key</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value">Value</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value_type">Value type</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">Select a type</string>
-
-    <string name="dialog_application_select_empty">No application detected</string>
-
-    <string name="dialog_action_new_title">New Action</string>
-    <string name="dialog_action_new_create">Create</string>
-    <string name="dialog_action_new_copy">Copy from another action</string>
-    <string name="dialog_action_copy_empty">No actions found.</string>
-    <string name="dialog_action_copy_click_details">During %1$s at [%2$d, %3$d]</string>
-    <string name="dialog_action_copy_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
-    <string name="dialog_action_copy_pause_details">During %1$s</string>
-    <string name="dialog_action_copy_intent_details_action">Send %1$s</string>
-    <string name="dialog_action_copy_intent_details_action_component">Send %1$s to %2$s</string>
-    <string name="dialog_action_copy_header_event">Actions from this event</string>
-    <string name="dialog_action_copy_header_all">Actions from all events</string>
-    <string name="dialog_action_copy_search">Search by action name</string>
-
-    <string name="dialog_condition_name_title">Name</string>
-    <string name="dialog_condition_detection_details_title">Detection details</string>
-    <string name="dialog_condition_delete">Delete</string>
-    <string name="dialog_condition_at">at position [%1$d,%2$d] [%3$d,%4$d]</string>
-    <string name="dialog_condition_type_title">Detection type</string>
-    <string name="dialog_condition_type_whole_screen">Anywhere on screen</string>
-    <string name="dialog_condition_type_exact_position">At the same position</string>
-    <string name="dialog_condition_threshold_title">Tolerated difference</string>
-    <string name="dialog_condition_threshold_value">Tolerance: %1$d %%</string>
-    <string name="dialog_condition_should_be_detected">Visible</string>
-    <string name="dialog_condition_should_not_be_detected">Not visible</string>
-    <string name="dialog_condition_error">The condition image can\'t be found.</string>
-    <string name="dialog_condition_new_title">New Condition</string>
-    <string name="dialog_condition_new_create">Create</string>
-    <string name="dialog_condition_new_copy">Copy from another condition</string>
-    <string name="dialog_condition_copy_empty">Can\'t copy, you don\'t have any conditions.</string>
-    <string name="dialog_condition_copy_threshold">%1$d%%</string>
-
-    <string name="toast_configure_single_click">Touch the position to click on.</string>
-    <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
-    <string name="toast_configure_swipe_to">Touch the position to end the swipe to.</string>
-    <string name="toast_denied_screen_sharing_permission">User denied screen sharing permission</string>
-
+    <string name="activity_title">Scenarios</string>
     <string name="accessibility_service_description">This application needs this service to inject the clicks you have
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from
         this application. Feel free to visit our github, the code is open source !</string>
 
-    <string name="content_desc_add_scenario">Create a new scenario</string>
-    <string name="content_desc_image_condition">The image to be detected</string>
-    <string name="content_desc_event_action_btn">Edit this event</string>
-    <string name="content_desc_delete_scenario">Delete scenario</string>
-    <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
-    <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
-    <string name="content_desc_open_event_list">Open the event list</string>
-    <string name="content_desc_move_menu">Move the floating menu</string>
-    <string name="content_desc_confirm">Confirm</string>
-    <string name="content_desc_go_back">Back to dialog</string>
-    <string name="content_desc_overlay_state">Overlay permission state</string>
-    <string name="content_desc_accessibility_state">Accessibility service permission state</string>
-    <string name="content_desc_action">The action to be executed</string>
-    <string name="content_desc_action_icon">The icon showing the type of action</string>
-    <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
-    <string name="content_desc_application_icon">The icon of the application to start.</string>
-
-    <string name="dialog_unit_ms" translatable="false">ms</string>
-
-    <string name="dialog_scenario_settings_title">Scenario Settings</string>
-    <string name="dialog_scenario_settings_quality_title">Detection quality</string>
-    <string name="dialog_scenario_settings_quality_speed">Speed</string>
-    <string name="dialog_scenario_settings_quality_precision">Precision</string>
-    <string name="dialog_scenario_settings_end_condition_title">End conditions</string>
-    <string name="dialog_scenario_settings_end_condition_card_executions" translatable="false">x%1$d</string>
-    <string name="dialog_scenario_settings_end_condition_no_events">No events available</string>
-    <string name="dialog_end_condition_config_event_no_selection">No Event selected</string>
-    <string name="dialog_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
-    <string name="dialog_end_condition_config_executions_title">Executions</string>
-
-    <string name="dialog_backup_create_title">Create backup</string>
-    <string name="dialog_backup_create_select_file">Select output file</string>
-    <string name="dialog_backup_create_progress">Creating backup: %1$d/%2$d</string>
-    <string name="dialog_backup_create_completed">Backup completed</string>
-    <string name="dialog_backup_create_error">An error has occurred and the backup export has been cancelled</string>
-    <string name="dialog_backup_import_title">Import backup</string>
-    <string name="dialog_backup_import_select_file">Select backup file</string>
-    <string name="dialog_backup_import_progress">Importing backup: %1$d</string>
-    <string name="dialog_backup_import_verification">Data verification</string>
-    <string name="dialog_backup_import_completed">Import completed\n%1$d scenario imported</string>
-    <string name="dialog_backup_import_completed_with_error">Import completed\n%1$d scenarios imported\n%2$d errors</string>
-    <string name="dialog_backup_import_error">An error has occurred and the backup import has been cancelled</string>
-    <string name="dialog_backup_import_compatibility">Some of the imported scenarios have been generated from a device with a different screen and this might cause issues with the detection and action coordinates.\n\nTo fix it, you need to take new screenshots for your conditions and update your click/swipe positions.</string>
-
-    <string name="dialog_debug_report_title">Debug report</string>
-    <string name="dialog_debug_report_total_duration">Total duration</string>
-    <string name="dialog_debug_report_image_processed">Images processed</string>
-    <string name="dialog_debug_report_avg_image_processing_duration">Average processing duration</string>
-    <string name="dialog_debug_report_total_event_trigger_count">Events triggered</string>
-    <string name="dialog_debug_report_detection_count">Conditions detected</string>
-    <string name="dialog_debug_report_event_list">Events</string>
-    <string name="dialog_debug_report_condition_list">Conditions</string>
-    <string name="dialog_debug_report_event_trigger_count">Triggered</string>
-    <string name="dialog_debug_report_event_processing_count">Processed</string>
-    <string name="dialog_debug_report_condition_detected_count">Detected</string>
-    <string name="dialog_debug_report_condition_processing_count">Processed</string>
-    <string name="dialog_debug_report_timing_title">Processing timing</string>
-    <string name="dialog_debug_report_confidence_title">Detection confidence rate</string>
-    <string name="dialog_debug_report_timing_min">Min</string>
-    <string name="dialog_debug_report_timing_max">Max</string>
-    <string name="dialog_debug_report_timing_avg">Avg</string>
-    <string name="dialog_debug_report_empty">No debug report !</string>
-    <string name="dialog_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
-
-    <string name="dialog_debug_config_title">Debugging</string>
-    <string name="dialog_debug_config_show_view">Show debug view</string>
-    <string name="dialog_debug_config_generate_report">Generate a report</string>
-
-    <string name="dialog_label_scenario_name">Scenario name</string>
-    <string name="dialog_conditions_empty">No condition</string>
-    <string name="dialog_actions_empty">No action</string>
-    <string name="dialog_copy_empty">Nothing to copy</string>
-
-    <string name="dialog_buttons_copy">Copy</string>
-
-    <string name="dialog_desc_click">Click somewhere on the screen</string>
-    <string name="dialog_desc_swipe">Swipe from a position on the screen to another</string>
-    <string name="dialog_desc_pause">Pause the detection execution</string>
-    <string name="dialog_desc_intent">Interact with another application</string>
-
-    <string name="dialog_click_config_click_on_header">Click on</string>
-    <string name="dialog_button_click_on_condition">Condition</string>
-    <string name="dialog_click_config_on_condition_desc">Click on the detected condition</string>
-    <string name="dialog_button_click_on_position">Position</string>
-    <string name="dialog_click_config_on_position_select">Select the position</string>
-    <string name="dialog_click_config_label_press_duration">Press duration (ms)</string>
-    <string name="dialog_swipe_config_positions_select">Select the positions</string>
-    <string name="dialog_swipe_config_label_duration">Swipe duration (ms)</string>
-    <string name="dialog_pause_config_label_duration">Pause duration (ms)</string>
-
-    <string name="error_field_required">Required</string>
-
-    <string name="fragment_scenario_empty_list">Create your first scenario and start automatizing tasks on your phone</string>
-    <string name="button_text_create_scenario">Create a scenario</string>
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">New scenario</string>
+    <string name="dialog_title_create_backup">Create backup</string>
+    <string name="dialog_title_delete_scenario">Delete scenario</string>
+    <string name="dialog_title_import_backup">Import backup</string>
+    <string name="dialog_title_permissions">Permissions required</string>
+    <string name="dialog_title_rename_scenario">Rename scenario</string>
 
     <!--
       - Titles for the dialogs displayed as overlay.
@@ -258,15 +48,174 @@
     <string name="dialog_overlay_title_click">Click</string>
     <string name="dialog_overlay_title_condition_config">Condition</string>
     <string name="dialog_overlay_title_copy_from">Copy from</string>
+    <string name="dialog_overlay_title_debug_report">Debug report</string>
     <string name="dialog_overlay_title_end_condition_config">End Condition</string>
     <string name="dialog_overlay_title_event_config">Event</string>
     <string name="dialog_overlay_title_event_selection">Select an event</string>
     <string name="dialog_overlay_title_extra_type_selection">Select a type</string>
     <string name="dialog_overlay_title_intent">Intent</string>
+    <string name="dialog_overlay_title_intent_extras_value_type">Value type</string>
     <string name="dialog_overlay_title_pause">Wait</string>
     <string name="dialog_overlay_title_scenario_config">Scenario</string>
     <string name="dialog_overlay_title_swipe">Swipe</string>
 
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_advanced">Advanced</string>
+    <string name="menu_item_title_cancel">Cancel</string>
+    <string name="menu_item_title_debugging">Debugging</string>
+    <string name="menu_item_title_export">Export</string>
+    <string name="menu_item_title_import">Import</string>
+    <string name="menu_item_title_search">Search</string>
+    <string name="menu_item_title_select_all">Select all</string>
+    <string name="menu_item_title_simple">Simple</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_desc_click">Click somewhere on the screen</string>
+    <string name="item_desc_click_details">During %1$s at [%2$d, %3$d]</string>
+    <string name="item_desc_click_position_on_condition">On condition</string>
+    <string name="item_desc_click_on_position">Click on %1$d, %2$d</string>
+    <string name="item_desc_intent">Interact with another application</string>
+    <string name="item_desc_intent_action">Send %1$s</string>
+    <string name="item_desc_intent_action_component">Send %1$s to %2$s</string>
+    <string name="item_desc_pause">Pause the detection execution</string>
+    <string name="item_desc_pause_details">During %1$s</string>
+    <string name="item_desc_permissions">The following permissions are required to use Smart AutoClicker:</string>
+    <string name="item_desc_permission_accessibility">The accessibility service allows this application to click on
+                                                        other apps for you.</string>
+    <string name="item_desc_permission_notification">Optional: Shows the notification while the application is running.</string>
+    <string name="item_desc_permission_overlay">The overlay permission allows this application to display a menu
+                                                  over other apps.</string>
+    <string name="item_desc_swipe">Swipe from a position on the screen to another</string>
+    <string name="item_desc_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
+    <string name="item_desc_swipe_positions">Swipe from %1$d, %2$d to %3$d, %4$d</string>
+    <string name="item_title_backup_create_select_file">Select output file</string>
+    <string name="item_title_backup_import_select_file">Select backup file</string>
+    <string name="item_title_click">Click</string>
+    <string name="item_title_debug_generate_report">Generate a report</string>
+    <string name="item_title_debug_show_view">Show debug view</string>
+    <string name="item_title_intent">Intent</string>
+    <string name="item_title_permission_accessibility">Accessibility service</string>
+    <string name="item_title_permission_notification">Notification</string>
+    <string name="item_title_permission_overlay">Overlay</string>
+    <string name="item_title_pause">Wait</string>
+    <string name="item_title_report_total_duration">Total duration</string>
+    <string name="item_title_report_image_processed">Images processed</string>
+    <string name="item_title_report_avg_image_processing_duration">Average processing duration</string>
+    <string name="item_title_report_total_event_trigger_count">Events triggered</string>
+    <string name="item_title_report_detection_count">Conditions detected</string>
+    <string name="item_title_swipe">Swipe</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_empty_actions">No action</string>
+    <string name="message_empty_actions_copy">No actions found</string>
+    <string name="message_empty_conditions">No condition</string>
+    <string name="message_empty_conditions_copy">Can\'t copy, you don\'t have any conditions.</string>
+    <string name="message_empty_copy">Nothing to copy</string>
+    <string name="message_empty_debug_report">No debug report !</string>
+    <string name="message_empty_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
+    <string name="message_empty_end_condition_config_event_no_selection">No Event selected</string>
+    <string name="message_empty_end_condition_no_events">No events available</string>
+    <string name="message_empty_event_copy">No events found</string>
+    <string name="message_empty_event_list">No events.\nClick on \'New\' to create one. </string>
+    <string name="message_empty_scenario_list">Create your first scenario and start automatizing tasks on your phone</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">Creating backup: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Backup completed</string>
+    <string name="message_backup_create_error">An error has occurred and the backup export has been cancelled</string>
+    <string name="message_backup_import_progress">Importing backup: %1$d</string>
+    <string name="message_backup_import_verification">Data verification</string>
+    <string name="message_backup_import_completed">Import completed\n%1$d scenario imported</string>
+    <string name="message_backup_import_completed_with_error">Import completed\n%1$d scenarios imported\n%2$d errors</string>
+    <string name="message_backup_import_error">An error has occurred and the backup import has been cancelled</string>
+    <string name="message_backup_import_compatibility">Some of the imported scenarios have been generated from a device with a different screen and this might cause issues with the detection and action coordinates.\n\nTo fix it, you need to take new screenshots for your conditions and update your click/swipe positions.</string>
+    <string name="message_condition_threshold">%1$d%%</string>
+    <string name="message_condition_threshold_value">Tolerance: %1$d %%</string>
+    <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
+
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_configure_single_click">Touch the position to click on.</string>
+    <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
+    <string name="toast_configure_swipe_to">Touch the position to end the swipe to.</string>
+    <string name="toast_denied_screen_sharing_permission">User denied screen sharing permission</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_condition_detection_details">Detection details</string>
+    <string name="section_title_condition_threshold">Tolerated difference</string>
+    <string name="section_title_detection_quality_title">Detection quality</string>
+    <string name="section_title_end_condition">End conditions</string>
+    <string name="section_title_intent_extras_value">Value</string>
+    <string name="section_title_report_timing_min">Min</string>
+    <string name="section_title_report_timing_max">Max</string>
+    <string name="section_title_report_timing_avg">Avg</string>
+    <string name="section_title_report_event_trigger_count">Triggered</string>
+    <string name="section_title_report_event_processing_count">Processed</string>
+    <string name="section_title_report_condition_detected_count">Detected</string>
+    <string name="section_title_report_condition_processing_count">Processed</string>
+    <string name="section_title_report_timing_title">Processing timing</string>
+    <string name="section_title_report_confidence_title">Detection confidence rate</string>
+    <string name="section_title_start_application">Start application</string>
+
+    <!--
+      - List header.
+      - Displayed on one line.
+      -->
+    <string name="list_header_copy_event_this">Events from this scenario</string>
+    <string name="list_header_copy_event_all">Events from all scenarios</string>
+    <string name="list_header_copy_action_this">Actions from this event</string>
+    <string name="list_header_copy_action_all">Actions from all events</string>
+
+    <!--
+      - SearchView hint
+      - Displayed on one line.
+      -->
+    <string name="search_view_hint_event_copy">Search by event name</string>
+    <string name="search_view_hint_action_copy">Search by action name</string>
+    <string name="search_view_hint_condition_copy">Search by condition name</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_click_position_select">Select the position</string>
+    <string name="button_text_create_scenario">Create a scenario</string>
+    <string name="button_text_intent_extra_type_select">Select a type</string>
+    <string name="button_text_quality_speed">Speed</string>
+    <string name="button_text_quality_precision">Precision</string>
+    <string name="button_text_swipe_positions_select">Select the positions</string>
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_name">Name</string>
+    <string name="input_field_label_click_press_duration">Press duration (ms)</string>
+    <string name="input_field_label_execution_count">Executions</string>
+    <string name="input_field_label_intent_extra_key">Key</string>
+    <string name="input_field_label_pause_duration">Pause duration (ms)</string>
+    <string name="input_field_label_scenario_name">Scenario name</string>
+    <string name="input_field_label_swipe_duration">Swipe duration (ms)</string>
+    <string name="input_field_error_required">Required</string>
 
     <!--
       - Dropdown input fields texts.
@@ -312,26 +261,54 @@
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_label_intent_sending_type">Type</string>
 
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">Create a new scenario</string>
+    <string name="content_desc_image_condition">The image to be detected</string>
+    <string name="content_desc_event_action_btn">Edit this event</string>
+    <string name="content_desc_delete_scenario">Delete scenario</string>
+    <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
+    <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
+    <string name="content_desc_open_event_list">Open the event list</string>
+    <string name="content_desc_move_menu">Move the floating menu</string>
+    <string name="content_desc_confirm">Confirm</string>
+    <string name="content_desc_go_back">Back to dialog</string>
+    <string name="content_desc_overlay_state">Overlay permission state</string>
+    <string name="content_desc_accessibility_state">Accessibility service permission state</string>
+    <string name="content_desc_action">The action to be executed</string>
+    <string name="content_desc_action_icon">The icon showing the type of action</string>
+    <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
+    <string name="content_desc_application_icon">The icon of the application to start.</string>
 
     <!--
       - The following strings should be kept the same in all languages.
       - DO NOT TRANSLATE.
       -->
     <string name="dialog_overlay_title_extra_config" translatable="false">Extra</string>
+    <string name="dialog_scenario_settings_end_condition_card_executions" translatable="false">x%1$d</string>
+
+    <string name="section_title_intent_extra" translatable="false">Extras</string>
+
+    <string name="input_field_label_intent_action" translatable="false">Action</string>
+    <string name="input_field_label_intent_flags" translatable="false">Flags</string>
+    <string name="input_field_label_intent_component_name" translatable="false">Component name</string>
 
     <string name="dropdown_item_title_intent_sending_type_activity" translatable="false">Start Activity</string>
     <string name="dropdown_item_title_intent_sending_type_broadcast" translatable="false">Send Broadcast</string>
-
     <string name="dropdown_item_title_extra_boolean_true" translatable="false">True</string>
     <string name="dropdown_item_title_extra_boolean_false" translatable="false">False</string>
 
-    <string name="dialog_intent_extra_type_boolean" translatable="false">Boolean</string>
-    <string name="dialog_intent_extra_type_byte" translatable="false">Byte</string>
-    <string name="dialog_intent_extra_type_char" translatable="false">Char</string>
-    <string name="dialog_intent_extra_type_double" translatable="false">Double</string>
-    <string name="dialog_intent_extra_type_int" translatable="false">Integer</string>
-    <string name="dialog_intent_extra_type_float" translatable="false">Float</string>
-    <string name="dialog_intent_extra_type_short" translatable="false">Short</string>
-    <string name="dialog_intent_extra_type_string" translatable="false">String</string>
+    <string name="item_title_intent_extra_type_boolean" translatable="false">Boolean</string>
+    <string name="item_title_intent_extra_type_byte" translatable="false">Byte</string>
+    <string name="item_title_intent_extra_type_char" translatable="false">Char</string>
+    <string name="item_title_intent_extra_type_double" translatable="false">Double</string>
+    <string name="item_title_intent_extra_type_int" translatable="false">Integer</string>
+    <string name="item_title_intent_extra_type_float" translatable="false">Float</string>
+    <string name="item_title_intent_extra_type_short" translatable="false">Short</string>
+    <string name="item_title_intent_extra_type_string" translatable="false">String</string>
+
+    <string name="item_title_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
 
 </resources>

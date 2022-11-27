@@ -46,7 +46,7 @@
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                 android:layout_marginBottom="@dimen/margin_horizontal_small"
                 app:endIconMode="clear_text"
-                android:hint="@string/dialog_event_config_name_title"/>
+                android:hint="@string/input_field_label_name"/>
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/AppTheme.Widget.Card"
@@ -66,7 +66,7 @@
                         style="@style/AppTheme.TextAppearance.CardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/dialog_condition_detection_details_title"
+                        android:text="@string/section_title_condition_detection_details"
                         android:labelFor="@+id/edit_name"/>
 
                     <ImageView
@@ -117,7 +117,7 @@
                         style="@style/AppTheme.TextAppearance.CardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/dialog_condition_threshold_title"/>
+                        android:text="@string/section_title_condition_threshold"/>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/text_diff_threshold"
@@ -127,7 +127,7 @@
                         android:layout_marginStart="@dimen/margin_horizontal_small"
                         android:layout_marginEnd="@dimen/margin_horizontal_small"
                         android:gravity="center_vertical"
-                        android:text="@string/dialog_condition_threshold_value"
+                        android:text="@string/message_condition_threshold_value"
                         tools:text="Value: 12%"/>
 
                     <com.google.android.material.slider.Slider

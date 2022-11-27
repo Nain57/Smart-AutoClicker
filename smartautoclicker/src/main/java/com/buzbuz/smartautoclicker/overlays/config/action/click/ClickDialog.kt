@@ -74,13 +74,13 @@ class ClickDialog(
             }
 
             editNameLayout.apply {
-                setLabel(R.string.dialog_event_config_name_title)
+                setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
             }
 
             editPressDurationLayout.apply {
                 textField.filters = arrayOf(DurationInputFilter())
-                setLabel(R.string.dialog_click_config_label_press_duration)
+                setLabel(R.string.input_field_label_click_press_duration)
                 setOnTextChangedListener {
                     viewModel.setPressDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
@@ -149,12 +149,12 @@ class ClickDialog(
 
     private fun updateClickOnPositionButtonText(position: Point?) {
         if (position == null) {
-            viewBinding.onPositionSelectButton.setText(R.string.dialog_click_config_on_position_select)
+            viewBinding.onPositionSelectButton.setText(R.string.button_text_click_position_select)
             return
         }
 
         viewBinding.onPositionSelectButton.text = context.getString(
-            R.string.dialog_action_config_click_position,
+            R.string.item_desc_click_on_position,
             position.x,
             position.y
         )

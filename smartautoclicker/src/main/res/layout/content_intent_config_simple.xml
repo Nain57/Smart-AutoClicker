@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dropdown_one_line_helper_text_height"
             android:layout_marginVertical="@dimen/margin_horizontal_small"
-            android:hint="@string/dialog_event_config_name_title"
+            android:hint="@string/input_field_label_name"
             app:endIconMode="clear_text"/>
 
         <com.google.android.material.card.MaterialCardView
@@ -58,7 +58,7 @@
                     style="@style/AppTheme.TextAppearance.CardTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_action_config_intent_simple_start_app_title"/>
+                    android:text="@string/section_title_start_application"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"

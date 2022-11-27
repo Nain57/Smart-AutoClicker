@@ -52,19 +52,19 @@ fun ImageView.setIconTint(@ColorRes color: Int) {
 
 @StringRes
 fun KClass<out Any>.getDisplayNameRes() : Int = when (this) {
-    Byte::class -> R.string.dialog_intent_extra_type_byte
-    Boolean::class -> R.string.dialog_intent_extra_type_boolean
-    Char::class -> R.string.dialog_intent_extra_type_char
-    Double::class -> R.string.dialog_intent_extra_type_double
-    Int::class -> R.string.dialog_intent_extra_type_int
-    Float::class -> R.string.dialog_intent_extra_type_float
-    Short::class -> R.string.dialog_intent_extra_type_short
-    String::class -> R.string.dialog_intent_extra_type_string
+    Byte::class -> R.string.item_title_intent_extra_type_byte
+    Boolean::class -> R.string.item_title_intent_extra_type_boolean
+    Char::class -> R.string.item_title_intent_extra_type_char
+    Double::class -> R.string.item_title_intent_extra_type_double
+    Int::class -> R.string.item_title_intent_extra_type_int
+    Float::class -> R.string.item_title_intent_extra_type_float
+    Short::class -> R.string.item_title_intent_extra_type_short
+    String::class -> R.string.item_title_intent_extra_type_string
     else -> 0
 }
 
 fun TextInputLayout.setError(isError: Boolean) {
-    error = if (isError) context.getString(R.string.error_field_required) else null
+    error = if (isError) context.getString(R.string.input_field_error_required) else null
 }
 
 /** Check if this duration value is valid for an action. */

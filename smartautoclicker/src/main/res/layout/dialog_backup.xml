@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_large"
-            tools:text="@string/dialog_backup_create_select_file"
+            tools:text="@string/item_title_backup_create_select_file"
             tools:visibility="gone"/>
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:gravity="center"
-            android:text="@string/dialog_backup_create_progress"
+            android:text="@string/message_backup_create_progress"
             android:visibility="visible"/>
 
         <LinearLayout
@@ -90,7 +90,7 @@
                 app:layout_constraintTop_toBottomOf="@id/text_status"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center"
-                android:text="@string/dialog_backup_import_compatibility"/>
+                android:text="@string/message_backup_import_compatibility"/>
 
         </LinearLayout>
 

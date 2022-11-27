@@ -39,7 +39,7 @@
         android:textSize="@dimen/text_size_list_item_text_big"
         android:textStyle="bold"
         android:singleLine="true"
-        tools:text="@string/dialog_debug_report_timing_title"/>
+        tools:text="@string/section_title_report_timing_title"/>
 
     <TextView
         android:id="@+id/minTitle"
@@ -50,7 +50,7 @@
         app:layout_constraintEnd_toStartOf="@id/separator_left"
         android:gravity="center"
         android:textSize="@dimen/text_size_list_item_text"
-        android:text="@string/dialog_debug_report_timing_min"/>
+        android:text="@string/section_title_report_timing_min"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/separator_left"
@@ -70,7 +70,7 @@
         app:layout_constraintEnd_toStartOf="@id/separator_right"
         android:gravity="center"
         android:textSize="@dimen/text_size_list_item_text"
-        android:text="@string/dialog_debug_report_timing_avg"/>
+        android:text="@string/section_title_report_timing_avg"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/separator_right"
@@ -90,7 +90,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
         android:textSize="@dimen/text_size_list_item_text"
-        android:text="@string/dialog_debug_report_timing_max"/>
+        android:text="@string/section_title_report_timing_max"/>
 
     <TextView
         android:id="@+id/minValue"

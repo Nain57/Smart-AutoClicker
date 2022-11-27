@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/debug_report"
         app:layout_constraintVertical_chainStyle="packed"
-        android:text="@string/dialog_debug_config_show_view"/>
+        android:text="@string/item_title_debug_show_view"/>
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/debug_report"
@@ -42,6 +42,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/debug_overlay"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/dialog_debug_config_generate_report"/>
+        android:text="@string/item_title_debug_generate_report"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

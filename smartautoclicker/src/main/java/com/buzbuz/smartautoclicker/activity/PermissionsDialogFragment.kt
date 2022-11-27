@@ -88,7 +88,7 @@ class PermissionsDialogFragment : DialogFragment() {
         }
 
         return MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.dialog_permissions_title)
+            .setTitle(R.string.dialog_title_permissions)
             .setView(viewBinding.root)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 (activity?.supportFragmentManager?.findFragmentByTag(FRAGMENT_TAG_SCENARIO_LIST) as PermissionDialogListener)

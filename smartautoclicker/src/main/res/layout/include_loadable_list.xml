@@ -33,7 +33,7 @@
         android:gravity="center"
         android:visibility="gone"
         tools:visibility="visible"
-        tools:text="@string/no_scenarios"/>
+        tools:text="@string/message_empty_scenario_list"/>
 
     <ProgressBar
         android:id="@+id/loading"

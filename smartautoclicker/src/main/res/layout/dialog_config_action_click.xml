@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/dialog_click_config_on_position_select"/>
+                android:text="@string/button_text_click_position_select"/>
 
         </LinearLayout>
 

@@ -243,7 +243,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     private fun onCreateClicked() {
         val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
         showDialog(MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.dialog_add_scenario_title)
+            .setTitle(R.string.dialog_title_add_scenario)
             .setView(dialogViewBinding.root)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 scenarioViewModel.createScenario(requireContext(), dialogViewBinding.textField.text.toString())
@@ -260,8 +260,8 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      */
     private fun onDeleteClicked(scenario: Scenario) {
         showDialog(MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.dialog_delete_scenario_title)
-            .setMessage(resources.getString(R.string.dialog_delete_scenario_message, scenario.name))
+            .setTitle(R.string.dialog_title_delete_scenario)
+            .setMessage(resources.getString(R.string.message_delete_scenario, scenario.name))
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 scenarioViewModel.deleteScenario(scenario)
             }

@@ -45,7 +45,7 @@
         app:layout_constraintBottom_toTopOf="@id/choice_description"
         app:layout_constraintStart_toEndOf="@id/choice_icon"
         app:layout_constraintEnd_toStartOf="@id/choice_chevron"
-        tools:text="@string/dialog_action_type_swipe"
+        tools:text="@string/item_title_swipe"
         tools:textColor="@android:color/black"/>
 
     <com.google.android.material.textview.MaterialTextView
@@ -58,7 +58,7 @@
         app:layout_constraintStart_toEndOf="@id/choice_icon"
         app:layout_constraintEnd_toStartOf="@id/choice_chevron"
         android:maxLines="2"
-        tools:text="@string/dialog_desc_swipe"
+        tools:text="@string/item_desc_swipe"
         tools:textColor="@android:color/black"/>
 
     <ImageView

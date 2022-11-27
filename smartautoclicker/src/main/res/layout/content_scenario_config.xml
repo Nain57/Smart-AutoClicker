@@ -65,7 +65,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/text_quality_value"
-                    android:text="@string/dialog_scenario_settings_quality_title" />
+                    android:text="@string/section_title_detection_quality_title" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_quality_value"
@@ -93,7 +93,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_scenario_settings_quality_speed"/>
+                    android:text="@string/button_text_quality_speed"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/text_precision"
@@ -108,7 +108,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_vertical"
-                    android:text="@string/dialog_scenario_settings_quality_precision"/>
+                    android:text="@string/button_text_quality_precision"/>
 
                 <com.google.android.material.slider.Slider
                     android:id="@+id/seekbar_quality"
@@ -147,7 +147,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_conditions_title"
                     style="@style/AppTheme.TextAppearance.CardTitle"
-                    android:text="@string/dialog_scenario_settings_end_condition_title"
+                    android:text="@string/section_title_end_condition"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_field"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -189,7 +189,7 @@
                         android:layout_gravity="center"
                         android:layout_marginVertical="@dimen/margin_vertical_large"
                         android:gravity="center"
-                        android:text="@string/dialog_scenario_settings_end_condition_no_events"
+                        android:text="@string/message_empty_end_condition_no_events"
                         android:visibility="gone" />
 
                 </FrameLayout>

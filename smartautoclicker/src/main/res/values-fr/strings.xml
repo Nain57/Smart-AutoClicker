@@ -17,72 +17,206 @@
 -->
 <resources>
 
-    <string name="activity_scenario_title">Scenarios</string>
-    <string name="menu_search_item_title">Rechercher</string>
-    <string name="no_scenarios">"Aucun scenario.\nAppuyez sur le button \'+\' pour en créer un."</string>
-    <plurals name="scenario_sub_text">
-        <item quantity="one">%d évènement</item>
-        <item quantity="other">%d évènements</item>
-        <item quantity="many">%d évènements</item>
-    </plurals>
-    <string name="dialog_permissions_title">Permissions requises</string>
-    <string name="dialog_permissions_header">Les permissions suivantes sont nécessaires pour utiliser Smart AutoClicker :</string>
-    <string name="dialog_permission_overlay">Superposition</string>
-    <string name="dialog_permission_overlay_desc">La permission de superposition permet à cette application d\'afficher
-                                                  un menu au dessus des autres applications.</string>
-    <string name="dialog_permission_accessibility">Service d\'accessibilité</string>
-    <string name="dialog_permission_accessibility_desc">Le service d\'accessibilité permet à cette application de
-                                                        cliquer pour vous sur les autres applications.</string>
-    <string name="dialog_permission_notification">Notification</string>
-    <string name="dialog_permission_notification_desc">Optionnel: Affiche une notification pendant que l\'application est lancée.</string>
+    <!-- Application wide texts. -->
     <string name="notification_title">Scenario : %1$s</string>
     <string name="notification_message">Appuyez pour changer le scenario</string>
-    <string name="dialog_add_scenario_title">Nouveau scenario</string>
-    <string name="dialog_add_scenario_name_hint">Nom</string>
-    <string name="dialog_delete_scenario_title">Supprimer le scenario</string>
-    <string name="dialog_delete_scenario_message">Le scenario %1$s va être supprimé. Êtes vous sûr ?</string>
-    <string name="dialog_rename_scenario_title">Renommer le scenario</string>
-    <string name="dialog_event_list_title">Liste des évènements</string>
-    <string name="dialog_event_list_add">Créer</string>
-    <string name="dialog_event_list_reorder">Réorganiser</string>
-    <string name="dialog_event_list_no_events">Aucun évènement.\nAppuyez sur \'Créer\' pour en créer un.</string>
-    <string name="dialog_event_add_title">Ajouter un nouvel évènement</string>
-    <string name="dialog_event_add_create">Créer</string>
-    <string name="dialog_event_add_copy">Copier depuis un autre évènement</string>
-    <string name="dialog_event_copy_header_event">Évènements de ce scenario</string>
-    <string name="dialog_event_copy_header_all">Évènements de tous les scenarios</string>
-    <string name="dialog_event_copy_search">Chercher par nom d\'évènement</string>
-    <string name="dialog_event_copy_empty">Aucun évènement trouvé.</string>
-    <string name="dialog_event_config_name_title">Nom</string>
-    <string name="dialog_action_config_click_position">Clic simple sur %1$d, %2$d</string>
-    <string name="dialog_action_config_swipe_position">Glisser de %1$d, %2$d à %3$d, %4$d</string>
-    <string name="dialog_event_config_condition_title">Conditions</string>
-    <string name="dialog_event_config_stop_after_executions">Éxecutions avant d\'arrêter le scénario</string>
-    <string name="dialog_event_config_executions_hint">Ne pas arrêter le scénario</string>
-    <string name="dialog_condition_operator_title">Type de conditions</string>
-    <string name="condition_operator_and">Toutes les conditions</string>
-    <string name="condition_operator_or">Une seule condition</string>
-    <string name="condition_operator_and_desc">Toutes les conditions sont remplies</string>
-    <string name="condition_operator_or_desc">Au moins une des conditions est remplie</string>
-    <string name="dialog_condition_name_title">Nom</string>
-    <string name="dialog_condition_delete">Supprimer</string>
-    <string name="dialog_condition_at">à la position [%1$d,%2$d] [%3$d,%4$d]</string>
-    <string name="dialog_condition_type_title">Type de détection</string>
-    <string name="dialog_condition_type_whole_screen">Sur tout l\'écran</string>
-    <string name="dialog_condition_type_exact_position">À la même position</string>
-    <string name="dialog_condition_threshold_title">Différence tolérée</string>
-    <string name="dialog_condition_threshold_value">Tolérance: %1$d %%</string>
-    <string name="dialog_condition_should_be_detected">Visible</string>
-    <string name="dialog_condition_should_not_be_detected">Non visible</string>
-    <string name="dialog_condition_error">L\'image de la condition n\'a pas pu être trouvée.</string>
+    <string name="activity_title">Scenarios</string>
+    <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
+        que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée
+        n\'est collectée par cette application. N\hésitez pas à visiter notre GitHub, le projet est open source !</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">Nouveau scenario</string>
+    <string name="dialog_title_delete_scenario">Supprimer le scenario</string>
+    <string name="dialog_title_create_backup">Créer une sauvegarde</string>
+    <string name="dialog_title_import_backup">Importer une sauvegarde</string>
+    <string name="dialog_title_permissions">Permissions requises</string>
+    <string name="dialog_title_rename_scenario">Renommer le scenario</string>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_action_type">Type d\'action</string>
+    <string name="dialog_overlay_title_application_selection">Choisir une application</string>
+    <string name="dialog_overlay_title_click">Clic</string>
+    <string name="dialog_overlay_title_condition_config">Condition</string>
+    <string name="dialog_overlay_title_copy_from">Copier depuis</string>
+    <string name="dialog_overlay_title_debug_report">Rapport de debug</string>
+    <string name="dialog_overlay_title_end_condition_config">Condition de fin</string>
+    <string name="dialog_overlay_title_event_config">Évènement</string>
+    <string name="dialog_overlay_title_event_selection">Choisir un évènement</string>
+    <string name="dialog_overlay_title_extra_type_selection">Choisir un type</string>
+    <string name="dialog_overlay_title_intent">Intent</string>
+    <string name="dialog_overlay_title_intent_extras_value_type">Type de la valeur</string>
+    <string name="dialog_overlay_title_pause">Pause</string>
+    <string name="dialog_overlay_title_scenario_config">Scénario</string>
+    <string name="dialog_overlay_title_swipe">Swipe</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_cancel">Cancel</string>
+    <string name="menu_item_title_debugging">Debugging</string>
+    <string name="menu_item_title_export">Export</string>
+    <string name="menu_item_title_import">Import</string>
+    <string name="menu_item_title_search">Rechercher</string>
+    <string name="menu_item_title_select_all">Tout selectionner</string>
+    <string name="menu_item_title_simple">Simple</string>
+    <string name="menu_item_title_advanced">Avancé</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_desc_click">Cliquer sur l\'écran</string>
+    <string name="item_desc_click_details">Pendant %1$s à [%2$d, %3$d]</string>
+    <string name="item_desc_click_position_on_condition">Sur la condition</string>
+    <string name="item_desc_click_on_position">Clic simple sur %1$d, %2$d</string>
+    <string name="item_desc_intent">Intéragir avec une autre application</string>
+    <string name="item_desc_intent_action">Envoyer %1$s</string>
+    <string name="item_desc_intent_action_component">Envoyer %1$s à %2$s</string>
+    <string name="item_desc_pause">Faire une pause pendant la détection</string>
+    <string name="item_desc_pause_details">Pendant %1$s</string>
+    <string name="item_desc_permissions">Les permissions suivantes sont nécessaires pour utiliser Smart AutoClicker :</string>
+    <string name="item_desc_permission_accessibility">Le service d\'accessibilité permet à cette application de
+                                                        cliquer pour vous sur les autres applications.</string>
+    <string name="item_desc_permission_notification">Optionnel: Affiche une notification pendant que l\'application est lancée.</string>
+    <string name="item_desc_permission_overlay">La permission de superposition permet à cette application d\'afficher
+                                                  un menu au dessus des autres applications.</string>
+    <string name="item_desc_swipe">Swiper d\'une position à une autre</string>
+    <string name="item_desc_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
+    <string name="item_desc_swipe_positions">Glisser de %1$d, %2$d à %3$d, %4$d</string>
+    <string name="item_title_backup_create_select_file">Choisir l\'emplacement de sauvegarde</string>
+    <string name="item_title_backup_import_select_file">Choisir le fichier de sauvegarde</string>
+    <string name="item_title_click">Clic</string>
+    <string name="item_title_debug_generate_report">Générer un rapport</string>
+    <string name="item_title_debug_show_view">Overlay de débug</string>
+    <string name="item_title_intent">Intent</string>
+    <string name="item_title_permission_accessibility">Service d\'accessibilité</string>
+    <string name="item_title_permission_notification">Notification</string>
+    <string name="item_title_permission_overlay">Superposition</string>
+    <string name="item_title_pause">Wait</string>
+    <string name="item_title_report_total_duration">Durée totale</string>
+    <string name="item_title_report_image_processed">Images analysées</string>
+    <string name="item_title_report_avg_image_processing_duration">Temps moyen d\'analyse</string>
+    <string name="item_title_report_total_event_trigger_count">Évènements activés</string>
+    <string name="item_title_report_detection_count">Conditions détectés</string>
+    <string name="item_title_swipe">Swipe</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_empty_event_copy">Aucun évènement trouvé.</string>
+    <string name="message_empty_actions">Aucune action</string>
+    <string name="message_empty_actions_copy">Aucune action trouvée.</string>
+    <string name="message_empty_conditions">Aucune condition</string>
+    <string name="message_empty_conditions_copy">Impossible de copier. Vous n\'avez créé aucune condition.</string>
+    <string name="message_empty_copy">Nothing to copy</string>
+    <string name="message_empty_debug_report">Aucun rapport de debug !</string>
+    <string name="message_empty_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
+    <string name="message_empty_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
+    <string name="message_empty_end_condition_no_events">Aucun évènement disponible</string>
+    <string name="message_empty_event_list">Aucun évènement.\nAppuyez sur \'Créer\' pour en créer un.</string>
+    <string name="message_empty_scenario_list">Créez votre premier scénario et commencez au automatiser des tâches dès maintenant</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">Sauvegarde: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Sauvegarde effectuée</string>
+    <string name="message_backup_create_error">Une erreur est survenue et la sauvegarde a été annulée</string>
+    <string name="message_backup_import_progress">Import de la sauvegarde: %1$d</string>
+    <string name="message_backup_import_verification">Vérification des données</string>
+    <string name="message_backup_import_completed">Import effectué: %1$d scenarios importés</string>
+    <string name="message_backup_import_completed_with_error">Import effectué, des erreurs ont survenues:\n%1$d scenarios importés\n%2$d erreurs</string>
+    <string name="message_backup_import_error">Une erreur est survenue et l\'import a été annulée</string>
+    <string name="message_backup_import_compatibility">Certains scenarios ont été généré par un téléphone avec un écran différent, ce qui peut causer des problèmes avec la détection et les coordonées des actions.\n\nPour régler le problème, vous devez refaire les screenshots de vos conditions et mettre à jour les coordonées de vos actions.</string>
+    <string name="message_condition_threshold">%1$d%%</string>
+    <string name="message_condition_threshold_value">Tolérance: %1$d %%</string>
+    <string name="message_delete_scenario">Le scenario %1$s va être supprimé. Êtes vous sûr ?</string>
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
     <string name="toast_configure_single_click">Appuyez sur la position à cliquer.</string>
     <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>
     <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée.</string>
     <string name="toast_denied_screen_sharing_permission">L\'utilisateur a refusé l\'autorisation de partage d\'écran</string>
-    <string name="dialog_event_config_title">Configuration de l\'évènement</string>
-    <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
-        que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée
-        n\'est collectée par cette application. N\hésitez pas à visiter notre GitHub, le projet est open source !</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_condition_detection_details">Détails de la détection</string>
+    <string name="section_title_condition_threshold">Différence tolérée</string>
+    <string name="section_title_detection_quality_title">Qualité de détection</string>
+    <string name="section_title_end_condition">Conditions de fin</string>
+    <string name="section_title_intent_extras_value">Valeur</string>
+    <string name="section_title_report_timing_min">Min</string>
+    <string name="section_title_report_timing_max">Max</string>
+    <string name="section_title_report_timing_avg">Moy</string>
+    <string name="section_title_report_event_trigger_count">Activé</string>
+    <string name="section_title_report_event_processing_count">Analysé</string>
+    <string name="section_title_report_condition_detected_count">Détecté</string>
+    <string name="section_title_report_condition_processing_count">Analysé</string>
+    <string name="section_title_report_timing_title">Temps d\'analyse</string>
+    <string name="section_title_report_confidence_title">Taux de confiance</string>
+    <string name="section_title_start_application">Lancer une application</string>
+
+    <!--
+      - List header.
+      - Displayed on one line.
+      -->
+    <string name="list_header_copy_event_this">Évènements de ce scenario</string>
+    <string name="list_header_copy_event_all">Évènements de tous les scenarios</string>
+    <string name="list_header_copy_action_this">Actions de cet évènement</string>
+    <string name="list_header_copy_action_all">Actions de tous les évènements</string>
+
+    <!--
+      - SearchView hint
+      - Displayed on one line.
+      -->
+    <string name="search_view_hint_event_copy">Chercher par nom d\'évènement</string>
+    <string name="search_view_hint_action_copy">Chercher par nom d\'action</string>
+    <string name="search_view_hint_condition_copy">Chercher par nom de condition</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">Créer un scénario</string>
+    <string name="button_text_click_position_select">Choisir une position</string>
+    <string name="button_text_intent_extra_type_select">Choisir un type</string>
+    <string name="button_text_quality_speed">Vitesse</string>
+    <string name="button_text_quality_precision">Précision</string>
+    <string name="button_text_swipe_positions_select">Choisir les positions</string>
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_name">Nom</string>
+    <string name="input_field_label_click_press_duration">Durée d\'appui (ms)</string>
+    <string name="input_field_label_execution_count">Éxecutions</string>
+    <string name="input_field_label_intent_extra_key">Clé</string>
+    <string name="input_field_label_pause_duration">Pause duration (ms)</string>
+    <string name="input_field_label_scenario_name">Scenario name</string>
+    <string name="input_field_label_swipe_duration">Swipe duration (ms)</string>
+    <string name="input_field_error_required">Required</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
     <string name="content_desc_add_scenario">Créer un nouveau scénario</string>
     <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
     <string name="content_desc_event_action_btn">Editer cet évènement</string>
@@ -96,115 +230,9 @@
     <string name="content_desc_overlay_state">État de la permission de superposition</string>
     <string name="content_desc_accessibility_state">État du service d\'accessibilité</string>
     <string name="content_desc_action">L\'action à éxecuter</string>
-    <string name="dialog_condition_detection_details_title">Détails de la détection</string>
-    <string name="dialog_action_type_click">Clic</string>
-    <string name="dialog_action_type_swipe">Swipe</string>
-    <string name="dialog_action_type_pause">Pause</string>
-    <string name="dialog_action_type_intent">Intent</string>
-    <string name="dialog_event_config_actions_title">Actions</string>
-    <string name="dialog_action_config_click_position_none">Pas de position définie</string>
-    <string name="dialog_action_config_swipe_position_none">Pas de position définie</string>
-    <string name="dialog_action_config_click_press_duration_title">Appuyer pendant</string>
-    <string name="dialog_action_config_click_position_on_condition">Sur la condition</string>
-    <string name="dialog_action_config_click_position_select_position">À la position…</string>
-    <string name="dialog_action_config_click_position_title">Position du clic</string>
-    <string name="dialog_action_config_swipe_duration_title">Durée du swipe</string>
-    <string name="dialog_action_config_swipe_position_title">Position du swipe</string>
-    <string name="dialog_action_config_pause_duration_title">Durée de la pause</string>
-    <string name="dialog_action_config_intent_config_type_title">Type de configuration</string>
-    <string name="dialog_action_config_intent_config_type_simple">Simple</string>
-    <string name="dialog_action_config_intent_config_type_advanced">Avancée</string>
-    <string name="dialog_action_config_intent_simple_start_app_title">Lancer une application</string>
-    <string name="dialog_action_config_intent_simple_start_app_no_app">Pas d\'application selectionnée</string>
-    <string name="dialog_action_config_intent_advanced_send_type_title">Type d\'envoi d\'Intent</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_key">Clé</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value">Valeur</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value_type">Type de la valeur</string>
-    <string name="dialog_action_config_intent_advanced_extras_config_value_type_none">Choisir un type</string>
-
-    <string name="dialog_application_select_empty">Aucune d\'application détectée</string>
-    <string name="dialog_action_copy_empty">Aucune action trouvée.</string>
-    <string name="dialog_action_new_title">Nouvelle action</string>
-    <string name="dialog_action_new_create">Créer</string>
-    <string name="dialog_action_new_copy">Copier depuis une autre action</string>
-    <string name="dialog_action_copy_click_details">Pendant %1$s à [%2$d, %3$d]</string>
-    <string name="dialog_action_copy_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
-    <string name="dialog_action_copy_pause_details">Pendant %1$s</string>
-    <string name="dialog_action_copy_intent_details_action">Envoyer %1$s</string>
-    <string name="dialog_action_copy_intent_details_action_component">Envoyer %1$s à %2$s</string>
-    <string name="dialog_action_copy_header_event">Actions de cet évènement</string>
-    <string name="dialog_action_copy_header_all">Actions de tous les évènements</string>
-    <string name="dialog_action_copy_search">Chercher par nom d\'action</string>
     <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
     <string name="content_desc_dialog_title_icon">L\'icone du titre du dialogue.</string>
-    <string name="dialog_condition_copy_empty">Impossible de copier. Vous n\'avez créé aucune condition.</string>
-    <string name="dialog_condition_copy_threshold">%1$d%%</string>
-    <string name="dialog_condition_new_title">Nouvelle condition</string>
-    <string name="dialog_condition_new_create">Créer</string>
-    <string name="dialog_condition_new_copy">Copier depuis une autre condition</string>
-    <string name="dialog_scenario_settings_title">Paramètres du scenario</string>
-    <string name="dialog_scenario_settings_quality_title">Qualité de détection</string>
-    <string name="dialog_scenario_settings_quality_speed">Vitesse</string>
-    <string name="dialog_scenario_settings_quality_precision">Précision</string>
-    <string name="dialog_scenario_settings_end_condition_title">Conditions de fin</string>
-    <string name="dialog_scenario_settings_end_condition_no_events">Aucun évènement disponible</string>
-    <string name="dialog_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
-    <string name="dialog_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
-    <string name="dialog_end_condition_config_executions_title">Éxecutions</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
-    <string name="dialog_backup_create_title">Créer une sauvegarde</string>
-    <string name="dialog_backup_create_select_file">Choisir l\'emplacement de sauvegarde</string>
-    <string name="dialog_backup_create_progress">Sauvegarde: %1$d/%2$d</string>
-    <string name="dialog_backup_create_completed">Sauvegarde effectuée</string>
-    <string name="dialog_backup_create_error">Une erreur est survenue et la sauvegarde a été annulée</string>
-    <string name="dialog_backup_import_title">Importer une sauvegarde</string>
-    <string name="dialog_backup_import_select_file">Choisir le fichier de sauvegarde</string>
-    <string name="dialog_backup_import_progress">Import de la sauvegarde: %1$d</string>
-    <string name="dialog_backup_import_verification">Vérification des données</string>
-    <string name="dialog_backup_import_completed">Import effectué: %1$d scenarios importés</string>
-    <string name="dialog_backup_import_completed_with_error">Import effectué, des erreurs ont survenues:\n%1$d scenarios importés\n%2$d erreurs</string>
-    <string name="dialog_backup_import_error">Une erreur est survenue et l\'import a été annulée</string>
-    <string name="dialog_backup_import_compatibility">Certains scenarios ont été généré par un téléphone avec un écran différent, ce qui peut causer des problèmes avec la détection et les coordonées des actions.\n\nPour régler le problème, vous devez refaire les screenshots de vos conditions et mettre à jour les coordonées de vos actions.</string>
-    <string name="dialog_debug_report_title">Rapport de debug</string>
-    <string name="dialog_debug_report_total_duration">Durée totale</string>
-    <string name="dialog_debug_report_image_processed">Images analysées</string>
-    <string name="dialog_debug_report_avg_image_processing_duration">Temps moyen d\'analyse</string>
-    <string name="dialog_debug_report_total_event_trigger_count">Évènements activés</string>
-    <string name="dialog_debug_report_detection_count">Conditions détectés</string>
-    <string name="dialog_debug_report_event_list">Évènements</string>
-    <string name="dialog_debug_report_condition_list">Conditions</string>
-    <string name="dialog_debug_report_event_trigger_count">Activé</string>
-    <string name="dialog_debug_report_event_processing_count">Analysé</string>
-    <string name="dialog_debug_report_condition_detected_count">Détecté</string>
-    <string name="dialog_debug_report_condition_processing_count">Analysé</string>
-    <string name="dialog_debug_report_timing_title">Temps d\'analyse</string>
-    <string name="dialog_debug_report_confidence_title">Taux de confiance</string>
-    <string name="dialog_debug_report_timing_min">Min</string>
-    <string name="dialog_debug_report_timing_max">Max</string>
-    <string name="dialog_debug_report_timing_avg">Moy</string>
-    <string name="dialog_debug_report_empty">Aucun rapport de debug !</string>
-    <string name="dialog_debug_config_title">Debugging</string>
-    <string name="dialog_debug_config_show_view">Overlay de débug</string>
-    <string name="dialog_debug_config_generate_report">Générer un rapport</string>
-
-    <!--
-      - Titles for the dialogs displayed as overlay.
-      - Allowed characters can be small due to save/delete/close buttons.
-      -->
-    <string name="dialog_overlay_title_action_type">Type d\'action</string>
-    <string name="dialog_overlay_title_application_selection">Choisir une application</string>
-    <string name="dialog_overlay_title_click">Clic</string>
-    <string name="dialog_overlay_title_condition_config">Condition</string>
-    <string name="dialog_overlay_title_copy_from">Copier depuis</string>
-    <string name="dialog_overlay_title_end_condition_config">Condition de fin</string>
-    <string name="dialog_overlay_title_event_config">Évènement</string>
-    <string name="dialog_overlay_title_event_selection">Choisir un évènement</string>
-    <string name="dialog_overlay_title_extra_type_selection">Choisir un type</string>
-    <string name="dialog_overlay_title_intent">Intent</string>
-    <string name="dialog_overlay_title_pause">Pause</string>
-    <string name="dialog_overlay_title_scenario_config">Scénario</string>
-    <string name="dialog_overlay_title_swipe">Swipe</string>
-
 
     <!--
       - Dropdown input fields texts.

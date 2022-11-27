@@ -61,7 +61,7 @@ fun ItemConditionBinding.bind(
 
 
     conditionThreshold.text = root.context.getString(
-        R.string.dialog_condition_copy_threshold,
+        R.string.message_condition_threshold,
         condition.threshold
     )
 

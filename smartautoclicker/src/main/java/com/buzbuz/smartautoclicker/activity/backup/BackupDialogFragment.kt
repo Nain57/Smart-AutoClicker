@@ -105,7 +105,7 @@ class BackupDialogFragment : DialogFragment() {
         viewBinding = DialogBackupBinding.inflate(layoutInflater)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(if (isImport) R.string.dialog_backup_import_title else R.string.dialog_backup_create_title)
+            .setTitle(if (isImport) R.string.dialog_title_import_backup else R.string.dialog_title_create_backup)
             .setView(viewBinding.root)
             .setCancelable(false)
             .setPositiveButton(android.R.string.ok, null)

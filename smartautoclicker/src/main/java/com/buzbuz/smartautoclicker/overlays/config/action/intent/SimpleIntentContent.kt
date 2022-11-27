@@ -53,7 +53,7 @@ class SimpleIntentContent : NavBarDialogContent() {
             selectedApplicationLayout.root.setOnClickListener { showApplicationSelectionDialog() }
 
             editNameLayout.apply {
-                setLabel(R.string.dialog_event_config_name_title)
+                setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
             }
         }

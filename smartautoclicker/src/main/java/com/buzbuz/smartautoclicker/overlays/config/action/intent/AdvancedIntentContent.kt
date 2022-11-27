@@ -53,7 +53,7 @@ class AdvancedIntentContent : NavBarDialogContent() {
 
         viewBinding = ContentIntentConfigAdvancedBinding.inflate(LayoutInflater.from(context)).apply {
             editNameLayout.apply {
-                setLabel(R.string.dialog_event_config_name_title)
+                setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
             }
 
@@ -64,12 +64,12 @@ class AdvancedIntentContent : NavBarDialogContent() {
             )
 
             editActionLayout.apply {
-                setLabel(R.string.dialog_action_config_intent_advanced_action_title)
+                setLabel(R.string.input_field_label_intent_action)
                 setOnTextChangedListener { dialogViewModel.setIntentAction(it.toString()) }
             }
 
             editFlagsLayout.apply {
-                setLabel(R.string.dialog_action_config_intent_advanced_flags_title)
+                setLabel(R.string.input_field_label_intent_flags)
                 setOnTextChangedListener {
                     dialogViewModel.setIntentFlags(
                         try { if (it.isNotEmpty()) it.toString().toInt() else null }
@@ -79,7 +79,7 @@ class AdvancedIntentContent : NavBarDialogContent() {
             }
 
             editComponentNameLayout.apply {
-                setLabel(R.string.dialog_action_config_intent_advanced_comp_name_title)
+                setLabel(R.string.input_field_label_intent_component_name)
                 setOnTextChangedListener { dialogViewModel.setComponentName(it.toString()) }
             }
 

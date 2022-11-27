@@ -23,8 +23,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyDialog
 
@@ -57,9 +59,12 @@ class EventCopyDialog(
             }
         }
 
-        viewBinding.layoutLoadableList.list.apply {
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = eventCopyAdapter
+        viewBinding.layoutLoadableList.apply {
+            setEmptyText(R.string.message_empty_event_copy)
+            list.apply {
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                adapter = eventCopyAdapter
+            }
         }
 
         lifecycleScope.launch {
