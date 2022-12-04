@@ -31,16 +31,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/text_name"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
         android:scaleType="center"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_reorder"/>
+        android:src="@drawable/ic_reorder"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/text_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_small"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
         app:layout_constraintStart_toEndOf="@id/btn_reorder"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
