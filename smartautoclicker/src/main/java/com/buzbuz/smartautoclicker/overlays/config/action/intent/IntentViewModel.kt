@@ -64,7 +64,7 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
     /** The flags for this intent. */
     val flags: Flow<String> = configuredIntent
         .filterNotNull()
-        .map { it.flags.toString() }
+        .map { it.flags?.toString() ?: "" }
         .take(1)
 
     /** The component name for the intent. */
