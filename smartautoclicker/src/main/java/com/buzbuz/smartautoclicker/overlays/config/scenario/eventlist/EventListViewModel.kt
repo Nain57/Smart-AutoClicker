@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultEvent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
-import com.buzbuz.smartautoclicker.overlays.config.scenario.INVALID_CONFIGURED_EVENT_ITEM_ID
+import com.buzbuz.smartautoclicker.overlays.config.scenario.INVALID_CONFIGURED_ITEM_ID
 
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
@@ -83,7 +83,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
     fun addOrUpdateEvent(item: ConfiguredEvent) {
         val items = (configuredScenario.value?.events ?: emptyList()).toMutableList()
 
-        if (item.itemId == INVALID_CONFIGURED_EVENT_ITEM_ID) {
+        if (item.itemId == INVALID_CONFIGURED_ITEM_ID) {
             items.add(item.copy(itemId = items.size))
         } else {
             val itemIndex = items.indexOfFirst { other -> item.itemId == other.itemId }

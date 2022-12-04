@@ -30,10 +30,12 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
-import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.flow.MutableStateFlow
 
 import kotlinx.coroutines.launch
 
@@ -41,16 +43,15 @@ import kotlinx.coroutines.launch
  * [OverlayDialogController] implementation for displaying the end condition configuration.
  **
  * @param context the Android Context for the dialog shown by this controller.
- * @param endCondition the end condition to be configured.
- * @param endConditions the complete list of end conditions for this scenario.
+ * @param configuredScenario the flow on the scenario currently configured.
  * @param onConfirmClicked called when the user clicks on confirm.
  * @param onDeleteClicked called when the user clicks on delete.
  */
 class EndConditionConfigDialog(
     context: Context,
-    private val endCondition: EndCondition,
-    private val endConditions: List<EndCondition>,
-    private val onConfirmClicked: (EndCondition) -> Unit,
+    private val configuredScenario: MutableStateFlow<ConfiguredScenario?>,
+    private val endCondition: ConfiguredEndCondition,
+    private val onConfirmClicked: (ConfiguredEndCondition) -> Unit,
     private val onDeleteClicked: () -> Unit
 ): OverlayDialogController(context, R.style.AppTheme) {
 
@@ -61,17 +62,23 @@ class EndConditionConfigDialog(
     private lateinit var viewBinding: DialogConfigEndConditionBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setEndCondition(endCondition, endConditions)
+        viewModel.setConfiguredEndCondition(endCondition, configuredScenario)
 
         viewBinding = DialogConfigEndConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_end_condition_config)
                 buttonDismiss.setOnClickListener { destroy() }
-                buttonDelete.setOnClickListener { onDeleteButtonClicked() }
+
+                buttonDelete.apply {
+                    visibility = if (viewModel.shouldShowDeleteButton()) View.VISIBLE else View.GONE
+                    setOnClickListener { onDeleteButtonClicked() }
+                }
+
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
                 }
+
             }
 
             editExecutionCountLayout.apply {

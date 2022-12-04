@@ -30,18 +30,18 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
-import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class EventSelectionDialog(
     context: Context,
-    private val eventList: List<Event>,
-    private val onEventClicked: (Event) -> Unit,
+    private val eventList: List<ConfiguredEvent>,
+    private val onEventClicked: (ConfiguredEvent) -> Unit,
 ): OverlayDialogController(context, R.style.AppTheme) {
 
     /** ViewBinding containing the views for this dialog. */
@@ -81,7 +81,7 @@ class EventSelectionDialog(
      *
      * @param event the selected event.
      */
-    private fun onEventSelected(event: Event) {
+    private fun onEventSelected(event: ConfiguredEvent) {
         onEventClicked(event)
         destroy()
     }
@@ -92,8 +92,8 @@ class EventSelectionDialog(
  * @param onEventSelected listener on user click on an event.
  */
 private class EndConditionEventsAdapter(
-    private val onEventSelected: (Event) -> Unit,
-) : ListAdapter<Event, EndConditionEventViewHolder>(EndConditionEventDiffUtilCallback) {
+    private val onEventSelected: (ConfiguredEvent) -> Unit,
+) : ListAdapter<ConfiguredEvent, EndConditionEventViewHolder>(EndConditionEventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EndConditionEventViewHolder =
         EndConditionEventViewHolder(
@@ -106,9 +106,9 @@ private class EndConditionEventsAdapter(
 }
 
 /** DiffUtil Callback comparing two EndConditionListItem when updating the [EndConditionEventsAdapter] list. */
-private object EndConditionEventDiffUtilCallback: DiffUtil.ItemCallback<Event>() {
-    override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean = oldItem.id != 0L && oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean = oldItem == newItem
+private object EndConditionEventDiffUtilCallback: DiffUtil.ItemCallback<ConfiguredEvent>() {
+    override fun areItemsTheSame(oldItem: ConfiguredEvent, newItem: ConfiguredEvent): Boolean = oldItem.event.id == newItem.event.id
+    override fun areContentsTheSame(oldItem: ConfiguredEvent, newItem: ConfiguredEvent): Boolean = oldItem == newItem
 }
 
 /**
@@ -119,10 +119,10 @@ private object EndConditionEventDiffUtilCallback: DiffUtil.ItemCallback<Event>()
  */
 private class EndConditionEventViewHolder(
     private val viewBinding: ItemEventBinding,
-    private val onEventSelected: (Event) -> Unit,
+    private val onEventSelected: (ConfiguredEvent) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(event: Event) {
-        viewBinding.bind(event, false, onEventSelected)
+    fun onBind(confEvent: ConfiguredEvent) {
+        viewBinding.bind(confEvent.event, false) { onEventSelected(confEvent) }
     }
 }

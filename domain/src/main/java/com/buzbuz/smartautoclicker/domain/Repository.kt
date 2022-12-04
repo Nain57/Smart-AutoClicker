@@ -194,7 +194,7 @@ interface Repository {
      * @param event the event to be added.
      * @return true if it has been added, false if not.
      */
-    suspend fun addEvent(event: Event): Boolean
+    suspend fun addEvent(event: Event): Long
 
     /**
      * Update an event.
