@@ -25,9 +25,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.databinding.ItemEndConditionCardBinding
 import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
 
 /**
  * Adapter displaying a list of end conditions.
@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
  */
 class EndConditionAdapter(
     private val addEndConditionClickedListener: () -> Unit,
-    private val endConditionClickedListener: (EndCondition, Int) -> Unit,
+    private val endConditionClickedListener: (ConfiguredEndCondition, Int) -> Unit,
 ) : ListAdapter<EndConditionListItem, RecyclerView.ViewHolder>(EndConditionDiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -74,7 +74,7 @@ object EndConditionDiffUtilCallback: DiffUtil.ItemCallback<EndConditionListItem>
     override fun areItemsTheSame(oldItem: EndConditionListItem, newItem: EndConditionListItem): Boolean = when {
         oldItem is EndConditionListItem.AddEndConditionItem && newItem is EndConditionListItem.AddEndConditionItem -> true
         oldItem is EndConditionListItem.EndConditionItem && newItem is EndConditionListItem.EndConditionItem ->
-            oldItem.endCondition.id == newItem.endCondition.id
+            oldItem.endCondition.endCondition.id == newItem.endCondition.endCondition.id
         else -> false
     }
 
@@ -97,16 +97,16 @@ class AddEndConditionViewHolder(
 /** View holder for the end condition item. */
 class EndConditionViewHolder(
     private val viewBinding: ItemEndConditionCardBinding,
-    private val endConditionClickedListener: (EndCondition, Int) -> Unit,
+    private val endConditionClickedListener: (ConfiguredEndCondition, Int) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(item: EndConditionListItem.EndConditionItem) {
         viewBinding.apply {
             root.setOnClickListener { endConditionClickedListener(item.endCondition, bindingAdapterPosition) }
-            textEndConditionName.text = item.endCondition.eventName
+            textEndConditionName.text = item.endCondition.endCondition.eventName
             textEndConditionExecutions.text = itemView.context.getString(
                 R.string.dialog_scenario_settings_end_condition_card_executions,
-                item.endCondition.executions
+                item.endCondition.endCondition.executions,
             )
         }
     }

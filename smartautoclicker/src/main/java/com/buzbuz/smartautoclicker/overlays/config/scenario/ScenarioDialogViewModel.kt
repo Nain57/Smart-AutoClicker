@@ -77,7 +77,9 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
                 events = repository.getCompleteEventList(scenario.id).mapIndexed { index, event ->
                     ConfiguredEvent(event, index)
                 },
-                endConditions = repository.getScenarioWithEndConditions(scenario.id)?.second ?: emptyList(),
+                endConditions = repository.getScenarioWithEndConditions(scenario.id)?.second?.mapIndexed { index, endCondition ->
+                    ConfiguredEndCondition(endCondition, index)
+                } ?: emptyList(),
             )
         }
     }
@@ -88,20 +90,30 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
             configuredScenario.value?.let { conf ->
                 repository.updateScenario(conf.scenario)
 
+                val eventItemIdMap = mutableMapOf<Int, Long>()
                 val toBeRemoved = repository.getCompleteEventList(conf.scenario.id).toMutableList()
                 conf.events.forEachIndexed { index, configuredEvent ->
                     configuredEvent.event.priority = index
 
                     if (configuredEvent.event.id == 0L) {
-                        repository.addEvent(configuredEvent.event)
+                        val eventId = repository.addEvent(configuredEvent.event)
+                        eventItemIdMap[configuredEvent.itemId] = eventId
                     } else {
                         repository.updateEvent(configuredEvent.event)
-                        toBeRemoved.removeIf { it.id == configuredEvent.event.id }
+                        if (toBeRemoved.removeIf { it.id == configuredEvent.event.id }) {
+                            eventItemIdMap[configuredEvent.itemId] = configuredEvent.event.id
+                        }
                     }
                 }
                 toBeRemoved.forEach { event -> repository.removeEvent(event) }
 
-                repository.updateEndConditions(conf.scenario.id, conf.endConditions)
+                repository.updateEndConditions(conf.scenario.id, conf.endConditions.mapNotNull { confEndCondition ->
+                    val eventId = eventItemIdMap[confEndCondition.eventItemId] ?: return@mapNotNull null
+                    confEndCondition.endCondition.copy(
+                        scenarioId = conf.scenario.id,
+                        eventId = eventId,
+                    )
+                })
             }
         }
     }
@@ -111,11 +123,18 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
 data class ConfiguredScenario(
     val scenario: Scenario,
     val events: List<ConfiguredEvent>,
-    val endConditions: List<EndCondition>,
+    val endConditions: List<ConfiguredEndCondition>,
 )
 
 /** Represents the events of the scenario currently configured. */
-data class ConfiguredEvent(val event: Event, val itemId: Int = INVALID_CONFIGURED_EVENT_ITEM_ID)
+data class ConfiguredEvent(val event: Event, val itemId: Int = INVALID_CONFIGURED_ITEM_ID)
 
-/** Invalid [ConfiguredEvent] id. The event item object is created but not yet in the list. */
-const val INVALID_CONFIGURED_EVENT_ITEM_ID = -1
+/** Represents the events of the scenario currently configured. */
+data class ConfiguredEndCondition(
+    val endCondition: EndCondition,
+    val eventItemId: Int = INVALID_CONFIGURED_ITEM_ID,
+    val itemId: Int = INVALID_CONFIGURED_ITEM_ID,
+)
+
+/** Invalid configured item id. The event item object is created but not yet in the list. */
+const val INVALID_CONFIGURED_ITEM_ID = -1

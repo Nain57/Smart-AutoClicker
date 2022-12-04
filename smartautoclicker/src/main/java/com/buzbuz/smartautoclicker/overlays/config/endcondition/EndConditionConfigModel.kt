@@ -21,9 +21,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
+import com.buzbuz.smartautoclicker.overlays.config.scenario.INVALID_CONFIGURED_ITEM_ID
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -36,86 +38,91 @@ import kotlinx.coroutines.flow.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class EndConditionConfigModel(application: Application) : AndroidViewModel(application) {
 
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application)
+    /** The scenario configured. */
+    private lateinit var configuredScenario: MutableStateFlow<ConfiguredScenario?>
 
     /** The configured end condition. */
-    private val configuredEndCondition = MutableStateFlow<EndCondition?>(null)
-    /** The list of current end conditions for this scenario. */
-    private val currentEndConditions = MutableStateFlow<List<EndCondition>>(emptyList())
-    /** The complete list of events for this scenario. */
-    private val events = configuredEndCondition
-        .filterNotNull()
-        .flatMapLatest {
-            repository.getCompleteEventListFlow(it.scenarioId)
-        }
+    private val configuredEndCondition = MutableStateFlow<ConfiguredEndCondition?>(null)
 
     /** The number of executions before triggering the end condition. */
     val executions = configuredEndCondition
         .filterNotNull()
-        .map { it.executions }
+        .map { it.endCondition.executions }
         .take(1)
     /** Tells if the execution count is valid or not. */
-    val executionCountError: Flow<Boolean> by lazy {
-        configuredEndCondition.map { (it?.executions ?: -1) <= 0 }
-    }
+    val executionCountError: Flow<Boolean> = configuredEndCondition
+        .map { (it?.endCondition?.executions ?: -1) <= 0 }
+
     /** Tells if the configured end condition can be deleted. */
     val canBeDeleted = configuredEndCondition
         .filterNotNull()
-        .map { it.id != 0L }
+        .map { it.endCondition.id != 0L }
     /** True if this end condition is valid and can be saved, false if not. */
-    val isValidEndCondition = configuredEndCondition.map { endCondition ->
-        endCondition != null && endCondition.eventId != 0L && endCondition.executions > 0
+    val isValidEndCondition = configuredEndCondition.map { conf ->
+        conf != null && conf.eventItemId != INVALID_CONFIGURED_ITEM_ID && conf.endCondition.executions > 0
     }
 
     /** Events available as end condition event for this end condition */
-    val eventsAvailable = combine(
-        currentEndConditions,
-        configuredEndCondition,
-        events
-    ) { endConditions, endCondition, events ->
-            events.filter { event ->
-                endCondition?.eventId == event.id || endConditions.find { it.eventId == event.id } == null
+    val eventsAvailable: StateFlow<List<ConfiguredEvent>> by lazy {
+        configuredScenario
+            .map { scenario ->
+                scenario ?: return@map emptyList()
+
+                scenario.events
+                    .filter { configuredEvent ->
+                        scenario.endConditions.find { it.endCondition.eventId == configuredEvent.event.id } == null
+                    }
             }
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            emptyList()
-        )
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                emptyList()
+            )
+    }
     /** The event selected for the end condition. Null if none is. */
-    val eventViewState = configuredEndCondition
-        .combine(events) { endCondition, events ->
-            events.find { event -> endCondition?.eventId == event.id }
-        }
-        .combine(eventsAvailable) { selectedEvent, scenarioEvents ->
-            when {
-                scenarioEvents.isEmpty() -> EndConditionEventViewState.NoEvents
-                selectedEvent == null -> EndConditionEventViewState.NoSelection
-                else -> EndConditionEventViewState.Selected(selectedEvent)
+    val eventViewState: Flow<EndConditionEventViewState> by lazy {
+        configuredEndCondition
+            .combine(configuredScenario) { confEndCondition, scenario ->
+                scenario ?: return@combine null
+                scenario.events.find { configuredEvent ->
+                    confEndCondition?.eventItemId == configuredEvent.itemId
+                }
             }
-        }
+            .combine(eventsAvailable) { selectedEvent, scenarioEvents ->
+                when {
+                    selectedEvent != null -> EndConditionEventViewState.Selected(selectedEvent.event)
+                    scenarioEvents.isEmpty() -> EndConditionEventViewState.NoEvents
+                    else -> EndConditionEventViewState.NoSelection
+
+                }
+            }
+    }
 
     /** Tells if the delete button should be shown. */
     fun shouldShowDeleteButton(): Boolean =
-        configuredEndCondition.value?.id?.equals(0L) == false
+        configuredEndCondition.value?.endCondition?.id?.equals(0L) == false
 
     /**
      * Set the end condition to be configured.
      * @param endCondition the end condition.
-     * @param endConditions the complete list of events for this scenario.
+     * @param scenario the scenario currently configured.
      */
-    fun setEndCondition(endCondition: EndCondition, endConditions: List<EndCondition>) {
-        configuredEndCondition.value = endCondition.copy()
-        currentEndConditions.value = endConditions
+    fun setConfiguredEndCondition(endCondition: ConfiguredEndCondition, scenario: MutableStateFlow<ConfiguredScenario?>) {
+        configuredEndCondition.value = endCondition
+        configuredScenario = scenario
     }
 
     /**
      * Set the event for the configured end condition
-     * @param event the new event.
+     * @param confEvent the new event.
      */
-    fun setEvent(event: Event) {
-        configuredEndCondition.value = configuredEndCondition.value?.copy(eventId = event.id, eventName = event.name)
+    fun setEvent(confEvent: ConfiguredEvent) {
+        configuredEndCondition.value = configuredEndCondition.value?.let { conf ->
+            conf.copy(
+                endCondition = conf.endCondition.copy(eventId = confEvent.event.id, eventName = confEvent.event.name),
+                eventItemId = confEvent.itemId,
+            )
+        }
     }
 
     /**
@@ -123,11 +130,13 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
      * @param executions the number of event executions.
      */
     fun setExecutions(executions: Int) {
-        configuredEndCondition.value = configuredEndCondition.value?.copy(executions = executions)
+        configuredEndCondition.value = configuredEndCondition.value?.let { conf ->
+            conf.copy(endCondition = conf.endCondition.copy(executions = executions))
+        }
     }
 
     /** @return the end condition currently configured. */
-    fun getConfiguredEndCondition(): EndCondition = configuredEndCondition.value!!
+    fun getConfiguredEndCondition(): ConfiguredEndCondition = configuredEndCondition.value!!
 }
 
 sealed class EndConditionEventViewState {

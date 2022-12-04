@@ -27,12 +27,12 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
-import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -138,7 +138,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
                     EndConditionConfigDialog(
                         context = context,
                         endCondition = endCondition,
-                        endConditions = viewModel.getConfiguredEndConditionsList(),
+                        configuredScenario = dialogViewModel.configuredScenario,
                         onConfirmClicked = { newEndCondition -> viewModel.addEndCondition(newEndCondition) },
                         onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
                     )
@@ -147,13 +147,13 @@ class ScenarioConfigContent : NavBarDialogContent() {
         }
     }
 
-    private fun onEndConditionClicked(endCondition: EndCondition, index: Int) {
+    private fun onEndConditionClicked(endCondition: ConfiguredEndCondition, index: Int) {
         dialogViewModel.requestSubOverlay(
             NavigationRequest(
                 EndConditionConfigDialog(
                     context = context,
                     endCondition = endCondition,
-                    endConditions = viewModel.getConfiguredEndConditionsList(),
+                    configuredScenario = dialogViewModel.configuredScenario,
                     onConfirmClicked = { newEndCondition -> viewModel.updateEndCondition(newEndCondition, index) },
                     onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
                 )
