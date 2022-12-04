@@ -43,6 +43,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/dialog_content"
+            app:labelVisibilityMode="unlabeled"
             tools:menu="@menu/menu_scenario_config"/>
 
         <FrameLayout
