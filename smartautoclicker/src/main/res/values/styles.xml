@@ -185,6 +185,10 @@
     <style name="AppTheme.TextAppearance.BodyLarge" parent="@style/TextAppearance.Material3.BodyLarge"/>
     <!-- Text appearance for the empty lists text. -->
     <style name="AppTheme.TextAppearance.EmptyText" parent="@style/TextAppearance.Material3.HeadlineSmall"/>
+    <!-- Text appearance for the secondary empty lists text. -->
+    <style name="AppTheme.TextAppearance.EmptyTextSecondary" parent="@style/TextAppearance.Material3.BodyMedium">
+        <item name="android:textStyle">italic</item>
+    </style>
     <!-- Text appearance for the debug overlay. -->
     <style name="AppTheme.TextAppearance.DebugOverlayText" parent="@android:style/TextAppearance.Widget.TextView">
         <item name="android:paddingStart">@dimen/margin_horizontal_mini</item>

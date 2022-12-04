@@ -20,8 +20,15 @@ import android.view.View
 import androidx.annotation.StringRes
 import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
 
-fun IncludeLoadableListBinding.setEmptyText(@StringRes id: Int) {
-    empty.setText(id)
+fun IncludeLoadableListBinding.setEmptyText(@StringRes id: Int, @StringRes secondaryId: Int? = null) {
+    emptyText.setText(id)
+
+    if (secondaryId == null) {
+        emptySecondary.visibility = View.GONE
+    } else {
+        emptySecondary.visibility = View.VISIBLE
+        emptySecondaryText.setText(secondaryId)
+    }
 }
 
 fun IncludeLoadableListBinding.updateState(items: List<Any>?) {

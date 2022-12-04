@@ -114,17 +114,26 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_empty_event_copy">Aucun évènement trouvé.</string>
-    <string name="message_empty_actions">Aucune action</string>
+    <string name="message_empty_actions">Aucune action !</string>
     <string name="message_empty_actions_copy">Aucune action trouvée.</string>
-    <string name="message_empty_conditions">Aucune condition</string>
+    <string name="message_empty_conditions">Aucune condition !</string>
     <string name="message_empty_conditions_copy">Impossible de copier. Vous n\'avez créé aucune condition.</string>
     <string name="message_empty_copy">Nothing to copy</string>
     <string name="message_empty_debug_report">Aucun rapport de debug !</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
-    <string name="message_empty_end_condition_no_events">Aucun évènement disponible</string>
-    <string name="message_empty_event_list">Aucun évènement.\nAppuyez sur \'Créer\' pour en créer un.</string>
+    <string name="message_empty_event_list">Aucun évènement !</string>
     <string name="message_empty_scenario_list">Créez votre premier scénario et commencez au automatiser des tâches dès maintenant</string>
+
+    <!--
+      - Secondary empty list messages.
+      - Views handles any length here, you can use more verbosity than the regular empty text.
+      -->
+    <string name="message_empty_secondary_end_condition_no_events">Vous avez besoin d\'au moins un évènement pour créer une condition de fin pour votre scénario</string>
+    <string name="message_empty_secondary_event_list">Un évènement est un ensemble d\'actions exécutées lorsque qu\'une condition spécifique est détectée sur l\'écran.\nVous avez besoin d\'au moins un évènement dans votre scénario pour l\'exécuter.</string>
+    <string name="message_empty_secondary_condition_list">Une condition est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
+    <string name="message_empty_secondary_action_list">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.\nVous avez besoin d\'au moins une action dans votre évènement.</string>
+
 
     <!--
       - Messages.
