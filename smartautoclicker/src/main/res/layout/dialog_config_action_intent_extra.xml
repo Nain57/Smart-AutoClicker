@@ -17,7 +17,6 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -73,36 +72,29 @@
                         android:text="@string/button_text_intent_extra_type_select"
                         tools:visibility="gone"/>
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/text_value_type"
+                    <include layout="@layout/include_input_field_dropdown"
+                        android:id="@+id/extra_value_type_field"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height_big"
-                        android:paddingStart="@dimen/margin_horizontal_default"
-                        android:paddingEnd="@dimen/margin_horizontal_default"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/text_size_list_item_text_big"
-                        android:drawablePadding="@dimen/margin_horizontal_small"
-                        app:drawableEndCompat="@drawable/ic_chevron"
-                        tools:text="Integer"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_vertical_large"/>
 
                     <FrameLayout
                         android:id="@+id/layout_value_input"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_vertical_default">
+                        android:layout_height="@dimen/dropdown_one_line_helper_text_height">
 
                         <include layout="@layout/include_input_field_text"
                             android:id="@+id/edit_value_field"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dropdown_one_line_helper_text_height"
-                            android:layout_marginVertical="@dimen/margin_horizontal_default"/>
+                            android:layout_height="match_parent"
+                            tools:visibility="visible"/>
 
                         <include layout="@layout/include_input_field_dropdown"
                             android:id="@+id/edit_boolean_value_field"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dropdown_one_line_helper_text_height"
-                            android:layout_marginVertical="@dimen/margin_vertical_default"
-                            tools:visibility="gone"/>
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            tools:visibility="visible"/>
 
                     </FrameLayout>
 

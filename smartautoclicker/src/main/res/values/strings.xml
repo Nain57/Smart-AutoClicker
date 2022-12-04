@@ -54,7 +54,6 @@
     <string name="dialog_overlay_title_event_selection">Select an event</string>
     <string name="dialog_overlay_title_extra_type_selection">Select a type</string>
     <string name="dialog_overlay_title_intent">Intent</string>
-    <string name="dialog_overlay_title_intent_extras_value_type">Value type</string>
     <string name="dialog_overlay_title_pause">Wait</string>
     <string name="dialog_overlay_title_scenario_config">Scenario</string>
     <string name="dialog_overlay_title_swipe">Swipe</string>
@@ -262,6 +261,13 @@
     <string name="dropdown_label_intent_sending_type">Type</string>
 
     <!--
+      - Dropdown field for selecting the intent extra type.
+      - All items for this field are not translatable.
+      -->
+    <string name="dropdown_label_intent_extra_value_type">Value type</string>
+
+
+    <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
@@ -300,14 +306,14 @@
     <string name="dropdown_item_title_extra_boolean_true" translatable="false">True</string>
     <string name="dropdown_item_title_extra_boolean_false" translatable="false">False</string>
 
-    <string name="item_title_intent_extra_type_boolean" translatable="false">Boolean</string>
-    <string name="item_title_intent_extra_type_byte" translatable="false">Byte</string>
-    <string name="item_title_intent_extra_type_char" translatable="false">Char</string>
-    <string name="item_title_intent_extra_type_double" translatable="false">Double</string>
-    <string name="item_title_intent_extra_type_int" translatable="false">Integer</string>
-    <string name="item_title_intent_extra_type_float" translatable="false">Float</string>
-    <string name="item_title_intent_extra_type_short" translatable="false">Short</string>
-    <string name="item_title_intent_extra_type_string" translatable="false">String</string>
+    <string name="dropdown_item_intent_extra_type_boolean" translatable="false">Boolean</string>
+    <string name="dropdown_item_intent_extra_type_byte" translatable="false">Byte</string>
+    <string name="dropdown_item_intent_extra_type_char" translatable="false">Char</string>
+    <string name="dropdown_item_intent_extra_type_double" translatable="false">Double</string>
+    <string name="dropdown_item_intent_extra_type_int" translatable="false">Integer</string>
+    <string name="dropdown_item_intent_extra_type_float" translatable="false">Float</string>
+    <string name="dropdown_item_intent_extra_type_short" translatable="false">Short</string>
+    <string name="dropdown_item_intent_extra_type_string" translatable="false">String</string>
 
     <string name="item_title_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
 
