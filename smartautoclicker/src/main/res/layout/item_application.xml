@@ -26,6 +26,7 @@
         android:id="@+id/icon_app"
         android:layout_width="@dimen/item_height"
         android:layout_height="@dimen/item_height"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
