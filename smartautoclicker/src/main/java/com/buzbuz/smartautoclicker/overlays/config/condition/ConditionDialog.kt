@@ -96,8 +96,11 @@ class ConditionDialog(
                 onItemSelected = viewModel::setShouldBeDetected,
             )
 
-            seekbarDiffThreshold.addOnChangeListener {  _, value, fromUser ->
-                if (fromUser) viewModel.setThreshold(value.roundToInt())
+            seekbarDiffThreshold.apply {
+                setLabelFormatter { "$it %" }
+                addOnChangeListener {  _, value, fromUser ->
+                    if (fromUser) viewModel.setThreshold(value.roundToInt())
+                }
             }
         }
 
@@ -144,11 +147,6 @@ class ConditionDialog(
 
     private fun updateThreshold(newThreshold: Int) {
         viewBinding.apply {
-            textDiffThreshold.text = context.getString(
-                R.string.message_condition_threshold_value,
-                newThreshold,
-            )
-
             val isNotInitialized = seekbarDiffThreshold.value == 0f
             seekbarDiffThreshold.value = newThreshold.toFloat()
 
