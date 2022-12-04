@@ -30,11 +30,7 @@ import com.buzbuz.smartautoclicker.overlays.debugging.report.formatConfidenceRat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.sample
+import kotlinx.coroutines.flow.*
 
 /** ViewModel for the debug features. */
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -86,10 +82,26 @@ class DebugModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
+    private val _isDebugReportConsumed = MutableStateFlow(false)
+    /** True if the debug report have been consumed, false if not. */
+    val isDebugReportConsumed: StateFlow<Boolean> = _isDebugReportConsumed
+
     /** True when a debug report is available. */
     val isDebugReportReady: Flow<Boolean> = detectorEngine.debugEngine
         .flatMapLatest { it.debugReport }
-        .map { it != null }
+        .combine(isDebugReportConsumed) { debugReport, consumed ->
+            if (debugReport == null) {
+                _isDebugReportConsumed.value = false
+                false
+            } else {
+                !consumed
+            }
+        }
+
+    /** Consume the current debug report. */
+    fun consumeDebugReport() {
+        _isDebugReportConsumed.value = true
+    }
 }
 
 /**
