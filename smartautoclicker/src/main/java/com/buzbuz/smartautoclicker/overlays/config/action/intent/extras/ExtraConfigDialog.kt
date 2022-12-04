@@ -31,7 +31,6 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionIntentExtraBinding
-import com.buzbuz.smartautoclicker.overlays.base.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -88,8 +87,11 @@ class ExtraConfigDialog(
                 setOnTextChangedListener { viewModel.setKey(it.toString()) }
             }
 
-            buttonSelectType.setOnClickListener { showExtraTypeSelectionDialog() }
-            textValueType.setOnClickListener { showExtraTypeSelectionDialog() }
+            extraValueTypeField.setItems(
+                label = context.getString(R.string.dropdown_label_intent_extra_value_type),
+                items = viewModel.extraTypeDropdownItems,
+                onItemSelected = viewModel::setType,
+            )
 
             editValueField.setOnTextChangedListener { viewModel.setValue(it.toString()) }
             editBooleanValueField.setItems(
@@ -136,32 +138,15 @@ class ExtraConfigDialog(
      * @param valueState the new state of the input views.
      */
     private fun updateExtraValue(valueState: ExtraValueInputState) {
-        when (valueState) {
-            ExtraValueInputState.NoTypeSelected -> toNoExtraTypeSelected()
-
-            is ExtraValueInputState.TypeSelected -> {
-                viewBinding.apply {
-                    layoutValueInput.visibility = View.VISIBLE
-                    buttonSelectType.visibility = View.GONE
-                    textValueType.apply {
-                        visibility = View.VISIBLE
-                        setText(valueState.typeText)
-                    }
-                }
-
-                when (valueState) {
-                    is ExtraValueInputState.BooleanInputTypeSelected -> toExtraTypeBooleanSelected(valueState)
-                    is ExtraValueInputState.TextInputTypeSelected -> toExtraTypeTextInputSelected(valueState)
-                }
-            }
-        }
-    }
-
-    private fun toNoExtraTypeSelected() {
         viewBinding.apply {
-            textValueType.visibility = View.GONE
-            layoutValueInput.visibility = View.GONE
-            buttonSelectType.visibility = View.VISIBLE
+            layoutValueInput.visibility = View.VISIBLE
+            buttonSelectType.visibility = View.GONE
+            extraValueTypeField.setSelectedItem(valueState.typeItem)
+        }
+
+        when (valueState) {
+            is ExtraValueInputState.BooleanInputTypeSelected -> toExtraTypeBooleanSelected(valueState)
+            is ExtraValueInputState.TextInputTypeSelected -> toExtraTypeTextInputSelected(valueState)
         }
     }
 
@@ -188,18 +173,6 @@ class ExtraConfigDialog(
 
     private fun updateSaveButton(isValidExtra: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidExtra)
-    }
-
-    private fun showExtraTypeSelectionDialog() {
-        showSubOverlay(
-            overlayController = MultiChoiceDialog(
-                context = context,
-                dialogTitleText = R.string.dialog_overlay_title_intent_extras_value_type,
-                choices = ExtraTypeChoice.getAllChoices(),
-                onChoiceSelected = viewModel::setType
-            ),
-            hideCurrent = false,
-        )
     }
 
     private fun TextInputEditText.clearInputClass() {

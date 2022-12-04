@@ -52,14 +52,14 @@ fun ImageView.setIconTint(@ColorRes color: Int) {
 
 @StringRes
 fun KClass<out Any>.getDisplayNameRes() : Int = when (this) {
-    Byte::class -> R.string.item_title_intent_extra_type_byte
-    Boolean::class -> R.string.item_title_intent_extra_type_boolean
-    Char::class -> R.string.item_title_intent_extra_type_char
-    Double::class -> R.string.item_title_intent_extra_type_double
-    Int::class -> R.string.item_title_intent_extra_type_int
-    Float::class -> R.string.item_title_intent_extra_type_float
-    Short::class -> R.string.item_title_intent_extra_type_short
-    String::class -> R.string.item_title_intent_extra_type_string
+    Byte::class -> R.string.dropdown_item_intent_extra_type_byte
+    Boolean::class -> R.string.dropdown_item_intent_extra_type_boolean
+    Char::class -> R.string.dropdown_item_intent_extra_type_char
+    Double::class -> R.string.dropdown_item_intent_extra_type_double
+    Int::class -> R.string.dropdown_item_intent_extra_type_int
+    Float::class -> R.string.dropdown_item_intent_extra_type_float
+    Short::class -> R.string.dropdown_item_intent_extra_type_short
+    String::class -> R.string.dropdown_item_intent_extra_type_string
     else -> 0
 }
 

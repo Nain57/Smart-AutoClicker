@@ -20,15 +20,13 @@ import android.app.Application
 import android.text.InputFilter
 import android.text.InputType
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.R
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.NumberInputFilter
 import com.buzbuz.smartautoclicker.domain.IntentExtra
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDisplayNameRes
 
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +34,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 
 /**
  * View model for the [ExtraConfigDialog].
@@ -55,15 +54,15 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
     val valueInputState: Flow<ExtraValueInputState> = configuredExtra
         .map {
             when (val value = it?.value) {
-                null -> ExtraValueInputState.NoTypeSelected
+                null,
                 is Boolean -> ExtraValueInputState.BooleanInputTypeSelected(
-                    value::class.getDisplayNameRes(),
-                    if (value == true) booleanItemTrue else booleanItemFalse,
+                    BOOLEAN_ITEM,
+                    if (value == true) BOOLEAN_ITEM_TRUE else BOOLEAN_ITEM_FALSE,
                 )
                 else -> {
                     val inputInfo = getInputInfo(value)
                     ExtraValueInputState.TextInputTypeSelected(
-                        value::class.getDisplayNameRes(),
+                        value::class.getTypeItem(),
                         inputInfo.second,
                         inputInfo.first,
                         value.toString(),
@@ -73,10 +72,12 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
             }
         }
 
-    val booleanItemTrue = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_true)
-    val booleanItemFalse = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_false)
+    /** Choices for the extra type selection dialog. */
+    val extraTypeDropdownItems = listOf(
+        BOOLEAN_ITEM, BYTE_ITEM, CHAR_ITEM, DOUBLE_ITEM, FLOAT_ITEM, INT_ITEM, SHORT_ITEM, STRING_ITEM,
+    )
     /** Items for the boolean value dropdown field. */
-    val booleanItems = listOf(booleanItemTrue, booleanItemFalse)
+    val booleanItems = listOf(BOOLEAN_ITEM_TRUE, BOOLEAN_ITEM_FALSE)
 
     /** Tells if the action name is valid or not. */
     val keyError: Flow<Boolean> = configuredExtra.map { it?.key?.isEmpty() ?: true }
@@ -95,7 +96,9 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
      */
     fun setConfigExtra(extra: IntentExtra<out Any>) {
         viewModelScope.launch {
-            configuredExtra.value = extra.copy()
+            configuredExtra.value =
+                if (extra.value == null) extra.copy(value = false)
+                else extra.copy()
         }
     }
 
@@ -122,13 +125,10 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
 
     /** Set the value to true or false. Should be called for a Boolean extra only. */
     fun setBooleanValue(value: DropdownItem) {
-        val current = configuredExtra.value?.value
-        if (current == null || current !is Boolean) return
-
         viewModelScope.launch {
             val extraValue = when (value) {
-                booleanItemTrue -> true
-                booleanItemFalse -> false
+                BOOLEAN_ITEM_TRUE -> true
+                BOOLEAN_ITEM_FALSE -> false
                 else -> return@launch
             }
 
@@ -139,22 +139,21 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
     /**
      * Set the type of the extra.
      * @param type the new type.
-     *
-     * @throws IllegalArgumentException if the type is not supported.
      */
-    fun setType(type: ExtraTypeChoice) {
+    fun setType(type: DropdownItem) {
         viewModelScope.launch {
             val oldValue = configuredExtra.value ?: return@launch
 
             configuredExtra.value = when (type) {
-                ExtraTypeChoice.ByteChoice -> oldValue.copy<Byte>(value = 0)
-                ExtraTypeChoice.BooleanChoice -> oldValue.copy(value = false)
-                ExtraTypeChoice.CharChoice -> oldValue.copy(value = 'a')
-                ExtraTypeChoice.DoubleChoice -> oldValue.copy(value = 0.0)
-                ExtraTypeChoice.IntChoice -> oldValue.copy(value = 0)
-                ExtraTypeChoice.FloatChoice -> oldValue.copy(value = 0f)
-                ExtraTypeChoice.ShortChoice -> oldValue.copy<Short>(value = 0)
-                ExtraTypeChoice.StringChoice -> oldValue.copy(value = "")
+                BYTE_ITEM -> oldValue.copy<Byte>(value = 0)
+                BOOLEAN_ITEM -> oldValue.copy(value = false)
+                CHAR_ITEM -> oldValue.copy(value = 'a')
+                DOUBLE_ITEM -> oldValue.copy(value = 0.0)
+                INT_ITEM -> oldValue.copy(value = 0)
+                FLOAT_ITEM -> oldValue.copy(value = 0f)
+                SHORT_ITEM -> oldValue.copy<Short>(value = 0)
+                STRING_ITEM -> oldValue.copy(value = "")
+                else -> throw IllegalArgumentException("Unsupported extra type $type")
             }
         }
     }
@@ -207,13 +206,8 @@ private fun IntentExtra<out Any>.copyFromString(strValue: String): IntentExtra<o
 /** State of the extra value input views. */
 sealed class ExtraValueInputState {
 
-    /** There is no types selected, no input views displayed. */
-    object NoTypeSelected: ExtraValueInputState()
-
-    sealed class TypeSelected : ExtraValueInputState() {
-        /** The name of the selected type. */
-        abstract val typeText: Int
-    }
+    /** The selected type. */
+    abstract val typeItem: DropdownItem
 
     /**
      * Selected type requires a text input with the IME.
@@ -224,12 +218,12 @@ sealed class ExtraValueInputState {
      * @param value the raw current value.
      */
     data class TextInputTypeSelected(
-        @StringRes override val typeText: Int,
+        override val typeItem: DropdownItem,
         val inputType: Int,
         val inputFilter: InputFilter?,
         val valueStr: String,
         val value: Any,
-    ): TypeSelected()
+    ): ExtraValueInputState()
 
     /**
      * Selected type requires a selection between two parameters.
@@ -237,26 +231,33 @@ sealed class ExtraValueInputState {
      * @param value value of the extra
      */
     data class BooleanInputTypeSelected(
-        @StringRes override val typeText: Int,
+        override val typeItem: DropdownItem,
         val value: DropdownItem,
-    ): TypeSelected()
+    ): ExtraValueInputState()
 }
 
-/** Choices for the extra type selection dialog. */
-sealed class ExtraTypeChoice(title: Int): DialogChoice(title) {
-    object BooleanChoice : ExtraTypeChoice(Boolean::class.getDisplayNameRes())
-    object ByteChoice : ExtraTypeChoice(Byte::class.getDisplayNameRes())
-    object CharChoice : ExtraTypeChoice(Char::class.getDisplayNameRes())
-    object DoubleChoice : ExtraTypeChoice(Double::class.getDisplayNameRes())
-    object FloatChoice : ExtraTypeChoice(Float::class.getDisplayNameRes())
-    object IntChoice : ExtraTypeChoice(Int::class.getDisplayNameRes())
-    object ShortChoice : ExtraTypeChoice(Short::class.getDisplayNameRes())
-    object StringChoice: ExtraTypeChoice(String::class.getDisplayNameRes())
-
-    companion object {
-        fun getAllChoices() = listOf(
-            BooleanChoice, ByteChoice, CharChoice, DoubleChoice, FloatChoice, IntChoice,
-            ShortChoice, StringChoice
-        )
-    }
+/** Get the corresponding extra type dropdown item. */
+private fun KClass<out Any>.getTypeItem() : DropdownItem = when (this) {
+    Boolean::class -> BOOLEAN_ITEM
+    Byte::class -> BYTE_ITEM
+    Char::class -> CHAR_ITEM
+    Double::class -> DOUBLE_ITEM
+    Float::class -> FLOAT_ITEM
+    Int::class -> INT_ITEM
+    Short::class -> SHORT_ITEM
+    String::class -> STRING_ITEM
+    else -> throw IllegalArgumentException("Unsupported extra type")
 }
+
+// Items for the extra type dropdown menu
+private val BOOLEAN_ITEM = DropdownItem(title = Boolean::class.getDisplayNameRes())
+private val BYTE_ITEM = DropdownItem(title = Byte::class.getDisplayNameRes())
+private val CHAR_ITEM = DropdownItem(title = Char::class.getDisplayNameRes())
+private val DOUBLE_ITEM = DropdownItem(title = Double::class.getDisplayNameRes())
+private val FLOAT_ITEM = DropdownItem(title = Float::class.getDisplayNameRes())
+private val INT_ITEM = DropdownItem(title = Int::class.getDisplayNameRes())
+private val SHORT_ITEM = DropdownItem(title = Short::class.getDisplayNameRes())
+private val STRING_ITEM = DropdownItem(title = String::class.getDisplayNameRes())
+
+private val BOOLEAN_ITEM_TRUE = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_true)
+private val BOOLEAN_ITEM_FALSE = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_false)
