@@ -61,10 +61,11 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
                     style="@style/AppTheme.TextAppearance.CardTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/text_quality_value"
                     android:text="@string/section_title_detection_quality_title" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -74,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_horizontal_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:layout_marginTop="@dimen/margin_vertical_small"
                     android:gravity="center"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -86,6 +88,7 @@
                     style="@style/Widget.Material3.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/item_height"
+                    android:layout_marginTop="@dimen/margin_vertical_small"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/text_quality_value"
                     app:layout_constraintBottom_toBottomOf="@id/text_quality_value"
@@ -100,6 +103,7 @@
                     style="@style/Widget.Material3.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/item_height"
+                    android:layout_marginTop="@dimen/margin_vertical_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/text_quality_value"
                     app:layout_constraintBottom_toBottomOf="@id/text_quality_value"
@@ -147,6 +151,8 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_conditions_title"
                     style="@style/AppTheme.TextAppearance.CardTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/section_title_end_condition"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_field"
                     app:layout_constraintEnd_toEndOf="parent"
