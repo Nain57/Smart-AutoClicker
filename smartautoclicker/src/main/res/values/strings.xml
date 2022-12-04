@@ -181,6 +181,8 @@
       -->
     <string name="list_header_copy_event_this">Events from this scenario</string>
     <string name="list_header_copy_event_all">Events from all scenarios</string>
+    <string name="list_header_copy_conditions_this">Conditions from this event</string>
+    <string name="list_header_copy_conditions_all">Conditions from all events</string>
     <string name="list_header_copy_action_this">Actions from this event</string>
     <string name="list_header_copy_action_all">Actions from all events</string>
 

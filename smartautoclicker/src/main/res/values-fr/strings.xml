@@ -178,6 +178,8 @@
       -->
     <string name="list_header_copy_event_this">Évènements de ce scenario</string>
     <string name="list_header_copy_event_all">Évènements de tous les scenarios</string>
+    <string name="list_header_copy_conditions_this">Condition de cet évènement</string>
+    <string name="list_header_copy_conditions_all">Conditions de tous les évènements</string>
     <string name="list_header_copy_action_this">Actions de cet évènement</string>
     <string name="list_header_copy_action_all">Actions de tous les évènements</string>
 
