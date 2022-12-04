@@ -119,24 +119,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/section_title_condition_threshold"/>
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/text_diff_threshold"
-                        style="@style/AppTheme.TextAppearance.Body"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_horizontal_small"
-                        android:layout_marginEnd="@dimen/margin_horizontal_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/message_condition_threshold_value"
-                        tools:text="Value: 12%"/>
-
                     <com.google.android.material.slider.Slider
                         android:id="@+id/seekbar_diff_threshold"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/item_height"
                         android:layout_marginStart="@dimen/margin_horizontal_small"
                         android:layout_marginEnd="@dimen/margin_horizontal_small"
-                        app:labelBehavior="gone"/>
+                        android:stepSize="1.0"
+                        app:labelBehavior="floating"/>
 
                 </LinearLayout>
 
