@@ -189,13 +189,13 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/end_conditions_no_events"
-                        style="@style/TextAppearance.Material3.HeadlineSmall"
+                        style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginVertical="@dimen/margin_vertical_large"
                         android:gravity="center"
-                        android:text="@string/message_empty_end_condition_no_events"
+                        android:text="@string/message_empty_secondary_end_condition_no_events"
                         android:visibility="gone" />
 
                 </FrameLayout>

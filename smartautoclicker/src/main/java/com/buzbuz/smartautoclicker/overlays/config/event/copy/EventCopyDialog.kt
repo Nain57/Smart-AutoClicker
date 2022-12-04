@@ -59,12 +59,9 @@ class EventCopyDialog(
             }
         }
 
-        viewBinding.layoutLoadableList.apply {
-            setEmptyText(R.string.message_empty_event_copy)
-            list.apply {
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-                adapter = eventCopyAdapter
-            }
+        viewBinding.layoutLoadableList.list.apply {
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = eventCopyAdapter
         }
 
         lifecycleScope.launch {

@@ -66,7 +66,10 @@ class ConditionsContent : NavBarDialogContent() {
         )
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            setEmptyText(R.string.message_empty_conditions)
+            setEmptyText(
+                id = R.string.message_empty_conditions,
+                secondaryId = R.string.message_empty_secondary_condition_list,
+            )
             list.apply {
                 adapter = conditionsAdapter
                 layoutManager = GridLayoutManager(

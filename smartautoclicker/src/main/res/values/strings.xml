@@ -113,20 +113,28 @@
 
     <!--
       - Empty list messages.
-      - Views handles any length here, so no limitations.
+      - Views handles any length here, but try to be concise.
       -->
-    <string name="message_empty_actions">No action</string>
+    <string name="message_empty_actions">No actions !</string>
     <string name="message_empty_actions_copy">No actions found</string>
-    <string name="message_empty_conditions">No condition</string>
+    <string name="message_empty_conditions">No conditions !</string>
     <string name="message_empty_conditions_copy">Can\'t copy, you don\'t have any conditions.</string>
     <string name="message_empty_copy">Nothing to copy</string>
     <string name="message_empty_debug_report">No debug report !</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">No Event selected</string>
-    <string name="message_empty_end_condition_no_events">No events available</string>
     <string name="message_empty_event_copy">No events found</string>
-    <string name="message_empty_event_list">No events.\nClick on \'New\' to create one. </string>
+    <string name="message_empty_event_list">No events !</string>
     <string name="message_empty_scenario_list">Create your first scenario and start automatizing tasks on your phone</string>
+
+    <!--
+      - Secondary empty list messages.
+      - Views handles any length here, you can use more verbosity than the regular empty text.
+      -->
+    <string name="message_empty_secondary_end_condition_no_events">You need at least one event to create an end condition for your scenario</string>
+    <string name="message_empty_secondary_event_list">An event contains a set of actions executed when a specific condition is detected on the screen.\nYou need at least one event in your scenario to execute it.</string>
+    <string name="message_empty_secondary_condition_list">A condition is a part of a screenshot that will be searched on each frames displayed by your phone screen.\nYou need at least one condition in your event.</string>
+    <string name="message_empty_secondary_action_list">An action is an interaction (click, swipe…) with your phone triggered when the created conditions are fulfilled.\nYou need at least one action in your event.</string>
 
     <!--
       - Messages.
