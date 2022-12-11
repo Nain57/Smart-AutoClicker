@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.action.intent
 
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -55,6 +56,9 @@ class AdvancedIntentContent : NavBarDialogContent() {
             editNameLayout.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
+                textField.filters = arrayOf<InputFilter>(
+                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                )
             }
 
             intentSendingTypeField.setItems(
