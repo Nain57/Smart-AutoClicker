@@ -37,7 +37,6 @@
     <string name="dialog_title_delete_scenario">Delete scenario</string>
     <string name="dialog_title_import_backup">Import backup</string>
     <string name="dialog_title_permissions">Permissions required</string>
-    <string name="dialog_title_rename_scenario">Rename scenario</string>
 
     <!--
       - Titles for the dialogs displayed as overlay.
@@ -52,7 +51,6 @@
     <string name="dialog_overlay_title_end_condition_config">End Condition</string>
     <string name="dialog_overlay_title_event_config">Event</string>
     <string name="dialog_overlay_title_event_selection">Select an event</string>
-    <string name="dialog_overlay_title_extra_type_selection">Select a type</string>
     <string name="dialog_overlay_title_intent">Intent</string>
     <string name="dialog_overlay_title_pause">Wait</string>
     <string name="dialog_overlay_title_scenario_config">Scenario</string>
@@ -64,12 +62,16 @@
       -->
     <string name="menu_item_title_advanced">Advanced</string>
     <string name="menu_item_title_cancel">Cancel</string>
-    <string name="menu_item_title_debugging">Debugging</string>
     <string name="menu_item_title_export">Export</string>
     <string name="menu_item_title_import">Import</string>
     <string name="menu_item_title_search">Search</string>
     <string name="menu_item_title_select_all">Select all</string>
     <string name="menu_item_title_simple">Simple</string>
+    <string name="menu_item_title_events">Events</string>
+    <string name="menu_item_title_config">Config</string>
+    <string name="menu_item_title_debug">Debug</string>
+    <string name="menu_item_title_actions">Actions</string>
+    <string name="menu_item_title_conditions">Conditions</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -116,14 +118,10 @@
       - Views handles any length here, but try to be concise.
       -->
     <string name="message_empty_actions">No actions !</string>
-    <string name="message_empty_actions_copy">No actions found</string>
     <string name="message_empty_conditions">No conditions !</string>
-    <string name="message_empty_conditions_copy">Can\'t copy, you don\'t have any conditions.</string>
     <string name="message_empty_copy">Nothing to copy</string>
-    <string name="message_empty_debug_report">No debug report !</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">No Event selected</string>
-    <string name="message_empty_event_copy">No events found</string>
     <string name="message_empty_event_list">No events !</string>
     <string name="message_empty_scenario_list">Create your first scenario and start automatizing tasks on your phone</string>
 
@@ -150,7 +148,6 @@
     <string name="message_backup_import_error">An error has occurred and the backup import has been cancelled</string>
     <string name="message_backup_import_compatibility">Some of the imported scenarios have been generated from a device with a different screen and this might cause issues with the detection and action coordinates.\n\nTo fix it, you need to take new screenshots for your conditions and update your click/swipe positions.</string>
     <string name="message_condition_threshold">%1$d%%</string>
-    <string name="message_condition_threshold_value">Tolerance: %1$d %%</string>
     <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
 
 

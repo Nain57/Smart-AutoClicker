@@ -17,7 +17,6 @@
 -->
 <resources>
     <color name="primary">#4CAF50</color>
-    <color name="primaryDark">#388E3C</color>
     <color name="accent">#448AFF</color>
 
     <color name="textTitle">#FFFFFF</color>
@@ -30,9 +29,6 @@
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>
     <color name="overlayClickSelectorBackground">#77000000</color>
-
-    <color name="green_ok">#FF00FF00</color>
-    <color name="red_ko">#FFFF0000</color>
 
     <!-- Material 3 Theme colors -->
     <color name="seed">#388e3c</color>

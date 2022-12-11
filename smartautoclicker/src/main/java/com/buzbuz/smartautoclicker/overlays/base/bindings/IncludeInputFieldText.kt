@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.baseui.OnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.databinding.IncludeInputFieldTextBinding
 
 fun IncludeInputFieldTextBinding.setLabel(@StringRes labelResId: Int) {
-    layoutInput.setHint(labelResId)
+    root.setHint(labelResId)
 }
 
 fun IncludeInputFieldTextBinding.setText(text: String?) {
@@ -33,7 +33,7 @@ fun IncludeInputFieldTextBinding.setText(text: String?) {
 }
 
 fun IncludeInputFieldTextBinding.setError(isError: Boolean) {
-    layoutInput.error = if (isError) root.context.getString(R.string.input_field_error_required) else null
+    root.error = if (isError) root.context.getString(R.string.input_field_error_required) else null
 }
 
 fun IncludeInputFieldTextBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {

@@ -34,7 +34,7 @@ fun IncludeInputFieldDropdownBinding.setItems(
     items: List<DropdownItem>,
     onItemSelected: (DropdownItem) -> Unit
 ) {
-    layoutInput.apply {
+    root.apply {
         isHintEnabled = true
         hint = label
     }
@@ -50,7 +50,7 @@ fun IncludeInputFieldDropdownBinding.setItems(
     items: List<DropdownItem>,
     onItemSelected: (DropdownItem) -> Unit
 ) {
-    layoutInput.apply {
+    root.apply {
         isHintEnabled = false
         hint = null
     }
@@ -65,16 +65,16 @@ fun IncludeInputFieldDropdownBinding.setItems(
 fun IncludeInputFieldDropdownBinding.setSelectedItem(item: DropdownItem) {
     textField.setText(textField.resources.getString(item.title), false)
 
-    layoutInput.apply {
+    root.apply {
         if (item.helperText != null) {
             isHelperTextEnabled = true
-            helperText = layoutInput.resources.getString(item.helperText)
+            helperText = resources.getString(item.helperText)
         } else {
             isHelperTextEnabled = false
         }
-    }
 
-    if (item.icon != null) layoutInput.setStartIconDrawable(item.icon)
+        if (item.icon != null) setStartIconDrawable(item.icon)
+    }
 }
 
 data class DropdownItem(

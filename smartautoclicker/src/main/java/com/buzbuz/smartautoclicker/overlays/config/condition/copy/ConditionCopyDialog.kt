@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
@@ -76,6 +77,8 @@ class ConditionCopyDialog(
                 spanSizeLookup = conditionAdapter.spanSizeLookup
             }
         }
+
+        viewBinding.layoutTopBar.search.queryHint = context.getString(R.string.search_view_hint_condition_copy)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
