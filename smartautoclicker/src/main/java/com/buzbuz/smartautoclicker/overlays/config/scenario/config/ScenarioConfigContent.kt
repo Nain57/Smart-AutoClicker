@@ -16,26 +16,26 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.scenario.config
 
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
+import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
-import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
-
+import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+
 
 class ScenarioConfigContent : NavBarDialogContent() {
 
@@ -58,6 +58,9 @@ class ScenarioConfigContent : NavBarDialogContent() {
             scenarioNameField.apply {
                 setLabel(R.string.input_field_label_scenario_name)
                 setOnTextChangedListener { viewModel.setScenarioName(it.toString()) }
+                textField.filters = arrayOf<InputFilter>(
+                    LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                )
             }
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }

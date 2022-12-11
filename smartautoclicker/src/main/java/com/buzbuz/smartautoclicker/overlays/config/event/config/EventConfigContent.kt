@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.event.config
 
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -53,6 +54,9 @@ class EventConfigContent : NavBarDialogContent() {
             eventNameInputLayout.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setEventName(it.toString()) }
+                textField.filters = arrayOf<InputFilter>(
+                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                )
             }
 
             conditionsOperatorField.setItems(

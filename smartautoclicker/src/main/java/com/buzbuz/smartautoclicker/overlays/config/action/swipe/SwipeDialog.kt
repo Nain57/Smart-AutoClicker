@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.config.action.swipe
 
 import android.content.Context
 import android.graphics.Point
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,6 +82,9 @@ class SwipeDialog(
             editNameLayout.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
+                textField.filters = arrayOf<InputFilter>(
+                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                )
             }
 
             editSwipeDurationLayout.apply {
