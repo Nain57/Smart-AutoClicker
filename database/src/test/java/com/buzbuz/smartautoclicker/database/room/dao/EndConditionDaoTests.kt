@@ -75,7 +75,7 @@ class EndConditionDaoTests {
 
         Assert.assertEquals(
             EndConditionWithEvent(endConditionEntity, eventEntity),
-            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first().endConditions[0]
+            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
         )
     }
 
@@ -103,7 +103,7 @@ class EndConditionDaoTests {
         // Verify
         Assert.assertEquals(
             EndConditionWithEvent(endConditionEntity, eventEntity),
-            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first().endConditions[0]
+            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
         )
     }
 
@@ -132,7 +132,7 @@ class EndConditionDaoTests {
         // Verify
         Assert.assertEquals(
             EndConditionWithEvent(endConditionEntity, eventEntity2),
-            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first().endConditions[0]
+            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
         )
     }
 
@@ -162,7 +162,7 @@ class EndConditionDaoTests {
         Assert.assertTrue(
             "Invalid end condition size",
             database.scenarioDao().getScenarioWithEndConditionsFlow(endConditionEntity.scenarioId)
-                .first().endConditions.isEmpty()
+                .first()!!.endConditions.isEmpty()
         )
         // Verify associated event is OK
         Assert.assertEquals(
