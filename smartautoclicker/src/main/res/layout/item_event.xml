@@ -34,6 +34,7 @@
         android:scaleType="center"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_reorder"
+        android:contentDescription="@string/content_desc_drag_and_drop"
         tools:visibility="visible"/>
 
     <TextView
@@ -64,7 +65,8 @@
             android:id="@+id/icon_enabled"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_confirm"/>
+            android:src="@drawable/ic_confirm"
+            android:contentDescription="@string/content_desc_event_state"/>
 
         <TextView
             android:id="@+id/text_enabled"
@@ -88,7 +90,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_click"/>
+            android:src="@drawable/ic_click"
+            android:contentDescription="@string/content_desc_conditions_count"/>
 
         <TextView
             android:id="@+id/text_actions_count"
@@ -112,7 +115,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_condition"/>
+            android:src="@drawable/ic_condition"
+            android:contentDescription="@string/content_desc_actions_count"/>
 
         <TextView
             android:id="@+id/text_conditions_count"

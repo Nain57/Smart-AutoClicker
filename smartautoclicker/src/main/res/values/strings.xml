@@ -278,10 +278,15 @@
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
+    <string name="content_desc_backup_state">The state of the backup</string>
+    <string name="content_desc_copy_button">The button to create a copy from an existing element</string>
+    <string name="content_desc_add_button">The button to create an element</string>
+    <string name="content_desc_drag_and_drop">Drag and drop to reorder the elements</string>
+    <string name="content_desc_event_state">The state of the event</string>
+    <string name="content_desc_conditions_count">The number of conditions in this event</string>
+    <string name="content_desc_actions_count">The number of actions in this event</string>
     <string name="content_desc_add_scenario">Create a new scenario</string>
     <string name="content_desc_image_condition">The image to be detected</string>
-    <string name="content_desc_event_action_btn">Edit this event</string>
-    <string name="content_desc_delete_scenario">Delete scenario</string>
     <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
     <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
     <string name="content_desc_open_event_list">Open the event list</string>
@@ -290,9 +295,7 @@
     <string name="content_desc_go_back">Back to dialog</string>
     <string name="content_desc_overlay_state">Overlay permission state</string>
     <string name="content_desc_accessibility_state">Accessibility service permission state</string>
-    <string name="content_desc_action">The action to be executed</string>
     <string name="content_desc_action_icon">The icon showing the type of action</string>
-    <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
     <string name="content_desc_application_icon">The icon of the application to start.</string>
 
     <!--
