@@ -35,7 +35,7 @@ import android.view.WindowManager
  *
  * @param context the Android context.
  */
-class ScreenMetrics private constructor(context: Context) {
+class ScreenMetrics internal constructor(context: Context) {
 
     companion object {
         /** WindowManager LayoutParams type for a window over applications. */

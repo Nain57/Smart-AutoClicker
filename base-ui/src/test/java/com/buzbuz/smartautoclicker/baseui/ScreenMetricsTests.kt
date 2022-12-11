@@ -115,6 +115,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
+        screenMetrics.startMonitoring(mockContext)
 
         screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
@@ -129,6 +130,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
+        screenMetrics.startMonitoring(mockContext)
 
         screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
@@ -154,6 +156,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         mockLegacyGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
+        screenMetrics.startMonitoring(mockContext)
 
         screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
@@ -169,6 +172,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         mockLegacyGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
+        screenMetrics.startMonitoring(mockContext)
 
         screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
@@ -231,6 +235,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
+        screenMetrics.startMonitoring(mockContext)
 
         screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
@@ -244,6 +249,7 @@ class ScreenMetricsTests {
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_0)
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
+        screenMetrics.startMonitoring(mockContext)
 
         screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
         getBroadcastOrientationReceiver().onReceive(mockContext, Intent())
@@ -255,11 +261,13 @@ class ScreenMetricsTests {
     fun orientationChanged_unregistration() {
         mockGetDisplaySize()
         screenMetrics = ScreenMetrics(mockContext)
+        screenMetrics.startMonitoring(mockContext)
+        val listener: (Context) -> Unit = { mockOrientationListener.onOrientationChanged() }
 
-        screenMetrics.addOrientationListener { mockOrientationListener.onOrientationChanged() }
+        screenMetrics.addOrientationListener(listener)
         val receiver = getBroadcastOrientationReceiver()
 
-        screenMetrics.unregisterOrientationListener()
+        screenMetrics.removeOrientationListener(listener)
         mockWhen(mockDisplay.rotation).thenReturn(Surface.ROTATION_90)
         receiver.onReceive(mockContext, Intent())
 
