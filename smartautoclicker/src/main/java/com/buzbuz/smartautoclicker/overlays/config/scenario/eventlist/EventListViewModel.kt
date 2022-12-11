@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultEvent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
@@ -33,13 +34,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class EventListViewModel(application: Application) : AndroidViewModel(application) {
 
+    /** The repository of the application. */
+    private val repository: Repository = Repository.getRepository(application)
+
     /** The event currently configured. */
     private lateinit var configuredScenario: MutableStateFlow<ConfiguredScenario?>
 
     /** List of events for the scenario specified in [configuredScenario]. */
     val eventsItems: Flow<List<ConfiguredEvent>?> by lazy { configuredScenario.map { it?.events } }
     /** Tells if the copy button should be visible or not. */
-    val copyButtonIsVisible: Flow<Boolean> by lazy { configuredScenario.map { it?.events?.isNotEmpty() ?: false } }
+    val copyButtonIsVisible: Flow<Boolean> = repository.getAllEvents().map { it.isNotEmpty() }
 
     /**
      * Set a scenario for this [EventListViewModel].
