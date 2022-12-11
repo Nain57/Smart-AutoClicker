@@ -230,7 +230,7 @@ abstract class OverlayController internal constructor(
      * In all cases, [onOrientationChanged] will be called to notify this [OverlayController] implementation for
      * rotation.
      */
-    private fun onOrientationChanged(context: Context) {
+    private fun onOrientationChanged(@Suppress("UNUSED_PARAMETER") context: Context) {
         Log.d(TAG, "onOrientationChanged for overlay ${hashCode()}")
         onOrientationChanged()
 

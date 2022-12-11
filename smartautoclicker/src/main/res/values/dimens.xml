@@ -22,9 +22,7 @@
     <dimen name="text_size_list_item_text_small">14sp</dimen>
     <dimen name="text_size_list_item_text">16sp</dimen>
     <dimen name="text_size_list_item_text_big">17sp</dimen>
-    <dimen name="text_size_dialog_title">20sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
-    <dimen name="text_size_big">26sp</dimen>
 
     <dimen name="margin_horizontal_large">24dp</dimen>
     <dimen name="margin_horizontal_default">16dp</dimen>
@@ -39,7 +37,6 @@
 
     <dimen name="drawable_padding_small">2dp</dimen>
 
-    <dimen name="elevation_level_1">1dp</dimen>
     <dimen name="elevation_level_2">3dp</dimen>
     <dimen name="elevation_level_3">6dp</dimen>
 
@@ -48,22 +45,16 @@
 
     <dimen name="dialog_export_icon_status_size">72dp</dimen>
 
-    <dimen name="empty_min_height">100dp</dimen>
     <dimen name="image_button_size">48dp</dimen>
     <dimen name="item_height">48dp</dimen>
     <dimen name="item_height_big">62dp</dimen>
 
-    <dimen name="dialog_button_size">50dp</dimen>
-    <dimen name="dialog_chevron_size">36dp</dimen>
     <dimen name="dialog_item_condition_height">100dp</dimen>
     <dimen name="dialog_item_condition_width">100dp</dimen>
     <dimen name="dialog_condition_max_height">600dp</dimen>
     <dimen name="dialog_condition_max_width">400dp</dimen>
     <dimen name="dialog_item_condition_copy_icons_height">30dp</dimen>
     <dimen name="dialog_item_condition_copy_condition_size">100dp</dimen>
-    <dimen name="dialog_item_action_height">100dp</dimen>
-    <dimen name="dialog_item_action_width">100dp</dimen>
-    <dimen name="dialog_item_action_icon_size">50dp</dimen>
 
     <dimen name="overlay_menu_btn_size">48dp</dimen>
     <dimen name="overlay_click_selector_thickness">6dp</dimen>

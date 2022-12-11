@@ -20,15 +20,15 @@
         android:id="@+id/page_events"
         android:enabled="true"
         android:icon="@drawable/ic_click_list"
-        android:title="Events"/>
+        android:title="@string/menu_item_title_events"/>
     <item
         android:id="@+id/page_config"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="Config"/>
+        android:title="@string/menu_item_title_config"/>
     <item
         android:id="@+id/page_debug"
         android:enabled="true"
         android:icon="@drawable/ic_debugging"
-        android:title="Debug"/>
+        android:title="@string/menu_item_title_debug"/>
 </menu>

@@ -65,8 +65,6 @@
     <style name="AppTheme.Widget.Card" parent="@style/Widget.Material3.CardView.Elevated" />
     <!-- Style for the outlined card views. -->
     <style name="AppTheme.Widget.CardOutlined" parent="@style/Widget.Material3.CardView.Outlined" />
-    <!-- Style for the filled card views. -->
-    <style name="AppTheme.Widget.CardFilled" parent="@style/Widget.Material3.CardView.Filled" />
     <!-- Style for the input text fields. -->
     <style name="AppTheme.Widget.InputText" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox"/>
     <!-- Style for the filled input text fields. -->

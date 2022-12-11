@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
@@ -63,7 +64,9 @@ class ActionCopyDialog(
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = actionCopyAdapter
         }
-        
+
+        viewBinding.layoutTopBar.search.queryHint = context.getString(R.string.search_view_hint_action_copy)
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.actionList.collect(::updateActionList)
