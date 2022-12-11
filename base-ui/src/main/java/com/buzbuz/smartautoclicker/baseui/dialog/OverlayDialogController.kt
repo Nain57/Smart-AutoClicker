@@ -33,6 +33,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
+import com.buzbuz.smartautoclicker.ui.R
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -47,7 +48,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  */
 abstract class OverlayDialogController(
     context: Context,
-    @StyleRes theme: Int,
+    @StyleRes theme: Int? = null,
 ) : OverlayController(context, theme, recreateOnRotation = true) {
 
     /** The Android InputMethodManger, for ensuring the keyboard dismiss on dialog dismiss. */
