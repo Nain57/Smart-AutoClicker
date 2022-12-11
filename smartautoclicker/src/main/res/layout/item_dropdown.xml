@@ -28,7 +28,8 @@
         android:layout_height="@dimen/dropdown_item_icon_size"
         android:layout_marginStart="@dimen/margin_horizontal_intermediate"
         android:layout_gravity="center_vertical"
-        tools:src="@drawable/ic_detect_exact"/>
+        tools:src="@drawable/ic_detect_exact"
+        tools:ignore="contentDescription"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/dropdown_item_text"

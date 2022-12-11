@@ -40,6 +40,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/img_save"
                 android:scaleType="fitCenter"
+                android:contentDescription="@string/content_desc_backup_state"
                 tools:visibility="visible"/>
 
             <ProgressBar

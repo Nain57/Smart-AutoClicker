@@ -32,7 +32,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/action_name"
         android:scaleType="center"
-        android:src="@drawable/ic_reorder"/>
+        android:src="@drawable/ic_reorder"
+        android:contentDescription="@string/content_desc_drag_and_drop"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/action_name"

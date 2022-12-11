@@ -46,7 +46,8 @@
         app:layout_constraintStart_toEndOf="@id/choice_title"
         app:layout_constraintEnd_toEndOf="parent"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_chevron"/>
+        android:src="@drawable/ic_chevron"
+        tools:ignore="ContentDescription"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

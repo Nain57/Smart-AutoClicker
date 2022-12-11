@@ -50,7 +50,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/background_fade_bottom"/>
+            android:background="@drawable/background_fade_bottom"
+            tools:ignore="contentDescription"/>
 
         <ImageView
             android:id="@+id/background_top"
@@ -59,7 +60,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/background_fade_top"/>
+            android:background="@drawable/background_fade_top"
+            tools:ignore="contentDescription"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/condition_name"

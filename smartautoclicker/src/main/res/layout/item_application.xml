@@ -30,6 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/content_desc_application_icon"
         tools:src="@drawable/ic_settings"/>
 
     <androidx.appcompat.widget.AppCompatTextView
