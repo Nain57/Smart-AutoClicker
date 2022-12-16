@@ -236,4 +236,55 @@ class ActionTests {
         val intent = TestsData.getNewIntent(eventId = TestsData.EVENT_ID)
         assertEquals(intent, intent.deepCopy())
     }
+
+    @Test
+    fun toggleEvent_toEntity() {
+        assertEquals(
+            TestsData.getToggleEventEntity(priority = 0, eventId = TestsData.EVENT_ID),
+            TestsData.getNewToggleEvent(eventId = TestsData.EVENT_ID).toEntity()
+        )
+    }
+
+    @Test
+    fun toggleEvent_toDomain() {
+        assertEquals(
+            TestsData.getNewToggleEvent(eventId = TestsData.EVENT_ID),
+            TestsData.getToggleEventEntity(priority = 0, eventId = TestsData.EVENT_ID).toAction(),
+        )
+    }
+
+    @Test
+    fun toggleEvent_getIdentifier() {
+        assertEquals(
+            TestsData.TOGGLE_EVENT_ID,
+            TestsData.getNewToggleEvent(eventId = TestsData.EVENT_ID).id,
+        )
+    }
+
+    @Test
+    fun toggleEvent_isComplete() {
+        assertTrue(TestsData.getNewToggleEvent(eventId = TestsData.EVENT_ID).isComplete())
+    }
+
+    @Test
+    fun toggleEvent_isComplete_incomplete() {
+        assertFalse(TestsData.getNewToggleEvent(eventId = TestsData.EVENT_ID, name = null).isComplete())
+    }
+
+    @Test
+    fun toggleEvent_cleanupIds() {
+        val intent = TestsData.getNewToggleEvent(
+            eventId = TestsData.EVENT_ID
+        )
+        intent.cleanUpIds()
+
+        assertEquals("Action id isn't cleaned", 0L, intent.id)
+        assertEquals("Event id isn't cleaned", 0L, intent.eventId)
+    }
+
+    @Test
+    fun toggleEvent_deepCopy() {
+        val toggleEvent = TestsData.getNewToggleEvent(eventId = TestsData.EVENT_ID)
+        assertEquals(toggleEvent, toggleEvent.deepCopy())
+    }
 }

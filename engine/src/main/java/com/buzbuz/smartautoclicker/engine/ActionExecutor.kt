@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Action.Click
 import com.buzbuz.smartautoclicker.domain.Action.Pause
 import com.buzbuz.smartautoclicker.domain.Action.Swipe
+import com.buzbuz.smartautoclicker.domain.Action.ToggleEvent
 import com.buzbuz.smartautoclicker.domain.putExtra
 
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +52,7 @@ internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
                 is Swipe -> executeSwipe(action)
                 is Pause -> executePause(action)
                 is Action.Intent -> executeIntent(action)
+                is ToggleEvent -> {}
             }
         }
     }
@@ -138,10 +140,7 @@ internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
 /** Execute the actions related to Android. */
 interface AndroidExecutor {
 
-    /**
-     * Execute the provided gesture.
-     *
-     */
+    /** Execute the provided gesture. */
     suspend fun executeGesture(gestureDescription: GestureDescription)
 
     /** Start the activity defined by the provided intent. */

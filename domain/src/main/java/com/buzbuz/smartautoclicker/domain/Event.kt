@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
  * @param priority the execution priority of the event in the scenario.
  * @param actions the list of action to execute when the conditions have been fulfilled
  * @param conditions the list of conditions to fulfill to execute the [actions].
- * @param stopAfter the amount of executions of this click before stopping the scenario.
+ * @param enabledOnStart tells if the event should be evalutated with the scenario, or if it should be enabled by an action.
  */
 data class Event(
     var id: Long = 0,
@@ -41,11 +41,11 @@ data class Event(
     var priority: Int,
     val actions: MutableList<Action>? = null,
     val conditions: MutableList<Condition>? = null,
-    var stopAfter: Int? = null,
+    var enabledOnStart: Boolean = true,
 ) {
 
     /** @return the entity equivalent of this event. */
-    internal fun toEntity() = EventEntity(id, scenarioId, name, conditionOperator, priority, stopAfter)
+    internal fun toEntity() = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart)
 
     /** @return the complete entity equivalent of this event. Return null if the actions or conditions are null. */
     internal fun toCompleteEntity(): CompleteEventEntity? {
@@ -86,7 +86,7 @@ data class Event(
 }
 
 /** @return the event for this entity. */
-internal fun EventEntity.toEvent() = Event(id, scenarioId, name, conditionOperator, priority, stopAfter = stopAfter)
+internal fun EventEntity.toEvent() = Event(id, scenarioId, name, conditionOperator, priority, enabledOnStart = enabledOnStart)
 
 /** @return the complete event for this entity. */
 internal fun CompleteEventEntity.toEvent() = Event(
@@ -95,7 +95,7 @@ internal fun CompleteEventEntity.toEvent() = Event(
     name= event.name,
     conditionOperator = event.conditionOperator,
     priority = event.priority,
-    stopAfter = event.stopAfter,
+    enabledOnStart = event.enabledOnStart,
     actions = actions.sortedBy { it.action.priority }.map { it.toAction() }.toMutableList(),
     conditions = conditions.map { it.toCondition() }.toMutableList(),
 )

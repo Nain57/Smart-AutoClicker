@@ -50,10 +50,10 @@ class ScenarioSerializerTests {
         private val DEFAULT_SCREEN_SIZE = Point(800,600)
 
         private val DEFAULT_COMPLETE_SCENARIO = CompleteScenario(
-            scenario = ScenarioEntity(1, "Scenario", 600, 1),
+            scenario = ScenarioEntity(1, "Scenario", 600, 1, false),
             events = listOf(
                 CompleteEventEntity(
-                    event = EventEntity(1, 1, "Event", 1, 0, null),
+                    event = EventEntity(1, 1, "Event", 1, 0, true),
                     conditions = listOf(
                         ConditionEntity(1, 1, "Condition", "/toto/tutu", 1, 2, 3, 4, 5, 1, true)
                     ),
@@ -299,7 +299,7 @@ class ScenarioSerializerTests {
             assertEquals("", event?.name)
             assertEquals(OPERATOR_DEFAULT_VALUE, event?.conditionOperator)
             assertEquals(0, event?.priority)
-            assertNull(event?.stopAfter)
+            assertEquals(true, event?.enabledOnStart)
         }
     }
 

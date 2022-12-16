@@ -1207,12 +1207,10 @@ class ScenarioProcessorTests {
             operator = OR,
             conditions = listOf(condition1),
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
-            stopAfter = 1,
+            enableOnStart = true,
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1), emptyList(),
-            OR
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)

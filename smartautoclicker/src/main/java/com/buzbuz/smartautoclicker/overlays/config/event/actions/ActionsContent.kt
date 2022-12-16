@@ -165,6 +165,8 @@ class ActionsContent : NavBarDialogContent() {
             is Action.Intent -> IntentDialog(context, action, viewModel::removeAction) { savedIntent ->
                 viewModel.addUpdateAction(savedIntent, index)
             }
+
+            else -> throw IllegalArgumentException("Not yet supported")
         }
 
         return NavigationRequest(

@@ -28,7 +28,7 @@ internal object ProcessingData {
         @ConditionOperator operator: Int = AND,
         actions: List<Action> = emptyList(),
         conditions: List<Condition> = emptyList(),
-        stopAfter: Int? = null,
+        enableOnStart: Boolean = true,
     ) = Event(
         id,
         1L,
@@ -37,7 +37,7 @@ internal object ProcessingData {
         0,
         actions.toMutableList(),
         conditions.toMutableList(),
-        stopAfter
+        enableOnStart,
     )
 
     /** Instantiates a new condition with only the useful values for the tests. */

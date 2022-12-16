@@ -28,17 +28,7 @@ import com.buzbuz.smartautoclicker.backup.ext.getJsonObject
 import com.buzbuz.smartautoclicker.backup.ext.getLong
 import com.buzbuz.smartautoclicker.backup.ext.getString
 import com.buzbuz.smartautoclicker.database.room.CLICK_DATABASE_VERSION
-import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ActionType
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
-import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
-import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraType
-import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.database.room.entity.*
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -144,6 +134,7 @@ internal class ScenarioSerializer {
             endConditionOperator = getInt("endConditionOperator")
                 ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
                 ?: OPERATOR_DEFAULT_VALUE,
+            randomize = getBoolean("randomize") ?: false,
         )
     }
 
@@ -201,7 +192,7 @@ internal class ScenarioSerializer {
                 ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
                 ?: OPERATOR_DEFAULT_VALUE,
             priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
-            stopAfter = getInt("stopAfter")?.coerceAtLeast(0),
+            enabledOnStart = getBoolean("enabledOnStart") ?: true,
         )
     }
 
@@ -258,7 +249,8 @@ internal class ScenarioSerializer {
             ActionType.SWIPE -> deserializeSwipeActionCompat()
             ActionType.PAUSE -> deserializePauseActionCompat()
             ActionType.INTENT -> deserializeIntentActionCompat()
-            null -> null
+            ActionType.TOGGLE_EVENT -> deserializeToggleEventActionCompat()
+            else -> null
         }
 
     /** @return the deserialized click action. */
@@ -350,6 +342,24 @@ internal class ScenarioSerializer {
             intentAction = intentAction,
             componentName = getString("componentName"),
             flags = getInt("flags")?.coerceAtLeast(0) ?: 0,
+        )
+    }
+
+    /** @return the deserialized toggle event action. */
+    @VisibleForTesting
+    internal fun JsonObject.deserializeToggleEventActionCompat(): ActionEntity? {
+        val id = getLong("id", true) ?: return null
+        val eventId = getLong("eventId", true) ?: return null
+        val toggleEventId = getLong("toggleEventId") ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = getString("name") ?: "",
+            priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.TOGGLE_EVENT,
+            toggleEventId = toggleEventId,
+            toggleEventType = getEnum<ToggleEventType>("toggleEventType"),
         )
     }
 

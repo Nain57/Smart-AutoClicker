@@ -117,7 +117,35 @@ fun getInsertV6Event(
         VALUES ($id, $scenarioId, "$name", $conditionOperator, $priority, $stopAfter)
     """.trimIndent()
 
+
 // ----- Utils for Database V7 -----
 
 fun getV7Scenario() = "SELECT * FROM scenario_table"
 fun getV7EndCondition() = "SELECT * FROM end_condition_table"
+
+
+// ----- Utils for Database V8 -----
+
+fun getInsertV8Scenario(id: Long, name: String, detectionQuality: Int, endConditionOperator: Int) =
+    """
+        INSERT INTO scenario_table (id, name, detection_quality, end_condition_operator) 
+        VALUES ($id, "$name", $detectionQuality, $endConditionOperator)
+    """.trimIndent()
+
+fun getInsertV8Event(
+    id: Long,
+    scenarioId: Long,
+    name: String,
+    conditionOperator: Int,
+    stopAfter: Int?,
+    priority: Int,
+) =
+    """
+        INSERT INTO event_table (id, scenario_id, name, operator, priority, stop_after) 
+        VALUES ($id, $scenarioId, "$name", $conditionOperator, $priority, $stopAfter)
+    """.trimIndent()
+
+// ----- Utils for Database V9 -----
+
+fun getV9Scenario() = "SELECT * FROM scenario_table"
+fun getV9Events() = "SELECT * FROM event_table"

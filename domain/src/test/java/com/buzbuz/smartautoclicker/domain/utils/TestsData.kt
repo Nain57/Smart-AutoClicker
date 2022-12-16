@@ -33,21 +33,24 @@ internal object TestsData {
     const val SCENARIO_NAME = "ClickScenario"
     const val SCENARIO_DETECTION_QUALITY = 500
     const val SCENARIO_END_CONDITION_OPERATOR = AND
+    const val SCENARIO_RANDOMIZE = false
 
     fun getNewScenarioEntity(
         id: Long = SCENARIO_ID,
         name: String = SCENARIO_NAME,
         detectionQuality: Int = SCENARIO_DETECTION_QUALITY,
         @ConditionOperator endConditionOperator: Int = SCENARIO_END_CONDITION_OPERATOR,
-    ) = ScenarioEntity(id, name, detectionQuality, endConditionOperator)
+        randomize: Boolean = SCENARIO_RANDOMIZE,
+    ) = ScenarioEntity(id, name, detectionQuality, endConditionOperator, randomize)
 
     fun getNewScenario(
         id: Long = SCENARIO_ID,
         name: String = SCENARIO_NAME,
         detectionQuality: Int = SCENARIO_DETECTION_QUALITY,
         @ConditionOperator endConditionOperator: Int = SCENARIO_END_CONDITION_OPERATOR,
+        randomize: Boolean = SCENARIO_RANDOMIZE,
         eventCount: Int = 0,
-    ) = Scenario(id, name, detectionQuality, endConditionOperator, eventCount)
+    ) = Scenario(id, name, detectionQuality, endConditionOperator, randomize, eventCount)
 
 
     /* ------- Event Data ------- */
@@ -55,27 +58,27 @@ internal object TestsData {
     const val EVENT_ID = 1667L
     private const val EVENT_NAME = "EventName"
     private const val EVENT_CONDITION_OPERATOR = AND
-    private val EVENT_STOP_AFTER = null
+    private const val EVENT_ENABLED_ON_START = true
 
     fun getNewEventEntity(
         id: Long = EVENT_ID,
         name: String = EVENT_NAME,
         @ConditionOperator conditionOperator: Int = EVENT_CONDITION_OPERATOR,
-        stopAfter: Int? = EVENT_STOP_AFTER,
+        enabledOnStart: Boolean = EVENT_ENABLED_ON_START,
         scenarioId: Long,
         priority: Int,
-    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, stopAfter)
+    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart)
 
     fun getNewEvent(
         id: Long = EVENT_ID,
         name: String = EVENT_NAME,
         @ConditionOperator conditionOperator: Int = EVENT_CONDITION_OPERATOR,
-        stopAfter: Int? = EVENT_STOP_AFTER,
+        enabledOnStart: Boolean = EVENT_ENABLED_ON_START,
         actions: MutableList<Action>? = null,
         conditions: MutableList<Condition>? = null,
         scenarioId: Long,
         priority: Int,
-    ) = Event(id, scenarioId, name, conditionOperator, priority, actions, conditions, stopAfter)
+    ) = Event(id, scenarioId, name, conditionOperator, priority, actions, conditions, enabledOnStart)
 
 
     /* ------- End Condition Data ------- */
@@ -269,6 +272,34 @@ internal object TestsData {
         key: String = INTENT_EXTRA_KEY,
         value: T,
     ) = IntentExtra(id, actionId, key, value)
+
+
+    /* ------- Toggle Event Action Data ------- */
+
+    const val TOGGLE_EVENT_ID = 159L
+    private const val TOGGLE_EVENT_NAME = "Toggle name"
+    private const val TOGGLE_EVENT_EVENT_ID = 500L
+    private val TOGGLE_EVENT_TYPE = Action.ToggleEvent.ToggleType.ENABLE
+
+    fun getToggleEventEntity(
+        id: Long = TOGGLE_EVENT_ID,
+        name: String = TOGGLE_EVENT_NAME,
+        toggleEventId: Long = TOGGLE_EVENT_EVENT_ID,
+        toggleType: ToggleEventType = TOGGLE_EVENT_TYPE.toEntity(),
+        eventId: Long,
+        priority: Int,
+    ) = CompleteActionEntity(
+        action = ActionEntity(id, eventId, priority, name, ActionType.TOGGLE_EVENT, toggleEventId = toggleEventId, toggleEventType = toggleType),
+        intentExtras = emptyList(),
+    )
+
+    fun getNewToggleEvent(
+        id: Long = TOGGLE_EVENT_ID,
+        name: String? = TOGGLE_EVENT_NAME,
+        toggleEventId: Long = TOGGLE_EVENT_EVENT_ID,
+        toggleType: Action.ToggleEvent.ToggleType = TOGGLE_EVENT_TYPE,
+        eventId: Long,
+    ) = Action.ToggleEvent(id, eventId, name, toggleEventId, toggleType)
 
     /* ------- Condition Data ------- */
 

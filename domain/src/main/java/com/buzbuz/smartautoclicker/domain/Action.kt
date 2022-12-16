@@ -21,8 +21,9 @@ import android.content.ComponentName
 import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ActionType
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
+import com.buzbuz.smartautoclicker.database.room.entity.ToggleEventType
 
-/** Base for for all possible actions for en Event. */
+/** Base for for all possible actions for an Event. */
 sealed class Action {
 
     /** The unique identifier for the action. Use 0 for creating a new action. Default value is 0. */
@@ -114,8 +115,7 @@ sealed class Action {
     ) : Action() {
 
         override fun isComplete(): Boolean =
-            super.isComplete() && swipeDuration != null && fromX != null && fromY != null && fromY != null
-                    && toX != null && toY != null
+            super.isComplete() && swipeDuration != null && fromX != null && fromY != null && toX != null && toY != null
 
         override fun toEntity(): CompleteActionEntity {
             if (!isComplete()) throw IllegalStateException("Can't transform to entity, Swipe is incomplete.")
@@ -190,12 +190,12 @@ sealed class Action {
      * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
-     * @param isAdvanced
-     * @param isBroadcast
-     * @param intentAction
-     * @param componentName
-     * @param flags
-     * @param extras
+     * @param isAdvanced if false, the user have used the simple config. If true, the advanced config.
+     * @param isBroadcast true if this intent should be a broadcast, false for a startActivity.
+     * @param intentAction the action of the intent.
+     * @param componentName the component name for the intent. Can be null for a broadcast.
+     * @param flags the flags for the intent.
+     * @param extras the list of extras to sent with the intent.
      */
     data class Intent(
         override var id: Long = 0,
@@ -239,7 +239,67 @@ sealed class Action {
 
         override fun deepCopy(): Intent = copy(name = "" + name)
     }
+
+    /**
+     * Toggle Event Action.
+     *
+     * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+     * @param eventId the identifier of the event for this action.
+     * @param name the name of the action.
+     * @param toggleEventId the identifier of the event to manipulate.
+     * @param toggleEventType the type of manipulation to apply.
+     */
+    data class ToggleEvent(
+        override var id: Long = 0,
+        override var eventId: Long,
+        override var name: String? = null,
+        var toggleEventId: Long? = null,
+        var toggleEventType: ToggleType? = null,
+    ) : Action() {
+
+        /**
+         * Types of toggle of a [ToggleEvent].
+         * Keep the same names as the db ones.
+         */
+        enum class ToggleType {
+            /** Enable the event. Has no effect if the event is already enabled. */
+            ENABLE,
+            /** Disable the event. Has no effect if the event is already disabled. */
+            DISABLE,
+            /** Enable the event if it is disabled, disable it if it is enabled. */
+            TOGGLE;
+
+            fun toEntity(): ToggleEventType = ToggleEventType.valueOf(name)
+        }
+
+        override fun isComplete(): Boolean = super.isComplete() && toggleEventId != null && toggleEventType != null
+
+        override fun toEntity(): CompleteActionEntity {
+            if (!isComplete()) throw IllegalStateException("Can't transform to entity, ToggleEvent is incomplete.")
+
+            return CompleteActionEntity(
+                action = ActionEntity(
+                    id = id,
+                    eventId = eventId,
+                    name = name!!,
+                    type = ActionType.TOGGLE_EVENT,
+                    toggleEventId = toggleEventId!!,
+                    toggleEventType = toggleEventType!!.toEntity(),
+                ),
+                intentExtras = emptyList(),
+            )
+        }
+
+        override fun cleanUpIds() {
+            id = 0
+            eventId = 0
+        }
+
+        override fun deepCopy(): Action = copy(name = "" + name)
+    }
 }
+
+fun ToggleEventType.toDomain(): Action.ToggleEvent.ToggleType = Action.ToggleEvent.ToggleType.valueOf(name)
 
 /** Convert an Action entity into a Domain Action. */
 internal fun CompleteActionEntity.toAction(): Action {
@@ -274,5 +334,13 @@ internal fun CompleteActionEntity.toAction(): Action {
                 intentExtras.map { it.toIntentExtra() }.toMutableList()
             )
         }
+
+        ActionType.TOGGLE_EVENT -> Action.ToggleEvent(
+            action.id,
+            action.eventId,
+            action.name,
+            action.toggleEventId,
+            action.toggleEventType?.toDomain(),
+        )
     }
 }

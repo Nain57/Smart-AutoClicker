@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
  *                         quality, while higher values means better and slower detection.
  * @param endConditionOperator the operator to apply to all [EndConditionEntity] related to this scenario. Can be any
  *                             value of [com.buzbuz.smartautoclicker.domain.ConditionOperator].
+ * @param randomize tells if the actions values should be randomized a bit.
  * @param eventCount the number of events in this scenario. Default value is 0.
  */
 data class Scenario(
@@ -36,6 +37,7 @@ data class Scenario(
     var name: String,
     var detectionQuality: Int,
     @ConditionOperator var endConditionOperator: Int,
+    var randomize: Boolean = false,
     val eventCount: Int = 0,
 ) {
     /** @return the entity equivalent of this scenario. */
@@ -48,6 +50,7 @@ internal fun ScenarioEntity.toScenario() = Scenario(
     name = name,
     detectionQuality = detectionQuality,
     endConditionOperator = endConditionOperator,
+    randomize = randomize,
 )
 
 /** @return the scenario for this entity. */
@@ -56,5 +59,6 @@ internal fun ScenarioWithEvents.toScenario() = Scenario(
     name = scenario.name,
     detectionQuality = scenario.detectionQuality,
     endConditionOperator = scenario.endConditionOperator,
+    randomize = scenario.randomize,
     eventCount = events.size
 )

@@ -56,6 +56,8 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
             is Action.Swipe -> action.copy(id = 0, name = "" + action.name)
             is Action.Pause -> action.copy(id = 0, name = "" + action.name)
             is Action.Intent -> action.copy(id = 0, name = "" + action.name)
+            else -> throw IllegalArgumentException("Not yet supported")
+
         }
 
     /**

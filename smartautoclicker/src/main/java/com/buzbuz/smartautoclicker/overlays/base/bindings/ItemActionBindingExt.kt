@@ -98,6 +98,8 @@ fun Action.toActionDetails(context: Context): ActionDetails {
             details = formatIntentDetails(this, context),
             action = this,
         )
+
+        else -> throw IllegalArgumentException("Not yet supported")
     }
 
     return item

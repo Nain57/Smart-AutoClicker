@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraTypeStringConverter
+import com.buzbuz.smartautoclicker.database.room.entity.ToggleEventTypeStringConverter
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.database.room.migrations.*
 
@@ -59,10 +60,15 @@ import com.buzbuz.smartautoclicker.database.room.migrations.*
     version = CLICK_DATABASE_VERSION,
     exportSchema = true,
     autoMigrations = [
-        AutoMigration (from = 7, to = 8)
+        AutoMigration (from = 7, to = 8),
+        AutoMigration (from = 8, to = 9, spec = AutoMigration8to9::class),
     ]
 )
-@TypeConverters(ActionTypeStringConverter::class, IntentExtraTypeStringConverter::class)
+@TypeConverters(
+    ActionTypeStringConverter::class,
+    IntentExtraTypeStringConverter::class,
+    ToggleEventTypeStringConverter::class,
+)
 abstract class ClickDatabase : RoomDatabase() {
 
     /** The data access object for the scenario in the database. */
@@ -112,4 +118,4 @@ abstract class ClickDatabase : RoomDatabase() {
 }
 
 /** Current version of the database. */
-const val CLICK_DATABASE_VERSION = 8
+const val CLICK_DATABASE_VERSION = 9

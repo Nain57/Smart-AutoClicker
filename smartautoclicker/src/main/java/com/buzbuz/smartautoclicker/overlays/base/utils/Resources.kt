@@ -40,6 +40,8 @@ fun Action.getIconRes() : Int =
         is Action.Swipe -> R.drawable.ic_swipe
         is Action.Pause -> R.drawable.ic_wait_aligned
         is Action.Intent -> R.drawable.ic_intent
+        else -> throw IllegalArgumentException("Not yet supported")
+
     }
 
 /** @param color the tint color to apply to the ImageView. */

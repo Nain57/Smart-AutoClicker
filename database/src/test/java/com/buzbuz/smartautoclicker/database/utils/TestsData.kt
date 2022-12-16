@@ -25,9 +25,9 @@ internal object TestsData {
     /* ------- Scenario Data ------- */
 
     const val SCENARIO_ID = 42L
-    private const val SCENARIO_NAME = "ClickScenario"
-    private const val SCENARIO_DETECTION_QUALITY = 500
-    private const val SCENARIO_END_CONDITION_OPERATOR = 1
+    const val SCENARIO_NAME = "ClickScenario"
+    const val SCENARIO_DETECTION_QUALITY = 500
+    const val SCENARIO_END_CONDITION_OPERATOR = 1
 
     fun getNewScenarioEntity(
         id: Long = SCENARIO_ID,
@@ -40,18 +40,17 @@ internal object TestsData {
     /* ------- Event Data ------- */
 
     const val EVENT_ID = 1667L
-    private const val EVENT_NAME = "EventName"
-    private const val EVENT_CONDITION_OPERATOR = 1
-    private val EVENT_STOP_AFTER = null
+    const val EVENT_NAME = "EventName"
+    const val EVENT_CONDITION_OPERATOR = 1
+    val EVENT_STOP_AFTER = null
 
     fun getNewEventEntity(
         id: Long = EVENT_ID,
         name: String = EVENT_NAME,
         conditionOperator: Int = EVENT_CONDITION_OPERATOR,
-        stopAfter: Int? = EVENT_STOP_AFTER,
         scenarioId: Long,
         priority: Int,
-    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, stopAfter)
+    ) = EventEntity(id, scenarioId, name, conditionOperator, priority)
 
     /* ------- End Condition Data ------- */
 

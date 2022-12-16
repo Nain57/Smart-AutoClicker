@@ -56,16 +56,28 @@ import kotlinx.serialization.Serializable
  * @param intentAction [ActionType.INTENT] only: action for the intent.
  * @param componentName [ActionType.INTENT] only: the component to send the intent to. Null for if [isBroadcast] is true.
  * @param flags [ActionType.INTENT] only: flags for the intent as defined in [android.content.Intent].
+ *
+ * @param toggleEventId [ActionType.TOGGLE_EVENT] only: the id of the event to be manipulated.
+ * @param toggleEventType [ActionType.TOGGLE_EVENT] only: the type of toggle for the event.
+ *                        Must be one of [ToggleEventType].
  */
 @Entity(
     tableName = "action_table",
-    indices = [Index("eventId")],
-    foreignKeys = [ForeignKey(
-        entity = EventEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["eventId"],
-        onDelete = ForeignKey.CASCADE
-    )]
+    indices = [Index("eventId"), Index("toggle_event_id")],
+    foreignKeys = [
+        ForeignKey(
+            entity = EventEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["eventId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = EventEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["toggle_event_id"],
+            onDelete = ForeignKey.SET_NULL,
+        ),
+    ]
 )
 @Serializable
 data class ActionEntity(
@@ -97,6 +109,10 @@ data class ActionEntity(
     @ColumnInfo(name = "intent_action") val intentAction: String? = null,
     @ColumnInfo(name = "component_name") val componentName: String ? = null,
     @ColumnInfo(name = "flags") val flags: Int? = null,
+
+    // ActionType.TOGGLE_EVENT
+    @ColumnInfo(name = "toggle_event_id") val toggleEventId: Long? = null,
+    @ColumnInfo(name = "toggle_type") val toggleEventType: ToggleEventType? = null,
 )
 
 /**
@@ -115,6 +131,8 @@ enum class ActionType {
     PAUSE,
     /** An Android Intent, allowing to interact with other applications. */
     INTENT,
+    /** Toggle the enabled state of an event. */
+    TOGGLE_EVENT,
 }
 
 /** Type converter to read/write the [ActionType] into the database. */
@@ -122,7 +140,29 @@ internal class ActionTypeStringConverter {
     @TypeConverter
     fun fromString(value: String): ActionType = ActionType.valueOf(value)
     @TypeConverter
-    fun toString(date: ActionType): String = date.toString()
+    fun toString(action: ActionType): String = action.toString()
+}
+
+/**
+ * The type of manipulation to apply to an event with a [ActionType.TOGGLE_EVENT].
+ *
+ * /!\ DO NOT RENAME: ToggleEventType enum name is used in the database.
+ */
+enum class ToggleEventType {
+    /** Enable the event. Has no effect if the event is already enabled. */
+    ENABLE,
+    /** Disable the event. Has no effect if the event is already disabled. */
+    DISABLE,
+    /** Enable the event if it is disabled, disable it if it is enabled. */
+    TOGGLE,
+}
+
+/** Type converter to read/write the [ToggleEventType] into the database. */
+internal class ToggleEventTypeStringConverter {
+    @TypeConverter
+    fun fromString(value: String?): ToggleEventType? = value?.let { ToggleEventType.valueOf(it) }
+    @TypeConverter
+    fun toString(type: ToggleEventType?): String? = type?.toString()
 }
 
 /**

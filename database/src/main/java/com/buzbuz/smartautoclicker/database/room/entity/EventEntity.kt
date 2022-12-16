@@ -45,8 +45,8 @@ import kotlinx.serialization.Serializable
  * @param conditionOperator the operator to apply to all [ConditionEntity] related to this click. Can be any value
  *                          of [com.buzbuz.smartautoclicker.domain.ConditionOperator].
  * @param priority the order in the scenario. Lowest priority will always be checked first when detecting.
- * @param stopAfter the number of executions of this click after which the scenario is stopped. Null if the scenario is
- *                  always continued after this click.
+ * @param enabledOnStart if true, the event will be evaluated while the scenario is playing. If false, it must be
+ *                       enabled via an action TOGGLE_EVENT to be evaluated.
  */
 @Entity(
     tableName = "event_table",
@@ -65,7 +65,7 @@ data class EventEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "operator") val conditionOperator: Int,
     @ColumnInfo(name = "priority") var priority: Int,
-    @ColumnInfo(name = "stop_after") var stopAfter: Int?,
+    @ColumnInfo(name = "enabled_on_start", defaultValue="1") var enabledOnStart: Boolean = true,
 )
 
 /**
