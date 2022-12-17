@@ -37,8 +37,12 @@ import kotlinx.coroutines.withContext
  * Execute the actions of an event.
  *
  * @param androidExecutor the executor for the actions requiring an interaction with Android.
+ * @param scenarioEditor the executor for the actions modifying the scenario processing.
  */
-internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
+internal class ActionExecutor(
+    private val androidExecutor: AndroidExecutor,
+    private val scenarioEditor: ScenarioEditor,
+) {
 
     /**
      * Execute the provided actions.
@@ -52,7 +56,7 @@ internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
                 is Swipe -> executeSwipe(action)
                 is Pause -> executePause(action)
                 is Action.Intent -> executeIntent(action)
-                is ToggleEvent -> {}
+                is ToggleEvent -> executeToggleEvent(action)
             }
         }
     }
@@ -135,6 +139,14 @@ internal class ActionExecutor(private val androidExecutor: AndroidExecutor) {
             delay(INTENT_START_ACTIVITY_DELAY)
         }
     }
+
+    /**
+     * Execute the provided toggle event.
+     * @param toggleEvent the toggleEvent to be executed.
+     */
+    private fun executeToggleEvent(toggleEvent: ToggleEvent) {
+        scenarioEditor.changeEventState(toggleEvent.toggleEventId!!, toggleEvent.toggleEventType!!)
+    }
 }
 
 /** Execute the actions related to Android. */
@@ -148,6 +160,13 @@ interface AndroidExecutor {
 
     /** Send a broadcast defined by the provided intent. */
     fun executeSendBroadcast(intent: Intent)
+}
+
+/** Execute the actions related to the scenario processing modifications. */
+interface ScenarioEditor {
+
+    /** Change the enable state of an event. */
+    fun changeEventState(eventId: Long, toggleType: ToggleEvent.ToggleType)
 }
 
 /** Tag for logs. */

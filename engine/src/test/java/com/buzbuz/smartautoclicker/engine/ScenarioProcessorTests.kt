@@ -1078,6 +1078,7 @@ class ScenarioProcessorTests {
         )
         val actionDuration1 = 1L
         val event1 = newEvent(
+            id = 10L,
             operator = OR,
             conditions = listOf(condition1),
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
@@ -1093,14 +1094,13 @@ class ScenarioProcessorTests {
         )
         val actionDuration2 = 1L
         val event2 = newEvent(
+            id = 11L,
             operator = AND,
             conditions = listOf(condition2),
             actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
-            OR
-        )
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)

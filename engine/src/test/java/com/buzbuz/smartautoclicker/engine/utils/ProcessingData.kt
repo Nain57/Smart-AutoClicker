@@ -30,14 +30,14 @@ internal object ProcessingData {
         conditions: List<Condition> = emptyList(),
         enableOnStart: Boolean = true,
     ) = Event(
-        id,
-        1L,
-        "TOTO",
-        operator,
-        0,
-        actions.toMutableList(),
-        conditions.toMutableList(),
-        enableOnStart,
+        id = id,
+        scenarioId = 1L,
+        name = "TOTO",
+        conditionOperator = operator,
+        priority = 0,
+        actions = actions.toMutableList(),
+        conditions = conditions.toMutableList(),
+        enabledOnStart = enableOnStart,
     )
 
     /** Instantiates a new condition with only the useful values for the tests. */

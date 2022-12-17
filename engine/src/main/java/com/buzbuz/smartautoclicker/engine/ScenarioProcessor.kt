@@ -49,7 +49,7 @@ import kotlinx.coroutines.yield
 internal class ScenarioProcessor(
     private val imageDetector: ImageDetector,
     private val detectionQuality: Int,
-    private val events: List<Event>,
+    events: List<Event>,
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
     androidExecutor: AndroidExecutor,
     @ConditionOperator endConditionOperator: Int,
@@ -58,8 +58,10 @@ internal class ScenarioProcessor(
     private val debugEngine: DebugEngine? = null,
 ) {
 
+    /** Handle the processing state of the scenario. */
+    private val scenarioState = ScenarioState(events)
     /** Execute the detected event actions. */
-    private val actionExecutor = ActionExecutor(androidExecutor)
+    private val actionExecutor = ActionExecutor(androidExecutor, scenarioState)
     /** Verifies the end conditions of a scenario. */
     private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onEndConditionReached)
 
@@ -95,7 +97,7 @@ internal class ScenarioProcessor(
             screenBitmap
         }
 
-        for (event in events) {
+        for (event in scenarioState.getEnabledEvents()) {
             // No conditions ? This should not happen, skip this event
             if (event.conditions?.isEmpty() == true) {
                 continue

@@ -67,6 +67,7 @@ class ActionExecutorTests {
     }
 
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
+    @Mock private lateinit var mockScenarioEditor: ScenarioEditor
 
     private lateinit var actionExecutor: ActionExecutor
 
@@ -83,7 +84,7 @@ class ActionExecutorTests {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
 
-        actionExecutor = ActionExecutor(mockAndroidExecutor)
+        actionExecutor = ActionExecutor(mockAndroidExecutor, mockScenarioEditor)
     }
 
     @After
