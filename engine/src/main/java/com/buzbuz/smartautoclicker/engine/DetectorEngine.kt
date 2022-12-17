@@ -292,6 +292,7 @@ class DetectorEngine(context: Context) {
             scenarioProcessor = ScenarioProcessor(
                 imageDetector = imageDetector!!,
                 detectionQuality = scenarioEndConditions.value!!.first.detectionQuality,
+                randomize = _scenario.value!!.randomize,
                 events = scenarioEvents.value,
                 bitmapSupplier = { path, width, height ->
                     // We can run blocking here, we are on the screen detector thread

@@ -84,7 +84,7 @@ class ActionExecutorTests {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
 
-        actionExecutor = ActionExecutor(mockAndroidExecutor, mockScenarioEditor)
+        actionExecutor = ActionExecutor(mockAndroidExecutor, mockScenarioEditor, randomize = false)
     }
 
     @After

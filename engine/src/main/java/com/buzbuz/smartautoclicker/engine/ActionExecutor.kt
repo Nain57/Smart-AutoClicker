@@ -32,17 +32,23 @@ import com.buzbuz.smartautoclicker.domain.putExtra
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlin.math.max
+import kotlin.random.Random
 
 /**
  * Execute the actions of an event.
  *
  * @param androidExecutor the executor for the actions requiring an interaction with Android.
  * @param scenarioEditor the executor for the actions modifying the scenario processing.
+ * @param randomize true to randomize the actions values a bit (positions, timers...), false to be precise.
  */
 internal class ActionExecutor(
     private val androidExecutor: AndroidExecutor,
     private val scenarioEditor: ScenarioEditor,
+    private val randomize: Boolean,
 ) {
+
+    private val random = Random(System.currentTimeMillis())
 
     /**
      * Execute the provided actions.
@@ -71,15 +77,21 @@ internal class ActionExecutor(
 
         if (click.clickOnCondition) {
             conditionPosition?.let { conditionCenter ->
-                clickPath.moveTo(conditionCenter.x.toFloat(), conditionCenter.y.toFloat())
+                clickPath.moveTo(conditionCenter.x, conditionCenter.y, randomize)
             } ?: run {
                 Log.w(TAG, "Can't click on position, there is no condition position")
                 return
             }
         } else {
-            clickPath.moveTo(click.x!!.toFloat(), click.y!!.toFloat())
+            clickPath.moveTo(click.x!!, click.y!!, randomize)
         }
-        clickBuilder.addStroke(GestureDescription.StrokeDescription(clickPath, 0, click.pressDuration!!))
+        clickBuilder.addStroke(
+            GestureDescription.StrokeDescription(
+                clickPath,
+                0,
+                if (randomize) random.getRandomizedDuration(click.pressDuration!!) else click.pressDuration!!,
+            )
+        )
 
         withContext(Dispatchers.Main) {
             androidExecutor.executeGesture(clickBuilder.build())
@@ -92,14 +104,20 @@ internal class ActionExecutor(
      */
     private suspend fun executeSwipe(swipe: Swipe) {
         val swipePath = Path()
-        val clickBuilder = GestureDescription.Builder()
+        val swipeBuilder = GestureDescription.Builder()
 
-        swipePath.moveTo(swipe.fromX!!.toFloat(), swipe.fromY!!.toFloat())
-        swipePath.lineTo(swipe.toX!!.toFloat(), swipe.toY!!.toFloat())
-        clickBuilder.addStroke(GestureDescription.StrokeDescription(swipePath, 0, swipe.swipeDuration!!))
+        swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, randomize)
+        swipePath.lineTo(swipe.toX!!, swipe.toY!!, randomize)
+        swipeBuilder.addStroke(
+            GestureDescription.StrokeDescription(
+                swipePath,
+                0,
+                if (randomize) random.getRandomizedDuration(swipe.swipeDuration!!) else swipe.swipeDuration!!,
+            )
+        )
 
         withContext(Dispatchers.Main) {
-            androidExecutor.executeGesture(clickBuilder.build())
+            androidExecutor.executeGesture(swipeBuilder.build())
         }
     }
 
@@ -108,7 +126,7 @@ internal class ActionExecutor(
      * @param pause the pause to be executed.
      */
     private suspend fun executePause(pause: Pause) {
-        delay(pause.pauseDuration!!)
+        delay(if (randomize) random.getRandomizedDuration(pause.pauseDuration!!) else pause.pauseDuration!!)
     }
 
     /**
@@ -147,6 +165,26 @@ internal class ActionExecutor(
     private fun executeToggleEvent(toggleEvent: ToggleEvent) {
         scenarioEditor.changeEventState(toggleEvent.toggleEventId!!, toggleEvent.toggleEventType!!)
     }
+
+    private fun Path.moveTo(x: Int, y: Int, randomize: Boolean) {
+        if (!randomize) moveTo(x.toFloat(), y.toFloat())
+        else moveTo(random.getRandomizedPosition(x), random.getRandomizedPosition(y))
+    }
+
+    private fun Path.lineTo(x: Int, y: Int, randomize: Boolean) {
+        if (!randomize) lineTo(x.toFloat(), y.toFloat())
+        else lineTo(random.getRandomizedPosition(x), random.getRandomizedPosition(y))
+    }
+
+    private fun Random.getRandomizedPosition(position: Int): Float = nextInt(
+        position - RANDOMIZATION_POSITION_MAX_OFFSET_PX,
+        position + RANDOMIZATION_POSITION_MAX_OFFSET_PX + 1,
+    ).toFloat()
+
+    private fun Random.getRandomizedDuration(duration: Long): Long = nextLong(
+        max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
+        duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1,
+    )
 }
 
 /** Execute the actions related to Android. */
@@ -175,3 +213,7 @@ private const val TAG = "ActionExecutor"
 private const val INTENT_START_ACTIVITY_DELAY = 1000L
 /** Waiting delay after a broadcast to avoid overflowing the system. */
 private const val INTENT_BROADCAST_DELAY = 100L
+/** */
+private const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
+/** */
+private const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5

@@ -38,6 +38,7 @@ import kotlinx.coroutines.yield
  *
  * @param imageDetector the detector for images.
  * @param detectionQuality the quality of the detection.
+ * @param randomize true to randomize the actions values a bit to avoid being taken for a bot.
  * @param events the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param androidExecutor execute the actions requiring an interaction with Android..
@@ -49,6 +50,7 @@ import kotlinx.coroutines.yield
 internal class ScenarioProcessor(
     private val imageDetector: ImageDetector,
     private val detectionQuality: Int,
+    randomize: Boolean,
     events: List<Event>,
     private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
     androidExecutor: AndroidExecutor,
@@ -61,7 +63,7 @@ internal class ScenarioProcessor(
     /** Handle the processing state of the scenario. */
     private val scenarioState = ScenarioState(events)
     /** Execute the detected event actions. */
-    private val actionExecutor = ActionExecutor(androidExecutor, scenarioState)
+    private val actionExecutor = ActionExecutor(androidExecutor, scenarioState, randomize)
     /** Verifies the end conditions of a scenario. */
     private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onEndConditionReached)
 

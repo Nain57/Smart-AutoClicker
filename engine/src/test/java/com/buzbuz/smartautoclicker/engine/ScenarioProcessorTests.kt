@@ -151,6 +151,7 @@ class ScenarioProcessorTests {
     ) = ScenarioProcessor(
         mockImageDetector,
         TEST_DATA_DETECTION_QUALITY.toInt(),
+        false,
         events,
         mockBitmapSupplier::getBitmap,
         mockAndroidExecutor,
