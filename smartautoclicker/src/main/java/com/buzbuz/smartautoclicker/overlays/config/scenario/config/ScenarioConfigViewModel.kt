@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario.config
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
-import com.buzbuz.smartautoclicker.R
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.domain.*
@@ -58,6 +58,30 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     val scenarioNameError: Flow<Boolean> by lazy {
         configuredScenario.map { it?.scenario?.name?.isEmpty() ?: true }
     }
+
+    private val enabledRandomization = DropdownItem(
+        title = R.string.dropdown_item_title_anti_detection_enabled,
+        helperText = R.string.dropdown_helper_text_anti_detection_enabled,
+    )
+    private val disableRandomization = DropdownItem(
+        title = R.string.dropdown_item_title_anti_detection_disabled,
+        helperText = R.string.dropdown_helper_text_anti_detection_disabled,
+    )
+    val randomizationItems = listOf(enabledRandomization, disableRandomization)
+
+    /** The randomization value for the scenario. */
+    val randomization: Flow<DropdownItem> by lazy {
+        configuredScenario
+            .map {
+                when (it?.scenario?.randomize) {
+                    true -> enabledRandomization
+                    false -> disableRandomization
+                    else -> null
+                }
+            }
+            .filterNotNull()
+    }
+
     /** The quality of the detection. */
     val detectionQuality: Flow<Int?> by lazy {
         configuredScenario.map { it?.scenario?.detectionQuality }
@@ -123,6 +147,19 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     fun setScenarioName(name: String) {
         configuredScenario.value?.let { conf ->
             configuredScenario.value = conf.scenario.copy(name = name).toScenarioConfig(conf)
+        }
+    }
+
+    /** Toggle the randomization value. */
+    fun setRandomization(randomizationItem: DropdownItem) {
+        configuredScenario.value?.let { conf ->
+            val value = when (randomizationItem) {
+                enabledRandomization -> true
+                disableRandomization -> false
+                else -> return
+            }
+
+            configuredScenario.value = conf.scenario.copy(randomize = value).toScenarioConfig(conf)
         }
     }
 

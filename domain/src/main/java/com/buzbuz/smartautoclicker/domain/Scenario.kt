@@ -41,7 +41,7 @@ data class Scenario(
     val eventCount: Int = 0,
 ) {
     /** @return the entity equivalent of this scenario. */
-    internal fun toEntity() = ScenarioEntity(id, name, detectionQuality, endConditionOperator)
+    internal fun toEntity() = ScenarioEntity(id, name, detectionQuality, endConditionOperator, randomize)
 }
 
 /** @return the scenario for this entity. */

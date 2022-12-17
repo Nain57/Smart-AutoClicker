@@ -21,10 +21,12 @@ import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
@@ -33,6 +35,7 @@ import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
+
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -63,6 +66,12 @@ class ScenarioConfigContent : NavBarDialogContent() {
                 )
             }
 
+            scenarioActionRandomization.setItems(
+                label = context.resources.getString(R.string.input_field_label_anti_detection),
+                items = viewModel.randomizationItems,
+                onItemSelected = viewModel::setRandomization,
+            )
+
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
             seekbarQuality.addOnChangeListener { _, value, fromUser ->
@@ -89,6 +98,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.scenarioName.collect(::updateScenarioName) }
                 launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameField::setError) }
+                launch { viewModel.randomization.collect(::updateRandomization) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
                 launch { viewModel.endConditionOperator.collect(::updateEndConditionOperator) }
                 launch { viewModel.endConditions.collect(::updateEndConditions) }
@@ -98,6 +108,10 @@ class ScenarioConfigContent : NavBarDialogContent() {
 
     private fun updateScenarioName(name: String?) {
         viewBinding.scenarioNameField.setText(name)
+    }
+
+    private fun updateRandomization(randomizationItem: DropdownItem) {
+        viewBinding.scenarioActionRandomization.setSelectedItem(randomizationItem)
     }
 
     private fun updateQuality(quality: Int?) {

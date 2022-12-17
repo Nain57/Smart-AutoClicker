@@ -221,6 +221,7 @@
     <string name="input_field_label_pause_duration">Pause duration (ms)</string>
     <string name="input_field_label_scenario_name">Scenario name</string>
     <string name="input_field_label_swipe_duration">Swipe duration (ms)</string>
+    <string name="input_field_label_anti_detection">Anti-detection</string>
     <string name="input_field_error_required">Required</string>
 
     <!--
@@ -231,6 +232,12 @@
       -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
       -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
       -->
+
+    <!-- Dropdown field for selecting anti bot state -->
+    <string name="dropdown_item_title_anti_detection_enabled">Enabled</string>
+    <string name="dropdown_item_title_anti_detection_disabled">Disabled</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">Randomize the click swipe and pause positions and durations by a small random offset</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">Execute all actions as declared</string>
 
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">Conditions</string>
