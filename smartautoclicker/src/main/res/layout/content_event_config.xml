@@ -38,6 +38,12 @@
         <include layout="@layout/include_input_field_dropdown"
             android:id="@+id/conditions_operator_field"
             android:layout_width="match_parent"
+            android:layout_height="@dimen/dropdown_two_lines_helper_text_height"
+            android:layout_marginBottom="@dimen/margin_horizontal_small"/>
+
+        <include layout="@layout/include_input_field_dropdown"
+            android:id="@+id/enabled_on_start_field"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/dropdown_two_lines_helper_text_height"/>
 
     </LinearLayout>

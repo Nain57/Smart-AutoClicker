@@ -37,6 +37,29 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     /** The event currently configured. */
     private lateinit var configuredEvent: MutableStateFlow<Event?>
 
+    private val enableEventItem = DropdownItem(
+        title = R.string.dropdown_item_title_event_state_enabled,
+        helperText = R.string.dropdown_helper_text_event_state_enabled,
+    )
+    private val disableEventItem = DropdownItem(
+        title= R.string.dropdown_item_title_event_state_disabled,
+        helperText = R.string.dropdown_helper_text_event_state_disabled,
+    )
+    val eventStateItems = listOf(enableEventItem, disableEventItem)
+
+    /** The enabled on start state of the configured event. */
+    val eventStateItem: Flow<DropdownItem> by lazy {
+        configuredEvent
+            .map {
+                when (it?.enabledOnStart) {
+                    true -> enableEventItem
+                    false -> disableEventItem
+                    else -> null
+                }
+            }
+            .filterNotNull()
+    }
+
     private val conditionAndItem = DropdownItem(
         title = R.string.dropdown_item_title_condition_and,
         helperText = R.string.dropdown_helper_text_condition_and,
@@ -95,6 +118,19 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
             }
 
             configuredEvent.value = event.copy(conditionOperator = operator)
+        }
+    }
+
+    /** Toggle the event state between true and false. */
+    fun setEventState(state: DropdownItem) {
+        configuredEvent.value?.let { event ->
+            val value = when (state) {
+                enableEventItem -> true
+                disableEventItem -> false
+                else -> return
+            }
+
+            configuredEvent.value = event.copy(enabledOnStart = value)
         }
     }
 }

@@ -64,6 +64,12 @@ class EventConfigContent : NavBarDialogContent() {
                 items = viewModel.conditionOperatorsItems,
                 onItemSelected = viewModel::setConditionOperator,
             )
+
+            enabledOnStartField.setItems(
+                label = context.resources.getString(R.string.input_field_label_event_state),
+                items = viewModel.eventStateItems,
+                onItemSelected = viewModel::setEventState,
+            )
         }
 
         return viewBinding.root
@@ -75,6 +81,7 @@ class EventConfigContent : NavBarDialogContent() {
                 launch { viewModel.eventNameError.collect(viewBinding.eventNameInputLayout::setError) }
                 launch { viewModel.eventName.collect(::updateEventName) }
                 launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
+                launch { viewModel.eventStateItem.collect(::updateEventState) }
             }
         }
     }
@@ -85,5 +92,9 @@ class EventConfigContent : NavBarDialogContent() {
 
     private fun updateConditionOperator(operatorItem: DropdownItem) {
         viewBinding.conditionsOperatorField.setSelectedItem(operatorItem)
+    }
+
+    private fun updateEventState(stateItem: DropdownItem) {
+        viewBinding.enabledOnStartField.setSelectedItem(stateItem)
     }
 }

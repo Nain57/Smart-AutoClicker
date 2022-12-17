@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.base.bindings
 
 import android.view.View
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.domain.Event
 
@@ -31,9 +32,16 @@ import com.buzbuz.smartautoclicker.domain.Event
  */
 fun ItemEventBinding.bind(event: Event, canDrag: Boolean, itemClickedListener: (Event) -> Unit) {
     textName.text = event.name
-    textEnabled.text = "Enabled"
     textConditionsCount.text = event.conditions?.size?.toString()
     textActionsCount.text = event.actions?.size?.toString()
+
+    if (event.enabledOnStart) {
+        textEnabled.setText(R.string.dropdown_item_title_event_state_enabled)
+        iconEnabled.setImageResource(R.drawable.ic_confirm)
+    } else {
+        textEnabled.setText(R.string.dropdown_item_title_event_state_disabled)
+        iconEnabled.setImageResource(R.drawable.ic_cancel)
+    }
 
     root.setOnClickListener { itemClickedListener(event) }
 
