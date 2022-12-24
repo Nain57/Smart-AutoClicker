@@ -19,13 +19,17 @@ package com.buzbuz.smartautoclicker.overlays.config.event.copy
 import android.app.Application
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyViewModel
+import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIconRes
+import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 
 /**
@@ -33,14 +37,22 @@ import kotlinx.coroutines.flow.combine
  *
  * @param application the Android application.
  */
-class EventCopyModel(application: Application) : CopyViewModel<Event>(application) {
+class EventCopyModel(application: Application) : AndroidViewModel(application) {
+
+    /** Repository providing access to the click database. */
+    private val repository = Repository.getRepository(application)
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
+
+    /** The currently searched action name. Null if no is. */
+    protected val searchQuery = MutableStateFlow<String?>(null)
 
     /**
      * List of displayed event items.
      * This list can contains all events with headers, or the search result depending on the current search query.
      */
     val eventList: Flow<List<EventCopyItem>?> =
-        combine(repository.getAllEvents(), itemsFromCurrentContainer, searchQuery) { dbEvents, scenarioEvents, query ->
+        combine(repository.getAllEvents(), editionRepository.editedEvents, searchQuery) { dbEvents, scenarioEvents, query ->
             if (query.isNullOrEmpty()) getAllItems(dbEvents, scenarioEvents) else getSearchedItems(dbEvents, query)
         }
 
@@ -50,11 +62,11 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
      * @param scenarioEvents all actions in the current event.
      * @return the complete list of action items.
      */
-    private fun getAllItems(dbEvents: List<Event>, scenarioEvents: List<Event>?): List<EventCopyItem> {
+    private fun getAllItems(dbEvents: List<Event>, scenarioEvents: List<ConfiguredEvent>?): List<EventCopyItem> {
         val allItems = mutableListOf<EventCopyItem>()
 
         // First, add the events from the current scenario
-        val eventItems = scenarioEvents?.sortedBy { it.name }?.map { it.toEventItem() }?.distinct()
+        val eventItems = scenarioEvents?.sortedBy { it.event.name }?.map { it.event.toEventItem() }?.distinct()
             ?: emptyList()
         if (eventItems.isNotEmpty()) allItems.add(EventCopyItem.HeaderItem(R.string.list_header_copy_event_this))
         allItems.addAll(eventItems)
@@ -76,6 +88,14 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
     }
 
     /**
+     * Update the action search query.
+     * @param query the new query.
+     */
+    fun updateSearchQuery(query: String?) {
+        searchQuery.value = query
+    }
+
+    /**
      * Get the result of the search query.
      * @param dbEvents all actions in the database.
      * @param query the current search query.
@@ -92,13 +112,14 @@ class EventCopyModel(application: Application) : CopyViewModel<Event>(applicatio
      *
      * @param event the event to get the copy of.
      */
-    fun getCopyEvent(scenario: Long, event: Event): Event {
-        return event.deepCopy().apply {
-            priority = itemsFromCurrentContainer.value?.size ?: 0
-            scenarioId = scenario
-            cleanUpIds()
-        }
-    }
+    fun getCopyEvent(event: Event): Event =
+        editionRepository.editedScenario.value?.let { conf ->
+            event.deepCopy().apply {
+                priority = conf.events.size
+                scenarioId = conf.scenario.id
+                cleanUpIds()
+            }
+        } ?: throw IllegalStateException("No scenario defined !")
 
     /** @return the [EventCopyItem.EventItem] corresponding to this event. */
     private fun Event.toEventItem(): EventCopyItem.EventItem =

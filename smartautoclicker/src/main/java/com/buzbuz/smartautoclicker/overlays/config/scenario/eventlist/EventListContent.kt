@@ -32,9 +32,9 @@ import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
+import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
 import com.buzbuz.smartautoclicker.overlays.config.event.copy.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialog
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 
 import kotlinx.coroutines.launch
@@ -61,8 +61,6 @@ class EventListContent : NavBarDialogContent() {
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setScenario(dialogViewModel.configuredScenario)
-
         eventAdapter = EventListAdapter(
             itemClickedListener = ::showEventConfigDialog,
             itemReorderListener = viewModel::updateEventsPriority,
@@ -93,7 +91,7 @@ class EventListContent : NavBarDialogContent() {
     }
 
     override fun onCreateButtonClicked() {
-        showEventConfigDialog(viewModel.getNewEventItem(context))
+        showEventConfigDialog(viewModel.createNewEvent(context))
     }
 
     override fun onCopyButtonClicked() {
@@ -117,11 +115,7 @@ class EventListContent : NavBarDialogContent() {
             NavigationRequest(
                 EventCopyDialog(
                     context = context,
-                    scenarioId = dialogViewModel.configuredScenario.value!!.scenario.id,
-                    events = viewModel.getConfiguredEventList(),
-                    onEventSelected = { event ->
-                        showEventConfigDialog(viewModel.getNewEventItem(context, event))
-                    }
+                    onEventSelected = { event -> showEventConfigDialog(viewModel.createNewEvent(context, event)) }
                 ),
             )
         )
@@ -129,13 +123,14 @@ class EventListContent : NavBarDialogContent() {
 
     /** Opens the dialog allowing the user to add a new event. */
     private fun showEventConfigDialog(item: ConfiguredEvent) {
+        viewModel.startEventEdition(item)
+
         dialogViewModel.requestSubOverlay(
             NavigationRequest(
                 overlay = EventDialog(
                     context = context,
-                    event = item.event,
-                    onConfigComplete = { viewModel.addOrUpdateEvent(item.copy(event = it)) },
-                    onDelete = { viewModel.deleteEvent(item) },
+                    onConfigComplete = { viewModel.saveEventEdition() },
+                    onDelete = { viewModel.deleteEditedEvent() },
                 ),
                 hideCurrent = true
             )

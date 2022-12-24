@@ -21,24 +21,26 @@ import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationViewModel
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 
 class EventDialogViewModel(application: Application) : NavigationViewModel(application) {
 
     /** The event currently configured. */
-    val configuredEvent: MutableStateFlow<Event?> = MutableStateFlow(null)
+    val configuredEvent: Flow<Event> = EditionRepository.getInstance(application).configuredEvent
+        .mapNotNull { it?.event }
+
+    /** Visibility of the top bar delete button. */
+    val deleteButtonVisibility: Flow<Boolean> = configuredEvent.map { it.id != 0L }
 
     /**
      * Tells if all content have their field correctly configured.
      * Used to display the red badge if indicating if there is something missing.
      */
     val navItemsValidity: Flow<Map<Int, Boolean>> = configuredEvent
-        .filterNotNull()
         .map { configuredItem ->
             buildMap {
                 put(R.id.page_event, configuredItem.name.isNotEmpty())
@@ -56,9 +58,4 @@ class EventDialogViewModel(application: Application) : NavigationViewModel(appli
             }
             allValid
         }
-
-    /** Set the event to be configured by this viewModel. */
-    fun setConfiguredEvent(eventItem: Event) {
-        configuredEvent.value = eventItem
-    }
 }

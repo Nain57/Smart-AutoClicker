@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemEndConditionCardBinding
 import com.buzbuz.smartautoclicker.databinding.ItemNewCopyCardBinding
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
+import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
 
 /**
  * Adapter displaying a list of end conditions.

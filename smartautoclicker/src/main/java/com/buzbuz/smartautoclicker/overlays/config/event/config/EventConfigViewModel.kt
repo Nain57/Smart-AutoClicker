@@ -19,23 +19,27 @@ package com.buzbuz.smartautoclicker.overlays.config.event.config
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.AND
-import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 
 class EventConfigViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The event currently configured. */
-    private lateinit var configuredEvent: MutableStateFlow<Event?>
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
+    /** Currently configured event. */
+    private val configuredEvent = editionRepository.configuredEvent
+        .filterNotNull()
 
     private val enableEventItem = DropdownItem(
         title = R.string.dropdown_item_title_event_state_enabled,
@@ -48,17 +52,14 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     val eventStateItems = listOf(enableEventItem, disableEventItem)
 
     /** The enabled on start state of the configured event. */
-    val eventStateItem: Flow<DropdownItem> by lazy {
-        configuredEvent
-            .map {
-                when (it?.enabledOnStart) {
-                    true -> enableEventItem
-                    false -> disableEventItem
-                    else -> null
-                }
+    val eventStateItem: Flow<DropdownItem> = configuredEvent
+        .map {
+            when (it.event.enabledOnStart) {
+                true -> enableEventItem
+                false -> disableEventItem
             }
-            .filterNotNull()
-    }
+        }
+        .filterNotNull()
 
     private val conditionAndItem = DropdownItem(
         title = R.string.dropdown_item_title_condition_and,
@@ -71,66 +72,63 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     val conditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
 
     /** The event condition operator currently edited by the user. */
-    val conditionOperator: Flow<DropdownItem> by lazy {
-        configuredEvent
-            .map {
-                when (it?.conditionOperator) {
-                    AND -> conditionAndItem
-                    OR -> conditionOrItem
-                    else -> null
-                }
+    val conditionOperator: Flow<DropdownItem> = configuredEvent
+        .map {
+            when (it.event.conditionOperator) {
+                AND -> conditionAndItem
+                OR -> conditionOrItem
+                else -> null
             }
-            .filterNotNull()
-    }
+        }
+        .filterNotNull()
 
     /** The event name value currently edited by the user. */
-    val eventName: Flow<String?> by lazy {
-        configuredEvent
-            .filterNotNull()
-            .map { it.name }
-            .take(1)
-    }
+    val eventName: Flow<String?> = configuredEvent
+        .filterNotNull()
+        .map { it.event.name }
+        .take(1)
 
     /** Tells if the event name is valid or not. */
-    val eventNameError: Flow<Boolean> by lazy {
-        configuredEvent.map { it?.name?.isEmpty() ?: true }
-    }
+    val eventNameError: Flow<Boolean> = configuredEvent
+        .map { it.event.name.isEmpty() }
 
-    /** Set the event currently configured by the UI. */
-    fun setConfiguredEvent(event: MutableStateFlow<Event?>) {
-        configuredEvent = event
-    }
 
     /** Set a new name for the configured event. */
     fun setEventName(newName: String) {
-        configuredEvent.value?.let { event ->
-            configuredEvent.value = event.copy(name = newName)
+        editionRepository.configuredEvent.value?.let { conf ->
+            viewModelScope.launch {
+                editionRepository.updateEditedEvent(conf.event.copy(name = newName))
+            }
         }
     }
 
     /** Toggle the end condition operator between AND and OR. */
     fun setConditionOperator(operatorItem: DropdownItem) {
-        configuredEvent.value?.let { event ->
+        editionRepository.configuredEvent.value?.let { conf ->
             val operator = when (operatorItem) {
                 conditionAndItem -> AND
                 conditionOrItem -> OR
                 else -> return
             }
 
-            configuredEvent.value = event.copy(conditionOperator = operator)
+            viewModelScope.launch {
+                editionRepository.updateEditedEvent(conf.event.copy(conditionOperator = operator))
+            }
         }
     }
 
     /** Toggle the event state between true and false. */
     fun setEventState(state: DropdownItem) {
-        configuredEvent.value?.let { event ->
+        editionRepository.configuredEvent.value?.let { conf ->
             val value = when (state) {
                 enableEventItem -> true
                 disableEventItem -> false
                 else -> return
             }
 
-            configuredEvent.value = event.copy(enabledOnStart = value)
+            viewModelScope.launch {
+                editionRepository.updateEditedEvent(conf.event.copy(enabledOnStart = value))
+            }
         }
     }
 }

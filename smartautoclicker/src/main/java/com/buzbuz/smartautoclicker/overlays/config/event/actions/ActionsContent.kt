@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.overlays.config.action.intent.IntentDialog
 import com.buzbuz.smartautoclicker.overlays.config.action.pause.PauseDialog
 import com.buzbuz.smartautoclicker.overlays.config.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.overlays.base.dialog.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.overlays.config.action.toggleevent.ToggleEventDialog
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
 
 import kotlinx.coroutines.launch
@@ -65,11 +66,9 @@ class ActionsContent : NavBarDialogContent() {
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
-
         actionAdapter = ActionAdapter(
             actionClickedListener = ::onActionClicked,
-            actionReorderListener = viewModel::updateActionOrder
+            actionReorderListener = viewModel::updateActionOrder,
         )
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
@@ -127,6 +126,7 @@ class ActionsContent : NavBarDialogContent() {
                 ActionTypeChoice.Swipe,
                 ActionTypeChoice.Pause,
                 ActionTypeChoice.Intent,
+                ActionTypeChoice.ToggleEvent,
             ),
             onChoiceSelected = { choiceClicked ->
                 dialogViewModel.requestSubOverlay(
@@ -164,6 +164,10 @@ class ActionsContent : NavBarDialogContent() {
 
             is Action.Intent -> IntentDialog(context, action, viewModel::removeAction) { savedIntent ->
                 viewModel.addUpdateAction(savedIntent, index)
+            }
+
+            is Action.ToggleEvent -> ToggleEventDialog(context, action, viewModel::removeAction) { savedToggleEvent ->
+                viewModel.addUpdateAction(savedToggleEvent, index)
             }
 
             else -> throw IllegalArgumentException("Not yet supported")

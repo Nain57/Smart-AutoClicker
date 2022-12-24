@@ -23,52 +23,42 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.DetectorState
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 /**
  * View model for the [MainMenu].
  * @param application the Android application.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 class MainMenuModel(application: Application) : AndroidViewModel(application) {
 
     /** Debug configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getDebugConfigPreferences()
     /** The detector engine. */
-    private var detectorEngine: DetectorEngine = DetectorEngine.getDetectorEngine(application)
+    private val detectorEngine: DetectorEngine = DetectorEngine.getDetectorEngine(application)
     /** The repository for the scenarios. */
-    private var repository: Repository = Repository.getRepository(application)
+    private val repository: Repository = Repository.getRepository(application)
+    /** The currently loaded scenario info. */
+    private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
+
     /** The current of the detection. */
     val detectionState: Flow<UiState> = detectorEngine.state
         .map { if (it == DetectorState.DETECTING) UiState.Detecting else UiState.Idle }
         .distinctUntilChanged()
-    /** The current scenario identifier. */
-    private val scenarioId = MutableStateFlow<Long?>(null)
-    val scenario : StateFlow<Scenario?> = scenarioId
-        .flatMapLatest { scenarioId ->
-            scenarioId ?: return@flatMapLatest emptyFlow()
-            repository.getScenario(scenarioId)
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            null,
-        )
-    /** The current list of event in the detector engine. */
-    val eventList: Flow<List<Event>?> = detectorEngine.scenarioEvents
 
-    /** Set the current scenario. */
-    fun setScenario(id: Long) {
-        scenarioId.value = id
-    }
+    /** Tells if the scenario can be started. Edited scenario must be synchronized and engine should allow it. */
+    val canStartScenario: Flow<Boolean> = detectorEngine.canStartDetection
+        .combine(editionRepository.isEditionSynchronized) { canStartDetection, isSynchronized ->
+            canStartDetection && isSynchronized
+        }
 
     /** Start/Stop the detection. */
     fun toggleDetection() {
@@ -81,6 +71,32 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
                 )
                 else -> { /* Nothing to do */ }
             }
+        }
+    }
+
+    fun setConfiguredScenario(scenarioId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            editionRepository.setConfiguredScenario(scenarioId)
+        }
+    }
+
+    fun startScenarioEdition() {
+        viewModelScope.launch(Dispatchers.IO) {
+            editionRepository.startEditions()
+        }
+    }
+
+    /** Save the configured scenario in the database. */
+    fun saveScenarioChanges() {
+        viewModelScope.launch(Dispatchers.IO) {
+            editionRepository.saveEditions()
+        }
+    }
+
+    /** Cancel all changes made by the user. */
+    fun cancelScenarioChanges() {
+        viewModelScope.launch(Dispatchers.IO) {
+            editionRepository.cancelEditions()
         }
     }
 

@@ -18,36 +18,22 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario
 
 import android.app.Application
 
-import androidx.lifecycle.viewModelScope
-
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.EndCondition
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationViewModel
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 /** ViewModel for the [ScenarioDialog] and its content. */
 class ScenarioDialogViewModel(application: Application) : NavigationViewModel(application) {
-
-    /** The repository providing access to the database. */
-    private val repository: Repository = Repository.getRepository(application)
-
-    /** The scenario currently configured. Shared with all contents view models. */
-    val configuredScenario: MutableStateFlow<ConfiguredScenario?> = MutableStateFlow(null)
 
     /**
      * Tells if all content have their field correctly configured.
      * Used to display the red badge if indicating if there is something missing.
      */
-    val navItemsValidity: Flow<Map<Int, Boolean>> = configuredScenario
+    val navItemsValidity: Flow<Map<Int, Boolean>> = EditionRepository.getInstance(application).editedScenario
         .filterNotNull()
         .map { configuredItem ->
             buildMap {
@@ -66,75 +52,4 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
             }
             allValid
         }
-
-    /** Set the scenario to be configured by this viewModel. */
-    fun setConfiguredScenario(scenario: Scenario) {
-        if (configuredScenario.value != null) return
-
-        viewModelScope.launch(Dispatchers.IO) {
-            configuredScenario.value = ConfiguredScenario(
-                scenario = scenario,
-                events = repository.getCompleteEventList(scenario.id).mapIndexed { index, event ->
-                    ConfiguredEvent(event, index)
-                },
-                endConditions = repository.getScenarioWithEndConditions(scenario.id)?.second?.mapIndexed { index, endCondition ->
-                    ConfiguredEndCondition(endCondition, index)
-                } ?: emptyList(),
-            )
-        }
-    }
-
-    /** Save the configured scenario in the database. */
-    fun saveScenarioChanges() {
-        viewModelScope.launch(Dispatchers.IO) {
-            configuredScenario.value?.let { conf ->
-                repository.updateScenario(conf.scenario)
-
-                val eventItemIdMap = mutableMapOf<Int, Long>()
-                val toBeRemoved = repository.getCompleteEventList(conf.scenario.id).toMutableList()
-                conf.events.forEachIndexed { index, configuredEvent ->
-                    configuredEvent.event.priority = index
-
-                    if (configuredEvent.event.id == 0L) {
-                        val eventId = repository.addEvent(configuredEvent.event)
-                        eventItemIdMap[configuredEvent.itemId] = eventId
-                    } else {
-                        repository.updateEvent(configuredEvent.event)
-                        if (toBeRemoved.removeIf { it.id == configuredEvent.event.id }) {
-                            eventItemIdMap[configuredEvent.itemId] = configuredEvent.event.id
-                        }
-                    }
-                }
-                toBeRemoved.forEach { event -> repository.removeEvent(event) }
-
-                repository.updateEndConditions(conf.scenario.id, conf.endConditions.mapNotNull { confEndCondition ->
-                    val eventId = eventItemIdMap[confEndCondition.eventItemId] ?: return@mapNotNull null
-                    confEndCondition.endCondition.copy(
-                        scenarioId = conf.scenario.id,
-                        eventId = eventId,
-                    )
-                })
-            }
-        }
-    }
 }
-
-/** Represents the scenario currently configured. */
-data class ConfiguredScenario(
-    val scenario: Scenario,
-    val events: List<ConfiguredEvent>,
-    val endConditions: List<ConfiguredEndCondition>,
-)
-
-/** Represents the events of the scenario currently configured. */
-data class ConfiguredEvent(val event: Event, val itemId: Int = INVALID_CONFIGURED_ITEM_ID)
-
-/** Represents the events of the scenario currently configured. */
-data class ConfiguredEndCondition(
-    val endCondition: EndCondition,
-    val eventItemId: Int = INVALID_CONFIGURED_ITEM_ID,
-    val itemId: Int = INVALID_CONFIGURED_ITEM_ID,
-)
-
-/** Invalid configured item id. The event item object is created but not yet in the list. */
-const val INVALID_CONFIGURED_ITEM_ID = -1

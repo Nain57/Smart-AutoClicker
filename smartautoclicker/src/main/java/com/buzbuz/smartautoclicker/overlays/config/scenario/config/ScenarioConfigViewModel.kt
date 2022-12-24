@@ -19,22 +19,22 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario.config
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
-import com.buzbuz.smartautoclicker.overlays.config.scenario.INVALID_CONFIGURED_ITEM_ID
+import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
@@ -45,19 +45,20 @@ import kotlin.math.min
  */
 class ScenarioConfigViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The scenario configured. */
-    private lateinit var configuredScenario: MutableStateFlow<ConfiguredScenario?>
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
+    /** Currently configured scenario. */
+    private val configuredScenario = editionRepository.editedScenario
+        .filterNotNull()
 
     /** The event name value currently edited by the user. */
-    val scenarioName: Flow<String> by lazy {
-        configuredScenario.map { it?.scenario?.name }
-            .filterNotNull()
-            .take(1)
-    }
+    val scenarioName: Flow<String> =  configuredScenario
+        .map { it.scenario.name }
+        .filterNotNull()
+        .take(1)
     /** Tells if the scenario name is valid or not. */
-    val scenarioNameError: Flow<Boolean> by lazy {
-        configuredScenario.map { it?.scenario?.name?.isEmpty() ?: true }
-    }
+    val scenarioNameError: Flow<Boolean> = configuredScenario
+        .map { it.scenario.name.isEmpty() }
 
     private val enabledRandomization = DropdownItem(
         title = R.string.dropdown_item_title_anti_detection_enabled,
@@ -70,22 +71,18 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     val randomizationItems = listOf(enabledRandomization, disableRandomization)
 
     /** The randomization value for the scenario. */
-    val randomization: Flow<DropdownItem> by lazy {
-        configuredScenario
-            .map {
-                when (it?.scenario?.randomize) {
-                    true -> enabledRandomization
-                    false -> disableRandomization
-                    else -> null
-                }
+    val randomization: Flow<DropdownItem> = configuredScenario
+        .map {
+            when (it.scenario.randomize) {
+                true -> enabledRandomization
+                false -> disableRandomization
             }
-            .filterNotNull()
-    }
+        }
+        .filterNotNull()
 
     /** The quality of the detection. */
-    val detectionQuality: Flow<Int?> by lazy {
-        configuredScenario.map { it?.scenario?.detectionQuality }
-    }
+    val detectionQuality: Flow<Int?> = configuredScenario
+        .map { it.scenario.detectionQuality }
 
     private val conditionAndItem = DropdownItem(
         title = R.string.dropdown_item_title_condition_and,
@@ -98,86 +95,81 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     val endConditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
 
     /** The operator applied to the end conditions. */
-    val endConditionOperator: Flow<DropdownItem> by lazy {
-        configuredScenario
-            .map {
-                when (it?.scenario?.endConditionOperator) {
-                    AND -> conditionAndItem
-                    OR -> conditionOrItem
-                    else -> null
-                }
+    val endConditionOperator: Flow<DropdownItem> = configuredScenario
+        .map {
+            when (it.scenario.endConditionOperator) {
+                AND -> conditionAndItem
+                OR -> conditionOrItem
+                else -> null
             }
-            .filterNotNull()
-    }
+        }
+        .filterNotNull()
+
 
     /** Events available for a new end condition. */
-    private val eventsAvailable: Flow<Boolean> by lazy {
-        configuredScenario.map { confScenario ->
-                if (confScenario == null) return@map false
-                if (confScenario.endConditions.isEmpty()) confScenario.events.isNotEmpty()
-                else confScenario.events.any { confEvent ->
-                    confScenario.endConditions.find { it.endCondition.eventId == confEvent.event.id } == null
-                }
+    private val eventsAvailable: Flow<Boolean> = configuredScenario.map { confScenario ->
+        if (confScenario.endConditions.isEmpty()) confScenario.events.isNotEmpty()
+        else confScenario.events.any { confEvent ->
+            confScenario.endConditions.find { it.endCondition.eventId == confEvent.event.id } == null
         }
     }
+
     /** The end conditions for the configured scenario. */
-    val endConditions: Flow<List<EndConditionListItem>> by lazy {
+    val endConditions: Flow<List<EndConditionListItem>> =
         configuredScenario.combine(eventsAvailable) { confScenario, eventsAvailable ->
-            if (confScenario == null) return@combine emptyList()
             buildList {
                 confScenario.endConditions.forEach { add(EndConditionListItem.EndConditionItem(it)) }
                 if (eventsAvailable) add(EndConditionListItem.AddEndConditionItem)
             }
         }
-    }
-
-    /**
-     * Set the scenario to be configured.
-     * @param scenario the scenario.
-     */
-    fun setScenario(scenario: MutableStateFlow<ConfiguredScenario?>) {
-        configuredScenario = scenario
-    }
-
-    /** Get all end conditions currently configured in this scenario. */
-    fun getConfiguredEndConditionsList(): List<ConfiguredEndCondition> =
-        configuredScenario.value?.endConditions ?: emptyList()
 
     /** Set a new name for the scenario. */
     fun setScenarioName(name: String) {
-        configuredScenario.value?.let { conf ->
-            configuredScenario.value = conf.scenario.copy(name = name).toScenarioConfig(conf)
+        editionRepository.editedScenario.value?.let { conf ->
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(conf.scenario.copy(name = name))
+            }
         }
     }
 
     /** Toggle the randomization value. */
     fun setRandomization(randomizationItem: DropdownItem) {
-        configuredScenario.value?.let { conf ->
+        editionRepository.editedScenario.value?.let { conf ->
             val value = when (randomizationItem) {
                 enabledRandomization -> true
                 disableRandomization -> false
                 else -> return
             }
 
-            configuredScenario.value = conf.scenario.copy(randomize = value).toScenarioConfig(conf)
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(conf.scenario.copy(randomize = value))
+            }
         }
     }
 
     /** Remove one to the detection quality */
     fun decreaseDetectionQuality() {
-        configuredScenario.value?.let { conf ->
-            configuredScenario.value = conf.scenario.copy(
-                detectionQuality = max(conf.scenario.detectionQuality - 1, DETECTION_QUALITY_MIN.toInt()),
-            ).toScenarioConfig(conf)
+        editionRepository.editedScenario.value?.let { conf ->
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(
+                    conf.scenario.copy(
+                        detectionQuality = max(conf.scenario.detectionQuality - 1, DETECTION_QUALITY_MIN.toInt())
+                    )
+                )
+            }
         }
     }
 
     /** Add one to the detection quality */
     fun increaseDetectionQuality() {
-        configuredScenario.value?.let { conf ->
-            configuredScenario.value = conf.scenario.copy(
-                detectionQuality = min(conf.scenario.detectionQuality + 1, DETECTION_QUALITY_MAX.toInt()),
-            ).toScenarioConfig(conf)
+        editionRepository.editedScenario.value?.let { conf ->
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(
+                    conf.scenario.copy(
+                        detectionQuality = min(conf.scenario.detectionQuality + 1, DETECTION_QUALITY_MAX.toInt())
+                    )
+                )
+            }
         }
     }
 
@@ -186,72 +178,52 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
      * @param quality the value from the seekbar.
      */
     fun setDetectionQuality(quality: Int) {
-        configuredScenario.value?.let { conf ->
-            configuredScenario.value = conf.scenario.copy(detectionQuality = quality).toScenarioConfig(conf)
+        editionRepository.editedScenario.value?.let { conf ->
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(conf.scenario.copy(detectionQuality = quality))
+            }
         }
     }
 
     /** Toggle the end condition operator between AND and OR. */
     fun setConditionOperator(operatorItem: DropdownItem) {
-        configuredScenario.value?.let { conf ->
+        editionRepository.editedScenario.value?.let { conf ->
             val operator = when (operatorItem) {
                 conditionAndItem -> AND
                 conditionOrItem -> OR
                 else -> return
             }
 
-            configuredScenario.value = conf.scenario.copy(endConditionOperator = operator).toScenarioConfig(conf)
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(conf.scenario.copy(endConditionOperator = operator))
+            }
         }
     }
 
     /** @return a new empty end condition. */
-    fun createNewEndCondition() =
-        ConfiguredEndCondition(EndCondition(scenarioId = configuredScenario.value?.scenario?.id ?: 0))
+    fun createNewEndCondition(): ConfiguredEndCondition =
+        editionRepository.createNewEndCondition()
 
     /**
      * Add a new end condition to the scenario.
      * @param confEndCondition the end condition to be added.
      */
-    fun addEndCondition(confEndCondition: ConfiguredEndCondition) {
-        if (confEndCondition.endCondition.id != 0L) return
-
-        configuredScenario.value?.let { conf ->
-            val newList = conf.endConditions.toMutableList().apply {
-                if (confEndCondition.itemId == INVALID_CONFIGURED_ITEM_ID) {
-                    add(confEndCondition.copy(itemId = conf.endConditions.size))
-                }
-            }
-            configuredScenario.value = newList.toScenarioConfig(conf)
-        }
-    }
+    fun addEndCondition(confEndCondition: ConfiguredEndCondition) =
+        editionRepository.addEndCondition(confEndCondition)
 
     /**
      * Update an end condition from the scenario.
      * @param confEndCondition the end condition to be updated.
      */
-    fun updateEndCondition(confEndCondition: ConfiguredEndCondition, index: Int) {
-        configuredScenario.value?.let { conf ->
-            val newList = conf.endConditions.toMutableList().apply { set(index, confEndCondition) }
-            configuredScenario.value = newList.toScenarioConfig(conf)
-        }
-    }
+    fun updateEndCondition(confEndCondition: ConfiguredEndCondition, index: Int) =
+        editionRepository.updateEndCondition(confEndCondition, index)
 
     /**
      * Delete a end condition from the scenario.
      * @param confEndCondition the end condition to be removed.
      */
-    fun deleteEndCondition(confEndCondition: ConfiguredEndCondition) {
-        configuredScenario.value?.let { conf ->
-            val newList = conf.endConditions.toMutableList().apply { remove(confEndCondition) }
-            configuredScenario.value = newList.toScenarioConfig(conf)
-        }
-    }
-
-    private fun Scenario.toScenarioConfig(configuredScenario: ConfiguredScenario): ConfiguredScenario =
-        configuredScenario.copy(scenario = this)
-
-    private fun List<ConfiguredEndCondition>.toScenarioConfig(configuredScenario: ConfiguredScenario): ConfiguredScenario =
-        configuredScenario.copy(endConditions = this)
+    fun deleteEndCondition(confEndCondition: ConfiguredEndCondition) =
+        editionRepository.deleteEndCondition(confEndCondition)
 }
 
 /** Items displayed in the end condition list. */

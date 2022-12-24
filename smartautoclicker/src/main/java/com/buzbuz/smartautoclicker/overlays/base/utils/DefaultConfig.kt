@@ -118,3 +118,15 @@ fun newDefaultIntent(context: Context, eventId: Long) = Action.Intent(
     name = context.getString(R.string.default_intent_name),
     isAdvanced = context.getEventConfigPreferences().getIntentIsAdvancedConfig(context),
 )
+
+/**
+ * Creates a new default toggle event action.
+ * @param context the Android context.
+ * @param eventId the event for this new action.
+ * @return the new toggle event.
+ */
+fun newDefaultToggleEvent(context: Context, eventId: Long) = Action.ToggleEvent(
+    eventId = eventId,
+    name = context.getString(R.string.default_toggle_event_name),
+    toggleEventType = Action.ToggleEvent.ToggleType.ENABLE,
+)

@@ -17,21 +17,16 @@
 package com.buzbuz.smartautoclicker.overlays.config.event.conditions
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemConditionBinding
 import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.domain.EXACT
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.base.utils.setIconTint
 
 import kotlinx.coroutines.Job
 

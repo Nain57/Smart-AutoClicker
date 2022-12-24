@@ -23,10 +23,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyDialog
 
@@ -39,8 +37,6 @@ import kotlinx.coroutines.launch
  */
 class EventCopyDialog(
     context: Context,
-    private val scenarioId: Long,
-    private val events: List<Event>,
     private val onEventSelected: (Event) -> Unit,
 ) : CopyDialog(context) {
 
@@ -50,11 +46,9 @@ class EventCopyDialog(
     private lateinit var eventCopyAdapter: EventCopyAdapter
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        viewModel.setItemsFromContainer(events)
-
         eventCopyAdapter = EventCopyAdapter { selectedEvent ->
             viewModel.let {
-                onEventSelected(it.getCopyEvent(scenarioId, selectedEvent))
+                onEventSelected(it.getCopyEvent(selectedEvent))
                 destroy()
             }
         }

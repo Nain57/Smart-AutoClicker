@@ -23,8 +23,10 @@ import android.graphics.Rect
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultCondition
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
 import kotlinx.coroutines.*
 
@@ -34,31 +36,28 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
 
     /** Repository providing access to the click database. */
     private val repository = Repository.getRepository(application.applicationContext)
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
+
+    /** Currently configured event. */
+    private val configuredEvent = editionRepository.configuredEvent
+        .filterNotNull()
 
     /** Tells if there is at least one condition to copy. */
     val canCopyCondition: Flow<Boolean> = repository.getAllConditions()
         .map { it.isNotEmpty() }
 
-    /** The event currently configured. */
-    private lateinit var configuredEvent: MutableStateFlow<Event?>
-
     /** Backing property for [conditions]. */
-    private val _conditions by lazy {
-        configuredEvent
-            .map { it?.conditions }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(),
-                emptyList()
-            )
-    }
+    private val _conditions = configuredEvent
+        .map { it.event.conditions }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            emptyList()
+        )
+
     /** The event conditions currently edited by the user. */
     val conditions: StateFlow<List<Condition>?> get() = _conditions
-
-    /** Set the event currently configured by the UI. */
-    fun setConfiguredEvent(event: MutableStateFlow<Event?>) {
-        configuredEvent = event
-    }
 
     /**
      * Create a new condition with the default values from configuration.
@@ -68,10 +67,10 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param bitmap the image for the condition to create.
      */
     fun createCondition(context: Context, area: Rect, bitmap: Bitmap): Condition {
-        configuredEvent.value?.let { event ->
+        editionRepository.configuredEvent.value?.let { conf ->
             return newDefaultCondition(
                 context = context,
-                eventId = event.id,
+                eventId = conf.event.id,
                 bitmap = bitmap,
                 area = area,
             )
@@ -82,47 +81,22 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * Add a new condition to the event.
      * @param condition the new condition.
      */
-    fun addCondition(condition: Condition) {
-        configuredEvent.value?.let { event ->
-            val newConditions = event.conditions?.let { ArrayList(it) } ?: ArrayList()
-            newConditions.add(condition)
-
-            viewModelScope.launch {
-                configuredEvent.value = event.copy(conditions = newConditions)
-            }
-        }
-    }
+    fun addCondition(condition: Condition) =
+        editionRepository.addConditionToEditedEvent(condition)
 
     /**
      * Update a condition in the event.
      * @param condition the updated condition.
      */
-    fun updateCondition(condition: Condition, index: Int) {
-        configuredEvent.value?.let { event ->
-            val newConditions = event.conditions?.let { ArrayList(it) } ?: ArrayList()
-            newConditions[index] = condition
-
-            viewModelScope.launch {
-                configuredEvent.value = event.copy(conditions = newConditions)
-            }
-        }
-    }
+    fun updateCondition(condition: Condition, index: Int) =
+        editionRepository.updateConditionFromEditedEvent(condition, index)
 
     /**
      * Remove a condition from the event.
      * @param condition the condition to be removed.
      */
-    fun removeCondition(condition: Condition) {
-        configuredEvent.value?.let { event ->
-
-            val newConditions = event.conditions?.let { ArrayList(it) } ?: ArrayList()
-            if (newConditions.remove(condition)) {
-                viewModelScope.launch {
-                    configuredEvent.value = event.copy(conditions = newConditions)
-                }
-            }
-        }
-    }
+    fun removeCondition(condition: Condition) =
+        editionRepository.removeConditionFromEditedEvent(condition)
 
     /**
      * Get the bitmap corresponding to a condition.

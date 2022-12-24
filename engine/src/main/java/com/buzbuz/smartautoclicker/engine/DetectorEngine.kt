@@ -40,15 +40,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -145,32 +137,32 @@ class DetectorEngine(context: Context) {
     var debugEngine: Flow<DebugEngine> = _debugEngine
         .filterNotNull()
 
-    /** The current scenario. */
-    private val _scenario = MutableStateFlow<Scenario?>(null)
-    /** The list of events for the [_scenario]. */
-    val scenarioEvents: StateFlow<List<Event>> = _scenario
-        .flatMapLatest {
-            it?.let { event ->
-                scenarioRepository.getCompleteEventListFlow(event.id)
-            } ?: flow { emit(emptyList()) }
-        }
-        .stateIn(
-            detectorEngineScope,
-            SharingStarted.Eagerly,
-            emptyList()
-        )
+    /** The current scenario unique identifier. */
+    private val _scenarioId = MutableStateFlow<Long?>(null)
+
     /** The scenario with its end conditions. */
-    private val scenarioEndConditions: StateFlow<Pair<Scenario, List<EndCondition>>?> = _scenario
-        .flatMapLatest {
-            it?.let { scenario ->
-                scenarioRepository.getScenarioWithEndConditionsFlow(scenario.id)
-            } ?: emptyFlow()
-        }
+    private val scenarioWithEndConditions: StateFlow<Pair<Scenario, List<EndCondition>>?> = _scenarioId
+        .filterNotNull()
+        .flatMapLatest { id -> scenarioRepository.getScenarioWithEndConditionsFlow(id) }
         .stateIn(
             detectorEngineScope,
             SharingStarted.Eagerly,
             null
         )
+    /** The list of events for the scenario. */
+    private val scenarioEvents: StateFlow<List<Event>> = _scenarioId
+        .filterNotNull()
+        .flatMapLatest { id -> scenarioRepository.getCompleteEventListFlow(id) }
+        .stateIn(
+            detectorEngineScope,
+            SharingStarted.Eagerly,
+            emptyList()
+        )
+
+    /** Tells if the detection can be started or not. */
+    val canStartDetection: Flow<Boolean> = scenarioEvents.map { events ->
+        events.isNotEmpty()
+    }
 
     /**
      * Start the screen detection.
@@ -218,7 +210,7 @@ class DetectorEngine(context: Context) {
                 startScreenRecord(context, screenMetrics.screenSize)
 
                 _state.emit(DetectorState.RECORDING)
-                _scenario.emit(scenario)
+                _scenarioId.emit(scenario.id)
             }
         }
     }
@@ -285,14 +277,14 @@ class DetectorEngine(context: Context) {
 
             val shouldDebug = debugInstantData || debugReport
             _debugEngine.value =
-                if (shouldDebug) DebugEngine(debugInstantData, debugReport, _scenario.value!!, scenarioEvents.value)
+                if (shouldDebug) DebugEngine(debugInstantData, debugReport, scenarioWithEndConditions.value!!.first, scenarioEvents.value)
                 else null
             _isDebugging.emit(shouldDebug)
 
             scenarioProcessor = ScenarioProcessor(
                 imageDetector = imageDetector!!,
-                detectionQuality = scenarioEndConditions.value!!.first.detectionQuality,
-                randomize = _scenario.value!!.randomize,
+                detectionQuality = scenarioWithEndConditions.value!!.first.detectionQuality,
+                randomize = scenarioWithEndConditions.value!!.first.randomize,
                 events = scenarioEvents.value,
                 bitmapSupplier = { path, width, height ->
                     // We can run blocking here, we are on the screen detector thread
@@ -301,8 +293,8 @@ class DetectorEngine(context: Context) {
                     }
                 },
                 androidExecutor = androidExecutor!!,
-                endConditionOperator = scenarioEndConditions.value!!.first.endConditionOperator,
-                endConditions =  scenarioEndConditions.value!!.second,
+                endConditionOperator = scenarioWithEndConditions.value!!.first.endConditionOperator,
+                endConditions =  scenarioWithEndConditions.value!!.second,
                 onEndConditionReached = { stopDetection() },
                 debugEngine = _debugEngine.value,
             )

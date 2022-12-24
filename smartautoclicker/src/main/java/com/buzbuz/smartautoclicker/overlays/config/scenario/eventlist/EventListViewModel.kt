@@ -24,50 +24,36 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultEvent
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEvent
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
-import com.buzbuz.smartautoclicker.overlays.config.scenario.INVALID_CONFIGURED_ITEM_ID
+import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 
 class EventListViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The repository of the application. */
     private val repository: Repository = Repository.getRepository(application)
 
-    /** The event currently configured. */
-    private lateinit var configuredScenario: MutableStateFlow<ConfiguredScenario?>
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
+    /** Currently configured scenario. */
+    private val configuredScenario = editionRepository.editedScenario
+        .filterNotNull()
 
     /** List of events for the scenario specified in [configuredScenario]. */
-    val eventsItems: Flow<List<ConfiguredEvent>?> by lazy { configuredScenario.map { it?.events } }
+    val eventsItems: Flow<List<ConfiguredEvent>?> = configuredScenario.map { it.events }
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> = repository.getAllEvents().map { it.isNotEmpty() }
 
     /**
-     * Set a scenario for this [EventListViewModel].
-     * This will modify the content of [eventsItems].
-     *
-     * @param scenario the scenario flow.
-     */
-    fun setScenario(scenario: MutableStateFlow<ConfiguredScenario?>) {
-        configuredScenario = scenario
-    }
-
-    /** Get all events currently configured in this scenario. */
-    fun getConfiguredEventList(): List<Event> = configuredScenario.value?.events?.map { it.event } ?: emptyList()
-
-    /**
      * Creates a new event item.
-     *
      * @param context the Android context.
-     * @param event the event represented by this item. Null for a new event.
-     *
      * @return the new event item.
      */
-    fun getNewEventItem(context: Context, event: Event? = null): ConfiguredEvent {
-        configuredScenario.value?.let { confScenario ->
+    fun createNewEvent(context: Context, event: Event? = null): ConfiguredEvent {
+        editionRepository.editedScenario.value?.let { confScenario ->
             return ConfiguredEvent(
                 event = event ?: newDefaultEvent(
                     context = context,
@@ -78,58 +64,14 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
         } ?: throw IllegalStateException("No scenario defined !")
     }
 
-    /**
-     * Add or update an event.
-     * If the event id is unset, it will be added. If not, updated.
-     *
-     * @param item the item to add/update.
-     */
-    fun addOrUpdateEvent(item: ConfiguredEvent) {
-        val items = (configuredScenario.value?.events ?: emptyList()).toMutableList()
+    fun startEventEdition(event: ConfiguredEvent) = editionRepository.startEventEdition(event)
 
-        if (item.itemId == INVALID_CONFIGURED_ITEM_ID) {
-            items.add(item.copy(itemId = items.size))
-        } else {
-            val itemIndex = items.indexOfFirst { other -> item.itemId == other.itemId }
-            if (itemIndex == -1) return
+    /** Add or update an event. If the event id is unset, it will be added. If not, updated. */
+    fun saveEventEdition() = editionRepository.commitEditedEventToEditedScenario()
 
-            items[itemIndex] = item
-        }
+    /** Delete an event. */
+    fun deleteEditedEvent() = editionRepository.deleteEditedEventFromEditedScenario()
 
-        updateConfiguredEventItems(items)
-    }
-
-    /**
-     * Delete an event.
-     *
-     * @param item the item to delete.
-     */
-    fun deleteEvent(item: ConfiguredEvent) {
-        val items = (configuredScenario.value?.events ?: emptyList()).toMutableList()
-
-        val itemIndex = items.indexOfFirst { other -> item.itemId == other.itemId }
-        if (itemIndex == -1) return
-        items.removeAt(itemIndex)
-
-        updateConfiguredEventItems(items)
-    }
-
-    /**
-     * Update the priority of the events in the scenario.
-     *
-     * @param events the events, ordered by their new priorities. They must be in the current scenario and have a
-     *               defined id.
-     */
-    fun updateEventsPriority(events: List<ConfiguredEvent>) {
-        updateConfiguredEventItems(events)
-    }
-
-    private fun updateConfiguredEventItems(newItems: List<ConfiguredEvent>) {
-        val currentConfiguredScenario = configuredScenario.value ?: return
-
-        configuredScenario.value = currentConfiguredScenario.copy(
-            scenario = currentConfiguredScenario.scenario.copy(eventCount = newItems.size),
-            events = newItems,
-        )
-    }
+    /** Update the priority of the events in the scenario. */
+    fun updateEventsPriority(events: List<ConfiguredEvent>) = editionRepository.updateEventsPriority(events)
 }

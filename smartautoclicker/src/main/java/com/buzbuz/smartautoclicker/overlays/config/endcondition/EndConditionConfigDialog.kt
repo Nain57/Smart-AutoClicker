@@ -31,11 +31,9 @@ import com.buzbuz.smartautoclicker.baseui.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredScenario
+import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.flow.MutableStateFlow
 
 import kotlinx.coroutines.launch
 
@@ -43,13 +41,11 @@ import kotlinx.coroutines.launch
  * [OverlayDialogController] implementation for displaying the end condition configuration.
  **
  * @param context the Android Context for the dialog shown by this controller.
- * @param configuredScenario the flow on the scenario currently configured.
  * @param onConfirmClicked called when the user clicks on confirm.
  * @param onDeleteClicked called when the user clicks on delete.
  */
 class EndConditionConfigDialog(
     context: Context,
-    private val configuredScenario: MutableStateFlow<ConfiguredScenario?>,
     private val endCondition: ConfiguredEndCondition,
     private val onConfirmClicked: (ConfiguredEndCondition) -> Unit,
     private val onDeleteClicked: () -> Unit
@@ -62,7 +58,7 @@ class EndConditionConfigDialog(
     private lateinit var viewBinding: DialogConfigEndConditionBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredEndCondition(endCondition, configuredScenario)
+        viewModel.setConfiguredEndCondition(endCondition)
 
         viewBinding = DialogConfigEndConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {

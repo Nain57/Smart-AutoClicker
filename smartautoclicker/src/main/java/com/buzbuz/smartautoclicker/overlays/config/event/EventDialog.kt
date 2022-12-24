@@ -26,7 +26,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogController
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
@@ -43,9 +42,8 @@ import kotlinx.coroutines.launch
 
 class EventDialog(
     context: Context,
-    private val event: Event,
-    private val onConfigComplete: (Event) -> Unit,
-    private val onDelete: (Event) -> Unit,
+    private val onConfigComplete: () -> Unit,
+    private val onDelete: () -> Unit,
 ): NavBarDialogController(context) {
 
     /** View model for this dialog. */
@@ -56,12 +54,9 @@ class EventDialog(
     override val navigationMenuId: Int = R.menu.menu_event_config
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredEvent(event)
-
         return super.onCreateView().also {
             topBarBinding.apply {
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
-                if (event.id != 0L) setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
                 dialogTitle.setText(R.string.dialog_overlay_title_event_config)
             }
         }
@@ -81,6 +76,7 @@ class EventDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.deleteButtonVisibility.collect(::updateDeleteButtonVisibility) }
                 launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
                 launch { viewModel.eventCanBeSaved.collect(::updateSaveButton) }
                 launch { viewModel.subOverlayRequest.collect(::onNewSubOverlayRequest) }
@@ -89,15 +85,17 @@ class EventDialog(
     }
 
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
-        val event = viewModel.configuredEvent.value ?: return
-
         when (buttonType) {
-            DialogNavigationButton.SAVE -> onConfigComplete(event)
-            DialogNavigationButton.DELETE -> onDelete(event)
+            DialogNavigationButton.SAVE -> onConfigComplete()
+            DialogNavigationButton.DELETE -> onDelete()
             else -> {}
         }
 
         destroy()
+    }
+
+    private fun updateDeleteButtonVisibility(isVisible: Boolean) {
+        topBarBinding.setButtonVisibility(DialogNavigationButton.DELETE, if (isVisible) View.VISIBLE else View.GONE)
     }
 
     private fun updateContentsValidity(itemsValidity: Map<Int, Boolean>) {

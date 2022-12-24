@@ -21,8 +21,8 @@ import android.content.SharedPreferences
 import android.graphics.Point
 
 import androidx.lifecycle.AndroidViewModel
-import com.buzbuz.smartautoclicker.R
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences

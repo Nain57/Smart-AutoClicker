@@ -26,7 +26,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogController
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
@@ -43,7 +42,8 @@ import kotlinx.coroutines.launch
 
 class ScenarioDialog(
     context: Context,
-    private val scenario: Scenario,
+    private val onConfigSaved: () -> Unit,
+    private val onConfigDiscarded: () -> Unit,
 ) : NavBarDialogController(context) {
 
     /** The view model for this dialog. */
@@ -54,8 +54,6 @@ class ScenarioDialog(
     override val navigationMenuId: Int = R.menu.menu_scenario_config
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredScenario(scenario)
-
         return super.onCreateView().also {
             topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
             topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_scenario_config)
@@ -82,7 +80,12 @@ class ScenarioDialog(
     }
 
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
-        if (buttonType == DialogNavigationButton.SAVE) viewModel.saveScenarioChanges()
+        when (buttonType) {
+            DialogNavigationButton.SAVE -> onConfigSaved()
+            DialogNavigationButton.DISMISS -> onConfigDiscarded()
+            else -> { /* Nothing to do */ }
+        }
+
         destroy()
     }
 

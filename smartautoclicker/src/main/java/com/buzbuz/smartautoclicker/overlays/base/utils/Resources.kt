@@ -40,6 +40,7 @@ fun Action.getIconRes() : Int =
         is Action.Swipe -> R.drawable.ic_swipe
         is Action.Pause -> R.drawable.ic_wait_aligned
         is Action.Intent -> R.drawable.ic_intent
+        is Action.ToggleEvent -> R.drawable.ic_toggle_event
         else -> throw IllegalArgumentException("Not yet supported")
 
     }

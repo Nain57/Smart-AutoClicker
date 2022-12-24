@@ -29,16 +29,11 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ContentEventConfigBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
 
 import kotlinx.coroutines.launch
 
 class EventConfigContent : NavBarDialogContent() {
 
-    /** View model for the container dialog. */
-    private val dialogViewModel: EventDialogViewModel by lazy {
-        ViewModelProvider(dialogController).get(EventDialogViewModel::class.java)
-    }
     /** View model for this content. */
     private val viewModel: EventConfigViewModel by lazy {
         ViewModelProvider(this).get(EventConfigViewModel::class.java)
@@ -48,8 +43,6 @@ class EventConfigContent : NavBarDialogContent() {
     private lateinit var viewBinding: ContentEventConfigBinding
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
-
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             eventNameInputLayout.apply {
                 setLabel(R.string.input_field_label_name)

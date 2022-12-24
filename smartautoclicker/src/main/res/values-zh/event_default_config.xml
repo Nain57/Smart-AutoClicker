@@ -22,4 +22,5 @@
     <string name="default_pause_name">等待</string>
     <string name="default_intent_name">意图</string>
     <string name="default_condition_name">默认条件</string>
+    <string name="default_toggle_event_name">Toggle event</string>
 </resources>

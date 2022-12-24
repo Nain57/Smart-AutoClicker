@@ -295,7 +295,7 @@ sealed class Action {
             eventId = 0
         }
 
-        override fun deepCopy(): Action = copy(name = "" + name)
+        override fun deepCopy(): ToggleEvent = copy(name = "" + name)
     }
 }
 

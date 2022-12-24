@@ -32,8 +32,6 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.menu.OverlayMenuController
 import com.buzbuz.smartautoclicker.databinding.OverlayMenuBinding
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugModel
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugOverlayView
 import com.buzbuz.smartautoclicker.overlays.debugging.report.DebugReportDialog
@@ -54,7 +52,7 @@ import kotlinx.coroutines.launch
  *
  * @param context the Android Context for the overlay menu shown by this controller.
  */
-class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuController(context) {
+class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuController(context) {
 
     /** The view model for this menu. */
     private val viewModel: MainMenuModel by lazy { ViewModelProvider(this).get(MainMenuModel::class.java) }
@@ -92,7 +90,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     override fun onCreate() {
         super.onCreate()
 
-        viewModel.setScenario(scenario.id)
+        viewModel.setConfiguredScenario(scenarioId)
 
         // Ensure the debug view state is correct
         viewBinding.layoutDebug.visibility = View.GONE
@@ -100,7 +98,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.eventList.collect(::updatePlayPauseButtonEnabledState) }
+                launch { viewModel.canStartScenario.collect(::updatePlayPauseButtonEnabledState) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
                 launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
                 launch { debuggingViewModel.isDebugReportReady.collect(::showDebugReportDialog) }
@@ -111,9 +109,7 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> viewModel.toggleDetection()
-            R.id.btn_click_list -> {
-                viewModel.scenario.value?.let { showSubOverlay(ScenarioDialog(context, it), true) }
-            }
+            R.id.btn_click_list -> showScenarioConfigDialog()
             R.id.btn_stop -> destroy()
         }
     }
@@ -126,9 +122,9 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
         )
     }
 
-    /** Refresh the play menu item according to the event count. */
-    private fun updatePlayPauseButtonEnabledState(events: List<Event>?) =
-        setMenuItemViewEnabled(viewBinding.btnPlay, !events.isNullOrEmpty())
+    /** Refresh the play menu item according to the scenario state. */
+    private fun updatePlayPauseButtonEnabledState(canStartDetection: Boolean) =
+        setMenuItemViewEnabled(viewBinding.btnPlay, canStartDetection)
 
     /** Refresh the menu layout according to the detection state. */
     private fun updateDetectionState(newState: UiState) {
@@ -163,6 +159,18 @@ class MainMenu(context: Context, private val scenario: Scenario) : OverlayMenuCo
                 }
             }
         }
+    }
+
+    private fun showScenarioConfigDialog() {
+        viewModel.startScenarioEdition()
+        showSubOverlay(
+            overlayController = ScenarioDialog(
+                context = context,
+                onConfigSaved = viewModel::saveScenarioChanges,
+                onConfigDiscarded = viewModel::cancelScenarioChanges,
+            ),
+            hideCurrent = true,
+        )
     }
 
     /**

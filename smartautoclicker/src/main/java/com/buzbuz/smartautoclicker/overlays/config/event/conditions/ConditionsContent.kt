@@ -58,8 +58,6 @@ class ConditionsContent : NavBarDialogContent() {
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setConfiguredEvent(dialogViewModel.configuredEvent)
-
         conditionsAdapter = ConditionAdapter(
             conditionClickedListener = ::onConditionClicked,
             bitmapProvider = viewModel::getConditionBitmap,

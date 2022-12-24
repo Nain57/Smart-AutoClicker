@@ -24,7 +24,6 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
-import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.extensions.mapList
 import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
@@ -34,46 +33,43 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultClick
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultIntent
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultPause
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultSwipe
+import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultToggleEvent
+import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
 
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class ActionsViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The repository of the application. */
     private val repository: Repository = Repository.getRepository(application)
-    /** The event currently configured. */
-    private lateinit var configuredEvent: MutableStateFlow<Event?>
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
+
+    /** Currently configured event. */
+    private val configuredEvent = editionRepository.configuredEvent
+        .filterNotNull()
 
     /** Tells if there is at least one action to copy. */
     val canCopyAction: Flow<Boolean> = repository.getAllActions()
         .map { it.isNotEmpty() }
 
     /** List of [actions]. */
-    val actions: StateFlow<List<Action>> by lazy {
-        configuredEvent
-            .map { it?.actions ?: emptyList() }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(),
-                emptyList()
-            )
-    }
-    /** List of action details. */
-    val actionDetails: StateFlow<List<ActionDetails>> by lazy {
-        actions
-            .mapList { action -> action.toActionDetails(application) }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(),
-                emptyList()
-            )
-    }
+    val actions: StateFlow<List<Action>> = configuredEvent
+        .map { it.event.actions ?: emptyList() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            emptyList()
+        )
 
-    /** Set the event currently configured by the UI. */
-    fun setConfiguredEvent(event: MutableStateFlow<Event?>) {
-        configuredEvent = event
-    }
+    /** List of action details. */
+    val actionDetails: StateFlow<List<ActionDetails>> = actions
+        .mapList { action -> action.toActionDetails(application) }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            emptyList()
+        )
 
     /**
      * Create a new action with the default values from configuration.
@@ -82,80 +78,36 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
      * @param actionType the type of action to create.
      */
     fun createAction(context: Context, actionType: ActionTypeChoice): Action {
-        configuredEvent.value?.let { event ->
+        editionRepository.configuredEvent.value?.let { conf ->
 
             return when (actionType) {
-                is ActionTypeChoice.Click -> newDefaultClick(context, event.id)
-                is ActionTypeChoice.Swipe -> newDefaultSwipe(context, event.id)
-                is ActionTypeChoice.Pause -> newDefaultPause(context, event.id)
-                is ActionTypeChoice.Intent -> newDefaultIntent(context, event.id)
+                is ActionTypeChoice.Click -> newDefaultClick(context, conf.event.id)
+                is ActionTypeChoice.Swipe -> newDefaultSwipe(context, conf.event.id)
+                is ActionTypeChoice.Pause -> newDefaultPause(context, conf.event.id)
+                is ActionTypeChoice.Intent -> newDefaultIntent(context, conf.event.id)
+                is ActionTypeChoice.ToggleEvent -> newDefaultToggleEvent(context, conf.event.id)
             }
 
         } ?: throw IllegalStateException("Can't create an action, event is null!")
     }
 
     fun addUpdateAction(action: Action, index: Int) {
-        if (index != -1)  updateAction(action, index)
-        else addAction(action)
-    }
-
-    /**
-     * Add a new action to the event.
-     * @param action the new action.
-     */
-    private fun addAction(action: Action) {
-        configuredEvent.value?.let { event ->
-            val newActions = event.actions?.let { ArrayList(it) } ?: ArrayList()
-            newActions.add(action)
-
-            viewModelScope.launch {
-                configuredEvent.value = event.copy(actions = newActions)
-            }
-        }
-    }
-
-    /**
-     * Update an action in the event.
-     * @param action the updated action.
-     */
-    private fun updateAction(action: Action, index: Int) {
-        configuredEvent.value?.let { event ->
-            val newActions = event.actions?.let { ArrayList(it) } ?: ArrayList()
-            newActions[index] = action
-
-            viewModelScope.launch {
-                configuredEvent.value = event.copy(actions = newActions)
-            }
-        }
+        if (index != -1) editionRepository.updateActionFromEditedEvent(action, index)
+        else editionRepository.addActionToEditedEvent(action)
     }
 
     /**
      * Remove an action from the event.
      * @param action the action to be removed.
      */
-    fun removeAction(action: Action) {
-        configuredEvent.value?.let { event ->
-
-            val newActions = event.actions?.let { ArrayList(it) } ?: ArrayList()
-            if (newActions.remove(action)) {
-                viewModelScope.launch {
-                    configuredEvent.value = event.copy(actions = newActions)
-                }
-            }
-        }
-    }
+    fun removeAction(action: Action) = editionRepository.removeActionFromEditedEvent(action)
 
     /**
      * Update the priority of the actions.
      * @param actions the new actions order.
      */
-    fun updateActionOrder(actions: List<ActionDetails>) {
-        configuredEvent.value?.let { event ->
-            viewModelScope.launch {
-                configuredEvent.value = event.copy(actions = actions.map { it.action }.toMutableList())
-            }
-        }
-    }
+    fun updateActionOrder(actions: List<ActionDetails>) = editionRepository
+        .updateActionOrder(actions.map { it.action })
 }
 
 /** Choices for the action type selection dialog. */
@@ -183,5 +135,11 @@ sealed class ActionTypeChoice(title: Int, description: Int, iconId: Int?): Dialo
         R.string.item_title_intent,
         R.string.item_desc_intent,
         R.drawable.ic_intent,
+    )
+    /** Toggle Event Action choice. */
+    object ToggleEvent : ActionTypeChoice(
+        R.string.item_title_toggle_event,
+        R.string.item_desc_toggle_event,
+        R.drawable.ic_toggle_event,
     )
 }

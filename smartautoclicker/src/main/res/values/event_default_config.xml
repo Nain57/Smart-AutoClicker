@@ -32,6 +32,8 @@
     <string name="default_intent_name">Intent</string>
     <bool name="default_intent_isAdvanced">false</bool>
 
+    <string name="default_toggle_event_name">Toggle event</string>
+
     <string name="default_condition_name">Condition</string>
     <integer name="default_condition_threshold">4</integer>
 

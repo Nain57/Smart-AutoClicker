@@ -55,6 +55,7 @@
     <string name="dialog_overlay_title_pause">Wait</string>
     <string name="dialog_overlay_title_scenario_config">Scenario</string>
     <string name="dialog_overlay_title_swipe">Swipe</string>
+    <string name="dialog_overlay_title_toggle_event">Event state</string>
 
     <!--
       - Text for menu items.
@@ -96,6 +97,7 @@
     <string name="item_desc_swipe">Swipe from a position on the screen to another</string>
     <string name="item_desc_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
     <string name="item_desc_swipe_positions">Swipe from %1$d, %2$d to %3$d, %4$d</string>
+    <string name="item_desc_toggle_event">Change the enabled state of an event</string>
     <string name="item_title_backup_create_select_file">Select output file</string>
     <string name="item_title_backup_import_select_file">Select backup file</string>
     <string name="item_title_click">Click</string>
@@ -112,6 +114,7 @@
     <string name="item_title_report_total_event_trigger_count">Events triggered</string>
     <string name="item_title_report_detection_count">Conditions detected</string>
     <string name="item_title_swipe">Swipe</string>
+    <string name="item_title_toggle_event">Change event state</string>
 
     <!--
       - Empty list messages.

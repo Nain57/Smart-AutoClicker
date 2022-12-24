@@ -32,8 +32,8 @@ import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
+import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
-import com.buzbuz.smartautoclicker.overlays.config.scenario.ConfiguredEndCondition
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 
 import kotlinx.coroutines.launch
@@ -55,8 +55,6 @@ class ScenarioConfigContent : NavBarDialogContent() {
     private lateinit var endConditionAdapter: EndConditionAdapter
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewModel.setScenario(dialogViewModel.configuredScenario)
-
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             scenarioNameField.apply {
                 setLabel(R.string.input_field_label_scenario_name)
@@ -155,7 +153,6 @@ class ScenarioConfigContent : NavBarDialogContent() {
                     EndConditionConfigDialog(
                         context = context,
                         endCondition = endCondition,
-                        configuredScenario = dialogViewModel.configuredScenario,
                         onConfirmClicked = { newEndCondition -> viewModel.addEndCondition(newEndCondition) },
                         onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
                     )
@@ -170,7 +167,6 @@ class ScenarioConfigContent : NavBarDialogContent() {
                 EndConditionConfigDialog(
                     context = context,
                     endCondition = endCondition,
-                    configuredScenario = dialogViewModel.configuredScenario,
                     onConfirmClicked = { newEndCondition -> viewModel.updateEndCondition(newEndCondition, index) },
                     onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
                 )
