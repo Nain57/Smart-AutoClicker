@@ -175,4 +175,4 @@ class EndConditionConfigDialog(
 }
 
 private const val MIN_EXECUTION_COUNT = 0
-private const val MAX_EXECUTION_COUNT = 99
+private const val MAX_EXECUTION_COUNT = 9999
