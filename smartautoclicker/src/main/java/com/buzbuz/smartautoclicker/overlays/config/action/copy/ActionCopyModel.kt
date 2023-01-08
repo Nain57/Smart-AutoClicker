@@ -19,14 +19,17 @@ package com.buzbuz.smartautoclicker.overlays.config.action.copy
 import android.app.Application
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.base.bindings.toActionDetails
-import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyViewModel
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 
 /**
@@ -34,17 +37,35 @@ import kotlinx.coroutines.flow.combine
  *
  * @param application the Android application.
  */
-class ActionCopyModel(application: Application) : CopyViewModel<Action>(application) {
+class ActionCopyModel(application: Application) : AndroidViewModel(application) {
+
+    /** Repository providing access to the click database. */
+    private val repository = Repository.getRepository(application)
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
+
+    /** The currently searched action name. Null if no is. */
+    private val searchQuery = MutableStateFlow<String?>(null)
 
     /**
      * List of displayed action items.
      * This list can contains all events with headers, or the search result depending on the current search query.
      */
     val actionList: Flow<List<ActionCopyItem>?> =
-        combine(repository.getAllActions(), itemsFromCurrentContainer, searchQuery) { dbActions, eventActions, query ->
-            eventActions ?: return@combine null
-            if (query.isNullOrEmpty()) getAllItems(dbActions, eventActions) else dbActions.toCopyItemsFromSearch(query)
+        combine(repository.getAllActions(), editionRepository.editedEvent, searchQuery) { dbActions, editedEvent, query ->
+            editedEvent ?: return@combine null
+
+            if (query.isNullOrEmpty()) getAllItems(dbActions, editedEvent.event.actions ?: emptyList())
+            else dbActions.toCopyItemsFromSearch(query)
         }
+
+    /**
+     * Update the action search query.
+     * @param query the new query.
+     */
+    fun updateSearchQuery(query: String?) {
+        searchQuery.value = query
+    }
 
     /**
      * Get a new action based on the provided one.
@@ -57,7 +78,6 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
             is Action.Pause -> action.copy(id = 0, name = "" + action.name)
             is Action.Intent -> action.copy(id = 0, name = "" + action.name)
             else -> throw IllegalArgumentException("Not yet supported")
-
         }
 
     /**
@@ -135,6 +155,6 @@ class ActionCopyModel(application: Application) : CopyViewModel<Action>(applicat
          * Action item.
          * @param actionDetails the details for the action.
          */
-        data class ActionItem (val actionDetails: ActionDetails) : ActionCopyItem()
+        data class ActionItem(val actionDetails: ActionDetails) : ActionCopyItem()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,9 @@
 package com.buzbuz.smartautoclicker.domain
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Build
-import com.buzbuz.smartautoclicker.backup.BackupEngine
 
+import com.buzbuz.smartautoclicker.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.dao.ConditionDao
@@ -29,9 +28,7 @@ import com.buzbuz.smartautoclicker.database.room.dao.EventDao
 import com.buzbuz.smartautoclicker.database.room.dao.ScenarioDao
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEndConditions
-import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.domain.utils.TestsData
-import com.buzbuz.smartautoclicker.domain.utils.anyNotNull
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -98,12 +95,6 @@ class RepositoryTests {
     }
 
     @Test
-    fun updateScenario() = runTest {
-        repository.updateScenario(TestsData.getNewScenario())
-        verify(mockScenarioDao).update(TestsData.getNewScenarioEntity())
-    }
-
-    @Test
     fun deleteScenario() = runTest {
         mockWhen(mockEventDao.getEventsIds(TestsData.SCENARIO_ID)).thenReturn(emptyList())
         repository.deleteScenario(TestsData.getNewScenario())
@@ -124,24 +115,10 @@ class RepositoryTests {
     }
 
     @Test
-    fun getScenario() = runTest {
-        mockWhen(mockScenarioDao.getScenarioWithEvents(TestsData.SCENARIO_ID)).thenReturn(
-            flow {
-                emit(ScenarioWithEvents(TestsData.getNewScenarioEntity(), emptyList()))
-            }
-        )
-
-        assertEquals(
-            TestsData.getNewScenario(),
-            repository.getScenario(TestsData.SCENARIO_ID).first(),
-        )
-    }
-
-    @Test
     fun getScenarioWithEndConditions_empty() = runTest {
         val scenarioEntity = TestsData.getNewScenarioEntity()
         val scenario = TestsData.getNewScenario()
-        mockWhen(mockScenarioDao.getScenarioWithEndConditionsFlow(TestsData.SCENARIO_ID)).thenReturn(
+        mockWhen(mockScenarioDao.getScenarioWithEndConditions(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(ScenarioWithEndConditions(scenarioEntity, emptyList()))
             }
@@ -159,7 +136,7 @@ class RepositoryTests {
         val eventEntity = TestsData.getNewEventEntity(scenarioId = scenarioEntity.id, priority = 1)
         val endConditionWithEvent = TestsData.getNewEndConditionWithEvent(event = eventEntity)
 
-        mockWhen(mockScenarioDao.getScenarioWithEndConditionsFlow(TestsData.SCENARIO_ID)).thenReturn(
+        mockWhen(mockScenarioDao.getScenarioWithEndConditions(TestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(ScenarioWithEndConditions(scenarioEntity, listOf(endConditionWithEvent)))
             }
@@ -170,34 +147,6 @@ class RepositoryTests {
         assertEquals(
             TestsData.getNewEndCondition(),
             result.second[0]
-        )
-    }
-
-    @Test
-    fun updateEndCondition() = runTest {
-        val endCondition = TestsData.getNewEndCondition(executions = 3)
-        val endConditionEntity = TestsData.getNewEndConditionEntity(executions = 3)
-        repository.updateEndConditions(endCondition.scenarioId, listOf(endCondition))
-        verify(mockEndConditionDao).updateEndConditions(endCondition.scenarioId, listOf(endConditionEntity))
-    }
-
-    @Test
-    fun getEventList() = runTest {
-        mockWhen(mockEventDao.getEvents(TestsData.SCENARIO_ID)).thenReturn(
-            flow {
-                emit(listOf(
-                    TestsData.getNewEventEntity(id = 1L, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-                    TestsData.getNewEventEntity(id = 2L, scenarioId = TestsData.SCENARIO_ID, priority = 1),
-                ))
-            }
-        )
-
-        assertEquals(
-            listOf(
-                TestsData.getNewEvent(id = 1L, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-                TestsData.getNewEvent(id = 2L, scenarioId = TestsData.SCENARIO_ID, priority = 1),
-            ),
-            repository.getEventList(TestsData.SCENARIO_ID).first(),
         )
     }
 
@@ -230,171 +179,10 @@ class RepositoryTests {
     }
 
     @Test
-    fun getCompleteEvent() = runTest {
-        mockWhen(mockEventDao.getEvent(TestsData.EVENT_ID)).thenReturn(
-            CompleteEventEntity(
-                event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-                actions = listOf(TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0)),
-                conditions = listOf(TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID))
-            )
-        )
-
-        assertEquals(
-            TestsData.getNewEvent(
-                id = TestsData.EVENT_ID,
-                scenarioId = TestsData.SCENARIO_ID,
-                priority = 0,
-                actions = mutableListOf(TestsData.getNewPause(eventId = TestsData.EVENT_ID)),
-                conditions = mutableListOf(TestsData.getNewCondition(eventId = TestsData.EVENT_ID))
-            ),
-            repository.getCompleteEvent(TestsData.EVENT_ID),
-        )
-    }
-
-    @Test
     fun getBitmap() = runTest {
         repository.getBitmap("toto", 20, 100)
         verify(mockBitmapManager).loadBitmap("toto", 20, 100)
         Unit
-    }
-
-    @Test
-    fun addEvent_saveBitmaps() = runTest {
-        val bitmapWithoutPath = mock(Bitmap::class.java)
-        val bitmapWithPath = mock(Bitmap::class.java)
-        val event = TestsData.getNewEvent(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-            actions = mutableListOf(TestsData.getNewPause(eventId = TestsData.EVENT_ID)),
-            conditions = mutableListOf(
-                TestsData.getNewCondition(eventId = TestsData.EVENT_ID, path = "titi", bitmap = null),
-                TestsData.getNewCondition(eventId = TestsData.EVENT_ID, path = null, bitmap = bitmapWithoutPath),
-                TestsData.getNewCondition(eventId = TestsData.EVENT_ID, path = "tutu", bitmap = bitmapWithPath),
-            )
-        )
-        mockWhen(mockBitmapManager.saveBitmap(bitmapWithoutPath)).thenReturn("toto")
-
-        repository.addEvent(event)
-
-        verify(mockBitmapManager).saveBitmap(bitmapWithoutPath)
-        verify(mockBitmapManager, never()).saveBitmap(bitmapWithPath)
-        Unit
-    }
-
-    @Test
-    fun addEvent_incomplete() = runTest {
-        val event = TestsData.getNewEvent(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-        )
-
-        repository.addEvent(event)
-
-        verify(mockEventDao, never()).addCompleteEvent(anyNotNull())
-    }
-
-    @Test
-    fun addEvent() = runTest {
-        val event = TestsData.getNewEvent(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-            actions = mutableListOf(TestsData.getNewPause(eventId = TestsData.EVENT_ID)),
-            conditions = mutableListOf(TestsData.getNewCondition(eventId = TestsData.EVENT_ID)),
-        )
-        val expectedEntity = CompleteEventEntity(
-            event = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = listOf(TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0)),
-            conditions = listOf(TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID))
-        )
-
-        repository.addEvent(event)
-
-        verify(mockEventDao).addCompleteEvent(expectedEntity)
-    }
-
-    @Test
-    fun updateEventsPriority() = runTest {
-        val events = listOf(
-            TestsData.getNewEvent(id = 1, scenarioId = TestsData.SCENARIO_ID, priority = 1),
-            TestsData.getNewEvent(id = 2, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-
-        )
-        events.forEach { repository.addEvent(it) }
-
-        val expectedEventsEntity = listOf(
-            TestsData.getNewEventEntity(id = 1, scenarioId = TestsData.SCENARIO_ID, priority = 1),
-            TestsData.getNewEventEntity(id = 2, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-        )
-
-        repository.updateEventsPriority(events)
-
-        verify(mockEventDao).updateEventList(expectedEventsEntity)
-    }
-
-    @Test
-    fun removeEvent() = runTest {
-        val event = TestsData.getNewEvent(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 1)
-        val expectedEvent = TestsData.getNewEventEntity(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 1)
-        mockWhen(mockConditionDao.getConditionsPath(TestsData.EVENT_ID)).thenReturn(emptyList())
-
-        repository.removeEvent(event)
-
-        verify(mockEventDao).deleteEvent(expectedEvent)
-    }
-
-    @Test
-    fun removeEvent_removedConditions() = runTest {
-        val event = TestsData.getNewEvent(id = TestsData.EVENT_ID, scenarioId = TestsData.SCENARIO_ID, priority = 1)
-        val conditionsPath = listOf("tata", "toto", "tutu")
-        mockWhen(mockConditionDao.getConditionsPath(TestsData.EVENT_ID)).thenReturn(conditionsPath)
-        mockWhen(mockConditionDao.getValidPathCount("tata")).thenReturn(1)
-        mockWhen(mockConditionDao.getValidPathCount("toto")).thenReturn(1)
-        mockWhen(mockConditionDao.getValidPathCount("tutu")).thenReturn(0)
-
-        repository.removeEvent(event)
-
-        verify(mockBitmapManager).deleteBitmaps(listOf("tutu"))
-    }
-
-    @Test
-    fun updateEvent_saveBitmaps() = runTest {
-        val bitmapWithoutPath = mock(Bitmap::class.java)
-        val bitmapWithPath = mock(Bitmap::class.java)
-        val event = TestsData.getNewEvent(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-            actions = mutableListOf(TestsData.getNewPause(eventId = TestsData.EVENT_ID)),
-            conditions = mutableListOf(
-                TestsData.getNewCondition(eventId = TestsData.EVENT_ID, path = "titi", bitmap = null),
-                TestsData.getNewCondition(eventId = TestsData.EVENT_ID, path = null, bitmap = bitmapWithoutPath),
-                TestsData.getNewCondition(eventId = TestsData.EVENT_ID, path = "tutu", bitmap = bitmapWithPath),
-            )
-        )
-        mockWhen(mockBitmapManager.saveBitmap(bitmapWithoutPath)).thenReturn("toto")
-        mockWhen(mockEventDao.updateCompleteEvent(anyNotNull())).thenReturn(emptyList())
-
-        repository.updateEvent(event)
-
-        verify(mockBitmapManager).saveBitmap(bitmapWithoutPath)
-        verify(mockBitmapManager, never()).saveBitmap(bitmapWithPath)
-        Unit
-    }
-
-    @Test
-    fun updateEvent_incomplete() = runTest {
-        val event = TestsData.getNewEvent(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-        )
-
-        repository.updateEvent(event)
-
-        verify(mockEventDao, never()).addCompleteEvent(anyNotNull())
     }
 }
 

@@ -45,31 +45,13 @@ interface ScenarioDao {
     fun getScenariosWithEvents(): Flow<List<ScenarioWithEvents>>
 
     /**
-     * Get all click scenario and their events.
-     *
-     * @return the live data on the list of scenarios.
-     */
-    @Transaction
-    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
-    fun getScenarioWithEvents(scenarioId: Long): Flow<ScenarioWithEvents?>
-
-    /**
      * Get a scenario and its end conditions.
      *
      * @return the live data on the scenario.
      */
     @Transaction
     @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
-    fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<ScenarioWithEndConditions?>
-
-    /**
-     * Get a scenario and its end conditions.
-     *
-     * @return the scenario.
-     */
-    @Transaction
-    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
-    suspend fun getScenarioWithEndConditions(scenarioId: Long): ScenarioWithEndConditions?
+    fun getScenarioWithEndConditions(scenarioId: Long): Flow<ScenarioWithEndConditions?>
 
     /**
      * Get a complete scenario
@@ -99,8 +81,8 @@ interface ScenarioDao {
     /**
      * Delete the provided click scenario from the database.
      *
-     * Any associated [ClickEntity] will be removed from the database, as well as their related [ClickConditionCrossRef]
-     * due to the [androidx.room.ForeignKey.CASCADE] deletion of this parent scenario.
+     * Any associated entity will be removed from the database due to the [androidx.room.ForeignKey.CASCADE]
+     * deletion of this parent scenario.
      *
      * @param scenario the scenario to be deleted.
      */

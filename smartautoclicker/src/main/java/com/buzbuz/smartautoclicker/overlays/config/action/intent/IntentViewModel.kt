@@ -29,6 +29,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.IntentExtra
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.extensions.resolveActivityCompat
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences
@@ -38,6 +39,8 @@ import kotlinx.coroutines.flow.*
 
 class IntentViewModel(application: Application) : AndroidViewModel(application) {
 
+    /** The edition action being configured by the user. */
+    private var configuredEditedAction: EditedAction? = null
     /** The action being configured by the user. Defined using [setConfiguredIntent]. */
     private val configuredIntent = MutableStateFlow<Action.Intent?>(null)
     /** Event configuration shared preferences. */
@@ -137,15 +140,28 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
      * Set the configured intent.
      * This will update all values represented by this view model.
      *
-     * @param intent the intent to configure.
+     * @param editedAction the intent to configure.
      */
-    fun setConfiguredIntent(intent: Action.Intent) {
+    fun setConfiguredIntent(editedAction: EditedAction) {
+        val intent = editedAction.action as? Action.Intent
+            ?: throw IllegalArgumentException("EditedAction must be a intent.")
+
+        configuredEditedAction = editedAction
         configuredIntent.value = intent.deepCopy()
     }
 
     /** @return the intent containing all user changes. */
-    fun getConfiguredIntent(): Action.Intent =
-        configuredIntent.value ?: throw IllegalStateException("Can't get the configured intent, none were defined.")
+    fun getConfiguredIntent(): EditedAction {
+        val configuredAction = configuredEditedAction
+        val intent = configuredIntent.value
+
+        if (configuredAction == null || intent == null)
+            throw IllegalStateException("Can't get the configured click, none were defined.")
+
+        return configuredAction.copy(action = intent)
+    }
+
+    fun isAdvanced(): Boolean = configuredIntent.value?.isAdvanced ?: false
 
     /**
      * Set the name of the intent.

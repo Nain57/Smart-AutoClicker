@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.DurationInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionClickBinding
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.config.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.action.CoordinatesSelector
@@ -43,9 +43,9 @@ import kotlinx.coroutines.launch
 
 class ClickDialog(
     context: Context,
-    private val click: Action.Click,
-    private val onDeleteClicked: (Action.Click) -> Unit,
-    private val onConfirmClicked: (Action.Click) -> Unit,
+    private val editedClick: EditedAction,
+    private val onDeleteClicked: (EditedAction) -> Unit,
+    private val onConfirmClicked: (EditedAction) -> Unit,
 ) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
@@ -57,7 +57,7 @@ class ClickDialog(
     private lateinit var viewBinding: DialogConfigActionClickBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredClick(click)
+        viewModel.setConfiguredClick(editedClick)
 
         viewBinding = DialogConfigActionClickBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
@@ -123,7 +123,7 @@ class ClickDialog(
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked(click)
+        onDeleteClicked(editedClick)
         destroy()
     }
 

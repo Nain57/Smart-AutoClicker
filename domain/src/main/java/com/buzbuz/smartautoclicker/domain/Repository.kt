@@ -24,6 +24,7 @@ import android.net.Uri
 import com.buzbuz.smartautoclicker.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
+import com.buzbuz.smartautoclicker.domain.edition.EditedScenario
 
 import kotlinx.coroutines.flow.Flow
 
@@ -74,9 +75,9 @@ interface Repository {
     /**
      * Update a scenario.
      *
-     * @param scenario the scenario to update.
+     * @param editedScenario the scenario to update.
      */
-    suspend fun updateScenario(scenario: Scenario)
+    suspend fun updateScenario(editedScenario: EditedScenario)
 
     /**
      * Delete a scenario.
@@ -87,61 +88,12 @@ interface Repository {
     suspend fun deleteScenario(scenario: Scenario)
 
     /**
-     * Get a flow on the specified scenario.
-     *
-     * @param scenarioId the identifier of the scenario.
-     * @return the flow on the scenario.
-     */
-    fun getScenario(scenarioId: Long): Flow<Scenario>
-
-    /**
      * Get a flow on the scenario and its and conditions.
      *
      * @param scenarioId the identifier of the scenario.
      * @return the flow on the scenario and its end conditions.
      */
     fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>>
-
-    /**
-     * Get a flow on the scenario and its and conditions.
-     *
-     * @param scenarioId the identifier of the scenario.
-     * @return the flow on the scenario and its end conditions.
-     */
-    suspend fun getScenarioWithEndConditions(scenarioId: Long): Pair<Scenario, List<EndCondition>>?
-
-    /**
-     * Update an existing end condition.
-     * @param endConditions the new list end condition to be updated.
-     */
-    suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndCondition>)
-
-    /**
-     * Get the total number of events in the database.
-     * @return a flow on the total number of events.
-     */
-    fun getEventCount(): Flow<Int>
-
-    /**
-     * Get the total number of actions in the database.
-     * @return a flow on the total number of actions.
-     */
-    fun getActionsCount(): Flow<Int>
-
-    /**
-     * Get the total number of conditions in the database.
-     * @return a flow on the total number of conditions.
-     */
-    fun getConditionsCount(): Flow<Int>
-
-    /**
-     * Get the list of events for a given scenario.
-     * Note that those events will not have their actions/conditions, use [getCompleteEventListFlow] for that.
-     *
-     * @param scenarioId the identifier of the scenario to ge the events from.
-     * @return the list of events, ordered by execution priority.
-     */
-    fun getEventList(scenarioId: Long): Flow<List<Event>>
 
     /**
      * Get the list of complete events for a given scenario.
@@ -158,14 +110,6 @@ interface Repository {
      * @return the list of complete events, ordered by execution priority.
      */
     fun getCompleteEventListFlow(scenarioId: Long): Flow<List<Event>>
-
-    /**
-     * Get the complete version of a given event.
-     *
-     * @param eventId the event identifier to get the complete version of.
-     * @return the complete event.
-     */
-    suspend fun getCompleteEvent(eventId: Long): Event
 
     /**
      * Get all events from all scenarios.
@@ -187,36 +131,6 @@ interface Repository {
      * @return the list containing all conditions.
      */
     fun getAllConditions(): Flow<List<Condition>>
-    /**
-     * Add a new event.
-     * It must be complete in order to be added or it will be skipped.
-     *
-     * @param event the event to be added.
-     * @return true if it has been added, false if not.
-     */
-    suspend fun addEvent(event: Event): Long
-
-    /**
-     * Update an event.
-     * It must be complete in order to be updated or it will be skipped.
-     *
-     * @param event the event to update.
-     */
-    suspend fun updateEvent(event: Event)
-
-    /**
-     * Update the priorities of the event list.
-     *
-     * @param events the events, ordered by execution priority.
-     */
-    suspend fun updateEventsPriority(events: List<Event>)
-
-    /**
-     * Remove an event.
-     *
-     * @param event the event to remove.
-     */
-    suspend fun removeEvent(event: Event)
 
     /**
      * Get the bitmap for the given path.

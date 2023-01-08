@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.engine.DetectorState
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

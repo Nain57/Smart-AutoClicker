@@ -24,8 +24,8 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultEvent
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
@@ -43,7 +43,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
         .filterNotNull()
 
     /** List of events for the scenario specified in [configuredScenario]. */
-    val eventsItems: Flow<List<ConfiguredEvent>?> = configuredScenario.map { it.events }
+    val eventsItems: Flow<List<EditedEvent>?> = configuredScenario.map { it.events }
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> = repository.getAllEvents().map { it.isNotEmpty() }
 
@@ -52,9 +52,9 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
      * @param context the Android context.
      * @return the new event item.
      */
-    fun createNewEvent(context: Context, event: Event? = null): ConfiguredEvent {
+    fun createNewEvent(context: Context, event: Event? = null): EditedEvent {
         editionRepository.editedScenario.value?.let { confScenario ->
-            return ConfiguredEvent(
+            return editionRepository.createNewEvent(
                 event = event ?: newDefaultEvent(
                     context = context,
                     scenarioId = confScenario.scenario.id,
@@ -64,7 +64,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
         } ?: throw IllegalStateException("No scenario defined !")
     }
 
-    fun startEventEdition(event: ConfiguredEvent) = editionRepository.startEventEdition(event)
+    fun startEventEdition(event: EditedEvent) = editionRepository.startEventEdition(event)
 
     /** Add or update an event. If the event id is unset, it will be added. If not, updated. */
     fun saveEventEdition() = editionRepository.commitEditedEventToEditedScenario()
@@ -73,5 +73,5 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
     fun deleteEditedEvent() = editionRepository.deleteEditedEventFromEditedScenario()
 
     /** Update the priority of the events in the scenario. */
-    fun updateEventsPriority(events: List<ConfiguredEvent>) = editionRepository.updateEventsPriority(events)
+    fun updateEventsPriority(events: List<EditedEvent>) = editionRepository.updateEventsPriority(events)
 }

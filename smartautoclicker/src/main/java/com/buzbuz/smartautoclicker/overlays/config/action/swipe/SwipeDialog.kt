@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.baseui.DurationInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionSwipeBinding
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.config.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.action.CoordinatesSelector
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
@@ -48,9 +49,9 @@ import kotlinx.coroutines.launch
 
 class SwipeDialog(
     context: Context,
-    private val swipe: Action.Swipe,
-    private val onDeleteClicked: (Action.Swipe) -> Unit,
-    private val onConfirmClicked: (Action.Swipe) -> Unit,
+    private val editedSwipe: EditedAction,
+    private val onDeleteClicked: (EditedAction) -> Unit,
+    private val onConfirmClicked: (EditedAction) -> Unit,
 ) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
@@ -62,7 +63,7 @@ class SwipeDialog(
     private lateinit var viewBinding: DialogConfigActionSwipeBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredSwipe(swipe)
+        viewModel.setConfiguredSwipe(editedSwipe)
 
         viewBinding = DialogConfigActionSwipeBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
@@ -121,7 +122,7 @@ class SwipeDialog(
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked(swipe)
+        onDeleteClicked(editedSwipe)
         destroy()
     }
 

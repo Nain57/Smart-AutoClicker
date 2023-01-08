@@ -22,8 +22,8 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
+import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.database.utils.TestsData
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,6 +32,7 @@ import kotlinx.coroutines.test.runTest
 
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -50,7 +51,11 @@ class ScenarioDaoTests {
 
     @Before
     fun setUp() {
-        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, ClickDatabase::class.java)
+        database = Room
+            .inMemoryDatabaseBuilder(
+                InstrumentationRegistry.getInstrumentation().targetContext,
+                ClickDatabase::class.java,
+            )
             .allowMainThreadQueries()
             .build()
     }
@@ -67,8 +72,8 @@ class ScenarioDaoTests {
         database.scenarioDao().add(scenarioEntity)
 
         assertEquals(
-            ScenarioWithEvents(scenarioEntity, emptyList()),
-            database.scenarioDao().getScenarioWithEvents(scenarioEntity.id).first()
+            CompleteScenario(scenarioEntity, emptyList(), emptyList()),
+            database.scenarioDao().getCompleteScenario(scenarioEntity.id)
         )
     }
 
@@ -81,8 +86,8 @@ class ScenarioDaoTests {
         database.scenarioDao().update(updatedScenario)
 
         assertEquals(
-            ScenarioWithEvents(updatedScenario, emptyList()),
-            database.scenarioDao().getScenarioWithEvents(scenarioEntity.id).first()
+            CompleteScenario(updatedScenario, emptyList(), emptyList()),
+            database.scenarioDao().getCompleteScenario(scenarioEntity.id)
         )
     }
 
@@ -93,10 +98,7 @@ class ScenarioDaoTests {
 
         database.scenarioDao().delete(scenarioEntity)
 
-        assertEquals(
-            null,
-            database.scenarioDao().getScenarioWithEvents(scenarioEntity.id).first()
-        )
+        assertNull(database.scenarioDao().getCompleteScenario(scenarioEntity.id))
     }
 
     @Test

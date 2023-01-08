@@ -24,6 +24,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
+import com.buzbuz.smartautoclicker.database.room.dao.ActionDao
 import com.buzbuz.smartautoclicker.database.room.dao.ConditionDao
 import com.buzbuz.smartautoclicker.database.room.dao.EndConditionDao
 import com.buzbuz.smartautoclicker.database.room.dao.EventDao
@@ -77,6 +78,8 @@ abstract class ClickDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
     /** The data access object for the conditions in the database. */
     abstract fun conditionDao(): ConditionDao
+    /** The data access object for the actions in the database. */
+    abstract fun actionDao(): ActionDao
     /** The data access object for the end conditions in the database. */
     abstract fun endConditionDao(): EndConditionDao
 

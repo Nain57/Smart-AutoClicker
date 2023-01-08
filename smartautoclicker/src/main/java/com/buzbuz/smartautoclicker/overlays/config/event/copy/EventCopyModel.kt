@@ -25,8 +25,8 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIconRes
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +45,7 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
     private val editionRepository = EditionRepository.getInstance(application)
 
     /** The currently searched action name. Null if no is. */
-    protected val searchQuery = MutableStateFlow<String?>(null)
+    private val searchQuery = MutableStateFlow<String?>(null)
 
     /**
      * List of displayed event items.
@@ -53,7 +53,8 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      */
     val eventList: Flow<List<EventCopyItem>?> =
         combine(repository.getAllEvents(), editionRepository.editedEvents, searchQuery) { dbEvents, scenarioEvents, query ->
-            if (query.isNullOrEmpty()) getAllItems(dbEvents, scenarioEvents) else getSearchedItems(dbEvents, query)
+            if (query.isNullOrEmpty()) getAllItems(dbEvents, scenarioEvents)
+            else getSearchedItems(dbEvents, query)
         }
 
     /**
@@ -62,7 +63,7 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      * @param scenarioEvents all actions in the current event.
      * @return the complete list of action items.
      */
-    private fun getAllItems(dbEvents: List<Event>, scenarioEvents: List<ConfiguredEvent>?): List<EventCopyItem> {
+    private fun getAllItems(dbEvents: List<Event>, scenarioEvents: List<EditedEvent>?): List<EventCopyItem> {
         val allItems = mutableListOf<EventCopyItem>()
 
         // First, add the events from the current scenario

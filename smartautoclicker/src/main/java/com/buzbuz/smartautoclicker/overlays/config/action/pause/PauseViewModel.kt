@@ -22,6 +22,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.isValidDuration
 import com.buzbuz.smartautoclicker.overlays.base.utils.putPauseDurationConfig
@@ -34,7 +35,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class PauseViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The action being configured by the user. Defined using [setConfiguredSwipe]. */
+    /** The edition action being configured by the user. */
+    private var configuredEditedAction: EditedAction? = null
+    /** The action being configured by the user. Defined using [setConfiguredPause]. */
     private val configuredPause = MutableStateFlow<Action.Pause?>(null)
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
@@ -65,15 +68,26 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
      * Set the configured pause.
      * This will update all values represented by this view model.
      *
-     * @param pause the pause to configure.
+     * @param editedAction the pause to configure.
      */
-    fun setConfiguredSwipe(pause: Action.Pause) {
+    fun setConfiguredPause(editedAction: EditedAction) {
+        val pause = editedAction.action as? Action.Pause
+            ?: throw IllegalArgumentException("EditedAction must be a pause.")
+
+        configuredEditedAction = editedAction
         configuredPause.value = pause.deepCopy()
     }
 
     /** @return the pause containing all user changes. */
-    fun getConfiguredPause(): Action.Pause =
-        configuredPause.value ?: throw IllegalStateException("Can't get the configured pause, none were defined.")
+    fun getConfiguredPause(): EditedAction  {
+        val configuredAction = configuredEditedAction
+        val pause = configuredPause.value
+
+        if (configuredAction == null || pause == null)
+            throw IllegalStateException("Can't get the configured pause, none were defined.")
+
+        return configuredAction.copy(action = pause)
+    }
 
     /**
      * Set the name of the pause.

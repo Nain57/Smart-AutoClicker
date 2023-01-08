@@ -26,7 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonVisibility
@@ -39,9 +39,9 @@ import kotlinx.coroutines.launch
 
 class IntentDialog(
     context: Context,
-    private val intent: Action.Intent,
-    private val onDeleteClicked: (Action.Intent) -> Unit,
-    private val onConfirmClicked: (Action.Intent) -> Unit,
+    private val editedIntent: EditedAction,
+    private val onDeleteClicked: (EditedAction) -> Unit,
+    private val onConfirmClicked: (EditedAction) -> Unit,
 ) : NavBarDialogController(context) {
 
     /** The view model for this dialog. */
@@ -52,7 +52,7 @@ class IntentDialog(
     override val navigationMenuId: Int = R.menu.menu_intent_config
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredIntent(intent)
+        viewModel.setConfiguredIntent(editedIntent)
 
         return super.onCreateView().also {
             topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_intent)
@@ -61,7 +61,9 @@ class IntentDialog(
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        navBarView.selectedItemId = if (intent.isAdvanced == true) R.id.page_advanced else R.id.page_simple
+        navBarView.selectedItemId =
+            if (viewModel.isAdvanced()) R.id.page_advanced
+            else R.id.page_simple
 
         super.onDialogCreated(dialog)
 
@@ -93,7 +95,7 @@ class IntentDialog(
                 viewModel.saveLastConfig()
                 onConfirmClicked(viewModel.getConfiguredIntent())
             }
-            DialogNavigationButton.DELETE -> onDeleteClicked(intent)
+            DialogNavigationButton.DELETE -> onDeleteClicked(editedIntent)
             else -> {}
         }
 

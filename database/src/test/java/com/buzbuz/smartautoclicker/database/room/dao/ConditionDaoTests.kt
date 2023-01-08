@@ -22,12 +22,12 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.database.utils.TestsData
-import com.buzbuz.smartautoclicker.database.utils.TestsData.cloneConditions
+import com.buzbuz.smartautoclicker.database.utils.assertSameContent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
 import org.junit.After
@@ -51,7 +51,11 @@ class ConditionDaoTests {
 
     @Before
     fun setUp() {
-        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, ClickDatabase::class.java)
+        database = Room
+            .inMemoryDatabaseBuilder(
+                InstrumentationRegistry.getInstrumentation().targetContext,
+                ClickDatabase::class.java,
+            )
             .allowMainThreadQueries()
             .build()
     }
@@ -64,27 +68,32 @@ class ConditionDaoTests {
 
     @Test
     fun getConditions_none() = runTest {
-        assertEquals(emptyList<ConditionEntity>(), database.eventDao().getConditions(TestsData.EVENT_ID))
+        assertEquals(emptyList<ConditionEntity>(), database.conditionDao().getConditions(TestsData.EVENT_ID))
     }
 
     @Test
     fun getConditions() = runTest {
+        val scenario = TestsData.getNewScenarioEntity()
+        val event = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 0,
+        )
         val expectedConditions = mutableListOf(
             TestsData.getNewConditionEntity(id = 1, eventId = TestsData.EVENT_ID),
             TestsData.getNewConditionEntity(id = 2, eventId = TestsData.EVENT_ID),
             TestsData.getNewConditionEntity(id = 3, eventId = TestsData.EVENT_ID),
         )
-        val completeEvent = CompleteEventEntity(
-            event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = mutableListOf(TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0)),
-            conditions = expectedConditions.cloneConditions(),
-        )
-        database.scenarioDao().add(TestsData.getNewScenarioEntity())
-        database.eventDao().addCompleteEvent(completeEvent)
+
+        database.apply {
+            scenarioDao().add(scenario)
+            eventDao().addEvent(event)
+            conditionDao().addConditions(expectedConditions)
+        }
 
         assertEquals(
             expectedConditions,
-            database.eventDao().getConditions(TestsData.EVENT_ID)
+            database.conditionDao().getConditions(TestsData.EVENT_ID)
         )
     }
 
@@ -95,28 +104,31 @@ class ConditionDaoTests {
 
     @Test
     fun getConditionsPath() = runTest {
-        val completeEvent = CompleteEventEntity(
-            event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = mutableListOf(TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0)),
-            conditions = mutableListOf(
-                TestsData.getNewConditionEntity(id = 1, eventId = TestsData.EVENT_ID, path = "toto"),
-                TestsData.getNewConditionEntity(id = 2, eventId = TestsData.EVENT_ID, path = "tata"),
-                TestsData.getNewConditionEntity(id = 3, eventId = TestsData.EVENT_ID, path = "tutu"),
-            ),
+        val scenario = TestsData.getNewScenarioEntity()
+        val event = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 0,
         )
-        database.scenarioDao().add(TestsData.getNewScenarioEntity())
-        database.eventDao().addCompleteEvent(completeEvent)
-
+        val conditions = mutableListOf(
+            TestsData.getNewConditionEntity(id = 1, eventId = TestsData.EVENT_ID, path = "toto"),
+            TestsData.getNewConditionEntity(id = 2, eventId = TestsData.EVENT_ID, path = "tata"),
+            TestsData.getNewConditionEntity(id = 3, eventId = TestsData.EVENT_ID, path = "tutu"),
+        )
         val expectedPaths = mutableListOf<String>()
-        completeEvent.conditions.forEach {
-            expectedPaths.add(it.path)
-        }
-        val resultPaths = database.conditionDao().getConditionsPath(TestsData.EVENT_ID)
+        conditions.forEach { expectedPaths.add(it.path) }
 
+        database.apply {
+            scenarioDao().add(scenario)
+            eventDao().addEvent(event)
+            conditionDao().addConditions(conditions)
+        }
+
+        val resultPaths = database.conditionDao().getConditionsPath(TestsData.EVENT_ID)
         assertEquals(
             "Path lists should have the same size.",
             expectedPaths.size,
-            resultPaths.size
+            resultPaths.size,
         )
         assertTrue("Path lists should have the same content", resultPaths.containsAll(expectedPaths))
     }
@@ -128,24 +140,64 @@ class ConditionDaoTests {
 
     @Test
     fun getValidPathCount() = runTest {
-        val completeEvent1 = CompleteEventEntity(
-            event = TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = mutableListOf(TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0)),
-            conditions = mutableListOf(TestsData.getNewConditionEntity(id = 1, eventId = TestsData.EVENT_ID, path = "toto")),
+        val scenario = TestsData.getNewScenarioEntity()
+        val event1 = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 0,
         )
-        val event2Id = 123456L
-        val completeEvent2 = CompleteEventEntity(
-            event = TestsData.getNewEventEntity(id = event2Id, scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            actions = mutableListOf(TestsData.getNewClickEntity(eventId = event2Id, priority = 0)),
-            conditions = mutableListOf(
-                TestsData.getNewConditionEntity(id = 2, eventId = event2Id, path = "toto"),
-                TestsData.getNewConditionEntity(id = 3, eventId = event2Id, path = "tutu")
-            ),
+        val event2 = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID_2,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 1,
         )
-        database.scenarioDao().add(TestsData.getNewScenarioEntity())
-        database.eventDao().addCompleteEvent(completeEvent1)
-        database.eventDao().addCompleteEvent(completeEvent2)
+        val conditions = mutableListOf(
+            TestsData.getNewConditionEntity(id = 1, eventId = event1.id, path = "toto"),
+            TestsData.getNewConditionEntity(id = 2, eventId = event2.id, path = "toto"),
+            TestsData.getNewConditionEntity(id = 3, eventId = event2.id, path = "tutu"),
+        )
+
+        database.apply {
+            scenarioDao().add(scenario)
+            eventDao().addEvent(event1)
+            eventDao().addEvent(event2)
+            conditionDao().addConditions(conditions)
+        }
 
         assertEquals(2, database.conditionDao().getValidPathCount("toto"))
+    }
+
+    @Test
+    fun syncConditions() = runTest {
+        val scenario = TestsData.getNewScenarioEntity()
+        val event1 = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 0,
+        )
+        val event2 = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID_2,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 1,
+        )
+        val condition1 = TestsData.getNewConditionEntity(id = 1, eventId = event1.id, path = "toto")
+        val conditionTobeUpdated = TestsData.getNewConditionEntity(id = 2, eventId = event2.id, path = "titi")
+        val conditionToBeRemoved = TestsData.getNewConditionEntity(id = 3, eventId = event2.id, path = "tutu")
+        val conditions = mutableListOf(condition1, conditionTobeUpdated, conditionToBeRemoved)
+        database.apply {
+            scenarioDao().add(scenario)
+            eventDao().addEvent(event1)
+            eventDao().addEvent(event2)
+            conditionDao().addConditions(conditions)
+        }
+
+        val added = TestsData.getNewConditionEntity(id = 4, eventId = event1.id, path = "tyty")
+        val updated = conditionTobeUpdated.copy(path = "tata")
+        database.conditionDao().syncConditions(listOf(added), listOf(updated), listOf(conditionToBeRemoved))
+
+        val expectedConditions = listOf(condition1, updated, added)
+        assertSameContent(expectedConditions, database.conditionDao().getAllConditions().first()) { condition ->
+            condition.id
+        }
     }
 }

@@ -24,6 +24,7 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.isValidDuration
@@ -37,6 +38,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
+    /** The edition action being configured by the user. */
+    private var configuredEditedAction: EditedAction? = null
     /** The action being configured by the user. Defined using [setConfiguredClick]. */
     private val configuredClick = MutableStateFlow<Action.Click?>(null)
     /** Event configuration shared preferences. */
@@ -99,15 +102,26 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
      * Set the configured click.
      * This will update all values represented by this view model.
      *
-     * @param click the click to configure.
+     * @param editedAction the click to configure.
      */
-    fun setConfiguredClick(click: Action.Click) {
+    fun setConfiguredClick(editedAction: EditedAction) {
+        val click = editedAction.action as? Action.Click
+            ?: throw IllegalArgumentException("EditedAction must be a click.")
+
+        configuredEditedAction = editedAction
         configuredClick.value = click.deepCopy()
     }
 
     /** @return the click containing all user changes. */
-    fun getConfiguredClick(): Action.Click =
-        configuredClick.value ?: throw IllegalStateException("Can't get the configured click, none were defined.")
+    fun getConfiguredClick(): EditedAction {
+        val configuredAction = configuredEditedAction
+        val click = configuredClick.value
+
+        if (configuredAction == null || click == null)
+            throw IllegalStateException("Can't get the configured click, none were defined.")
+
+        return configuredAction.copy(action = click)
+    }
 
     /**
      * Set the name of the click.

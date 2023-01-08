@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.overlays.config.event.copy.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
@@ -98,7 +98,7 @@ class EventListContent : NavBarDialogContent() {
         showEventCopyDialog()
     }
 
-    private fun updateEventList(newItems: List<ConfiguredEvent>?) {
+    private fun updateEventList(newItems: List<EditedEvent>?) {
         viewBinding.updateState(newItems)
         eventAdapter.submitList(newItems)
     }
@@ -122,7 +122,7 @@ class EventListContent : NavBarDialogContent() {
     }
 
     /** Opens the dialog allowing the user to add a new event. */
-    private fun showEventConfigDialog(item: ConfiguredEvent) {
+    private fun showEventConfigDialog(item: EditedEvent) {
         viewModel.startEventEdition(item)
 
         dialogViewModel.requestSubOverlay(

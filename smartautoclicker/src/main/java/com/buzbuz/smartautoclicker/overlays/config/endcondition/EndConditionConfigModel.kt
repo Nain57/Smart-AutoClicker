@@ -22,10 +22,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
-import com.buzbuz.smartautoclicker.overlays.config.INVALID_CONFIGURED_ITEM_ID
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
+import com.buzbuz.smartautoclicker.domain.edition.INVALID_EDITED_ITEM_ID
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -45,27 +45,27 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         .filterNotNull()
 
     /** The configured end condition. */
-    private val configuredEndCondition = MutableStateFlow<ConfiguredEndCondition?>(null)
+    private val editedEndCondition = MutableStateFlow<EditedEndCondition?>(null)
 
     /** The number of executions before triggering the end condition. */
-    val executions = configuredEndCondition
+    val executions = editedEndCondition
         .filterNotNull()
         .map { it.endCondition.executions }
         .take(1)
     /** Tells if the execution count is valid or not. */
-    val executionCountError: Flow<Boolean> = configuredEndCondition
+    val executionCountError: Flow<Boolean> = editedEndCondition
         .map { (it?.endCondition?.executions ?: -1) <= 0 }
     /** Tells if the configured end condition can be deleted. */
-    val canBeDeleted = configuredEndCondition
+    val canBeDeleted = editedEndCondition
         .filterNotNull()
         .map { it.endCondition.id != 0L }
     /** True if this end condition is valid and can be saved, false if not. */
-    val isValidEndCondition = configuredEndCondition.map { conf ->
-        conf != null && conf.eventItemId != INVALID_CONFIGURED_ITEM_ID && conf.endCondition.executions > 0
+    val isValidEndCondition = editedEndCondition.map { conf ->
+        conf != null && conf.eventItemId != INVALID_EDITED_ITEM_ID && conf.endCondition.executions > 0
     }
 
     /** Events available as end condition event for this end condition */
-    val eventsAvailable: StateFlow<List<ConfiguredEvent>> = configuredScenario
+    val eventsAvailable: StateFlow<List<EditedEvent>> = configuredScenario
         .map { scenario ->
             scenario.events.filter { configuredEvent ->
                 scenario.endConditions.find { it.endCondition.eventId == configuredEvent.event.id } == null
@@ -78,7 +78,7 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         )
 
     /** The event selected for the end condition. Null if none is. */
-    val eventViewState: Flow<EndConditionEventViewState> = configuredEndCondition
+    val eventViewState: Flow<EndConditionEventViewState> = editedEndCondition
         .combine(configuredScenario) { confEndCondition, scenario ->
             scenario.events.find { configuredEvent ->
                 confEndCondition?.eventItemId == configuredEvent.itemId
@@ -94,22 +94,22 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
 
     /** Tells if the delete button should be shown. */
     fun shouldShowDeleteButton(): Boolean =
-        configuredEndCondition.value?.endCondition?.id?.equals(0L) == false
+        editedEndCondition.value?.endCondition?.id?.equals(0L) == false
 
     /**
      * Set the end condition to be configured.
      * @param endCondition the end condition.
      */
-    fun setConfiguredEndCondition(endCondition: ConfiguredEndCondition) {
-        configuredEndCondition.value = endCondition
+    fun setConfiguredEndCondition(endCondition: EditedEndCondition) {
+        editedEndCondition.value = endCondition
     }
 
     /**
      * Set the event for the configured end condition
      * @param confEvent the new event.
      */
-    fun setEvent(confEvent: ConfiguredEvent) {
-        configuredEndCondition.value = configuredEndCondition.value?.let { conf ->
+    fun setEvent(confEvent: EditedEvent) {
+        editedEndCondition.value = editedEndCondition.value?.let { conf ->
             conf.copy(
                 endCondition = conf.endCondition.copy(eventId = confEvent.event.id, eventName = confEvent.event.name),
                 eventItemId = confEvent.itemId,
@@ -122,13 +122,13 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
      * @param executions the number of event executions.
      */
     fun setExecutions(executions: Int) {
-        configuredEndCondition.value = configuredEndCondition.value?.let { conf ->
+        editedEndCondition.value = editedEndCondition.value?.let { conf ->
             conf.copy(endCondition = conf.endCondition.copy(executions = executions))
         }
     }
 
     /** @return the end condition currently configured. */
-    fun getConfiguredEndCondition(): ConfiguredEndCondition = configuredEndCondition.value!!
+    fun getConfiguredEndCondition(): EditedEndCondition = editedEndCondition.value!!
 }
 
 sealed class EndConditionEventViewState {

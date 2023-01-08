@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.config.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
@@ -102,7 +103,7 @@ class ActionsContent : NavBarDialogContent() {
         dialogViewModel.requestSubOverlay(newActionCopyNavigationRequest())
     }
 
-    private fun onActionClicked(action: Action, index: Int) {
+    private fun onActionClicked(action: EditedAction, index: Int) {
         dialogViewModel.requestSubOverlay(newActionConfigNavigationRequest(action, index))
     }
 
@@ -112,7 +113,7 @@ class ActionsContent : NavBarDialogContent() {
         }
     }
 
-    private fun updateActionList(newList: List<ActionDetails>?) {
+    private fun updateActionList(newList: List<Pair<EditedAction, ActionDetails>>?) {
         viewBinding.updateState(newList)
         actionAdapter.submitList(newList)
     }
@@ -141,32 +142,33 @@ class ActionsContent : NavBarDialogContent() {
     private fun newActionCopyNavigationRequest() = NavigationRequest(
         ActionCopyDialog(
             context = context,
-            actions = viewModel.actions.value,
             onActionSelected = { actionSelected ->
-                dialogViewModel.requestSubOverlay(newActionConfigNavigationRequest(actionSelected))
+                dialogViewModel.requestSubOverlay(
+                    newActionConfigNavigationRequest(viewModel.createAction(actionSelected))
+                )
             }
         )
     )
 
-    private fun newActionConfigNavigationRequest(action: Action, index: Int = -1): NavigationRequest {
-        val overlay = when (action) {
-            is Action.Click -> ClickDialog(context, action, viewModel::removeAction) { savedClick ->
+    private fun newActionConfigNavigationRequest(editedAction: EditedAction, index: Int = -1): NavigationRequest {
+        val overlay = when (editedAction.action) {
+            is Action.Click -> ClickDialog(context, editedAction, viewModel::removeAction) { savedClick ->
                 viewModel.addUpdateAction(savedClick, index)
             }
 
-            is Action.Swipe -> SwipeDialog(context, action, viewModel::removeAction) { savedSwipe ->
+            is Action.Swipe -> SwipeDialog(context, editedAction, viewModel::removeAction) { savedSwipe ->
                 viewModel.addUpdateAction(savedSwipe, index)
             }
 
-            is Action.Pause -> PauseDialog(context, action, viewModel::removeAction) { savedPause ->
+            is Action.Pause -> PauseDialog(context, editedAction, viewModel::removeAction) { savedPause ->
                 viewModel.addUpdateAction(savedPause, index)
             }
 
-            is Action.Intent -> IntentDialog(context, action, viewModel::removeAction) { savedIntent ->
+            is Action.Intent -> IntentDialog(context, editedAction, viewModel::removeAction) { savedIntent ->
                 viewModel.addUpdateAction(savedIntent, index)
             }
 
-            is Action.ToggleEvent -> ToggleEventDialog(context, action, viewModel::removeAction) { savedToggleEvent ->
+            is Action.ToggleEvent -> ToggleEventDialog(context, editedAction, viewModel::removeAction) { savedToggleEvent ->
                 viewModel.addUpdateAction(savedToggleEvent, index)
             }
 

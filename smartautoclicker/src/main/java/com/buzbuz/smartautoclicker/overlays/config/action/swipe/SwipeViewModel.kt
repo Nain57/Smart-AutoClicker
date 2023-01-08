@@ -23,6 +23,7 @@ import android.graphics.Point
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.isValidDuration
 import com.buzbuz.smartautoclicker.overlays.base.utils.putSwipeDurationConfig
@@ -35,6 +36,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class SwipeViewModel(application: Application) : AndroidViewModel(application) {
 
+    /** The edition action being configured by the user. */
+    private var configuredEditedAction: EditedAction? = null
     /** The action being configured by the user. Defined using [setConfiguredSwipe]. */
     private val configuredSwipe = MutableStateFlow<Action.Swipe?>(null)
     /** Event configuration shared preferences. */
@@ -79,15 +82,26 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
      * Set the configured swipe.
      * This will update all values represented by this view model.
      *
-     * @param swipe the swipe to configure.
+     * @param editedAction the swipe to configure.
      */
-    fun setConfiguredSwipe(swipe: Action.Swipe) {
+    fun setConfiguredSwipe(editedAction: EditedAction) {
+        val swipe = editedAction.action as? Action.Swipe
+            ?: throw IllegalArgumentException("EditedAction must be a swipe.")
+
+        configuredEditedAction = editedAction
         configuredSwipe.value = swipe.deepCopy()
     }
 
     /** @return the swipe containing all user changes. */
-    fun getConfiguredSwipe(): Action.Swipe =
-        configuredSwipe.value ?: throw IllegalStateException("Can't get the configured swipe, none were defined.")
+    fun getConfiguredSwipe(): EditedAction {
+        val configuredAction = configuredEditedAction
+        val swipe = configuredSwipe.value
+
+        if (configuredAction == null || swipe == null)
+            throw IllegalStateException("Can't get the configured swipe, none were defined.")
+
+        return configuredAction.copy(action = swipe)
+    }
 
     /**
      * Set the name of the swipe.

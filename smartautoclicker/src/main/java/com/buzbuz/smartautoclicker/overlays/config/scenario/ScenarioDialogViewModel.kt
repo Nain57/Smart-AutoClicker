@@ -20,7 +20,7 @@ import android.app.Application
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationViewModel
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map

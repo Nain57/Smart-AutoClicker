@@ -26,7 +26,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultCondition
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.*
 
@@ -40,7 +40,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     private val editionRepository = EditionRepository.getInstance(application)
 
     /** Currently configured event. */
-    private val configuredEvent = editionRepository.configuredEvent
+    private val configuredEvent = editionRepository.editedEvent
         .filterNotNull()
 
     /** Tells if there is at least one condition to copy. */
@@ -67,7 +67,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param bitmap the image for the condition to create.
      */
     fun createCondition(context: Context, area: Rect, bitmap: Bitmap): Condition {
-        editionRepository.configuredEvent.value?.let { conf ->
+        editionRepository.editedEvent.value?.let { conf ->
             return newDefaultCondition(
                 context = context,
                 eventId = conf.event.id,

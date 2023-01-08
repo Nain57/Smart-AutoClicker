@@ -41,20 +41,21 @@ abstract class EndConditionDao {
     abstract fun getEndConditions(scenarioId: Long): List<EndConditionEntity>
 
     /**
-     * Update an end condition in the database.
-     * Execute the add, update and remove end conditions operations.
+     * Synchronize the end conditions in the database.
      *
-     * @param scenarioId the unique identifier of the scenario for the updated end conditions.
-     * @param endConditions the new end conditions for this scenario.
+     * @param add the conditions to be added.
+     * @param update the conditions to be updated.
+     * @param delete the conditions to be deleted.
      */
     @Transaction
-    open suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndConditionEntity>) {
-        EndConditionsUpdater.let {
-            it.refreshUpdateValues(getEndConditions(scenarioId), endConditions)
-            add(it.toBeAdded)
-            update(it.toBeUpdated)
-            delete(it.toBeRemoved)
-        }
+    open suspend fun syncEndConditions(
+        add: List<EndConditionEntity>,
+        update: List<EndConditionEntity>,
+        delete: List<EndConditionEntity>,
+    ) {
+        addEndConditions(add)
+        updateEndConditions(update)
+        deleteEndConditions(delete)
     }
 
     /**
@@ -63,7 +64,7 @@ abstract class EndConditionDao {
      * @param endConditionEntities the list of end condition to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun add(endConditionEntities: List<EndConditionEntity>)
+    abstract suspend fun addEndConditions(endConditionEntities: List<EndConditionEntity>)
 
     /**
      * Update the selected end condition.
@@ -72,7 +73,7 @@ abstract class EndConditionDao {
      */
     @Update
     @VisibleForTesting
-    abstract suspend fun update(endConditionEntities: List<EndConditionEntity>)
+    abstract suspend fun updateEndConditions(endConditionEntities: List<EndConditionEntity>)
 
     /**
      * Delete the provided end condition from the database.
@@ -81,5 +82,5 @@ abstract class EndConditionDao {
      */
     @Delete
     @VisibleForTesting
-    abstract suspend fun delete(endConditionEntities: List<EndConditionEntity>)
+    abstract suspend fun deleteEndConditions(endConditionEntities: List<EndConditionEntity>)
 }

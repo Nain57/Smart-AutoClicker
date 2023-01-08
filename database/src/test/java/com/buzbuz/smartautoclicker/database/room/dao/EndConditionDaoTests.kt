@@ -23,6 +23,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionWithEvent
 import com.buzbuz.smartautoclicker.database.utils.TestsData
+import com.buzbuz.smartautoclicker.database.utils.assertSameContent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -48,7 +49,11 @@ class EndConditionDaoTests {
 
     @Before
     fun setUp() {
-        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, ClickDatabase::class.java)
+        database = Room
+            .inMemoryDatabaseBuilder(
+                InstrumentationRegistry.getInstrumentation().targetContext,
+                ClickDatabase::class.java,
+            )
             .allowMainThreadQueries()
             .build()
     }
@@ -65,17 +70,18 @@ class EndConditionDaoTests {
         val eventEntity = TestsData.getNewEventEntity(scenarioId = scenarioEntity.id, priority = 1)
         val endConditionEntity = TestsData.getNewEndConditionEntity(
             scenarioId = scenarioEntity.id,
-            eventId = eventEntity.id
+            eventId = eventEntity.id,
         )
+
         database.apply {
             scenarioDao().add(scenarioEntity)
             eventDao().addEvent(eventEntity)
-            endConditionDao().add(listOf(endConditionEntity))
+            endConditionDao().addEndConditions(listOf(endConditionEntity))
         }
 
         Assert.assertEquals(
             EndConditionWithEvent(endConditionEntity, eventEntity),
-            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
+            database.scenarioDao().getScenarioWithEndConditions(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
         )
     }
 
@@ -93,17 +99,17 @@ class EndConditionDaoTests {
         database.apply {
             scenarioDao().add(scenarioEntity)
             eventDao().addEvent(eventEntity)
-            endConditionDao().add(listOf(endConditionEntity))
+            endConditionDao().addEndConditions(listOf(endConditionEntity))
         }
 
         // Update end condition executions
         endConditionEntity = endConditionEntity.copy(executions = 3)
-        database.endConditionDao().update(listOf(endConditionEntity))
+        database.endConditionDao().updateEndConditions(listOf(endConditionEntity))
 
         // Verify
         Assert.assertEquals(
             EndConditionWithEvent(endConditionEntity, eventEntity),
-            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
+            database.scenarioDao().getScenarioWithEndConditions(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
         )
     }
 
@@ -122,17 +128,17 @@ class EndConditionDaoTests {
             scenarioDao().add(scenarioEntity)
             eventDao().addEvent(eventEntity1)
             eventDao().addEvent(eventEntity2)
-            endConditionDao().add(listOf(endConditionEntity))
+            endConditionDao().addEndConditions(listOf(endConditionEntity))
         }
 
         // Update end condition event
         endConditionEntity = endConditionEntity.copy(eventId = eventEntity2.id)
-        database.endConditionDao().update(listOf(endConditionEntity))
+        database.endConditionDao().updateEndConditions(listOf(endConditionEntity))
 
         // Verify
         Assert.assertEquals(
             EndConditionWithEvent(endConditionEntity, eventEntity2),
-            database.scenarioDao().getScenarioWithEndConditionsFlow(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
+            database.scenarioDao().getScenarioWithEndConditions(TestsData.END_SCENARIO_ID).first()!!.endConditions[0]
         )
     }
 
@@ -150,25 +156,59 @@ class EndConditionDaoTests {
         database.apply {
             scenarioDao().add(scenarioEntity)
             eventId = eventDao().addEvent(eventEntity)
-            endConditionDao().add(listOf(endConditionEntity))
+            endConditionDao().addEndConditions(listOf(endConditionEntity))
         }
 
         // Update ids from insert methods
         eventEntity = eventEntity.copy(id = eventId)
         // Delete end condition
-        database.endConditionDao().delete(listOf(endConditionEntity))
+        database.endConditionDao().deleteEndConditions(listOf(endConditionEntity))
 
         // Verify scenario is OK and condition deleted
         Assert.assertTrue(
             "Invalid end condition size",
-            database.scenarioDao().getScenarioWithEndConditionsFlow(endConditionEntity.scenarioId)
+            database.scenarioDao().getScenarioWithEndConditions(endConditionEntity.scenarioId)
                 .first()!!.endConditions.isEmpty()
         )
         // Verify associated event is OK
         Assert.assertEquals(
             "Invalid end condition size",
             eventEntity,
-            database.eventDao().getEvent(eventEntity.id).event,
+            database.eventDao().getEvents(scenarioEntity.id).first().first(),
         )
+    }
+
+    @Test
+    fun syncEndConditions() = runTest {
+        val scenario = TestsData.getNewScenarioEntity()
+        val event1 = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 0,
+        )
+        val event2 = TestsData.getNewEventEntity(
+            id = TestsData.EVENT_ID_2,
+            scenarioId = TestsData.SCENARIO_ID,
+            priority = 1,
+        )
+        val endCondition1 = TestsData.getNewEndConditionEntity(id = 1, eventId = event1.id, executions = 5)
+        val endConditionTobeUpdated = TestsData.getNewEndConditionEntity(id = 2, eventId = event2.id, executions = 10)
+        val endConditionToBeRemoved = TestsData.getNewEndConditionEntity(id = 3, eventId = event2.id, executions = 1)
+        val endConditions = mutableListOf(endCondition1, endConditionTobeUpdated, endConditionToBeRemoved)
+        database.apply {
+            scenarioDao().add(scenario)
+            eventDao().addEvent(event1)
+            eventDao().addEvent(event2)
+            endConditionDao().addEndConditions(endConditions)
+        }
+
+        val added = TestsData.getNewEndConditionEntity(id = 4, eventId = event1.id, executions = 99)
+        val updated = endConditionTobeUpdated.copy(executions = 50)
+        database.endConditionDao().syncEndConditions(listOf(added), listOf(updated), listOf(endConditionToBeRemoved))
+
+        val expectedConditions = listOf(endCondition1, updated, added)
+        assertSameContent(expectedConditions, database.endConditionDao().getEndConditions(scenario.id)) { endCondition ->
+            endCondition.id
+        }
     }
 }

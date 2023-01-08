@@ -40,6 +40,8 @@ internal object TestsData {
     /* ------- Event Data ------- */
 
     const val EVENT_ID = 1667L
+    const val EVENT_ID_2 = 123456L
+
     const val EVENT_NAME = "EventName"
     const val EVENT_CONDITION_OPERATOR = 1
     val EVENT_STOP_AFTER = null
@@ -138,7 +140,7 @@ internal object TestsData {
 
     /* ------- Intent Action Data ------- */
 
-    private const val INTENT_ID = 149L
+    const val INTENT_ID = 149L
     private const val INTENT_NAME = "Intent name"
     private const val INTENT_IS_ADVANCED = true
     private const val INTENT_IS_BROADCAST = true

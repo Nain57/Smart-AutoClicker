@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.AND
 import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
@@ -38,7 +38,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
     /** Currently configured event. */
-    private val configuredEvent = editionRepository.configuredEvent
+    private val configuredEvent = editionRepository.editedEvent
         .filterNotNull()
 
     private val enableEventItem = DropdownItem(
@@ -95,7 +95,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Set a new name for the configured event. */
     fun setEventName(newName: String) {
-        editionRepository.configuredEvent.value?.let { conf ->
+        editionRepository.editedEvent.value?.let { conf ->
             viewModelScope.launch {
                 editionRepository.updateEditedEvent(conf.event.copy(name = newName))
             }
@@ -104,7 +104,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Toggle the end condition operator between AND and OR. */
     fun setConditionOperator(operatorItem: DropdownItem) {
-        editionRepository.configuredEvent.value?.let { conf ->
+        editionRepository.editedEvent.value?.let { conf ->
             val operator = when (operatorItem) {
                 conditionAndItem -> AND
                 conditionOrItem -> OR
@@ -119,7 +119,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Toggle the event state between true and false. */
     fun setEventState(state: DropdownItem) {
-        editionRepository.configuredEvent.value?.let { conf ->
+        editionRepository.editedEvent.value?.let { conf ->
             val value = when (state) {
                 enableEventItem -> true
                 disableEventItem -> false

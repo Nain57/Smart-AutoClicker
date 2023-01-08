@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.DurationInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionPauseBinding
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
@@ -45,9 +45,9 @@ import kotlinx.coroutines.launch
 
 class PauseDialog(
     context: Context,
-    private val pause: Action.Pause,
-    private val onDeleteClicked: (Action.Pause) -> Unit,
-    private val onConfirmClicked: (Action.Pause) -> Unit,
+    private val editedPause: EditedAction,
+    private val onDeleteClicked: (EditedAction) -> Unit,
+    private val onConfirmClicked: (EditedAction) -> Unit,
 ) : OverlayDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
@@ -59,7 +59,7 @@ class PauseDialog(
     private lateinit var viewBinding: DialogConfigActionPauseBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredSwipe(pause)
+        viewModel.setConfiguredPause(editedPause)
 
         viewBinding = DialogConfigActionPauseBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
@@ -115,7 +115,7 @@ class PauseDialog(
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked(pause)
+        onDeleteClicked(editedPause)
         destroy()
     }
 

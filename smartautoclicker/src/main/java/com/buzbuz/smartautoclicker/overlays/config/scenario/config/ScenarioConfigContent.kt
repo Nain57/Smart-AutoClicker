@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
+import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
 
@@ -161,13 +161,13 @@ class ScenarioConfigContent : NavBarDialogContent() {
         }
     }
 
-    private fun onEndConditionClicked(endCondition: ConfiguredEndCondition, index: Int) {
+    private fun onEndConditionClicked(endCondition: EditedEndCondition) {
         dialogViewModel.requestSubOverlay(
             NavigationRequest(
                 EndConditionConfigDialog(
                     context = context,
                     endCondition = endCondition,
-                    onConfirmClicked = { newEndCondition -> viewModel.updateEndCondition(newEndCondition, index) },
+                    onConfirmClicked = { newEndCondition -> viewModel.updateEndCondition(newEndCondition) },
                     onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
                 )
             )

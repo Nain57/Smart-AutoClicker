@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationViewModel
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.mapNotNull
 class EventDialogViewModel(application: Application) : NavigationViewModel(application) {
 
     /** The event currently configured. */
-    val configuredEvent: Flow<Event> = EditionRepository.getInstance(application).configuredEvent
+    val configuredEvent: Flow<Event> = EditionRepository.getInstance(application).editedEvent
         .mapNotNull { it?.event }
 
     /** Visibility of the top bar delete button. */

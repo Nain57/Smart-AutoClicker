@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.baseui.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
+import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -46,8 +46,8 @@ import kotlinx.coroutines.launch
  */
 class EndConditionConfigDialog(
     context: Context,
-    private val endCondition: ConfiguredEndCondition,
-    private val onConfirmClicked: (ConfiguredEndCondition) -> Unit,
+    private val endCondition: EditedEndCondition,
+    private val onConfirmClicked: (EditedEndCondition) -> Unit,
     private val onDeleteClicked: () -> Unit
 ): OverlayDialogController(context, R.style.AppTheme) {
 

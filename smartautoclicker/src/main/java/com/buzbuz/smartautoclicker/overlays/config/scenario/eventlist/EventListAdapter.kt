@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEvent
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 
 import java.util.Collections
 
@@ -37,9 +37,9 @@ import java.util.Collections
  * @param itemReorderListener listener called when the user finish moving an item.
  */
 class EventListAdapter(
-    private val itemClickedListener: (ConfiguredEvent) -> Unit,
-    private val itemReorderListener: (List<ConfiguredEvent>) -> Unit,
-) : ListAdapter<ConfiguredEvent, EventViewHolder>(EventDiffUtilCallback) {
+    private val itemClickedListener: (EditedEvent) -> Unit,
+    private val itemReorderListener: (List<EditedEvent>) -> Unit,
+) : ListAdapter<EditedEvent, EventViewHolder>(EventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -67,11 +67,11 @@ class EventListAdapter(
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [EventListAdapter] list. */
-object EventDiffUtilCallback: DiffUtil.ItemCallback<ConfiguredEvent>() {
-    override fun areItemsTheSame(oldItem: ConfiguredEvent, newItem: ConfiguredEvent): Boolean =
+object EventDiffUtilCallback: DiffUtil.ItemCallback<EditedEvent>() {
+    override fun areItemsTheSame(oldItem: EditedEvent, newItem: EditedEvent): Boolean =
         oldItem.itemId == newItem.itemId
 
-    override fun areContentsTheSame(oldItem: ConfiguredEvent, newItem: ConfiguredEvent): Boolean =
+    override fun areContentsTheSame(oldItem: EditedEvent, newItem: EditedEvent): Boolean =
         oldItem == newItem
 }
 
@@ -88,7 +88,7 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
      * @param item the item providing the binding data.
      * @param itemClickedListener listener called when an event is clicked.
      */
-    fun bindEvent(item: ConfiguredEvent, itemClickedListener: (ConfiguredEvent) -> Unit) {
+    fun bindEvent(item: EditedEvent, itemClickedListener: (EditedEvent) -> Unit) {
         holderViewBinding.bind(item.event, true) { itemClickedListener(item) }
     }
 }

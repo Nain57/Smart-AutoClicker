@@ -19,10 +19,13 @@ package com.buzbuz.smartautoclicker.overlays.config.action.toggleevent
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import kotlinx.coroutines.flow.*
 
 class ToggleEventViewModel(application: Application) : AndroidViewModel(application) {
 
+    /** The edition action being configured by the user. */
+    private var configuredEditedAction: EditedAction? = null
     /** The action being configured by the user. Defined using [setConfiguredToggleEvent]. */
     private val configuredToggleEvent = MutableStateFlow<Action.ToggleEvent?>(null)
 
@@ -45,15 +48,26 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
      * Set the configured toggle event.
      * This will update all values represented by this view model.
      *
-     * @param toggleEvent the toggle event to configure.
+     * @param editedAction the toggle event action to configure.
      */
-    fun setConfiguredToggleEvent(toggleEvent: Action.ToggleEvent) {
+    fun setConfiguredToggleEvent(editedAction: EditedAction) {
+        val toggleEvent = editedAction.action as? Action.ToggleEvent
+            ?: throw IllegalArgumentException("EditedAction must be a toggle event action.")
+
+        configuredEditedAction = editedAction
         configuredToggleEvent.value = toggleEvent.deepCopy()
     }
 
     /** @return the toggle event containing all user changes. */
-    fun getConfiguredClick(): Action.ToggleEvent =
-        configuredToggleEvent.value ?: throw IllegalStateException("Can't get the configured toggle event, none were defined.")
+    fun getConfiguredClick(): EditedAction {
+        val configuredAction = configuredEditedAction
+        val toggleEvent = configuredToggleEvent.value
+
+        if (configuredAction == null || toggleEvent == null)
+            throw IllegalStateException("Can't get the configured toggle event action, none were defined.")
+
+        return configuredAction.copy(action = toggleEvent)
+    }
 
     /**
      * Set the name of the click.

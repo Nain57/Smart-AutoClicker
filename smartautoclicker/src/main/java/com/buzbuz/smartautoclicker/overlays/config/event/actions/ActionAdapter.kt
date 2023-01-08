@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
 
@@ -38,16 +38,15 @@ import java.util.Collections
  * @param actionClickedListener  the listener called when the user clicks on a action.
  */
 class ActionAdapter(
-    private val actionClickedListener: (Action, Int) -> Unit,
-    private val actionReorderListener: (List<ActionDetails>) -> Unit,
-) : ListAdapter<ActionDetails, ActionViewHolder>(ActionDiffUtilCallback) {
+    private val actionClickedListener: (EditedAction, Int) -> Unit,
+    private val actionReorderListener: (List<Pair<EditedAction, ActionDetails>>) -> Unit,
+) : ListAdapter<Pair<EditedAction, ActionDetails>, ActionViewHolder>(ActionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionViewHolder =
         ActionViewHolder(ItemActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ActionViewHolder, position: Int) {
         holder.onBind(getItem(position), actionClickedListener)
-
     }
 
     /**
@@ -69,11 +68,17 @@ class ActionAdapter(
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [ActionAdapter] list. */
-object ActionDiffUtilCallback: DiffUtil.ItemCallback<ActionDetails>() {
-    override fun areItemsTheSame(oldItem: ActionDetails, newItem: ActionDetails): Boolean =
-        oldItem.action.id == newItem.action.id
-    override fun areContentsTheSame(oldItem: ActionDetails, newItem: ActionDetails): Boolean =
-        oldItem == newItem
+object ActionDiffUtilCallback: DiffUtil.ItemCallback<Pair<EditedAction, ActionDetails>>() {
+
+    override fun areItemsTheSame(
+        oldItem: Pair<EditedAction, ActionDetails>,
+        newItem: Pair<EditedAction, ActionDetails>,
+    ): Boolean = oldItem.first.action.id == newItem.first.action.id
+
+    override fun areContentsTheSame(
+        oldItem: Pair<EditedAction, ActionDetails>,
+        newItem: Pair<EditedAction, ActionDetails>,
+    ): Boolean = oldItem == newItem
 }
 
 /**
@@ -88,8 +93,10 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param action the action to be represented by this item.
      * @param actionClickedListener listener notified upon user click on this item.
      */
-    fun onBind(action: ActionDetails, actionClickedListener: (Action, Int) -> Unit) {
-        viewBinding.bind(action, bindingAdapterPosition, true, actionClickedListener)
+    fun onBind(action: Pair<EditedAction, ActionDetails>, actionClickedListener: (EditedAction, Int) -> Unit) {
+        viewBinding.bind(action.second, bindingAdapterPosition, true) { _, index ->
+            actionClickedListener(action.first, index)
+        }
     }
 }
 

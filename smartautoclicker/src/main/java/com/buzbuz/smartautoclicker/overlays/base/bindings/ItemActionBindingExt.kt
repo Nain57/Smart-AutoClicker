@@ -24,8 +24,7 @@ import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.domain.Action
-
-import kotlin.time.Duration.Companion.milliseconds
+import com.buzbuz.smartautoclicker.overlays.base.utils.formatDuration
 
 fun ItemActionBinding.bind(
     details: ActionDetails,
@@ -106,30 +105,6 @@ fun Action.toActionDetails(context: Context): ActionDetails {
 }
 
 /**
- * Format a duration into a human readable string.
- * @param msDuration the duration to be formatted in milliseconds.
- * @return the formatted duration.
- */
-private fun formatDuration(msDuration: Long): String {
-    val duration = msDuration.milliseconds
-    var value = ""
-    if (duration.inWholeHours > 0) {
-        value += "${duration.inWholeHours}h "
-    }
-    if (duration.inWholeMinutes % 60 > 0) {
-        value += "${duration.inWholeMinutes % 60}m"
-    }
-    if (duration.inWholeSeconds % 60 > 0) {
-        value += "${duration.inWholeSeconds % 60}s"
-    }
-    if (duration.inWholeMilliseconds % 1000 > 0) {
-        value += "${duration.inWholeMilliseconds % 1000}ms"
-    }
-
-    return value.trim()
-}
-
-/**
  * Format a action intent into a human readable string.
  * @param intent the action intent to be formatted.
  * @return the formatted intent.
@@ -164,7 +139,7 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
     return context.getString(R.string.item_desc_intent_action, action)
 }
 
-/** */
+/** The maximal length of the displayed intent action string. */
 private const val INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT = 15
-/** */
+/** The maximal length of the displayed intent component name string. */
 private const val INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT = 20

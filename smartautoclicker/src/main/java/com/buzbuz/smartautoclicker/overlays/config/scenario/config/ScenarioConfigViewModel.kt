@@ -26,8 +26,8 @@ import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.overlays.config.ConfiguredEndCondition
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
@@ -201,28 +201,28 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     }
 
     /** @return a new empty end condition. */
-    fun createNewEndCondition(): ConfiguredEndCondition =
+    fun createNewEndCondition(): EditedEndCondition =
         editionRepository.createNewEndCondition()
 
     /**
      * Add a new end condition to the scenario.
      * @param confEndCondition the end condition to be added.
      */
-    fun addEndCondition(confEndCondition: ConfiguredEndCondition) =
+    fun addEndCondition(confEndCondition: EditedEndCondition) =
         editionRepository.addEndCondition(confEndCondition)
 
     /**
      * Update an end condition from the scenario.
      * @param confEndCondition the end condition to be updated.
      */
-    fun updateEndCondition(confEndCondition: ConfiguredEndCondition, index: Int) =
-        editionRepository.updateEndCondition(confEndCondition, index)
+    fun updateEndCondition(confEndCondition: EditedEndCondition) =
+        editionRepository.updateEndCondition(confEndCondition)
 
     /**
      * Delete a end condition from the scenario.
      * @param confEndCondition the end condition to be removed.
      */
-    fun deleteEndCondition(confEndCondition: ConfiguredEndCondition) =
+    fun deleteEndCondition(confEndCondition: EditedEndCondition) =
         editionRepository.deleteEndCondition(confEndCondition)
 }
 
@@ -231,7 +231,7 @@ sealed class EndConditionListItem {
     /** The add end condition item. */
     object AddEndConditionItem : EndConditionListItem()
     /** Item representing a end condition. */
-    data class EndConditionItem(val endCondition: ConfiguredEndCondition) : EndConditionListItem()
+    data class EndConditionItem(val endCondition: EditedEndCondition) : EndConditionListItem()
 }
 
 /** The minimum value for the seek bar. */

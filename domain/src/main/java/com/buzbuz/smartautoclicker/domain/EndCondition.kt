@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.EndConditionWithEvent
 data class EndCondition(
     val id: Long = 0,
     val scenarioId: Long,
-    val eventId: Long = 0,
+    var eventId: Long = 0,
     val eventName: String? = null,
     @IntRange(from = 1) var executions: Int = 1,
 ) {

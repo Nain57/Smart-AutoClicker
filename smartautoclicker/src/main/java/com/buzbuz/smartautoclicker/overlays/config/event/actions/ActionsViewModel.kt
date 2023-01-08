@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.extensions.mapList
 import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
@@ -34,7 +35,7 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultIntent
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultPause
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultSwipe
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultToggleEvent
-import com.buzbuz.smartautoclicker.overlays.config.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.flow.*
 
@@ -46,7 +47,7 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
     private val editionRepository = EditionRepository.getInstance(application)
 
     /** Currently configured event. */
-    private val configuredEvent = editionRepository.configuredEvent
+    private val configuredEvent = editionRepository.editedEvent
         .filterNotNull()
 
     /** Tells if there is at least one action to copy. */
@@ -54,8 +55,8 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
         .map { it.isNotEmpty() }
 
     /** List of [actions]. */
-    val actions: StateFlow<List<Action>> = configuredEvent
-        .map { it.event.actions ?: emptyList() }
+    val actions: StateFlow<List<EditedAction>> = configuredEvent
+        .map { it.editedActions }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(),
@@ -63,8 +64,8 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
         )
 
     /** List of action details. */
-    val actionDetails: StateFlow<List<ActionDetails>> = actions
-        .mapList { action -> action.toActionDetails(application) }
+    val actionDetails: StateFlow<List<Pair<EditedAction, ActionDetails>>> = actions
+        .mapList { editedAction -> editedAction to editedAction.action.toActionDetails(application) }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(),
@@ -77,21 +78,29 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
      * @param context the Android Context.
      * @param actionType the type of action to create.
      */
-    fun createAction(context: Context, actionType: ActionTypeChoice): Action {
-        editionRepository.configuredEvent.value?.let { conf ->
-
-            return when (actionType) {
-                is ActionTypeChoice.Click -> newDefaultClick(context, conf.event.id)
-                is ActionTypeChoice.Swipe -> newDefaultSwipe(context, conf.event.id)
-                is ActionTypeChoice.Pause -> newDefaultPause(context, conf.event.id)
-                is ActionTypeChoice.Intent -> newDefaultIntent(context, conf.event.id)
-                is ActionTypeChoice.ToggleEvent -> newDefaultToggleEvent(context, conf.event.id)
-            }
-
+    fun createAction(context: Context, actionType: ActionTypeChoice): EditedAction {
+        editionRepository.editedEvent.value?.let { conf ->
+            return editionRepository.createNewAction(
+                when (actionType) {
+                    is ActionTypeChoice.Click -> newDefaultClick(context, conf.event.id)
+                    is ActionTypeChoice.Swipe -> newDefaultSwipe(context, conf.event.id)
+                    is ActionTypeChoice.Pause -> newDefaultPause(context, conf.event.id)
+                    is ActionTypeChoice.Intent -> newDefaultIntent(context, conf.event.id)
+                    is ActionTypeChoice.ToggleEvent -> newDefaultToggleEvent(context, conf.event.id)
+                }
+            )
         } ?: throw IllegalStateException("Can't create an action, event is null!")
     }
 
-    fun addUpdateAction(action: Action, index: Int) {
+    /**
+     * Create a new action item from an existing action. Used for action copy purposes.
+     * @param action the type of action to create.
+     */
+    fun createAction(action: Action): EditedAction =
+        editionRepository.createNewAction(action)
+
+
+    fun addUpdateAction(action: EditedAction, index: Int) {
         if (index != -1) editionRepository.updateActionFromEditedEvent(action, index)
         else editionRepository.addActionToEditedEvent(action)
     }
@@ -100,14 +109,15 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
      * Remove an action from the event.
      * @param action the action to be removed.
      */
-    fun removeAction(action: Action) = editionRepository.removeActionFromEditedEvent(action)
+    fun removeAction(action: EditedAction) =
+        editionRepository.removeActionFromEditedEvent(action)
 
     /**
      * Update the priority of the actions.
      * @param actions the new actions order.
      */
-    fun updateActionOrder(actions: List<ActionDetails>) = editionRepository
-        .updateActionOrder(actions.map { it.action })
+    fun updateActionOrder(actions: List<Pair<EditedAction, ActionDetails>>) =
+        editionRepository.updateActionOrder(actions.map { it.first })
 }
 
 /** Choices for the action type selection dialog. */

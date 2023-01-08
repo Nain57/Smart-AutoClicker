@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.config
+package com.buzbuz.smartautoclicker.domain.edition
 
 import android.content.Context
 
@@ -26,7 +26,6 @@ import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Scenario
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -34,6 +33,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
+// TODO: Needs to check scenario validity when removing an event for
+//  - end condition referencing this event
+//  - toggle event action referencing this event
 
 /** Repository handling the user edition of a scenario. */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -62,6 +65,9 @@ class EditionRepository private constructor(context: Context) {
     /** The repository providing access to the database. */
     private val repository: Repository = Repository.getRepository(context)
 
+    /** */
+    private val editedItemManager: EditedItemManager = EditedItemManager()
+
     /**
      * The unique identifier of the scenario currently used/configured.
      * Set with [setConfiguredScenario].
@@ -78,30 +84,15 @@ class EditionRepository private constructor(context: Context) {
         .flatMapLatest { id -> repository.getCompleteEventListFlow(id) }
 
     /**
-     * The state of the currently configured scenario in the database.
-     * It will not changes until [saveEditions] is called.
-     */
-    private val dbScenario: Flow<ConfiguredScenario> = dbScenarioWithEndConditions
-        .combine(dbEvents) { scenarioWithEndConditions, events ->
-            ConfiguredScenario(
-                scenario = scenarioWithEndConditions.first,
-                endConditions = scenarioWithEndConditions.second.mapIndexed { index, endCondition ->
-                    ConfiguredEndCondition(endCondition, index)
-                },
-                events = events.mapIndexed { index, event -> ConfiguredEvent(event, index) },
-            )
-        }
-
-    /**
      * The scenario currently edited by the user.
-     * Set as the [dbScenario] value when starting the edition with [startEditions], it will contains all modifications
+     * Set as the dbScenario when starting the edition with [startEditions], it will contains all modifications
      * made by the user.
      */
-    private val _editedScenario: MutableStateFlow<ConfiguredScenario?> = MutableStateFlow(null)
+    private val _editedScenario: MutableStateFlow<EditedScenario?> = MutableStateFlow(null)
     /** The scenario currently edited by the user. */
-    val editedScenario: StateFlow<ConfiguredScenario?> = _editedScenario
+    val editedScenario: StateFlow<EditedScenario?> = _editedScenario
     /** The event list for scenario currently edited by the user. */
-    val editedEvents: Flow<List<ConfiguredEvent>> = _editedScenario.map { confScenario ->
+    val editedEvents: Flow<List<EditedEvent>> = _editedScenario.map { confScenario ->
         confScenario?.events ?: emptyList()
     }
 
@@ -109,8 +100,8 @@ class EditionRepository private constructor(context: Context) {
      * The event currently configured by the user.
      * Set as the selected event via [startEventEdition], it will contains all modifications made by the user.
      */
-    private val _configuredEvent: MutableStateFlow<ConfiguredEvent?> = MutableStateFlow(null)
-    val configuredEvent: StateFlow<ConfiguredEvent?> = _configuredEvent
+    private val _editedEvent: MutableStateFlow<EditedEvent?> = MutableStateFlow(null)
+    val editedEvent: StateFlow<EditedEvent?> = _editedEvent
 
     /** Tells if the editions made on the scenario are synchronized with the database values. */
     val isEditionSynchronized: Flow<Boolean> = _editedScenario.map { it == null }
@@ -122,9 +113,19 @@ class EditionRepository private constructor(context: Context) {
 
     /** Start editing the configured scenario. */
     suspend fun startEditions() {
-        dbScenario.firstOrNull()?.let { dbScenario ->
-            _editedScenario.emit(dbScenario)
-        } ?: throw IllegalStateException("Can't start editions, there is no configured scenario set")
+        val scenarioWithEndConditions = dbScenarioWithEndConditions.firstOrNull()
+            ?: throw IllegalStateException("Can't start editions, there is no configured scenario set")
+        val events = dbEvents.firstOrNull() ?: emptyList()
+
+        editedItemManager.resetEditionItemIds()
+
+        _editedScenario.emit(
+            editedItemManager.createConfiguredScenario(
+                scenario = scenarioWithEndConditions.first,
+                endConditions = scenarioWithEndConditions.second,
+                events = events,
+            )
+        )
     }
 
     /** Cancel all changes made during the edition. */
@@ -134,36 +135,10 @@ class EditionRepository private constructor(context: Context) {
 
     /** Save editions changes in the database. */
     suspend fun saveEditions() {
-        _editedScenario.value?.let { conf ->
-            repository.updateScenario(conf.scenario)
-
-            val eventItemIdMap = mutableMapOf<Int, Long>()
-            val toBeRemoved = repository.getCompleteEventList(conf.scenario.id).toMutableList()
-            conf.events.forEachIndexed { index, configuredEvent ->
-                configuredEvent.event.priority = index
-
-                if (configuredEvent.event.id == 0L) {
-                    val eventId = repository.addEvent(configuredEvent.event)
-                    eventItemIdMap[configuredEvent.itemId] = eventId
-                } else {
-                    repository.updateEvent(configuredEvent.event)
-                    if (toBeRemoved.removeIf { it.id == configuredEvent.event.id }) {
-                        eventItemIdMap[configuredEvent.itemId] = configuredEvent.event.id
-                    }
-                }
-            }
-            toBeRemoved.forEach { event -> repository.removeEvent(event) }
-
-            repository.updateEndConditions(conf.scenario.id, conf.endConditions.mapNotNull { confEndCondition ->
-                val eventId = eventItemIdMap[confEndCondition.eventItemId] ?: return@mapNotNull null
-                confEndCondition.endCondition.copy(
-                    scenarioId = conf.scenario.id,
-                    eventId = eventId,
-                )
-            })
-        } ?: throw IllegalStateException("Can't save editions, there is no configured scenario set")
-
-        _editedScenario.emit(null)
+        _editedScenario.apply {
+            value?.let { repository.updateScenario(it) }
+            emit(null)
+        }
     }
 
     /** Update the currently edited scenario. */
@@ -177,29 +152,34 @@ class EditionRepository private constructor(context: Context) {
      * @param events the events, ordered by their new priorities. They must be in the current scenario and have a
      *               defined id.
      */
-    fun updateEventsPriority(events: List<ConfiguredEvent>) {
+    fun updateEventsPriority(events: List<EditedEvent>) {
         updateEditedEventItems(events)
     }
 
     /** @return a new empty end condition. */
-    fun createNewEndCondition(): ConfiguredEndCondition =
+    fun createNewEndCondition(): EditedEndCondition =
         editedScenario.value?.let { confScenario ->
-            ConfiguredEndCondition(EndCondition(scenarioId = confScenario.scenario.id))
+            editedItemManager.createNewConfiguredEndCondition(
+                EndCondition(scenarioId = confScenario.scenario.id)
+            )
         } ?: throw IllegalStateException("No scenario defined !")
 
     /**
      * Add a new end condition to the scenario.
      * @param confEndCondition the end condition to be added.
      */
-    fun addEndCondition(confEndCondition: ConfiguredEndCondition) {
+    fun addEndCondition(confEndCondition: EditedEndCondition) {
         if (confEndCondition.endCondition.id != 0L) return
 
         editedScenario.value?.let { conf ->
             _editedScenario.value = conf.copy(
                 endConditions = conf.endConditions.toMutableList().apply {
-                    if (confEndCondition.itemId == INVALID_CONFIGURED_ITEM_ID) {
-                        add(confEndCondition.copy(itemId = conf.endConditions.size))
+                    if (confEndCondition.itemId == INVALID_EDITED_ITEM_ID
+                        || confEndCondition.eventItemId == INVALID_EDITED_ITEM_ID) {
+                        throw IllegalStateException("Event item id can't be found.")
                     }
+
+                    add(confEndCondition)
                 }
             )
         }
@@ -209,8 +189,11 @@ class EditionRepository private constructor(context: Context) {
      * Update an end condition from the scenario.
      * @param confEndCondition the end condition to be updated.
      */
-    fun updateEndCondition(confEndCondition: ConfiguredEndCondition, index: Int) {
+    fun updateEndCondition(confEndCondition: EditedEndCondition) {
         editedScenario.value?.let { conf ->
+            val index = conf.endConditions.indexOfFirst { it.itemId == confEndCondition.itemId }
+            if (index == -1) throw IllegalStateException("Can't update end condition, itemId not found.")
+
             _editedScenario.value = conf.copy(
                 endConditions = conf.endConditions.toMutableList().apply { set(index, confEndCondition) }
             )
@@ -221,22 +204,29 @@ class EditionRepository private constructor(context: Context) {
      * Delete a end condition from the scenario.
      * @param confEndCondition the end condition to be removed.
      */
-    fun deleteEndCondition(confEndCondition: ConfiguredEndCondition) {
+    fun deleteEndCondition(confEndCondition: EditedEndCondition) {
         editedScenario.value?.let { conf ->
+            val index = conf.endConditions.indexOfFirst { it.itemId == confEndCondition.itemId }
+            if (index == -1) throw IllegalStateException("Can't delete end condition, itemId not found.")
+
             _editedScenario.value = conf.copy(
-                endConditions = conf.endConditions.toMutableList().apply { remove(confEndCondition) }
+                endConditions = conf.endConditions.toMutableList().apply { removeAt(index) }
             )
         }
     }
 
+    /** */
+    fun createNewEvent(event: Event): EditedEvent =
+        editedItemManager.createNewConfiguredEvent(event)
+
     /** Set the event currently edited. */
-    fun startEventEdition(event: ConfiguredEvent) {
-        _configuredEvent.value = event
+    fun startEventEdition(event: EditedEvent) {
+        _editedEvent.value = event
     }
 
     /** Update the currently edited event. */
     fun updateEditedEvent(event: Event) {
-        _configuredEvent.value = _configuredEvent.value?.copy(event = event)
+        _editedEvent.value = _editedEvent.value?.copy(event = event)
     }
 
     /**
@@ -244,33 +234,30 @@ class EditionRepository private constructor(context: Context) {
      * If the event id is unset, it will be added. If not, updated.
      */
     fun commitEditedEventToEditedScenario() {
-        val item = _configuredEvent.value ?: return
+        val item = _editedEvent.value ?: return
         val items = (editedScenario.value?.events ?: emptyList()).toMutableList()
 
-        if (item.itemId == INVALID_CONFIGURED_ITEM_ID) {
-            items.add(item.copy(itemId = items.size))
-        } else {
-            val itemIndex = items.indexOfFirst { other -> item.itemId == other.itemId }
-            if (itemIndex == -1) return
-
-            items[itemIndex] = item
+        items.indexOfFirst { other -> item.itemId == other.itemId }.let { itemIndex ->
+            if (itemIndex == -1) items.add(item)
+            else items[itemIndex] = item
         }
 
         updateEditedEventItems(items)
-        _configuredEvent.value = null
+        _editedEvent.value = null
     }
 
     /** Delete the edited event from the edited scenario. */
     fun deleteEditedEventFromEditedScenario() {
-        val item = _configuredEvent.value ?: return
+        val item = _editedEvent.value ?: return
         val items = (editedScenario.value?.events ?: emptyList()).toMutableList()
 
-        val itemIndex = items.indexOfFirst { other -> item.itemId == other.itemId }
-        if (itemIndex == -1) return
-        items.removeAt(itemIndex)
+        items.indexOfFirst { other -> item.itemId == other.itemId }.let { itemIndex ->
+            if (itemIndex == -1) return
+            items.removeAt(itemIndex)
+        }
 
         updateEditedEventItems(items)
-        _configuredEvent.value = null
+        _editedEvent.value = null
     }
 
     /**
@@ -278,11 +265,11 @@ class EditionRepository private constructor(context: Context) {
      * @param condition the new condition.
      */
     fun addConditionToEditedEvent(condition: Condition) {
-        configuredEvent.value?.let { conf ->
+        editedEvent.value?.let { conf ->
             val newConditions = conf.event.conditions?.let { ArrayList(it) } ?: ArrayList()
             newConditions.add(condition)
 
-            _configuredEvent.value = conf.copy(event = conf.event.copy(conditions = newConditions))
+            _editedEvent.value = conf.copy(event = conf.event.copy(conditions = newConditions))
         }
     }
 
@@ -291,11 +278,11 @@ class EditionRepository private constructor(context: Context) {
      * @param condition the updated condition.
      */
     fun updateConditionFromEditedEvent(condition: Condition, index: Int) {
-        configuredEvent.value?.let { conf ->
+        editedEvent.value?.let { conf ->
             val newConditions = conf.event.conditions?.let { ArrayList(it) } ?: ArrayList()
             newConditions[index] = condition
 
-            _configuredEvent.value = conf.copy(event = conf.event.copy(conditions = newConditions))
+            _editedEvent.value = conf.copy(event = conf.event.copy(conditions = newConditions))
         }
     }
 
@@ -304,50 +291,70 @@ class EditionRepository private constructor(context: Context) {
      * @param condition the condition to be removed.
      */
     fun removeConditionFromEditedEvent(condition: Condition) {
-        configuredEvent.value?.let { conf ->
+        editedEvent.value?.let { conf ->
             val newConditions = conf.event.conditions?.let { ArrayList(it) } ?: ArrayList()
             if (newConditions.remove(condition)) {
-                _configuredEvent.value = conf.copy(event = conf.event.copy(conditions = newConditions))
+                _editedEvent.value = conf.copy(event = conf.event.copy(conditions = newConditions))
             }
         }
     }
 
+    /** */
+    fun createNewAction(action: Action): EditedAction =
+        editedItemManager.createNewEditedAction(action)
+
     /**
      * Add a new action to the edited event.
-     * @param action the new action.
+     * @param editedAction the new action.
      */
-    fun addActionToEditedEvent(action: Action) {
-        configuredEvent.value?.let { conf ->
+    fun addActionToEditedEvent(editedAction: EditedAction) {
+        editedEvent.value?.let { conf ->
             val newActions = conf.event.actions?.let { ArrayList(it) } ?: ArrayList()
-            newActions.add(action)
+            newActions.add(editedAction.action)
+            val newEditedActions = ArrayList(conf.editedActions)
+            newEditedActions.add(editedAction)
 
-            _configuredEvent.value = conf.copy(event = conf.event.copy(actions = newActions))
+            _editedEvent.value = conf.copy(
+                event = conf.event.copy(actions = newActions),
+                editedActions = newEditedActions,
+            )
         }
     }
 
     /**
      * Update an action from the edited event.
-     * @param action the updated action.
+     * @param editedAction the updated action.
+     * @param index the index in the action list.
      */
-    fun updateActionFromEditedEvent(action: Action, index: Int) {
-        configuredEvent.value?.let { conf ->
+    fun updateActionFromEditedEvent(editedAction: EditedAction, index: Int) {
+        editedEvent.value?.let { conf ->
             val newActions = conf.event.actions?.let { ArrayList(it) } ?: ArrayList()
-            newActions[index] = action
+            newActions[index] = editedAction.action
+            val newEditedActions = ArrayList(conf.editedActions)
+            newEditedActions[index] = editedAction
 
-            _configuredEvent.value = conf.copy(event = conf.event.copy(actions = newActions))
+            _editedEvent.value = conf.copy(
+                event = conf.event.copy(actions = newActions),
+                editedActions = newEditedActions,
+            )
         }
     }
 
     /**
      * Remove an action from the edited event.
-     * @param action the action to be removed.
+     * @param editedAction the action to be removed.
      */
-    fun removeActionFromEditedEvent(action: Action) {
-        configuredEvent.value?.let { conf ->
+    fun removeActionFromEditedEvent(editedAction: EditedAction) {
+        editedEvent.value?.let { conf ->
             val newActions = conf.event.actions?.let { ArrayList(it) } ?: ArrayList()
-            if (newActions.remove(action)) {
-                _configuredEvent.value = conf.copy(event = conf.event.copy(actions = newActions))
-            }
+            newActions.remove(editedAction.action)
+            val newEditedActions = ArrayList(conf.editedActions)
+            newEditedActions.remove(editedAction)
+
+            _editedEvent.value = conf.copy(
+                event = conf.event.copy(actions = newActions),
+                editedActions = newEditedActions,
+            )
         }
     }
 
@@ -355,15 +362,16 @@ class EditionRepository private constructor(context: Context) {
      * Update the priority of the actions.
      * @param actions the new actions order.
      */
-    fun updateActionOrder(actions: List<Action>) {
-        configuredEvent.value?.let { conf ->
-            _configuredEvent.value = conf.copy(
-                event = conf.event.copy(actions = actions.toMutableList())
+    fun updateActionOrder(actions: List<EditedAction>) {
+        editedEvent.value?.let { conf ->
+            _editedEvent.value = conf.copy(
+                event = conf.event.copy(actions = actions.map { it.action }.toMutableList()),
+                editedActions = actions.toMutableList(),
             )
         }
     }
 
-    private fun updateEditedEventItems(newItems: List<ConfiguredEvent>) {
+    private fun updateEditedEventItems(newItems: List<EditedEvent>) {
         val currentConfiguredScenario = editedScenario.value ?: return
 
         _editedScenario.value = currentConfiguredScenario.copy(
@@ -372,23 +380,3 @@ class EditionRepository private constructor(context: Context) {
         )
     }
 }
-
-/** Represents the scenario currently configured. */
-data class ConfiguredScenario(
-    val scenario: Scenario,
-    val events: List<ConfiguredEvent>,
-    val endConditions: List<ConfiguredEndCondition>,
-)
-
-/** Represents the events of the scenario currently configured. */
-data class ConfiguredEvent(val event: Event, val itemId: Int = INVALID_CONFIGURED_ITEM_ID)
-
-/** Represents the events of the scenario currently configured. */
-data class ConfiguredEndCondition(
-    val endCondition: EndCondition,
-    val eventItemId: Int = INVALID_CONFIGURED_ITEM_ID,
-    val itemId: Int = INVALID_CONFIGURED_ITEM_ID,
-)
-
-/** Invalid configured item id. The event item object is created but not yet in the list. */
-const val INVALID_CONFIGURED_ITEM_ID = -1

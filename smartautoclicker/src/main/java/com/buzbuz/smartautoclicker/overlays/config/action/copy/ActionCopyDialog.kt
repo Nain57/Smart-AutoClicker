@@ -37,12 +37,10 @@ import kotlinx.coroutines.launch
  * [CopyDialog] implementation for displaying the whole list of actions for a copy.
  *
  * @param context the Android Context for the dialog shown by this controller.
- * @param actions the list of edited actions for the configured event.
  * @param onActionSelected the listener called when the user select an Action.
  */
 class ActionCopyDialog(
     context: Context,
-    private val actions: List<Action>,
     private val onActionSelected: (Action) -> Unit,
 ) : CopyDialog(context) {
 
@@ -53,8 +51,6 @@ class ActionCopyDialog(
     private lateinit var actionCopyAdapter: ActionCopyAdapter
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        viewModel.setItemsFromContainer(actions)
-
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->
             onActionSelected(viewModel.getNewActionForCopy(selectedAction))
             destroy()
