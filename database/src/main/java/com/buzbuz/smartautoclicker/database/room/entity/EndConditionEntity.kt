@@ -58,7 +58,7 @@ import kotlinx.serialization.Serializable
 data class EndConditionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
-    @ColumnInfo(name = "event_id") val eventId: Long,
+    @ColumnInfo(name = "event_id") var eventId: Long,
     @ColumnInfo(name = "executions") val executions: Int,
 )
 

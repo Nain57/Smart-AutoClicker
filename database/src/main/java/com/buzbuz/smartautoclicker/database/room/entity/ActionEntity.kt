@@ -111,7 +111,7 @@ data class ActionEntity(
     @ColumnInfo(name = "flags") val flags: Int? = null,
 
     // ActionType.TOGGLE_EVENT
-    @ColumnInfo(name = "toggle_event_id") val toggleEventId: Long? = null,
+    @ColumnInfo(name = "toggle_event_id") var toggleEventId: Long? = null,
     @ColumnInfo(name = "toggle_type") val toggleEventType: ToggleEventType? = null,
 )
 

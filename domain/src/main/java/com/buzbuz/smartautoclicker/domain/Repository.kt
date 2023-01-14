@@ -76,6 +76,8 @@ interface Repository {
      * Update a scenario.
      *
      * @param editedScenario the scenario to update.
+     *
+     * @throws IllegalArgumentException if the edited scenario is incomplete.
      */
     suspend fun updateScenario(editedScenario: EditedScenario)
 

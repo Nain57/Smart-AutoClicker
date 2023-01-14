@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.domain.edition.EditedScenario
 import com.buzbuz.smartautoclicker.domain.edition.INVALID_EDITED_ITEM_ID
+import com.buzbuz.smartautoclicker.domain.edition.isValidForSave
 import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
@@ -116,6 +117,10 @@ internal class RepositoryImpl internal constructor(
     override fun getAllConditions(): Flow<List<Condition>> = conditionsDao.getAllConditions().mapList { it.toCondition() }
 
     override suspend fun updateScenario(editedScenario: EditedScenario) {
+        // Ensure correctness of the inserted scenario
+        if (!editedScenario.isValidForSave())
+            throw IllegalArgumentException("Can't save this scenario, it is invalid.")
+
         // Update scenario entity values
         scenarioDao.update(editedScenario.scenario.toEntity())
 
@@ -153,6 +158,8 @@ internal class RepositoryImpl internal constructor(
     }
 
     private suspend fun updateEventConditions(evtId: Long, conditions: List<Condition>) {
+        saveNewConditionsBitmap(conditions)
+
         conditionsUpdater.refreshUpdateValues(
             currentEntities = conditionsDao.getConditions(evtId),
             newItems = conditions,
@@ -163,7 +170,6 @@ internal class RepositoryImpl internal constructor(
             }
         )
 
-        saveNewConditionsBitmap(conditions)
         conditionsDao.syncConditions(
             conditionsUpdater.toBeAdded,
             conditionsUpdater.toBeUpdated,
@@ -186,12 +192,15 @@ internal class RepositoryImpl internal constructor(
             currentEntities = actionDao.getCompleteActions(evtId),
             newItems = actions,
             toEntity = { index, editedAction ->
-                editedAction.action.apply {
-                    eventId = evtId
-                    if (this is Action.ToggleEvent && editedAction.toggleEventItemId != INVALID_EDITED_ITEM_ID) {
-                        toggleEventId = evtItemIdToDbIdMap.getEventId(editedAction.toggleEventItemId)
-                    }
-                }.toEntity().apply {
+                val toggleEvtId = if (editedAction.action is Action.ToggleEvent && editedAction.toggleEventItemId != INVALID_EDITED_ITEM_ID) {
+                    evtItemIdToDbIdMap.getEventId(editedAction.toggleEventItemId)
+                } else {
+                    null
+                }
+
+                editedAction.action.toEntity().apply {
+                    action.eventId = evtId
+                    action.toggleEventId = toggleEvtId
                     action.priority = index
                 }
             }
@@ -213,9 +222,9 @@ internal class RepositoryImpl internal constructor(
             currentEntities = endConditionDao.getEndConditions(scenarioId),
             newItems = endConditions,
             toEntity = { _, editedEndCondition ->
-                editedEndCondition.endCondition.apply {
+                editedEndCondition.endCondition.toEntity().apply {
                     eventId = evtItemIdToDbIdMap.getEventId(editedEndCondition.eventItemId)
-                }.toEntity()
+                }
             }
         )
 

@@ -48,5 +48,74 @@ data class EditedAction internal constructor(
     val toggleEventItemId: Int = INVALID_EDITED_ITEM_ID,
 )
 
+/**
+ * Check scenario validity for database saving.
+ * An edited scenario should have at least one event (all valid), and 0 or more end conditions (all valid)
+ **
+ * @return true if the edited scenario can be saved in database, false if not.
+ */
+internal fun EditedScenario.isValidForSave(): Boolean {
+    if (events.isEmpty()) return false
+    for (editedEvent in events) if (!editedEvent.isValidForSave(events)) return false
+
+    for (editedEndCondition in endConditions) if (!editedEndCondition.isValidForSave(events)) return false
+
+    return true
+}
+
+/**
+ * Check event validity for database saving.
+ * An edited event should shave a valid item id, at least one conditions (all valid), at least one action (all valid)
+ * and a list of edited action, each of them referencing an event action.
+ *
+ * @param editedEvents the edited events for the scenario of this event.
+ *
+ * @return true if the edited event can be saved in database, false if not.
+ */
+private fun EditedEvent.isValidForSave(editedEvents: List<EditedEvent>): Boolean {
+    if (itemId == INVALID_EDITED_ITEM_ID) return false
+
+    if (event.conditions.isNullOrEmpty()) return false
+
+    if (editedActions.isEmpty()) return false
+    if (event.actions.isNullOrEmpty()) return false
+    if (editedActions.size != event.actions.size) return false
+    for (editedAction in editedActions) if (!editedAction.isValidForSave(editedEvents)) return false
+
+    return true
+}
+
+/**
+ * Check action validity for database saving.
+ * An edited action should simply be complete, except for a ToggleEvent, where it should reference an existing event
+ * within the same scenario.
+ *
+ * @param editedEvents the edited events for the scenario of this action.
+ *
+ * @return true if the edited action can be saved in database, false if not.
+ */
+private fun EditedAction.isValidForSave(editedEvents: List<EditedEvent>): Boolean = when (action) {
+    is Action.Click,
+    is Action.Swipe,
+    is Action.Pause,
+    is Action.Intent -> action.isComplete()
+
+    is Action.ToggleEvent -> action.isComplete()
+            && toggleEventItemId != INVALID_EDITED_ITEM_ID
+            && editedEvents.find { editedEvent -> toggleEventItemId == editedEvent.itemId } != null
+}
+
+
+/**
+ * Check end condition validity for database saving.
+ * An edited end condition should have a valid edited item id and a valid corresponding event.
+ *
+ * @param editedEvents the edited events for the scenario of this end condition.
+ *
+ * @return true if the edited end condition can be saved in database, false if not.
+ */
+private fun EditedEndCondition.isValidForSave(editedEvents: List<EditedEvent>): Boolean =
+    itemId != INVALID_EDITED_ITEM_ID && editedEvents.find { editedEvent -> eventItemId == editedEvent.itemId } != null
+
 /** Invalid edited item id. */
 const val INVALID_EDITED_ITEM_ID = -1

@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
  * @param priority the execution priority of the event in the scenario.
  * @param actions the list of action to execute when the conditions have been fulfilled
  * @param conditions the list of conditions to fulfill to execute the [actions].
- * @param enabledOnStart tells if the event should be evalutated with the scenario, or if it should be enabled by an action.
+ * @param enabledOnStart tells if the event should be evaluated with the scenario, or if it should be enabled by an action.
  */
 data class Event(
     var id: Long = 0,
