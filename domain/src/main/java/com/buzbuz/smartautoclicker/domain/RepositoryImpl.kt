@@ -35,7 +35,9 @@ import com.buzbuz.smartautoclicker.domain.edition.isValidForSave
 import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
@@ -80,8 +82,12 @@ internal class RepositoryImpl internal constructor(
         entityPrimaryKeySupplier = { endConditionEntity -> endConditionEntity.id },
     )
 
-    override val scenarios =
-        scenarioDao.getScenariosWithEvents().mapList { it.toScenario() }
+    /** True when data are being inserted/edited, false if not. */
+    private val isEditingData: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    override val scenarios = scenarioDao.getScenariosWithEvents()
+        .filterWhenEditing()
+        .mapList { it.toScenario() }
 
     override suspend fun addScenario(scenario: Scenario): Long =
         scenarioDao.add(scenario.toEntity())
@@ -99,6 +105,7 @@ internal class RepositoryImpl internal constructor(
     }
 
     override fun getScenarioWithEndConditionsFlow(scenarioId: Long) = scenarioDao.getScenarioWithEndConditions(scenarioId)
+        .filterWhenEditing()
         .mapNotNull { scenarioWithEndConditions ->
             scenarioWithEndConditions ?: return@mapNotNull null
             scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
@@ -108,18 +115,28 @@ internal class RepositoryImpl internal constructor(
         eventDao.getCompleteEvents(scenarioId).map { it.toEvent() }
 
     override fun getCompleteEventListFlow(scenarioId: Long): Flow<List<Event>> =
-        eventDao.getCompleteEventsFlow(scenarioId).mapList { it.toEvent() }
+        eventDao.getCompleteEventsFlow(scenarioId)
+            .filterWhenEditing()
+            .mapList { it.toEvent() }
 
-    override fun getAllEvents(): Flow<List<Event>> = eventDao.getAllEvents().mapList { it.toEvent() }
+    override fun getAllEvents(): Flow<List<Event>> = eventDao.getAllEvents()
+        .filterWhenEditing()
+        .mapList { it.toEvent() }
 
-    override fun getAllActions(): Flow<List<Action>> = actionDao.getAllActions().mapList { it.toAction() }
+    override fun getAllActions(): Flow<List<Action>> = actionDao.getAllActions()
+        .filterWhenEditing()
+        .mapList { it.toAction() }
 
-    override fun getAllConditions(): Flow<List<Condition>> = conditionsDao.getAllConditions().mapList { it.toCondition() }
+    override fun getAllConditions(): Flow<List<Condition>> = conditionsDao.getAllConditions()
+        .filterWhenEditing()
+        .mapList { it.toCondition() }
 
     override suspend fun updateScenario(editedScenario: EditedScenario) {
         // Ensure correctness of the inserted scenario
         if (!editedScenario.isValidForSave())
             throw IllegalArgumentException("Can't save this scenario, it is invalid.")
+
+        isEditingData.value = true
 
         // Update scenario entity values
         scenarioDao.update(editedScenario.scenario.toEntity())
@@ -130,6 +147,8 @@ internal class RepositoryImpl internal constructor(
             updateEventActions(editedEvent.itemId, editedEvent.editedActions, eventItemIdMap)
         }
         updateEndConditions(editedScenario.scenario.id, editedScenario.endConditions, eventItemIdMap)
+
+        isEditingData.value = false
     }
 
     /**
@@ -309,6 +328,8 @@ internal class RepositoryImpl internal constructor(
     }
 
     private suspend fun insertRestoredScenarios(completeScenarios: List<CompleteScenario>) {
+        isEditingData.value = true
+
         completeScenarios.forEach { completeScenario ->
             // Insert scenario to get the new database id
             val scenarioId = scenarioDao.add(completeScenario.scenario.copy(id = 0))
@@ -354,6 +375,16 @@ internal class RepositoryImpl internal constructor(
                 }
             )
         }
+
+        isEditingData.value = false
+    }
+
+    /**
+     * Propagate the changes of a flow only when [isEditingData] is false.
+     * This allows to prevent the clients to receives updates when a scenario is being updated.
+     */
+    private fun <T> Flow<T>.filterWhenEditing() = combineTransform(isEditingData) { value, isEditing ->
+        if (!isEditing) emit(value)
     }
 }
 
