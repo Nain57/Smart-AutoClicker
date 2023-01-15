@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,12 +28,11 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
 import com.buzbuz.smartautoclicker.overlays.debugging.report.formatConfidenceRate
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 
 /** ViewModel for the debug features. */
-@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class DebugModel(application: Application) : AndroidViewModel(application) {
 
     /** Debug configuration shared preferences. */
@@ -50,17 +49,10 @@ class DebugModel(application: Application) : AndroidViewModel(application) {
         debugging && sharedPreferences.getIsDebugViewEnabled(application)
     }
 
-    /** The confidence rate on the last detection, positive or negative. */
-    val debugLastConfidenceRate: Flow<String?> = debugLastResult
-        .sample(CONFIDENCE_RATE_SAMPLING_TIME_MS)
-        .map { lastDebugInfo ->
-            lastDebugInfo.detectionResult.confidenceRate.formatConfidenceRate()
-        }
-
     /** The coordinates of the last positive detection. */
     val debugLastPositiveCoordinates: Flow<Rect> = debugLastResult
         .map { debugInfo ->
-            if (debugInfo.detectionResult.isDetected) debugInfo.conditionArea
+            if (debugInfo != null && debugInfo.detectionResult.isDetected) debugInfo.conditionArea
             else Rect()
         }
 
@@ -69,6 +61,11 @@ class DebugModel(application: Application) : AndroidViewModel(application) {
         .flatMapLatest { it.lastPositiveInfo }
         .flatMapLatest { debugInfo ->
             flow {
+                if (debugInfo == null) {
+                    emit(LastPositiveDebugInfo())
+                    return@flow
+                }
+
                 emit(
                     LastPositiveDebugInfo(
                         debugInfo.event.name,
@@ -84,7 +81,7 @@ class DebugModel(application: Application) : AndroidViewModel(application) {
 
     private val _isDebugReportConsumed = MutableStateFlow(false)
     /** True if the debug report have been consumed, false if not. */
-    val isDebugReportConsumed: StateFlow<Boolean> = _isDebugReportConsumed
+    private val isDebugReportConsumed: StateFlow<Boolean> = _isDebugReportConsumed
 
     /** True when a debug report is available. */
     val isDebugReportReady: Flow<Boolean> = detectorEngine.debugEngine
@@ -118,5 +115,3 @@ data class LastPositiveDebugInfo(
 
 /** Delay before removing the last positive result display in debug. */
 private const val POSITIVE_VALUE_DISPLAY_TIMEOUT_MS = 1500L
-/** Sampling on the current confidence rate for the display. */
-private const val CONFIDENCE_RATE_SAMPLING_TIME_MS = 450L

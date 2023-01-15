@@ -109,7 +109,6 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
     /** Tells if the configured click is valid and can be saved. */
     val isValidAction: Flow<Boolean> = configuredToggleEvent
         .map { toggleEvent ->
-            println("TOTO: $toggleEvent")
             toggleEvent != null && !toggleEvent.name.isNullOrEmpty() && toggleEvent.toggleEventId != null
                     && toggleEvent.toggleEventType != null
         }

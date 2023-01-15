@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ import kotlinx.coroutines.flow.*
 /** Engine for the debugging of a scenario processing. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class DebugEngine(
-    val instantData: Boolean,
-    val generateReport: Boolean,
+    private val instantData: Boolean,
+    private val generateReport: Boolean,
     private val scenario: Scenario,
     private val events: List<Event>,
 ) {
@@ -54,12 +54,12 @@ class DebugEngine(
     val debugReport: Flow<DebugReport?> = _debugReport
 
     /** The DebugInfo for the current image. */
-    private val currentInfo = MutableSharedFlow<DebugInfo>()
+    private val currentInfo = MutableSharedFlow<DebugInfo?>()
     /** The DebugInfo for the current image. */
     val lastResult = currentInfo
     /** The DebugInfo for the last positive detection. */
     val lastPositiveInfo = currentInfo
-        .filter { it.detectionResult.isDetected }
+        .filter { it?.detectionResult?.isDetected ?: false }
 
     /** Start the session recorder at the DebugEngine creation. */
     init {
@@ -139,8 +139,11 @@ class DebugEngine(
         imageRecorder.onProcessingEnd()
     }
 
-    internal fun onSessionEnded() {
-        currentInfo.resetReplayCache()
+    internal suspend fun onSessionEnded() {
+        currentInfo.apply {
+            resetReplayCache()
+            emit(null)
+        }
         if (!generateReport) return
 
         sessionRecorder.onProcessingEnd()

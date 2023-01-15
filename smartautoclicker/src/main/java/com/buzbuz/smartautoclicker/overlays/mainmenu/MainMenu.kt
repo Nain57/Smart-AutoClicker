@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -187,6 +187,9 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
             debugObservableJob?.cancel()
             debugObservableJob = null
 
+            viewBinding.debugEventName.text = null
+            viewBinding.debugConditionName.text = null
+            viewBinding.debugConfidenceRate.text = null
             viewBinding.layoutDebug.visibility = View.GONE
             setOverlayViewVisibility(View.GONE)
             (screenOverlayView as DebugOverlayView).clear()
