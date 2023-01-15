@@ -38,7 +38,7 @@ fun ItemEventBinding.bind(event: Event, canDrag: Boolean, itemClickedListener: (
     textActionsCount.text = event.actions?.size?.toString()
 
     val typedValue = TypedValue()
-    val actionColorAttr = if (event.actions.isNullOrEmpty()) R.attr.colorError else R.attr.colorOnPrimaryContainer
+    val actionColorAttr = if (event.actions.isNullOrEmpty()) R.attr.colorError else R.attr.colorOnSurface
     root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
     textActionsCount.setTextColor(typedValue.data)
     imageAction.setIconTintColor(typedValue.data)
