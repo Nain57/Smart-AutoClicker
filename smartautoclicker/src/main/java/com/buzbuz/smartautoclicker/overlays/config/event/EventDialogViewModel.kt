@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
 package com.buzbuz.smartautoclicker.overlays.config.event
 
 import android.app.Application
-import com.buzbuz.smartautoclicker.R
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationViewModel
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
@@ -29,8 +29,11 @@ import kotlinx.coroutines.flow.mapNotNull
 
 class EventDialogViewModel(application: Application) : NavigationViewModel(application) {
 
+    /** Repository containing the user editions. */
+    private val editionRepository = EditionRepository.getInstance(application)
+
     /** The event currently configured. */
-    val configuredEvent: Flow<Event> = EditionRepository.getInstance(application).editedEvent
+    private val configuredEvent: Flow<Event> = editionRepository.editedEvent
         .mapNotNull { it?.event }
 
     /** Visibility of the top bar delete button. */
@@ -58,4 +61,10 @@ class EventDialogViewModel(application: Application) : NavigationViewModel(appli
             }
             allValid
         }
+
+    /** Tells if this event have associated end conditions. */
+    fun isEventHaveRelatedEndConditions(): Boolean = editionRepository.isEditedEventUsedByEndCondition()
+
+    /** Tells if this event have associated end conditions. */
+    fun isEventHaveRelatedActions(): Boolean = editionRepository.isEditedEventUsedByAction()
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,18 @@
 package com.buzbuz.smartautoclicker.overlays.config.event
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogController
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
@@ -37,6 +40,7 @@ import com.buzbuz.smartautoclicker.overlays.config.event.conditions.ConditionsCo
 import com.buzbuz.smartautoclicker.overlays.config.event.config.EventConfigContent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
@@ -87,7 +91,10 @@ class EventDialog(
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
         when (buttonType) {
             DialogNavigationButton.SAVE -> onConfigComplete()
-            DialogNavigationButton.DELETE -> onDelete()
+            DialogNavigationButton.DELETE -> {
+                onDeleteButtonPressed()
+                return
+            }
             else -> {}
         }
 
@@ -113,5 +120,62 @@ class EventDialog(
 
         showSubOverlay(request.overlay, request.hideCurrent)
         viewModel.consumeRequest()
+    }
+
+    /**
+     * Called when the delete button is pressed.
+     * It will display the relation warnings if needed, or delete the event immediately and close the dialog.
+     */
+    private fun onDeleteButtonPressed() {
+        if (viewModel.isEventHaveRelatedEndConditions()) {
+            showAssociatedEndConditionsWarning()
+        } else if (viewModel.isEventHaveRelatedActions()) {
+            showAssociatedActionsWarning()
+        } else {
+            onDelete()
+            destroy()
+        }
+    }
+
+    /**
+     * Show the end condition relation warning dialog.
+     * Once confirmed, it will show the action relation warning, or delete the event immediately and close the dialog.
+     */
+    private fun showAssociatedEndConditionsWarning() {
+        showMessageDialog(R.string.dialog_title_warning, R.string.message_event_delete_associated_end_condition) {
+            if (viewModel.isEventHaveRelatedActions()) {
+                showAssociatedActionsWarning()
+            } else {
+                onDelete()
+                destroy()
+            }
+        }
+    }
+
+    /**
+     * Show the action relation warning dialog.
+     * Once confirmed, it will delete the event and close the dialog.
+     */
+    private fun showAssociatedActionsWarning() {
+        showMessageDialog(R.string.dialog_title_warning, R.string.message_event_delete_associated_action) {
+            onDelete()
+            destroy()
+        }
+    }
+
+    /** Show a message dialog. */
+    private fun showMessageDialog(@StringRes title: Int, @StringRes message: Int, onOkPressed: () -> Unit) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                onOkPressed()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .apply {
+                window?.setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
+            }
+            .show()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,10 +33,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-// TODO: Needs to check scenario validity when removing an event for
-//  - end condition referencing this event
-//  - toggle event action referencing this event
 
 /** Repository handling the user edition of a scenario. */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -215,7 +211,7 @@ class EditionRepository private constructor(context: Context) {
         }
     }
 
-    /** */
+    /** Create a new edited event. */
     fun createNewEvent(event: Event): EditedEvent =
         editedItemManager.createNewConfiguredEvent(event)
 
@@ -246,17 +242,61 @@ class EditionRepository private constructor(context: Context) {
         _editedEvent.value = null
     }
 
+    /** Check if the [editedEvent] is referenced by an end condition in the edited scenario. */
+    fun isEditedEventUsedByEndCondition(): Boolean {
+        val item = _editedEvent.value ?: return false
+        val endConditions = editedScenario.value?.endConditions ?: return false
+
+        return endConditions.find { it.eventItemId == item.itemId } != null
+    }
+
+    /** Check if the [editedEvent] is referenced by an action in the edited scenario. */
+    fun isEditedEventUsedByAction(): Boolean {
+        val item = _editedEvent.value ?: return false
+        val events = editedScenario.value?.events ?: return false
+
+        return events.find { editedEvent ->
+            editedEvent.editedActions.find { it.toggleEventItemId == item.itemId } != null
+        } != null
+    }
+
     /** Delete the edited event from the edited scenario. */
     fun deleteEditedEventFromEditedScenario() {
+        val scenario = editedScenario.value ?: return
         val item = _editedEvent.value ?: return
-        val items = (editedScenario.value?.events ?: emptyList()).toMutableList()
 
-        items.indexOfFirst { other -> item.itemId == other.itemId }.let { itemIndex ->
-            if (itemIndex == -1) return
-            items.removeAt(itemIndex)
+        // Remove any end condition referencing the event to be deleted
+        val correctedEndConditions = editedScenario.value?.endConditions?.toMutableList() ?: mutableListOf()
+        editedScenario.value?.endConditions?.forEach { endCondition ->
+            if (endCondition.itemId == item.itemId) correctedEndConditions.remove(endCondition)
         }
 
-        updateEditedEventItems(items)
+        // Remove any action referencing the event to be deleted
+        val correctedEvents = editedScenario.value?.events?.toMutableList() ?: mutableListOf()
+        for (evtIndex in correctedEvents.indices) {
+            val correctedActions = correctedEvents[evtIndex].editedActions.toMutableList()
+            correctedEvents[evtIndex].editedActions.forEach { editedAction ->
+                if (editedAction.toggleEventItemId == item.itemId) {
+                    correctedActions.remove(editedAction)
+                }
+            }
+            correctedEvents[evtIndex] = correctedEvents[evtIndex].copy(
+                event = correctedEvents[evtIndex].event.copy(actions = correctedActions.map { it.action }.toMutableList()),
+                editedActions = correctedActions,
+            )
+        }
+
+        // Remove event from list
+        correctedEvents.indexOfFirst { other -> item.itemId == other.itemId }.let { itemIndex ->
+            if (itemIndex == -1) return
+            correctedEvents.removeAt(itemIndex)
+        }
+
+        _editedScenario.value = scenario.copy(
+            scenario = scenario.scenario.copy(eventCount = correctedEvents.size),
+            events = correctedEvents,
+            endConditions = correctedEndConditions,
+        )
         _editedEvent.value = null
     }
 
@@ -299,7 +339,7 @@ class EditionRepository private constructor(context: Context) {
         }
     }
 
-    /** */
+    /** Creates a new edited action. */
     fun createNewAction(action: Action): EditedAction =
         editedItemManager.createNewEditedAction(action)
 
