@@ -21,11 +21,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.domain.edition.INVALID_EDITED_ITEM_ID
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
+import com.buzbuz.smartautoclicker.overlays.base.bindings.EventPickerViewState
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -78,7 +78,7 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         )
 
     /** The event selected for the end condition. Null if none is. */
-    val eventViewState: Flow<EndConditionEventViewState> = editedEndCondition
+    val eventViewState: Flow<EventPickerViewState> = editedEndCondition
         .combine(configuredScenario) { confEndCondition, scenario ->
             scenario.events.find { configuredEvent ->
                 confEndCondition?.eventItemId == configuredEvent.itemId
@@ -86,9 +86,9 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         }
         .combine(eventsAvailable) { selectedEvent, scenarioEvents ->
             when {
-                selectedEvent != null -> EndConditionEventViewState.Selected(selectedEvent.event)
-                scenarioEvents.isEmpty() -> EndConditionEventViewState.NoEvents
-                else -> EndConditionEventViewState.NoSelection
+                selectedEvent != null -> EventPickerViewState.Selected(selectedEvent.event)
+                scenarioEvents.isEmpty() -> EventPickerViewState.NoEvents
+                else -> EventPickerViewState.NoSelection
             }
         }
 
@@ -129,10 +129,4 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
 
     /** @return the end condition currently configured. */
     fun getConfiguredEndCondition(): EditedEndCondition = editedEndCondition.value!!
-}
-
-sealed class EndConditionEventViewState {
-    object NoEvents : EndConditionEventViewState()
-    object NoSelection: EndConditionEventViewState()
-    data class Selected(val event: Event): EndConditionEventViewState()
 }

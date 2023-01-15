@@ -74,7 +74,6 @@ class EndConditionConfigDialog(
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
                 }
-
             }
 
             editExecutionCountLayout.apply {
@@ -131,30 +130,8 @@ class EndConditionConfigDialog(
     }
 
     /** Update the ui state of the selected event for the end condition. */
-    private fun updateEvent(viewState: EndConditionEventViewState) {
-        viewBinding.apply {
-            when (viewState) {
-                EndConditionEventViewState.NoEvents -> {
-                    eventNone.visibility = View.VISIBLE
-                    eventEmpty.visibility = View.GONE
-                    includeSelectedEvent.root.visibility = View.GONE
-                }
-
-                EndConditionEventViewState.NoSelection -> {
-                    eventNone.visibility = View.GONE
-                    eventEmpty.visibility = View.VISIBLE
-                    eventEmpty.setOnClickListener { showEventSelectionDialog() }
-                    includeSelectedEvent.root.visibility = View.GONE
-                }
-
-                is EndConditionEventViewState.Selected -> {
-                    eventNone.visibility = View.GONE
-                    eventEmpty.visibility = View.GONE
-                    includeSelectedEvent.root.visibility = View.VISIBLE
-                    includeSelectedEvent.bind(viewState.event, false) { showEventSelectionDialog() }
-                }
-            }
-        }
+    private fun updateEvent(viewState: EventPickerViewState) {
+        viewBinding.eventPicker.updateState(viewState) { showEventSelectionDialog() }
     }
 
     /** Update the display of the executions count. */

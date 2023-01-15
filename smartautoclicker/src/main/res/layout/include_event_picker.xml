@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_card"
+    style="@style/AppTheme.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_vertical_large">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/event_title"
+            style="@style/AppTheme.TextAppearance.CardTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/dialog_overlay_title_event_config" />
+
+        <include
+            android:id="@+id/include_selected_event"
+            layout="@layout/item_event"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height_big"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/event_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="visible"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/event_empty"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/event_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/message_empty_end_condition_config_event_no_selection"
+            android:textAlignment="center"
+            tools:visibility="gone"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/event_none"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            android:layout_marginBottom="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/event_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/message_empty_end_condition_config_event_none_in_scenario"
+            android:textAlignment="center"
+            tools:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
