@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/include_dialog_navigation_top_bar"
@@ -48,32 +48,13 @@
             <include layout="@layout/include_input_field_dropdown"
                 android:id="@+id/toggle_type_field"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dropdown_one_line_helper_text_height"
+                android:layout_height="@dimen/dropdown_two_lines_helper_text_height"
                 android:layout_marginBottom="@dimen/margin_vertical_large"/>
 
-            <FrameLayout
+            <include layout="@layout/include_event_picker"
+                android:id="@+id/event_picker"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_vertical_large">
-
-                <include
-                    android:id="@+id/include_selected_event"
-                    layout="@layout/item_event"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_height_big"
-                    tools:visibility="visible"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/event_empty"
-                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/message_empty_end_condition_config_event_no_selection"
-                    android:textAlignment="center"
-                    tools:visibility="gone"/>
-
-            </FrameLayout>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

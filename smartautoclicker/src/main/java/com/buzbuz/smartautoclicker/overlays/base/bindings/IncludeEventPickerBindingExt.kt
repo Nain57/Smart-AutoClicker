@@ -20,12 +20,13 @@ import android.view.View
 
 import com.buzbuz.smartautoclicker.databinding.IncludeEventPickerBinding
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 
-/**
- * Update the ui state of the selected event.
- *
- */
-fun IncludeEventPickerBinding.updateState(viewState: EventPickerViewState, onPickerClicked: () -> Unit) {
+/** Update the ui state of the selected event. */
+fun IncludeEventPickerBinding.updateState(
+    viewState: EventPickerViewState,
+    onPickerClicked: (List<EditedEvent>) -> Unit,
+) {
     when (viewState) {
         EventPickerViewState.NoEvents -> {
             eventNone.visibility = View.VISIBLE
@@ -33,10 +34,10 @@ fun IncludeEventPickerBinding.updateState(viewState: EventPickerViewState, onPic
             includeSelectedEvent.root.visibility = View.GONE
         }
 
-        EventPickerViewState.NoSelection -> {
+        is EventPickerViewState.NoSelection -> {
             eventNone.visibility = View.GONE
             eventEmpty.visibility = View.VISIBLE
-            eventEmpty.setOnClickListener { onPickerClicked() }
+            eventEmpty.setOnClickListener { onPickerClicked(viewState.availableEvents) }
             includeSelectedEvent.root.visibility = View.GONE
         }
 
@@ -44,13 +45,14 @@ fun IncludeEventPickerBinding.updateState(viewState: EventPickerViewState, onPic
             eventNone.visibility = View.GONE
             eventEmpty.visibility = View.GONE
             includeSelectedEvent.root.visibility = View.VISIBLE
-            includeSelectedEvent.bind(viewState.event, false) { onPickerClicked() }
+            includeSelectedEvent.bind(viewState.event, false) { onPickerClicked(viewState.availableEvents) }
         }
     }
 }
 
+/** Possible states for a [IncludeEventPickerBinding]. */
 sealed class EventPickerViewState {
     object NoEvents : EventPickerViewState()
-    object NoSelection: EventPickerViewState()
-    data class Selected(val event: Event): EventPickerViewState()
+    data class NoSelection(val availableEvents: List<EditedEvent>): EventPickerViewState()
+    data class Selected(val event: Event, val availableEvents: List<EditedEvent>): EventPickerViewState()
 }

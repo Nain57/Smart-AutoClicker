@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.overlays.config.endcondition
 import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
@@ -27,15 +26,18 @@ import com.buzbuz.smartautoclicker.domain.edition.INVALID_EDITED_ITEM_ID
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 import com.buzbuz.smartautoclicker.overlays.base.bindings.EventPickerViewState
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.take
 
 /**
  * View model for the [EndConditionConfigDialog].
  *
  * @param application the Android application.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 class EndConditionConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** Maintains the currently configured scenario state. */
@@ -65,17 +67,12 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
     }
 
     /** Events available as end condition event for this end condition */
-    val eventsAvailable: StateFlow<List<EditedEvent>> = configuredScenario
+    private val eventsAvailable: Flow<List<EditedEvent>> = configuredScenario
         .map { scenario ->
             scenario.events.filter { configuredEvent ->
                 scenario.endConditions.find { it.endCondition.eventId == configuredEvent.event.id } == null
             }
         }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            emptyList()
-        )
 
     /** The event selected for the end condition. Null if none is. */
     val eventViewState: Flow<EventPickerViewState> = editedEndCondition
@@ -86,9 +83,9 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         }
         .combine(eventsAvailable) { selectedEvent, scenarioEvents ->
             when {
-                selectedEvent != null -> EventPickerViewState.Selected(selectedEvent.event)
+                selectedEvent != null -> EventPickerViewState.Selected(selectedEvent.event, scenarioEvents)
                 scenarioEvents.isEmpty() -> EventPickerViewState.NoEvents
-                else -> EventPickerViewState.NoSelection
+                else -> EventPickerViewState.NoSelection(scenarioEvents)
             }
         }
 

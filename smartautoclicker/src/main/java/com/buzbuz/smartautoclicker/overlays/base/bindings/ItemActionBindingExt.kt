@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,6 +98,13 @@ fun Action.toActionDetails(context: Context): ActionDetails {
             action = this,
         )
 
+        is Action.ToggleEvent -> ActionDetails(
+            icon = R.drawable.ic_toggle_event,
+            name = name!!,
+            details = formatToggleEventState(this, context),
+            action = this,
+        )
+
         else -> throw IllegalArgumentException("Not yet supported")
     }
 
@@ -137,6 +144,26 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
     }
 
     return context.getString(R.string.item_desc_intent_action, action)
+}
+
+/**
+ * Format a action toggle event into a human readable string.
+ * @param toggleEvent the action intent to be formatted.
+ * @param context the Android context.
+ * @return the formatted toggle event action.
+ */
+private fun formatToggleEventState(toggleEvent: Action.ToggleEvent, context: Context): String {
+    val toggleTypeStringId = when (toggleEvent.toggleEventType) {
+        Action.ToggleEvent.ToggleType.ENABLE -> R.string.dropdown_item_title_toggle_event_state_enable
+        Action.ToggleEvent.ToggleType.DISABLE -> R.string.dropdown_item_title_toggle_event_state_disable
+        Action.ToggleEvent.ToggleType.TOGGLE -> R.string.dropdown_item_title_toggle_event_state_toggle
+        null -> throw IllegalArgumentException("Invalid toggle event type")
+    }
+
+    return context.getString(
+        R.string.item_desc_toggle_event_details,
+        context.getString(toggleTypeStringId),
+    )
 }
 
 /** The maximal length of the displayed intent action string. */

@@ -98,6 +98,7 @@
     <string name="item_desc_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
     <string name="item_desc_swipe_positions">Swipe from %1$d, %2$d to %3$d, %4$d</string>
     <string name="item_desc_toggle_event">Change the enabled state of an event</string>
+    <string name="item_desc_toggle_event_details">Change event state with type %1$s</string>
     <string name="item_title_backup_create_select_file">Select output file</string>
     <string name="item_title_backup_import_select_file">Select backup file</string>
     <string name="item_title_click">Click</string>
@@ -227,6 +228,7 @@
     <string name="input_field_label_anti_detection">Anti-detection</string>
     <string name="input_field_label_event_state">State</string>
     <string name="input_field_error_required">Required</string>
+    <string name="input_field_toggle_event_type">New event state</string>
 
     <!--
       - Dropdown input fields texts.
@@ -248,6 +250,14 @@
     <string name="dropdown_item_title_event_state_disabled">Disabled</string>
     <string name="dropdown_helper_text_event_state_enabled">This event will be interpreted normally when playing the scenario</string>
     <string name="dropdown_helper_text_event_state_disabled">This event needs to be enabled by an action to be interpreted when playing the scenario</string>
+
+    <!-- Dropdown field for selecting the toggle event type -->
+    <string name="dropdown_item_title_toggle_event_state_enable">Enable</string>
+    <string name="dropdown_item_title_toggle_event_state_disable">Disable</string>
+    <string name="dropdown_item_title_toggle_event_state_toggle">Toggle</string>
+    <string name="dropdown_helper_text_toggle_event_state_enable">The event will start being interpreted when playing the scenario</string>
+    <string name="dropdown_helper_text_toggle_event_state_disable">The event will stop being interpreted when playing the scenario</string>
+    <string name="dropdown_helper_text_toggle_event_state_toggle">When playing the scenario, start interpreting the event if it is disabled, stop if it is enabled</string>
 
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">Conditions</string>

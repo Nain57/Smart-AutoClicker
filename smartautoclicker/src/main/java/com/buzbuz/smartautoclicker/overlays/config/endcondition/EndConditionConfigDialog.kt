@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -131,7 +132,7 @@ class EndConditionConfigDialog(
 
     /** Update the ui state of the selected event for the end condition. */
     private fun updateEvent(viewState: EventPickerViewState) {
-        viewBinding.eventPicker.updateState(viewState) { showEventSelectionDialog() }
+        viewBinding.eventPicker.updateState(viewState, ::showEventSelectionDialog)
     }
 
     /** Update the display of the executions count. */
@@ -140,11 +141,11 @@ class EndConditionConfigDialog(
     }
 
     /** Show the event selection dialog. */
-    private fun showEventSelectionDialog() {
+    private fun showEventSelectionDialog(availableEvents: List<EditedEvent>) {
         showSubOverlay(
             EventSelectionDialog(
                 context = context,
-                eventList = viewModel.eventsAvailable.value,
+                eventList = availableEvents,
                 onEventClicked = { event -> viewModel.setEvent(event) }
             )
         )

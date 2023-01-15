@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,9 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionToggleEventBinding
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.overlays.base.bindings.*
+import com.buzbuz.smartautoclicker.overlays.config.endcondition.EventSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -70,6 +72,12 @@ class ToggleEventDialog(
                 }
             }
 
+            toggleTypeField.setItems(
+                label = context.getString(R.string.input_field_toggle_event_type),
+                items = viewModel.toggleStateItems,
+                onItemSelected = viewModel::setToggleType,
+            )
+
             editNameLayout.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
@@ -77,8 +85,6 @@ class ToggleEventDialog(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-
-            eventEmpty.setOnClickListener { showEventSelectionDialog() }
         }
 
         return viewBinding.root
@@ -88,14 +94,16 @@ class ToggleEventDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateToggleEventName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
+                launch { viewModel.toggleStateItem.collect(::updateToggleType) }
+                launch { viewModel.eventViewState.collect(::updateEvent) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
     }
 
     private fun onSaveButtonClicked() {
-        onConfirmClicked(viewModel.getConfiguredClick())
+        onConfirmClicked(viewModel.getConfiguredToggleEvent())
         destroy()
     }
 
@@ -108,18 +116,26 @@ class ToggleEventDialog(
         viewBinding.editNameLayout.setText(newName)
     }
 
+    private fun updateToggleType(operatorItem: DropdownItem) {
+        viewBinding.toggleTypeField.setSelectedItem(operatorItem)
+    }
+
+    private fun updateEvent(viewState: EventPickerViewState) {
+        viewBinding.eventPicker.updateState(viewState, ::showEventSelectionDialog)
+    }
+
     private fun updateSaveButton(isValidCondition: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     /** Show the event selection dialog. */
-    private fun showEventSelectionDialog() {
-        /*showSubOverlay(
+    private fun showEventSelectionDialog(availableEvents: List<EditedEvent>) {
+        showSubOverlay(
             EventSelectionDialog(
                 context = context,
-                eventList = viewModel.eventsAvailable.value,
+                eventList = availableEvents,
                 onEventClicked = { event -> viewModel.setEvent(event) }
             )
-        )*/
+        )
     }
 }
