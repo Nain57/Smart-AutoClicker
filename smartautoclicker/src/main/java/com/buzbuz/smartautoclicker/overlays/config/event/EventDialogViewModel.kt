@@ -36,9 +36,6 @@ class EventDialogViewModel(application: Application) : NavigationViewModel(appli
     private val configuredEvent: Flow<Event> = editionRepository.editedEvent
         .mapNotNull { it?.event }
 
-    /** Visibility of the top bar delete button. */
-    val deleteButtonVisibility: Flow<Boolean> = configuredEvent.map { it.id != 0L }
-
     /**
      * Tells if all content have their field correctly configured.
      * Used to display the red badge if indicating if there is something missing.

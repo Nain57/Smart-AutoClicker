@@ -61,6 +61,7 @@ class EventDialog(
         return super.onCreateView().also {
             topBarBinding.apply {
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+                setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
                 dialogTitle.setText(R.string.dialog_overlay_title_event_config)
             }
         }
@@ -80,7 +81,6 @@ class EventDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.deleteButtonVisibility.collect(::updateDeleteButtonVisibility) }
                 launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
                 launch { viewModel.eventCanBeSaved.collect(::updateSaveButton) }
                 launch { viewModel.subOverlayRequest.collect(::onNewSubOverlayRequest) }
@@ -99,10 +99,6 @@ class EventDialog(
         }
 
         destroy()
-    }
-
-    private fun updateDeleteButtonVisibility(isVisible: Boolean) {
-        topBarBinding.setButtonVisibility(DialogNavigationButton.DELETE, if (isVisible) View.VISIBLE else View.GONE)
     }
 
     private fun updateContentsValidity(itemsValidity: Map<Int, Boolean>) {
