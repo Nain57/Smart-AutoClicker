@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.overlays.base.bindings
 
+import android.util.TypedValue
 import android.view.View
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.overlays.base.utils.setIconTintColor
 
 /**
  * Bind the [ItemEventBinding] to an event.
@@ -34,6 +36,12 @@ fun ItemEventBinding.bind(event: Event, canDrag: Boolean, itemClickedListener: (
     textName.text = event.name
     textConditionsCount.text = event.conditions?.size?.toString()
     textActionsCount.text = event.actions?.size?.toString()
+
+    val typedValue = TypedValue()
+    val actionColorAttr = if (event.actions.isNullOrEmpty()) R.attr.colorError else R.attr.colorOnPrimaryContainer
+    root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
+    textActionsCount.setTextColor(typedValue.data)
+    imageAction.setIconTintColor(typedValue.data)
 
     if (event.enabledOnStart) {
         textEnabled.setText(R.string.dropdown_item_title_event_state_enabled)

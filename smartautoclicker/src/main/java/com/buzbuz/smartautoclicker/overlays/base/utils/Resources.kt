@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.base.utils
 
 import android.widget.ImageView
 
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -25,6 +26,7 @@ import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
+
 import com.google.android.material.textfield.TextInputLayout
 
 import kotlin.reflect.KClass
@@ -48,8 +50,13 @@ fun Action.getIconRes() : Int =
 
 /** @param color the tint color to apply to the ImageView. */
 fun ImageView.setIconTint(@ColorRes color: Int) {
+    setIconTintColor(ContextCompat.getColor(context, color))
+}
+
+/** @param color the tint color to apply to the ImageView. */
+fun ImageView.setIconTintColor(@ColorInt color: Int) {
     setColorFilter(
-        ContextCompat.getColor(context, color),
+        color,
         android.graphics.PorterDuff.Mode.SRC_IN
     )
 }

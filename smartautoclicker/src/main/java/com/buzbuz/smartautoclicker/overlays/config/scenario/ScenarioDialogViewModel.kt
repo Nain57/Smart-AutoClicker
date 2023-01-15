@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.config.scenario
 import android.app.Application
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationViewModel
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
@@ -37,7 +38,7 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
         .filterNotNull()
         .map { configuredItem ->
             buildMap {
-                put(R.id.page_events, configuredItem.events.isNotEmpty())
+                put(R.id.page_events, configuredItem.events.isEventListValid())
                 put(R.id.page_config, configuredItem.scenario.name.isNotEmpty())
                 put(R.id.page_debug, true)
             }
@@ -52,4 +53,16 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
             }
             allValid
         }
+
+    /**
+     * Check the validity of the event list.
+     * It must be not empty, and all events must have at least one action.
+     *
+     * @return true if valid, false if not.
+     */
+    private fun List<EditedEvent>.isEventListValid(): Boolean {
+        if (isEmpty()) return false
+        forEach { editedEvent -> if (editedEvent.event.actions.isNullOrEmpty()) return false }
+        return true
+    }
 }

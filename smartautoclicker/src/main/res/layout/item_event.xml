@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -88,6 +88,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/image_action"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_click"
