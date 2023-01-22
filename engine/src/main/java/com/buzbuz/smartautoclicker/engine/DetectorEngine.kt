@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,26 +24,35 @@ import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 import com.buzbuz.smartautoclicker.detection.NativeDetector
-import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
 import com.buzbuz.smartautoclicker.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.debugging.DebugEngine
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 /**
  * Detects [Event] conditions on a display and execute its actions.
@@ -272,7 +281,7 @@ class DetectorEngine(context: Context) {
 
         Log.i(TAG, "startDetection")
 
-        processingJob = processingScope?.launch {
+        processingScope?.launchProcessingJob {
             imageDetector = NativeDetector()
 
             val shouldDebug = debugInstantData || debugReport
@@ -322,7 +331,7 @@ class DetectorEngine(context: Context) {
             screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
 
             if (_state.value == DetectorState.DETECTING) {
-                processingJob = processingScope?.launch {
+                processingScope?.launchProcessingJob {
                     processScreenImages()
                 }
             }
@@ -415,6 +424,23 @@ class DetectorEngine(context: Context) {
         cleanInstance()
 
         _state.value != DetectorState.DESTROYED
+    }
+
+    /**
+     * Creates a new job executing the provided job automatically once the job is effectively created.
+     * This allows to check the job state correctly within the [block], even quickly after its start, as the [launch]
+     * method with the [CoroutineStart.DEFAULT] starts the coroutine execution before returning the resulting [Job].
+     *
+     * The job will affected to the [processingJob] variable.
+     *
+     * @param block the coroutine code which will be invoked in the context of the provided scope.
+     */
+    private fun CoroutineScope.launchProcessingJob(block: suspend CoroutineScope.() -> Unit) {
+        processingJob = launch(
+            start = CoroutineStart.LAZY,
+            block = block,
+        )
+        processingJob?.start()
     }
 }
 
