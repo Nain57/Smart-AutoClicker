@@ -51,13 +51,10 @@ namespace smartautoclicker {
 
         std::unique_ptr<cv::Mat> currentImage = nullptr;
         std::unique_ptr<cv::Mat> currentImageScaled = std::make_unique<cv::Mat>();
-        std::unique_ptr<cv::Mat> currentCondition = std::make_unique<cv::Mat>();
 
         DetectionResult detectionResult;
 
         static std::unique_ptr<cv::Mat> bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap);
-
-        static void scale(const cv::Mat& src, cv::Mat& dest, const double& ratio);
 
         static std::unique_ptr<cv::Mat> matchTemplate(const cv::Mat& image, const cv::Mat& condition);
 
