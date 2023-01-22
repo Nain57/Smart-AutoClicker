@@ -42,7 +42,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 import kotlinx.coroutines.flow.Flow
@@ -295,12 +294,7 @@ class DetectorEngine(context: Context) {
                 detectionQuality = scenarioWithEndConditions.value!!.first.detectionQuality,
                 randomize = scenarioWithEndConditions.value!!.first.randomize,
                 events = scenarioEvents.value,
-                bitmapSupplier = { path, width, height ->
-                    // We can run blocking here, we are on the screen detector thread
-                    runBlocking(Dispatchers.IO) {
-                        scenarioRepository.getBitmap(path, width, height)
-                    }
-                },
+                bitmapSupplier = scenarioRepository::getBitmap,
                 androidExecutor = androidExecutor!!,
                 endConditionOperator = scenarioWithEndConditions.value!!.first.endConditionOperator,
                 endConditions =  scenarioWithEndConditions.value!!.second,

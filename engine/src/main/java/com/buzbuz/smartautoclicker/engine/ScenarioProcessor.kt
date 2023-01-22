@@ -52,7 +52,7 @@ internal class ScenarioProcessor(
     private val detectionQuality: Int,
     randomize: Boolean,
     events: List<Event>,
-    private val bitmapSupplier: (String, Int, Int) -> Bitmap?,
+    private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     androidExecutor: AndroidExecutor,
     @ConditionOperator endConditionOperator: Int,
     endConditions: List<EndCondition>,
@@ -198,7 +198,7 @@ internal class ScenarioProcessor(
      *
      * @return the result of the detection, or null of the detection is not possible.
      */
-    private fun checkCondition(condition: Condition) : DetectionResult? {
+    private suspend fun checkCondition(condition: Condition) : DetectionResult? {
         condition.path?.let { path ->
             bitmapSupplier(path, condition.area.width(), condition.area.height())?.let { conditionBitmap ->
                 return detect(condition, conditionBitmap)
