@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 <resources>
 
     <!-- Application wide texts. -->
-    <string name="notification_title">Scenario : %1$s</string>
-    <string name="notification_message">Appuyez pour changer le scenario</string>
-    <string name="activity_title">Scenarios</string>
+    <string name="notification_title">Scénario : %1$s</string>
+    <string name="notification_message">Appuyez pour changer le scénario</string>
+    <string name="activity_title">Scénarios</string>
     <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
         que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée
         n\'est collectée par cette application. N\hésitez pas à visiter notre GitHub, le projet est open source !</string>
@@ -29,11 +29,12 @@
       - Titles for the dialogs displayed from the activity.
       - Regular Android dialog title characters size.
       -->
-    <string name="dialog_title_add_scenario">Nouveau scenario</string>
-    <string name="dialog_title_delete_scenario">Supprimer le scenario</string>
+    <string name="dialog_title_add_scenario">Nouveau scénario</string>
+    <string name="dialog_title_delete_scenario">Supprimer le scénario</string>
     <string name="dialog_title_create_backup">Créer une sauvegarde</string>
     <string name="dialog_title_import_backup">Importer une sauvegarde</string>
     <string name="dialog_title_permissions">Permissions requises</string>
+    <string name="dialog_title_warning">Avertissement</string>
 
     <!--
       - Titles for the dialogs displayed as overlay.
@@ -53,16 +54,17 @@
     <string name="dialog_overlay_title_pause">Pause</string>
     <string name="dialog_overlay_title_scenario_config">Scénario</string>
     <string name="dialog_overlay_title_swipe">Swipe</string>
+    <string name="dialog_overlay_title_toggle_event">État d\'évènement</string>
 
     <!--
       - Text for menu items.
       - Should be short and concise.
       -->
-    <string name="menu_item_title_cancel">Cancel</string>
-    <string name="menu_item_title_export">Export</string>
-    <string name="menu_item_title_import">Import</string>
+    <string name="menu_item_title_cancel">Annuler</string>
+    <string name="menu_item_title_export">Exporter</string>
+    <string name="menu_item_title_import">Importer</string>
     <string name="menu_item_title_search">Rechercher</string>
-    <string name="menu_item_title_select_all">Tout selectionner</string>
+    <string name="menu_item_title_select_all">Tout sélectionner</string>
     <string name="menu_item_title_simple">Simple</string>
     <string name="menu_item_title_advanced">Avancé</string>
     <string name="menu_item_title_events">Évènements</string>
@@ -93,7 +95,9 @@
                                                   un menu au dessus des autres applications.</string>
     <string name="item_desc_swipe">Swiper d\'une position à une autre</string>
     <string name="item_desc_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
-    <string name="item_desc_swipe_positions">Glisser de %1$d, %2$d à %3$d, %4$d</string>
+    <string name="item_desc_swipe_positions">Swiper de %1$d, %2$d à %3$d, %4$d</string>
+    <string name="item_desc_toggle_event">Changer l\'état d\'activation d\'un évènement</string>
+    <string name="item_desc_toggle_event_details">Changer l\'état avec le type %1$s</string>
     <string name="item_title_backup_create_select_file">Choisir l\'emplacement de sauvegarde</string>
     <string name="item_title_backup_import_select_file">Choisir le fichier de sauvegarde</string>
     <string name="item_title_click">Clic</string>
@@ -103,13 +107,14 @@
     <string name="item_title_permission_accessibility">Service d\'accessibilité</string>
     <string name="item_title_permission_notification">Notification</string>
     <string name="item_title_permission_overlay">Superposition</string>
-    <string name="item_title_pause">Wait</string>
+    <string name="item_title_pause">Pause</string>
     <string name="item_title_report_total_duration">Durée totale</string>
     <string name="item_title_report_image_processed">Images analysées</string>
     <string name="item_title_report_avg_image_processing_duration">Temps moyen d\'analyse</string>
     <string name="item_title_report_total_event_trigger_count">Évènements activés</string>
     <string name="item_title_report_detection_count">Conditions détectés</string>
     <string name="item_title_swipe">Swipe</string>
+    <string name="item_title_toggle_event">État d\'évènement</string>
 
     <!--
       - Empty list messages.
@@ -117,7 +122,7 @@
       -->
     <string name="message_empty_actions">Aucune action !</string>
     <string name="message_empty_conditions">Aucune condition !</string>
-    <string name="message_empty_copy">Nothing to copy</string>
+    <string name="message_empty_copy">Rien à copier</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
     <string name="message_empty_event_list">Aucun évènement !</string>
@@ -142,12 +147,15 @@
     <string name="message_backup_create_error">Une erreur est survenue et la sauvegarde a été annulée</string>
     <string name="message_backup_import_progress">Import de la sauvegarde: %1$d</string>
     <string name="message_backup_import_verification">Vérification des données</string>
-    <string name="message_backup_import_completed">Import effectué: %1$d scenarios importés</string>
-    <string name="message_backup_import_completed_with_error">Import effectué, des erreurs ont survenues:\n%1$d scenarios importés\n%2$d erreurs</string>
+    <string name="message_backup_import_completed">Import effectué: %1$d scénarios importés</string>
+    <string name="message_backup_import_completed_with_error">Import effectué, des erreurs ont survenues:\n%1$d scénarios importés\n%2$d erreurs</string>
     <string name="message_backup_import_error">Une erreur est survenue et l\'import a été annulée</string>
-    <string name="message_backup_import_compatibility">Certains scenarios ont été généré par un téléphone avec un écran différent, ce qui peut causer des problèmes avec la détection et les coordonées des actions.\n\nPour régler le problème, vous devez refaire les screenshots de vos conditions et mettre à jour les coordonées de vos actions.</string>
+    <string name="message_backup_import_compatibility">Certains scénarios ont été généré par un téléphone avec un écran différent, ce qui peut causer des problèmes avec la détection et les coordonées des actions.\n\nPour régler le problème, vous devez refaire les screenshots de vos conditions et mettre à jour les coordonées de vos actions.</string>
     <string name="message_condition_threshold">%1$d%%</string>
-    <string name="message_delete_scenario">Le scenario %1$s va être supprimé. Êtes vous sûr ?</string>
+    <string name="message_delete_scenario">Le scénario %1$s va être supprimé. Êtes vous sûr ?</string>
+    <string name="message_event_delete_associated_end_condition">Cet évènement est référencé par une ou plusieures conditions de fin. Le supprimer supprimera aussi les conditions de fin associées.\nÊtes vous sûr ?</string>
+    <string name="message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
+
 
     <!--
       - Toast messages.
@@ -214,14 +222,15 @@
       -->
     <string name="input_field_label_name">Nom</string>
     <string name="input_field_label_click_press_duration">Durée d\'appui (ms)</string>
-    <string name="input_field_label_execution_count">Éxecutions</string>
+    <string name="input_field_label_execution_count">Exécutions</string>
     <string name="input_field_label_intent_extra_key">Clé</string>
-    <string name="input_field_label_pause_duration">Pause duration (ms)</string>
-    <string name="input_field_label_scenario_name">Scenario name</string>
-    <string name="input_field_label_swipe_duration">Swipe duration (ms)</string>
+    <string name="input_field_label_pause_duration">Durée de la pause (ms)</string>
+    <string name="input_field_label_scenario_name">Nom du scénario</string>
+    <string name="input_field_label_swipe_duration">Durée du swipe (ms)</string>
     <string name="input_field_label_anti_detection">Anti détection</string>
     <string name="input_field_label_event_state">État</string>
-    <string name="input_field_error_required">Required</string>
+    <string name="input_field_error_required">Requis</string>
+    <string name="input_field_toggle_event_type">Nouvel état d\'évènement</string>
 
     <!--
       - Dropdown input fields texts.
@@ -236,13 +245,21 @@
     <string name="dropdown_item_title_anti_detection_enabled">Activé</string>
     <string name="dropdown_item_title_anti_detection_disabled">Désactivé</string>
     <string name="dropdown_helper_text_anti_detection_enabled">Ajoute une petite part de hasard dans les positions et durées des clics, swipes et pauses</string>
-    <string name="dropdown_helper_text_anti_detection_disabled">Execute les actions comme elles sont déclarées</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">Exécute les actions comme elles sont déclarées</string>
 
     <!-- Dropdown field for selecting the event state -->
     <string name="dropdown_item_title_event_state_enabled">Activé</string>
     <string name="dropdown_item_title_event_state_disabled">Désactivé</string>
     <string name="dropdown_helper_text_event_state_enabled">Cet évènement sera interprété normalement quand le scénario sera joué</string>
     <string name="dropdown_helper_text_event_state_disabled">Cet évènement doit être activé par une action pour être interprété quand le scénario sera joué</string>
+
+    <!-- Dropdown field for selecting the toggle event type -->
+    <string name="dropdown_item_title_toggle_event_state_enable">Activé</string>
+    <string name="dropdown_item_title_toggle_event_state_disable">Désactivé</string>
+    <string name="dropdown_item_title_toggle_event_state_toggle">Alterner l\'état</string>
+    <string name="dropdown_helper_text_toggle_event_state_enable">L\'évènement sera interprété lorsque le scenario sera joué</string>
+    <string name="dropdown_helper_text_toggle_event_state_disable">L\'évènement ne sera plus interprété lorsque le scénario sera joué</string>
+    <string name="dropdown_helper_text_toggle_event_state_toggle">Lorsque le scénario sera joué, active l\'évenement s\'il était désactivé, le désactive s\'il était activé</string>
 
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">Conditions</string>

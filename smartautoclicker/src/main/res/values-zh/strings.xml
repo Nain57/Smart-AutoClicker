@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
     <string name="dialog_title_delete_scenario">删除脚本</string>
     <string name="dialog_title_import_backup">导入备份</string>
     <string name="dialog_title_permissions">需要以下权限</string>
+    <string name="dialog_title_warning">Warning</string>
 
     <!--
       - Titles for the dialogs displayed as overlay.
@@ -52,6 +53,7 @@
     <string name="dialog_overlay_title_pause">等待</string>
     <string name="dialog_overlay_title_scenario_config">脚本</string>
     <string name="dialog_overlay_title_swipe">滑动</string>
+    <string name="dialog_overlay_title_toggle_event">Event state</string>
 
     <!--
       - Text for menu items.
@@ -91,6 +93,8 @@
     <string name="item_desc_swipe">Swipe from a position on the screen to another</string>
     <string name="item_desc_swipe_details">持续 %1$s 从 [%2$d, %3$d] 到 [%4$d, %5$d]</string>
     <string name="item_desc_swipe_positions">从 %1$d, %2$d 滑动到 %3$d, %4$d</string>
+    <string name="item_desc_toggle_event">Change the enabled state of an event</string>
+    <string name="item_desc_toggle_event_details">Change event state with type %1$s</string>
     <string name="item_title_backup_create_select_file">选择保存路径</string>
     <string name="item_title_backup_import_select_file">选择备份文件</string>
     <string name="item_title_click">单击</string>
@@ -107,6 +111,7 @@
     <string name="item_title_report_total_duration">Total duration</string>
     <string name="item_title_report_total_event_trigger_count">Events triggered</string>
     <string name="item_title_swipe">滑动</string>
+    <string name="item_title_toggle_event">Change event state</string>
 
     <!--
       - Empty list messages.
@@ -144,6 +149,8 @@
     <string name="message_backup_import_compatibility">某些导入的场景是从具有不同屏幕的设备生成的，这可能会导致检测和操作坐标出现问题。\n\n要修复它，您需要根据您的情况创建新的屏幕截图并更新您的点击/滑动位置。</string>
     <string name="message_condition_threshold">%1$d%%</string>
     <string name="message_delete_scenario">是否删除脚本 %1$s ？</string>
+    <string name="message_event_delete_associated_end_condition">This event have one or more end conditions referencing it. Deleting this event will delete the associated end conditions as well.\nAre you sure ?</string>
+    <string name="message_event_delete_associated_action">This event have one or more actions referencing it. Deleting this event will delete the associated actions as well.\nAre you sure ?</string>
 
     <!--
       - Toast messages.
@@ -218,6 +225,7 @@
     <string name="input_field_label_anti_detection">Anti-detection</string>
     <string name="input_field_label_event_state">State</string>
     <string name="input_field_error_required">Required</string>
+    <string name="input_field_toggle_event_type">New event state</string>
 
     <!--
       - Dropdown input fields texts.
@@ -239,6 +247,15 @@
     <string name="dropdown_item_title_event_state_disabled">Disabled</string>
     <string name="dropdown_helper_text_event_state_enabled">This event will be interpreted normally when playing the scenario</string>
     <string name="dropdown_helper_text_event_state_disabled">This event needs to be enabled by an action to be interpreted when playing the scenario</string>
+
+    <!-- Dropdown field for selecting the toggle event type -->
+    <string name="dropdown_item_title_toggle_event_state_enable">Enable</string>
+    <string name="dropdown_item_title_toggle_event_state_disable">Disable</string>
+    <string name="dropdown_item_title_toggle_event_state_toggle">Toggle</string>
+    <string name="dropdown_helper_text_toggle_event_state_enable">The event will start being interpreted when playing the scenario</string>
+    <string name="dropdown_helper_text_toggle_event_state_disable">The event will stop being interpreted when playing the scenario</string>
+    <string name="dropdown_helper_text_toggle_event_state_toggle">When playing the scenario, start interpreting the event if it is disabled, stop if it is enabled</string>
+
 
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">需匹配的图像</string>
