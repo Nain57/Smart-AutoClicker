@@ -72,8 +72,8 @@
     <string name="menu_item_title_events">Events</string>
     <string name="menu_item_title_config">Config</string>
     <string name="menu_item_title_debug">Debug</string>
-    <string name="menu_item_title_actions">Actions</string>
     <string name="menu_item_title_conditions">Conditions</string>
+    <string name="menu_item_title_actions">Actions</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -90,11 +90,11 @@
     <string name="item_desc_pause">Pause the detection execution</string>
     <string name="item_desc_pause_details">During %1$s</string>
     <string name="item_desc_permissions">The following permissions are required to use Smart AutoClicker:</string>
+    <string name="item_desc_permission_overlay">The overlay permission allows this application to display a menu
+                                                  over other apps.</string>
     <string name="item_desc_permission_accessibility">The accessibility service allows this application to click on
                                                         other apps for you.</string>
     <string name="item_desc_permission_notification">Optional: Shows the notification while the application is running.</string>
-    <string name="item_desc_permission_overlay">The overlay permission allows this application to display a menu
-                                                  over other apps.</string>
     <string name="item_desc_swipe">Swipe from a position on the screen to another</string>
     <string name="item_desc_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
     <string name="item_desc_swipe_positions">Swipe from %1$d, %2$d to %3$d, %4$d</string>
