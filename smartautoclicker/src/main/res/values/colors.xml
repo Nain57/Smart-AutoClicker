@@ -19,7 +19,7 @@
     <color name="primary">#4CAF50</color>
     <color name="accent">#448AFF</color>
 
-    <color name="textTitle">#FFFFFF</color>
+    <color name="textTitle">#000000</color>
     <color name="textHint">#88FFFFFF</color>
     <color name="listBackground">#EAEAEA</color>
 
