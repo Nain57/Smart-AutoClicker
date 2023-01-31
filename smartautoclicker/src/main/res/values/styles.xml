@@ -115,7 +115,7 @@
     </style>
     <!-- Style for the collapsible search view. -->
     <style name="AppTheme.Widget.SearchView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:textColor">@color/textTitle</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textColorHint">@color/textHint</item>
     </style>
     <!-- Style for the permission item layout -->
