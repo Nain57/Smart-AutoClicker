@@ -83,7 +83,7 @@ class ScenarioUpdateTests {
                 actions = mutableListOf(action),
                 priority = 0,
             ),
-            editedActions = listOf(EditedAction(action)),
+            editedActions = listOf(EditedAction(itemId = 0, action = action)),
         )
 
         return EditedScenario(
@@ -258,7 +258,7 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(incompleteClick)),
+                editedActions = listOf(EditedAction(itemId = 0, action = incompleteClick)),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteClick),
                 )
@@ -279,7 +279,7 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(incompleteSwipe)),
+                editedActions = listOf(EditedAction(itemId = 0, action = incompleteSwipe)),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteSwipe),
                 )
@@ -300,7 +300,7 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(incompletePause)),
+                editedActions = listOf(EditedAction(itemId = 0, action = incompletePause)),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompletePause),
                 )
@@ -321,7 +321,7 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(incompleteIntent)),
+                editedActions = listOf(EditedAction(itemId = 0, action = incompleteIntent)),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteIntent),
                 )
@@ -342,7 +342,7 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(incompleteToggleEvent)),
+                editedActions = listOf(EditedAction(itemId = 0, action = incompleteToggleEvent)),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteToggleEvent),
                 )
@@ -364,7 +364,7 @@ class ScenarioUpdateTests {
             events = listOf(editedEvent.copy(
                 event = editedEvent.event.copy(actions = mutableListOf(invalidToggleEvent)),
                 editedActions = listOf(
-                    EditedAction(action = invalidToggleEvent, toggleEventItemId = INVALID_EDITED_ITEM_ID)
+                    EditedAction(itemId = 0, action = invalidToggleEvent, toggleEventItemId = INVALID_EDITED_ITEM_ID)
                 )
             )),
         )
@@ -384,7 +384,7 @@ class ScenarioUpdateTests {
             events = listOf(editedEvent.copy(
                 event = editedEvent.event.copy(actions = mutableListOf(toggleEvent)),
                 editedActions = listOf(
-                    EditedAction(action = toggleEvent, toggleEventItemId = editedEvent.itemId + 1)
+                    EditedAction(itemId = 0, action = toggleEvent, toggleEventItemId = editedEvent.itemId + 1)
                 )
             )),
         )
@@ -454,7 +454,7 @@ class ScenarioUpdateTests {
             events = listOf(editedEvent.copy(
                 event = editedEvent.event.copy(actions = mutableListOf(toggleEvent)),
                 editedActions = listOf(
-                    EditedAction(action = toggleEvent, toggleEventItemId = editedEvent.itemId)
+                    EditedAction(itemId = 0, action = toggleEvent, toggleEventItemId = editedEvent.itemId)
                 )
             )),
         )
