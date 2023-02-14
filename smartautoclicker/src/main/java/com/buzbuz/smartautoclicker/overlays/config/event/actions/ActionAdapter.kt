@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ object ActionDiffUtilCallback: DiffUtil.ItemCallback<Pair<EditedAction, ActionDe
     override fun areItemsTheSame(
         oldItem: Pair<EditedAction, ActionDetails>,
         newItem: Pair<EditedAction, ActionDetails>,
-    ): Boolean = oldItem.first.action.id == newItem.first.action.id
+    ): Boolean = oldItem.first.itemId == newItem.first.itemId
 
     override fun areContentsTheSame(
         oldItem: Pair<EditedAction, ActionDetails>,
@@ -111,6 +111,7 @@ class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(ItemTouchHelper.
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+        println("TOTO: onMove from=${viewHolder.bindingAdapterPosition} to=${target.bindingAdapterPosition}")
         isDragging = true
         (recyclerView.adapter as ActionAdapter).moveActions(
             viewHolder.bindingAdapterPosition,
@@ -123,6 +124,7 @@ class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(ItemTouchHelper.
         super.clearView(recyclerView, viewHolder)
 
         if (isDragging) {
+            println("TOTO: clearView")
             (recyclerView.adapter as ActionAdapter).notifyMoveFinished()
             isDragging = false
         }

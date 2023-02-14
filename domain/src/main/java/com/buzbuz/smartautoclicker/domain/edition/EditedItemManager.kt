@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,17 +21,17 @@ import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Scenario
 
-/** */
+/** Handles the creation of edited items, allowing to uniquely identify an item during scenario edition. */
 internal class EditedItemManager {
 
-    /** */
+    /** The last generated item id for an Action. */
+    private var lastGeneratedActionItemId: Int = 0
+    /** The last generated item id for an End Condition. */
     private var lastGeneratedEndConditionItemId: Int = 0
-    /** */
+    /** The last generated item id for an Event. */
     private var lastGeneratedEventItemId: Int = 0
 
-    /**
-     *
-     */
+    /** Creates a new configured scenario. */
     fun createConfiguredScenario(
         scenario: Scenario,
         endConditions: List<EndCondition>,
@@ -57,9 +57,7 @@ internal class EditedItemManager {
         )
     }
 
-    /**
-     *
-     */
+    /** Creates a new configured End Condition. */
     fun createNewConfiguredEndCondition(
         endCondition: EndCondition,
         eventItemId: Int = INVALID_EDITED_ITEM_ID,
@@ -69,9 +67,7 @@ internal class EditedItemManager {
         eventItemId = eventItemId,
     )
 
-    /**
-     *
-     */
+    /** Creates a new configured Event. */
     fun createNewConfiguredEvent(event: Event) =
         EditedEvent(
             event = event,
@@ -81,9 +77,7 @@ internal class EditedItemManager {
             } ?: emptyList()
         )
 
-    /**
-     *
-     */
+    /** Creates a new configured Event with inner items mapped with an edited Event. */
     private fun createNewConfiguredEvent(event: Event, eventIdsMap: Map<Long, Int>) =
         EditedEvent(
             event = event,
@@ -93,19 +87,27 @@ internal class EditedItemManager {
             } ?: emptyList()
         )
 
+    /** Creates a new configured Action. */
     fun createNewEditedAction(action: Action): EditedAction =
-        EditedAction(action = action)
+        EditedAction(
+            action = action,
+            itemId = ++lastGeneratedActionItemId,
+        )
 
-    /** */
+    /** Creates a new configured Action with inner items mapped with an edited Event. */
     private fun createNewEditedAction(action: Action, eventIdsMap: Map<Long, Int>): EditedAction =
         if (action is Action.ToggleEvent)
-            EditedAction(action = action, toggleEventItemId = eventIdsMap[action.toggleEventId]!!)
-        else
-            EditedAction(action = action)
+            EditedAction(
+                action = action,
+                itemId = ++lastGeneratedActionItemId,
+                toggleEventItemId = eventIdsMap[action.toggleEventId]!!,
+            )
+        else createNewEditedAction(action)
 
-    /** */
+    /** Reset the edition items ids. */
     fun resetEditionItemIds() {
         lastGeneratedEndConditionItemId = 0
         lastGeneratedEventItemId = 0
+        lastGeneratedActionItemId = 0
     }
 }

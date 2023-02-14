@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ import android.app.Application
 import android.content.Context
 
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
@@ -37,7 +36,9 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultSwipe
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultToggleEvent
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 
 class ActionsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -54,23 +55,10 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
     val canCopyAction: Flow<Boolean> = repository.getAllActions()
         .map { it.isNotEmpty() }
 
-    /** List of [actions]. */
-    val actions: StateFlow<List<EditedAction>> = configuredEvent
-        .map { it.editedActions }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            emptyList()
-        )
-
     /** List of action details. */
-    val actionDetails: StateFlow<List<Pair<EditedAction, ActionDetails>>> = actions
+    val actionDetails: Flow<List<Pair<EditedAction, ActionDetails>>> = configuredEvent
+        .map { it.editedActions }
         .mapList { editedAction -> editedAction to editedAction.action.toActionDetails(application) }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            emptyList()
-        )
 
     /**
      * Create a new action with the default values from configuration.

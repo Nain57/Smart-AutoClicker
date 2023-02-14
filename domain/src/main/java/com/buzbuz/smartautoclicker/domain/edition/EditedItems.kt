@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ data class EditedEvent internal constructor(
 /** Represents the actions of the event currently edited. */
 data class EditedAction internal constructor(
     val action: Action,
+    val itemId: Int,
     val toggleEventItemId: Int = INVALID_EDITED_ITEM_ID,
 )
 
