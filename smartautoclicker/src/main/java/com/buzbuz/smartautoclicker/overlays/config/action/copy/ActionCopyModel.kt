@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,7 +97,10 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
         }
 
         // Then, add all other actions. Remove the one already in this event.
-        val actions = dbActions.toCopyItemsFromOtherEvents(eventItems)
+        // There should be no ToggleEvent action, as we can't reference an event from another scenario.
+        val actions = dbActions
+            .filter { it !is Action.ToggleEvent }
+            .toCopyItemsFromOtherEvents(eventItems)
         if (actions.isNotEmpty()) {
             allItems.add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
             allItems.addAll(actions)
