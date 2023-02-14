@@ -20,7 +20,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 
 import androidx.appcompat.widget.SearchView
 
@@ -28,7 +27,6 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseCopyBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.overlays.base.utils.setIconTint
 
 abstract class CopyDialog(
     context: Context,
@@ -44,9 +42,6 @@ abstract class CopyDialog(
                 buttonDismiss.setOnClickListener { destroy() }
 
                 search.apply {
-                    findViewById<ImageView>(androidx.appcompat.R.id.search_button).setIconTint(R.color.overlayViewPrimary)
-                    findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).setIconTint(R.color.overlayViewPrimary)
-
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?) = false
                         override fun onQueryTextChange(newText: String?): Boolean {
