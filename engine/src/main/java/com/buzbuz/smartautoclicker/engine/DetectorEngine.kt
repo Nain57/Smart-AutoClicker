@@ -298,7 +298,7 @@ class DetectorEngine(context: Context) {
                 androidExecutor = androidExecutor!!,
                 endConditionOperator = scenarioWithEndConditions.value!!.first.endConditionOperator,
                 endConditions =  scenarioWithEndConditions.value!!.second,
-                onEndConditionReached = { stopDetection() },
+                onStopRequested = { stopDetection() },
                 debugEngine = _debugEngine.value,
             )
 

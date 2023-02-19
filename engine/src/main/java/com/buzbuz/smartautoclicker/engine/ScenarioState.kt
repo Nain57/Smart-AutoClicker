@@ -46,6 +46,9 @@ internal class ScenarioState(events: List<Event>) : ScenarioEditor {
     /** Get the list of currently enabled events. */
     fun getEnabledEvents(): Collection<Event> = enabledEventsMap.values
 
+    /** Tells if all events are disabled. */
+    fun areAllEventsDisabled(): Boolean = enabledEventsMap.isEmpty()
+
     override fun changeEventState(eventId: Long, toggleType: Action.ToggleEvent.ToggleType) {
         when (toggleType) {
             Action.ToggleEvent.ToggleType.ENABLE -> enableEvent(eventId)

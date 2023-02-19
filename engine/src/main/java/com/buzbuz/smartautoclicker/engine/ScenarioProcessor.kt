@@ -44,7 +44,7 @@ import kotlinx.coroutines.yield
  * @param androidExecutor execute the actions requiring an interaction with Android..
  * @param endConditionOperator the operator to apply between the end conditions.
  * @param endConditions the list of end conditions for the current scenario.
- * @param onEndConditionReached called when a end condition of the scenario have been reached.
+ * @param onStopRequested called when a end condition of the scenario have been reached or all events are disabled.
  * @param debugEngine the engine for the debugging. Can be null if not required.
  */
 internal class ScenarioProcessor(
@@ -56,7 +56,7 @@ internal class ScenarioProcessor(
     androidExecutor: AndroidExecutor,
     @ConditionOperator endConditionOperator: Int,
     endConditions: List<EndCondition>,
-    onEndConditionReached: () -> Unit,
+    private val onStopRequested: () -> Unit,
     private val debugEngine: DebugEngine? = null,
 ) {
 
@@ -65,7 +65,7 @@ internal class ScenarioProcessor(
     /** Execute the detected event actions. */
     private val actionExecutor = ActionExecutor(androidExecutor, scenarioState, randomize)
     /** Verifies the end conditions of a scenario. */
-    private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onEndConditionReached)
+    private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onStopRequested)
 
     /** Tells if the screen metrics have been invalidated and should be updated. */
     private var invalidateScreenMetrics = true
@@ -85,6 +85,11 @@ internal class ScenarioProcessor(
      * @return the first Event with all conditions fulfilled, or null if none has been found.
      */
     suspend fun process(screenImage: Image) {
+        if (scenarioState.areAllEventsDisabled()) {
+            onStopRequested()
+            return
+        }
+
         debugEngine?.onImageProcessingStarted()
 
         // Set the current screen image

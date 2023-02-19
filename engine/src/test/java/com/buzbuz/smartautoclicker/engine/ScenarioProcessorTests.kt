@@ -90,9 +90,9 @@ class ScenarioProcessorTests {
     interface BitmapSupplier {
         fun getBitmap(path: String, width: Int, height: Int): Bitmap
     }
-    /** Interface to be mocked in order to verify the calls to the end condition listener. */
-    interface EndConditionListener {
-        fun onEndConditionReached()
+    /** Interface to be mocked in order to verify the calls to the stop listener. */
+    interface StopRequestListener {
+        fun onStopRequested()
     }
 
     @Mock private lateinit var mockBitmapCreator: ShadowBitmapCreator.BitmapCreator
@@ -100,7 +100,7 @@ class ScenarioProcessorTests {
     @Mock private lateinit var mockImageDetector: ImageDetector
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
-    @Mock private lateinit var mockEndListener: EndConditionListener
+    @Mock private lateinit var mockEndListener: StopRequestListener
 
     @Mock private lateinit var mockScreenImage: Image
     @Mock private lateinit var mockScreenImagePlane: Image.Plane
@@ -157,7 +157,7 @@ class ScenarioProcessorTests {
         mockAndroidExecutor,
         endConditionOperator,
         endConditions,
-        mockEndListener::onEndConditionReached,
+        mockEndListener::onStopRequested,
     )
 
     @Before
@@ -190,8 +190,9 @@ class ScenarioProcessorTests {
         scenarioProcessor = createNewScenarioProcessor(emptyList(), emptyList(), OR)
         scenarioProcessor.process(mockScreenImage)
 
-        verify(mockImageDetector).setupDetection(mockScreenBitmap)
-        verifyNoInteractions(mockBitmapSupplier, mockAndroidExecutor, mockEndListener)
+
+        verify(mockEndListener).onStopRequested()
+        verifyNoInteractions(mockBitmapSupplier, mockAndroidExecutor, mockImageDetector)
     }
 
     @Test
@@ -1251,7 +1252,7 @@ class ScenarioProcessorTests {
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
         assertActionGesture(actionDuration1)
-        verify(mockEndListener).onEndConditionReached()
+        verify(mockEndListener).onStopRequested()
     }
 
     @Test
@@ -1284,13 +1285,13 @@ class ScenarioProcessorTests {
         )
 
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, never()).onEndConditionReached()
+        verify(mockEndListener, never()).onStopRequested()
 
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, never()).onEndConditionReached()
+        verify(mockEndListener, never()).onStopRequested()
 
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, times(1)).onEndConditionReached()
+        verify(mockEndListener, times(1)).onStopRequested()
     }
 
     @Test
@@ -1344,7 +1345,7 @@ class ScenarioProcessorTests {
         )
 
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, times(1)).onEndConditionReached()
+        verify(mockEndListener, times(1)).onStopRequested()
     }
 
     @Test
@@ -1380,7 +1381,7 @@ class ScenarioProcessorTests {
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
         assertActionGesture(actionDuration1)
-        verify(mockEndListener).onEndConditionReached()
+        verify(mockEndListener).onStopRequested()
     }
 
     @Test
@@ -1412,13 +1413,13 @@ class ScenarioProcessorTests {
             AND,
         )
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, never()).onEndConditionReached()
+        verify(mockEndListener, never()).onStopRequested()
 
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, never()).onEndConditionReached()
+        verify(mockEndListener, never()).onStopRequested()
 
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, times(1)).onEndConditionReached()
+        verify(mockEndListener, times(1)).onStopRequested()
     }
 
     @Test
@@ -1472,6 +1473,6 @@ class ScenarioProcessorTests {
         )
 
         scenarioProcessor.process(mockScreenImage)
-        verify(mockEndListener, never()).onEndConditionReached()
+        verify(mockEndListener, never()).onStopRequested()
     }
 }
