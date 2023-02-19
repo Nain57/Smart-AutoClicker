@@ -343,6 +343,10 @@ class EditionRepository private constructor(context: Context) {
     fun createNewAction(action: Action): EditedAction =
         editedItemManager.createNewEditedAction(action)
 
+    /** Creates a new edited action. */
+    fun createNewActionCopy(action: Action, toggleEventItemId: Int): EditedAction =
+        editedItemManager.createNewEditedActionCopy(action, toggleEventItemId)
+
     /**
      * Add a new action to the edited event.
      * @param editedAction the new action.

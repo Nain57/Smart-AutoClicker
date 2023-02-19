@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemCopyHeaderBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
@@ -35,7 +34,7 @@ import com.buzbuz.smartautoclicker.overlays.config.action.copy.ActionCopyModel.A
  * @param onActionSelected Called when the user presses an action.
  */
 class ActionCopyAdapter(
-    private val onActionSelected: (Action) -> Unit
+    private val onActionSelected: (ActionCopyItem.ActionItem) -> Unit
 ): ListAdapter<ActionCopyItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -99,9 +98,9 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param item the item to be represented by this view holder.
      * @param actionClickedListener listener notified upon user click on this item.
      */
-    fun onBind(item: ActionCopyItem.ActionItem, actionClickedListener: (Action) -> Unit) {
+    fun onBind(item: ActionCopyItem.ActionItem, actionClickedListener: (ActionCopyItem.ActionItem) -> Unit) {
         viewBinding.bind(item.actionDetails, bindingAdapterPosition, false) { action, _ ->
-            actionClickedListener(action)
+            actionClickedListener(item)
         }
     }
 }

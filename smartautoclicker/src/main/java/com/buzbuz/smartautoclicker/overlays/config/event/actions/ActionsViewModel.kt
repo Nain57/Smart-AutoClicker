@@ -22,7 +22,6 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.extensions.mapList
@@ -79,14 +78,6 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
             )
         } ?: throw IllegalStateException("Can't create an action, event is null!")
     }
-
-    /**
-     * Create a new action item from an existing action. Used for action copy purposes.
-     * @param action the type of action to create.
-     */
-    fun createAction(action: Action): EditedAction =
-        editionRepository.createNewAction(action)
-
 
     fun addUpdateAction(action: EditedAction, index: Int) {
         if (index != -1) editionRepository.updateActionFromEditedEvent(action, index)

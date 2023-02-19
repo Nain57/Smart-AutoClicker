@@ -299,6 +299,15 @@ sealed class Action {
     }
 }
 
+/** Creates a deep copy of the action and reset its id. */
+fun Action.copyAndResetId(): Action = when (this) {
+    is Action.Click -> copy(id = 0, name = "" + name)
+    is Action.Swipe -> copy(id = 0, name = "" + name)
+    is Action.Pause -> copy(id = 0, name = "" + name)
+    is Action.Intent -> copy(id = 0, name = "" + name)
+    is Action.ToggleEvent -> copy(id = 0, name = "" + name)
+}
+
 fun ToggleEventType.toDomain(): Action.ToggleEvent.ToggleType = Action.ToggleEvent.ToggleType.valueOf(name)
 
 /** Convert an Action entity into a Domain Action. */

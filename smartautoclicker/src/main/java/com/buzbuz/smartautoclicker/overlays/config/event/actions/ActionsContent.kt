@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -142,9 +142,9 @@ class ActionsContent : NavBarDialogContent() {
     private fun newActionCopyNavigationRequest() = NavigationRequest(
         ActionCopyDialog(
             context = context,
-            onActionSelected = { actionSelected ->
+            onActionSelected = { newCopyAction ->
                 dialogViewModel.requestSubOverlay(
-                    newActionConfigNavigationRequest(viewModel.createAction(actionSelected))
+                    newActionConfigNavigationRequest(newCopyAction)
                 )
             }
         )

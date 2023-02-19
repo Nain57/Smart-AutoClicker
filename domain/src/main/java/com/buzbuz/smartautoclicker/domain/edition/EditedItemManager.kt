@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.domain.edition
 
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.copyAndResetId
 import com.buzbuz.smartautoclicker.domain.EndCondition
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Scenario
@@ -92,6 +93,14 @@ internal class EditedItemManager {
         EditedAction(
             action = action,
             itemId = ++lastGeneratedActionItemId,
+        )
+
+    /** Creates a new configured Action from another one. */
+    fun createNewEditedActionCopy(action: Action, toggleEventItemId: Int): EditedAction =
+        EditedAction(
+            action = action.copyAndResetId(),
+            itemId = ++lastGeneratedActionItemId,
+            toggleEventItemId = toggleEventItemId,
         )
 
     /** Creates a new configured Action with inner items mapped with an edited Event. */

@@ -24,7 +24,9 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
+import com.buzbuz.smartautoclicker.domain.edition.INVALID_EDITED_ITEM_ID
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.base.bindings.toActionDetails
 
@@ -47,17 +49,62 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
 
+    /** List of all actions available for copy */
+    private val allCopyItems: Flow<List<ActionCopyItem>> = combine(
+        editionRepository.editedEvents,
+        editionRepository.editedEvent,
+        repository.getAllActions(),
+    ) { editedEvents, currentEditedEvent, dbActions ->
+        currentEditedEvent ?: return@combine emptyList()
+
+        buildList {
+            // First, add the actions from the current event
+            val eventItems = currentEditedEvent.editedActions
+                .toCopyItemsFromEditedEvents()
+                .sortedBy { it.actionDetails.name }
+            if (eventItems.isNotEmpty()) {
+                add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
+                addAll(eventItems)
+            }
+
+            // Then, add all other actions. Remove the one already in this event.
+            // There should be no ToggleEvent action, as we can't reference an event from another scenario.
+            val allOtherActions = buildList {
+                val otherEventsActions = buildList {
+                    editedEvents
+                        .filter { otherEvent -> currentEditedEvent.itemId != otherEvent.itemId }
+                        .forEach { otherEditedEvent ->
+                            addAll(otherEditedEvent.editedActions.toCopyItemsFromEditedEvents())
+                        }
+                }
+
+                addAll(otherEventsActions)
+                addAll(dbActions.filter { action ->
+                    action !is Action.ToggleEvent
+                            && eventItems.doesNotContainAction(action.id)
+                            && otherEventsActions.doesNotContainAction(action.id)
+                }.toCopyItemsFromOtherScenarios())
+            }.sortedBy { it.actionDetails.name }
+
+            if (allOtherActions.isNotEmpty()) {
+                add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
+                addAll(allOtherActions)
+            }
+        }.distinctByUiDisplay()
+    }
+
     /**
      * List of displayed action items.
      * This list can contains all events with headers, or the search result depending on the current search query.
      */
-    val actionList: Flow<List<ActionCopyItem>?> =
-        combine(repository.getAllActions(), editionRepository.editedEvent, searchQuery) { dbActions, editedEvent, query ->
-            editedEvent ?: return@combine null
-
-            if (query.isNullOrEmpty()) getAllItems(dbActions, editedEvent.event.actions ?: emptyList())
-            else dbActions.toCopyItemsFromSearch(query)
-        }
+    val actionList: Flow<List<ActionCopyItem>?> = allCopyItems.combine(searchQuery) { allItems, query ->
+        if (query.isNullOrEmpty()) allItems
+        else allItems
+            .filterIsInstance<ActionCopyItem.ActionItem>()
+            .filter { item -> item.actionDetails.name.contains(query, true) }
+            .sortedBy { it.actionDetails.name }
+            .distinctByUiDisplay()
+    }
 
     /**
      * Update the action search query.
@@ -69,80 +116,41 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
 
     /**
      * Get a new action based on the provided one.
-     * @param action the acton to copy.
+     * @param item the item containing the action to copy.
      */
-    fun getNewActionForCopy(action: Action): Action =
-        when (action) {
-            is Action.Click -> action.copy(id = 0, name = "" + action.name)
-            is Action.Swipe -> action.copy(id = 0, name = "" + action.name)
-            is Action.Pause -> action.copy(id = 0, name = "" + action.name)
-            is Action.Intent -> action.copy(id = 0, name = "" + action.name)
-            else -> throw IllegalArgumentException("Not yet supported")
-        }
+    fun getNewActionForCopy(item: ActionCopyItem.ActionItem): EditedAction =
+        editionRepository.createNewActionCopy(item.actionDetails.action, item.toggleEventItemId)
 
-    /**
-     * Get all items with the headers.
-     * @param dbActions all actions in the database.
-     * @param eventActions all actions in the current event.
-     * @return the complete list of action items.
-     */
-    private fun getAllItems(dbActions: List<Action>, eventActions: List<Action>): List<ActionCopyItem> {
-        val allItems = mutableListOf<ActionCopyItem>()
-
-        // First, add the actions from the current event
-        val eventItems = eventActions.toCopyItemsFromCurrentEvent()
-        if (eventItems.isNotEmpty()) {
-            allItems.add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
-            allItems.addAll(eventItems)
-        }
-
-        // Then, add all other actions. Remove the one already in this event.
-        // There should be no ToggleEvent action, as we can't reference an event from another scenario.
-        val actions = dbActions
-            .filter { it !is Action.ToggleEvent }
-            .toCopyItemsFromOtherEvents(eventItems)
-        if (actions.isNotEmpty()) {
-            allItems.add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
-            allItems.addAll(actions)
-        }
-
-        return allItems
+    /** Creates copy items from a list of edited actions from this scenario. */
+    private fun List<EditedAction>.toCopyItemsFromEditedEvents() = map {
+        ActionCopyItem.ActionItem(
+            actionDetails = it.action.toActionDetails(getApplication()),
+            toggleEventItemId = if (it.action is Action.ToggleEvent) it.toggleEventItemId else INVALID_EDITED_ITEM_ID,
+        )
     }
 
-    /**
-     * Get the result of the search query.
-     * @param query the current search query.
-     */
-    private fun List<Action>.toCopyItemsFromSearch(query: String) =
-        filter { action -> action.name!!.contains(query, true) }
-            .map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-            .distinctByUiDisplay()
+    /** Creates copy items from a list of actions from another scenario. */
+    private fun List<Action>.toCopyItemsFromOtherScenarios() = map {
+        ActionCopyItem.ActionItem(
+            actionDetails = it.toActionDetails(getApplication()),
+        )
+    }
 
-    /** */
-    private fun List<Action>.toCopyItemsFromCurrentEvent() =
-        map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-            .distinctByUiDisplay()
-            .sortedBy { it.actionDetails.name }
+    /** Check if this list does not already contains the provided action */
+    private fun List<ActionCopyItem.ActionItem>.doesNotContainAction(actionId: Long) = find { item ->
+        item.actionDetails.action.id == actionId
+    } == null
 
-    private fun List<Action>.toCopyItemsFromOtherEvents(eventItems: List<ActionCopyItem.ActionItem>) =
-        map { ActionCopyItem.ActionItem(it.toActionDetails(getApplication())) }
-            .toMutableList()
-            .apply {
-                removeIf { allItem ->
-                    eventItems.find {
-                        allItem.actionDetails.action.id == it.actionDetails.action.id
-                                || allItem.actionDetails.isSimilar(it.actionDetails)
-                    } != null
-                }
+    /** Remove all identical items from the list. */
+    private fun List<ActionCopyItem>.distinctByUiDisplay() =
+        distinctBy { item ->
+            when (item) {
+                is ActionCopyItem.HeaderItem -> item.title.hashCode()
+                is ActionCopyItem.ActionItem -> item.actionDetails.name.hashCode() +
+                        item.actionDetails.details.hashCode() +
+                        item.actionDetails.icon.hashCode() +
+                        item.toggleEventItemId.hashCode()
             }
-            .distinctByUiDisplay()
-
-    private fun ActionDetails.isSimilar(other: ActionDetails): Boolean =
-        name == other.name && details == other.details && icon == other.icon
-
-    private fun List<ActionCopyItem.ActionItem>.distinctByUiDisplay() =
-        distinctBy {
-            it.actionDetails.name.hashCode() + it.actionDetails.details.hashCode() + it.actionDetails.icon.hashCode()
         }
 
     /** Types of items in the action copy list. */
@@ -157,7 +165,12 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
         /**
          * Action item.
          * @param actionDetails the details for the action.
+         * @param toggleEventItemId the identifier of the event referenced by the toggle event action.
+         *                          Null if if not a toggle event.
          */
-        data class ActionItem(val actionDetails: ActionDetails) : ActionCopyItem()
+        data class ActionItem(
+            val actionDetails: ActionDetails,
+            val toggleEventItemId: Int = INVALID_EDITED_ITEM_ID,
+        ) : ActionCopyItem()
     }
 }
