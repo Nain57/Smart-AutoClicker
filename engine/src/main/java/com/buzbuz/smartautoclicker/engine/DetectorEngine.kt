@@ -167,9 +167,15 @@ class DetectorEngine(context: Context) {
             emptyList()
         )
 
-    /** Tells if the detection can be started or not. */
+    /**
+     * Tells if the detection can be started or not.
+     * It requires at least one event enabled on start to be started.
+     */
     val canStartDetection: Flow<Boolean> = scenarioEvents.map { events ->
-        events.isNotEmpty()
+        events.forEach { event ->
+            if (event.enabledOnStart) return@map true
+        }
+        false
     }
 
     /**
