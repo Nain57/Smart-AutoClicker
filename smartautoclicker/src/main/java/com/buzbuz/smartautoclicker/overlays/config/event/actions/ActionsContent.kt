@@ -104,6 +104,7 @@ class ActionsContent : NavBarDialogContent() {
     }
 
     private fun onActionClicked(action: EditedAction, index: Int) {
+        println("TOTO: onActionClicked $index")
         dialogViewModel.requestSubOverlay(newActionConfigNavigationRequest(action, index))
     }
 

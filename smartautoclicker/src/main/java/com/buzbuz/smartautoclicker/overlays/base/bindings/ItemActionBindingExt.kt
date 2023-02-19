@@ -28,11 +28,10 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.formatDuration
 
 fun ItemActionBinding.bind(
     details: ActionDetails,
-    bindingAdapterPosition: Int,
     canDrag: Boolean,
-    actionClickedListener: (Action, Int) -> Unit,
+    actionClickedListener: (Action) -> Unit,
 ) {
-    root.setOnClickListener { actionClickedListener.invoke(details.action, bindingAdapterPosition) }
+    root.setOnClickListener { actionClickedListener.invoke(details.action) }
 
     actionName.visibility = View.VISIBLE
     actionTypeIcon.setImageResource(details.icon)

@@ -94,8 +94,8 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param actionClickedListener listener notified upon user click on this item.
      */
     fun onBind(action: Pair<EditedAction, ActionDetails>, actionClickedListener: (EditedAction, Int) -> Unit) {
-        viewBinding.bind(action.second, bindingAdapterPosition, true) { _, index ->
-            actionClickedListener(action.first, index)
+        viewBinding.bind(action.second, true) { _ ->
+            actionClickedListener(action.first, bindingAdapterPosition)
         }
     }
 }
@@ -111,7 +111,6 @@ class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(ItemTouchHelper.
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        println("TOTO: onMove from=${viewHolder.bindingAdapterPosition} to=${target.bindingAdapterPosition}")
         isDragging = true
         (recyclerView.adapter as ActionAdapter).moveActions(
             viewHolder.bindingAdapterPosition,
@@ -124,7 +123,6 @@ class ActionReorderTouchHelper : ItemTouchHelper.SimpleCallback(ItemTouchHelper.
         super.clearView(recyclerView, viewHolder)
 
         if (isDragging) {
-            println("TOTO: clearView")
             (recyclerView.adapter as ActionAdapter).notifyMoveFinished()
             isDragging = false
         }
