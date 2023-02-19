@@ -255,8 +255,12 @@ class EditionRepository private constructor(context: Context) {
         val item = _editedEvent.value ?: return false
         val events = editedScenario.value?.events ?: return false
 
-        return events.find { editedEvent ->
-            editedEvent.editedActions.find { it.toggleEventItemId == item.itemId } != null
+        return events.find { event ->
+            if (event.itemId == item.itemId) return@find false
+
+            event.editedActions.find { action ->
+                action.toggleEventItemId == item.itemId
+            } != null
         } != null
     }
 
