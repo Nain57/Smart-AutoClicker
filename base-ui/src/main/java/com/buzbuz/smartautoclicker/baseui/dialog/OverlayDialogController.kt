@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.baseui.dialog
 
 import android.content.Context
-import android.content.res.Configuration
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -25,7 +24,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.FrameLayout
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
@@ -33,7 +31,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import com.buzbuz.smartautoclicker.baseui.OverlayController
 import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
-import com.buzbuz.smartautoclicker.ui.R
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -117,12 +114,9 @@ abstract class OverlayDialogController(
 
             dialogCoordinatorLayout = (view.parent.parent as CoordinatorLayout)
 
-            if (screenMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                behavior.apply {
-                    state = BottomSheetBehavior.STATE_EXPANDED
-                    isDraggable = false
-
-                }
+            behavior.apply {
+                state = BottomSheetBehavior.STATE_EXPANDED
+                isDraggable = false
             }
         }
 
