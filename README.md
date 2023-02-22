@@ -17,26 +17,18 @@ Smart AutoClicker is an Android application allowing to automate repetitive task
 <br>
 
 <p align="center">
-  <img src="https://i.postimg.cc/65JBX8D9/Phone-Screenshot-1.png" width="200">
-  <img src="https://i.postimg.cc/6Q3X0nGh/Phone-Screenshot-2.png" width="200">
-  <img src="https://i.postimg.cc/1zjZYXG1/Phone-Screenshot-3.png" width="200">
-  <img src="https://i.postimg.cc/qvp0N9JS/Phone-Screenshot-4.png" width="200">
+  <img src="https://i.postimg.cc/VYtCZrN0/1.png" width="200">
+  <img src="https://i.postimg.cc/Vsf0NKWX/2.png" width="200">
+  <img src="https://i.postimg.cc/51gFrMfg/3.png" width="200">
+  <img src="https://i.postimg.cc/wHgmFBY3/4.png" width="200">
 </p>
 <br>
-<p align="center">
-  <img src="https://i.postimg.cc/8zwGMts5/Phone-Screenshot-5.png" width="200">
-  <img src="https://i.postimg.cc/ZnrtRL1J/Phone-Screenshot-6.png" width="200">
-  <img src="https://i.postimg.cc/1Xx1sd7W/Phone-Screenshot-7.png" width="200">
-  <img src="https://i.postimg.cc/nz9t8x2j/Phone-Screenshot-8.png" width="200">
-</p>
-<br>
-
 
 ## Features
 
 - Organize clicks by scenario
-- Execute clicks or swipes
-- Add an image condition from the screen
+- Execute clicks, swipes, send Intents, modify events states
+- Add one or more images conditions from the screen
 - Modify the tolerance for the condition detection
 - Combine multiple conditions
 - Configure the delay before the next click
