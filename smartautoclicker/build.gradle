@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,8 +35,8 @@ android {
         applicationId "com.buzbuz.smartautoclicker"
         minSdk rootProject.ext.minSdkVersion
         targetSdk rootProject.ext.compileSdkVersion
-        versionCode 20
-        versionName "1.5.4"
+        versionCode 21
+        versionName "2.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
