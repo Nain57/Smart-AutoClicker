@@ -46,7 +46,7 @@
             android:id="@+id/scenario_action_randomization"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_horizontal_small"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/scenario_name_field"
