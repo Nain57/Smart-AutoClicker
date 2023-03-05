@@ -65,7 +65,7 @@ class OverlayWindowResizeController(
             view: View?,
             transitionType: Int
         ) {
-            if (view != null && view.id == resizedContainer.id && isChangeTransition(transitionType)) {
+            if (view != null && view.id == backgroundViewGroup.id && isChangeTransition(transitionType)) {
                 // The view resize animation is over, restore the window size to wrap the content.
                 windowSizeListener(Size(backgroundViewGroup.width, backgroundViewGroup.height))
                 isAnimating = false
