@@ -76,7 +76,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
-        debug {
+        debugFDroid {
             applicationIdSuffix '.debug'
         }
     }
@@ -120,8 +120,9 @@ dependencies {
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
     // Google Play Store version dependencies only
-    playStoreImplementation platform('com.google.firebase:firebase-bom:30.4.0')
+    playStoreImplementation platform("com.google.firebase:firebase-bom:${rootProject.ext.firebaseBomVersion}")
     playStoreImplementation 'com.google.firebase:firebase-crashlytics-ktx'
+    playStoreImplementation("com.android.billingclient:billing:${rootProject.ext.billingVersion}")
 
     implementation project(path: ':base-ui')
     implementation project(path: ':domain')
