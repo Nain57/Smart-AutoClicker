@@ -27,5 +27,5 @@ jobs:
       with:
         name: smartautoclicker-release
         path: |
-          smartautoclicker/build/outputs/bundle/fDroid/release/smartautoclicker-release.aab
-          smartautoclicker/build/outputs/apk/fDroid/release/smartautoclicker-release.apk
+          smartautoclicker/build/outputs/bundle/fDroid/release/smartautoclicker-fDroid-release.aab
+          smartautoclicker/build/outputs/apk/fDroid/release/smartautoclicker-fDroid-release.apk

@@ -24,6 +24,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: smartautoclicker-release
-        path: |
-          smartautoclicker/build/outputs/bundle/playStore/release/smartautoclicker-release.aab
-          smartautoclicker/build/outputs/apk/playStore/release/smartautoclicker-release.apk
+        path: |   
+          smartautoclicker/build/outputs/bundle/playStore/release/smartautoclicker-playStore-release.aab
+          smartautoclicker/build/outputs/apk/playStore/release/smartautoclicker-playStore-release.apk
