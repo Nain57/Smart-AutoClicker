@@ -70,6 +70,10 @@ ext {
     mockitoCoreVersion = '4.5.1'
     mockitoKotlinVersion = '4.0.0'
     robolectricVersion = '4.8.1'
+
+    // Google PlayStore version dependencies
+    firebaseBomVersion = '30.4.0'
+    billingVersion = "5.1.0"
 }
 
 task clean (type: Delete) {
