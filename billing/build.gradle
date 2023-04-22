@@ -19,7 +19,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+def billingKey = "\"" + (localProperties['billingPublicKey'] ?: rootProject.billingPublicKey) + "\""
 
 android {
     namespace 'com.buzbuz.smartautoclicker.billing'
@@ -62,7 +66,7 @@ android {
         }
         create("playStore") {
             dimension = "version"
-            buildConfigField("String", "BILLING_PUBLIC_KEY", "\"" + localProperties['billingPublicKey'] + "\"")
+            buildConfigField("String", "BILLING_PUBLIC_KEY", "\"" + billingKey + "\"")
         }
     }
 }
