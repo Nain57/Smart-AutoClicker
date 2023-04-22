@@ -19,7 +19,7 @@ jobs:
         with:
           java-version: '11'
       - name: Local unit tests with Gradle
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testFDroidDebugUnitTest
       - name: Upload tests results
         uses: actions/upload-artifact@v2
         if: success() || failure()
