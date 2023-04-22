@@ -20,10 +20,13 @@ apply plugin: 'kotlin-kapt'
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
+def billingKey
 if (localPropertiesFile.exists()) {
     localProperties.load(new FileInputStream(localPropertiesFile))
+    billingKey = localProperties['billingPublicKey']
+} else if (rootProject.hasProperty('billingPublicKey')) {
+    billingKey = rootProject.billingPublicKey
 }
-def billingKey = "\"" + (localProperties['billingPublicKey'] ?: rootProject.billingPublicKey) + "\""
 
 android {
     namespace 'com.buzbuz.smartautoclicker.billing'
