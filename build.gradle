@@ -73,7 +73,7 @@ ext {
 
     // Google PlayStore version dependencies
     firebaseBomVersion = '30.4.0'
-    billingVersion = "5.1.0"
+    billingVersion = "5.2.0"
 }
 
 task clean (type: Delete) {
