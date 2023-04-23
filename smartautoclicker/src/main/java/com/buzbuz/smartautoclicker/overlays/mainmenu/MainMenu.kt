@@ -30,7 +30,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.menu.OverlayMenuController
+import com.buzbuz.smartautoclicker.baseui.overlays.menu.OverlayMenuController
 import com.buzbuz.smartautoclicker.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugModel
 import com.buzbuz.smartautoclicker.overlays.debugging.DebugOverlayView

@@ -25,8 +25,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
-import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

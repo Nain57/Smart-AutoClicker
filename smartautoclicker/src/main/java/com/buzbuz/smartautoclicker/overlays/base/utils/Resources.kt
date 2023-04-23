@@ -25,7 +25,9 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.bindings.setError
 import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.ui.databinding.IncludeInputFieldTextBinding
 
 import com.google.android.material.textfield.TextInputLayout
 
@@ -76,6 +78,10 @@ fun KClass<out Any>.getDisplayNameRes() : Int = when (this) {
 
 fun TextInputLayout.setError(isError: Boolean) {
     error = if (isError) context.getString(R.string.input_field_error_required) else null
+}
+
+fun IncludeInputFieldTextBinding.setError(isError: Boolean) {
+    setError(R.string.input_field_error_required, isError)
 }
 
 /** Check if this duration value is valid for an action. */

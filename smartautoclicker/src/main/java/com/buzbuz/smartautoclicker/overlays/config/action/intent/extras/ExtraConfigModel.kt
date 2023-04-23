@@ -24,9 +24,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.NumberInputFilter
+import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.baseui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.domain.IntentExtra
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.overlays.base.utils.getDisplayNameRes
 
 import kotlinx.coroutines.flow.Flow

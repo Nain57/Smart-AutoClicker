@@ -23,7 +23,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.*
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

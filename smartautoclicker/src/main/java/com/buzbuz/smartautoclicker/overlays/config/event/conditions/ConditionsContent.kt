@@ -26,16 +26,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.*
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionDialog
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
+import com.buzbuz.smartautoclicker.ui.databinding.IncludeLoadableListBinding
 
 import kotlinx.coroutines.launch
 

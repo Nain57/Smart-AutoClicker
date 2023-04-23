@@ -28,12 +28,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseNavBarBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeCreateCopyButtonsBinding
 import com.buzbuz.smartautoclicker.databinding.ViewBottomNavBarBinding
-import com.buzbuz.smartautoclicker.databinding.IncludeDialogNavigationTopBarBinding
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.ui.databinding.IncludeDialogNavigationTopBarBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView

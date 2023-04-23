@@ -17,9 +17,9 @@
 package com.buzbuz.smartautoclicker.overlays.base.bindings
 
 import androidx.annotation.StringRes
+
 import com.buzbuz.smartautoclicker.databinding.IncludeDebugReportMinAvgMaxBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeDebugReportTriggeredProcessedBinding
-
 import com.buzbuz.smartautoclicker.databinding.IncludeDebugReportValueBinding
 
 fun IncludeDebugReportValueBinding.setValue(@StringRes desc: Int, v: String) {

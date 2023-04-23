@@ -28,13 +28,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.databinding.ContentIntentConfigSimpleBinding
+import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
+import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setError
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setLabel
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setText
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.activities.ActivitySelectionDialog
+
 
 import kotlinx.coroutines.launch
 

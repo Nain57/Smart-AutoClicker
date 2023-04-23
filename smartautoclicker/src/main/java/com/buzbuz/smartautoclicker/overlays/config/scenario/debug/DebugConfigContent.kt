@@ -23,9 +23,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.databinding.ContentDebugConfigBinding
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
 
 import kotlinx.coroutines.launch
 

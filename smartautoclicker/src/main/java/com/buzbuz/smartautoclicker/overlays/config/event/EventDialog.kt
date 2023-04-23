@@ -28,13 +28,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.baseui.bindings.setButtonVisibility
+import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogController
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.overlays.config.event.actions.ActionsContent
 import com.buzbuz.smartautoclicker.overlays.config.event.conditions.ConditionsContent
 import com.buzbuz.smartautoclicker.overlays.config.event.config.EventConfigContent

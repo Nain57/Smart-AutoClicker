@@ -28,7 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 
-import com.buzbuz.smartautoclicker.overlays.base.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
 
 abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
 

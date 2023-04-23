@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -18,36 +18,7 @@
 <resources>
     <dimen name="bottom_sheet_min_height">600dp</dimen>
 
-    <dimen name="text_size_item_title">14sp</dimen>
-    <dimen name="text_size_list_item_text_small">14sp</dimen>
-    <dimen name="text_size_list_item_text">16sp</dimen>
-    <dimen name="text_size_list_item_text_big">17sp</dimen>
-    <dimen name="text_size_large">22sp</dimen>
-
-    <dimen name="margin_horizontal_large">24dp</dimen>
-    <dimen name="margin_horizontal_default">16dp</dimen>
-    <dimen name="margin_horizontal_intermediate">12dp</dimen>
-    <dimen name="margin_horizontal_small">8dp</dimen>
-    <dimen name="margin_horizontal_mini">4dp</dimen>
-    <dimen name="margin_vertical_extra_large">16dp</dimen>
-    <dimen name="margin_vertical_large">12dp</dimen>
-    <dimen name="margin_vertical_default">8dp</dimen>
-    <dimen name="margin_vertical_small">4dp</dimen>
-    <dimen name="margin_vertical_mini">2dp</dimen>
-
-    <dimen name="drawable_padding_small">2dp</dimen>
-
-    <dimen name="elevation_level_2">3dp</dimen>
-    <dimen name="elevation_level_3">6dp</dimen>
-
-    <dimen name="card_view_width_horizontal_list">100dp</dimen>
-    <dimen name="card_view_height_horizontal_list">100dp</dimen>
-
     <dimen name="dialog_export_icon_status_size">72dp</dimen>
-
-    <dimen name="image_button_size">48dp</dimen>
-    <dimen name="item_height">48dp</dimen>
-    <dimen name="item_height_big">62dp</dimen>
 
     <dimen name="dialog_item_condition_height">100dp</dimen>
     <dimen name="dialog_item_condition_width">100dp</dimen>
@@ -71,13 +42,6 @@
     <dimen name="overlay_debug_panel_width">200dp</dimen>
     <dimen name="overlay_debug_panel_height">100dp</dimen>
 
-    <dimen name="dialog_choice_item_icon_size">32dp</dimen>
-
-    <dimen name="android_bottom_navigation_height">80dp</dimen>
-    <dimen name="margin_fab_secondary_bottom">24dp</dimen>
-
     <!-- This must be equals to android_bottom_navigation_height + 16dp-->
     <dimen name="dialog_create_copy_buttons_bottom_margin">96dp</dimen>
-
-    <dimen name="dropdown_item_icon_size">24dp</dimen>
 </resources>

@@ -26,9 +26,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.baseui.bindings.setItems
+import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
+import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
+import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.databinding.ContentEventConfigBinding
-import com.buzbuz.smartautoclicker.overlays.base.bindings.*
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import kotlinx.coroutines.launch
 

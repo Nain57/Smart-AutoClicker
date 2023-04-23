@@ -29,14 +29,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.buzbuz.smartautoclicker.R
 
-import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.bindings.updateState
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemApplicationBinding
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.ActivityDisplayInfo
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

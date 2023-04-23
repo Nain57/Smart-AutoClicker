@@ -29,11 +29,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.DurationInputFilter
-import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.baseui.bindings.setItems
+import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
+import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
+import com.buzbuz.smartautoclicker.baseui.bindings.setText
+import com.buzbuz.smartautoclicker.baseui.utils.DurationInputFilter
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
-import com.buzbuz.smartautoclicker.overlays.base.bindings.*
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.action.CoordinatesSelector
 

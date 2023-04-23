@@ -27,12 +27,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
+import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

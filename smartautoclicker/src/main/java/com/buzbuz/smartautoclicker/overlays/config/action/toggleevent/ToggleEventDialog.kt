@@ -28,11 +28,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.baseui.bindings.setItems
+import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
+import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
+import com.buzbuz.smartautoclicker.baseui.bindings.setText
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionToggleEventBinding
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
-import com.buzbuz.smartautoclicker.overlays.base.bindings.*
+import com.buzbuz.smartautoclicker.overlays.base.bindings.EventPickerViewState
+import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
+import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EventSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

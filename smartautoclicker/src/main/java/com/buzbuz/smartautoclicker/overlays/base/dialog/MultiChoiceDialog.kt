@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseMultiChoiceBinding
 import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceBinding
 import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceSmallBinding

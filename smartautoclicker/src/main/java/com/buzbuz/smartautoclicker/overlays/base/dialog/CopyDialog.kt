@@ -24,9 +24,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogBaseCopyBinding
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
 
 abstract class CopyDialog(
     context: Context,

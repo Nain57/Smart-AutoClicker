@@ -26,15 +26,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.config.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
-import com.buzbuz.smartautoclicker.overlays.base.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.config.action.copy.ActionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.IntentDialog
 import com.buzbuz.smartautoclicker.overlays.config.action.pause.PauseDialog
@@ -42,6 +41,7 @@ import com.buzbuz.smartautoclicker.overlays.config.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.overlays.base.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.overlays.config.action.toggleevent.ToggleEventDialog
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialogViewModel
+import com.buzbuz.smartautoclicker.ui.databinding.IncludeLoadableListBinding
 
 import kotlinx.coroutines.launch
 

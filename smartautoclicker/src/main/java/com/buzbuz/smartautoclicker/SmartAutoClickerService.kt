@@ -33,8 +33,8 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVI
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.LocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
-import com.buzbuz.smartautoclicker.baseui.OverlayController
-import com.buzbuz.smartautoclicker.baseui.ScreenMetrics
+import com.buzbuz.smartautoclicker.baseui.overlays.OverlayController
+import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.DetectorEngine

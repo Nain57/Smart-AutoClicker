@@ -37,6 +37,10 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     testOptions {
         unitTests.includeAndroidResources = true
     }

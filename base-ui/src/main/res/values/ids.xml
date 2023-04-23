@@ -24,6 +24,4 @@
     <item name="btn_move" type="id"/>
     <!-- Id for the hide button in the OverlayMenuController -->
     <item name="btn_hide_overlay" type="id"/>
-    <!-- Id for the color of the hints. -->
-    <item name="overlayViewPrimary" type="color" />
 </resources>

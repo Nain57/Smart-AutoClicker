@@ -29,6 +29,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.billing.BillingRepository
+import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Scenario
@@ -99,6 +101,8 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
                 )
             }
         }
+
+    val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
 
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)

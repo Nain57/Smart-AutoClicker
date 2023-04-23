@@ -23,10 +23,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.buzbuz.smartautoclicker.R
 
+import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.overlays.base.bindings.updateState
 import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyDialog
+import com.buzbuz.smartautoclicker.ui.databinding.IncludeLoadableListBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -57,6 +59,8 @@ class EventCopyDialog(
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = eventCopyAdapter
         }
+
+        viewBinding.layoutTopBar.search.queryHint = context.getString(R.string.search_view_hint_event_copy)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
