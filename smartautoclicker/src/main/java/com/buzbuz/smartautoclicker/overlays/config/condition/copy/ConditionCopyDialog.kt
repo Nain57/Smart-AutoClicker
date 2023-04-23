@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyDialog
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -44,13 +44,16 @@ class ConditionCopyDialog(
     context: Context,
     private val conditions: List<Condition>,
     private val onConditionSelected: (Condition) -> Unit,
-) : CopyDialog(context)  {
+) : CopyDialog(context, R.style.AppTheme)  {
 
     /** View model for this content. */
     private val viewModel: ConditionCopyModel by lazy { ViewModelProvider(this).get(ConditionCopyModel::class.java) }
 
     /** Adapter displaying the list of conditions. */
     private lateinit var conditionAdapter: ConditionCopyAdapter
+
+    override val titleRes: Int = R.string.dialog_overlay_title_copy_from
+    override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewModel.setItemsFromContainer(conditions)

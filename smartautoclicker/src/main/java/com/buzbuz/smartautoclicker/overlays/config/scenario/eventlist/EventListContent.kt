@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.overlays.config.event.copy.EventCopyDialog
 import com.buzbuz.smartautoclicker.overlays.config.event.EventDialog

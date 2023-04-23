@@ -32,9 +32,9 @@ import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.baseui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogController
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogController
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.event.actions.ActionsContent
 import com.buzbuz.smartautoclicker.overlays.config.event.conditions.ConditionsContent
 import com.buzbuz.smartautoclicker.overlays.config.event.config.EventConfigContent
@@ -48,7 +48,7 @@ class EventDialog(
     context: Context,
     private val onConfigComplete: () -> Unit,
     private val onDelete: () -> Unit,
-): NavBarDialogController(context) {
+): NavBarDialogController(context, R.style.AppTheme) {
 
     /** View model for this dialog. */
     private val viewModel: EventDialogViewModel by lazy {

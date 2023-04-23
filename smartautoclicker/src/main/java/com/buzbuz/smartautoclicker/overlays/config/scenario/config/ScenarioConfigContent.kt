@@ -35,8 +35,8 @@ import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog

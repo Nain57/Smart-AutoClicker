@@ -27,8 +27,7 @@ import com.buzbuz.smartautoclicker.R
 
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyDialog
-import com.buzbuz.smartautoclicker.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -40,12 +39,15 @@ import kotlinx.coroutines.launch
 class EventCopyDialog(
     context: Context,
     private val onEventSelected: (Event) -> Unit,
-) : CopyDialog(context) {
+) : CopyDialog(context, R.style.AppTheme) {
 
     /** View model for this content. */
     private val viewModel: EventCopyModel by lazy { ViewModelProvider(this).get(EventCopyModel::class.java) }
     /** Adapter displaying the list of events. */
     private lateinit var eventCopyAdapter: EventCopyAdapter
+
+    override val titleRes: Int = R.string.dialog_overlay_title_copy_from
+    override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         eventCopyAdapter = EventCopyAdapter { selectedEvent ->

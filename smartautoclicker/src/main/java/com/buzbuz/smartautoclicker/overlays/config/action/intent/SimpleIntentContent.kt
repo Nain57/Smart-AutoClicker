@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
 import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.overlays.base.bindings.bind
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.activities.ActivitySelectionDialog
 

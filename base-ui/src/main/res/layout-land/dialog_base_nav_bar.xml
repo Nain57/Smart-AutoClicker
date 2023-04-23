@@ -15,11 +15,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="@dimen/bottom_sheet_min_height"
     android:orientation="vertical">
 
@@ -43,8 +43,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/dialog_content"
-            app:labelVisibilityMode="unlabeled"
-            tools:menu="@menu/menu_scenario_config"/>
+            app:labelVisibilityMode="unlabeled"/>
 
         <FrameLayout
             android:id="@+id/dialog_content"

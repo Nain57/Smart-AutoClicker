@@ -29,9 +29,9 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.baseui.bindings.setButtonVisibility
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogController
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogController
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.scenario.config.ScenarioConfigContent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.debug.DebugConfigContent
 import com.buzbuz.smartautoclicker.overlays.config.scenario.eventlist.EventListContent
@@ -44,7 +44,7 @@ class ScenarioDialog(
     context: Context,
     private val onConfigSaved: () -> Unit,
     private val onConfigDiscarded: () -> Unit,
-) : NavBarDialogController(context) {
+) : NavBarDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ScenarioDialogViewModel by lazy {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<com.google.android.material.bottomnavigation.BottomNavigationView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_navigation"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:translationZ="100dp"
-    tools:menu="@menu/menu_scenario_config" />
+<resources>
+    <string name="content_desc_add_button">The button to create an element</string>
+    <string name="content_desc_copy_button">The button to create a copy from an existing element</string>
+</resources>

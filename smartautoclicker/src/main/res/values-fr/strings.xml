@@ -301,8 +301,6 @@
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
     <string name="content_desc_backup_state">L\'état du backup</string>
-    <string name="content_desc_copy_button">Le button pour créer une copie à partir d\'un élément existant</string>
-    <string name="content_desc_add_button">Le button pour créer un élément</string>
     <string name="content_desc_drag_and_drop">Drag and drop pour changer l\'ordre des éléments</string>
     <string name="content_desc_event_state">L\'état de l\'évènement</string>
     <string name="content_desc_conditions_count">Le nombre de conditions dans cet évènement</string>

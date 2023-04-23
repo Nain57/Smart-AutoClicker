@@ -22,10 +22,10 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.extensions.mapList
-import com.buzbuz.smartautoclicker.overlays.base.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.overlays.base.bindings.toActionDetails
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultClick

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.base.dialog
+package com.buzbuz.smartautoclicker.baseui.overlays.dialog
 
 import android.content.Context
 import android.content.res.Configuration
@@ -24,23 +24,23 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.CallSuper
+import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogBaseNavBarBinding
-import com.buzbuz.smartautoclicker.databinding.IncludeCreateCopyButtonsBinding
-import com.buzbuz.smartautoclicker.databinding.ViewBottomNavBarBinding
+import com.buzbuz.smartautoclicker.ui.databinding.DialogBaseNavBarBinding
+import com.buzbuz.smartautoclicker.ui.databinding.IncludeCreateCopyButtonsBinding
 import com.buzbuz.smartautoclicker.ui.databinding.IncludeDialogNavigationTopBarBinding
+import com.buzbuz.smartautoclicker.ui.databinding.ViewBottomNavBarBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView
 
 abstract class NavBarDialogController(
     context: Context,
-) : OverlayDialogController(context, R.style.AppTheme) {
+    @StyleRes theme: Int,
+    ) : OverlayDialogController(context, theme) {
 
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()

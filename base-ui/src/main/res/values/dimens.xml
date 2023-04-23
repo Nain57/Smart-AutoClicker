@@ -51,4 +51,9 @@
     <dimen name="margin_fab_secondary_bottom">24dp</dimen>
 
     <dimen name="dropdown_item_icon_size">24dp</dimen>
+
+    <dimen name="bottom_sheet_min_height">600dp</dimen>
+
+    <!-- This must be equals to android_bottom_navigation_height + 16dp-->
+    <dimen name="dialog_create_copy_buttons_bottom_margin">96dp</dimen>
 </resources>

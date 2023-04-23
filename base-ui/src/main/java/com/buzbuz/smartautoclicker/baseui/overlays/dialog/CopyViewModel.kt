@@ -14,19 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.base.dialog
+package com.buzbuz.smartautoclicker.baseui.overlays.dialog
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.domain.Repository
-
 import kotlinx.coroutines.flow.MutableStateFlow
 
 abstract class CopyViewModel<I>(application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the click database. */
-    protected val repository = Repository.getRepository(application)
 
     /** The currently searched action name. Null if no is. */
     protected val searchQuery = MutableStateFlow<String?>(null)

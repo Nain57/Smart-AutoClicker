@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
-import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyDialog
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -42,13 +42,16 @@ import kotlinx.coroutines.launch
 class ActionCopyDialog(
     context: Context,
     private val onActionSelected: (EditedAction) -> Unit,
-) : CopyDialog(context) {
+) : CopyDialog(context, R.style.AppTheme) {
 
     /** View model for this content. */
     private val viewModel: ActionCopyModel by lazy { ViewModelProvider(this).get(ActionCopyModel::class.java) }
 
     /** Adapter displaying the list of events. */
     private lateinit var actionCopyAdapter: ActionCopyAdapter
+
+    override val titleRes: Int = R.string.dialog_overlay_title_copy_from
+    override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->

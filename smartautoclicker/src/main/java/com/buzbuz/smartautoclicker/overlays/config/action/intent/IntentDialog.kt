@@ -30,8 +30,8 @@ import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.baseui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogController
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogController
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -42,7 +42,7 @@ class IntentDialog(
     private val editedIntent: EditedAction,
     private val onDeleteClicked: (EditedAction) -> Unit,
     private val onConfirmClicked: (EditedAction) -> Unit,
-) : NavBarDialogController(context) {
+) : NavBarDialogController(context, R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: IntentViewModel by lazy {

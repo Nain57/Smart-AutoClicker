@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.base.dialog
+package com.buzbuz.smartautoclicker.baseui.overlays.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -23,14 +23,14 @@ import android.view.ViewGroup
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
-import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogBaseMultiChoiceBinding
-import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceBinding
-import com.buzbuz.smartautoclicker.databinding.ItemMultiChoiceSmallBinding
+import com.buzbuz.smartautoclicker.ui.R
+import com.buzbuz.smartautoclicker.ui.databinding.DialogBaseMultiChoiceBinding
+import com.buzbuz.smartautoclicker.ui.databinding.ItemMultiChoiceBinding
+import com.buzbuz.smartautoclicker.ui.databinding.ItemMultiChoiceSmallBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -39,16 +39,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  *
  * @param T the type of choices in the list. Must extends [DialogChoice].
  * @param context the Android Context for the dialog shown by this controller.
+ * @param theme the resource id of the theme to apply.
  * @param dialogTitleText the title of the dialog.
  * @param choices the choices to be displayed.
  * @param onChoiceSelected the callback to be notified upon user choice selection.
  */
 class MultiChoiceDialog<T : DialogChoice>(
     context: Context,
+    @StyleRes theme: Int,
     @StringRes private val dialogTitleText: Int,
     private val choices: List<T>,
     private val onChoiceSelected: (T) -> Unit
-) : OverlayDialogController(context, R.style.AppTheme) {
+) : OverlayDialogController(context, theme) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseMultiChoiceBinding

@@ -29,8 +29,8 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.*
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavigationRequest
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionDialog
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.condition.copy.ConditionCopyDialog

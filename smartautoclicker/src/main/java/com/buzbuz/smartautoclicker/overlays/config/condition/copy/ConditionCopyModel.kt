@@ -24,7 +24,8 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.overlays.base.dialog.CopyViewModel
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyViewModel
+import com.buzbuz.smartautoclicker.domain.Repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,6 +40,9 @@ import kotlinx.coroutines.withContext
  * @param application the Android application.
  */
 class ConditionCopyModel(application: Application) : CopyViewModel<Condition>(application) {
+
+    /** Repository providing access to the click database. */
+    private val repository = Repository.getRepository(application)
 
     /** List of displayed condition items. */
     val conditionList: Flow<List<ConditionCopyItem>?> =

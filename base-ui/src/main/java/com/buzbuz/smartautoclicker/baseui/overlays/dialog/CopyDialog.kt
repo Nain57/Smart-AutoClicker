@@ -14,31 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.overlays.base.dialog
+package com.buzbuz.smartautoclicker.baseui.overlays.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.annotation.StyleRes
 import androidx.appcompat.widget.SearchView
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.databinding.DialogBaseCopyBinding
+import com.buzbuz.smartautoclicker.ui.databinding.DialogBaseCopyBinding
 
 abstract class CopyDialog(
     context: Context,
-) : OverlayDialogController(context, R.style.AppTheme) {
+    @StyleRes theme: Int,
+) : OverlayDialogController(context, theme) {
 
     /** ViewBinding containing the views for this dialog. */
     protected lateinit var viewBinding: DialogBaseCopyBinding
+    /** The resource id for the dialog title. */
+    protected abstract val titleRes: Int
+    /** The resource id for the text displayed when there is nothing to copy. */
+    protected abstract val emptyRes: Int
 
     final override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseCopyBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_copy_from)
+                dialogTitle.setText(titleRes)
                 buttonDismiss.setOnClickListener { destroy() }
 
                 search.apply {
@@ -61,7 +65,7 @@ abstract class CopyDialog(
                 }
             }
 
-            layoutLoadableList.setEmptyText(R.string.message_empty_copy)
+            layoutLoadableList.setEmptyText(emptyRes)
         }
 
         return viewBinding.root

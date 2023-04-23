@@ -298,8 +298,6 @@
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
     <string name="content_desc_backup_state">The state of the backup</string>
-    <string name="content_desc_copy_button">The button to create a copy from an existing element</string>
-    <string name="content_desc_add_button">The button to create an element</string>
     <string name="content_desc_drag_and_drop">Drag and drop to reorder the elements</string>
     <string name="content_desc_event_state">The state of the event</string>
     <string name="content_desc_conditions_count">The number of conditions in this event</string>

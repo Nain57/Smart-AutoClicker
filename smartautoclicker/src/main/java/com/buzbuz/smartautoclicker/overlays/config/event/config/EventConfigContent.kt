@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.databinding.ContentEventConfigBinding
-import com.buzbuz.smartautoclicker.overlays.base.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import kotlinx.coroutines.launch
