@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.activity
 
-import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
@@ -242,9 +241,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      * Create and show the [dialog]. Upon Ok press, creates the scenario.
      */
     private fun onCreateClicked() {
-        scenarioViewModel.billingRepository.launchBillingFlow((activity as Activity))
-
-        /*val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
+        val dialogViewBinding = DialogEditBinding.inflate(LayoutInflater.from(context))
         showDialog(MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.dialog_title_add_scenario)
             .setView(dialogViewBinding.root)
@@ -252,7 +249,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 scenarioViewModel.createScenario(requireContext(), dialogViewBinding.textField.text.toString())
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .create())*/
+            .create())
     }
 
     /**

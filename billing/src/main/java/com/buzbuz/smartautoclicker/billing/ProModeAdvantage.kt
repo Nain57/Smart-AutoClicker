@@ -16,24 +16,28 @@
  */
 package com.buzbuz.smartautoclicker.billing
 
-import android.app.Activity
-import android.content.Context
+/** Defines the advantages of Smart AutoClicker Pro. */
+interface ProModeAdvantage {
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+    /** Features available with Pro. */
+    enum class Feature : ProModeAdvantage {
+        ACTION_TYPE_INTENT,
+        ACTION_TYPE_TOGGLE_EVENT,
+        BACKUP_EXPORT,
+        BACKUP_IMPORT,
+        CONDITION_THRESHOLD,
+        EVENT_STATE,
+        SCENARIO_ANTI_DETECTION,
+        SCENARIO_DETECTION_QUALITY,
+        SCENARIO_END_CONDITIONS,
+    }
 
-class BillingRepository(applicationContext: Context): IBillingRepository {
-
-    override val newPurchases: Flow<List<String>> = flowOf(emptyList())
-
-    override val isProModePurchased: Flow<Boolean> = flowOf(true)
-    override val canPurchaseProMode: Flow<Boolean> = flowOf(false)
-
-    override val proModeTitle: Flow<String> = flowOf("")
-    override val proModePrice: Flow<String> = flowOf("")
-    override val proModeDescription: Flow<String> = flowOf("")
-
-    override val isBillingFlowInProcess: Flow<Boolean> = flowOf(false)
-
-    override fun launchBillingFlow(activity: Activity) {}
+    /** Limitations for users without Pro. */
+    enum class Limitation(val limit: Int) : ProModeAdvantage {
+        ACTION_COUNT_LIMIT(5),
+        CONDITION_COUNT_LIMIT(2),
+        DETECTION_DURATION_MINUTES_LIMIT(10),
+        EVENT_COUNT_LIMIT(10),
+        SCENARIO_COUNT_LIMIT(2),
+    }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.billing.engine
+package com.buzbuz.smartautoclicker.billing.data
 
 import android.app.Activity
 import android.content.Context
@@ -29,7 +29,6 @@ import com.android.billingclient.api.Purchase
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -137,9 +136,10 @@ internal class BillingDataSource(
             .build()
 
         defaultScope.launch {
-            Log.e(LOG_TAG, "Launching billing flow for product $details")
+            println("TOTO: starting google billing")
             val billingResult = billingClient.launchBillingFlow(activity, billingFlowParams)
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                println("TOTO: billing result ok")
                 billingFlowInProcess.emit(true)
             } else {
                 Log.e(LOG_TAG, "Billing failed: " + billingResult.debugMessage)
@@ -152,6 +152,7 @@ internal class BillingDataSource(
     }
 
     private fun onPurchasesUpdated(billingResult: BillingResult, purchases: List<Purchase>?) {
+        println("TOTO: onPurchasesUpdated")
         purchaseManager.onPurchasesUpdated(billingResult, purchases)
     }
 
@@ -163,6 +164,7 @@ internal class BillingDataSource(
     }
 
     private fun onPurchaseUpdateFailed() {
+        println("TOTO: onPurchaseUpdateFailed")
         defaultScope.launch {
             billingFlowInProcess.emit(false)
         }

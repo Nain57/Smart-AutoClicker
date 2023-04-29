@@ -14,17 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.billing
+package com.buzbuz.smartautoclicker.billing.model
 
 import android.app.Activity
 import android.content.Context
 
-import com.buzbuz.smartautoclicker.billing.engine.BillingDataSource
+import com.buzbuz.smartautoclicker.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
+import com.buzbuz.smartautoclicker.billing.data.BillingDataSource
+import com.buzbuz.smartautoclicker.billing.ui.ProModeBillingActivity
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class BillingRepository(applicationContext: Context): IBillingRepository {
 
@@ -32,6 +36,8 @@ class BillingRepository(applicationContext: Context): IBillingRepository {
     private val billingScope = CoroutineScope(Job() + Dispatchers.IO)
     /** Manages the connexion with the billing API and provide status about pro mode product state. */
     private val dataSource: BillingDataSource = BillingDataSource(applicationContext, billingScope)
+    /** Tells if the [ProModeBillingActivity] is started or not. */
+    private val billingActivityState = MutableStateFlow(false)
 
     override val newPurchases: Flow<List<String>> = dataSource.getNewPurchases()
 
@@ -42,9 +48,17 @@ class BillingRepository(applicationContext: Context): IBillingRepository {
     override val proModePrice: Flow<String> = dataSource.getProductPrice()
     override val proModeDescription: Flow<String> = dataSource.getProductDescription()
 
-    override val isBillingFlowInProcess: Flow<Boolean> = dataSource.getBillingFlowInProcess()
+    override val isBillingFlowInProcess: Flow<Boolean> = billingActivityState
 
-    override fun launchBillingFlow(activity: Activity) {
+    override fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage) {
+        context.startActivity(ProModeBillingActivity.getStartIntent(context, requestedAdvantage))
+    }
+
+    internal fun launchPlayStoreBillingFlow(activity: Activity) {
         dataSource.launchBillingFlow(activity)
+    }
+
+    internal fun setBillingActivityState(created: Boolean) {
+        billingActivityState.value = created
     }
 }

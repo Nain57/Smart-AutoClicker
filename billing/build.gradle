@@ -70,6 +70,9 @@ android {
         create("playStore") {
             dimension = "version"
             buildConfigField("String", "BILLING_PUBLIC_KEY", "\"" + billingKey + "\"")
+            buildFeatures {
+                viewBinding true
+            }
         }
     }
 }
@@ -77,6 +80,15 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 
+    implementation project(path: ':base-ui')
+
+    playStoreImplementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
+    playStoreImplementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
+    playStoreImplementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
+    playStoreImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
+
     playStoreImplementation "com.android.billingclient:billing:${rootProject.ext.billingVersion}"
     playStoreImplementation "com.android.billingclient:billing-ktx:${rootProject.ext.billingVersion}"
+
+    playStoreImplementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 }

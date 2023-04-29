@@ -16,9 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.billing
 
-import android.app.Activity
 import android.content.Context
-
+import com.buzbuz.smartautoclicker.billing.model.BillingRepository
 import kotlinx.coroutines.flow.Flow
 
 interface IBillingRepository {
@@ -67,18 +66,17 @@ interface IBillingRepository {
     val proModeDescription: Flow<String>
 
     /**
-     * Returns a Flow that reports if a billing flow is in process, meaning that launchBillingFlow has returned
-     * BillingResponseCode.OK and onPurchasesUpdated hasn't yet been called.
+     * Returns a Flow that reports if a billing flow is in process.
      *
      * @return Flow that indicates the known state of the billing flow.
      */
     val isBillingFlowInProcess: Flow<Boolean>
 
     /**
-     * Launch the billing flow.
+     * Launch the billing activity.
      *
-     * @param activity active activity to launch our billing flow from.
-     * @return true if launch is successful.
+     * @param context the Android context.
+     * @param requestedAdvantage the pro mode advantage the user is trying to access.
      */
-    fun launchBillingFlow(activity: Activity)
+    fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage)
 }

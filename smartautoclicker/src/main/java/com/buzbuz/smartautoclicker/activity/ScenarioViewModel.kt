@@ -29,7 +29,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
-import com.buzbuz.smartautoclicker.billing.BillingRepository
+import com.buzbuz.smartautoclicker.billing.model.BillingRepository
 import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
