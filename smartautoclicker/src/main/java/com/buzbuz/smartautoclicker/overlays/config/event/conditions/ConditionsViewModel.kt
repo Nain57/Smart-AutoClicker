@@ -23,6 +23,8 @@ import android.graphics.Rect
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultCondition
@@ -38,14 +40,26 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     private val repository = Repository.getRepository(application.applicationContext)
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
+    /** The repository for the pro mode billing. */
+    private val billingRepository = IBillingRepository.getRepository(application)
 
     /** Currently configured event. */
     private val configuredEvent = editionRepository.editedEvent
         .filterNotNull()
 
+    /** Tells if the limitation in conditions count have been reached. */
+    val isConditionLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
+        .combine(configuredEvent) { isProModePurchased, event ->
+            !isProModePurchased &&
+                    ((event.event.conditions?.size ?: 0) >= ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT.limit)
+        }
+
     /** Tells if there is at least one condition to copy. */
     val canCopyCondition: Flow<Boolean> = repository.getAllConditions()
         .map { it.isNotEmpty() }
+
+    /** Tells if the pro mode billing flow is being displayed. */
+    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** Backing property for [conditions]. */
     private val _conditions = configuredEvent
@@ -125,5 +139,9 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
 
         onBitmapLoaded.invoke(null)
         return null
+    }
+
+    fun onConditionCountReachedAddCopyClicked(context: Context) {
+        billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT)
     }
 }

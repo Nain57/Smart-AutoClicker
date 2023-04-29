@@ -31,6 +31,8 @@ import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionDialog
 import com.buzbuz.smartautoclicker.overlays.config.condition.ConditionSelectorMenu
 import com.buzbuz.smartautoclicker.overlays.config.condition.copy.ConditionCopyDialog
@@ -54,6 +56,9 @@ class ConditionsContent : NavBarDialogContent() {
     private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of conditions. */
     private lateinit var conditionsAdapter: ConditionAdapter
+
+    /** Tells if the billing flow has been triggered by the condition count limit. */
+    private var conditionLimitReachedClick: Boolean = false
 
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
@@ -81,8 +86,23 @@ class ConditionsContent : NavBarDialogContent() {
     }
 
     override fun onViewCreated() {
+        // When the billing flow is not longer displayed, restore the dialogs states
+        lifecycleScope.launch {
+            repeatOnLifecycle((Lifecycle.State.CREATED)) {
+                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
+                    if (!isDisplayed) {
+                        if (conditionLimitReachedClick) {
+                            dialogController.show()
+                            conditionLimitReachedClick = false
+                        }
+                    }
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.isConditionLimitReached.collect(::updateConditionLimitationVisibility) }
                 launch { viewModel.canCopyCondition.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.conditions.collect(::updateConditionList) }
             }
@@ -97,8 +117,29 @@ class ConditionsContent : NavBarDialogContent() {
         dialogViewModel.requestSubOverlay(newConditionCopyNavigationRequest())
     }
 
+    private fun onCreateCopyClickedWhileLimited() {
+        conditionLimitReachedClick = true
+
+        dialogController.hide()
+        viewModel.onConditionCountReachedAddCopyClicked(context)
+    }
+
     private fun onConditionClicked(condition: Condition, index: Int) {
         dialogViewModel.requestSubOverlay(newConditionConfigNavigationRequest(condition, index))
+    }
+
+    private fun updateConditionLimitationVisibility(isVisible: Boolean) {
+        dialogController.createCopyButtons.apply {
+            if (isVisible) {
+                root.alpha = ALPHA_DISABLED_ITEM
+                buttonNew.setOnClickListener { onCreateCopyClickedWhileLimited() }
+                buttonCopy.setOnClickListener { onCreateCopyClickedWhileLimited() }
+            } else {
+                root.alpha = ALPHA_ENABLED_ITEM
+                buttonNew.setOnClickListener { onCreateButtonClicked() }
+                buttonCopy.setOnClickListener { onCopyButtonClicked() }
+            }
+        }
     }
 
     private fun updateCopyButtonVisibility(isVisible: Boolean) {
