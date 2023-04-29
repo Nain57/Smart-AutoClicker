@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ import android.view.ViewGroup
  * @param maximumSize the maximum width and height the window can have between all its states.
  * @param windowSizeListener called when the window needs to be resized.
  */
-class OverlayWindowResizeController(
+internal class OverlayWindowResizeController(
     private val backgroundViewGroup: ViewGroup,
     private val resizedContainer: ViewGroup,
     private val maximumSize: Size,
