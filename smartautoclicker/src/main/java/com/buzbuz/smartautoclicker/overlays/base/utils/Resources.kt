@@ -110,3 +110,6 @@ fun formatDuration(msDuration: Long): String {
 
     return value.trim()
 }
+
+const val ALPHA_DISABLED_ITEM = 0.5f
+const val ALPHA_ENABLED_ITEM = 1f

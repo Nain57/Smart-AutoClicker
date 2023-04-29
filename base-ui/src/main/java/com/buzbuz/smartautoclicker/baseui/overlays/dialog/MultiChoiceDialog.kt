@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,8 @@ class MultiChoiceDialog<T : DialogChoice>(
     @StyleRes theme: Int,
     @StringRes private val dialogTitleText: Int,
     private val choices: List<T>,
-    private val onChoiceSelected: (T) -> Unit
+    private val onChoiceSelected: (T) -> Boolean,
+    private val onCanceled: () -> Unit,
 ) : OverlayDialogController(context, theme) {
 
     /** ViewBinding containing the views for this dialog. */
@@ -61,12 +62,14 @@ class MultiChoiceDialog<T : DialogChoice>(
         viewBinding = DialogBaseMultiChoiceBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(dialogTitleText)
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener {
+                    onCanceled()
+                    destroy()
+                }
             }
 
             adapter = ChoiceAdapter(choices) { choice ->
-                onChoiceSelected.invoke(choice)
-                destroy()
+                if (onChoiceSelected(choice)) destroy()
             }
         }
 
@@ -159,9 +162,24 @@ private class ChoiceViewHolder<T : DialogChoice>(
                     setImageResource(0)
                 }
             }
+
+            if (choice.enabled) {
+                choiceTitle.alpha = ENABLED_ITEM_ALPHA
+                choiceDescription.alpha = ENABLED_ITEM_ALPHA
+                choiceIcon.alpha = ENABLED_ITEM_ALPHA
+                choiceChevron.setImageResource(R.drawable.ic_chevron)
+            } else {
+                choiceTitle.alpha = DISABLED_ITEM_ALPHA
+                choiceDescription.alpha = DISABLED_ITEM_ALPHA
+                choiceIcon.alpha = DISABLED_ITEM_ALPHA
+                choice.disabledIconId?.let { choiceChevron.setImageResource(it) }
+            }
         }
     }
 }
+
+private const val ENABLED_ITEM_ALPHA = 1f
+private const val DISABLED_ITEM_ALPHA = 0.5f
 
 /**
  * View holder for a choice with only a title.
@@ -184,4 +202,6 @@ open class DialogChoice(
     @StringRes val title: Int,
     @StringRes val description: Int? = null,
     @DrawableRes val iconId: Int? = null,
+    val enabled: Boolean = true,
+    @DrawableRes val disabledIconId: Int? = null,
 )

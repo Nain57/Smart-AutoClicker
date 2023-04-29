@@ -35,6 +35,8 @@ import com.buzbuz.smartautoclicker.overlays.config.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.base.bindings.ActionDetails
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.overlays.config.action.copy.ActionCopyDialog
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.IntentDialog
 import com.buzbuz.smartautoclicker.overlays.config.action.pause.PauseDialog
@@ -64,6 +66,11 @@ class ActionsContent : NavBarDialogContent() {
     /** Adapter for the list of actions. */
     private lateinit var actionAdapter: ActionAdapter
 
+    /** Tells if the billing flow has been triggered by the action count limit. */
+    private var actionLimitReachedClick: Boolean = false
+    /** Dialog for the selection of the action type when creating a new one. Null if not displayed. */
+    private var actionTypeSelectionDialog: MultiChoiceDialog<ActionTypeChoice>? = null
+
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
@@ -87,8 +94,25 @@ class ActionsContent : NavBarDialogContent() {
     }
 
     override fun onViewCreated() {
+        // When the billing flow is not longer displayed, restore the dialogs states
+        lifecycleScope.launch {
+            repeatOnLifecycle((Lifecycle.State.CREATED)) {
+                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
+                    if (!isDisplayed) {
+                        actionTypeSelectionDialog?.show()
+
+                        if (actionLimitReachedClick) {
+                            dialogController.show()
+                            actionLimitReachedClick = false
+                        }
+                    }
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.isActionLimitReached.collect(::updateActionLimitationVisibility) }
                 launch { viewModel.canCopyAction.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.actionDetails.collect(::updateActionList) }
             }
@@ -103,9 +127,29 @@ class ActionsContent : NavBarDialogContent() {
         dialogViewModel.requestSubOverlay(newActionCopyNavigationRequest())
     }
 
+    private fun onCreateCopyClickedWhileLimited() {
+        actionLimitReachedClick = true
+
+        dialogController.hide()
+        viewModel.onActionCountReachedAddCopyClicked(context)
+    }
+
     private fun onActionClicked(action: EditedAction, index: Int) {
-        println("TOTO: onActionClicked $index")
         dialogViewModel.requestSubOverlay(newActionConfigNavigationRequest(action, index))
+    }
+
+    private fun updateActionLimitationVisibility(isVisible: Boolean) {
+        dialogController.createCopyButtons.apply {
+            if (isVisible) {
+                root.alpha = ALPHA_DISABLED_ITEM
+                buttonNew.setOnClickListener { onCreateCopyClickedWhileLimited() }
+                buttonCopy.setOnClickListener { onCreateCopyClickedWhileLimited() }
+            } else {
+                root.alpha = ALPHA_ENABLED_ITEM
+                buttonNew.setOnClickListener { onCreateButtonClicked() }
+                buttonCopy.setOnClickListener { onCopyButtonClicked() }
+            }
+        }
     }
 
     private fun updateCopyButtonVisibility(isVisible: Boolean) {
@@ -119,27 +163,33 @@ class ActionsContent : NavBarDialogContent() {
         actionAdapter.submitList(newList)
     }
 
-    private fun newActionTypeSelectionNavigationRequest() = NavigationRequest(
-        MultiChoiceDialog(
+    private fun newActionTypeSelectionNavigationRequest(): NavigationRequest {
+        val dialog = MultiChoiceDialog(
             context = context,
             theme = R.style.AppTheme,
             dialogTitleText = R.string.dialog_overlay_title_action_type,
-            choices = listOf(
-                ActionTypeChoice.Click,
-                ActionTypeChoice.Swipe,
-                ActionTypeChoice.Pause,
-                ActionTypeChoice.Intent,
-                ActionTypeChoice.ToggleEvent,
-            ),
+            choices = viewModel.actionCreationItems.value,
             onChoiceSelected = { choiceClicked ->
-                dialogViewModel.requestSubOverlay(
-                    newActionConfigNavigationRequest(
-                        viewModel.createAction(context, choiceClicked)
+                if (!choiceClicked.enabled) {
+                    actionTypeSelectionDialog?.hide()
+                    viewModel.onProModeUnsubscribedActionClicked(context, choiceClicked)
+                    false
+                } else {
+                    actionTypeSelectionDialog = null
+                    dialogViewModel.requestSubOverlay(
+                        newActionConfigNavigationRequest(
+                            viewModel.createAction(context, choiceClicked)
+                        )
                     )
-                )
-            }
+                    true
+                }
+            },
+            onCanceled = { actionTypeSelectionDialog = null }
         )
-    )
+        actionTypeSelectionDialog = dialog
+
+        return NavigationRequest(dialog)
+    }
 
     private fun newActionCopyNavigationRequest() = NavigationRequest(
         ActionCopyDialog(
