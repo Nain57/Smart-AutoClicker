@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,8 @@ import com.buzbuz.smartautoclicker.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
@@ -59,6 +61,8 @@ class ScenarioConfigContent : NavBarDialogContent() {
     private lateinit var viewBinding: ContentScenarioConfigBinding
     private lateinit var endConditionAdapter: EndConditionAdapter
 
+    private var billingFlowStarted: Boolean = false
+
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             scenarioNameField.apply {
@@ -68,12 +72,6 @@ class ScenarioConfigContent : NavBarDialogContent() {
                     LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-
-            scenarioActionRandomization.setItems(
-                label = context.resources.getString(R.string.input_field_label_anti_detection),
-                items = viewModel.randomizationItems,
-                onItemSelected = viewModel::setRandomization,
-            )
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
@@ -97,10 +95,25 @@ class ScenarioConfigContent : NavBarDialogContent() {
     }
 
     override fun onViewCreated() {
+        // When the billing flow is not longer displayed, restore the dialogs states
+        lifecycleScope.launch {
+            repeatOnLifecycle((Lifecycle.State.CREATED)) {
+                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
+                    if (!isDisplayed) {
+                        if (billingFlowStarted) {
+                            dialogController.show()
+                            billingFlowStarted = false
+                        }
+                    }
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.scenarioName.collect(::updateScenarioName) }
                 launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameField::setError) }
+                launch { viewModel.randomizationDropdownState.collect(::updateRandomizationDropdown) }
                 launch { viewModel.randomization.collect(::updateRandomization) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
                 launch { viewModel.endConditionOperator.collect(::updateEndConditionOperator) }
@@ -111,6 +124,25 @@ class ScenarioConfigContent : NavBarDialogContent() {
 
     private fun updateScenarioName(name: String?) {
         viewBinding.scenarioNameField.setText(name)
+    }
+
+    private fun updateRandomizationDropdown(dropdownState: RandomizationDropdownUiState) {
+        viewBinding.scenarioActionRandomization.setItems(
+            label = context.resources.getString(R.string.input_field_label_anti_detection),
+            items = dropdownState.items,
+            enabled = dropdownState.enabled,
+            disabledIcon = dropdownState.disabledIcon,
+            onItemSelected = viewModel::setRandomization,
+            onDisabledClick = {
+                billingFlowStarted = true
+                dialogController.hide()
+                viewModel.onAntoDetectionClickedWithoutProMode(context)
+            },
+        )
+
+        viewBinding.scenarioActionRandomization.root.alpha =
+            if (dropdownState.enabled) ALPHA_ENABLED_ITEM
+            else ALPHA_DISABLED_ITEM
     }
 
     private fun updateRandomization(randomizationItem: DropdownItem) {

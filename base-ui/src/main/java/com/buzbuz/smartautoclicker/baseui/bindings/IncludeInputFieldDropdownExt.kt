@@ -42,15 +42,15 @@ fun IncludeInputFieldDropdownBinding.setItems(
     onDisabledClick: (() -> Unit)? = null,
 ) {
     root.apply {
-        isHintEnabled = false
-        hint = label
-
         if (enabled) {
             endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
         } else {
             endIconMode = TextInputLayout.END_ICON_CUSTOM
             disabledIcon?.let { setEndIconDrawable(it) }
         }
+
+        isHintEnabled = label != null
+        hint = label
     }
 
     onDisabledClick?.let {

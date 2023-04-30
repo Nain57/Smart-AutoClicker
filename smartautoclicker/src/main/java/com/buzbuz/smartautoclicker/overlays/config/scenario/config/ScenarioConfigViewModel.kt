@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,16 @@
 package com.buzbuz.smartautoclicker.overlays.config.scenario.config
 
 import android.app.Application
+import android.content.Context
+import androidx.annotation.DrawableRes
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.domain.*
@@ -47,6 +51,9 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
+    /** The repository for the pro mode billing. */
+    private val billingRepository = IBillingRepository.getRepository(application)
+
     /** Currently configured scenario. */
     private val configuredScenario = editionRepository.editedScenario
         .filterNotNull()
@@ -68,7 +75,14 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
         title = R.string.dropdown_item_title_anti_detection_disabled,
         helperText = R.string.dropdown_helper_text_anti_detection_disabled,
     )
-    val randomizationItems = listOf(enabledRandomization, disableRandomization)
+    val randomizationDropdownState: Flow<RandomizationDropdownUiState> = billingRepository.isProModePurchased
+        .map { isProModePurchased ->
+            RandomizationDropdownUiState(
+                items = listOf(enabledRandomization, disableRandomization),
+                enabled = isProModePurchased,
+                disabledIcon = R.drawable.ic_pro,
+            )
+        }
 
     /** The randomization value for the scenario. */
     val randomization: Flow<DropdownItem> = configuredScenario
@@ -122,6 +136,9 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
                 if (eventsAvailable) add(EndConditionListItem.AddEndConditionItem)
             }
         }
+
+    /** Tells if the pro mode billing flow is being displayed. */
+    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** Set a new name for the scenario. */
     fun setScenarioName(name: String) {
@@ -224,6 +241,10 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
      */
     fun deleteEndCondition(confEndCondition: EditedEndCondition) =
         editionRepository.deleteEndCondition(confEndCondition)
+
+    fun onAntoDetectionClickedWithoutProMode(context: Context) {
+        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_ANTI_DETECTION)
+    }
 }
 
 /** Items displayed in the end condition list. */
@@ -233,6 +254,12 @@ sealed class EndConditionListItem {
     /** Item representing a end condition. */
     data class EndConditionItem(val endCondition: EditedEndCondition) : EndConditionListItem()
 }
+
+data class RandomizationDropdownUiState(
+    val items: List<DropdownItem>,
+    val enabled: Boolean = true,
+    @DrawableRes val disabledIcon: Int? = null,
+)
 
 /** The minimum value for the seek bar. */
 const val SLIDER_QUALITY_MIN = DETECTION_QUALITY_MIN.toFloat()
