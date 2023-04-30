@@ -40,6 +40,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * View model for the [MainMenu].
@@ -77,6 +78,7 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     /** Start/Stop the detection. */
     fun toggleDetection(context: Context, onStoppedByLimitation: () -> Unit) {
         autoStopJob?.cancel()
+        autoStopJob = null
 
         when (detectorEngine.state.value) {
             DetectorState.DETECTING -> detectorEngine.stopDetection()
@@ -93,7 +95,7 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
 
         if (!billingRepository.isProModePurchased.value) {
             autoStopJob = viewModelScope.launch {
-                delay(ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT.limit.milliseconds)
+                delay(ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT.limit.minutes.inWholeMilliseconds)
 
                 detectorEngine.stopDetection()
                 onStoppedByLimitation()
