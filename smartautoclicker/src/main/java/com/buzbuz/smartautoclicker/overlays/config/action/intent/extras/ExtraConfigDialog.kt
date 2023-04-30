@@ -61,7 +61,7 @@ class ExtraConfigDialog(
     private val extra: IntentExtra<out Any>,
     private val onConfigComplete: (IntentExtra<out Any>) -> Unit,
     private val onDeleteClicked: (() -> Unit)? = null,
-) : OverlayDialogController(context, R.style.AppTheme) {
+) : OverlayDialogController(context, R.style.SmartAutoClickerTheme) {
 
     /** The view model for the data displayed in this dialog. */
     private val viewModel: ExtraConfigModel by lazy {

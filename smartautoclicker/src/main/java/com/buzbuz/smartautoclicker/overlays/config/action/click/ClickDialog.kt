@@ -54,7 +54,7 @@ class ClickDialog(
     private val editedClick: EditedAction,
     private val onDeleteClicked: (EditedAction) -> Unit,
     private val onConfirmClicked: (EditedAction) -> Unit,
-) : OverlayDialogController(context, R.style.AppTheme) {
+) : OverlayDialogController(context, R.style.SmartAutoClickerTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ClickViewModel by lazy {

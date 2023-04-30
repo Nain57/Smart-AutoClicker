@@ -44,7 +44,7 @@ class ScenarioDialog(
     context: Context,
     private val onConfigSaved: () -> Unit,
     private val onConfigDiscarded: () -> Unit,
-) : NavBarDialogController(context, R.style.AppTheme) {
+) : NavBarDialogController(context, R.style.SmartAutoClickerTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ScenarioDialogViewModel by lazy {

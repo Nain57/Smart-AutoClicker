@@ -51,7 +51,7 @@ import kotlinx.coroutines.launch
 class ActivitySelectionDialog(
     context: Context,
     private val onApplicationSelected: (ComponentName) -> Unit,
-) : OverlayDialogController(context, R.style.AppTheme) {
+) : OverlayDialogController(context, R.style.SmartAutoClickerTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ActivitySelectionModel by lazy {

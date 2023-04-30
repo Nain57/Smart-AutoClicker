@@ -21,7 +21,7 @@
       * Base application theme.
       * Colors for Material 3 created with https://m3.material.io/theme-builder#/custom
     -->
-    <style name="BaseUiTheme" parent="Theme.Material3.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>

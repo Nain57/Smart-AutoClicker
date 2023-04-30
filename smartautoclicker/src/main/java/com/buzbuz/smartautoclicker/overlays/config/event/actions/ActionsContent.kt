@@ -166,7 +166,7 @@ class ActionsContent : NavBarDialogContent() {
     private fun newActionTypeSelectionNavigationRequest(): NavigationRequest {
         val dialog = MultiChoiceDialog(
             context = context,
-            theme = R.style.AppTheme,
+            theme = R.style.SmartAutoClickerTheme,
             dialogTitleText = R.string.dialog_overlay_title_action_type,
             choices = viewModel.actionCreationItems.value,
             onChoiceSelected = { choiceClicked ->

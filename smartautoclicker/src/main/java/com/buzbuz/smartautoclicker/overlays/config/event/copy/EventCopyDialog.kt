@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 class EventCopyDialog(
     context: Context,
     private val onEventSelected: (Event) -> Unit,
-) : CopyDialog(context, R.style.AppTheme) {
+) : CopyDialog(context, R.style.SmartAutoClickerTheme) {
 
     /** View model for this content. */
     private val viewModel: EventCopyModel by lazy { ViewModelProvider(this).get(EventCopyModel::class.java) }

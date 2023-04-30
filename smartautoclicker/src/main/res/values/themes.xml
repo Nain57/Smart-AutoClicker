@@ -18,7 +18,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="BaseUiTheme">
+    <style name="SmartAutoClickerTheme" parent="AppTheme">
         <item name="clickSelectorStyle">@style/AppTheme.Overlay.Selector.Click</item>
         <item name="conditionSelectorStyle">@style/AppTheme.Overlay.Selector.Condition</item>
     </style>

@@ -42,7 +42,7 @@ class IntentDialog(
     private val editedIntent: EditedAction,
     private val onDeleteClicked: (EditedAction) -> Unit,
     private val onConfirmClicked: (EditedAction) -> Unit,
-) : NavBarDialogController(context, R.style.AppTheme) {
+) : NavBarDialogController(context, R.style.SmartAutoClickerTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: IntentViewModel by lazy {

@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 class ActionCopyDialog(
     context: Context,
     private val onActionSelected: (EditedAction) -> Unit,
-) : CopyDialog(context, R.style.AppTheme) {
+) : CopyDialog(context, R.style.SmartAutoClickerTheme) {
 
     /** View model for this content. */
     private val viewModel: ActionCopyModel by lazy { ViewModelProvider(this).get(ActionCopyModel::class.java) }

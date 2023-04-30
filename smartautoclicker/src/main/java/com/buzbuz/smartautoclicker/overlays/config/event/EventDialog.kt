@@ -48,7 +48,7 @@ class EventDialog(
     context: Context,
     private val onConfigComplete: () -> Unit,
     private val onDelete: () -> Unit,
-): NavBarDialogController(context, R.style.AppTheme) {
+): NavBarDialogController(context, R.style.SmartAutoClickerTheme) {
 
     /** View model for this dialog. */
     private val viewModel: EventDialogViewModel by lazy {
