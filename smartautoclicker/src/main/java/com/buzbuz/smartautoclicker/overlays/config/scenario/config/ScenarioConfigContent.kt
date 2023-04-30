@@ -22,6 +22,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.annotation.IdRes
+import androidx.core.view.children
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -43,6 +45,8 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.overlays.config.scenario.ScenarioDialogViewModel
+
+import com.google.android.material.card.MaterialCardView
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -115,6 +119,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
                 launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameField::setError) }
                 launch { viewModel.randomizationDropdownState.collect(::updateRandomizationDropdown) }
                 launch { viewModel.randomization.collect(::updateRandomization) }
+                launch { viewModel.isProModePurchased.collect(::updateProModeFeaturesUi) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
                 launch { viewModel.endConditionOperator.collect(::updateEndConditionOperator) }
                 launch { viewModel.endConditions.collect(::updateEndConditions) }
@@ -136,7 +141,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
             onDisabledClick = {
                 billingFlowStarted = true
                 dialogController.hide()
-                viewModel.onAntoDetectionClickedWithoutProMode(context)
+                viewModel.onAntiDetectionClickedWithoutProMode(context)
             },
         )
 
@@ -147,6 +152,22 @@ class ScenarioConfigContent : NavBarDialogContent() {
 
     private fun updateRandomization(randomizationItem: DropdownItem) {
         viewBinding.scenarioActionRandomization.setSelectedItem(randomizationItem)
+    }
+
+    private fun updateProModeFeaturesUi(isEnabled: Boolean) {
+        viewBinding.apply {
+            detectionQualityCard.setEnabledState(isEnabled, R.id.quality_pro_mode) {
+                billingFlowStarted = true
+                dialogController.hide()
+                viewModel.onDetectionQualityClickedWithoutProMode(context)
+            }
+
+            endConditionsCard.setEnabledState(isEnabled, R.id.end_conditions_pro_mode) {
+                billingFlowStarted = true
+                dialogController.hide()
+                viewModel.onEndConditionsClickedWithoutProMode(context)
+            }
+        }
     }
 
     private fun updateQuality(quality: Int?) {
@@ -209,5 +230,31 @@ class ScenarioConfigContent : NavBarDialogContent() {
                 )
             )
         )
+    }
+
+    private fun MaterialCardView.setEnabledState(
+        isEnabled: Boolean,
+        @IdRes disableReasonView: Int,
+        onDisabledClick: () -> Unit,
+    ) {
+        val alpha = if (isEnabled) ALPHA_ENABLED_ITEM else ALPHA_DISABLED_ITEM
+
+        (getChildAt(0) as ViewGroup).children.forEach { child ->
+            if (child.id == disableReasonView) child.visibility = if (isEnabled) View.GONE else View.VISIBLE
+            else child.apply {
+                this.alpha = alpha
+                this.isEnabled = isEnabled
+            }
+        }
+
+        (getChildAt(1) as View).apply {
+            if (isEnabled) {
+                setOnClickListener(null)
+                visibility = View.GONE
+            } else {
+                setOnClickListener { onDisabledClick() }
+                visibility = View.VISIBLE
+            }
+        }
     }
 }

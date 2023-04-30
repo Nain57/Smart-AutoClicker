@@ -137,6 +137,8 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
             }
         }
 
+    /** Tells if the pro mode has been purchased by the user. */
+    val isProModePurchased: Flow<Boolean> = billingRepository.isProModePurchased
     /** Tells if the pro mode billing flow is being displayed. */
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
@@ -242,8 +244,16 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     fun deleteEndCondition(confEndCondition: EditedEndCondition) =
         editionRepository.deleteEndCondition(confEndCondition)
 
-    fun onAntoDetectionClickedWithoutProMode(context: Context) {
+    fun onAntiDetectionClickedWithoutProMode(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_ANTI_DETECTION)
+    }
+
+    fun onDetectionQualityClickedWithoutProMode(context: Context) {
+        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_DETECTION_QUALITY)
+    }
+
+    fun onEndConditionsClickedWithoutProMode(context: Context) {
+        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_END_CONDITIONS)
     }
 }
 

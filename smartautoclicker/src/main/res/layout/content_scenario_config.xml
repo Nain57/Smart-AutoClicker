@@ -71,12 +71,24 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
                     style="@style/AppTheme.TextAppearance.CardTitle"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/quality_pro_mode"
                     app:layout_constraintTop_toTopOf="parent"
                     android:text="@string/section_title_detection_quality_title" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/quality_pro_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toEndOf="@id/detection_quality_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/detection_quality_title"
+                    app:layout_constraintBottom_toBottomOf="@id/detection_quality_title"
+                    app:srcCompat="@drawable/ic_pro"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_quality_value"
@@ -138,6 +150,10 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -161,13 +177,25 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_conditions_title"
                     style="@style/AppTheme.TextAppearance.CardTitle"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/section_title_end_condition"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_field"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/end_conditions_pro_mode"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/end_conditions_pro_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toEndOf="@id/end_conditions_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/end_conditions_title"
+                    app:layout_constraintBottom_toBottomOf="@id/end_conditions_title"
+                    app:srcCompat="@drawable/ic_pro"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
 
                 <include layout="@layout/include_input_field_dropdown"
                     android:id="@+id/end_conditions_operator_field"
@@ -211,6 +239,10 @@
                 </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </com.google.android.material.card.MaterialCardView>
 

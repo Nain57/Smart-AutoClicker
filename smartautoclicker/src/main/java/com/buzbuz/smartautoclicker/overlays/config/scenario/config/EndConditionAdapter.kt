@@ -40,6 +40,19 @@ class EndConditionAdapter(
     private val endConditionClickedListener: (EditedEndCondition) -> Unit,
 ) : ListAdapter<EndConditionListItem, RecyclerView.ViewHolder>(EndConditionDiffUtilCallback) {
 
+    private var recyclerView: RecyclerView? = null
+
+    private val recyclerViewEnabledState: Boolean
+        get() = recyclerView?.parent?.let { (it as View).isEnabled } ?: false
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        this.recyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        this.recyclerView = null
+    }
+
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
             is EndConditionListItem.AddEndConditionItem -> R.layout.item_new_copy_card
@@ -49,13 +62,13 @@ class EndConditionAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.item_new_copy_card -> AddEndConditionViewHolder(
-                ItemNewCopyCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                addEndConditionClickedListener,
+                viewBinding = ItemNewCopyCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                addEndConditionClickedListener = { if (recyclerViewEnabledState) addEndConditionClickedListener() },
             )
 
             R.layout.item_end_condition_card -> EndConditionViewHolder(
-                ItemEndConditionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                endConditionClickedListener,
+                viewBinding = ItemEndConditionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                endConditionClickedListener = { if (recyclerViewEnabledState) endConditionClickedListener(it) },
             )
 
             else -> throw IllegalArgumentException("Unsupported view type !")
