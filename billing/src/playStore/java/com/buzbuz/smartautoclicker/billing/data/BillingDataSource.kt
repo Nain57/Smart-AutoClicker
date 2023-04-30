@@ -28,13 +28,7 @@ import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 internal class BillingDataSource(
@@ -81,8 +75,9 @@ internal class BillingDataSource(
      *
      * @return a Flow that observes the product purchase state
      */
-    fun isPurchased(): Flow<Boolean> = purchaseManager.productState
+    fun isPurchased(): StateFlow<Boolean> = purchaseManager.productState
         .map { state -> state == ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED }
+        .stateIn(defaultScope, SharingStarted.Eagerly, false)
 
     /**
      * Returns whether or not the user can purchase a product.

@@ -17,8 +17,11 @@
 package com.buzbuz.smartautoclicker.billing
 
 import android.content.Context
+
 import com.buzbuz.smartautoclicker.billing.model.BillingRepository
+
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface IBillingRepository {
 
@@ -50,7 +53,7 @@ interface IBillingRepository {
      * Returns whether or not the user has purchased ProMode.
      * @return a Flow that observes the product purchase state
      */
-    val isProModePurchased: Flow<Boolean>
+    val isProModePurchased: StateFlow<Boolean>
 
     /**
      * Returns whether or not the user can purchase a product.
