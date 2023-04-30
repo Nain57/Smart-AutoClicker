@@ -34,6 +34,8 @@ import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.databinding.ContentEventConfigBinding
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import kotlinx.coroutines.launch
@@ -47,6 +49,8 @@ class EventConfigContent : NavBarDialogContent() {
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentEventConfigBinding
+
+    private var billingFlowStarted: Boolean = false
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
@@ -63,23 +67,32 @@ class EventConfigContent : NavBarDialogContent() {
                 items = viewModel.conditionOperatorsItems,
                 onItemSelected = viewModel::setConditionOperator,
             )
-
-            enabledOnStartField.setItems(
-                label = context.resources.getString(R.string.input_field_label_event_state),
-                items = viewModel.eventStateItems,
-                onItemSelected = viewModel::setEventState,
-            )
         }
 
         return viewBinding.root
     }
 
     override fun onViewCreated() {
+        // When the billing flow is not longer displayed, restore the dialogs states
+        lifecycleScope.launch {
+            repeatOnLifecycle((Lifecycle.State.CREATED)) {
+                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
+                    if (!isDisplayed) {
+                        if (billingFlowStarted) {
+                            dialogController.show()
+                            billingFlowStarted = false
+                        }
+                    }
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.eventNameError.collect(viewBinding.eventNameInputLayout::setError) }
                 launch { viewModel.eventName.collect(::updateEventName) }
                 launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
+                launch { viewModel.eventStateDropdownState.collect(::updateEventStateDropdown) }
                 launch { viewModel.eventStateItem.collect(::updateEventState) }
             }
         }
@@ -91,6 +104,25 @@ class EventConfigContent : NavBarDialogContent() {
 
     private fun updateConditionOperator(operatorItem: DropdownItem) {
         viewBinding.conditionsOperatorField.setSelectedItem(operatorItem)
+    }
+
+    private fun updateEventStateDropdown(dropdownState: EventStateDropdownUiState) {
+        viewBinding.enabledOnStartField.setItems(
+            label = context.resources.getString(R.string.input_field_label_event_state),
+            items = dropdownState.items,
+            enabled = dropdownState.enabled,
+            disabledIcon = dropdownState.disabledIcon,
+            onItemSelected = viewModel::setEventState,
+            onDisabledClick = {
+                billingFlowStarted = true
+                dialogController.hide()
+                viewModel.onEventStateClickedWithoutProMode(context)
+           },
+        )
+
+        viewBinding.enabledOnStartField.root.alpha =
+            if (dropdownState.enabled) ALPHA_ENABLED_ITEM
+            else ALPHA_DISABLED_ITEM
     }
 
     private fun updateEventState(stateItem: DropdownItem) {
