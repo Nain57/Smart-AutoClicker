@@ -48,6 +48,8 @@ import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment.Companio
 import com.buzbuz.smartautoclicker.domain.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -109,7 +111,6 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
             list.adapter = scenariosAdapter
 
             emptyCreateButton.setOnClickListener { onCreateClicked() }
-            add.setOnClickListener { onCreateClicked() }
 
             appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
             topAppBar.apply {
@@ -137,6 +138,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { scenarioViewModel.isScenarioLimitReached.collect(::updateScenarioLimitationVisibility) }
                 launch { scenarioViewModel.scenarioItems.collect(::onNewScenarioList) }
                 launch { scenarioViewModel.menuUiState.collect(::updateMenu) }
             }
@@ -149,13 +151,22 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
     private fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_export ->
-                if (scenarioViewModel.menuState.value == MenuState.EXPORT) {
+            R.id.action_export -> when {
+                !scenarioViewModel.isProModePurchased.value ->
+                    scenarioViewModel.onExportClickedWithoutProMode(requireContext())
+                scenarioViewModel.menuState.value == MenuState.EXPORT ->
                     showBackupDialog(false, scenarioViewModel.getScenariosSelectedForBackup())
-                } else {
+                else ->
                     scenarioViewModel.setMenuState(MenuState.EXPORT)
-                }
-            R.id.action_import -> showBackupDialog(true)
+            }
+
+            R.id.action_import -> when {
+                !scenarioViewModel.isProModePurchased.value ->
+                    scenarioViewModel.onImportClickedWithoutProMode(requireContext())
+                else ->
+                    showBackupDialog(true)
+            }
+
             R.id.action_cancel -> scenarioViewModel.setMenuState(MenuState.SELECTION)
             R.id.action_search -> scenarioViewModel.setMenuState(MenuState.SEARCH)
             R.id.action_select_all -> scenarioViewModel.toggleAllScenarioSelectionForBackup()
@@ -171,16 +182,22 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      */
     private fun updateMenu(menuState: MenuUiState) {
         viewBinding.topAppBar.menu.apply {
-            findItem(R.id.action_search).isVisible = menuState.searchVisibility
-            findItem(R.id.action_import).isVisible = menuState.importBackupVisibility
-            findItem(R.id.action_cancel).isVisible = menuState.cancelVisibility
-            findItem(R.id.action_select_all).isVisible = menuState.selectAllVisibility
-            findItem(R.id.action_export).apply {
-                isVisible = menuState.createBackupVisibility
-                isEnabled = menuState.createBackupEnabled
-                icon = icon?.mutate()?.apply {
-                    alpha = menuState.createBackupAlpha
-                }
+            findItem(R.id.action_search).bind(menuState.searchItemState)
+            findItem(R.id.action_select_all).bind(menuState.selectAllItemState)
+            findItem(R.id.action_cancel).bind(menuState.cancelItemState)
+            findItem(R.id.action_import).bind(menuState.importItemState)
+            findItem(R.id.action_export).bind(menuState.exportItemState)
+        }
+    }
+
+    private fun updateScenarioLimitationVisibility(isVisible: Boolean) {
+        viewBinding.add.apply {
+            if (isVisible){
+                alpha = ALPHA_DISABLED_ITEM
+                setOnClickListener { scenarioViewModel.onScenarioCountReachedAddCopyClicked(requireContext()) }
+            } else {
+                alpha = ALPHA_ENABLED_ITEM
+                setOnClickListener { onCreateClicked() }
             }
         }
     }
@@ -302,6 +319,14 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }
         scenarioViewModel.setMenuState(MenuState.SELECTION)
+    }
+}
+
+private fun MenuItem.bind(state: MenuItemState) {
+    isVisible = state.visible
+    isEnabled = state.enabled
+    icon = icon?.mutate()?.apply {
+        alpha = state.iconAlpha
     }
 }
 

@@ -31,12 +31,15 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.billing.model.BillingRepository
 import com.buzbuz.smartautoclicker.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM_INT
+import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM_INT
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultScenario
-import kotlinx.coroutines.*
 
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +52,9 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
 
     /** The repository providing access to the database. */
     private val repository = Repository.getRepository(application)
+    /** The repository for the pro mode billing. */
+    private val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
+
     /** Callback upon the availability of the [SmartAutoClickerService]. */
     private val serviceConnection: (SmartAutoClickerService.LocalService?) -> Unit = { localService ->
         clickerService = localService
@@ -63,46 +69,71 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
     /** Set of scenario identifier selected for a backup. */
     private val selectedForBackup = MutableStateFlow(emptySet<Long>())
 
+    /** Tells if the pro mode is enabled or not. */
+    val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            false,
+        )
+
     /** Backing property for [menuState]. */
     private val _menuState = MutableStateFlow(MenuState.SELECTION)
     /** Current menu state. */
     val menuState: StateFlow<MenuState> = _menuState
     /** Current menu UI state. */
     val menuUiState: Flow<MenuUiState> =
-        combine(_menuState, selectedForBackup, repository.scenarios) { menuState, selection, scenarios ->
+        combine(
+            _menuState,
+            selectedForBackup,
+            repository.scenarios,
+            isProModePurchased,
+        ) { menuState, selection, scenarios, proModePurchased ->
             when (menuState) {
                 MenuState.SEARCH -> MenuUiState(
                     state = menuState,
-                    searchVisibility = false,
-                    importBackupVisibility = false,
-                    cancelVisibility = false,
-                    selectAllVisibility = false,
-                    createBackupVisibility = false,
-                    createBackupEnabled = false,
+                    searchItemState = MenuItemState(false),
+                    selectAllItemState = MenuItemState(false),
+                    cancelItemState = MenuItemState(false),
+                    importItemState = MenuItemState(false),
+                    exportItemState = MenuItemState(false),
                 )
                 MenuState.EXPORT -> MenuUiState(
                     state = menuState,
-                    searchVisibility = false,
-                    importBackupVisibility = false,
-                    cancelVisibility = true,
-                    selectAllVisibility = true,
-                    createBackupVisibility = true,
-                    createBackupEnabled = selection.isNotEmpty(),
-                    createBackupAlpha = if (selection.isNotEmpty()) 255 else 127
+                    searchItemState = MenuItemState(false),
+                    selectAllItemState = MenuItemState(true),
+                    cancelItemState = MenuItemState(true),
+                    importItemState = MenuItemState(false),
+                    exportItemState = MenuItemState(
+                        visible = true,
+                        enabled = selection.isNotEmpty(),
+                        iconAlpha = if (selection.isNotEmpty()) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
+                    ),
                 )
                 MenuState.SELECTION -> MenuUiState(
                     state = menuState,
-                    searchVisibility = scenarios.isNotEmpty(),
-                    importBackupVisibility = true,
-                    cancelVisibility = false,
-                    selectAllVisibility = false,
-                    createBackupVisibility = scenarios.isNotEmpty(),
-                    createBackupEnabled = scenarios.isNotEmpty(),
+                    searchItemState = MenuItemState(scenarios.isNotEmpty()),
+                    selectAllItemState = MenuItemState(false),
+                    cancelItemState = MenuItemState(false),
+                    importItemState = MenuItemState(
+                        visible = true,
+                        enabled = true,
+                        iconAlpha = if (proModePurchased) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
+                    ),
+                    exportItemState = MenuItemState(
+                        visible = scenarios.isNotEmpty(),
+                        enabled = scenarios.isNotEmpty(),
+                        iconAlpha = if (proModePurchased) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
+                    ),
                 )
             }
         }
 
-    val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
+    /** Tells if the limitation in scenario count have been reached. */
+    val isScenarioLimitReached: Flow<Boolean> = isProModePurchased
+        .combine(repository.scenarios) { isProModePurchased, scenarios ->
+            !isProModePurchased && scenarios.size >= ProModeAdvantage.Limitation.SCENARIO_COUNT_LIMIT.limit
+        }
 
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
@@ -311,6 +342,18 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
         onBitmapLoaded.invoke(null)
         return null
     }
+
+    fun onScenarioCountReachedAddCopyClicked(context: Context) {
+        billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.SCENARIO_COUNT_LIMIT)
+    }
+
+    fun onExportClickedWithoutProMode(context: Context) {
+        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.BACKUP_EXPORT)
+    }
+
+    fun onImportClickedWithoutProMode(context: Context) {
+        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.BACKUP_IMPORT)
+    }
 }
 
 /** Possible states for the action menu of the ScenarioListFragment. */
@@ -327,23 +370,32 @@ enum class MenuState {
  * Ui state of the action menu.
  *
  * @param state the current state.
- * @param searchVisibility the visibility of the search item.
- * @param importBackupVisibility the visibility of the import item.
- * @param selectAllVisibility the visibility of the select all item.
- * @param cancelVisibility the visibility of the cancel item.
- * @param createBackupVisibility the visibility of the export item.
- * @param createBackupEnabled true if the user can click the export item, false if not.
- * @param createBackupAlpha the alpha to apply to the export item. 0 is transparent, 255 is opaque.
+ * @param searchItemState the state of the search item.
+ * @param selectAllItemState the state of the select all item.
+ * @param cancelItemState the state of the cancel item.
+ * @param importItemState the state of the import item.
+ * @param exportItemState the state of the export item.
  */
 data class MenuUiState(
     val state: MenuState,
-    val searchVisibility: Boolean,
-    val importBackupVisibility: Boolean,
-    val selectAllVisibility: Boolean,
-    val cancelVisibility: Boolean,
-    val createBackupVisibility: Boolean,
-    val createBackupEnabled: Boolean,
-    @IntRange(from = 0, to = 255) val createBackupAlpha: Int = 255,
+    val searchItemState: MenuItemState,
+    val selectAllItemState: MenuItemState,
+    val cancelItemState: MenuItemState,
+    val importItemState: MenuItemState,
+    val exportItemState: MenuItemState,
+)
+
+/**
+ * Defines a menu item in the action bar.
+ *
+ * @param visible true if it should be visible, false if not.
+ * @param enabled true if the user can interact with it, false if not.
+ * @param iconAlpha the alpha to apply to the icon.
+ */
+data class MenuItemState(
+    val visible: Boolean,
+    val enabled: Boolean = true,
+    @IntRange(from = 0, to = 255) val iconAlpha: Int = 255,
 )
 
 sealed class ScenarioListItem {

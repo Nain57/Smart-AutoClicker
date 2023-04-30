@@ -112,4 +112,6 @@ fun formatDuration(msDuration: Long): String {
 }
 
 const val ALPHA_DISABLED_ITEM = 0.5f
+const val ALPHA_DISABLED_ITEM_INT = 127
 const val ALPHA_ENABLED_ITEM = 1f
+const val ALPHA_ENABLED_ITEM_INT = 255
