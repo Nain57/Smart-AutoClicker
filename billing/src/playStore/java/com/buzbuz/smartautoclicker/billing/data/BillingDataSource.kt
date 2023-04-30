@@ -77,7 +77,6 @@ internal class BillingDataSource(
      */
     fun isPurchased(): StateFlow<Boolean> = purchaseManager.productState
         .map { state -> state == ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED }
-        .stateIn(defaultScope, SharingStarted.Eagerly, false)
 
     /**
      * Returns whether or not the user can purchase a product.

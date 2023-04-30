@@ -39,7 +39,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
 /**
@@ -58,6 +57,14 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
     private val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
+
+    /** Tells if the pro mode is purchased. */
+    private val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            false,
+        )
 
     /** Coroutine Job stopping the detection automatically if user is not in pro mode. */
     private var autoStopJob: Job? = null
@@ -93,7 +100,7 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
             sharedPreferences.getIsDebugReportEnabled(getApplication<Application>()),
         )
 
-        if (!billingRepository.isProModePurchased.value) {
+        if (!isProModePurchased.value) {
             autoStopJob = viewModelScope.launch {
                 delay(ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT.limit.minutes.inWholeMilliseconds)
 

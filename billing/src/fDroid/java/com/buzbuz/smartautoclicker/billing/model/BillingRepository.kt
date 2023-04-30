@@ -22,14 +22,13 @@ import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.StateFlow
 
 
 class BillingRepository(applicationContext: Context): IBillingRepository {
 
     override val newPurchases: Flow<List<String>> = flowOf(emptyList())
 
-    override val isProModePurchased: StateFlow<Boolean> = flowOf(true)
+    override val isProModePurchased: Flow<Boolean> = flowOf(true)
     override val canPurchaseProMode: Flow<Boolean> = flowOf(false)
 
     override val proModeTitle: Flow<String> = flowOf("")

@@ -29,7 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 class BillingRepository(applicationContext: Context): IBillingRepository {
 
@@ -42,7 +41,7 @@ class BillingRepository(applicationContext: Context): IBillingRepository {
 
     override val newPurchases: Flow<List<String>> = dataSource.getNewPurchases()
 
-    override val isProModePurchased: StateFlow<Boolean> = dataSource.isPurchased()
+    override val isProModePurchased: Flow<Boolean> = dataSource.isPurchased()
     override val canPurchaseProMode = dataSource.canPurchase()
 
     override val proModeTitle: Flow<String> = dataSource.getProductTitle()
