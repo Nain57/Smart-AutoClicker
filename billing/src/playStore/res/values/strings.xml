@@ -27,7 +27,7 @@
     <string name="billing_reason_backup_import">Buy Smart AutoClicker Pro to import a scenario from a zip file</string>
     <string name="billing_reason_condition_count">Buy Smart AutoClicker Pro to create more than %1$d conditions</string>
     <string name="billing_reason_condition_threshold">Buy Smart AutoClicker Pro to change the condition tolerated difference</string>
-    <string name="billing_reason_detection_duration_limit">Buy Smart AutoClicker Pro to run detection sessions that last more than $1%d minutes</string>
+    <string name="billing_reason_detection_duration_limit">Buy Smart AutoClicker Pro to run detection sessions that last more than %1$d minutes</string>
     <string name="billing_reason_event_count">Buy Smart AutoClicker Pro to create more than %1$d events</string>
     <string name="billing_reason_event_state">Buy Smart AutoClicker Pro to change the states of an event</string>
     <string name="billing_reason_scenario_anti_detection">Buy Smart AutoClicker Pro to enable the anti detection by third party apps</string>

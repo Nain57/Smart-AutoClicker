@@ -17,11 +17,15 @@
 package com.buzbuz.smartautoclicker.overlays.mainmenu
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
+import com.buzbuz.smartautoclicker.billing.model.BillingRepository
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.DetectorState
@@ -31,8 +35,11 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.getIsDebugViewEnabled
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * View model for the [MainMenu].
@@ -48,6 +55,13 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     private val repository: Repository = Repository.getRepository(application)
     /** The currently loaded scenario info. */
     private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
+    /** The repository for the pro mode billing. */
+    private val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
+
+    /** Coroutine Job stopping the detection automatically if user is not in pro mode. */
+    private var autoStopJob: Job? = null
+
+    val isBillingFlowInProgress: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** The current of the detection. */
     val detectionState: Flow<UiState> = detectorEngine.state
@@ -61,15 +75,32 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
         }
 
     /** Start/Stop the detection. */
-    fun toggleDetection() {
-        detectorEngine.apply {
-            when (state.value) {
-                DetectorState.DETECTING -> stopDetection()
-                DetectorState.RECORDING -> startDetection(
-                    sharedPreferences.getIsDebugViewEnabled(getApplication<Application>()),
-                    sharedPreferences.getIsDebugReportEnabled(getApplication<Application>()),
+    fun toggleDetection(context: Context, onStoppedByLimitation: () -> Unit) {
+        autoStopJob?.cancel()
+
+        when (detectorEngine.state.value) {
+            DetectorState.DETECTING -> detectorEngine.stopDetection()
+            DetectorState.RECORDING -> startDetection(context, onStoppedByLimitation)
+            else -> { /* Nothing to do */ }
+        }
+    }
+
+    private fun startDetection(context: Context, onStoppedByLimitation: () -> Unit) {
+        detectorEngine.startDetection(
+            sharedPreferences.getIsDebugViewEnabled(getApplication<Application>()),
+            sharedPreferences.getIsDebugReportEnabled(getApplication<Application>()),
+        )
+
+        if (!billingRepository.isProModePurchased.value) {
+            autoStopJob = viewModelScope.launch {
+                delay(ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT.limit.milliseconds)
+
+                detectorEngine.stopDetection()
+                onStoppedByLimitation()
+                billingRepository.startBillingActivity(
+                    context,
+                    ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT,
                 )
-                else -> { /* Nothing to do */ }
             }
         }
     }

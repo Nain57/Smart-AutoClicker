@@ -66,6 +66,8 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
     private val pauseToPlayDrawable =
         AnimatedVectorDrawableCompat.create(context, R.drawable.anim_pause_play)!!
 
+    private var billingFlowTriggeredByDetectionLimitation: Boolean = false
+
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
 
@@ -96,6 +98,20 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
         viewBinding.layoutDebug.visibility = View.GONE
         setOverlayViewVisibility(View.GONE)
 
+        // When the billing flow is not longer displayed, restore the dialogs states
+        lifecycleScope.launch {
+            repeatOnLifecycle((Lifecycle.State.CREATED)) {
+                viewModel.isBillingFlowInProgress.collect { isDisplayed ->
+                    if (!isDisplayed) {
+                        if (billingFlowTriggeredByDetectionLimitation) {
+                            show()
+                            billingFlowTriggeredByDetectionLimitation = false
+                        }
+                    }
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canStartScenario.collect(::updatePlayPauseButtonEnabledState) }
@@ -108,7 +124,12 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_play -> viewModel.toggleDetection()
+            R.id.btn_play -> {
+                viewModel.toggleDetection(context) {
+                    billingFlowTriggeredByDetectionLimitation = true
+                    hide()
+                }
+            }
             R.id.btn_click_list -> showScenarioConfigDialog()
             R.id.btn_stop -> destroy()
         }
