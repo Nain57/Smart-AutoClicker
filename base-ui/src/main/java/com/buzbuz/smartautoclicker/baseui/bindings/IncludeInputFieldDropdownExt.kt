@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.baseui.bindings
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,6 @@ import com.buzbuz.smartautoclicker.ui.databinding.ItemDropdownBinding
 
 import com.google.android.material.textfield.TextInputLayout
 
-@SuppressLint("ClickableViewAccessibility")
 fun IncludeInputFieldDropdownBinding.setItems(
     items: List<DropdownItem>,
     onItemSelected: (DropdownItem) -> Unit,
@@ -41,7 +39,7 @@ fun IncludeInputFieldDropdownBinding.setItems(
     @DrawableRes disabledIcon: Int? = null,
     onDisabledClick: (() -> Unit)? = null,
 ) {
-    root.apply {
+    textLayout.apply {
         if (enabled) {
             endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
         } else {
@@ -53,26 +51,29 @@ fun IncludeInputFieldDropdownBinding.setItems(
         hint = label
     }
 
-    onDisabledClick?.let {
-        textField.setOnTouchListener { _, _ ->
-            it()
-            true
-        }
-    } ?: textField.setOnTouchListener(null)
-
-
     textField.setAdapter(
         DropdownAdapter(items) { selectedItem ->
             textField.dismissDropDown()
             onItemSelected(selectedItem)
         }
     )
+
+    if (enabled) {
+        disabledTouchHandler.visibility = View.GONE
+    } else {
+        onDisabledClick?.let {
+            disabledTouchHandler.apply {
+                visibility = View.VISIBLE
+                setOnClickListener { it() }
+            }
+        }
+    }
 }
 
 fun IncludeInputFieldDropdownBinding.setSelectedItem(item: DropdownItem) {
     textField.setText(textField.resources.getString(item.title), false)
 
-    root.apply {
+    textLayout.apply {
         if (item.helperText != null) {
             isHelperTextEnabled = true
             helperText = resources.getString(item.helperText)
