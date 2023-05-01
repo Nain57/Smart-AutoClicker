@@ -75,7 +75,7 @@ internal class BillingDataSource(
      *
      * @return a Flow that observes the product purchase state
      */
-    fun isPurchased(): StateFlow<Boolean> = purchaseManager.productState
+    fun isPurchased(): Flow<Boolean> = purchaseManager.productState
         .map { state -> state == ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED }
 
     /**
@@ -130,10 +130,8 @@ internal class BillingDataSource(
             .build()
 
         defaultScope.launch {
-            println("TOTO: starting google billing")
             val billingResult = billingClient.launchBillingFlow(activity, billingFlowParams)
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                println("TOTO: billing result ok")
                 billingFlowInProcess.emit(true)
             } else {
                 Log.e(LOG_TAG, "Billing failed: " + billingResult.debugMessage)
@@ -146,7 +144,6 @@ internal class BillingDataSource(
     }
 
     private fun onPurchasesUpdated(billingResult: BillingResult, purchases: List<Purchase>?) {
-        println("TOTO: onPurchasesUpdated")
         purchaseManager.onPurchasesUpdated(billingResult, purchases)
     }
 
@@ -158,7 +155,6 @@ internal class BillingDataSource(
     }
 
     private fun onPurchaseUpdateFailed() {
-        println("TOTO: onPurchaseUpdateFailed")
         defaultScope.launch {
             billingFlowInProcess.emit(false)
         }
