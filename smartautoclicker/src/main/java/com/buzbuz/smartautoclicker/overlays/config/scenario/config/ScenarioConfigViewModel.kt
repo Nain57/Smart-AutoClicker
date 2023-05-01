@@ -80,7 +80,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
             RandomizationDropdownUiState(
                 items = listOf(enabledRandomization, disableRandomization),
                 enabled = isProModePurchased,
-                disabledIcon = R.drawable.ic_pro,
+                disabledIcon = R.drawable.ic_pro_small,
             )
         }
 

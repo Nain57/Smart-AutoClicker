@@ -29,7 +29,7 @@
     <string name="billing_reason_condition_threshold">Buy Smart AutoClicker Pro to change the condition tolerated difference</string>
     <string name="billing_reason_detection_duration_limit">Buy Smart AutoClicker Pro to run detection sessions that last more than %1$d minutes</string>
     <string name="billing_reason_event_count">Buy Smart AutoClicker Pro to create more than %1$d events</string>
-    <string name="billing_reason_event_state">Buy Smart AutoClicker Pro to change the states of an event</string>
+    <string name="billing_reason_event_state">Buy Smart AutoClicker Pro to change the state of an event</string>
     <string name="billing_reason_scenario_anti_detection">Buy Smart AutoClicker Pro to enable the anti detection by third party apps</string>
     <string name="billing_reason_scenario_count">Buy Smart AutoClicker Pro to create more than %1$d scenarios</string>
     <string name="billing_reason_scenario_detection_quality">Buy Smart AutoClicker Pro to change the detection quality of the algorithm</string>

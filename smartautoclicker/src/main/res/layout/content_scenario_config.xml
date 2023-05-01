@@ -71,7 +71,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
                     style="@style/AppTheme.TextAppearance.CardTitle"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/quality_pro_mode"
@@ -80,9 +80,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/quality_pro_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    app:layout_constraintStart_toEndOf="@id/detection_quality_title"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/detection_quality_title"
                     app:layout_constraintBottom_toBottomOf="@id/detection_quality_title"
@@ -177,7 +176,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/end_conditions_title"
                     style="@style/AppTheme.TextAppearance.CardTitle"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/section_title_end_condition"
                     app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_field"
@@ -187,9 +186,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/end_conditions_pro_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    app:layout_constraintStart_toEndOf="@id/end_conditions_title"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/end_conditions_title"
                     app:layout_constraintBottom_toBottomOf="@id/end_conditions_title"

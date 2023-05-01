@@ -61,7 +61,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
             EventStateDropdownUiState(
                 items = listOf(enableEventItem, disableEventItem),
                 enabled = isProModePurchased,
-                disabledIcon = R.drawable.ic_pro,
+                disabledIcon = R.drawable.ic_pro_small,
             )
         }
 

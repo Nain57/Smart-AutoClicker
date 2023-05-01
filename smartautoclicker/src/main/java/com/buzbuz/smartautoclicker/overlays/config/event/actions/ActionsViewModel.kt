@@ -156,7 +156,7 @@ sealed class ActionTypeChoice(
     title = title,
     description = description,
     iconId = iconId,
-    disabledIconId = R.drawable.ic_pro,
+    disabledIconId = R.drawable.ic_pro_small,
     enabled = enabled,
 ) {
     /** Click Action choice. */
