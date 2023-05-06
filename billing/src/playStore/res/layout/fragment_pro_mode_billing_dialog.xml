@@ -33,50 +33,80 @@
         android:layout_marginBottom="@dimen/margin_vertical_extra_large"
         android:scrollbars="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layout_not_purchased"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                tools:visibility="visible">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/reason_text"
+                    style="@style/AppTheme.TextAppearance.BodyLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginTop="@dimen/margin_vertical_default"
+                    android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+                    android:gravity="center"
+                    app:drawableStartCompat="@drawable/ic_pro"
+                    tools:text="@string/billing_reason_action_type_toggle_event"/>
+
+                <com.google.android.material.divider.MaterialDivider
+                    style="@style/AppTheme.Widget.Divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dividerInsetStart="@dimen/margin_horizontal_large"
+                    app:dividerInsetEnd="@dimen/margin_horizontal_large"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/description_text"
+                    style="@style/AppTheme.TextAppearance.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+                    android:gravity="center_vertical"
+                    android:text="@string/billing_pro_mode_description"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buy_button"
+                    style="@style/AppTheme.Widget.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+                    android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+                    tools:text="4.99€"/>
+
+            </LinearLayout>
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/reason_text"
-                style="@style/AppTheme.TextAppearance.BodyLarge"
+                android:id="@+id/layout_purchased"
+                style="@style/AppTheme.TextAppearance.EmptyText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginTop="@dimen/margin_vertical_default"
-                android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+                android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
                 android:gravity="center"
-                app:drawableStartCompat="@drawable/ic_pro"
-                tools:text="@string/billing_reason_action_type_toggle_event"/>
+                android:text="@string/billing_pro_mode_success"
+                android:visibility="gone"/>
 
-            <com.google.android.material.divider.MaterialDivider
-                style="@style/AppTheme.Widget.Divider"
-                android:layout_width="match_parent"
+            <ProgressBar
+                android:id="@+id/layout_connecting"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:dividerInsetStart="@dimen/margin_horizontal_large"
-                app:dividerInsetEnd="@dimen/margin_horizontal_large"/>
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:layout_marginBottom="@dimen/margin_vertical_default"
+                android:layout_gravity="center"
+                style="?android:attr/progressBarStyleLarge"
+                android:visibility="gone"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/description_text"
-                style="@style/AppTheme.TextAppearance.Body"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="@dimen/margin_vertical_extra_large"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_large"
-                android:gravity="center_vertical"
-                tools:text="@string/billing_pro_mode_description"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buy_button"
-                style="@style/AppTheme.Widget.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_large"
-                android:layout_marginVertical="@dimen/margin_vertical_extra_large"
-                tools:text="4.99€"/>
-
-        </LinearLayout>
+        </FrameLayout>
 
     </androidx.core.widget.NestedScrollView>
 

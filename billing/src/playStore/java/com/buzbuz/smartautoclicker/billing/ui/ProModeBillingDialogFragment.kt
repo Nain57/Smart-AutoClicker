@@ -52,7 +52,7 @@ internal class ProModeBillingDialogFragment : DialogFragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                billingViewModel.dialogState.collect(::updateDialogState)
+                launch { billingViewModel.dialogState.collect(::updateDialogState) }
             }
         }
     }
@@ -94,10 +94,28 @@ internal class ProModeBillingDialogFragment : DialogFragment() {
 
     private fun updateDialogState(state: DialogState) {
         viewBinding.apply {
-            layoutTopBar.dialogTitle.setText(state.titleText)
-            reasonText.text = state.billingReasonText
-            descriptionText.setText(state.descriptionText)
-            buyButton.text = state.acceptButtonText
+            when (state) {
+                DialogState.Connecting -> {
+                    layoutPurchased.visibility = View.GONE
+                    layoutNotPurchased.visibility = View.INVISIBLE
+                    layoutConnecting.visibility = View.VISIBLE
+                }
+
+                DialogState.Purchased -> {
+                    layoutPurchased.visibility = View.VISIBLE
+                    layoutNotPurchased.visibility = View.INVISIBLE
+                    layoutConnecting.visibility = View.GONE
+                }
+
+                is DialogState.NotPurchased -> {
+                    layoutPurchased.visibility = View.GONE
+                    layoutNotPurchased.visibility = View.VISIBLE
+                    layoutConnecting.visibility = View.GONE
+
+                    reasonText.text = state.billingReasonText
+                    buyButton.text = state.acceptButtonText
+                }
+            }
         }
     }
 

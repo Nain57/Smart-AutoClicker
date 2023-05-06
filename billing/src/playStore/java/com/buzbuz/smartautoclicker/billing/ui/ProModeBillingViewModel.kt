@@ -25,6 +25,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.billing.IBillingRepository
@@ -32,8 +33,10 @@ import com.buzbuz.smartautoclicker.billing.R
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.stateIn
 
 /**
  * View model for the [ProModeBillingDialogFragment].
@@ -47,15 +50,21 @@ internal class ProModeBillingViewModel(application: Application) : AndroidViewMo
 
     private val proModeFeature = MutableStateFlow<ProModeAdvantage?>(null)
 
-    val dialogState: Flow<DialogState> = proModeFeature.filterNotNull()
-        .combine(billingRepository.proModePrice) { reason, price ->
-            DialogState(
-                R.string.billing_pro_mode_dialog_title,
-                reason.toDisplayString(application),
-                R.string.billing_pro_mode_description,
-                price,
-            )
-        }
+    val dialogState: Flow<DialogState> = combine(
+        billingRepository.isProModePurchased,
+        proModeFeature.filterNotNull(),
+        billingRepository.proModePrice,
+    ) { isPurchased, reason, price ->
+        if (isPurchased) DialogState.Purchased
+        else DialogState.NotPurchased(
+            reason.toDisplayString(application),
+            price,
+        )
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(3000),
+        DialogState.Connecting,
+    )
 
     fun setBillingReason(reason: ProModeAdvantage) {
         proModeFeature.value = reason
@@ -70,12 +79,17 @@ internal class ProModeBillingViewModel(application: Application) : AndroidViewMo
     }
 }
 
-internal data class DialogState(
-    @StringRes val titleText: Int,
-    val billingReasonText: String,
-    @StringRes val descriptionText: Int,
-    val acceptButtonText: String,
-)
+internal sealed class DialogState {
+    internal data class NotPurchased(
+        val billingReasonText: String,
+        val acceptButtonText: String,
+    ): DialogState()
+
+    internal object Purchased : DialogState()
+
+    internal object Connecting : DialogState()
+}
+
 
 private fun ProModeAdvantage.toDisplayString(context: Context): String =
     when (this) {

@@ -22,6 +22,7 @@
     <dimen name="text_size_list_item_text_big">17sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
 
+    <dimen name="margin_horizontal_extra_large">32dp</dimen>
     <dimen name="margin_horizontal_large">24dp</dimen>
     <dimen name="margin_horizontal_default">16dp</dimen>
     <dimen name="margin_horizontal_intermediate">12dp</dimen>
