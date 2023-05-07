@@ -184,6 +184,15 @@ abstract class OverlayDialogController(
         }
     }
 
+    /** Hide automatically the software keyboard when the provided view lose the focus. */
+    fun hideSoftInputOnFocusLoss(view: View) {
+        view.setOnFocusChangeListener { v, hasFocus ->
+            if (view.id == v.id && !hasFocus) {
+                hideSoftInput()
+            }
+        }
+    }
+
     /** Hide the software keyboard. */
     private fun hideSoftInput() {
         dialog?.let {

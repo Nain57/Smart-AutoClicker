@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.config.endcondition
 
 import android.content.Context
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,6 +91,7 @@ class EndConditionConfigDialog(
                 }
                 textField.filters = arrayOf(MinMaxInputFilter(MIN_EXECUTION_COUNT, MAX_EXECUTION_COUNT))
             }
+            hideSoftInputOnFocusLoss(editExecutionCountLayout.textField)
         }
 
         return viewBinding.root
@@ -142,7 +144,7 @@ class EndConditionConfigDialog(
 
     /** Update the display of the executions count. */
     private fun updateExecutionCount(count: Int) {
-        viewBinding.editExecutionCountLayout.setText(count.toString())
+        viewBinding.editExecutionCountLayout.setText(count.toString(), InputType.TYPE_CLASS_NUMBER)
     }
 
     /** Show the event selection dialog. */

@@ -76,6 +76,7 @@ class ScenarioConfigContent : NavBarDialogContent() {
                     LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            dialogController.hideSoftInputOnFocusLoss(scenarioNameField.textField)
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }

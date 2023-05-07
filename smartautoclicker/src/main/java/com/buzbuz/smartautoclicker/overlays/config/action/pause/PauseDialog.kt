@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.overlays.config.action.pause
 
 import android.content.Context
 import android.text.InputFilter
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,6 +84,7 @@ class PauseDialog(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editPauseDurationLayout.apply {
                 textField.filters = arrayOf(DurationInputFilter())
@@ -91,6 +93,7 @@ class PauseDialog(
                     viewModel.setPauseDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
             }
+            hideSoftInputOnFocusLoss(editPauseDurationLayout.textField)
         }
 
         return viewBinding.root
@@ -124,7 +127,7 @@ class PauseDialog(
     }
 
     private fun updatePauseDuration(newDuration: String?) {
-        viewBinding.editPauseDurationLayout.setText(newDuration)
+        viewBinding.editPauseDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {

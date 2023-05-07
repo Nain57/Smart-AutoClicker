@@ -24,9 +24,13 @@
     android:scrollbars="vertical">
 
     <LinearLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <include layout="@layout/include_input_field_text"

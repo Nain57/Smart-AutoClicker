@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.config.action.click
 import android.content.Context
 import android.graphics.Point
 import android.text.InputFilter
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -89,6 +90,7 @@ class ClickDialog(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editPressDurationLayout.apply {
                 textField.filters = arrayOf(DurationInputFilter())
@@ -97,6 +99,7 @@ class ClickDialog(
                     viewModel.setPressDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
             }
+            hideSoftInputOnFocusLoss(editPressDurationLayout.textField)
 
             clickPositionField.setItems(
                 label = context.getString(R.string.dropdown_label_click_position_type),
@@ -140,7 +143,7 @@ class ClickDialog(
     }
 
     private fun updateClickDuration(newDuration: String?) {
-        viewBinding.editPressDurationLayout.setText(newDuration)
+        viewBinding.editPressDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
     }
 
     private fun updateClickType(newType: DropdownItem) {

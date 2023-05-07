@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.config.action.intent
 
 import android.text.InputFilter
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -66,6 +67,7 @@ class AdvancedIntentContent : NavBarDialogContent() {
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            dialogController.hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             intentSendingTypeField.setItems(
                 label = context.getString(R.string.dropdown_label_intent_sending_type),
@@ -77,6 +79,7 @@ class AdvancedIntentContent : NavBarDialogContent() {
                 setLabel(R.string.input_field_label_intent_action)
                 setOnTextChangedListener { dialogViewModel.setIntentAction(it.toString()) }
             }
+            dialogController.hideSoftInputOnFocusLoss(editActionLayout.textField)
 
             editFlagsLayout.apply {
                 setLabel(R.string.input_field_label_intent_flags)
@@ -87,11 +90,13 @@ class AdvancedIntentContent : NavBarDialogContent() {
                     )
                 }
             }
+            dialogController.hideSoftInputOnFocusLoss(editFlagsLayout.textField)
 
             editComponentNameLayout.apply {
                 setLabel(R.string.input_field_label_intent_component_name)
                 setOnTextChangedListener { dialogViewModel.setComponentName(it.toString()) }
             }
+            dialogController.hideSoftInputOnFocusLoss(editComponentNameLayout.textField)
 
             extrasList.adapter = extrasAdapter
         }
@@ -128,7 +133,7 @@ class AdvancedIntentContent : NavBarDialogContent() {
     }
 
     private fun updateIntentFlags(flags: String) {
-        viewBinding.editFlagsLayout.setText(flags)
+        viewBinding.editFlagsLayout.setText(flags, InputType.TYPE_CLASS_NUMBER)
     }
 
     private fun updateComponentName(componentName: String?) {

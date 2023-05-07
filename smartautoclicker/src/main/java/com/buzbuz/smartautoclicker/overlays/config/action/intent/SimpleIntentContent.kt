@@ -61,6 +61,7 @@ class SimpleIntentContent : NavBarDialogContent() {
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            dialogController.hideSoftInputOnFocusLoss(editNameLayout.textField)
         }
 
         return viewBinding.root

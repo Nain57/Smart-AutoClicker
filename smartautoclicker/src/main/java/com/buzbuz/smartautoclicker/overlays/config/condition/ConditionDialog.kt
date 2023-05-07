@@ -95,6 +95,7 @@ class ConditionDialog(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             conditionDetectionType.setItems(
                 label = context.getString(R.string.dropdown_label_condition_detection_type),

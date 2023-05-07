@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.config.action.swipe
 import android.content.Context
 import android.graphics.Point
 import android.text.InputFilter
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,6 +87,7 @@ class SwipeDialog(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editSwipeDurationLayout.apply {
                 textField.filters = arrayOf(DurationInputFilter())
@@ -94,6 +96,7 @@ class SwipeDialog(
                     viewModel.setSwipeDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
             }
+            hideSoftInputOnFocusLoss(editSwipeDurationLayout.textField)
 
             onPositionSelectButton.setOnClickListener { showPositionSelector() }
         }
@@ -130,7 +133,7 @@ class SwipeDialog(
     }
 
     private fun updateSwipeDuration(newDuration: String?) {
-        viewBinding.editSwipeDurationLayout.setText(newDuration)
+        viewBinding.editSwipeDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
     }
 
     private fun updateSwipePositionsButtonText(positions: Pair<Point, Point>?) {

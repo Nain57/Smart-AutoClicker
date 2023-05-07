@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ class EventConfigContent : NavBarDialogContent() {
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            dialogController.hideSoftInputOnFocusLoss(eventNameInputLayout.textField)
 
             conditionsOperatorField.setItems(
                 label = context.getString(R.string.dropdown_label_condition_operator),

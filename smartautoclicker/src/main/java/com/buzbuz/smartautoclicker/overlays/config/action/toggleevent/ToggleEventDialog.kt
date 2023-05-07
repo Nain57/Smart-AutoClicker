@@ -95,6 +95,7 @@ class ToggleEventDialog(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
+            hideSoftInputOnFocusLoss(editNameLayout.textField)
         }
 
         return viewBinding.root

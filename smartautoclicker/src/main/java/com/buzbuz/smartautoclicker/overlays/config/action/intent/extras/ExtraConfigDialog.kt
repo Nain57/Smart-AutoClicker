@@ -93,6 +93,7 @@ class ExtraConfigDialog(
                 setLabel(R.string.input_field_label_intent_extra_key)
                 setOnTextChangedListener { viewModel.setKey(it.toString()) }
             }
+            hideSoftInputOnFocusLoss(editKeyLayout.textField)
 
             extraValueTypeField.setItems(
                 label = context.getString(R.string.dropdown_label_intent_extra_value_type),
