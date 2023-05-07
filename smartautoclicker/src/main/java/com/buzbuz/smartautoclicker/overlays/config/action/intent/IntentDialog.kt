@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,8 +55,11 @@ class IntentDialog(
         viewModel.setConfiguredIntent(editedIntent)
 
         return super.onCreateView().also {
-            topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_intent)
-            topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+            topBarBinding.apply {
+                dialogTitle.setText(R.string.dialog_overlay_title_intent)
+                setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+                setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
+            }
         }
     }
 
