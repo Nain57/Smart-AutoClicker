@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                     addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
                         override fun onViewDetachedFromWindow(arg0: View) {
                             scenarioViewModel.updateSearchQuery(null)
-                            scenarioViewModel.setMenuState(MenuState.SELECTION)
+                            scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SELECTION)
                         }
 
                         override fun onViewAttachedToWindow(arg0: View) {}
@@ -138,9 +138,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { scenarioViewModel.isScenarioLimitReached.collect(::updateScenarioLimitationVisibility) }
-                launch { scenarioViewModel.scenarioItems.collect(::onNewScenarioList) }
-                launch { scenarioViewModel.menuUiState.collect(::updateMenu) }
+                launch { scenarioViewModel.uiState.collect(::updateUiState) }
             }
         }
     }
@@ -150,25 +148,25 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     }
 
     private fun onMenuItemSelected(item: MenuItem): Boolean {
+        val uiState = scenarioViewModel.uiState.value ?: return false
+
         when (item.itemId) {
             R.id.action_export -> when {
-                !scenarioViewModel.isProModePurchased.value ->
-                    scenarioViewModel.onExportClickedWithoutProMode(requireContext())
-                scenarioViewModel.menuState.value == MenuState.EXPORT ->
-                    showBackupDialog(false, scenarioViewModel.getScenariosSelectedForBackup())
-                else ->
-                    scenarioViewModel.setMenuState(MenuState.EXPORT)
+                !uiState.isProModePurchased -> scenarioViewModel.onExportClickedWithoutProMode(requireContext())
+                uiState.type == ScenarioListFragmentUiState.Type.EXPORT -> showBackupDialog(
+                    isImport = false,
+                    scenariosToBackup = scenarioViewModel.getScenariosSelectedForBackup(),
+                )
+                else -> scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.EXPORT)
             }
 
             R.id.action_import -> when {
-                !scenarioViewModel.isProModePurchased.value ->
-                    scenarioViewModel.onImportClickedWithoutProMode(requireContext())
-                else ->
-                    showBackupDialog(true)
+                !uiState.isProModePurchased -> scenarioViewModel.onImportClickedWithoutProMode(requireContext())
+                else -> showBackupDialog(true)
             }
 
-            R.id.action_cancel -> scenarioViewModel.setMenuState(MenuState.SELECTION)
-            R.id.action_search -> scenarioViewModel.setMenuState(MenuState.SEARCH)
+            R.id.action_cancel -> scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SELECTION)
+            R.id.action_search -> scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SEARCH)
             R.id.action_select_all -> scenarioViewModel.toggleAllScenarioSelectionForBackup()
             else -> return false
         }
@@ -176,11 +174,19 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
         return true
     }
 
+    private fun updateUiState(uiState: ScenarioListFragmentUiState?) {
+        uiState ?: return
+
+        updateMenu(uiState.menuUiState)
+        updateScenarioList(uiState.listContent)
+        updateScenarioLimitationVisibility(uiState.isScenarioLimitReached)
+    }
+
     /**
      * Update the display of the action menu.
      * @param menuState the new ui state for the menu.
      */
-    private fun updateMenu(menuState: MenuUiState) {
+    private fun updateMenu(menuState: ScenarioListFragmentUiState.Menu) {
         viewBinding.topAppBar.menu.apply {
             findItem(R.id.action_search).bind(menuState.searchItemState)
             findItem(R.id.action_select_all).bind(menuState.selectAllItemState)
@@ -188,6 +194,26 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
             findItem(R.id.action_import).bind(menuState.importItemState)
             findItem(R.id.action_export).bind(menuState.exportItemState)
         }
+    }
+
+    /**
+     * Observer upon the list of click scenarios.
+     * Will update the list/empty view according to the current click scenarios
+     */
+    private fun updateScenarioList(scenarios: List<ScenarioListFragmentUiState.ScenarioListItem>) {
+        viewBinding.apply {
+            if (scenarios.isEmpty()) {
+                list.visibility = View.GONE
+                add.visibility = View.GONE
+                layoutEmpty.visibility = View.VISIBLE
+            } else {
+                list.visibility = View.VISIBLE
+                add.visibility = View.VISIBLE
+                layoutEmpty.visibility = View.GONE
+            }
+        }
+
+        scenariosAdapter.submitList(scenarios)
     }
 
     private fun updateScenarioLimitationVisibility(isVisible: Boolean) {
@@ -287,26 +313,6 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     }
 
     /**
-     * Observer upon the list of click scenarios.
-     * Will update the list/empty view according to the current click scenarios
-     */
-    private fun onNewScenarioList(scenarios: List<ScenarioListItem>) {
-        viewBinding.apply {
-            if (scenarios.isEmpty()) {
-                list.visibility = View.GONE
-                add.visibility = View.GONE
-                layoutEmpty.visibility = View.VISIBLE
-            } else {
-                list.visibility = View.VISIBLE
-                add.visibility = View.VISIBLE
-                layoutEmpty.visibility = View.GONE
-            }
-        }
-
-        scenariosAdapter.submitList(scenarios)
-    }
-
-    /**
      * Shows the backup dialog fragment.
      *
      * @param isImport true to display in import mode, false for export.
@@ -318,11 +324,11 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 .newInstance(isImport, scenariosToBackup)
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }
-        scenarioViewModel.setMenuState(MenuState.SELECTION)
+        scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SELECTION)
     }
 }
 
-private fun MenuItem.bind(state: MenuItemState) {
+private fun MenuItem.bind(state: ScenarioListFragmentUiState.Menu.Item) {
     isVisible = state.visible
     isEnabled = state.enabled
     icon = icon?.mutate()?.apply {

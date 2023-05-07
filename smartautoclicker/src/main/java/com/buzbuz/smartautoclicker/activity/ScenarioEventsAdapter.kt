@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.EventItem
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
 import com.buzbuz.smartautoclicker.domain.Condition
 
