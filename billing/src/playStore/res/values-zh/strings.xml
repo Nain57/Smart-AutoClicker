@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="billing_pro_mode_description">&#8226; 无检测时长限制\n&#8226; 没有场景、事件、条件和动作创建计数限制\n&#8226; 将场景导出/导入为 zip 文件\n&#8226; 通过意图与其他应用程序通信\n&#8226; 在场景执行期间启用/禁用事件并更改其状态\n&#8226; 控制每个条件的检测阈值\n&#8226; 当满足某些结束条件时自动停止检测\n&#8226; 随机化您的场景值以避免被其他应用程序检测到\n&#8226; 调整检测算法以提高其速度或正确性</string>
+    <string name="billing_pro_mode_success">感谢您购买\nSmart AutoClicker Pro！</string>
+
+    <string name="billing_reason_action_count">购买 Smart AutoClicker Pro 以创建超过 %1$d 个操作</string>
+    <string name="billing_reason_action_type_intent">购买 Smart AutoClicker Pro 发送意向</string>
+    <string name="billing_reason_action_type_toggle_event">购买 Smart AutoClicker Pro 以更改事件启用状态</string>
+    <string name="billing_reason_backup_export">购买 Smart AutoClicker Pro 将场景保存为 zip 文件</string>
+    <string name="billing_reason_backup_import">购买 Smart AutoClicker Pro 以从 zip 文件导入场景</string>
+    <string name="billing_reason_condition_count">购买 Smart AutoClicker Pro 以创建超过 %1$d 个条件</string>
+    <string name="billing_reason_condition_threshold">购买 Smart AutoClicker Pro 以更改条件容忍差异</string>
+    <string name="billing_reason_detection_duration_limit">购买 Smart AutoClicker Pro 以运行持续超过 %1$d 分钟的检测会话</string>
+    <string name="billing_reason_event_count">购买 Smart AutoClicker Pro 以创建超过 %1$d 个事件</string>
+    <string name="billing_reason_event_state">购买 Smart AutoClicker Pro 以更改事件的状态</string>
+    <string name="billing_reason_scenario_anti_detection">购买 Smart AutoClicker Pro 以启用第三方应用程序的反检测</string>
+    <string name="billing_reason_scenario_count">购买 Smart AutoClicker Pro 以创建超过 %1$d 个场景</string>
+    <string name="billing_reason_scenario_detection_quality">购买 Smart AutoClicker Pro 改变算法的检测质量</string>
+    <string name="billing_reason_scenario_end_conditions">购买 Smart AutoClicker Pro 以创建自动结束检测条件</string>
+</resources>

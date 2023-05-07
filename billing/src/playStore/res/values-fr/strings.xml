@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="billing_pro_mode_description">&#8226; Durée de détection illimitée\n&#8226; Création de scénarios, évènements, conditions et actions illimitée\n&#8226; Export/Import de scénarios dans un fichier zip\n&#8226; Communication avec d\'autres applications via Intents\n&#8226; Activer/Désactiver un évènement et changer son état pendant la détection\n&#8226; Contrôle du seuil de détection pour chaque condition\n&#8226; Arrêt automatique du scénario lorsque des conditions de fin sont atteintes\n&#8226; Ajout d\'une petite part d\'aléatoire dans les scénarios pour éviter la detection par une autre application\n&#8226; Réglage de l\'algorithme pour qu\'il soit plus rapide ou plus correct</string>
+    <string name="billing_pro_mode_success">Merci d\'avoir acheté\nSmart AutoClicker Pro !</string>
+
+    <string name="billing_reason_action_count">Achetez Smart AutoClicker Pro pour créer plus que %1$d actions</string>
+    <string name="billing_reason_action_type_intent">Achetez Smart AutoClicker Pro pour envoyer des Intents</string>
+    <string name="billing_reason_action_type_toggle_event">Achetez Smart AutoClicker Pro pour changer l\'état d\'activation d\'un évènement</string>
+    <string name="billing_reason_backup_export">Achetez Smart AutoClicker Pro pour sauvegarder un scénario dans un fichier zip</string>
+    <string name="billing_reason_backup_import">Achetez Smart AutoClicker Pro pour importer un scénario depuis un fichier zip</string>
+    <string name="billing_reason_condition_count">Achetez Smart AutoClicker Pro pour créer plus que %1$d conditions</string>
+    <string name="billing_reason_condition_threshold">Achetez Smart AutoClicker Pro pour changer le seuil de détection d\'une condition</string>
+    <string name="billing_reason_detection_duration_limit">Achetez Smart AutoClicker Pro pour faire des sessions de détection plus longues que %1$d minutes</string>
+    <string name="billing_reason_event_count">Achetez Smart AutoClicker Pro pour créer plus que %1$d évènements</string>
+    <string name="billing_reason_event_state">Achetez Smart AutoClicker Pro pour définir l\'état d\'un évènement</string>
+    <string name="billing_reason_scenario_anti_detection">Achetez Smart AutoClicker Pro pour activer l\'anti détection par les autres application</string>
+    <string name="billing_reason_scenario_count">Achetez Smart AutoClicker Pro pour créer plus que %1$d scénarios</string>
+    <string name="billing_reason_scenario_detection_quality">Achetez Smart AutoClicker Pro pour changer la qualité de détection de l\'algorithme</string>
+    <string name="billing_reason_scenario_end_conditions">Achetez Smart AutoClicker Pro pour créer de conditions de fin de scénario</string>
+</resources>
