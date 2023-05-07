@@ -34,7 +34,7 @@ sealed class Action {
     abstract var name: String?
 
     /** @return true if this action is complete and can be transformed into its entity. */
-    internal open fun isComplete(): Boolean = name != null
+    open fun isComplete(): Boolean = name != null
     /** @return the entity equivalent of this action. */
     internal abstract fun toEntity(): CompleteActionEntity
     /** Cleanup all ids contained in this action. Ideal for copying. */
@@ -296,6 +296,8 @@ sealed class Action {
         }
 
         override fun deepCopy(): ToggleEvent = copy(name = "" + name)
+
+        fun deepCopyWithToggleEventCleanup(): ToggleEvent = copy(name = "" + name, toggleEventId = null)
     }
 }
 

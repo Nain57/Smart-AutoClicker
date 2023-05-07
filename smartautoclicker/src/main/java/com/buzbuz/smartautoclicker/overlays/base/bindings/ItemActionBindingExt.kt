@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.overlays.base.bindings
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.View
 
 import androidx.annotation.DrawableRes
@@ -36,7 +37,14 @@ fun ItemActionBinding.bind(
     actionName.visibility = View.VISIBLE
     actionTypeIcon.setImageResource(details.icon)
     actionName.text = details.name
-    actionDetails.text = details.details
+    actionDetails.apply {
+        text = details.details
+
+        val typedValue = TypedValue()
+        val actionColorAttr = if (!details.action.isComplete()) R.attr.colorError else R.attr.colorOnSurfaceVariant
+        root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
+        setTextColor(typedValue.data)
+    }
 
     btnReorder.visibility = if (canDrag) View.VISIBLE else View.GONE
 }
@@ -53,61 +61,102 @@ data class ActionDetails (
     val name: String,
     val details: String,
     val action: Action,
+    val haveError: Boolean,
 )
 
 /** @return the [ActionDetails] corresponding to this action. */
-fun Action.toActionDetails(context: Context): ActionDetails {
-    val item = when (this) {
-        is Action.Click -> ActionDetails(
-            icon = R.drawable.ic_click,
-            name = name!!,
-            details = if (clickOnCondition) context.getString(
-                R.string.item_desc_click_position_on_condition
-            ) else context.getString(
-                R.string.item_desc_click_details,
-                formatDuration(pressDuration!!), x, y
-            ),
-            action = this,
-        )
+fun Action.toActionDetails(context: Context): ActionDetails = when (this) {
+    is Action.Click -> this.toClickDetails(context)
+    is Action.Swipe -> this.toSwipeDetails(context)
+    is Action.Pause -> this.toPauseDetails(context)
+    is Action.Intent -> this.toIntentDetails(context)
+    is Action.ToggleEvent -> this.toToggleEventDetails(context)
+    else -> throw IllegalArgumentException("Not yet supported")
+}
 
-        is Action.Swipe -> ActionDetails(
-            icon = R.drawable.ic_swipe,
-            name = name!!,
-            details = context.getString(
+private fun Action.Click.toClickDetails(context: Context): ActionDetails {
+    val error = !isComplete()
+
+    return ActionDetails(
+        icon = R.drawable.ic_click,
+        name = name!!,
+        details = when {
+            error -> context.getString(R.string.item_error_action_invalid_generic)
+            clickOnCondition -> context.getString(R.string.item_desc_click_position_on_condition)
+            else  -> context.getString(
+                R.string.item_desc_click_details,
+                formatDuration(pressDuration!!), x, y,
+            )
+        },
+        action = this,
+        haveError = error,
+    )
+}
+
+private fun Action.Swipe.toSwipeDetails(context: Context): ActionDetails {
+    val error = !isComplete()
+
+    return ActionDetails(
+        icon = R.drawable.ic_swipe,
+        name = name!!,
+        details = when {
+            error -> context.getString(R.string.item_error_action_invalid_generic)
+            else -> context.getString(
                 R.string.item_desc_swipe_details,
                 formatDuration(swipeDuration!!), fromX, fromY, toX, toY
-            ),
-            action = this,
-        )
+            )
+        },
+        action = this,
+        haveError = error,
+    )
+}
 
-        is Action.Pause -> ActionDetails(
-            icon = R.drawable.ic_wait,
-            name = name!!,
-            details = context.getString(
+private fun Action.Pause.toPauseDetails(context: Context): ActionDetails {
+    val error = !isComplete()
+
+    return ActionDetails(
+        icon = R.drawable.ic_wait,
+        name = name!!,
+        details = when {
+            error -> context.getString(R.string.item_error_action_invalid_generic)
+            else -> context.getString(
                 R.string.item_desc_pause_details,
                 formatDuration(pauseDuration!!)
-            ),
-            action = this,
-        )
+            )
+        },
+        action = this,
+        haveError = error,
+    )
+}
 
-        is Action.Intent -> ActionDetails(
-            icon = R.drawable.ic_intent,
-            name = name!!,
-            details = formatIntentDetails(this, context),
-            action = this,
-        )
+private fun Action.Intent.toIntentDetails(context: Context): ActionDetails {
+    val error = !isComplete()
 
-        is Action.ToggleEvent -> ActionDetails(
-            icon = R.drawable.ic_toggle_event,
-            name = name!!,
-            details = formatToggleEventState(this, context),
-            action = this,
-        )
+    return ActionDetails(
+        icon = R.drawable.ic_intent,
+        name = name!!,
+        details = when {
+            error -> context.getString(R.string.item_error_action_invalid_generic)
+            else -> formatIntentDetails(this, context)
+        },
+        action = this,
+        haveError = error,
+    )
+}
 
-        else -> throw IllegalArgumentException("Not yet supported")
-    }
+private fun Action.ToggleEvent.toToggleEventDetails(context: Context): ActionDetails {
+    val error = !isComplete()
 
-    return item
+    return ActionDetails(
+        icon = R.drawable.ic_toggle_event,
+        name = name!!,
+        details = when {
+            error -> context.getString(R.string.item_error_action_invalid_toggle_event_target)
+            else -> formatToggleEventState(this, context)
+        },
+        action = this,
+        haveError = error,
+    )
 }
 
 /**

@@ -98,6 +98,8 @@
     <string name="item_desc_swipe_positions">Swiper de %1$d, %2$d à %3$d, %4$d</string>
     <string name="item_desc_toggle_event">Changer l\'état d\'activation d\'un évènement</string>
     <string name="item_desc_toggle_event_details">Changer l\'état avec le type %1$s</string>
+    <string name="item_error_action_invalid_generic">Cette action est invalide</string>
+    <string name="item_error_action_invalid_toggle_event_target">Évènement cible non trouvé</string>
     <string name="item_title_backup_create_select_file">Choisir l\'emplacement de sauvegarde</string>
     <string name="item_title_backup_import_select_file">Choisir le fichier de sauvegarde</string>
     <string name="item_title_click">Clic</string>
@@ -153,6 +155,7 @@
     <string name="message_backup_import_compatibility">Certains scénarios ont été généré par un téléphone avec un écran différent, ce qui peut causer des problèmes avec la détection et les coordonées des actions.\n\nPour régler le problème, vous devez refaire les screenshots de vos conditions et mettre à jour les coordonées de vos actions.</string>
     <string name="message_condition_threshold">%1$d%%</string>
     <string name="message_delete_scenario">Le scénario %1$s va être supprimé. Êtes vous sûr ?</string>
+    <string name="message_event_copy_with_toggle_action_from_another_scenario">Cet évènement possède une ou plusieures actions de changement d\'état référenceant un évènement d\'un autre scénario.\nVous devrez mettre à jour ces actions avant de pouvoir sauvegarder le scénario.</string>
     <string name="message_event_delete_associated_end_condition">Cet évènement est référencé par une ou plusieures conditions de fin. Le supprimer supprimera aussi les conditions de fin associées.\nÊtes vous sûr ?</string>
     <string name="message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
 

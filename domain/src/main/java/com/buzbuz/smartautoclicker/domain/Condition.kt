@@ -72,6 +72,9 @@ data class Condition(
         path = path,
         area = Rect(area),
     )
+
+    /** Tells if this condition is complete and valid to be saved. */
+    fun isComplete(): Boolean = (path != null || bitmap != null)
 }
 
 /** @return the condition for this entity. */

@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.overlays.config.event
 import android.app.Application
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.Condition
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.overlays.base.NavigationViewModel
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
@@ -44,8 +46,8 @@ class EventDialogViewModel(application: Application) : NavigationViewModel(appli
         .map { configuredItem ->
             buildMap {
                 put(R.id.page_event, configuredItem.name.isNotEmpty())
-                put(R.id.page_conditions, configuredItem.conditions?.isNotEmpty() ?: false)
-                put(R.id.page_actions, configuredItem.actions?.isNotEmpty() ?: false)
+                put(R.id.page_conditions, configuredItem.conditions.isValidConditionList())
+                put(R.id.page_actions, configuredItem.actions.isValidActionList())
             }
         }
 
@@ -62,6 +64,18 @@ class EventDialogViewModel(application: Application) : NavigationViewModel(appli
     /** Tells if this event have associated end conditions. */
     fun isEventHaveRelatedEndConditions(): Boolean = editionRepository.isEditedEventUsedByEndCondition()
 
-    /** Tells if this event have associated end conditions. */
+    /** Tells if this event have associated actions. */
     fun isEventHaveRelatedActions(): Boolean = editionRepository.isEditedEventUsedByAction()
+
+    private fun List<Action>?.isValidActionList(): Boolean {
+        if (this == null) return false
+        forEach { if (!it.isComplete()) return false }
+        return true
+    }
+
+    private fun List<Condition>?.isValidConditionList(): Boolean {
+        if (this == null) return false
+        forEach { if (!it.isComplete()) return false }
+        return true
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.domain.Action
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIconRes
@@ -115,12 +116,19 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      */
     fun getCopyEvent(event: Event): Event =
         editionRepository.editedScenario.value?.let { conf ->
-            event.deepCopy().apply {
+            event.deepCopy(fromAnotherScenario = !event.isFromEditedScenario()).apply {
                 priority = conf.events.size
                 scenarioId = conf.scenario.id
                 cleanUpIds()
             }
         } ?: throw IllegalStateException("No scenario defined !")
+
+    /** If that's not the same scenario and we are copying an event with a toggle event action, warn the user */
+    fun eventCopyShouldWarnUser(event: Event): Boolean =
+        !event.isFromEditedScenario() && event.actions?.firstOrNull { it is Action.ToggleEvent } != null
+
+    private fun Event.isFromEditedScenario(): Boolean =
+        editionRepository.editedScenario.value?.scenario?.id == scenarioId
 
     /** @return the [EventCopyItem.EventItem] corresponding to this event. */
     private fun Event.toEventItem(): EventCopyItem.EventItem =

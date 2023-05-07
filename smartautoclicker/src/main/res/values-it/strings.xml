@@ -97,6 +97,8 @@
     <string name="item_desc_swipe_positions">Scorri da %1$d, %2$d a %3$d, %4$d</string>
     <string name="item_desc_toggle_event">Cambia lo stato di abilitazione di un evento</string>
     <string name="item_desc_toggle_event_details">Cambia stato dell\'evento con tipo %1$s</string>
+    <string name="item_error_action_invalid_generic">"Questa azione non è valida "</string>
+    <string name="item_error_action_invalid_toggle_event_target">"Evento di destinazione non trovato "</string>
     <string name="item_title_backup_create_select_file">Seleziona file di output</string>
     <string name="item_title_backup_import_select_file">Seleziona file di backup</string>
     <string name="item_title_click">Clic</string>
@@ -151,6 +153,7 @@
     <string name="message_backup_import_compatibility">Alcuni degli scenari importati sono stati generati da un dispositivo con uno schermo diverso e ciò potrebbe causare problemi con il rilevamento e le coordinate delle azioni.\n\nPer risolvere il problema, devi acquisire nuovi screenshot per le tue condizioni e aggiornare le posizioni di clic/scorrimento.</string>
     <string name="message_condition_threshold">%1$d%%</string>
     <string name="message_delete_scenario">Questo cancellerà %1$s. Sei sicuro ?</string>
+    <string name="message_event_copy_with_toggle_action_from_another_scenario">Questo evento ha una o più azioni evento di commutazione che fanno riferimento a un evento da un altro scenario.</string>
     <string name="message_event_delete_associated_end_condition">Questo evento ha una o più condizioni di fine che ne fanno riferimento. Cancellare questo evento eliminarà anche le condizioni di fine associate.\nSei sicuro ?</string>
     <string name="message_event_delete_associated_action">Questo evento ha una o più azioni che ne fanno riferimento. Cancellare questo evento eliminarà anche le azioni associate.\nSei sicuro ?</string>
 

@@ -56,13 +56,13 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
 
     /**
      * Check the validity of the event list.
-     * It must be not empty, and all events must have at least one action.
+     * It must be not empty, and all events must have at least one action and one condition.
      *
      * @return true if valid, false if not.
      */
     private fun List<EditedEvent>.isEventListValid(): Boolean {
         if (isEmpty()) return false
-        forEach { editedEvent -> if (editedEvent.event.actions.isNullOrEmpty()) return false }
+        forEach { if (!it.event.isComplete()) return false }
         return true
     }
 }

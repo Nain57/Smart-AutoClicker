@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,25 @@
 package com.buzbuz.smartautoclicker.overlays.config.event.copy
 
 import android.content.Context
+import android.content.DialogInterface
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.buzbuz.smartautoclicker.R
 
+import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.Event
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyDialog
+import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
-/**
- *
- */
 class EventCopyDialog(
     context: Context,
     private val onEventSelected: (Event) -> Unit,
@@ -50,12 +50,7 @@ class EventCopyDialog(
     override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        eventCopyAdapter = EventCopyAdapter { selectedEvent ->
-            viewModel.let {
-                onEventSelected(it.getCopyEvent(selectedEvent))
-                destroy()
-            }
-        }
+        eventCopyAdapter = EventCopyAdapter(::onEventClicked)
 
         viewBinding.layoutLoadableList.list.apply {
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -73,6 +68,35 @@ class EventCopyDialog(
 
     override fun onSearchQueryChanged(newText: String?) {
         viewModel.updateSearchQuery(newText)
+    }
+
+    private fun onEventClicked(event: Event) {
+        if (viewModel.eventCopyShouldWarnUser(event)) {
+            showToggleEventCopyWarning(event)
+        } else {
+            notifySelectionAndDestroy(event)
+        }
+    }
+
+    /** Show the copy event with toggle event action warning. */
+    private fun showToggleEventCopyWarning(event: Event) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.dialog_title_warning)
+            .setMessage(R.string.message_event_copy_with_toggle_action_from_another_scenario)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                notifySelectionAndDestroy(event)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .apply {
+                window?.setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
+            }
+            .show()
+    }
+
+    private fun notifySelectionAndDestroy(event: Event) {
+        onEventSelected(viewModel.getCopyEvent(event))
+        destroy()
     }
 
     private fun updateEventList(newItems: List<EventCopyModel.EventCopyItem>?) {

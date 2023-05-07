@@ -68,9 +68,12 @@ data class Event(
     }
 
     /** @return creates a deep copy of this complete event and of its content. */
-    fun deepCopy(): Event {
+    fun deepCopy(fromAnotherScenario: Boolean = false): Event {
         val actionsCopy = actions?.let { actionList ->
-            actionList.map { it.deepCopy() }
+            actionList.map { action ->
+                if (fromAnotherScenario && action is Action.ToggleEvent) action.deepCopyWithToggleEventCleanup()
+                else action.deepCopy()
+            }
         }
 
         val conditionsCopy = conditions?.let { conditionList ->
@@ -82,6 +85,21 @@ data class Event(
             actions = actionsCopy?.toMutableList(),
             conditions = conditionsCopy?.toMutableList(),
         )
+    }
+
+    /** Tells if this event is complete and valid for save. */
+    fun isComplete(): Boolean {
+        if (conditions.isNullOrEmpty()) return false
+        conditions.forEach { condition ->
+            if (!condition.isComplete()) return false
+        }
+
+        if (actions.isNullOrEmpty()) return false
+        actions.forEach { action ->
+            if (!action.isComplete()) return false
+        }
+
+        return true
     }
 }
 

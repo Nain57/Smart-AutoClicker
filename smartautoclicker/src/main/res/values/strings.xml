@@ -79,6 +79,7 @@
       - Text for items in a list or vertical layout.
       -  * Title should be short and concise.
       -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
       -->
     <string name="item_desc_click">Click somewhere on the screen</string>
     <string name="item_desc_click_details">During %1$s at [%2$d, %3$d]</string>
@@ -100,6 +101,8 @@
     <string name="item_desc_swipe_positions">Swipe from %1$d, %2$d to %3$d, %4$d</string>
     <string name="item_desc_toggle_event">Change the enabled state of an event</string>
     <string name="item_desc_toggle_event_details">Change event state with type %1$s</string>
+    <string name="item_error_action_invalid_generic">This action is invalid</string>
+    <string name="item_error_action_invalid_toggle_event_target">Target event not found</string>
     <string name="item_title_backup_create_select_file">Select output file</string>
     <string name="item_title_backup_import_select_file">Select backup file</string>
     <string name="item_title_click">Click</string>
@@ -153,6 +156,7 @@
     <string name="message_backup_import_error">An error has occurred and the backup import has been cancelled</string>
     <string name="message_backup_import_compatibility">Some of the imported scenarios have been generated from a device with a different screen and this might cause issues with the detection and action coordinates.\n\nTo fix it, you need to take new screenshots for your conditions and update your click/swipe positions.</string>
     <string name="message_condition_threshold">%1$d%%</string>
+    <string name="message_event_copy_with_toggle_action_from_another_scenario">This event have one or more toggle event actions referencing an event from another scenario.\nYou will have to update their target events before saving your scenario.</string>
     <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
     <string name="message_event_delete_associated_end_condition">This event have one or more end conditions referencing it. Deleting this event will delete the associated end conditions as well.\nAre you sure ?</string>
     <string name="message_event_delete_associated_action">This event have one or more actions referencing it. Deleting this event will delete the associated actions as well.\nAre you sure ?</string>

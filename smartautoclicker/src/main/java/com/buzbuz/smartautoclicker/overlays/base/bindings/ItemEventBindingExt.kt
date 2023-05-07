@@ -28,17 +28,20 @@ import com.buzbuz.smartautoclicker.overlays.base.utils.setIconTintColor
  * Bind the [ItemEventBinding] to an event.
  *
  * @param event the event represented by this view binding.
- *
  * @param canDrag true to show the drag handle, false to hide it.
  * @param itemClickedListener called when the user clicks on the item.
  */
-fun ItemEventBinding.bind(event: Event, canDrag: Boolean, itemClickedListener: (Event) -> Unit) {
+fun ItemEventBinding.bind(
+    event: Event,
+    canDrag: Boolean,
+    itemClickedListener: (Event) -> Unit,
+) {
     textName.text = event.name
     textConditionsCount.text = event.conditions?.size?.toString()
     textActionsCount.text = event.actions?.size?.toString()
 
     val typedValue = TypedValue()
-    val actionColorAttr = if (event.actions.isNullOrEmpty()) R.attr.colorError else R.attr.colorOnSurface
+    val actionColorAttr = if (!event.isComplete()) R.attr.colorError else R.attr.colorOnSurface
     root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
     textActionsCount.setTextColor(typedValue.data)
     imageAction.setIconTintColor(typedValue.data)

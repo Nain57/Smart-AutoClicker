@@ -96,6 +96,8 @@
     <string name="item_desc_swipe_positions">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
     <string name="item_desc_toggle_event">启用或禁用某场景</string>
     <string name="item_desc_toggle_event_details">将场景状态设置为： %1$s</string>
+    <string name="item_error_action_invalid_generic">"此操作无效 "</string>
+    <string name="item_error_action_invalid_toggle_event_target">"未找到目标事件 "</string>
     <string name="item_title_backup_create_select_file">选择保存路径</string>
     <string name="item_title_backup_import_select_file">选择备份文件</string>
     <string name="item_title_click">单击</string>
@@ -150,6 +152,7 @@
     <string name="message_backup_import_compatibility">某些导入的场景是从具有不同屏幕的设备生成的，这可能会导致检测和操作坐标出现问题。\n\n要修复它，您需要根据您的情况创建新的屏幕截图并更新您的点击/滑动位置。</string>
     <string name="message_condition_threshold">%1$d%%</string>
     <string name="message_delete_scenario">是否删除场景： %1$s ？</string>
+    <string name="message_event_copy_with_toggle_action_from_another_scenario">" 此事件有一个或多个切换事件操作引用来自另一场景的事件。 在保存场景之前，您必须更新他们的目标事件。"</string>
     <string name="message_event_delete_associated_end_condition">这个场景存在一个或多个结束条件被引用。 删除这个场景将同时删除相关的结束条件\n确认删除？</string>
     <string name="message_event_delete_associated_action">这个场景存在一个或多个动作被引用。 删除这个场景也会删除相关的动作。\n确认删除？</string>
 
