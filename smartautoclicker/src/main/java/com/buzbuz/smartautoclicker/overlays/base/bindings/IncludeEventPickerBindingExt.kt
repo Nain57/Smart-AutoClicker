@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.overlays.base.bindings
 import android.view.View
 
 import com.buzbuz.smartautoclicker.databinding.IncludeEventPickerBinding
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 
 /** Update the ui state of the selected event. */

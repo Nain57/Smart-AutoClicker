@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.domain.edition
 
-import com.buzbuz.smartautoclicker.domain.Action
-import com.buzbuz.smartautoclicker.domain.copyAndResetId
-import com.buzbuz.smartautoclicker.domain.EndCondition
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 
 /** Handles the creation of edited items, allowing to uniquely identify an item during scenario edition. */
 internal class EditedItemManager {

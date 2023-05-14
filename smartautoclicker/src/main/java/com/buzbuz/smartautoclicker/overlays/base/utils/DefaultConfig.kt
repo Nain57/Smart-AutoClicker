@@ -21,7 +21,13 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.*
+import com.buzbuz.smartautoclicker.domain.model.AND
+import com.buzbuz.smartautoclicker.domain.model.EXACT
+import com.buzbuz.smartautoclicker.domain.model.OR
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 
 /**
  * Creates a new event.

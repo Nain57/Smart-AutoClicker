@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
-import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.overlays.base.NavigationRequest
 import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM

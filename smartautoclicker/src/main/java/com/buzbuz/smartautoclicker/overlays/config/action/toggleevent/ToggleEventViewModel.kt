@@ -22,7 +22,7 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository

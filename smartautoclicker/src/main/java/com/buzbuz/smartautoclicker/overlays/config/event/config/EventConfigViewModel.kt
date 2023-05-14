@@ -27,9 +27,9 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.domain.AND
-import com.buzbuz.smartautoclicker.domain.OR
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
+import com.buzbuz.smartautoclicker.domain.model.AND
+import com.buzbuz.smartautoclicker.domain.model.OR
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow

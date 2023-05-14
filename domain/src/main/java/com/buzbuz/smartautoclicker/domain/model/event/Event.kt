@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.domain
+package com.buzbuz.smartautoclicker.domain.model.event
 
-import androidx.annotation.IntDef
-
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
 
 /**
  * Event of a scenario.
@@ -43,22 +42,6 @@ data class Event(
     val conditions: MutableList<Condition>? = null,
     var enabledOnStart: Boolean = true,
 ) {
-
-    /** @return the entity equivalent of this event. */
-    internal fun toEntity() = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart)
-
-    /** @return the complete entity equivalent of this event. Return null if the actions or conditions are null. */
-    internal fun toCompleteEntity(): CompleteEventEntity? {
-        if (actions == null || conditions == null) {
-            return null
-        }
-
-        return CompleteEventEntity(
-            event = toEntity(),
-            actions = actions.map { it.toEntity() },
-            conditions = conditions.map { it.toEntity() }
-        )
-    }
 
     /** Cleanup all ids contained in this event. Ideal for copying. */
     fun cleanUpIds() {
@@ -102,27 +85,3 @@ data class Event(
         return true
     }
 }
-
-/** @return the event for this entity. */
-internal fun EventEntity.toEvent() = Event(id, scenarioId, name, conditionOperator, priority, enabledOnStart = enabledOnStart)
-
-/** @return the complete event for this entity. */
-internal fun CompleteEventEntity.toEvent() = Event(
-    id = event.id,
-    scenarioId = event.scenarioId,
-    name= event.name,
-    conditionOperator = event.conditionOperator,
-    priority = event.priority,
-    enabledOnStart = event.enabledOnStart,
-    actions = actions.sortedBy { it.action.priority }.map { it.toAction() }.toMutableList(),
-    conditions = conditions.map { it.toCondition() }.toMutableList(),
-)
-
-/** Defines the operators to be applied between the conditions. */
-@IntDef(AND, OR)
-@Retention(AnnotationRetention.SOURCE)
-annotation class ConditionOperator
-/** All conditions must be fulfilled. */
-const val AND = 1
-/** Only one of the conditions must be fulfilled. */
-const val OR = 2

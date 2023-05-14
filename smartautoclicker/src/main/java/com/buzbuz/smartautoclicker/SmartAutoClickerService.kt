@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.LocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.baseui.overlays.OverlayController
 import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
-import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu

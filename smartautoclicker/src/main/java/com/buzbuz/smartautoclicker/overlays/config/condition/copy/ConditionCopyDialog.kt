@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
-import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

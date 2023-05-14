@@ -23,7 +23,7 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultEvent
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent

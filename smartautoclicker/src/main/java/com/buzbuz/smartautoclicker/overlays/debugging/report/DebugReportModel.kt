@@ -22,7 +22,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.debugging.ConditionProcessingDebugInfo

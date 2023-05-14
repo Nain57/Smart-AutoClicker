@@ -21,8 +21,16 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.database.room.entity.*
+import com.buzbuz.smartautoclicker.domain.model.AND
+import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.domain.model.EXACT
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 
 /** Data set for the database tests. */
 internal object TestsData {
@@ -265,7 +273,6 @@ internal object TestsData {
         value: String,
     ) = IntentExtraEntity(id, actionId, type, key, value)
 
-    @Suppress("UNCHECKED_CAST")
     fun <T> getNewIntentExtra(
         id: Long = INTENT_EXTRA_ID,
         actionId: Long = INTENT_EXTRA_ACTION_ID,

@@ -36,9 +36,9 @@ import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.Type
 import com.buzbuz.smartautoclicker.billing.model.BillingRepository
 import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM_INT
 import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM_INT
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultScenario

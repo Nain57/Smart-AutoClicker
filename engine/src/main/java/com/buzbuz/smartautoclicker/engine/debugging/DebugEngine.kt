@@ -18,10 +18,10 @@ package com.buzbuz.smartautoclicker.engine.debugging
 
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.detection.DetectionResult
-import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.engine.ProcessorResult
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemDebugReportEventBinding
 import com.buzbuz.smartautoclicker.databinding.ItemDebugReportScenarioBinding
-import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setValue
 import com.buzbuz.smartautoclicker.overlays.base.bindings.setValues
 

@@ -41,7 +41,7 @@ import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.databinding.DialogConfigConditionBinding
-import com.buzbuz.smartautoclicker.domain.*
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

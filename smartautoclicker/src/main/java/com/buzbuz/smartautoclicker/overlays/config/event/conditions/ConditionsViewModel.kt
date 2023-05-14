@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 
 import com.buzbuz.smartautoclicker.domain.*
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultCondition
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
 

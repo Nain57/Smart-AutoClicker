@@ -22,12 +22,12 @@ import android.graphics.Path
 import android.graphics.Point
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.domain.Action
-import com.buzbuz.smartautoclicker.domain.Action.Click
-import com.buzbuz.smartautoclicker.domain.Action.Pause
-import com.buzbuz.smartautoclicker.domain.Action.Swipe
-import com.buzbuz.smartautoclicker.domain.Action.ToggleEvent
-import com.buzbuz.smartautoclicker.domain.putExtra
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.action.Action.Click
+import com.buzbuz.smartautoclicker.domain.model.action.Action.Pause
+import com.buzbuz.smartautoclicker.domain.model.action.Action.Swipe
+import com.buzbuz.smartautoclicker.domain.model.action.Action.ToggleEvent
+import com.buzbuz.smartautoclicker.domain.model.action.putDomainExtra
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -142,7 +142,7 @@ internal class ActionExecutor(
                 component = intent.componentName
             }
 
-            intent.extras?.forEach { putExtra(it) }
+            intent.extras?.forEach { putDomainExtra(it) }
         }
 
         if (intent.isBroadcast!!) {

@@ -26,12 +26,26 @@ import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
 import com.buzbuz.smartautoclicker.domain.edition.EditedScenario
 import com.buzbuz.smartautoclicker.domain.edition.INVALID_EDITED_ITEM_ID
 import com.buzbuz.smartautoclicker.domain.edition.isValidForSave
+import com.buzbuz.smartautoclicker.domain.model.action.toAction
+import com.buzbuz.smartautoclicker.domain.model.action.toEntity
+import com.buzbuz.smartautoclicker.domain.model.condition.toCondition
+import com.buzbuz.smartautoclicker.domain.model.condition.toEntity
+import com.buzbuz.smartautoclicker.domain.model.endcondition.toEndCondition
+import com.buzbuz.smartautoclicker.domain.model.endcondition.toEntity
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.event.toEntity
+import com.buzbuz.smartautoclicker.domain.model.event.toEvent
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.domain.model.scenario.toEntity
+import com.buzbuz.smartautoclicker.domain.model.scenario.toScenario
 import com.buzbuz.smartautoclicker.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow

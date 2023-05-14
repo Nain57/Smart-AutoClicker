@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.EventItem
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
-import com.buzbuz.smartautoclicker.domain.Condition
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 
 import kotlinx.coroutines.Job
 

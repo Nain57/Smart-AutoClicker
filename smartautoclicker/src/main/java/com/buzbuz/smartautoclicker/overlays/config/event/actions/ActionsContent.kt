@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.config.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent

@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.baseui.bindings.setText
 import com.buzbuz.smartautoclicker.databinding.ContentIntentConfigAdvancedBinding
-import com.buzbuz.smartautoclicker.domain.IntentExtra
+import com.buzbuz.smartautoclicker.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.intent.extras.ExtraConfigDialog

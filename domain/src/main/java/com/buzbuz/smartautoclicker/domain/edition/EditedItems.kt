@@ -16,10 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.domain.edition
 
-import com.buzbuz.smartautoclicker.domain.Action
-import com.buzbuz.smartautoclicker.domain.EndCondition
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.Scenario
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 
 /** Represents the scenario currently edited. */
 data class EditedScenario internal constructor(
