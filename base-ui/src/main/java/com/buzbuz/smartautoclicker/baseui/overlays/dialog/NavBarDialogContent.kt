@@ -43,8 +43,9 @@ abstract class NavBarDialogContent(
     override val viewModelStore: ViewModelStore
         get() = modelStore
 
-    override val defaultViewModelProviderFactory: ViewModelProvider.Factory =
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
         ViewModelProvider.AndroidViewModelFactory.getInstance((appContext as Application))
+    }
 
     /** The container for the dialog content. */
     private lateinit var rootContainer: ViewGroup

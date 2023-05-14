@@ -68,9 +68,11 @@ abstract class OverlayController internal constructor(
 
     /** The store for the view models of the [OverlayController] implementations. */
     private val modelStore: ViewModelStore by lazy { ViewModelStore() }
-    override val viewModelStore: ViewModelStore = modelStore
-    override val defaultViewModelProviderFactory: ViewModelProvider.Factory =
+    override val viewModelStore: ViewModelStore
+        get() = modelStore
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
         ViewModelProvider.AndroidViewModelFactory.getInstance((context.applicationContext as Application))
+    }
 
     /**
      * OverlayController for an overlay shown from this OverlayController using [showSubOverlay].
