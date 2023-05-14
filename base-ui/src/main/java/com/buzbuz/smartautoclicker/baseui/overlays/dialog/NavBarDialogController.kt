@@ -40,7 +40,7 @@ import com.google.android.material.navigation.NavigationBarView
 abstract class NavBarDialogController(
     context: Context,
     @StyleRes theme: Int,
-    ) : OverlayDialogController(context, theme) {
+) : OverlayDialogController(context, theme) {
 
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()

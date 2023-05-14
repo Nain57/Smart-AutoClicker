@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.action.intent
 
+import android.content.Context
 import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
@@ -41,7 +42,7 @@ import com.buzbuz.smartautoclicker.overlays.config.action.intent.extras.ExtraCon
 
 import kotlinx.coroutines.launch
 
-class AdvancedIntentContent : NavBarDialogContent() {
+class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
     private val dialogViewModel: IntentViewModel by lazy {

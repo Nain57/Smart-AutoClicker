@@ -54,16 +54,6 @@ abstract class OverlayController internal constructor(
     private val recreateOnRotation: Boolean = false,
 ) : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
 
-    /** The lifecycle of the ui component controlled by this class */
-    private var lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
-
-    /** The store for the view models of the [OverlayController] implementations. */
-    private val modelStore: ViewModelStore by lazy { ViewModelStore() }
-    override fun getViewModelStore(): ViewModelStore = modelStore
-    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory =
-        ViewModelProvider.AndroidViewModelFactory.getInstance((context.applicationContext as Application))
-
     /** The metrics of the device screen. */
     protected val screenMetrics = ScreenMetrics.getInstance(appContext)
     /** The listener upon screen rotation. */
@@ -71,6 +61,16 @@ abstract class OverlayController internal constructor(
 
     /** The context for this overlay. See [newOverlayContext]. */
     protected var context: Context = newOverlayContext(appContext)
+
+    /** The lifecycle of the ui component controlled by this class */
+    private var lifecycleRegistry = LifecycleRegistry(this)
+    override val lifecycle: Lifecycle = lifecycleRegistry
+
+    /** The store for the view models of the [OverlayController] implementations. */
+    private val modelStore: ViewModelStore by lazy { ViewModelStore() }
+    override val viewModelStore: ViewModelStore = modelStore
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory =
+        ViewModelProvider.AndroidViewModelFactory.getInstance((context.applicationContext as Application))
 
     /**
      * OverlayController for an overlay shown from this OverlayController using [showSubOverlay].

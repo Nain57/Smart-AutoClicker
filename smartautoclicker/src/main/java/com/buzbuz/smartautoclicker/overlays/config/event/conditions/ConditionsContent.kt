@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.event.conditions
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -41,7 +42,7 @@ import com.buzbuz.smartautoclicker.ui.databinding.IncludeLoadableListBinding
 
 import kotlinx.coroutines.launch
 
-class ConditionsContent : NavBarDialogContent() {
+class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
     private val dialogViewModel: EventDialogViewModel by lazy {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,17 +30,21 @@ import androidx.lifecycle.ViewModelStoreOwner
 
 import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
 
-abstract class NavBarDialogContent : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
+abstract class NavBarDialogContent(
+    appContext: Context,
+) : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
 
     /** The lifecycle of the ui component controlled by this class */
     private val lifecycleRegistry: LifecycleRegistry by lazy { LifecycleRegistry(this) }
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle = lifecycleRegistry
 
     /** The store for the view models of the [NavBarDialogContent] implementations. */
     private val modelStore: ViewModelStore by lazy { ViewModelStore() }
-    override fun getViewModelStore(): ViewModelStore = modelStore
-    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory =
-        ViewModelProvider.AndroidViewModelFactory.getInstance((context.applicationContext as Application))
+    override val viewModelStore: ViewModelStore
+        get() = modelStore
+
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory =
+        ViewModelProvider.AndroidViewModelFactory.getInstance((appContext as Application))
 
     /** The container for the dialog content. */
     private lateinit var rootContainer: ViewGroup

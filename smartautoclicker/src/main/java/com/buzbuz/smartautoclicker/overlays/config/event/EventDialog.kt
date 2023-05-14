@@ -69,9 +69,9 @@ class EventDialog(
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent {
         return when (navItemId) {
-            R.id.page_event -> EventConfigContent()
-            R.id.page_conditions -> ConditionsContent()
-            R.id.page_actions -> ActionsContent()
+            R.id.page_event -> EventConfigContent(context.applicationContext)
+            R.id.page_conditions -> ConditionsContent(context.applicationContext)
+            R.id.page_actions -> ActionsContent(context.applicationContext)
             else -> throw IllegalArgumentException("Unknown menu id $navItemId")
         }
     }

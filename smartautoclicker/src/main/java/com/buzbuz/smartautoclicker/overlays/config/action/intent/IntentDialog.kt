@@ -79,8 +79,8 @@ class IntentDialog(
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent {
         return when (navItemId) {
-            R.id.page_simple -> SimpleIntentContent()
-            R.id.page_advanced -> AdvancedIntentContent()
+            R.id.page_simple -> SimpleIntentContent(context.applicationContext)
+            R.id.page_advanced -> AdvancedIntentContent(context.applicationContext)
             else -> throw IllegalArgumentException("Unknown menu id $navItemId")
         }
     }

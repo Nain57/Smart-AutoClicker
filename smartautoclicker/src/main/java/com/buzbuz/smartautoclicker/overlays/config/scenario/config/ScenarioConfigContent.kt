@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.scenario.config
 
+import android.content.Context
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
@@ -51,7 +52,7 @@ import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class ScenarioConfigContent : NavBarDialogContent() {
+class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
     private val viewModel: ScenarioConfigViewModel by lazy {

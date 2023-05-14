@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.overlays.config.scenario.debug
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
@@ -29,7 +30,7 @@ import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
 
 import kotlinx.coroutines.launch
 
-class DebugConfigContent : NavBarDialogContent() {
+class DebugConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
     private val viewModel: DebugConfigViewModel by lazy { ViewModelProvider(this).get(DebugConfigViewModel::class.java) }

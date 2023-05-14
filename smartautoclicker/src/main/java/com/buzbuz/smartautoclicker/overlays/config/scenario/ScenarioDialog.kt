@@ -61,9 +61,9 @@ class ScenarioDialog(
     }
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent = when (navItemId) {
-        R.id.page_events -> EventListContent()
-        R.id.page_config -> ScenarioConfigContent()
-        R.id.page_debug -> DebugConfigContent()
+        R.id.page_events -> EventListContent(context.applicationContext)
+        R.id.page_config -> ScenarioConfigContent(context.applicationContext)
+        R.id.page_debug -> DebugConfigContent(context.applicationContext)
         else -> throw IllegalArgumentException("Unknown menu id $navItemId")
     }
 
