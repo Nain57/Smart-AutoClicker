@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.domain
+package com.buzbuz.smartautoclicker.domain.model.endcondition
 
 import androidx.annotation.IntRange
-
-import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EndConditionWithEvent
 
 /**
  * End condition for a scenario.
@@ -36,18 +33,4 @@ data class EndCondition(
     var eventId: Long = 0,
     val eventName: String? = null,
     @IntRange(from = 1) var executions: Int = 1,
-) {
-
-    /** @return the entity equivalent of this end condition. */
-    internal fun toEntity(): EndConditionEntity {
-        if (scenarioId == 0L || eventId == 0L)
-            throw IllegalStateException("Can't create entity, scenario or event is invalid")
-
-        return EndConditionEntity(id, scenarioId, eventId, executions)
-    }
-}
-
-
-/** @return the end condition for this entity. */
-internal fun EndConditionWithEvent.toEndCondition() =
-    EndCondition(endCondition.id, endCondition.scenarioId, event.id, event.name, endCondition.executions)
+)

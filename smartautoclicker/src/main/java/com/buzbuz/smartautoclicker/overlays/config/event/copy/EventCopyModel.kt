@@ -22,8 +22,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.domain.Action
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.overlays.base.utils.getIconRes
 import com.buzbuz.smartautoclicker.domain.edition.EditedEvent

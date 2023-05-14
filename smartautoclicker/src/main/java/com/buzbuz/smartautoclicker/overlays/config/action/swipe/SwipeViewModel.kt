@@ -22,7 +22,7 @@ import android.graphics.Point
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.overlays.base.utils.isValidDuration

@@ -24,7 +24,12 @@ import android.net.Uri
 import com.buzbuz.smartautoclicker.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
+import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.domain.edition.EditedScenario
+import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 
 import kotlinx.coroutines.flow.Flow
 

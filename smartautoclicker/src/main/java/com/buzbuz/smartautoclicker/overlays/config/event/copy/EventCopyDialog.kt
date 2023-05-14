@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.updateState
-import com.buzbuz.smartautoclicker.domain.Event
+import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
 

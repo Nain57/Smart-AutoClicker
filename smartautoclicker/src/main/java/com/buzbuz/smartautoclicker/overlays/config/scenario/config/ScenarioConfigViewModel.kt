@@ -29,9 +29,10 @@ import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MIN
-import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
 import com.buzbuz.smartautoclicker.domain.edition.EditionRepository
+import com.buzbuz.smartautoclicker.domain.model.AND
+import com.buzbuz.smartautoclicker.domain.model.OR
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull

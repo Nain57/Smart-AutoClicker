@@ -24,6 +24,9 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.domain.model.EXACT
+import com.buzbuz.smartautoclicker.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

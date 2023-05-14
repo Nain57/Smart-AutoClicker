@@ -26,7 +26,7 @@ import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.bindings.setError
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.ui.databinding.IncludeInputFieldTextBinding
 
 import com.google.android.material.textfield.TextInputLayout

@@ -16,11 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.engine
 
-import com.buzbuz.smartautoclicker.domain.AND
-import com.buzbuz.smartautoclicker.domain.OR
-import com.buzbuz.smartautoclicker.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.EndCondition
+import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.domain.model.AND
+import com.buzbuz.smartautoclicker.domain.model.OR
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
 
 /**
  * Verifies if the scenario has reached its end conditions.

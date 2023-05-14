@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.domain
+package com.buzbuz.smartautoclicker.domain.model.condition
 
 import android.graphics.Bitmap
 import android.graphics.Rect
-import androidx.annotation.IntDef
 
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.domain.model.DetectionType
 
 /**
  * Condition for a Event.
@@ -46,21 +45,6 @@ data class Condition(
     val bitmap: Bitmap? = null,
 ) {
 
-    /** @return the entity equivalent of this condition. */
-    internal fun toEntity() = ConditionEntity(
-        id,
-        eventId,
-        name,
-        path!!,
-        area.left,
-        area.top,
-        area.right,
-        area.bottom,
-        threshold,
-        detectionType,
-        shouldBeDetected,
-    )
-
     /** Cleanup all ids contained in this condition. Ideal for copying. */
     internal fun cleanUpIds() {
         id = 0
@@ -76,16 +60,3 @@ data class Condition(
     /** Tells if this condition is complete and valid to be saved. */
     fun isComplete(): Boolean = (path != null || bitmap != null)
 }
-
-/** @return the condition for this entity. */
-internal fun ConditionEntity.toCondition(): Condition =
-    Condition(id, eventId, name, path, Rect(areaLeft, areaTop, areaRight, areaBottom), threshold, detectionType, shouldBeDetected)
-
-/** Defines the detection type to apply to a condition. */
-@IntDef(EXACT, WHOLE_SCREEN)
-@Retention(AnnotationRetention.SOURCE)
-annotation class DetectionType
-/** The condition must be detected at the exact same position. */
-const val EXACT = 1
-/** The condition can be detected anywhere on the screen. */
-const val WHOLE_SCREEN = 2

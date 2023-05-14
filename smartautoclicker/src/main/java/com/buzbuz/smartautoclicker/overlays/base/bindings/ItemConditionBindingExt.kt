@@ -23,8 +23,8 @@ import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemConditionBinding
-import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.domain.EXACT
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.domain.model.EXACT
 import com.buzbuz.smartautoclicker.overlays.base.utils.setIconTint
 
 import kotlinx.coroutines.Job

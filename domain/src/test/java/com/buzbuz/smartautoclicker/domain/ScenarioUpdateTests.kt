@@ -26,7 +26,9 @@ import com.buzbuz.smartautoclicker.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.edition.*
+import com.buzbuz.smartautoclicker.domain.model.scenario.toScenario
 import com.buzbuz.smartautoclicker.domain.utils.TestsData
 import com.buzbuz.smartautoclicker.domain.utils.anyNotNull
 import com.buzbuz.smartautoclicker.domain.utils.assertSameEndConditionNoIdCheck

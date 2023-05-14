@@ -21,14 +21,14 @@ import android.media.Image
 
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
-import com.buzbuz.smartautoclicker.domain.AND
-import com.buzbuz.smartautoclicker.domain.Condition
-import com.buzbuz.smartautoclicker.domain.ConditionOperator
-import com.buzbuz.smartautoclicker.domain.EndCondition
-import com.buzbuz.smartautoclicker.domain.Event
-import com.buzbuz.smartautoclicker.domain.EXACT
-import com.buzbuz.smartautoclicker.domain.OR
-import com.buzbuz.smartautoclicker.domain.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.domain.model.AND
+import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.domain.model.EXACT
+import com.buzbuz.smartautoclicker.domain.model.OR
+import com.buzbuz.smartautoclicker.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.engine.debugging.DebugEngine
 
 import kotlinx.coroutines.yield

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.domain
+package com.buzbuz.smartautoclicker.domain.model.action
 
 import android.content.Intent
-import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
-import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraType
 
 /**
  * Extras for a Intent action.
@@ -35,25 +33,6 @@ data class IntentExtra<T>(
     var key: String?,
     var value: T?,
 ) {
-
-    /** @return the entity equivalent of this intent extra. */
-    internal fun toEntity(): IntentExtraEntity {
-        if (key == null || value == null)
-            throw IllegalStateException("Can't create entity, action is invalid")
-
-        val type = when (value) {
-            is Boolean -> IntentExtraType.BOOLEAN
-            is Byte -> IntentExtraType.BYTE
-            is Char -> IntentExtraType.CHAR
-            is Double -> IntentExtraType.DOUBLE
-            is Int -> IntentExtraType.INTEGER
-            is Float -> IntentExtraType.FLOAT
-            is Short -> IntentExtraType.SHORT
-            is String -> IntentExtraType.STRING
-            else -> throw IllegalArgumentException("Unsupported value type")
-        }
-        return IntentExtraEntity(id, actionId, type, key!!, value!!.toString())
-    }
 
     /** Cleanup all ids contained in this intent extra. Ideal for copying. */
     internal fun cleanUpIds() {
@@ -80,7 +59,7 @@ data class IntentExtra<T>(
  * Add the provided intent extra into the Android intent.
  * @param extra the extra to be added.
  */
-fun Intent.putExtra(extra: IntentExtra<out Any>): Intent {
+fun Intent.putDomainExtra(extra: IntentExtra<out Any>): Intent {
     when (val value = extra.value) {
         is Byte -> putExtra(extra.key, value)
         is Boolean -> putExtra(extra.key, value)
@@ -93,16 +72,4 @@ fun Intent.putExtra(extra: IntentExtra<out Any>): Intent {
         else -> throw IllegalArgumentException("Unsupported value type")
     }
     return this
-}
-
-/** @return the intent extra for this entity. */
-internal fun IntentExtraEntity.toIntentExtra() = when (type) {
-    IntentExtraType.BYTE -> IntentExtra(id, actionId, key, value.toByte())
-    IntentExtraType.BOOLEAN -> IntentExtra(id, actionId, key, value.toBooleanStrict())
-    IntentExtraType.CHAR -> IntentExtra(id, actionId, key, value[0])
-    IntentExtraType.DOUBLE -> IntentExtra(id, actionId, key, value.toDouble())
-    IntentExtraType.INTEGER -> IntentExtra(id, actionId, key, value.toInt())
-    IntentExtraType.FLOAT -> IntentExtra(id, actionId, key, value.toFloat())
-    IntentExtraType.SHORT -> IntentExtra(id, actionId, key, value.toShort())
-    IntentExtraType.STRING -> IntentExtra(id, actionId, key, value)
 }

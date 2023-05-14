@@ -24,7 +24,7 @@ import androidx.annotation.DrawableRes
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemActionBinding
-import com.buzbuz.smartautoclicker.domain.Action
+import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.overlays.base.utils.formatDuration
 
 fun ItemActionBinding.bind(

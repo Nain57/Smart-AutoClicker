@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.domain
+package com.buzbuz.smartautoclicker.domain.model.event
 
 import android.os.Build
 
@@ -24,9 +24,7 @@ import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.domain.utils.TestsData
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -43,52 +41,6 @@ class EventTests {
             TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
             TestsData.getNewEvent(scenarioId = TestsData.SCENARIO_ID, priority = 0).toEntity()
         )
-    }
-
-    @Test
-    fun toCompleteEntity() {
-        val completeEventEntity = TestsData.getNewEvent(
-            actions = mutableListOf(
-                TestsData.getNewClick(eventId = TestsData.EVENT_ID),
-                TestsData.getNewSwipe(eventId = TestsData.EVENT_ID),
-                TestsData.getNewPause(eventId = TestsData.EVENT_ID)
-            ),
-            conditions = mutableListOf(TestsData.getNewCondition(eventId = TestsData.EVENT_ID)),
-            priority = 0,
-            scenarioId = TestsData.SCENARIO_ID,
-        ).toCompleteEntity()
-
-        assertNotNull("Complete event is null !", completeEventEntity)
-        assertEquals(
-            "Event is not the same",
-            TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            completeEventEntity!!.event,
-        )
-        assertEquals(
-            "Click is not the same",
-            TestsData.getNewClickEntity(eventId = TestsData.EVENT_ID, priority = 0),
-            completeEventEntity.actions[0]
-        )
-        assertEquals(
-            "Swipe is not the same",
-            TestsData.getNewSwipeEntity(eventId = TestsData.EVENT_ID, priority = 0),
-            completeEventEntity.actions[1]
-        )
-        assertEquals(
-            "Pause is not the same",
-            TestsData.getNewPauseEntity(eventId = TestsData.EVENT_ID, priority = 0),
-            completeEventEntity.actions[2]
-        )
-        assertEquals(
-            "Condition is not the same",
-            TestsData.getNewConditionEntity(eventId = TestsData.EVENT_ID),
-            completeEventEntity.conditions[0]
-        )
-    }
-
-    @Test
-    fun toCompleteEntity_incomplete() {
-        assertNull(TestsData.getNewEvent(scenarioId = TestsData.SCENARIO_ID, priority = 0).toCompleteEntity())
     }
 
     @Test
