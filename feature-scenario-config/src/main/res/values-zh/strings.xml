@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_action_type">动作类型</string>
+    <string name="dialog_overlay_title_application_selection">选择一个应用程序</string>
+    <string name="dialog_overlay_title_click">单击</string>
+    <string name="dialog_overlay_title_condition_config">条件</string>
+    <string name="dialog_overlay_title_copy_from">复制自</string>
+    <string name="dialog_overlay_title_end_condition_config">终止条件</string>
+    <string name="dialog_overlay_title_event_config">场景</string>
+    <string name="dialog_overlay_title_event_selection">选择一个场景</string>
+    <string name="dialog_overlay_title_intent">意图</string>
+    <string name="dropdown_label_intent_extra_value_type">参数值类型</string>
+    <string name="dialog_overlay_title_pause">等待</string>
+    <string name="dialog_overlay_title_scenario_config">场景</string>
+    <string name="dialog_overlay_title_swipe">滑动</string>
+    <string name="dialog_overlay_title_toggle_event">场景状态</string>
+    <string name="dialog_overlay_title_warning">警告</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_advanced">高级模式</string>
+    <string name="menu_item_title_cancel">取消</string>
+    <string name="menu_item_title_search">搜索</string>
+    <string name="menu_item_title_simple">简易模式</string>
+    <string name="menu_item_title_events">场景</string>
+    <string name="menu_item_title_config">配置</string>
+    <string name="menu_item_title_debug">调试</string>
+    <string name="menu_item_title_conditions">条件</string>
+    <string name="menu_item_title_actions">动作</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_desc_click">单击屏幕某处</string>
+    <string name="item_desc_click_details">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
+    <string name="item_desc_click_position_on_condition">识别并点击已保存的图片</string>
+    <string name="item_desc_click_on_position">点击 (%1$d, %2$d)</string>
+    <string name="item_desc_intent">调用其他的应用程序</string>
+    <string name="item_desc_intent_action">发送广播： %1$s</string>
+    <string name="item_desc_intent_action_component">使用附加Action： %1$s 启动 %2$s 活动</string>
+
+    <string name="item_desc_pause">延迟一段时间执行</string>
+    <string name="item_desc_pause_details">延迟 %1$s</string>
+    <string name="item_desc_swipe">从A点滑动到B点</string>
+    <string name="item_desc_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
+    <string name="item_desc_swipe_positions">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
+    <string name="item_desc_toggle_event">启用或禁用某场景</string>
+    <string name="item_desc_toggle_event_details">将场景状态设置为： %1$s</string>
+    <string name="item_error_action_invalid_generic">"此操作无效 "</string>
+    <string name="item_error_action_invalid_toggle_event_target">"未找到目标事件 "</string>
+    <string name="item_title_click">单击</string>
+    <string name="item_title_debug_generate_report">生成调试报告</string>
+    <string name="item_title_debug_show_view">显示调试窗口</string>
+    <string name="item_title_intent">意图</string>
+    <string name="item_title_pause">等待</string>
+    <string name="item_title_swipe">滑动</string>
+    <string name="item_title_toggle_event">修改场景状态</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_empty_actions">未创建动作！</string>
+    <string name="message_empty_conditions">未创建条件！</string>
+    <string name="message_empty_copy">Nothing to copy</string>
+    <string name="message_empty_end_condition_config_event_none_in_scenario">没有在脚本中创建场景</string>
+    <string name="message_empty_end_condition_config_event_no_selection">没有场景被选择</string>
+    <string name="message_empty_event_list">未创建场景！</string>
+
+    <!--
+      - Secondary empty list messages.
+      - Views handles any length here, you can use more verbosity than the regular empty text.
+      -->
+    <string name="message_empty_secondary_end_condition_no_events">您需要至少创建一个场景才能使用结束条件</string>
+    <string name="message_empty_secondary_event_list">一个场景包含一组在屏幕上检测到特定条件时执行的动作。\n您需要在您的脚本中至少有一个场景来执行它。</string>
+    <string name="message_empty_secondary_condition_list">按照指定条件在屏幕每一帧的截图上进行搜索。\n您的场景中需要至少存在一个条件。</string>
+    <string name="message_empty_secondary_action_list">当条件满足时，创建的动作将被执行（点击、滑动……）\n您的场景中需要至少存在一个动作。</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_condition_threshold">%1$d%%</string>
+    <string name="message_event_copy_with_toggle_action_from_another_scenario">" 此事件有一个或多个切换事件操作引用来自另一场景的事件。 在保存场景之前，您必须更新他们的目标事件。"</string>
+    <string name="message_event_delete_associated_end_condition">这个场景存在一个或多个结束条件被引用。 删除这个场景将同时删除相关的结束条件\n确认删除？</string>
+    <string name="message_event_delete_associated_action">这个场景存在一个或多个动作被引用。 删除这个场景也会删除相关的动作。\n确认删除？</string>
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_configure_single_click">触摸要点击的位置。</string>
+    <string name="toast_configure_swipe_from">请点击滑动开始的位置。</string>
+    <string name="toast_configure_swipe_to">请点击滑动结束的位置。</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_condition_detection_details">检测细节</string>
+    <string name="section_title_condition_threshold">容差</string>
+    <string name="section_title_detection_quality_title">检测质量</string>
+    <string name="section_title_end_condition">终止条件</string>
+    <string name="section_title_intent_extras_value">参数值</string>
+    <string name="section_title_start_application">启动应用程序</string>
+
+    <!--
+      - List header.
+      - Displayed on one line.
+      -->
+    <string name="list_header_copy_action_this">此场景下的动作</string>
+    <string name="list_header_copy_action_all">所有场景下的动作</string>
+    <string name="list_header_copy_conditions_this">此场景下的条件</string>
+    <string name="list_header_copy_conditions_all">所有场景下的条件</string>
+    <string name="list_header_copy_event_this">此脚本中的场景</string>
+    <string name="list_header_copy_event_all">所有脚本中的场景</string>
+
+    <!--
+      - SearchView hint
+      - Displayed on one line.
+      -->
+    <string name="search_view_hint_action_copy">通过动作名搜索</string>
+    <string name="search_view_hint_event_copy">通过场景名搜索</string>
+    <string name="search_view_hint_condition_copy">通过条件名搜索</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_click_position_select">选择一个坐标</string>
+    <string name="button_text_create_scenario">创建脚本</string>
+    <string name="button_text_intent_extra_type_select">选择一个参数类型</string>
+    <string name="button_text_quality_speed">速度</string>
+    <string name="button_text_quality_precision">精准度</string>
+    <string name="button_text_swipe_positions_select">选择滑动起止坐标</string>
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_name">名称</string>
+    <string name="input_field_label_click_press_duration">单击持续时间 (ms)</string>
+    <string name="input_field_label_execution_count">执行次数</string>
+    <string name="input_field_label_intent_extra_key">参数名</string>
+    <string name="input_field_label_pause_duration">延迟 (ms)</string>
+    <string name="input_field_label_scenario_name">脚本名</string>
+    <string name="input_field_label_swipe_duration">滑动持续时间 (ms)</string>
+    <string name="input_field_label_anti_detection">反作弊</string>
+    <string name="input_field_label_event_state">状态</string>
+    <string name="input_field_error_required">不能为空</string>
+    <string name="input_field_toggle_event_type">场景新状态</string>
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
+    <!-- Dropdown field for selecting anti bot state -->
+    <string name="dropdown_item_title_anti_detection_enabled">启用</string>
+    <string name="dropdown_item_title_anti_detection_disabled">禁用</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">在单击、滑动和等待中，增加一个很小的随机值，使点击、滑动的坐标以及延迟时间有一定的差异。</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">不启用防作弊，按照设置的值执行</string>
+
+    <!-- Dropdown field for selecting the event state -->
+    <string name="dropdown_item_title_event_state_enabled">启用</string>
+    <string name="dropdown_item_title_event_state_disabled">禁用</string>
+    <string name="dropdown_helper_text_event_state_enabled">运行该脚本时，这个场景将被启用</string>
+    <string name="dropdown_helper_text_event_state_disabled">运行该脚本时，需要其他动作执行状态变更才会被启用（不明白作者为什么要这种表述）</string>
+
+    <!-- Dropdown field for selecting the toggle event type -->
+    <string name="dropdown_item_title_toggle_event_state_enable">启用</string>
+    <string name="dropdown_item_title_toggle_event_state_disable">禁用</string>
+    <string name="dropdown_item_title_toggle_event_state_toggle">切换</string>
+    <string name="dropdown_helper_text_toggle_event_state_enable">该场景将在脚本中被启用</string>
+    <string name="dropdown_helper_text_toggle_event_state_disable">该场景将在脚本中被禁用</string>
+    <string name="dropdown_helper_text_toggle_event_state_toggle">如果脚本在该场景中是启用状态，将被切换为禁用；反之亦反之（doge）</string>
+
+
+    <!-- Dropdown field for selecting the conditions operator -->
+    <string name="dropdown_label_condition_operator">需匹配的图像</string>
+    <string name="dropdown_item_title_condition_or">单一</string>
+    <string name="dropdown_item_title_condition_and">所有</string>
+    <string name="dropdown_helper_text_condition_or">只要满足其中任意一个条件，就能够触发动作</string>
+    <string name="dropdown_helper_text_condition_and">需要满足所有条件，才能触发动作</string>
+
+    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
+    <string name="dropdown_helper_text_end_condition_or">只要满足其中任意一个条件，就停止脚本</string>
+    <string name="dropdown_helper_text_end_condition_and">需要满足所有条件，才能停止脚本</string>
+
+    <!-- Dropdown field for selecting the condition detection type. -->
+    <string name="dropdown_label_condition_detection_type">检测类型</string>
+    <string name="dropdown_item_title_detection_type_exact">精确位置</string>
+    <string name="dropdown_item_title_detection_type_screen">全屏幕</string>
+    <string name="dropdown_helper_text_detection_type_exact">在截图选择的位置进行条件检测匹配</string>
+    <string name="dropdown_helper_text_detection_type_screen">在全屏幕进行条件检测匹配</string>
+
+    <!-- Dropdown field for selecting the condition visibility. -->
+    <string name="dropdown_label_condition_visibility">存在与否</string>
+    <string name="dropdown_item_title_condition_visibility_present">存在</string>
+    <string name="dropdown_item_title_condition_visibility_absent">不存在</string>
+    <string name="dropdown_helper_text_condition_visibility_present">这个细节存在时，条件生效</string>
+    <string name="dropdown_helper_text_condition_visibility_absent">这个细节不存在时，条件生效</string>
+
+    <!-- Dropdown field for selecting the click position type -->
+    <string name="dropdown_label_click_position_type">单击位置</string>
+    <string name="dropdown_item_title_click_position_type_on_condition">匹配到的位置</string>
+    <string name="dropdown_item_title_click_position_type_on_position">选择一个坐标</string>
+    <string name="dropdown_helper_text_click_position_type_on_condition">点击条件满足的对应位置坐标</string>
+    <string name="dropdown_helper_text_click_position_type_on_position">点击自定义坐标位置</string>
+
+    <!-- Dropdown field for selecting the intent sending type. -->
+    <string name="dropdown_label_intent_sending_type">类型</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_drag_and_drop">Drag and drop to reorder the elements</string>
+    <string name="content_desc_event_state">The state of the event</string>
+    <string name="content_desc_conditions_count">The number of conditions in this event</string>
+    <string name="content_desc_actions_count">The number of actions in this event</string>
+    <string name="content_desc_image_condition">要被检测的图像</string>
+    <string name="content_desc_play_pause_scenario">开始或者停止该脚本</string>
+    <string name="content_desc_stop_clicker">停止自动点击器</string>
+    <string name="content_desc_open_event_list">打开脚本列表</string>
+    <string name="content_desc_move_menu">移动悬浮窗菜单</string>
+    <string name="content_desc_confirm">确认</string>
+    <string name="content_desc_go_back">返回到对话框</string>
+    <string name="content_desc_action_icon">这个图标标注动作类型</string>
+    <string name="content_desc_application_icon">应用图标</string>
+</resources>

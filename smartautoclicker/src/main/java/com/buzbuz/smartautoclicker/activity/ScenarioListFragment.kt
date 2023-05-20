@@ -48,8 +48,8 @@ import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment.Companio
 import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
-import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable

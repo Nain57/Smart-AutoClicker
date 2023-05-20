@@ -33,7 +33,6 @@
     <string name="dialog_title_delete_scenario">删除脚本</string>
     <string name="dialog_title_import_backup">导入备份</string>
     <string name="dialog_title_permissions">需要以下权限</string>
-    <string name="dialog_title_warning">警告</string>
 
     <!--
       - Titles for the dialogs displayed as overlay.

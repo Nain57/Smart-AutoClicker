@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_action_type">Type d\'action</string>
+    <string name="dialog_overlay_title_application_selection">Choisir une application</string>
+    <string name="dialog_overlay_title_click">Clic</string>
+    <string name="dialog_overlay_title_condition_config">Condition</string>
+    <string name="dialog_overlay_title_copy_from">Copier depuis</string>
+    <string name="dialog_overlay_title_end_condition_config">Condition de fin</string>
+    <string name="dialog_overlay_title_event_config">Évènement</string>
+    <string name="dialog_overlay_title_event_selection">Choisir un évènement</string>
+    <string name="dialog_overlay_title_intent">Intent</string>
+    <string name="dropdown_label_intent_extra_value_type">Type de la valeur</string>
+    <string name="dialog_overlay_title_pause">Pause</string>
+    <string name="dialog_overlay_title_scenario_config">Scénario</string>
+    <string name="dialog_overlay_title_swipe">Swipe</string>
+    <string name="dialog_overlay_title_toggle_event">État d\'évènement</string>
+    <string name="dialog_overlay_title_warning">Avertissement</string>
+
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_cancel">Annuler</string>
+    <string name="menu_item_title_search">Rechercher</string>
+    <string name="menu_item_title_simple">Simple</string>
+    <string name="menu_item_title_advanced">Avancé</string>
+    <string name="menu_item_title_events">Évènements</string>
+    <string name="menu_item_title_config">Configuration</string>
+    <string name="menu_item_title_debug">Debug</string>
+    <string name="menu_item_title_actions">Actions</string>
+    <string name="menu_item_title_conditions">Conditions</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_desc_click">Cliquer sur l\'écran</string>
+    <string name="item_desc_click_details">Pendant %1$s à [%2$d, %3$d]</string>
+    <string name="item_desc_click_position_on_condition">Sur la condition</string>
+    <string name="item_desc_click_on_position">Clic simple sur %1$d, %2$d</string>
+    <string name="item_desc_intent">Intéragir avec une autre application</string>
+    <string name="item_desc_intent_action">Envoyer %1$s</string>
+    <string name="item_desc_intent_action_component">Envoyer %1$s à %2$s</string>
+    <string name="item_desc_pause">Faire une pause pendant la détection</string>
+    <string name="item_desc_pause_details">Pendant %1$s</string>
+    <string name="item_desc_swipe">Swiper d\'une position à une autre</string>
+    <string name="item_desc_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
+    <string name="item_desc_swipe_positions">Swiper de %1$d, %2$d à %3$d, %4$d</string>
+    <string name="item_desc_toggle_event">Changer l\'état d\'activation d\'un évènement</string>
+    <string name="item_desc_toggle_event_details">Changer l\'état avec le type %1$s</string>
+    <string name="item_error_action_invalid_generic">Cette action est invalide</string>
+    <string name="item_error_action_invalid_toggle_event_target">Évènement cible non trouvé</string>
+    <string name="item_title_click">Clic</string>
+    <string name="item_title_debug_generate_report">Générer un rapport</string>
+    <string name="item_title_debug_show_view">Overlay de débug</string>
+    <string name="item_title_intent">Intent</string>
+    <string name="item_title_pause">Pause</string>
+    <string name="item_title_swipe">Swipe</string>
+    <string name="item_title_toggle_event">État d\'évènement</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_empty_actions">Aucune action !</string>
+    <string name="message_empty_conditions">Aucune condition !</string>
+    <string name="message_empty_copy">Rien à copier</string>
+    <string name="message_empty_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
+    <string name="message_empty_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
+    <string name="message_empty_event_list">Aucun évènement !</string>
+
+    <!--
+      - Secondary empty list messages.
+      - Views handles any length here, you can use more verbosity than the regular empty text.
+      -->
+    <string name="message_empty_secondary_end_condition_no_events">Vous avez besoin d\'au moins un évènement pour créer une condition de fin pour votre scénario</string>
+    <string name="message_empty_secondary_event_list">Un évènement est un ensemble d\'actions exécutées lorsque qu\'une condition spécifique est détectée sur l\'écran.\nVous avez besoin d\'au moins un évènement dans votre scénario pour l\'exécuter.</string>
+    <string name="message_empty_secondary_condition_list">Une condition est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
+    <string name="message_empty_secondary_action_list">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.\nVous avez besoin d\'au moins une action dans votre évènement.</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_condition_threshold">%1$d%%</string>
+    <string name="message_event_copy_with_toggle_action_from_another_scenario">Cet évènement possède une ou plusieures actions de changement d\'état référenceant un évènement d\'un autre scénario.\nVous devrez mettre à jour ces actions avant de pouvoir sauvegarder le scénario.</string>
+    <string name="message_event_delete_associated_end_condition">Cet évènement est référencé par une ou plusieures conditions de fin. Le supprimer supprimera aussi les conditions de fin associées.\nÊtes vous sûr ?</string>
+    <string name="message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
+
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_configure_single_click">Appuyez sur la position à cliquer.</string>
+    <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>
+    <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée.</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_condition_detection_details">Détails de la détection</string>
+    <string name="section_title_condition_threshold">Différence tolérée</string>
+    <string name="section_title_detection_quality_title">Qualité de détection</string>
+    <string name="section_title_end_condition">Conditions de fin</string>
+    <string name="section_title_intent_extras_value">Valeur</string>
+    <string name="section_title_start_application">Lancer une application</string>
+
+    <!--
+      - List header.
+      - Displayed on one line.
+      -->
+    <string name="list_header_copy_event_this">Évènements de ce scenario</string>
+    <string name="list_header_copy_event_all">Évènements de tous les scenarios</string>
+    <string name="list_header_copy_conditions_this">Condition de cet évènement</string>
+    <string name="list_header_copy_conditions_all">Conditions de tous les évènements</string>
+    <string name="list_header_copy_action_this">Actions de cet évènement</string>
+    <string name="list_header_copy_action_all">Actions de tous les évènements</string>
+
+    <!--
+      - SearchView hint
+      - Displayed on one line.
+      -->
+    <string name="search_view_hint_event_copy">Chercher par nom d\'évènement</string>
+    <string name="search_view_hint_action_copy">Chercher par nom d\'action</string>
+    <string name="search_view_hint_condition_copy">Chercher par nom de condition</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">Créer un scénario</string>
+    <string name="button_text_click_position_select">Choisir une position</string>
+    <string name="button_text_intent_extra_type_select">Choisir un type</string>
+    <string name="button_text_quality_speed">Vitesse</string>
+    <string name="button_text_quality_precision">Précision</string>
+    <string name="button_text_swipe_positions_select">Choisir les positions</string>
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_name">Nom</string>
+    <string name="input_field_label_click_press_duration">Durée d\'appui (ms)</string>
+    <string name="input_field_label_execution_count">Exécutions</string>
+    <string name="input_field_label_intent_extra_key">Clé</string>
+    <string name="input_field_label_pause_duration">Durée de la pause (ms)</string>
+    <string name="input_field_label_scenario_name">Nom du scénario</string>
+    <string name="input_field_label_swipe_duration">Durée du swipe (ms)</string>
+    <string name="input_field_label_anti_detection">Anti détection</string>
+    <string name="input_field_label_event_state">État</string>
+    <string name="input_field_error_required">Requis</string>
+    <string name="input_field_toggle_event_type">Nouvel état d\'évènement</string>
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
+    <!-- Dropdown field for selecting anti bot state -->
+    <string name="dropdown_item_title_anti_detection_enabled">Activé</string>
+    <string name="dropdown_item_title_anti_detection_disabled">Désactivé</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">Ajoute une petite part de hasard dans les positions et durées des clics, swipes et pauses</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">Exécute les actions comme elles sont déclarées</string>
+
+    <!-- Dropdown field for selecting the event state -->
+    <string name="dropdown_item_title_event_state_enabled">Activé</string>
+    <string name="dropdown_item_title_event_state_disabled">Désactivé</string>
+    <string name="dropdown_helper_text_event_state_enabled">Cet évènement sera interprété normalement quand le scénario sera joué</string>
+    <string name="dropdown_helper_text_event_state_disabled">Cet évènement doit être activé par une action pour être interprété quand le scénario sera joué</string>
+
+    <!-- Dropdown field for selecting the toggle event type -->
+    <string name="dropdown_item_title_toggle_event_state_enable">Activé</string>
+    <string name="dropdown_item_title_toggle_event_state_disable">Désactivé</string>
+    <string name="dropdown_item_title_toggle_event_state_toggle">Alterner l\'état</string>
+    <string name="dropdown_helper_text_toggle_event_state_enable">L\'évènement sera interprété lorsque le scenario sera joué</string>
+    <string name="dropdown_helper_text_toggle_event_state_disable">L\'évènement ne sera plus interprété lorsque le scénario sera joué</string>
+    <string name="dropdown_helper_text_toggle_event_state_toggle">Lorsque le scénario sera joué, active l\'évenement s\'il était désactivé, le désactive s\'il était activé</string>
+
+    <!-- Dropdown field for selecting the conditions operator -->
+    <string name="dropdown_label_condition_operator">Conditions</string>
+    <string name="dropdown_item_title_condition_or">Une</string>
+    <string name="dropdown_item_title_condition_and">Toutes</string>
+    <string name="dropdown_helper_text_condition_or">Une seule des conditions doit être remplie pour déclencher les actions</string>
+    <string name="dropdown_helper_text_condition_and">Toutes les conditions doivent être remplies pour déclencher les actions</string>
+
+    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
+    <string name="dropdown_helper_text_end_condition_or">Une seule des conditions doit être remplie pour arrêter le scenario</string>
+    <string name="dropdown_helper_text_end_condition_and">Toutes les conditions doivent être remplies pour arrêter le scenario</string>
+
+    <!-- Dropdown field for selecting the condition detection type. -->
+    <string name="dropdown_label_condition_detection_type">Type de détection</string>
+    <string name="dropdown_item_title_detection_type_exact">Exacte</string>
+    <string name="dropdown_item_title_detection_type_screen">Tout l\'écran</string>
+    <string name="dropdown_helper_text_detection_type_exact">La condition est cherchée à sa position de capture.</string>
+    <string name="dropdown_helper_text_detection_type_screen">La condition est cherchée sur tout l\'écran</string>
+
+    <!-- Dropdown field for selecting the condition visibility. -->
+    <string name="dropdown_label_condition_visibility">Visibilité</string>
+    <string name="dropdown_item_title_condition_visibility_present">Présente</string>
+    <string name="dropdown_item_title_condition_visibility_absent">Absente</string>
+    <string name="dropdown_helper_text_condition_visibility_present">La condition doit être détectée</string>
+    <string name="dropdown_helper_text_condition_visibility_absent">La condition ne doit pas être détectée</string>
+
+    <!-- Dropdown field for selecting the click position type -->
+    <string name="dropdown_label_click_position_type">Cliquer sur</string>
+    <string name="dropdown_item_title_click_position_type_on_condition">Condition</string>
+    <string name="dropdown_item_title_click_position_type_on_position">Position selectionné</string>
+    <string name="dropdown_helper_text_click_position_type_on_condition">Cliquer sur la condition détectée</string>
+    <string name="dropdown_helper_text_click_position_type_on_position">Cliquer sur la position selectionnée</string>
+
+    <!-- Dropdown field for selecting the intent sending type. -->
+    <string name="dropdown_label_intent_sending_type">Type</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_drag_and_drop">Drag and drop pour changer l\'ordre des éléments</string>
+    <string name="content_desc_event_state">L\'état de l\'évènement</string>
+    <string name="content_desc_conditions_count">Le nombre de conditions dans cet évènement</string>
+    <string name="content_desc_actions_count">Le nombre d\'actions dans cet évènement</string>
+    <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
+    <string name="content_desc_play_pause_scenario">Jouer ou arrêter le scenario</string>
+    <string name="content_desc_stop_clicker">Quitter Smart AutoClicker</string>
+    <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
+    <string name="content_desc_move_menu">Déplacer le menu flottant</string>
+    <string name="content_desc_confirm">Confirmer</string>
+    <string name="content_desc_go_back">Retour au dialog</string>
+    <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
+    <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
+</resources>

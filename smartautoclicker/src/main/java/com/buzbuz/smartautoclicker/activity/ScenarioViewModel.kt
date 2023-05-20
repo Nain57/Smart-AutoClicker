@@ -38,10 +38,13 @@ import com.buzbuz.smartautoclicker.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.domain.model.DATABASE_ID_INSERTION
+import com.buzbuz.smartautoclicker.domain.model.Identifier
+import com.buzbuz.smartautoclicker.domain.model.OR
 import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_DISABLED_ITEM_INT
-import com.buzbuz.smartautoclicker.overlays.base.utils.ALPHA_ENABLED_ITEM_INT
-import com.buzbuz.smartautoclicker.overlays.base.utils.newDefaultScenario
+import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM_INT
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM_INT
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.combine
@@ -138,13 +141,13 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
             else ScenarioListItem.EmptyScenarioItem(scenario)
         }
 
-        val events = repository.getCompleteEventList(scenario.id).map { event ->
+        val events = repository.getCompleteEventList(scenario.id.databaseId).map { event ->
             EventItem(
-                id = event.id,
+                id = event.id.databaseId,
                 eventName = event.name,
-                actionsCount = event.actions?.size ?: 0,
-                conditionsCount = event.conditions?.size ?: 0,
-                firstCondition = event.conditions?.first(),
+                actionsCount = event.actions.size,
+                conditionsCount = event.conditions.size,
+                firstCondition = event.conditions.first(),
             )
         }
 
@@ -152,7 +155,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
             scenario = scenario,
             eventsItems = events,
             exportMode = uiState == Type.EXPORT,
-            checkedForExport = backupSelection.contains(scenario.id),
+            checkedForExport = backupSelection.contains(scenario.id.databaseId),
         )
     }
 
@@ -253,7 +256,14 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      */
     fun createScenario(context: Context, name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addScenario(newDefaultScenario(context, name))
+            repository.addScenario(
+                Scenario(
+                    id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0),
+                    name = name,
+                    detectionQuality = context.resources.getInteger(R.integer.default_detection_quality),
+                    endConditionOperator = OR,
+                )
+            )
         }
     }
 
@@ -285,8 +295,8 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
         if (scenario.eventCount == 0) return
 
         val newSelection = selectedForBackup.value.toMutableSet().apply {
-            if (contains(scenario.id)) remove(scenario.id)
-            else add(scenario.id)
+            if (contains(scenario.id.databaseId)) remove(scenario.id.databaseId)
+            else add(scenario.id.databaseId)
         }
         selectedForBackup.value = newSelection
     }
@@ -300,7 +310,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
                 selectedForBackup.value = state.listContent
                     .mapNotNull { item ->
                         if (item !is ScenarioListItem.ScenarioItem) null
-                        else item.scenario.id
+                        else item.scenario.id.databaseId
                     }.toSet()
             }
         }

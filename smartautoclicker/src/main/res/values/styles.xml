@@ -37,7 +37,6 @@
         <item name="android:textColor">@color/textTitle</item>
     </style>
 
-
     <!-- Base overlays theme. -->
     <style name="AppTheme.Overlay" />
 
@@ -69,44 +68,6 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:tint">@color/overlayMenuButtons</item>
         <item name="android:scaleType">fitCenter</item>
-    </style>
-
-    <!-- Base theme for the selector overlays. -->
-    <style name="AppTheme.Overlay.Selector">
-        <item name="colorBackground">@color/overlayClickSelectorBackground</item>
-    </style>
-    <!-- Style for the click/swipe position(s) overlay selector view. -->
-    <style name="AppTheme.Overlay.Selector.Click">
-        <item name="radius">@dimen/overlay_click_selector_radius</item>
-        <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
-        <item name="thickness">@dimen/overlay_click_selector_thickness</item>
-        <item name="colorInner">@color/overlayViewPrimary</item>
-        <item name="colorOutlinePrimary">@color/overlayViewAccentPrimary</item>
-        <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
-    </style>
-    <!-- Style for the condition overlay selector view. -->
-    <style name="AppTheme.Overlay.Selector.Condition">
-        <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
-        <item name="thickness">@dimen/overlay_condition_selector_thickness</item>
-        <item name="cornerRadius">@dimen/overlay_condition_selector_corner_radius</item>
-        <item name="defaultWidth">@dimen/overlay_condition_selector_width</item>
-        <item name="defaultHeight">@dimen/overlay_condition_selector_height</item>
-        <item name="resizeHandleSize">@dimen/overlay_condition_selector_resize_handle_size</item>
-        <item name="hintsIconsSize">@dimen/overlay_condition_selector_resize_hints_icon_size</item>
-        <item name="hintsIconsMargin">@dimen/overlay_condition_selector_resize_hints_icon_margin</item>
-        <item name="hintsPinchIconMargin">@dimen/overlay_condition_selector_resize_hints_pinch_icon_margin</item>
-        <item name="hintsFadeDuration">@integer/duration_hint_fade_ms</item>
-        <item name="hintsAllFadeDelay">@integer/duration_hint_all_fade_delay_ms</item>
-        <item name="hintMoveIcon">@drawable/ic_hint_move</item>
-        <item name="hintResizeUpIcon">@drawable/ic_hint_resize_up</item>
-        <item name="hintResizeDownIcon">@drawable/ic_hint_resize_down</item>
-        <item name="hintResizeLeftIcon">@drawable/ic_hint_resize_left</item>
-        <item name="hintResizeRightIcon">@drawable/ic_hint_resize_right</item>
-        <item name="hintPinchIcon">@drawable/ic_hint_pinch</item>
-        <item name="showSelectorAnimationDuration">@integer/duration_show_selector_animation_ms</item>
-        <item name="showCaptureAnimationDuration">@integer/duration_show_capture_animation_ms</item>
-        <item name="minimumZoomValue">@integer/capture_minimum_zoom</item>
-        <item name="maximumZoomValue">@integer/capture_maximum_zoom</item>
     </style>
 
 </resources>

@@ -34,7 +34,6 @@
     <string name="dialog_title_create_backup">Créer une sauvegarde</string>
     <string name="dialog_title_import_backup">Importer une sauvegarde</string>
     <string name="dialog_title_permissions">Permissions requises</string>
-    <string name="dialog_title_warning">Avertissement</string>
 
     <!--
       - Titles for the dialogs displayed as overlay.
