@@ -19,31 +19,31 @@ package com.buzbuz.smartautoclicker.domain.model.condition
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /** @return the entity equivalent of this condition. */
 internal fun Condition.toEntity() = ConditionEntity(
-    id,
-    eventId,
-    name,
-    path!!,
-    area.left,
-    area.top,
-    area.right,
-    area.bottom,
-    threshold,
-    detectionType,
-    shouldBeDetected,
+    id = id.databaseId,
+    eventId = eventId.databaseId,
+    name = name,
+    path = path!!,
+    areaLeft = area.left,
+    areaTop = area.top,
+    areaRight = area.right,
+    areaBottom = area.bottom,
+    threshold = threshold,
+    detectionType = detectionType,
+    shouldBeDetected = shouldBeDetected,
 )
-
 
 /** @return the condition for this entity. */
 internal fun ConditionEntity.toCondition() = Condition(
-    id,
-    eventId,
-    name,
-    path,
-    Rect(areaLeft, areaTop, areaRight, areaBottom),
-    threshold,
-    detectionType,
-    shouldBeDetected,
+    id = Identifier(databaseId = id),
+    eventId = Identifier(databaseId = eventId),
+    name = name,
+    path = path,
+    area = Rect(areaLeft, areaTop, areaRight, areaBottom),
+    threshold = threshold,
+    detectionType = detectionType,
+    shouldBeDetected = shouldBeDetected,
 )

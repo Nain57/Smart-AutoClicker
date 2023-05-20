@@ -76,7 +76,7 @@ class EventDaoTests {
 
         database.eventDao().addEvent(event)
 
-        assertEquals(event, database.eventDao().getEvents(TestsData.SCENARIO_ID).first().first())
+        assertEquals(event, database.eventDao().getEventsFlow(TestsData.SCENARIO_ID).first().first())
     }
 
     @Test
@@ -96,7 +96,7 @@ class EventDaoTests {
         database.eventDao().updateEvent(updatedEvent)
 
         // Check update
-        assertEquals(updatedEvent, database.eventDao().getEvents(TestsData.SCENARIO_ID).first().first())
+        assertEquals(updatedEvent, database.eventDao().getEventsFlow(TestsData.SCENARIO_ID).first().first())
     }
 
     @Test
@@ -106,7 +106,7 @@ class EventDaoTests {
 
         database.eventDao().deleteEvents(listOf(event))
 
-        assertTrue(database.eventDao().getEvents(TestsData.SCENARIO_ID).first().isEmpty())
+        assertTrue(database.eventDao().getEventsFlow(TestsData.SCENARIO_ID).first().isEmpty())
     }
 
     @Test

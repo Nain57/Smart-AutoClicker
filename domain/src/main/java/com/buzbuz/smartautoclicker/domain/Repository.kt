@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.domain.edition.EditedScenario
 import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
@@ -80,11 +79,13 @@ interface Repository {
     /**
      * Update a scenario.
      *
-     * @param editedScenario the scenario to update.
+     * @param scenario the scenario to update.
+     * @param events the list of event for the scenario.
+     * @param endConditions the list of end conditions for the scenario.
      *
      * @throws IllegalArgumentException if the edited scenario is incomplete.
      */
-    suspend fun updateScenario(editedScenario: EditedScenario)
+    suspend fun updateScenario(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>)
 
     /**
      * Delete a scenario.
@@ -101,6 +102,30 @@ interface Repository {
      * @return the flow on the scenario and its end conditions.
      */
     fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>>
+
+    /**
+     * Get the requested scenario.
+     *
+     * @param scenarioId the identifier of the scenario.
+     * @return the scenario.
+     */
+    suspend fun getScenario(scenarioId: Long): Scenario
+
+    /**
+     * Get the list of events for a given scenario.
+     *
+     * @param scenarioId the identifier of the scenario.
+     * @return the list of end conditions.
+     */
+    suspend fun getEvents(scenarioId: Long): List<Event>
+
+    /**
+     * Get the list of end conditions for a given scenario.
+     *
+     * @param scenarioId the identifier of the scenario.
+     * @return the list of end conditions.
+     */
+    suspend fun getEndConditions(scenarioId: Long): List<EndCondition>
 
     /**
      * Get the list of complete events for a given scenario.

@@ -49,7 +49,16 @@ abstract class EventDao {
      * @return the flow on the list of events.
      */
     @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId ORDER BY priority")
-    abstract fun getEvents(scenarioId: Long): Flow<List<EventEntity>>
+    abstract fun getEventsFlow(scenarioId: Long): Flow<List<EventEntity>>
+
+    /**
+     * Get the list of events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of events.
+     */
+    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId ORDER BY priority")
+    abstract suspend fun getEvents(scenarioId: Long): List<EventEntity>
 
     /**
      * Get the list of complete events for a scenario ordered by priority.
@@ -80,6 +89,16 @@ abstract class EventDao {
     @Transaction
     @Query("SELECT id FROM event_table WHERE scenario_id=:scenarioId")
     abstract suspend fun getEventsIds(scenarioId: Long): List<Long>
+
+    /**
+     * Get the list of events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of events.
+     */
+    @Transaction
+    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId AND id=:eventId")
+    abstract fun getEvent(scenarioId: Long, eventId: Long): Flow<CompleteEventEntity>
 
     /**
      * Add an event to the database.

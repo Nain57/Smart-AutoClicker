@@ -174,7 +174,7 @@ class EndConditionDaoTests {
         Assert.assertEquals(
             "Invalid end condition size",
             eventEntity,
-            database.eventDao().getEvents(scenarioEntity.id).first().first(),
+            database.eventDao().getEventsFlow(scenarioEntity.id).first().first(),
         )
     }
 

@@ -18,11 +18,12 @@ package com.buzbuz.smartautoclicker.domain.model.scenario
 
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /**
  * Scenario of events.
  *
- * @param id the unique identifier for the scenario. Use 0 for creating a new scenario. Default value is 0.
+ * @param id the unique identifier for the scenario.
  * @param name the name of the scenario.
  * @param detectionQuality the quality of the detection algorithm. Lower value means faster detection but poorer
  *                         quality, while higher values means better and slower detection.
@@ -32,7 +33,7 @@ import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
  * @param eventCount the number of events in this scenario. Default value is 0.
  */
 data class Scenario(
-    val id: Long = 0,
+    val id: Identifier,
     var name: String,
     var detectionQuality: Int,
     @ConditionOperator var endConditionOperator: Int,

@@ -19,31 +19,28 @@ package com.buzbuz.smartautoclicker.domain.model.action
 import android.content.ComponentName
 
 import com.buzbuz.smartautoclicker.database.room.entity.ToggleEventType
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /** Base for for all possible actions for an Event. */
 sealed class Action {
 
-    /** The unique identifier for the action. Use 0 for creating a new action. Default value is 0. */
-    abstract var id: Long
+    /** The unique identifier for the action. */
+    abstract var id: Identifier
     /** The identifier of the event for this action. */
-    abstract var eventId: Long
+    abstract var eventId: Identifier
     /** The name of the action. */
     abstract var name: String?
 
     /** @return true if this action is complete and can be transformed into its entity. */
     open fun isComplete(): Boolean = name != null
-    /** Cleanup all ids contained in this action. Ideal for copying. */
-    internal abstract fun cleanUpIds()
+
     /** @return creates a deep copy of this action. */
     abstract fun deepCopy(): Action
-
-    /** Creates a deep copy of the action and reset its id. */
-    abstract fun copyAndResetId(): Action
 
     /**
      * Click action.
      *
-     * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+     * @param id the unique identifier for the action.
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param pressDuration the duration between the click down and up in milliseconds.
@@ -51,8 +48,8 @@ sealed class Action {
      * @param y the y position of the click.
      */
     data class Click(
-        override var id: Long = 0,
-        override var eventId: Long,
+        override var id: Identifier,
+        override var eventId: Identifier,
         override var name: String? = null,
         var pressDuration: Long? = null,
         var x: Int? = null,
@@ -63,19 +60,13 @@ sealed class Action {
         override fun isComplete(): Boolean =
             super.isComplete() && pressDuration != null && ((x != null && y != null) || clickOnCondition)
 
-        override fun cleanUpIds() {
-            id = 0
-            eventId = 0
-        }
-
         override fun deepCopy(): Click = copy(name = "" + name)
-        override fun copyAndResetId(): Action = copy(id = 0, name = "" + name)
     }
 
     /**
      * Swipe action.
      *
-     * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+     * @param id the unique identifier for the action.
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param swipeDuration the duration between the swipe start and end in milliseconds.
@@ -85,8 +76,8 @@ sealed class Action {
      * @param toY the y position of the swipe end.
      */
     data class Swipe(
-        override var id: Long = 0,
-        override var eventId: Long,
+        override var id: Identifier,
+        override var eventId: Identifier,
         override var name: String? = null,
         var swipeDuration: Long? = null,
         var fromX: Int? = null,
@@ -98,47 +89,33 @@ sealed class Action {
         override fun isComplete(): Boolean =
             super.isComplete() && swipeDuration != null && fromX != null && fromY != null && toX != null && toY != null
 
-        override fun cleanUpIds() {
-            id = 0
-            eventId = 0
-        }
-
         override fun deepCopy(): Swipe = copy(name = "" + name)
-        override fun copyAndResetId(): Action = copy(id = 0, name = "" + name)
-
     }
 
     /**
      * Pause action.
      *
-     * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+     * @param id the unique identifier for the action.
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param pauseDuration the duration of the pause in milliseconds.
      */
     data class Pause(
-        override var id: Long = 0,
-        override var eventId: Long,
+        override var id: Identifier,
+        override var eventId: Identifier,
         override var name: String? = null,
         var pauseDuration: Long? = null,
     ) : Action() {
 
         override fun isComplete(): Boolean = super.isComplete() && pauseDuration != null
 
-        override fun cleanUpIds() {
-            id = 0
-            eventId = 0
-        }
-
         override fun deepCopy(): Pause = copy(name = "" + name)
-        override fun copyAndResetId(): Action = copy(id = 0, name = "" + name)
-
     }
 
     /**
      * Intent action.
      *
-     * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+     * @param id the unique identifier for the action.
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param isAdvanced if false, the user have used the simple config. If true, the advanced config.
@@ -149,8 +126,8 @@ sealed class Action {
      * @param extras the list of extras to sent with the intent.
      */
     data class Intent(
-        override var id: Long = 0,
-        override var eventId: Long,
+        override var id: Identifier,
+        override var eventId: Identifier,
         override var name: String? = null,
         var isAdvanced: Boolean? = null,
         var isBroadcast: Boolean? = null,
@@ -163,30 +140,23 @@ sealed class Action {
         override fun isComplete(): Boolean =
             super.isComplete() && isAdvanced != null && intentAction != null && flags != null
 
-        override fun cleanUpIds() {
-            id = 0
-            eventId = 0
-            extras?.forEach { it.cleanUpIds() }
-        }
-
         override fun deepCopy(): Intent = copy(name = "" + name)
-        override fun copyAndResetId(): Action = copy(id = 0, name = "" + name)
     }
 
     /**
      * Toggle Event Action.
      *
-     * @param id the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+     * @param id the unique identifier for the action.
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param toggleEventId the identifier of the event to manipulate.
      * @param toggleEventType the type of manipulation to apply.
      */
     data class ToggleEvent(
-        override var id: Long = 0,
-        override var eventId: Long,
+        override var id: Identifier,
+        override var eventId: Identifier,
         override var name: String? = null,
-        var toggleEventId: Long? = null,
+        var toggleEventId: Identifier? = null,
         var toggleEventType: ToggleType? = null,
     ) : Action() {
 
@@ -207,15 +177,7 @@ sealed class Action {
 
         override fun isComplete(): Boolean = super.isComplete() && toggleEventId != null && toggleEventType != null
 
-        override fun cleanUpIds() {
-            id = 0
-            eventId = 0
-        }
-
         override fun deepCopy(): ToggleEvent = copy(name = "" + name)
-
-        fun deepCopyWithToggleEventCleanup(): ToggleEvent = copy(name = "" + name, toggleEventId = null)
-        override fun copyAndResetId(): Action = copy(id = 0, name = "" + name)
     }
 }
 

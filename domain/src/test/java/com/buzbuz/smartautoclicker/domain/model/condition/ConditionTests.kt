@@ -50,15 +50,6 @@ class ConditionTests {
     }
 
     @Test
-    fun cleanupIds() {
-        val condition = TestsData.getNewCondition(eventId = TestsData.EVENT_ID)
-        condition.cleanUpIds()
-
-        assertEquals("Condition id isn't cleaned", 0L, condition.id)
-        assertEquals("Event id isn't cleaned", 0L, condition.eventId)
-    }
-
-    @Test
     fun deepCopy() {
         val condition = TestsData.getNewCondition(eventId = TestsData.EVENT_ID)
         assertEquals(condition, condition.deepCopy())

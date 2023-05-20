@@ -17,20 +17,21 @@
 package com.buzbuz.smartautoclicker.domain.model.endcondition
 
 import androidx.annotation.IntRange
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /**
  * End condition for a scenario.
  *
- * @param id the unique identifier for the end condition. Use 0 for creating a new end condition. Default value is 0.
+ * @param id the unique identifier for the end condition.
  * @param scenarioId the unique identifier of the scenario for this end condition.
  * @param eventId the unique identifier of the event associated with this end condition.
  * @param eventName the name of the associated event.
  * @param executions the number of execution of the associated event before fulfilling this end condition.
  */
 data class EndCondition(
-    val id: Long = 0,
-    val scenarioId: Long,
-    var eventId: Long = 0,
+    val id: Identifier,
+    val scenarioId: Identifier,
+    var eventId: Identifier? = null,
     val eventName: String? = null,
     @IntRange(from = 1) var executions: Int = 1,
 )

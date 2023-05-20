@@ -18,33 +18,24 @@ package com.buzbuz.smartautoclicker.domain.model.event
 
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EventEntity
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 import com.buzbuz.smartautoclicker.domain.model.action.toAction
 import com.buzbuz.smartautoclicker.domain.model.condition.toCondition
 
 /** @return the entity equivalent of this event. */
 internal fun Event.toEntity() = EventEntity(
-    id,
-    scenarioId,
-    name,
-    conditionOperator,
-    priority,
-    enabledOnStart,
-)
-
-/** @return the event for this entity. */
-internal fun EventEntity.toEvent() = Event(
-    id,
-    scenarioId,
-    name,
-    conditionOperator,
-    priority,
+    id = id.databaseId,
+    scenarioId = scenarioId.databaseId,
+    name = name,
+    conditionOperator = conditionOperator,
+    priority = priority,
     enabledOnStart = enabledOnStart,
 )
 
 /** @return the complete event for this entity. */
 internal fun CompleteEventEntity.toEvent() = Event(
-    id = event.id,
-    scenarioId = event.scenarioId,
+    id = Identifier(databaseId = event.id),
+    scenarioId = Identifier(databaseId = event.scenarioId),
     name= event.name,
     conditionOperator = event.conditionOperator,
     priority = event.priority,

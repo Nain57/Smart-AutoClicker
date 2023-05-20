@@ -70,15 +70,6 @@ class ActionTests {
     }
 
     @Test
-    fun click_cleanupIds() {
-        val click = TestsData.getNewClick(eventId = TestsData.EVENT_ID)
-        click.cleanUpIds()
-
-        assertEquals("Action id isn't cleaned", 0L, click.id)
-        assertEquals("Event id isn't cleaned", 0L, click.eventId)
-    }
-
-    @Test
     fun click_deepCopy() {
         val click = TestsData.getNewClick(eventId = TestsData.EVENT_ID)
         assertEquals(click, click.deepCopy())
@@ -117,15 +108,6 @@ class ActionTests {
     fun swipe_isComplete_incomplete() {
         assertFalse(TestsData.getNewSwipe(eventId = TestsData.EVENT_ID, name = null, fromX = null, fromY = null,
             toX = null, toY = null).isComplete())
-    }
-
-    @Test
-    fun swipe_cleanupIds() {
-        val swipe = TestsData.getNewSwipe(eventId = TestsData.EVENT_ID)
-        swipe.cleanUpIds()
-
-        assertEquals("Action id isn't cleaned", 0L, swipe.id)
-        assertEquals("Event id isn't cleaned", 0L, swipe.eventId)
     }
 
     @Test
@@ -169,15 +151,6 @@ class ActionTests {
     }
 
     @Test
-    fun pause_cleanupIds() {
-        val pause = TestsData.getNewPause(eventId = TestsData.EVENT_ID)
-        pause.cleanUpIds()
-
-        assertEquals("Action id isn't cleaned", 0L, pause.id)
-        assertEquals("Event id isn't cleaned", 0L, pause.eventId)
-    }
-
-    @Test
     fun pause_deepCopy() {
         val pause = TestsData.getNewPause(eventId = TestsData.EVENT_ID)
         assertEquals(pause, pause.deepCopy())
@@ -218,20 +191,6 @@ class ActionTests {
     }
 
     @Test
-    fun intent_cleanupIds() {
-        val intent = TestsData.getNewIntent(
-            eventId = TestsData.EVENT_ID,
-            intentExtras = mutableListOf(TestsData.getNewIntentExtra(value = 20))
-        )
-        intent.cleanUpIds()
-
-        assertEquals("Action id isn't cleaned", 0L, intent.id)
-        assertEquals("Event id isn't cleaned", 0L, intent.eventId)
-        assertEquals("Intent extra id isn't cleaned", 0L, intent.extras!![0].id)
-        assertEquals("Intent extra action id isn't cleaned", 0L, intent.extras!![0].actionId)
-    }
-
-    @Test
     fun intent_deepCopy() {
         val intent = TestsData.getNewIntent(eventId = TestsData.EVENT_ID)
         assertEquals(intent, intent.deepCopy())
@@ -269,17 +228,6 @@ class ActionTests {
     @Test
     fun toggleEvent_isComplete_incomplete() {
         assertFalse(TestsData.getNewToggleEvent(eventId = TestsData.EVENT_ID, name = null).isComplete())
-    }
-
-    @Test
-    fun toggleEvent_cleanupIds() {
-        val intent = TestsData.getNewToggleEvent(
-            eventId = TestsData.EVENT_ID
-        )
-        intent.cleanUpIds()
-
-        assertEquals("Action id isn't cleaned", 0L, intent.id)
-        assertEquals("Event id isn't cleaned", 0L, intent.eventId)
     }
 
     @Test
