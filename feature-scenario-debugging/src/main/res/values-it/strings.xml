@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_debug_report">Rapporto di debug</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_title_debug_generate_report">Genera un rapporto</string>
+    <string name="item_title_debug_show_view">Mostra visualizzazione debug</string>
+    <string name="item_title_report_total_duration">Durata totale</string>
+    <string name="item_title_report_image_processed">Immagini processate</string>
+    <string name="item_title_report_avg_image_processing_duration">Durata di processo media</string>
+    <string name="item_title_report_total_event_trigger_count">Eventi azionati</string>
+    <string name="item_title_report_detection_count">Condizioni rilevate</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_report_timing_min">Min</string>
+    <string name="section_title_report_timing_max">Max</string>
+    <string name="section_title_report_timing_avg">Med</string>
+    <string name="section_title_report_event_trigger_count">Eseguiti</string>
+    <string name="section_title_report_event_processing_count">Processati</string>
+    <string name="section_title_report_condition_detected_count">Rilevati</string>
+    <string name="section_title_report_condition_processing_count">Processati</string>
+    <string name="section_title_report_timing_title">Tempo di processo</string>
+    <string name="section_title_report_confidence_title">Tasso affidabilità rilevamento</string>
+
+</resources>

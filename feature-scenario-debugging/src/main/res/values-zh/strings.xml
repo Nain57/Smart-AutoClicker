@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_debug_report">调试报告</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_title_debug_generate_report">生成调试报告</string>
+    <string name="item_title_debug_show_view">显示调试窗口</string>
+    <string name="item_title_report_avg_image_processing_duration">平均处理时间</string>
+    <string name="item_title_report_detection_count">检测到条件数量</string>
+    <string name="item_title_report_image_processed">处理图片数</string>
+    <string name="item_title_report_total_duration">总用时</string>
+    <string name="item_title_report_total_event_trigger_count">触发场景数</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_report_event_trigger_count">触发数</string>
+    <string name="section_title_report_event_processing_count">处理数</string>
+    <string name="section_title_report_condition_detected_count">检测到个数</string>
+    <string name="section_title_report_condition_processing_count">处理数</string>
+    <string name="section_title_report_timing_title">处理时间</string>
+    <string name="section_title_report_confidence_title">相似度</string>
+    <string name="section_title_report_timing_min">最小</string>
+    <string name="section_title_report_timing_max">最高</string>
+    <string name="section_title_report_timing_avg">平均</string>
+
+</resources>

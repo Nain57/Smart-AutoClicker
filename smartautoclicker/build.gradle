@@ -132,4 +132,6 @@ dependencies {
     implementation project(path: ':extensions')
     implementation project(path: ':detection')
     implementation project(path: ':billing')
+    implementation project(path: ':feature-scenario-config')
+    implementation project(path: ':feature-scenario-debugging')
 }

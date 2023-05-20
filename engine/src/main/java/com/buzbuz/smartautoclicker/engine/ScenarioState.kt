@@ -38,8 +38,8 @@ internal class ScenarioState(events: List<Event>) : ScenarioEditor {
 
     init {
         events.forEach { event ->
-            if (event.enabledOnStart) enabledEventsMap[event.id] = event
-            else disabledEvents[event.id] = event
+            if (event.enabledOnStart) enabledEventsMap[event.id.databaseId] = event
+            else disabledEvents[event.id.databaseId] = event
         }
     }
 

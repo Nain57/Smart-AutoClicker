@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/dialog_debug_condition_bitmap_size"
+    android:layout_height="@dimen/dialog_debug_condition_bitmap_size"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+    android:layout_marginVertical="@dimen/margin_vertical_default">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/condition_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@drawable/ic_save_filled" />
+
+        <ImageView
+            android:id="@+id/background_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_debug_condition_icons_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/background_fade_bottom"
+            tools:ignore="contentDescription"/>
+
+        <ImageView
+            android:id="@+id/background_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_debug_condition_icons_height"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/background_fade_top"
+            tools:ignore="contentDescription"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/condition_name"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+            app:layout_constraintTop_toTopOf="@id/background_top"
+            app:layout_constraintBottom_toBottomOf="@id/background_top"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:textColor="@color/md_theme_light_onPrimary"
+            tools:text="Condition name"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/condition_triggered"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+            app:layout_constraintTop_toTopOf="@id/background_bottom"
+            app:layout_constraintBottom_toBottomOf="@id/background_bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:textColor="@color/md_theme_light_onPrimary"
+            tools:text="104578 / 145789"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
