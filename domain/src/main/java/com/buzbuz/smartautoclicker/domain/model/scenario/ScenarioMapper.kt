@@ -18,19 +18,20 @@ package com.buzbuz.smartautoclicker.domain.model.scenario
 
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /** @return the entity equivalent of this scenario. */
 internal fun Scenario.toEntity() = ScenarioEntity(
-    id,
-    name,
-    detectionQuality,
-    endConditionOperator,
-    randomize,
+    id = id.databaseId,
+    name = name,
+    detectionQuality = detectionQuality,
+    endConditionOperator = endConditionOperator,
+    randomize = randomize,
 )
 
 /** @return the scenario for this entity. */
 internal fun ScenarioEntity.toScenario() = Scenario(
-    id = id,
+    id = Identifier(databaseId = id),
     name = name,
     detectionQuality = detectionQuality,
     endConditionOperator = endConditionOperator,
@@ -39,10 +40,10 @@ internal fun ScenarioEntity.toScenario() = Scenario(
 
 /** @return the scenario for this entity. */
 internal fun ScenarioWithEvents.toScenario() = Scenario(
-    id = scenario.id,
+    id = Identifier(databaseId = scenario.id),
     name = scenario.name,
     detectionQuality = scenario.detectionQuality,
     endConditionOperator = scenario.endConditionOperator,
     randomize = scenario.randomize,
-    eventCount = events.size
+    eventCount = events.size,
 )

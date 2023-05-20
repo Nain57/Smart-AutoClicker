@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.domain
 
+import com.buzbuz.smartautoclicker.domain.model.Identifier
+
 /**
  * Helper class to update a list in the database.
  *
@@ -29,7 +31,7 @@ package com.buzbuz.smartautoclicker.domain
  * @param entityPrimaryKeySupplier
  */
 internal open class DatabaseListUpdater<I, E>(
-    private val itemPrimaryKeySupplier: (item: I) -> Long,
+    private val itemPrimaryKeySupplier: (item: I) -> Identifier,
     private val entityPrimaryKeySupplier: (item: E) -> Long,
 ) {
 
@@ -59,7 +61,7 @@ internal open class DatabaseListUpdater<I, E>(
         // New items with the default primary key should be added, others should be updated.
         // Updated items are removed from toBeRemoved list.
         newItems.forEachIndexed { index, newItem ->
-            val newItemPrimaryKey = itemPrimaryKeySupplier(newItem)
+            val newItemPrimaryKey = itemPrimaryKeySupplier(newItem).databaseId
             val newEntity = toEntity(index, newItem)
 
             if (newItemPrimaryKey == DATABASE_DEFAULT_LONG_PRIMARY_KEY) {

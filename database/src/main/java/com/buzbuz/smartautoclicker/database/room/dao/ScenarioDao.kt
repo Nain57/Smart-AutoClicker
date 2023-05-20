@@ -45,6 +45,15 @@ interface ScenarioDao {
     fun getScenariosWithEvents(): Flow<List<ScenarioWithEvents>>
 
     /**
+     * Get a scenario with its events.
+     *
+     * @return the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
+    fun getScenarioWithEvents(scenarioId: Long): Flow<ScenarioWithEvents>
+
+    /**
      * Get a scenario and its end conditions.
      *
      * @return the live data on the scenario.
@@ -54,13 +63,22 @@ interface ScenarioDao {
     fun getScenarioWithEndConditions(scenarioId: Long): Flow<ScenarioWithEndConditions?>
 
     /**
+     * Get a scenario
+     *
+     * @return the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
+    suspend fun getScenario(scenarioId: Long): ScenarioEntity
+
+    /**
      * Get a complete scenario
      *
      * @return the scenario.
      */
     @Transaction
     @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
-    suspend fun getCompleteScenario(scenarioId: Long): CompleteScenario?
+    suspend fun getCompleteScenario(scenarioId: Long): CompleteScenario
 
     /**
      * Add a new scenario to the database.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,16 +28,12 @@ import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.domain.edition.EditedAction
-import com.buzbuz.smartautoclicker.domain.edition.EditedEndCondition
-import com.buzbuz.smartautoclicker.domain.edition.EditedEvent
-import com.buzbuz.smartautoclicker.domain.edition.EditedScenario
-import com.buzbuz.smartautoclicker.domain.edition.INVALID_EDITED_ITEM_ID
-import com.buzbuz.smartautoclicker.domain.edition.isValidForSave
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 import com.buzbuz.smartautoclicker.domain.model.action.toAction
 import com.buzbuz.smartautoclicker.domain.model.action.toEntity
 import com.buzbuz.smartautoclicker.domain.model.condition.toCondition
 import com.buzbuz.smartautoclicker.domain.model.condition.toEntity
+import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.domain.model.endcondition.toEndCondition
 import com.buzbuz.smartautoclicker.domain.model.endcondition.toEntity
 import com.buzbuz.smartautoclicker.domain.model.event.Event
@@ -55,6 +51,7 @@ import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
+// TODO: We should clean unused bitmaps, it can happens that some stays there
 /**
  * Repository for the database and bitmap manager.
  * Provide the access to the scenario, events, actions and conditions from the database and the conditions bitmap from
@@ -86,29 +83,25 @@ internal class RepositoryImpl internal constructor(
         entityPrimaryKeySupplier = { conditionEntity -> conditionEntity.id },
     )
     /** Updater for a list of actions. */
-    private val actionsUpdater = DatabaseListUpdater<EditedAction, CompleteActionEntity>(
-        itemPrimaryKeySupplier = { editedAction -> editedAction.action.id },
+    private val actionsUpdater = DatabaseListUpdater<Action, CompleteActionEntity>(
+        itemPrimaryKeySupplier = { action -> action.id },
         entityPrimaryKeySupplier = { completeActionEntity -> completeActionEntity.action.id },
     )
     /** Updater for a list of end conditions. */
-    private val endConditionsUpdater = DatabaseListUpdater<EditedEndCondition, EndConditionEntity>(
-        itemPrimaryKeySupplier = { editedEndCondition -> editedEndCondition.endCondition.id },
+    private val endConditionsUpdater = DatabaseListUpdater<EndCondition, EndConditionEntity>(
+        itemPrimaryKeySupplier = { endCondition -> endCondition.id },
         entityPrimaryKeySupplier = { endConditionEntity -> endConditionEntity.id },
     )
 
     /** True when data are being inserted/edited, false if not. */
     private val isEditingData: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-    override val scenarios = scenarioDao.getScenariosWithEvents()
-        .filterWhenEditing()
-        .mapList { it.toScenario() }
-
     override suspend fun addScenario(scenario: Scenario): Long =
         scenarioDao.add(scenario.toEntity())
 
     override suspend fun deleteScenario(scenario: Scenario) {
         val removedConditionsPath = mutableListOf<String>()
-        eventDao.getEventsIds(scenario.id).forEach { eventId ->
+        eventDao.getEventsIds(scenario.id.databaseId).forEach { eventId ->
             conditionsDao.getConditionsPath(eventId).forEach { path ->
                 if (!removedConditionsPath.contains(path)) removedConditionsPath.add(path)
             }
@@ -118,87 +111,104 @@ internal class RepositoryImpl internal constructor(
         clearRemovedConditionsBitmaps(removedConditionsPath)
     }
 
-    override fun getScenarioWithEndConditionsFlow(scenarioId: Long) = scenarioDao.getScenarioWithEndConditions(scenarioId)
-        .filterWhenEditing()
-        .mapNotNull { scenarioWithEndConditions ->
-            scenarioWithEndConditions ?: return@mapNotNull null
-            scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
-        }
+    override suspend fun getScenario(scenarioId: Long): Scenario =
+        scenarioDao.getScenario(scenarioId).toScenario()
+
+    override suspend fun getEvents(scenarioId: Long): List<Event> =
+        eventDao.getCompleteEvents(scenarioId).map { it.toEvent() }
+
+    override suspend fun getEndConditions(scenarioId: Long): List<EndCondition> =
+        endConditionDao.getEndConditionsWithEvent(scenarioId).map { it.toEndCondition() }
 
     override suspend fun getCompleteEventList(scenarioId: Long): List<Event> =
         eventDao.getCompleteEvents(scenarioId).map { it.toEvent() }
+
+    override val scenarios: Flow<List<Scenario>> =
+        scenarioDao.getScenariosWithEvents()
+            .filterWhenEditing()
+            .mapList { it.toScenario() }
+
+    override fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>> =
+        scenarioDao.getScenarioWithEndConditions(scenarioId)
+            .filterWhenEditing()
+            .mapNotNull { scenarioWithEndConditions ->
+                scenarioWithEndConditions ?: return@mapNotNull null
+                scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
+            }
 
     override fun getCompleteEventListFlow(scenarioId: Long): Flow<List<Event>> =
         eventDao.getCompleteEventsFlow(scenarioId)
             .filterWhenEditing()
             .mapList { it.toEvent() }
 
-    override fun getAllEvents(): Flow<List<Event>> = eventDao.getAllEvents()
-        .filterWhenEditing()
-        .mapList { it.toEvent() }
+    override fun getAllEvents(): Flow<List<Event>> =
+        eventDao.getAllEvents()
+            .filterWhenEditing()
+            .mapList { it.toEvent() }
 
-    override fun getAllActions(): Flow<List<Action>> = actionDao.getAllActions()
-        .filterWhenEditing()
-        .mapList { it.toAction() }
+    override fun getAllActions(): Flow<List<Action>> =
+        actionDao.getAllActions()
+            .filterWhenEditing()
+            .mapList { it.toAction() }
 
-    override fun getAllConditions(): Flow<List<Condition>> = conditionsDao.getAllConditions()
-        .filterWhenEditing()
-        .mapList { it.toCondition() }
+    override fun getAllConditions(): Flow<List<Condition>> =
+        conditionsDao.getAllConditions()
+            .filterWhenEditing()
+            .mapList { it.toCondition() }
 
-    override suspend fun updateScenario(editedScenario: EditedScenario) {
-        // Ensure correctness of the inserted scenario
-        if (!editedScenario.isValidForSave())
-            throw IllegalArgumentException("Can't save this scenario, it is invalid.")
-
+    override suspend fun updateScenario(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>) {
         isEditingData.value = true
 
         // Update scenario entity values
-        scenarioDao.update(editedScenario.scenario.toEntity())
+        scenarioDao.update(scenario.toEntity())
 
-        val eventItemIdMap = updateScenarioEvents(editedScenario.scenario.id, editedScenario.events)
-        editedScenario.events.forEach { editedEvent ->
-            updateEventConditions(eventItemIdMap.getEventId(editedEvent.itemId), editedEvent.event.conditions ?: emptyList())
-            updateEventActions(editedEvent.itemId, editedEvent.editedActions, eventItemIdMap)
+        // Keep track of new database id for events that weren't in the database yet.
+        val evtDomainToDbIdMap = mutableMapOf<Int, Long>()
+        // Keep track of the events to be removed.
+        // First take all events from the database, and then remove the events found in the new event list
+        val eventsToBeRemoved = eventDao.getEvents(scenario.id.databaseId).toMutableList()
+
+        // Add/Update all events entities. Removals will be done at the end.
+        events.forEachIndexed { index, eventInScenario ->
+            eventInScenario.priority = index
+
+            val entity = eventInScenario.toEntity()
+            if (eventInScenario.id.isInDatabase()) {
+                eventDao.updateEvent(entity)
+                eventsToBeRemoved.removeIf { it.id == eventInScenario.id.databaseId }
+            } else {
+                eventInScenario.id.domainId?.let {
+                    evtDomainToDbIdMap[it] = eventDao.addEvent(entity)
+                }
+            }
         }
-        updateEndConditions(editedScenario.scenario.id, editedScenario.endConditions, eventItemIdMap)
+
+        // Now that all events have a database id, process actions and conditions
+        events.forEach { eventInScenario ->
+            val eventDbId = evtDomainToDbIdMap.getDatabaseId(eventInScenario.id)
+            updateConditions(eventDbId, eventInScenario.conditions)
+            updateActions(eventDbId, eventInScenario.actions, evtDomainToDbIdMap)
+        }
+
+        // Update the scenario's end conditions
+        updateEndConditions(scenario.id.databaseId, endConditions, evtDomainToDbIdMap)
+
+        // Remove events that are not in the new scenario.
+        // Cascade deletion will remove all linked actions and conditions.
+        if (eventsToBeRemoved.isNotEmpty()) eventDao.deleteEvents(eventsToBeRemoved)
 
         isEditingData.value = false
     }
 
-    /**
-     * Insert/update the events entity and keep the mapping between db ids and edition ids.
-     * Keep also track of the events to be removed, and remove them all at once.
-     */
-    private suspend fun updateScenarioEvents(scenarioId: Long, events: List<EditedEvent>): Map<Int, Long> {
-        val itemIdToDbIdMap = mutableMapOf<Int, Long>()
-
-        val eventsToBeRemoved = getCompleteEventList(scenarioId).toMutableList()
-        events.forEachIndexed { index, editedEvent ->
-            editedEvent.event.priority = index
-
-            if (editedEvent.event.id == 0L) {
-                itemIdToDbIdMap[editedEvent.itemId] = eventDao.addEvent(editedEvent.event.toEntity())
-            } else {
-                eventDao.updateEvent(editedEvent.event.toEntity())
-                itemIdToDbIdMap[editedEvent.itemId] = editedEvent.event.id
-                eventsToBeRemoved.removeIf { it.id == editedEvent.event.id }
-            }
-        }
-
-        if (eventsToBeRemoved.isNotEmpty()) eventDao.deleteEvents(eventsToBeRemoved.map { it.toEntity() })
-
-        return itemIdToDbIdMap
-    }
-
-    private suspend fun updateEventConditions(evtId: Long, conditions: List<Condition>) {
+    private suspend fun updateConditions(eventDbId: Long, conditions: List<Condition>) {
         saveNewConditionsBitmap(conditions)
 
         conditionsUpdater.refreshUpdateValues(
-            currentEntities = conditionsDao.getConditions(evtId),
+            currentEntities = conditionsDao.getConditions(eventDbId),
             newItems = conditions,
             toEntity = { _, condition ->
                 condition.toEntity().apply {
-                    eventId = evtId
+                    eventId = eventDbId
                 }
             }
         )
@@ -214,26 +224,14 @@ internal class RepositoryImpl internal constructor(
         }
     }
 
-    private suspend fun updateEventActions(
-        eventItemId: Int,
-        actions: List<EditedAction>,
-        evtItemIdToDbIdMap: Map<Int, Long>,
-    ) {
-        val evtId = evtItemIdToDbIdMap.getEventId(eventItemId)
-
+    private suspend fun updateActions(eventDbId: Long, actions: List<Action>, evtItemIdToDbIdMap: Map<Int, Long>) {
         actionsUpdater.refreshUpdateValues(
-            currentEntities = actionDao.getCompleteActions(evtId),
+            currentEntities = actionDao.getCompleteActions(eventDbId),
             newItems = actions,
-            toEntity = { index, editedAction ->
-                val toggleEvtId = if (editedAction.action is Action.ToggleEvent && editedAction.toggleEventItemId != INVALID_EDITED_ITEM_ID) {
-                    evtItemIdToDbIdMap.getEventId(editedAction.toggleEventItemId)
-                } else {
-                    null
-                }
-
-                editedAction.action.toEntity().apply {
-                    action.eventId = evtId
-                    action.toggleEventId = toggleEvtId
+            toEntity = { index, actionInEvent ->
+                actionInEvent.toEntity().apply {
+                    action.eventId = eventDbId
+                    action.toggleEventId = evtItemIdToDbIdMap.getToggleEventDatabaseId(actionInEvent)
                     action.priority = index
                 }
             }
@@ -248,15 +246,15 @@ internal class RepositoryImpl internal constructor(
 
     private suspend fun updateEndConditions(
         scenarioId: Long,
-        endConditions: List<EditedEndCondition>,
+        endConditions: List<EndCondition>,
         evtItemIdToDbIdMap: Map<Int, Long>,
     ) {
         endConditionsUpdater.refreshUpdateValues(
             currentEntities = endConditionDao.getEndConditions(scenarioId),
             newItems = endConditions,
-            toEntity = { _, editedEndCondition ->
-                editedEndCondition.endCondition.toEntity().apply {
-                    eventId = evtItemIdToDbIdMap.getEventId(editedEndCondition.eventItemId)
+            toEntity = { _, endCondition ->
+                endCondition.toEntity().apply {
+                    eventId = evtItemIdToDbIdMap.getDatabaseId(endCondition.eventId)
                 }
             }
         )
@@ -267,6 +265,21 @@ internal class RepositoryImpl internal constructor(
             endConditionsUpdater.toBeRemoved,
         )
     }
+
+    private fun Map<Int, Long>.getDatabaseId(identifier: Identifier?): Long = when {
+        identifier != null && identifier.domainId == null && identifier.databaseId != 0L -> identifier.databaseId
+        identifier != null -> get(identifier.domainId) ?: throw IllegalStateException("Identifier is not found in map")
+        else -> throw IllegalStateException("Database id can't be found")
+    }
+
+    private fun Map<Int, Long>.getToggleEventDatabaseId(action: Action): Long? =
+        if (action is Action.ToggleEvent) {
+            val toggleEventId = action.toggleEventId
+                ?: throw IllegalArgumentException("Invalid toggle event insertion")
+            getDatabaseId(toggleEventId)
+        } else {
+            null
+        }
 
     override suspend fun getBitmap(path: String, width: Int, height: Int) =
         bitmapManager.loadBitmap(path, width, height)
@@ -308,7 +321,7 @@ internal class RepositoryImpl internal constructor(
         launch {
             backupEngine.createBackup(
                 zipFileUri,
-                scenarios.mapNotNull {
+                scenarios.map {
                     scenarioDao.getCompleteScenario(it)
                 },
                 screenSize,
@@ -401,6 +414,3 @@ internal class RepositoryImpl internal constructor(
         if (!isEditing) emit(value)
     }
 }
-
-private fun Map<Int, Long>.getEventId(itemId: Int): Long =
-    get(itemId) ?: throw IllegalStateException("Can't find event id for item id $itemId")

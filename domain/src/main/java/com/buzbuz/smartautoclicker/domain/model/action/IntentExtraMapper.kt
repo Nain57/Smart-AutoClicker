@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.domain.model.action
 
 import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.database.room.entity.IntentExtraType
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /** @return the entity equivalent of this intent extra. */
 internal fun <T> IntentExtra<T>.toEntity(): IntentExtraEntity {
@@ -25,24 +26,24 @@ internal fun <T> IntentExtra<T>.toEntity(): IntentExtraEntity {
         throw IllegalStateException("Can't create entity, action is invalid")
 
     return IntentExtraEntity(
-        id,
-        actionId,
-        value.toIntentExtraType(),
-        key!!,
-        value!!.toString(),
+        id = id.databaseId,
+        actionId = actionId.databaseId,
+        type = value.toIntentExtraType(),
+        key = key!!,
+        value = value!!.toString(),
     )
 }
 
 /** @return the intent extra for this entity. */
 internal fun IntentExtraEntity.toIntentExtra() = when (type) {
-    IntentExtraType.BYTE -> IntentExtra(id, actionId, key, value.toByte())
-    IntentExtraType.BOOLEAN -> IntentExtra(id, actionId, key, value.toBooleanStrict())
-    IntentExtraType.CHAR -> IntentExtra(id, actionId, key, value[0])
-    IntentExtraType.DOUBLE -> IntentExtra(id, actionId, key, value.toDouble())
-    IntentExtraType.INTEGER -> IntentExtra(id, actionId, key, value.toInt())
-    IntentExtraType.FLOAT -> IntentExtra(id, actionId, key, value.toFloat())
-    IntentExtraType.SHORT -> IntentExtra(id, actionId, key, value.toShort())
-    IntentExtraType.STRING -> IntentExtra(id, actionId, key, value)
+    IntentExtraType.BYTE -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toByte())
+    IntentExtraType.BOOLEAN -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toBooleanStrict())
+    IntentExtraType.CHAR -> IntentExtra(Identifier(id), Identifier(actionId), key, value[0])
+    IntentExtraType.DOUBLE -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toDouble())
+    IntentExtraType.INTEGER -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toInt())
+    IntentExtraType.FLOAT -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toFloat())
+    IntentExtraType.SHORT -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toShort())
+    IntentExtraType.STRING -> IntentExtra(Identifier(id), Identifier(actionId), key, value)
 }
 
 private fun <T> T?.toIntentExtraType(): IntentExtraType = when (this) {

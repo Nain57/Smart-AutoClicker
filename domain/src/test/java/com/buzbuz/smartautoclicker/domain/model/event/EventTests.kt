@@ -44,14 +44,6 @@ class EventTests {
     }
 
     @Test
-    fun toDomain() {
-        assertEquals(
-            TestsData.getNewEvent(scenarioId = TestsData.SCENARIO_ID, priority = 0),
-            TestsData.getNewEventEntity(scenarioId = TestsData.SCENARIO_ID, priority = 0).toEvent()
-        )
-    }
-
-    @Test
     fun toDomain_fromCompleteEntity() {
         val expectedEvent = TestsData.getNewEvent(
             actions = mutableListOf(

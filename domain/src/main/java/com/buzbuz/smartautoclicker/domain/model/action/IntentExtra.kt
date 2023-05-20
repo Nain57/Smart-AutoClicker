@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.domain.model.action
 
 import android.content.Intent
 
+import com.buzbuz.smartautoclicker.domain.model.Identifier
+
 /**
  * Extras for a Intent action.
  *
@@ -28,24 +30,18 @@ import android.content.Intent
  * @param value the value of the extra.
  */
 data class IntentExtra<T>(
-    var id: Long = 0,
-    var actionId: Long,
+    var id: Identifier,
+    var actionId: Identifier,
     var key: String?,
     var value: T?,
 ) {
-
-    /** Cleanup all ids contained in this intent extra. Ideal for copying. */
-    internal fun cleanUpIds() {
-        id = 0
-        actionId = 0
-    }
 
     /**
      * Copy and change the type of the value contained in this IntentExtra.
      * @param V the new value type.
      * @param value the new value.
      */
-    fun <V> copy(value: V): IntentExtra<V> {
+    fun <V> changeType(value: V): IntentExtra<V> {
         if (value !is Boolean && value !is Byte && value !is Char && value !is Double && value !is Int &&
             value !is Float && value !is Short && value !is String) {
             throw IllegalArgumentException("Unsupported value type")

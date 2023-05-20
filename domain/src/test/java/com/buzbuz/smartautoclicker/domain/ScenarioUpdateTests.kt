@@ -27,7 +27,6 @@ import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.domain.model.action.Action
-import com.buzbuz.smartautoclicker.domain.edition.*
 import com.buzbuz.smartautoclicker.domain.model.scenario.toScenario
 import com.buzbuz.smartautoclicker.domain.utils.TestsData
 import com.buzbuz.smartautoclicker.domain.utils.anyNotNull
@@ -74,21 +73,18 @@ class ScenarioUpdateTests {
     /** A mocked version of the backup engine. */
     @Mock private lateinit var mockBackupEngine: BackupEngine
 
-    private fun createSimpleValidScenario(eventId: Long = TestsData.EVENT_ID): EditedScenario {
+    private fun createSimpleValidScenario(eventId: Long = TestsData.EVENT_ID): com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedScenario {
         val action = TestsData.getNewClick(id = 0, eventId = eventId)
-        val editedEvent = EditedEvent(
-            itemId = 1,
-            event = TestsData.getNewEvent(
+        val editedEvent = TestsData.getNewEvent(
                 id = eventId,
                 scenarioId = testScenarioEntity.id,
                 conditions = mutableListOf(TestsData.getNewCondition(id = 0, eventId = eventId)),
                 actions = mutableListOf(action),
                 priority = 0,
             ),
-            editedActions = listOf(EditedAction(itemId = 0, action = action)),
         )
 
-        return EditedScenario(
+        return com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedScenario(
             scenario = testScenarioEntity.toScenario(),
             endConditions = emptyList(),
             events = listOf(editedEvent),
@@ -126,11 +122,13 @@ class ScenarioUpdateTests {
     fun updateScenario_invalid_endConditions_invalidItemId() = runTest {
         var editedScenario = createSimpleValidScenario()
         editedScenario = editedScenario.copy(
-            endConditions = listOf(EditedEndCondition(
-                endCondition = TestsData.getNewEndCondition(),
-                itemId = INVALID_EDITED_ITEM_ID,
-                eventItemId = editedScenario.events.first().itemId,
-            ))
+            endConditions = listOf(
+                com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedEndCondition(
+                    endCondition = TestsData.getNewEndCondition(),
+                    itemId = com.buzbuz.smartautoclicker.feature.scenario.config.model.INVALID_EDITED_ITEM_ID,
+                    eventItemId = editedScenario.events.first().itemId,
+                )
+            )
         )
 
         repository.updateScenario(editedScenario)
@@ -140,11 +138,13 @@ class ScenarioUpdateTests {
     fun updateScenario_invalid_endConditions_invalidEventItemId() = runTest {
         var editedScenario = createSimpleValidScenario()
         editedScenario = editedScenario.copy(
-            endConditions = listOf(EditedEndCondition(
-                endCondition = TestsData.getNewEndCondition(),
-                itemId = 1,
-                eventItemId = INVALID_EDITED_ITEM_ID,
-            ))
+            endConditions = listOf(
+                com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedEndCondition(
+                    endCondition = TestsData.getNewEndCondition(),
+                    itemId = 1,
+                    eventItemId = com.buzbuz.smartautoclicker.feature.scenario.config.model.INVALID_EDITED_ITEM_ID,
+                )
+            )
         )
 
         repository.updateScenario(editedScenario)
@@ -154,11 +154,13 @@ class ScenarioUpdateTests {
     fun updateScenario_invalid_endConditions_unknownEventItemId() = runTest {
         var editedScenario = createSimpleValidScenario()
         editedScenario = editedScenario.copy(
-            endConditions = listOf(EditedEndCondition(
-                endCondition = TestsData.getNewEndCondition(),
-                itemId = 1,
-                eventItemId = editedScenario.events.first().itemId + 1,
-            ))
+            endConditions = listOf(
+                com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedEndCondition(
+                    endCondition = TestsData.getNewEndCondition(),
+                    itemId = 1,
+                    eventItemId = editedScenario.events.first().itemId + 1,
+                )
+            )
         )
 
         repository.updateScenario(editedScenario)
@@ -179,7 +181,7 @@ class ScenarioUpdateTests {
         val editedEvent = editedScenario.events.first()
 
         editedScenario = editedScenario.copy(
-            events = listOf(editedEvent.copy(itemId = INVALID_EDITED_ITEM_ID))
+            events = listOf(editedEvent.copy(itemId = com.buzbuz.smartautoclicker.feature.scenario.config.model.INVALID_EDITED_ITEM_ID))
         )
 
         repository.updateScenario(editedScenario)
@@ -260,7 +262,12 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(itemId = 0, action = incompleteClick)),
+                editedActions = listOf(
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = incompleteClick
+                    )
+                ),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteClick),
                 )
@@ -281,7 +288,12 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(itemId = 0, action = incompleteSwipe)),
+                editedActions = listOf(
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = incompleteSwipe
+                    )
+                ),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteSwipe),
                 )
@@ -302,7 +314,12 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(itemId = 0, action = incompletePause)),
+                editedActions = listOf(
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = incompletePause
+                    )
+                ),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompletePause),
                 )
@@ -323,7 +340,12 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(itemId = 0, action = incompleteIntent)),
+                editedActions = listOf(
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = incompleteIntent
+                    )
+                ),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteIntent),
                 )
@@ -344,7 +366,12 @@ class ScenarioUpdateTests {
 
         editedScenario = editedScenario.copy(
             events = listOf(editedEvent.copy(
-                editedActions = listOf(EditedAction(itemId = 0, action = incompleteToggleEvent)),
+                editedActions = listOf(
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = incompleteToggleEvent
+                    )
+                ),
                 event = editedEvent.event.copy(
                     actions = mutableListOf(incompleteToggleEvent),
                 )
@@ -366,7 +393,11 @@ class ScenarioUpdateTests {
             events = listOf(editedEvent.copy(
                 event = editedEvent.event.copy(actions = mutableListOf(invalidToggleEvent)),
                 editedActions = listOf(
-                    EditedAction(itemId = 0, action = invalidToggleEvent, toggleEventItemId = INVALID_EDITED_ITEM_ID)
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = invalidToggleEvent,
+                        toggleEventItemId = com.buzbuz.smartautoclicker.feature.scenario.config.model.INVALID_EDITED_ITEM_ID
+                    )
                 )
             )),
         )
@@ -386,7 +417,11 @@ class ScenarioUpdateTests {
             events = listOf(editedEvent.copy(
                 event = editedEvent.event.copy(actions = mutableListOf(toggleEvent)),
                 editedActions = listOf(
-                    EditedAction(itemId = 0, action = toggleEvent, toggleEventItemId = editedEvent.itemId + 1)
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = toggleEvent,
+                        toggleEventItemId = editedEvent.itemId + 1
+                    )
                 )
             )),
         )
@@ -399,11 +434,13 @@ class ScenarioUpdateTests {
         var editedScenario = createSimpleValidScenario(0)
         val endCondition = TestsData.getNewEndCondition(id = 0, scenarioId = editedScenario.scenario.id)
         editedScenario = editedScenario.copy(
-            endConditions = listOf(EditedEndCondition(
-                endCondition = endCondition,
-                itemId = 1,
-                eventItemId = editedScenario.events.first().itemId,
-            ))
+            endConditions = listOf(
+                com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedEndCondition(
+                    endCondition = endCondition,
+                    itemId = 1,
+                    eventItemId = editedScenario.events.first().itemId,
+                )
+            )
         )
         repository.updateScenario(editedScenario)
 
@@ -416,11 +453,13 @@ class ScenarioUpdateTests {
         var editedScenario = createSimpleValidScenario(0)
         val endCondition = TestsData.getNewEndCondition(id = 0, scenarioId = editedScenario.scenario.id)
         editedScenario = editedScenario.copy(
-            endConditions = listOf(EditedEndCondition(
-                endCondition = endCondition,
-                itemId = 1,
-                eventItemId = editedScenario.events.first().itemId,
-            ))
+            endConditions = listOf(
+                com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedEndCondition(
+                    endCondition = endCondition,
+                    itemId = 1,
+                    eventItemId = editedScenario.events.first().itemId,
+                )
+            )
         )
         repository.updateScenario(editedScenario)
 
@@ -456,7 +495,11 @@ class ScenarioUpdateTests {
             events = listOf(editedEvent.copy(
                 event = editedEvent.event.copy(actions = mutableListOf(toggleEvent)),
                 editedActions = listOf(
-                    EditedAction(itemId = 0, action = toggleEvent, toggleEventItemId = editedEvent.itemId)
+                    com.buzbuz.smartautoclicker.feature.scenario.config.model.EditedAction(
+                        itemId = 0,
+                        action = toggleEvent,
+                        toggleEventItemId = editedEvent.itemId
+                    )
                 )
             )),
         )

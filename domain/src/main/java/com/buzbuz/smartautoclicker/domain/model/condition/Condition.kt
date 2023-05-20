@@ -20,11 +20,12 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.domain.model.DetectionType
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /**
  * Condition for a Event.
  *
- * @param id the unique identifier for the condition. Use 0 for creating a new condition. Default value is 0.
+ * @param id the unique identifier for the condition.
  * @param eventId the identifier of the event for this condition.
  * @param name the name of the condition.
  * @param path the path to the bitmap that should be matched for detection.
@@ -34,8 +35,8 @@ import com.buzbuz.smartautoclicker.domain.model.DetectionType
  * @param bitmap the bitmap for the condition. Not set when fetched from the repository.
  */
 data class Condition(
-    var id: Long = 0,
-    var eventId: Long,
+    var id: Identifier,
+    var eventId: Identifier,
     var name: String,
     var path: String? = null,
     var area: Rect,
@@ -45,15 +46,9 @@ data class Condition(
     val bitmap: Bitmap? = null,
 ) {
 
-    /** Cleanup all ids contained in this condition. Ideal for copying. */
-    internal fun cleanUpIds() {
-        id = 0
-        eventId = 0
-    }
-
     /** @return creates a deep copy of this condition. */
     fun deepCopy(): Condition = copy(
-        path = path,
+        path = "" + path,
         area = Rect(area),
     )
 

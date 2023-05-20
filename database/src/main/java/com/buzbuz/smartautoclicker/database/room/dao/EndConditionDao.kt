@@ -26,6 +26,8 @@ import androidx.room.Transaction
 import androidx.room.Update
 
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
+import com.buzbuz.smartautoclicker.database.room.entity.EndConditionWithEvent
+import kotlinx.coroutines.flow.Flow
 
 /** Allows to access and edit the end conditions in the database. */
 @Dao
@@ -38,7 +40,16 @@ abstract class EndConditionDao {
      */
     @Transaction
     @Query("SELECT * FROM end_condition_table WHERE scenario_id=:scenarioId")
-    abstract fun getEndConditions(scenarioId: Long): List<EndConditionEntity>
+    abstract suspend fun getEndConditions(scenarioId: Long): List<EndConditionEntity>
+
+    /**
+     * Get all end conditions and their associated event for a given scenario.
+     *
+     * @param scenarioId the unique identifier of the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM end_condition_table WHERE scenario_id=:scenarioId")
+    abstract suspend fun getEndConditionsWithEvent(scenarioId: Long): List<EndConditionWithEvent>
 
     /**
      * Synchronize the end conditions in the database.

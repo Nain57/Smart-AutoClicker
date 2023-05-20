@@ -18,20 +18,27 @@ package com.buzbuz.smartautoclicker.domain.model.endcondition
 
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.database.room.entity.EndConditionWithEvent
+import com.buzbuz.smartautoclicker.domain.model.Identifier
 
 /** @return the entity equivalent of this end condition. */
 internal fun EndCondition.toEntity(): EndConditionEntity {
-    if (scenarioId == 0L || eventId == 0L)
+    val evtId = eventId
+    if (!scenarioId.isInDatabase() || evtId == null || !evtId.isInDatabase())
         throw IllegalStateException("Can't create entity, scenario or event is invalid")
 
-    return EndConditionEntity(id, scenarioId, eventId, executions)
+    return EndConditionEntity(
+        id = id.databaseId,
+        scenarioId = scenarioId.databaseId,
+        eventId = evtId.databaseId,
+        executions = executions,
+    )
 }
 
 /** @return the end condition for this entity. */
 internal fun EndConditionWithEvent.toEndCondition() = EndCondition(
-    endCondition.id,
-    endCondition.scenarioId,
-    event.id,
-    event.name,
-    endCondition.executions,
+    id = Identifier(databaseId = endCondition.id),
+    scenarioId = Identifier(databaseId = endCondition.scenarioId),
+    eventId = Identifier(databaseId = event.id),
+    eventName = event.name,
+    executions = endCondition.executions,
 )
