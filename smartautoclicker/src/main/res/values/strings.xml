@@ -37,7 +37,6 @@
     <string name="dialog_title_delete_scenario">Delete scenario</string>
     <string name="dialog_title_import_backup">Import backup</string>
     <string name="dialog_title_permissions">Permissions required</string>
-    <string name="dialog_title_warning">Warning</string>
 
     <!--
       - Titles for the dialogs displayed as overlay.

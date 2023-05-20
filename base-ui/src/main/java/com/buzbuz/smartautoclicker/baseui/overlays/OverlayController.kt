@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.baseui.overlays
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.activity.ComponentActivity
 
 import androidx.annotation.CallSuper
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
@@ -29,6 +30,9 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Lifecycle.State
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelLazy
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
 
 import kotlinx.coroutines.CoroutineScope
@@ -347,6 +351,14 @@ abstract class OverlayController internal constructor(
     /** @return the dump representation of this OverlayController. */
     private fun toDumpString() = "${javaClass.simpleName}@${hashCode()}"
 }
+
+inline fun <reified VM : ViewModel> OverlayController.viewModels(): Lazy<VM> =
+    ViewModelLazy(
+        VM::class,
+        { viewModelStore },
+        { defaultViewModelProviderFactory },
+        { defaultViewModelCreationExtras },
+    )
 
 /** Tag for logs. */
 private const val TAG = "OverlayController"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
-import com.buzbuz.smartautoclicker.overlays.mainmenu.MainMenu
+import com.buzbuz.smartautoclicker.mainmenu.MainMenu
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -135,7 +135,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             }
 
             Handler(Looper.getMainLooper()).postDelayed({
-                rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario.id).apply {
+                rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario.id.databaseId).apply {
                     create { this@LocalService.stop() }
                     show()
                 }

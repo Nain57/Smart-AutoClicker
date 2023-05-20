@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Base theme. -->
+    <style name="AppTheme.ScenarioConfig" />
+
+    <!-- Base theme for the selector overlays. -->
+    <style name="AppTheme.ScenarioConfig.Selector">
+        <item name="colorBackground">@color/overlayClickSelectorBackground</item>
+    </style>
+    <!-- Style for the click/swipe position(s) overlay selector view. -->
+    <style name="AppTheme.ScenarioConfig.Selector.Click">
+        <item name="radius">@dimen/overlay_click_selector_radius</item>
+        <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
+        <item name="thickness">@dimen/overlay_click_selector_thickness</item>
+        <item name="colorInner">@color/overlayViewPrimary</item>
+        <item name="colorOutlinePrimary">@color/overlayViewAccentPrimary</item>
+        <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
+    </style>
+    <!-- Style for the condition overlay selector view. -->
+    <style name="AppTheme.ScenarioConfig.Selector.Condition">
+        <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
+        <item name="thickness">@dimen/overlay_condition_selector_thickness</item>
+        <item name="cornerRadius">@dimen/overlay_condition_selector_corner_radius</item>
+        <item name="defaultWidth">@dimen/overlay_condition_selector_width</item>
+        <item name="defaultHeight">@dimen/overlay_condition_selector_height</item>
+        <item name="resizeHandleSize">@dimen/overlay_condition_selector_resize_handle_size</item>
+        <item name="hintsIconsSize">@dimen/overlay_condition_selector_resize_hints_icon_size</item>
+        <item name="hintsIconsMargin">@dimen/overlay_condition_selector_resize_hints_icon_margin</item>
+        <item name="hintsPinchIconMargin">@dimen/overlay_condition_selector_resize_hints_pinch_icon_margin</item>
+        <item name="hintsFadeDuration">@integer/duration_hint_fade_ms</item>
+        <item name="hintsAllFadeDelay">@integer/duration_hint_all_fade_delay_ms</item>
+        <item name="hintMoveIcon">@drawable/ic_hint_move</item>
+        <item name="hintResizeUpIcon">@drawable/ic_hint_resize_up</item>
+        <item name="hintResizeDownIcon">@drawable/ic_hint_resize_down</item>
+        <item name="hintResizeLeftIcon">@drawable/ic_hint_resize_left</item>
+        <item name="hintResizeRightIcon">@drawable/ic_hint_resize_right</item>
+        <item name="hintPinchIcon">@drawable/ic_hint_pinch</item>
+        <item name="showSelectorAnimationDuration">@integer/duration_show_selector_animation_ms</item>
+        <item name="showCaptureAnimationDuration">@integer/duration_show_capture_animation_ms</item>
+        <item name="minimumZoomValue">@integer/capture_minimum_zoom</item>
+        <item name="maximumZoomValue">@integer/capture_maximum_zoom</item>
+    </style>
+
+</resources>
