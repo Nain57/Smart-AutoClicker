@@ -39,7 +39,7 @@ import androidx.annotation.WorkerThread
  *
  * Uses the [MediaProjection] API to create a [VirtualDisplay] not shown to the user and containing a copy of the
  * user device screen content. An [ImageReader] is attached to this display in order to monitor every new frame
- * displayed on the screen, received in the form of an [Image]. Then, process those Image with [ScenarioProcessor]
+ * displayed on the screen, received in the form of an [Image]. Then, process those Image with ScenarioProcessor
  * according to the current mode (capture/detection). All Image processing code is executed on a background thread
  * (methods annotated with [WorkerThread]), and all results callbacks are executed on the main thread (the thread that
  * has instantiated this class).

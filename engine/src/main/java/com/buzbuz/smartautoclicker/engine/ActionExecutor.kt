@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -163,7 +163,7 @@ internal class ActionExecutor(
      * @param toggleEvent the toggleEvent to be executed.
      */
     private fun executeToggleEvent(toggleEvent: ToggleEvent) {
-        scenarioEditor.changeEventState(toggleEvent.toggleEventId!!, toggleEvent.toggleEventType!!)
+        scenarioEditor.changeEventState(toggleEvent.toggleEventId!!.databaseId, toggleEvent.toggleEventType!!)
     }
 
     private fun Path.moveTo(x: Int, y: Int, randomize: Boolean) {

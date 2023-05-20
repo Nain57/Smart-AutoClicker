@@ -31,7 +31,8 @@ import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.engine.debugging.DebugEngine
+import com.buzbuz.smartautoclicker.engine.processor.ProgressListener
+import com.buzbuz.smartautoclicker.engine.processor.ScenarioProcessor
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -140,11 +141,6 @@ class DetectorEngine(context: Context) {
     /** True if we are collecting debug data, false if not. */
     val isDebugging: StateFlow<Boolean> = _isDebugging
 
-    /** Engine for debugging purposes. */
-    private val _debugEngine = MutableStateFlow<DebugEngine?>(null)
-    var debugEngine: Flow<DebugEngine> = _debugEngine
-        .filterNotNull()
-
     /** The current scenario unique identifier. */
     private val _scenarioId = MutableStateFlow<Long?>(null)
 
@@ -177,6 +173,12 @@ class DetectorEngine(context: Context) {
         }
         false
     }
+
+    /**
+     * Object to notify upon start/completion of detections steps.
+     * Defined at detection start, reset to null at detection end.
+     */
+    private var detectionProgressListener: ProgressListener? = null
 
     /**
      * Start the screen detection.
@@ -224,7 +226,7 @@ class DetectorEngine(context: Context) {
                 startScreenRecord(context, screenMetrics.screenSize)
 
                 _state.emit(DetectorState.RECORDING)
-                _scenarioId.emit(scenario.id)
+                _scenarioId.emit(scenario.id.databaseId)
             }
         }
     }
@@ -274,10 +276,15 @@ class DetectorEngine(context: Context) {
      * callback.
      * [state] should be RECORDING to capture. Detection can be stopped with [stopDetection] or [stopScreenRecord].
      *
-     * @param debugInstantData true to get the debug info via the [debugEngine], false if not.
+     * @param debugInstantData true to get the debug info via the [progressListener], false if not.
      * @param debugReport true to generate a debug report at the end of the session, false if not.
+     * @param progressListener object to notify upon start/completion of detections steps.
      */
-    fun startDetection(debugInstantData: Boolean = false, debugReport: Boolean = false) {
+    fun startDetection(
+        debugInstantData: Boolean = false,
+        debugReport: Boolean = false,
+        progressListener: ProgressListener? = null,
+    ) {
         if (_state.value != DetectorState.RECORDING) {
             Log.w(TAG, "startDetection: Screen record is not started.")
             return
@@ -290,10 +297,9 @@ class DetectorEngine(context: Context) {
             imageDetector = NativeDetector()
 
             val shouldDebug = debugInstantData || debugReport
-            _debugEngine.value =
-                if (shouldDebug) DebugEngine(debugInstantData, debugReport, scenarioWithEndConditions.value!!.first, scenarioEvents.value)
-                else null
             _isDebugging.emit(shouldDebug)
+
+            detectionProgressListener = progressListener
 
             scenarioProcessor = ScenarioProcessor(
                 imageDetector = imageDetector!!,
@@ -305,7 +311,7 @@ class DetectorEngine(context: Context) {
                 endConditionOperator = scenarioWithEndConditions.value!!.first.endConditionOperator,
                 endConditions =  scenarioWithEndConditions.value!!.second,
                 onStopRequested = { stopDetection() },
-                debugEngine = _debugEngine.value,
+                progressListener  = progressListener,
             )
 
             processScreenImages()
@@ -327,7 +333,7 @@ class DetectorEngine(context: Context) {
             }
 
             screenRecorder.stopScreenRecord()
-            _debugEngine.value?.cancelCurrentProcessing()
+            detectionProgressListener?.cancelCurrentProcessing()
             screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
 
             if (_state.value == DetectorState.DETECTING) {
@@ -360,7 +366,8 @@ class DetectorEngine(context: Context) {
             imageDetector?.close()
             imageDetector = null
             scenarioProcessor = null
-            _debugEngine.value?.onSessionEnded()
+            detectionProgressListener?.onSessionEnded()
+            detectionProgressListener = null
 
             _state.emit(DetectorState.RECORDING)
             _isDebugging.value = false

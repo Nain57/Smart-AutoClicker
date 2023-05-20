@@ -38,7 +38,7 @@ internal class EndConditionVerifier(
     /** State of the executed events. EventId to Execution info.*/
     private val executedEvents = HashMap<Long, ExecutionInfo>().apply {
         conditions.forEach { condition ->
-            put(condition.eventId, ExecutionInfo(maxExecutionCount = condition.executions))
+            put(condition.eventId!!.databaseId, ExecutionInfo(maxExecutionCount = condition.executions))
         }
     }
     /** The list of already completed conditions. Used only for [AND]. */
@@ -56,7 +56,7 @@ internal class EndConditionVerifier(
      */
     fun onEventTriggered(event: Event): Boolean {
         // Is the event has a end condition ? If not, return false.
-        triggeredEventInfo = executedEvents[event.id] ?: return false
+        triggeredEventInfo = executedEvents[event.id.databaseId] ?: return false
 
         // Increment the execution count and verify if this event end condition is fulfilled. If not, return false.
         triggeredEventInfo.executionCount++
@@ -69,7 +69,7 @@ internal class EndConditionVerifier(
         }
 
         // If the operator is AND, add this end condition as reached, and verify if all conditions are now reached.
-        completedConditions.add(event.id)
+        completedConditions.add(event.id.databaseId)
         if (completedConditions.size == executedEvents.size) {
             onEndConditionReached()
             return true
