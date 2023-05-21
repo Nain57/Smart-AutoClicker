@@ -27,11 +27,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
-import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.baseui.bindings.setText
-import com.buzbuz.smartautoclicker.baseui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R

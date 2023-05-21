@@ -26,11 +26,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.baseui.bindings.updateState
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.R
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.DialogDebugReportBinding
-import com.buzbuz.smartautoclicker.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

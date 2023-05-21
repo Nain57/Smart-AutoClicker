@@ -24,10 +24,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 
-import com.buzbuz.smartautoclicker.baseui.bindings.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.ui.databinding.IncludeInputFieldTextBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldTextBinding
 
 import com.google.android.material.textfield.TextInputLayout
 

@@ -27,15 +27,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.baseui.bindings.setItems
-import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
-import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
-import com.buzbuz.smartautoclicker.baseui.bindings.setText
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
@@ -136,7 +135,7 @@ class ToggleEventDialog(
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
+        viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
     }
 
     /** Show the event selection dialog. */

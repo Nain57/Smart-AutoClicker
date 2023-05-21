@@ -75,8 +75,8 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation project(path: ':core-ui')
 
-    implementation project(path: ':base-ui')
 
     playStoreImplementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
     playStoreImplementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"

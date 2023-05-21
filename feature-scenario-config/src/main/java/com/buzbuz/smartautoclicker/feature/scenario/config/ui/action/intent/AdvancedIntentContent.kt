@@ -27,14 +27,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.baseui.bindings.setItems
-import com.buzbuz.smartautoclicker.baseui.bindings.setLabel
-import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
-import com.buzbuz.smartautoclicker.baseui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.domain.model.action.IntentExtra
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigAdvancedBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras.ExtraConfigDialog

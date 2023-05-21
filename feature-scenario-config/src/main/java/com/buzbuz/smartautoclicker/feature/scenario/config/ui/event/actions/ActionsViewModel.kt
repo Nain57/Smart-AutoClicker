@@ -22,7 +22,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.DialogChoice
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.domain.Repository
