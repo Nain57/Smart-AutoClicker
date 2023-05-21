@@ -37,9 +37,9 @@ internal fun Condition.toEntity() = ConditionEntity(
 )
 
 /** @return the condition for this entity. */
-internal fun ConditionEntity.toCondition() = Condition(
-    id = Identifier(databaseId = id),
-    eventId = Identifier(databaseId = eventId),
+internal fun ConditionEntity.toCondition(asDomain: Boolean = false) = Condition(
+    id = Identifier(id = id, asDomain = asDomain),
+    eventId = Identifier(id = eventId, asDomain = asDomain),
     name = name,
     path = path,
     area = Rect(areaLeft, areaTop, areaRight, areaBottom),

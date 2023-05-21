@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">创建备份</string>
+    <string name="dialog_title_delete_scenario">删除脚本</string>
+    <string name="dialog_title_import_backup">导入备份</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_title_backup_create_select_file">选择保存路径</string>
+    <string name="item_title_backup_import_select_file">选择备份文件</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">创建备份: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">备份完成</string>
+    <string name="message_backup_create_error">发生错误，备份导出已取消</string>
+    <string name="message_backup_import_progress">导入备份: %1$d</string>
+    <string name="message_backup_import_verification">数据验证</string>
+    <string name="message_backup_import_completed">导入已完成\n%1$d 方案已导入</string>
+    <string name="message_backup_import_completed_with_error">已完成导入 \n%1$d 个方案，错误 \n%2$d 个</string>
+    <string name="message_backup_import_error">发生错误，备份导入已取消</string>
+    <string name="message_backup_import_compatibility">某些导入的场景是从具有不同屏幕的设备生成的，这可能会导致检测和操作坐标出现问题。\n\n要修复它，您需要根据您的情况创建新的屏幕截图并更新您的点击/滑动位置。</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">The state of the backup</string>
+</resources>

@@ -43,8 +43,8 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.PermissionsDialogFragment.Companion.FRAGMENT_TAG_PERMISSION_DIALOG
-import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment
-import com.buzbuz.smartautoclicker.activity.backup.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
+import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
+import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
 import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
@@ -320,7 +320,7 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      */
     private fun showBackupDialog(isImport: Boolean, scenariosToBackup: Collection<Long>? = null) {
         activity?.let {
-            BackupDialogFragment
+            com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
                 .newInstance(isImport, scenariosToBackup)
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }

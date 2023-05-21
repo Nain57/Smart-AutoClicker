@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.backup
+package com.buzbuz.smartautoclicker.feature.backup.ui
 
 import android.app.Dialog
 import android.content.Intent
@@ -29,9 +29,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-
-import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.databinding.DialogBackupBinding
+import com.buzbuz.smartautoclicker.feature.backup.R
+import com.buzbuz.smartautoclicker.feature.backup.databinding.DialogBackupBinding
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

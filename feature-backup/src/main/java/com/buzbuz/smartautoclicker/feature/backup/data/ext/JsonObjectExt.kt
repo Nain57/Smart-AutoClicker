@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.backup.ext
+package com.buzbuz.smartautoclicker.feature.backup.data.ext
 
 import android.util.Log
 

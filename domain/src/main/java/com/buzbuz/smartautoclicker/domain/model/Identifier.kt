@@ -25,9 +25,14 @@ package com.buzbuz.smartautoclicker.domain.model
  * @param domainId: the identifier for the domain, set only when the object is not yet inserted in database.
  */
 data class Identifier(
-    val databaseId: Long,
-    val domainId: Int? = null,
+    val databaseId: Long = DATABASE_ID_INSERTION,
+    val domainId: Long? = null,
 ) {
+
+    internal constructor(id: Long, asDomain: Boolean = false) : this(
+        databaseId = if (asDomain) DATABASE_ID_INSERTION else id,
+        domainId = if (asDomain) id else null,
+    )
 
     /** Ensure correctness of ids. */
     init {

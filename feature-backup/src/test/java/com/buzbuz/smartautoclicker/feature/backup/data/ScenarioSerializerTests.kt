@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.backup
+package com.buzbuz.smartautoclicker.feature.backup.data
 
 import android.graphics.Point
 import android.os.Build
@@ -23,22 +23,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.database.room.CLICK_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.database.room.entity.*
-import com.buzbuz.smartautoclicker.feature.backup.CONDITION_THRESHOLD_DEFAULT_VALUE
-import com.buzbuz.smartautoclicker.feature.backup.CONDITION_THRESHOLD_LOWER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.CONDITION_THRESHOLD_UPPER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.DETECTION_QUALITY_DEFAULT_VALUE
-import com.buzbuz.smartautoclicker.feature.backup.DETECTION_QUALITY_LOWER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.DETECTION_QUALITY_UPPER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.DETECTION_TYPE_DEFAULT_VALUE
-import com.buzbuz.smartautoclicker.feature.backup.DETECTION_TYPE_LOWER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.DETECTION_TYPE_UPPER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.DURATION_GESTURE_UPPER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.END_CONDITION_EXECUTION_DEFAULT_VALUE
-import com.buzbuz.smartautoclicker.feature.backup.OPERATOR_DEFAULT_VALUE
-import com.buzbuz.smartautoclicker.feature.backup.OPERATOR_LOWER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.OPERATOR_UPPER_BOUND
-import com.buzbuz.smartautoclicker.feature.backup.ScenarioBackup
-import com.buzbuz.smartautoclicker.feature.backup.ScenarioSerializer
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*

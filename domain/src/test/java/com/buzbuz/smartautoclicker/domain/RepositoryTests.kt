@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.domain
 import android.content.Context
 import android.os.Build
 
-import com.buzbuz.smartautoclicker.feature.backup.BackupEngine
+import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.dao.ConditionDao

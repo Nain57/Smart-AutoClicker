@@ -18,12 +18,10 @@ package com.buzbuz.smartautoclicker.domain
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Point
-import android.net.Uri
 
-import com.buzbuz.smartautoclicker.feature.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
+import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
@@ -57,7 +55,6 @@ interface Repository {
                 val instance = RepositoryImpl(
                     ClickDatabase.getDatabase(context),
                     BitmapManager.getBitmapManager(context),
-                    BackupEngine.newBackupEngine(context),
                 )
                 INSTANCE = instance
                 instance
@@ -75,6 +72,13 @@ interface Repository {
      * @return the identifier for the newly add scenario.
      */
     suspend fun addScenario(scenario: Scenario): Long
+
+    /**
+     * Create a copy of a scenario and insert it in the database.
+     *
+     * @param completeScenario the scenario to copy.
+     */
+    suspend fun addScenarioCopy(completeScenario: CompleteScenario)
 
     /**
      * Update a scenario.
@@ -178,25 +182,4 @@ interface Repository {
 
     /** Clean the cache of this repository. */
     fun cleanCache()
-
-    /**
-     * Create a backup of the provided scenario into the provided file.
-     *
-     * @param zipFileUri the uri of the file to write the backup into. Must be retrieved using the DocumentProvider.
-     * @param scenarios the scenarios to backup.
-     * @param screenSize the size of this device screen.
-     *
-     * @return a flow on the backup creation progress.
-     */
-    fun createScenarioBackup(zipFileUri: Uri, scenarios: List<Long>, screenSize: Point): Flow<Backup>
-
-    /**
-     * Restore a backup of scenarios from the provided file.
-     *
-     * @param zipFileUri the uri of the file to read the backup from. Must be retrieved using the DocumentProvider.
-     * @param screenSize the size of this device screen.
-     *
-     * @return a flow on the backup import progress.
-     */
-    fun restoreScenarioBackup(zipFileUri: Uri, screenSize: Point): Flow<Backup>
 }

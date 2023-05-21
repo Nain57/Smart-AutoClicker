@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">Crea backup</string>
+    <string name="dialog_title_delete_scenario">Elimina scenario</string>
+    <string name="dialog_title_import_backup">Importa backup</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_title_backup_create_select_file">Seleziona file di output</string>
+    <string name="item_title_backup_import_select_file">Seleziona file di backup</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">Creazione backup: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Backup completato</string>
+    <string name="message_backup_create_error">È stato riscontrato un errore e l\'esportazione del backup è stata annullata</string>
+    <string name="message_backup_import_progress">Importazione backup: %1$d</string>
+    <string name="message_backup_import_verification">Verifica dei dati</string>
+    <string name="message_backup_import_completed">Importazione completata\n%1$d scenario importato</string>
+    <string name="message_backup_import_completed_with_error">Importazione completata\n%1$d scenari importati\n%2$d errori</string>
+    <string name="message_backup_import_error">È stato riscontrato un errore e l\'importazione del backup è stata annullata</string>
+    <string name="message_backup_import_compatibility">Alcuni degli scenari importati sono stati generati da un dispositivo con uno schermo diverso e ciò potrebbe causare problemi con il rilevamento e le coordinate delle azioni.\n\nPer risolvere il problema, devi acquisire nuovi screenshot per le tue condizioni e aggiornare le posizioni di clic/scorrimento.</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">Lo stato del backup</string>
+
+</resources>
