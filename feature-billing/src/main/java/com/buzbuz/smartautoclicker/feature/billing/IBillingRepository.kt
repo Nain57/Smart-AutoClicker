@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.billing
 
 import android.content.Context
 
-import com.buzbuz.smartautoclicker.feature.billing.model.BillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
 
 import kotlinx.coroutines.flow.Flow
 
