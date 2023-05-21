@@ -129,7 +129,7 @@ dependencies {
     implementation project(path: ':core-domain')
 
     implementation project(path: ':engine')
-    implementation project(path: ':extensions')
+    implementation project(path: ':core-extensions')
     implementation project(path: ':detection')
     implementation project(path: ':feature-backup')
     implementation project(path: ':feature-billing')

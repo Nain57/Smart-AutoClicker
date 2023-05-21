@@ -21,7 +21,7 @@ import android.content.Intent
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.extensions.queryIntentActivitiesCompat
+import com.buzbuz.smartautoclicker.core.queryIntentActivitiesCompat
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.getActivityDisplayInfo
 
 import kotlinx.coroutines.Dispatchers

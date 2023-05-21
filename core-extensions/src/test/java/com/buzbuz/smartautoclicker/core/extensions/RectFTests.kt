@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2022 Kevin Buzeau
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package com.buzbuz.smartautoclicker.extensions
+package com.buzbuz.smartautoclicker.core.extensions
 
 import android.graphics.PointF
 import android.graphics.RectF
@@ -22,17 +6,24 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import org.junit.Assert.assertEquals
+import com.buzbuz.smartautoclicker.core.scale
+import com.buzbuz.smartautoclicker.core.translate
+
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
 import org.robolectric.annotation.Config
 
 /** Tests for the extensions for [RectF]. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class RectFTests {
+
+    companion object {
+        /** RectF used as reference rectangle for all tests. */
+        private val TEST_DATA_RECT = RectF(10f, 10f, 20f, 20f)
+    }
 
     /** Object under tests, initialized before each test. */
     private lateinit var testedRectF: RectF
@@ -47,7 +38,7 @@ class RectFTests {
         val expectedCenter = PointF(testedRectF.centerX(), testedRectF.centerY())
         testedRectF.scale(1f, expectedCenter)
 
-        assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
+        Assert.assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
     }
 
     @Test
@@ -55,7 +46,7 @@ class RectFTests {
         val expectedSize = PointF(testedRectF.width(), testedRectF.height())
         testedRectF.scale(1f, PointF(testedRectF.centerX(), testedRectF.centerY()))
 
-        assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
+        Assert.assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
     }
 
     @Test
@@ -63,7 +54,7 @@ class RectFTests {
         val expectedCenter = PointF(testedRectF.centerX(), testedRectF.centerY())
         testedRectF.scale(2f, expectedCenter)
 
-        assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
+        Assert.assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
     }
 
     @Test
@@ -71,7 +62,7 @@ class RectFTests {
         val expectedValue = testedRectF.left
         testedRectF.scale(2f, PointF(expectedValue, testedRectF.centerY()))
 
-        assertEquals(expectedValue, testedRectF.left)
+        Assert.assertEquals(expectedValue, testedRectF.left)
     }
 
     @Test
@@ -79,7 +70,7 @@ class RectFTests {
         val expectedValue = testedRectF.right
         testedRectF.scale(2f, PointF(expectedValue, testedRectF.centerY()))
 
-        assertEquals(expectedValue, testedRectF.right)
+        Assert.assertEquals(expectedValue, testedRectF.right)
     }
 
     @Test
@@ -87,7 +78,7 @@ class RectFTests {
         val expectedValue = testedRectF.top
         testedRectF.scale(2f, PointF(testedRectF.centerX(), expectedValue))
 
-        assertEquals(expectedValue, testedRectF.top)
+        Assert.assertEquals(expectedValue, testedRectF.top)
     }
 
     @Test
@@ -95,7 +86,7 @@ class RectFTests {
         val expectedValue = testedRectF.bottom
         testedRectF.scale(2f, PointF(testedRectF.centerX(), expectedValue))
 
-        assertEquals(expectedValue, testedRectF.bottom)
+        Assert.assertEquals(expectedValue, testedRectF.bottom)
     }
 
     @Test
@@ -104,7 +95,7 @@ class RectFTests {
         val expectedSize = PointF(testedRectF.width() * scaleFactor, testedRectF.height() * scaleFactor)
         testedRectF.scale(scaleFactor, PointF(testedRectF.centerX(), testedRectF.centerY()))
 
-        assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
+        Assert.assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
     }
 
     @Test
@@ -112,7 +103,7 @@ class RectFTests {
         val expectedCenter = PointF(testedRectF.centerX(), testedRectF.centerY())
         testedRectF.scale(0.8f, expectedCenter)
 
-        assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
+        Assert.assertEquals(expectedCenter, PointF(testedRectF.centerX(), testedRectF.centerY()))
     }
 
     @Test
@@ -120,7 +111,7 @@ class RectFTests {
         val expectedValue = testedRectF.left
         testedRectF.scale(0.8f, PointF(expectedValue, testedRectF.centerY()))
 
-        assertEquals(expectedValue, testedRectF.left)
+        Assert.assertEquals(expectedValue, testedRectF.left)
     }
 
     @Test
@@ -128,7 +119,7 @@ class RectFTests {
         val expectedValue = testedRectF.right
         testedRectF.scale(0.8f, PointF(expectedValue, testedRectF.centerY()))
 
-        assertEquals(expectedValue, testedRectF.right)
+        Assert.assertEquals(expectedValue, testedRectF.right)
     }
 
     @Test
@@ -136,7 +127,7 @@ class RectFTests {
         val expectedValue = testedRectF.top
         testedRectF.scale(0.8f, PointF(testedRectF.centerX(), expectedValue))
 
-        assertEquals(expectedValue, testedRectF.top)
+        Assert.assertEquals(expectedValue, testedRectF.top)
     }
 
     @Test
@@ -144,7 +135,7 @@ class RectFTests {
         val expectedValue = testedRectF.bottom
         testedRectF.scale(0.8f, PointF(testedRectF.centerX(), expectedValue))
 
-        assertEquals(expectedValue, testedRectF.bottom)
+        Assert.assertEquals(expectedValue, testedRectF.bottom)
     }
 
     @Test
@@ -153,7 +144,7 @@ class RectFTests {
         val expectedSize = PointF(testedRectF.width() * scaleFactor, testedRectF.height() * scaleFactor)
         testedRectF.scale(scaleFactor, PointF(testedRectF.centerX(), testedRectF.centerY()))
 
-        assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
+        Assert.assertEquals(expectedSize, PointF(testedRectF.width(), testedRectF.height()))
     }
 
     @Test
@@ -161,7 +152,7 @@ class RectFTests {
         val expectedArea = RectF(testedRectF)
         testedRectF.translate(0f, 0f)
 
-        assertEquals(expectedArea, testedRectF)
+        Assert.assertEquals(expectedArea, testedRectF)
     }
 
     @Test
@@ -172,8 +163,8 @@ class RectFTests {
 
         testedRectF.translate(translation, 0f)
 
-        assertEquals(expectedLeft, testedRectF.left)
-        assertEquals(expectedRight, testedRectF.right)
+        Assert.assertEquals(expectedLeft, testedRectF.left)
+        Assert.assertEquals(expectedRight, testedRectF.right)
     }
 
     @Test
@@ -184,8 +175,8 @@ class RectFTests {
 
         testedRectF.translate(translation, 0f)
 
-        assertEquals(expectedLeft, testedRectF.left)
-        assertEquals(expectedRight, testedRectF.right)
+        Assert.assertEquals(expectedLeft, testedRectF.left)
+        Assert.assertEquals(expectedRight, testedRectF.right)
     }
 
     @Test
@@ -196,8 +187,8 @@ class RectFTests {
 
         testedRectF.translate(0f, translation)
 
-        assertEquals(expectedTop, testedRectF.top)
-        assertEquals(expectedBottom, testedRectF.bottom)
+        Assert.assertEquals(expectedTop, testedRectF.top)
+        Assert.assertEquals(expectedBottom, testedRectF.bottom)
     }
 
     @Test
@@ -208,10 +199,7 @@ class RectFTests {
 
         testedRectF.translate(0f, translation)
 
-        assertEquals(expectedTop, testedRectF.top)
-        assertEquals(expectedBottom, testedRectF.bottom)
+        Assert.assertEquals(expectedTop, testedRectF.top)
+        Assert.assertEquals(expectedBottom, testedRectF.bottom)
     }
 }
-
-/** RectF used as reference rectangle for all tests. */
-private val TEST_DATA_RECT = RectF(10f, 10f, 20f, 20f)
