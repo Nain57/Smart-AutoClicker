@@ -1,4 +1,4 @@
-include ':extensions'
+include ':core-extensions'
 include ':engine'
 include ':database'
 include ':core-ui'

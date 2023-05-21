@@ -28,8 +28,8 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 
 import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
-import com.buzbuz.smartautoclicker.extensions.scale
-import com.buzbuz.smartautoclicker.extensions.translate
+import com.buzbuz.smartautoclicker.core.scale
+import com.buzbuz.smartautoclicker.core.translate
 import com.buzbuz.smartautoclicker.core.ui.R
 
 import kotlin.math.max

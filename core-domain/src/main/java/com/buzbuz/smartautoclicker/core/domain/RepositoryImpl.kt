@@ -39,7 +39,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.toEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toScenario
-import com.buzbuz.smartautoclicker.extensions.mapList
+import com.buzbuz.smartautoclicker.core.mapList
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

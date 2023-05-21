@@ -58,6 +58,6 @@ dependencies {
     implementation project(path: ':feature-billing')
     implementation project(path: ':core-domain')
     implementation project(path: ':engine')
-    implementation project(path: ':extensions')
+    implementation project(path: ':core-extensions')
     implementation project(path: ':feature-scenario-debugging')
 }
