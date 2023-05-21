@@ -25,11 +25,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.baseui.bindings.setButtonVisibility
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogController
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.NavigationRequest
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.config.ScenarioConfigContent
@@ -55,7 +54,7 @@ class ScenarioDialog(
 
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
-            topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+            topBarBinding.setButtonVisibility(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, View.VISIBLE)
             topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_scenario_config)
         }
     }
@@ -79,10 +78,10 @@ class ScenarioDialog(
         }
     }
 
-    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
+    override fun onDialogButtonPressed(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) {
         when (buttonType) {
-            DialogNavigationButton.SAVE -> onConfigSaved()
-            DialogNavigationButton.DISMISS -> onConfigDiscarded()
+            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE -> onConfigSaved()
+            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DISMISS -> onConfigDiscarded()
             else -> { /* Nothing to do */ }
         }
 
@@ -97,7 +96,7 @@ class ScenarioDialog(
 
     /** */
     private fun updateSaveButtonState(isEnabled: Boolean) {
-        topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, isEnabled)
+        topBarBinding.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isEnabled)
     }
 
     private fun onNewSubOverlayRequest(request: NavigationRequest?) {

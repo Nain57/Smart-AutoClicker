@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.R
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.DialogDebugReportConditionBinding
 

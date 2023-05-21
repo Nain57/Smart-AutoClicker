@@ -23,7 +23,7 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.detection.DETECTION_QUALITY_MAX

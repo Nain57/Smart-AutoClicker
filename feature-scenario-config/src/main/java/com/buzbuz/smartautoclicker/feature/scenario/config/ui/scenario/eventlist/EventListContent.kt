@@ -27,9 +27,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 
-import com.buzbuz.smartautoclicker.baseui.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.baseui.bindings.updateState
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.NavigationRequest
@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCo
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
-import com.buzbuz.smartautoclicker.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 
 import kotlinx.coroutines.launch
 

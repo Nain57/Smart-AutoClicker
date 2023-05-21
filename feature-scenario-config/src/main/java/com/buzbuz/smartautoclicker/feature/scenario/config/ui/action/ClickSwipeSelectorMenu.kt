@@ -25,11 +25,11 @@ import android.widget.Toast
 
 import androidx.core.graphics.toPoint
 
-import com.buzbuz.smartautoclicker.baseui.overlays.menu.OverlayMenuController
-import com.buzbuz.smartautoclicker.baseui.overlays.menu.overlayviews.ClickSelectorView
-import com.buzbuz.smartautoclicker.baseui.overlays.menu.overlayviews.FIRST
-import com.buzbuz.smartautoclicker.baseui.overlays.menu.overlayviews.SECOND
-import com.buzbuz.smartautoclicker.baseui.overlays.menu.overlayviews.SelectionIndex
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.ClickSelectorView
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.FIRST
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.SECOND
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.SelectionIndex
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayValidationMenuBinding
 

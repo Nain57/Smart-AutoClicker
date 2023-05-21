@@ -25,8 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.ContentDebugConfigBinding
 
 import kotlinx.coroutines.launch
@@ -56,8 +55,8 @@ class DebugConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
         }
     }
 
-    override fun onDialogButtonClicked(buttonType: DialogNavigationButton) {
-        if (buttonType == DialogNavigationButton.SAVE) {
+    override fun onDialogButtonClicked(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) {
+        if (buttonType == com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE) {
             viewModel.saveConfig()
         }
     }

@@ -26,7 +26,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.feature.backup.R
 
 import com.buzbuz.smartautoclicker.feature.backup.domain.Backup

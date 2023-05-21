@@ -23,8 +23,8 @@ import android.text.InputType
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.baseui.utils.NumberInputFilter
+import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getDisplayNameRes

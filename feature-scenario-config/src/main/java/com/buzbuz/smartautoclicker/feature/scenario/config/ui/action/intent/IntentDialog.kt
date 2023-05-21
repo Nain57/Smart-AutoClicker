@@ -25,11 +25,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.baseui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.baseui.bindings.setButtonVisibility
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.NavBarDialogController
+import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogController
 import com.buzbuz.smartautoclicker.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
@@ -57,8 +56,8 @@ class IntentDialog(
         return super.onCreateView().also {
             topBarBinding.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_intent)
-                setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
-                setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
+                setButtonVisibility(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, View.VISIBLE)
+                setButtonVisibility(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DELETE, View.VISIBLE)
             }
         }
     }
@@ -92,13 +91,13 @@ class IntentDialog(
         }
     }
 
-    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
+    override fun onDialogButtonPressed(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) {
         when (buttonType) {
-            DialogNavigationButton.SAVE -> {
+            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE -> {
                 viewModel.saveLastConfig()
                 onConfirmClicked(viewModel.getConfiguredIntent())
             }
-            DialogNavigationButton.DELETE -> onDeleteClicked(editedIntent)
+            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DELETE -> onDeleteClicked(editedIntent)
             else -> {}
         }
 
@@ -106,6 +105,6 @@ class IntentDialog(
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
-        topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
+        topBarBinding.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
     }
 }

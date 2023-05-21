@@ -25,10 +25,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
-import com.buzbuz.smartautoclicker.baseui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.domain.model.event.Event
-import com.buzbuz.smartautoclicker.baseui.overlays.dialog.CopyDialog
-import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
+import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

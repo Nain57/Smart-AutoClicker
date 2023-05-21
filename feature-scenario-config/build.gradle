@@ -52,8 +52,8 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+    implementation project(path: ':core-ui')
 
-    implementation project(path: ':base-ui')
     implementation project(path: ':feature-billing')
     implementation project(path: ':detection')
     implementation project(path: ':domain')
