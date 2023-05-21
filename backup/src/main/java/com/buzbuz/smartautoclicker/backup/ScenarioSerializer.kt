@@ -279,7 +279,9 @@ internal class ScenarioSerializer {
             clickOnCondition = clickOnCondition,
             x = x,
             y = y,
-            pressDuration = getLong("pressDuration")?.coerceAtLeast(0) ?: DEFAULT_CLICK_DURATION,
+            pressDuration = getLong("pressDuration")
+                ?.coerceIn(DURATION_LOWER_BOUND..DURATION_GESTURE_UPPER_BOUND)
+                ?: DEFAULT_CLICK_DURATION,
         )
     }
 
@@ -304,7 +306,9 @@ internal class ScenarioSerializer {
             fromY = fromY,
             toX = toX,
             toY = toY,
-            swipeDuration = getLong("swipeDuration")?.coerceAtLeast(0) ?: DEFAULT_SWIPE_DURATION,
+            swipeDuration = getLong("swipeDuration")
+                ?.coerceIn(DURATION_LOWER_BOUND..DURATION_GESTURE_UPPER_BOUND)
+                ?: DEFAULT_SWIPE_DURATION,
         )
     }
 
@@ -409,6 +413,10 @@ const val CONDITION_THRESHOLD_DEFAULT_VALUE = 4
 /** End condition executions default value on compat deserialization. */
 const val END_CONDITION_EXECUTION_DEFAULT_VALUE = 1
 
+/** The minimum value for all durations. */
+const val DURATION_LOWER_BOUND = 1L
+/** The maximum value for all gestures durations. */
+const val DURATION_GESTURE_UPPER_BOUND = 59_999L
 /** Default click duration in ms on compat deserialization. */
 const val DEFAULT_CLICK_DURATION = 1L
 /** Default swipe duration in ms on compat deserialization. */

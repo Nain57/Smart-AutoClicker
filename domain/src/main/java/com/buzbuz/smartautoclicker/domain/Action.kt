@@ -355,3 +355,6 @@ internal fun CompleteActionEntity.toAction(): Action {
         )
     }
 }
+
+/** The maximum supported duration for a gesture. This limitation comes from Android GestureStroke API.  */
+const val GESTURE_DURATION_MAX_VALUE = 59_999L

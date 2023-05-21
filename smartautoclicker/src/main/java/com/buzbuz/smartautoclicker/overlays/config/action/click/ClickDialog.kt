@@ -38,9 +38,10 @@ import com.buzbuz.smartautoclicker.baseui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.baseui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.baseui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.baseui.bindings.setText
-import com.buzbuz.smartautoclicker.baseui.utils.DurationInputFilter
 import com.buzbuz.smartautoclicker.baseui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.baseui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.databinding.DialogConfigActionClickBinding
+import com.buzbuz.smartautoclicker.domain.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.domain.edition.EditedAction
 import com.buzbuz.smartautoclicker.overlays.base.utils.setError
 import com.buzbuz.smartautoclicker.overlays.config.action.ClickSwipeSelectorMenu
@@ -93,7 +94,7 @@ class ClickDialog(
             hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editPressDurationLayout.apply {
-                textField.filters = arrayOf(DurationInputFilter())
+                textField.filters = arrayOf(MinMaxInputFilter(0, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_click_press_duration)
                 setOnTextChangedListener {
                     viewModel.setPressDuration(if (it.isNotEmpty()) it.toString().toLong() else null)

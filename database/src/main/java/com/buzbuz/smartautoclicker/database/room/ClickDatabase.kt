@@ -110,6 +110,7 @@ abstract class ClickDatabase : RoomDatabase() {
                         Migration4to5,
                         Migration5to6,
                         Migration6to7,
+                        Migration9to10,
                     )
                     .build()
 
@@ -121,4 +122,4 @@ abstract class ClickDatabase : RoomDatabase() {
 }
 
 /** Current version of the database. */
-const val CLICK_DATABASE_VERSION = 9
+const val CLICK_DATABASE_VERSION = 10

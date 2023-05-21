@@ -651,6 +651,40 @@ class ScenarioSerializerTests {
     }
 
     @Test
+    fun deserialization_action_click_duration_boundaries() {
+        val pressDurationOver = DURATION_GESTURE_UPPER_BOUND + 500L
+        val pressDurationBelow = DURATION_GESTURE_UPPER_BOUND - 500L
+
+        val jsonClickOver = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(false),
+            "x" to JsonPrimitive(5),
+            "y" to JsonPrimitive(5),
+            "pressDuration" to JsonPrimitive(pressDurationOver),
+        ))
+        val jsonClickBelow = JsonObject(mapOf(
+            "id" to JsonPrimitive(2),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(false),
+            "x" to JsonPrimitive(5),
+            "y" to JsonPrimitive(5),
+            "pressDuration" to JsonPrimitive(pressDurationBelow),
+        ))
+
+        ScenarioSerializer().apply {
+            assertEquals(DURATION_GESTURE_UPPER_BOUND, jsonClickOver.deserializeClickActionCompat()!!.pressDuration)
+            assertEquals(pressDurationBelow, jsonClickBelow.deserializeClickActionCompat()!!.pressDuration)
+        }
+    }
+
+    @Test
     fun deserialization_action_click_mandatory_coordinates() {
         val clickOnCondition = false
         val jsonClickNullX = JsonObject(mapOf(
@@ -763,6 +797,42 @@ class ScenarioSerializerTests {
         ScenarioSerializer().apply {
             assertNull(jsonSwipeNullId.deserializeSwipeActionCompat())
             assertNull(jsonSwipeNullEventId.deserializeSwipeActionCompat())
+        }
+    }
+
+    @Test
+    fun deserialization_action_swipe_duration_boundaries() {
+        val pressDurationOver = DURATION_GESTURE_UPPER_BOUND + 500L
+        val pressDurationBelow = DURATION_GESTURE_UPPER_BOUND - 500L
+
+        val jsonSwipeOver = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to JsonPrimitive(5),
+            "toX" to JsonPrimitive(10),
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to JsonPrimitive(pressDurationOver),
+        ))
+        val jsonSwipeBelow = JsonObject(mapOf(
+            "id" to JsonPrimitive(2),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.SWIPE.name),
+            "fromX" to JsonPrimitive(5),
+            "fromY" to JsonPrimitive(5),
+            "toX" to JsonPrimitive(10),
+            "toY" to JsonPrimitive(10),
+            "swipeDuration" to JsonPrimitive(pressDurationBelow),
+        ))
+
+        ScenarioSerializer().apply {
+            assertEquals(DURATION_GESTURE_UPPER_BOUND, jsonSwipeOver.deserializeSwipeActionCompat()!!.swipeDuration)
+            assertEquals(pressDurationBelow, jsonSwipeBelow.deserializeSwipeActionCompat()!!.swipeDuration)
         }
     }
 

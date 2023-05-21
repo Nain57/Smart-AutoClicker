@@ -16,7 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.database.utils
 
+import android.database.Cursor
+import com.buzbuz.smartautoclicker.database.room.migrations.Migration9to10
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 
 /**
  * Verify that the content of two lists are the same, in any order.
@@ -36,3 +39,14 @@ fun <T> assertSameContent(expectedItems: List<T>, actualItems: List<T>, identifi
         assertEquals(matchedExpected, actualItem)
     }
 }
+
+/** Check the number of items in a cursor. */
+fun Cursor.assertCountEquals(expectedCount: Int) =
+    assertEquals("Invalid list size", expectedCount, count)
+
+fun Cursor.assertColumnEquals(expected: Long, actualColumn: String) =
+    assertEquals(
+        "Invalid column value for $actualColumn",
+        expected,
+        getLong(getColumnIndex(actualColumn))
+    )

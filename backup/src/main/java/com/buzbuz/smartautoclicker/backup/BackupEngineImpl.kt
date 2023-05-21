@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 /** [BackupEngine] internal implementation. */
-@Suppress("BlockingMethodInNonBlockingContext") // All are handled in IO dispatcher
 internal class BackupEngineImpl(
     private val appDataDir: File,
     private val contentResolver: ContentResolver,

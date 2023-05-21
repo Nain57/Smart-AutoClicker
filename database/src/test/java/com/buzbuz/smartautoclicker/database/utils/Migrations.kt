@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -149,3 +149,26 @@ fun getInsertV8Event(
 
 fun getV9Scenario() = "SELECT * FROM scenario_table"
 fun getV9Events() = "SELECT * FROM event_table"
+
+fun getInsertV9Click(id: Long, eventId: Long, name: String, type: String, x: Int?, y: Int?, clickOnCondition: Int?, pressDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, x, y, clickOnCondition, pressDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "$type", $x, $y, $clickOnCondition, $pressDuration)
+    """.trimIndent()
+
+fun getInsertV9Swipe(id: Long, eventId: Long, name: String, type: String, fromX: Int, fromY: Int, toX: Int, toY: Int, swipeDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, fromX, fromY, toX, toY, swipeDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "$type", $fromX, $fromY, $toX, $toY, $swipeDuration)
+    """.trimIndent()
+
+fun getInsertV9EmptyAction(id: Long, eventId: Long, name: String, type: String, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type) 
+        VALUES ($id, $eventId, $priority, "$name", "$type")
+    """.trimIndent()
+
+
+// ----- Utils for Database V10 -----
+
+fun getV10Actions() = "SELECT * FROM action_table"
