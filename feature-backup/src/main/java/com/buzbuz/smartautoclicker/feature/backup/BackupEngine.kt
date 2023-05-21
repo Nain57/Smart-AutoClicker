@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.backup
+package com.buzbuz.smartautoclicker.feature.backup
 
 import android.content.Context
 import android.graphics.Point

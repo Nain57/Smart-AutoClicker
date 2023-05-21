@@ -21,7 +21,7 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.net.Uri
 
-import com.buzbuz.smartautoclicker.backup.BackupEngine
+import com.buzbuz.smartautoclicker.feature.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.domain.model.action.Action

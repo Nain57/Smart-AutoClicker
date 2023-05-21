@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.domain
 import android.graphics.Point
 import android.net.Uri
 
-import com.buzbuz.smartautoclicker.backup.BackupEngine.BackupProgress
+import com.buzbuz.smartautoclicker.feature.backup.BackupEngine.BackupProgress
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
@@ -43,6 +43,7 @@ import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.domain.model.scenario.toEntity
 import com.buzbuz.smartautoclicker.domain.model.scenario.toScenario
 import com.buzbuz.smartautoclicker.extensions.mapList
+import com.buzbuz.smartautoclicker.feature.backup.BackupEngine
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +64,7 @@ import kotlinx.coroutines.launch
 internal class RepositoryImpl internal constructor(
     database: ClickDatabase,
     private val bitmapManager: BitmapManager,
-    private val backupEngine: com.buzbuz.smartautoclicker.backup.BackupEngine,
+    private val backupEngine: BackupEngine,
 ): Repository {
 
     /** The Dao for accessing the database. */
