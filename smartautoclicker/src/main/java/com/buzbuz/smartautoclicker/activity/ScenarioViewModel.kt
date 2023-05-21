@@ -33,9 +33,9 @@ import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.EventIte
 import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.Menu
 import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.ScenarioListItem
 import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.Type
-import com.buzbuz.smartautoclicker.billing.model.BillingRepository
-import com.buzbuz.smartautoclicker.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
+import com.buzbuz.smartautoclicker.feature.billing.model.BillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.domain.model.DATABASE_ID_INSERTION

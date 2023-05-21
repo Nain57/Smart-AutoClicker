@@ -24,8 +24,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.baseui.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.domain.model.AND
 import com.buzbuz.smartautoclicker.domain.model.OR

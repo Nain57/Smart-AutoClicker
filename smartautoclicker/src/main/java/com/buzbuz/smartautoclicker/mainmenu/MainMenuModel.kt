@@ -22,9 +22,9 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.billing.model.BillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
+import com.buzbuz.smartautoclicker.feature.billing.model.BillingRepository
 import com.buzbuz.smartautoclicker.domain.Repository
 import com.buzbuz.smartautoclicker.engine.DetectorEngine
 import com.buzbuz.smartautoclicker.engine.DetectorState
