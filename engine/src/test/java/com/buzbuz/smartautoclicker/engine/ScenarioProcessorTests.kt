@@ -25,8 +25,8 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.*
-import com.buzbuz.smartautoclicker.detection.DetectionResult
-import com.buzbuz.smartautoclicker.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.DetectionResult
+import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT

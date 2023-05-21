@@ -27,8 +27,8 @@ import com.buzbuz.smartautoclicker.core.capture.ScreenRecorder
 import com.buzbuz.smartautoclicker.core.capture.toBitmap
 
 import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
-import com.buzbuz.smartautoclicker.detection.ImageDetector
-import com.buzbuz.smartautoclicker.detection.NativeDetector
+import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.Repository

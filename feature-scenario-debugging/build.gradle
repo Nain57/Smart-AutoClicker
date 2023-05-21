@@ -45,5 +45,5 @@ dependencies {
     implementation project(path: ':core-domain')
 
     implementation project(path: ':engine')
-    implementation project(path: ':detection')
+    implementation project(path: ':core-detection')
 }
