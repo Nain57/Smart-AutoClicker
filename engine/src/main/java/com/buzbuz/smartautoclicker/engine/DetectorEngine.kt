@@ -23,6 +23,8 @@ import android.graphics.Rect
 import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.capture.ScreenRecorder
+import com.buzbuz.smartautoclicker.core.capture.toBitmap
 
 import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.detection.ImageDetector
@@ -114,7 +116,7 @@ class DetectorEngine(context: Context) {
     private val orientationListener = ::onOrientationChanged
 
     /** Record the screen and provide images via [ScreenRecorder.acquireLatestImage]. */
-    private val screenRecorder = ScreenRecorder()
+    private val screenRecorder = ScreenRecorder.getInstance()
     /** Process the events conditions to detect them on the screen. */
     private var scenarioProcessor: ScenarioProcessor? = null
     /** Detect the condition images on the screen image. */

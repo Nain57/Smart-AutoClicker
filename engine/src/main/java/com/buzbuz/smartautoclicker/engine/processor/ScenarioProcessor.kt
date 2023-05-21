@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.engine.processor
 
 import android.graphics.Bitmap
 import android.media.Image
+import com.buzbuz.smartautoclicker.core.capture.toBitmap
 
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
@@ -33,7 +34,6 @@ import com.buzbuz.smartautoclicker.engine.ActionExecutor
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.EndConditionVerifier
 import com.buzbuz.smartautoclicker.engine.ScenarioState
-import com.buzbuz.smartautoclicker.engine.toBitmap
 
 import kotlinx.coroutines.yield
 
