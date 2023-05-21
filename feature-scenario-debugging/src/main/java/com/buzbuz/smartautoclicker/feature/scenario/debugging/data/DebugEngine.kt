@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.debugging.data
 import android.content.Context
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.detection.DetectionResult
+import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario

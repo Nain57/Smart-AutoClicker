@@ -20,8 +20,8 @@ import android.graphics.Bitmap
 import android.media.Image
 import com.buzbuz.smartautoclicker.core.capture.toBitmap
 
-import com.buzbuz.smartautoclicker.detection.DetectionResult
-import com.buzbuz.smartautoclicker.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.DetectionResult
+import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
