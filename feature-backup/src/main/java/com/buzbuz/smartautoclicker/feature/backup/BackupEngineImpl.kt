@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.backup
+package com.buzbuz.smartautoclicker.feature.backup
 
 import android.content.ContentResolver
 import android.graphics.Point
 import android.net.Uri
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.backup.ext.readEntryFile
-import com.buzbuz.smartautoclicker.backup.ext.writeEntryFile
+import com.buzbuz.smartautoclicker.feature.backup.ext.readEntryFile
+import com.buzbuz.smartautoclicker.feature.backup.ext.writeEntryFile
 import com.buzbuz.smartautoclicker.database.bitmap.CLICK_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
 

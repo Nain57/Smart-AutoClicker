@@ -22,7 +22,7 @@ plugins {
 }
 
 android {
-    namespace 'com.buzbuz.smartautoclicker.backup'
+    namespace 'com.buzbuz.smartautoclicker.feature.backup'
     compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {

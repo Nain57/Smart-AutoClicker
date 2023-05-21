@@ -22,7 +22,7 @@ import android.os.Build
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 
-import com.buzbuz.smartautoclicker.backup.BackupEngine
+import com.buzbuz.smartautoclicker.feature.backup.BackupEngine
 import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
 import com.buzbuz.smartautoclicker.database.room.ClickDatabase
 import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
