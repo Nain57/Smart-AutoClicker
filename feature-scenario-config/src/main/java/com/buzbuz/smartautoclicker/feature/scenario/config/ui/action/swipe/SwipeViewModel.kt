@@ -22,7 +22,7 @@ import android.graphics.Point
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isValidDuration
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putSwipeDurationConfig

@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.engine
 
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.domain.model.action.Action
-import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 /**
  * Handle the state of the scenario events.

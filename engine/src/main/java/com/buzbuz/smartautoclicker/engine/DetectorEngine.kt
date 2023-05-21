@@ -29,10 +29,10 @@ import com.buzbuz.smartautoclicker.core.capture.toBitmap
 import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.detection.ImageDetector
 import com.buzbuz.smartautoclicker.detection.NativeDetector
-import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.domain.model.event.Event
-import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.engine.processor.ProgressListener
 import com.buzbuz.smartautoclicker.engine.processor.ScenarioProcessor
 

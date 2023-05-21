@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings
 import android.util.TypedValue
 import android.view.View
 
-import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setIconTintColor

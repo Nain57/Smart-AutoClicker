@@ -22,14 +22,14 @@ import com.buzbuz.smartautoclicker.core.capture.toBitmap
 
 import com.buzbuz.smartautoclicker.detection.DetectionResult
 import com.buzbuz.smartautoclicker.detection.ImageDetector
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.domain.model.event.Event
-import com.buzbuz.smartautoclicker.domain.model.AND
-import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
-import com.buzbuz.smartautoclicker.domain.model.EXACT
-import com.buzbuz.smartautoclicker.domain.model.OR
-import com.buzbuz.smartautoclicker.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.AND
+import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.engine.ActionExecutor
 import com.buzbuz.smartautoclicker.engine.AndroidExecutor
 import com.buzbuz.smartautoclicker.engine.EndConditionVerifier

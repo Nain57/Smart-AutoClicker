@@ -16,9 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.domain
 
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.domain.model.event.Event
-import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
 data class DebugReport internal constructor(
     val scenario: Scenario,

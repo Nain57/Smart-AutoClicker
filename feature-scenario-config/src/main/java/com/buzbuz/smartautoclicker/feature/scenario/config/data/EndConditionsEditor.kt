@@ -16,9 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
-import com.buzbuz.smartautoclicker.domain.model.Identifier
-import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 
 internal class EndConditionsEditor: ListEditor<EndConditionsEditor.Reference, EndCondition>() {

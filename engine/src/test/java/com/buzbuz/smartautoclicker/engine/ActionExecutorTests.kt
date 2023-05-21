@@ -22,7 +22,7 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.engine.utils.anyNotNull
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*

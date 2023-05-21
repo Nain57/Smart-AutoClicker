@@ -22,12 +22,12 @@ import android.graphics.Path
 import android.graphics.Point
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.domain.model.action.Action
-import com.buzbuz.smartautoclicker.domain.model.action.Action.Click
-import com.buzbuz.smartautoclicker.domain.model.action.Action.Pause
-import com.buzbuz.smartautoclicker.domain.model.action.Action.Swipe
-import com.buzbuz.smartautoclicker.domain.model.action.Action.ToggleEvent
-import com.buzbuz.smartautoclicker.domain.model.action.putDomainExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.putDomainExtra
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

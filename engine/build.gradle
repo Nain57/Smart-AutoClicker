@@ -59,7 +59,7 @@ dependencies {
 
     implementation project(path: ':core-capture')
     implementation project(path: ':core-ui')
-    implementation project(path: ':domain')
+    implementation project(path: ':core-domain')
     implementation project(path: ':detection')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"

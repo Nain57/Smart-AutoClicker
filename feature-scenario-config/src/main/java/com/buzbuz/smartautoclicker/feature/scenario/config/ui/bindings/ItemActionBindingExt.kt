@@ -22,7 +22,7 @@ import android.view.View
 
 import androidx.annotation.DrawableRes
 
-import com.buzbuz.smartautoclicker.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.formatDuration

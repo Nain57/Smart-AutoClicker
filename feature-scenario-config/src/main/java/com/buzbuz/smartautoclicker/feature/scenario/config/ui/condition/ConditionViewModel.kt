@@ -21,12 +21,12 @@ import android.graphics.Bitmap
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.domain.Repository
 
-import com.buzbuz.smartautoclicker.domain.*
 import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.domain.model.EXACT
-import com.buzbuz.smartautoclicker.domain.model.WHOLE_SCREEN
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import kotlinx.coroutines.*

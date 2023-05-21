@@ -18,9 +18,9 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
 import android.content.Context
 
-import com.buzbuz.smartautoclicker.domain.model.Identifier
-import com.buzbuz.smartautoclicker.domain.model.action.Action
-import com.buzbuz.smartautoclicker.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.IdentifierCreator
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
