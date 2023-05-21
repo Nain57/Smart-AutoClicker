@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.engine
+package com.buzbuz.smartautoclicker.core.capture
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -22,6 +22,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.graphics.Point
+import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.Image
@@ -31,7 +32,6 @@ import android.media.projection.MediaProjectionManager
 import android.util.Log
 
 import androidx.annotation.MainThread
-import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 
 /**
@@ -49,14 +49,31 @@ import androidx.annotation.WorkerThread
  * [stopProjection] in order to release all resources associated with this object.
  */
 @MainThread
-internal class ScreenRecorder {
+class ScreenRecorder private constructor() {
 
-    @VisibleForTesting
-    internal companion object {
+    companion object {
         /** Tag for logs. */
         private const val TAG = "ScreenRecorder"
         /** Name of the virtual display generating [Image]. */
-        const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"
+        internal const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"
+
+        /** Singleton preventing multiple instances of the ScreenRecorder at the same time. */
+        @Volatile
+        private var INSTANCE: ScreenRecorder? = null
+
+        /**
+         * Get the engine singleton, or instantiates it if it wasn't yet.
+         *
+         * @return the engine singleton.
+         */
+        fun getInstance(): ScreenRecorder {
+            return INSTANCE ?: synchronized(this) {
+                Log.i(TAG, "Instantiates new ScreenRecorder")
+                val instance = ScreenRecorder()
+                INSTANCE = instance
+                instance
+            }
+        }
     }
 
     /**
@@ -136,6 +153,24 @@ internal class ScreenRecorder {
     /** @return the last image of the screen, or null if they have been processed. */
     fun acquireLatestImage(): Image? = imageReader?.acquireLatestImage()
 
+    suspend fun takeScreenshot(area: Rect, completion: suspend (Bitmap) -> Unit) {
+        var image: Image?
+        do {
+            image = acquireLatestImage()
+            image?.use {
+                val bitmap = Bitmap.createBitmap(
+                    it.toBitmap(),
+                    area.left,
+                    area.top,
+                    area.width(),
+                    area.height()
+                )
+
+                completion(bitmap)
+            }
+        } while (image == null)
+    }
+
     /**
      * Stop the screen recording.
      * This method should not be called from the main thread, but the processing thread.
@@ -191,7 +226,7 @@ internal class ScreenRecorder {
  *                     created.
  * @return the bitmap corresponding to the image. If [resultBitmap] was provided, it will be the same object.
  */
-internal fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
+fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
     var bitmap = resultBitmap
     val imageWidth = width + (planes[0].rowStride - planes[0].pixelStride * width) / planes[0].pixelStride
 

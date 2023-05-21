@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.engine
+package com.buzbuz.smartautoclicker.core.capture
 
 import android.content.Context
 import android.content.Intent
@@ -32,8 +32,8 @@ import android.view.Surface
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.engine.shadows.ShadowImageReader
-import com.buzbuz.smartautoclicker.engine.utils.anyNotNull
+import com.buzbuz.smartautoclicker.core.capture.shadows.ShadowImageReader
+import com.buzbuz.smartautoclicker.core.capture.utils.anyNotNull
 
 import kotlinx.coroutines.runBlocking
 
@@ -118,7 +118,7 @@ class ScreenRecorderTests {
             null)
         ).thenReturn(mockVirtualDisplay)
 
-        screenRecorder = ScreenRecorder()
+        screenRecorder = ScreenRecorder.getInstance()
     }
 
     @After

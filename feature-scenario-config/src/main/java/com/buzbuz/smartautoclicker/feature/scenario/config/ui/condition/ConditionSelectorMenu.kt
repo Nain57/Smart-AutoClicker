@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.IntDef
+import androidx.lifecycle.ViewModelProvider
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenuController
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ConditionSelectorView
@@ -46,9 +47,6 @@ class ConditionSelectorMenu(
 ) : OverlayMenuController(context) {
 
     private companion object {
-        /** Delay before confirming the selection in order to let the time to the selector view to be hide. */
-        private const val SELECTION_DELAY_MS = 200L
-
         /** Describe the state of the capture. */
         @IntDef(SELECTION, CAPTURE, ADJUST)
         @Retention(AnnotationRetention.SOURCE)
@@ -59,6 +57,11 @@ class ConditionSelectorMenu(
         private const val CAPTURE = 2
         /** User is selecting a part of the capture for the event condition. */
         private const val ADJUST = 3
+    }
+
+    /** The view model for this menu. */
+    private val viewModel: ConditionSelectorViewModel by lazy {
+        ViewModelProvider(this).get(ConditionSelectorViewModel::class.java)
     }
 
     /** The view binding for the overlay menu. */
@@ -127,14 +130,13 @@ class ConditionSelectorMenu(
     private fun onConfirm() {
         if (state == SELECTION) {
             state = CAPTURE
-            Handler(Looper.getMainLooper()).postDelayed({
-                val screenSize = screenMetrics.screenSize
-                val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
-                DetectorEngine.getDetectorEngine(context).captureArea(screenRect) { bitmap ->
-                    selectorView.showCapture(bitmap)
-                    state = ADJUST
-                }
-            }, SELECTION_DELAY_MS)
+
+            val screenSize = screenMetrics.screenSize
+            val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
+            viewModel.takeScreenshot(screenRect) { screenshot ->
+                selectorView.showCapture(screenshot)
+                state = ADJUST
+            }
         } else {
             val selection = selectorView.getSelection()
             onConditionSelected(selection.first, selection.second)
