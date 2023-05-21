@@ -33,13 +33,13 @@ internal fun Event.toEntity() = EventEntity(
 )
 
 /** @return the complete event for this entity. */
-internal fun CompleteEventEntity.toEvent() = Event(
-    id = Identifier(databaseId = event.id),
-    scenarioId = Identifier(databaseId = event.scenarioId),
+internal fun CompleteEventEntity.toEvent(asDomain: Boolean = false) = Event(
+    id = Identifier(id = event.id, asDomain = asDomain),
+    scenarioId = Identifier(id = event.scenarioId, asDomain = asDomain),
     name= event.name,
     conditionOperator = event.conditionOperator,
     priority = event.priority,
     enabledOnStart = event.enabledOnStart,
-    actions = actions.sortedBy { it.action.priority }.map { it.toAction() }.toMutableList(),
-    conditions = conditions.map { it.toCondition() }.toMutableList(),
+    actions = actions.sortedBy { it.action.priority }.map { it.toAction(asDomain) }.toMutableList(),
+    conditions = conditions.map { it.toCondition(asDomain) }.toMutableList(),
 )

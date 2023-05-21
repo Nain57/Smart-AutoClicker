@@ -258,7 +258,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO) {
             repository.addScenario(
                 Scenario(
-                    id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0),
+                    id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0L),
                     name = name,
                     detectionQuality = context.resources.getInteger(R.integer.default_detection_quality),
                     endConditionOperator = OR,

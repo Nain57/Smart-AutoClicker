@@ -120,17 +120,17 @@ private fun Action.ToggleEvent.toToggleEventEntity(): CompleteActionEntity {
 }
 
 /** Convert an Action entity into a Domain Action. */
-internal fun CompleteActionEntity.toAction(): Action = when (action.type) {
-    ActionType.CLICK -> toClick()
-    ActionType.SWIPE -> toSwipe()
-    ActionType.PAUSE -> toPause()
-    ActionType.INTENT -> toIntent()
-    ActionType.TOGGLE_EVENT -> toToggleEvent()
+internal fun CompleteActionEntity.toAction(asDomain: Boolean = false): Action = when (action.type) {
+    ActionType.CLICK -> toClick(asDomain)
+    ActionType.SWIPE -> toSwipe(asDomain)
+    ActionType.PAUSE -> toPause(asDomain)
+    ActionType.INTENT -> toIntent(asDomain)
+    ActionType.TOGGLE_EVENT -> toToggleEvent(asDomain)
 }
 
-private fun CompleteActionEntity.toClick() = Action.Click(
-    id = Identifier(databaseId = action.id),
-    eventId = Identifier(databaseId = action.eventId),
+private fun CompleteActionEntity.toClick(asDomain: Boolean = false) = Action.Click(
+    id = Identifier(id = action.id, asDomain= asDomain),
+    eventId = Identifier(id = action.eventId, asDomain= asDomain),
     name = action.name,
     pressDuration = action.pressDuration!!,
     x = action.x,
@@ -138,9 +138,9 @@ private fun CompleteActionEntity.toClick() = Action.Click(
     clickOnCondition = action.clickOnCondition!!,
 )
 
-private fun CompleteActionEntity.toSwipe() = Action.Swipe(
-    id = Identifier(databaseId = action.id),
-    eventId = Identifier(databaseId = action.eventId),
+private fun CompleteActionEntity.toSwipe(asDomain: Boolean = false) = Action.Swipe(
+    id = Identifier(id = action.id, asDomain= asDomain),
+    eventId = Identifier(id = action.eventId, asDomain= asDomain),
     name = action.name,
     swipeDuration = action.swipeDuration!!,
     fromX = action.fromX!!,
@@ -149,30 +149,30 @@ private fun CompleteActionEntity.toSwipe() = Action.Swipe(
     toY = action.toY!!,
 )
 
-private fun CompleteActionEntity.toPause() = Action.Pause(
-    id = Identifier(databaseId = action.id),
-    eventId = Identifier(databaseId = action.eventId),
+private fun CompleteActionEntity.toPause(asDomain: Boolean = false) = Action.Pause(
+    id = Identifier(id = action.id, asDomain= asDomain),
+    eventId = Identifier(id = action.eventId, asDomain= asDomain),
     name = action.name,
     pauseDuration = action.pauseDuration!!,
 )
 
-private fun CompleteActionEntity.toIntent() = Action.Intent(
-    id = Identifier(action.id),
-    eventId = Identifier(action.eventId),
+private fun CompleteActionEntity.toIntent(asDomain: Boolean = false) = Action.Intent(
+    id = Identifier(id = action.id, asDomain= asDomain),
+    eventId = Identifier(id = action.eventId, asDomain= asDomain),
     name = action.name,
     isAdvanced = action.isAdvanced,
     isBroadcast = action.isBroadcast,
     intentAction = action.intentAction,
     componentName = action.componentName.toComponentName(),
     flags = action.flags,
-    extras = intentExtras.map { it.toIntentExtra() }.toMutableList(),
+    extras = intentExtras.map { it.toIntentExtra(asDomain) }.toMutableList(),
 )
 
-private fun CompleteActionEntity.toToggleEvent() = Action.ToggleEvent(
-    id = Identifier(databaseId = action.id),
-    eventId = Identifier(databaseId = action.eventId),
+private fun CompleteActionEntity.toToggleEvent(asDomain: Boolean = false) = Action.ToggleEvent(
+    id = Identifier(id = action.id, asDomain= asDomain),
+    eventId = Identifier(id = action.eventId, asDomain= asDomain),
     name = action.name,
-    toggleEventId = Identifier(databaseId = action.toggleEventId!!),
+    toggleEventId = Identifier(id = action.toggleEventId!!, asDomain= asDomain),
     toggleEventType = action.toggleEventType!!.toDomain(),
 )
 

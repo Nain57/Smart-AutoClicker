@@ -30,8 +30,8 @@ internal fun Scenario.toEntity() = ScenarioEntity(
 )
 
 /** @return the scenario for this entity. */
-internal fun ScenarioEntity.toScenario() = Scenario(
-    id = Identifier(databaseId = id),
+internal fun ScenarioEntity.toScenario(asDomain: Boolean = false) = Scenario(
+    id = Identifier(id = id, asDomain = asDomain),
     name = name,
     detectionQuality = detectionQuality,
     endConditionOperator = endConditionOperator,

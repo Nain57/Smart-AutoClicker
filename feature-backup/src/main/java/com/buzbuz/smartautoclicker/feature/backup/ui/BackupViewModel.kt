@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.backup
+package com.buzbuz.smartautoclicker.feature.backup.ui
 
 import android.app.Application
 import android.content.Intent
@@ -26,11 +26,11 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.baseui.utils.ScreenMetrics
-import com.buzbuz.smartautoclicker.domain.Repository
-import com.buzbuz.smartautoclicker.domain.Backup
+import com.buzbuz.smartautoclicker.feature.backup.R
+
+import com.buzbuz.smartautoclicker.feature.backup.domain.Backup
+import com.buzbuz.smartautoclicker.feature.backup.domain.BackupRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 class BackupViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The repository providing access to the database. */
-    private val repository = Repository.getRepository(application)
+    private val repository = BackupRepository.getInstance(application)
     /** The metrics of the screen.  */
     private val screenMetrics = ScreenMetrics.getInstance(application.applicationContext)
 

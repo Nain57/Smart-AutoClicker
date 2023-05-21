@@ -54,7 +54,6 @@ dependencies {
     implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
-    implementation project(path: ':feature-backup')
 
     implementation project(path: ':database')
     implementation project(path: ':extensions')

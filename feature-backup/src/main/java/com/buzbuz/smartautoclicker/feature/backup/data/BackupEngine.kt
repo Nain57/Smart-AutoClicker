@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.backup
+package com.buzbuz.smartautoclicker.feature.backup.data
 
 import android.content.ContentResolver
 import android.graphics.Point
 import android.net.Uri
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.feature.backup.ext.readEntryFile
-import com.buzbuz.smartautoclicker.feature.backup.ext.writeEntryFile
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.readEntryFile
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.writeEntryFile
 import com.buzbuz.smartautoclicker.database.bitmap.CLICK_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
 
@@ -36,10 +36,7 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 /** [BackupEngine] internal implementation. */
-internal class BackupEngineImpl(
-    private val appDataDir: File,
-    private val contentResolver: ContentResolver,
-) : BackupEngine {
+internal class BackupEngine(private val appDataDir: File, private val contentResolver: ContentResolver) {
 
     /**
      * Regex matching a condition file into its folder in a backup archive.
@@ -53,11 +50,19 @@ internal class BackupEngineImpl(
     /** Serializer/Deserializer for database scenarios. */
     private val scenarioSerializer = ScenarioSerializer()
 
-    override suspend fun createBackup(
+    /**
+     * Creates a new backup file.
+     *
+     * @param zipFileUri the uri of the file to write the backup into. Must be retrieved using the DocumentProvider.
+     * @param scenarios the scenarios to backup.
+     * @param screenSize the size of this device screen.
+     * @param progress the object notified about the backup progress.
+     */
+    suspend fun createBackup(
         zipFileUri: Uri,
         scenarios: List<CompleteScenario>,
         screenSize: Point,
-        progress: BackupEngine.BackupProgress,
+        progress: BackupProgress,
     ) {
         Log.d(TAG, "Create backup: $zipFileUri for scenarios: $scenarios")
 
@@ -151,7 +156,14 @@ internal class BackupEngineImpl(
         }
     }
 
-    override suspend fun loadBackup(zipFileUri: Uri, screenSize: Point, progress: BackupEngine.BackupProgress) {
+    /**
+     * Loads a backup file.
+     *
+     * @param zipFileUri the uri of the file to load the backup from. Must be retrieved using the DocumentProvider.
+     * @param screenSize the size of this device screen.
+     * @param progress the object notified about the backup import progress.
+     */
+    suspend fun loadBackup(zipFileUri: Uri, screenSize: Point, progress: BackupProgress) {
         Log.d(TAG, "Load backup: $zipFileUri")
 
         var screenCompatWarning = false

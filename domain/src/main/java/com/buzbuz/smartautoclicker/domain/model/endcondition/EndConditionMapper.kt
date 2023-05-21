@@ -35,10 +35,10 @@ internal fun EndCondition.toEntity(): EndConditionEntity {
 }
 
 /** @return the end condition for this entity. */
-internal fun EndConditionWithEvent.toEndCondition() = EndCondition(
-    id = Identifier(databaseId = endCondition.id),
-    scenarioId = Identifier(databaseId = endCondition.scenarioId),
-    eventId = Identifier(databaseId = event.id),
+internal fun EndConditionWithEvent.toEndCondition(asDomain: Boolean = false) = EndCondition(
+    id = Identifier(id = endCondition.id, asDomain = asDomain),
+    scenarioId = Identifier(id = endCondition.scenarioId, asDomain = asDomain),
+    eventId = Identifier(id = event.id, asDomain = asDomain),
     eventName = event.name,
     executions = endCondition.executions,
 )

@@ -35,15 +35,15 @@ internal fun <T> IntentExtra<T>.toEntity(): IntentExtraEntity {
 }
 
 /** @return the intent extra for this entity. */
-internal fun IntentExtraEntity.toIntentExtra() = when (type) {
-    IntentExtraType.BYTE -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toByte())
-    IntentExtraType.BOOLEAN -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toBooleanStrict())
-    IntentExtraType.CHAR -> IntentExtra(Identifier(id), Identifier(actionId), key, value[0])
-    IntentExtraType.DOUBLE -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toDouble())
-    IntentExtraType.INTEGER -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toInt())
-    IntentExtraType.FLOAT -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toFloat())
-    IntentExtraType.SHORT -> IntentExtra(Identifier(id), Identifier(actionId), key, value.toShort())
-    IntentExtraType.STRING -> IntentExtra(Identifier(id), Identifier(actionId), key, value)
+internal fun IntentExtraEntity.toIntentExtra(asDomain: Boolean = false) = when (type) {
+    IntentExtraType.BYTE -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toByte())
+    IntentExtraType.BOOLEAN -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toBooleanStrict())
+    IntentExtraType.CHAR -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value[0])
+    IntentExtraType.DOUBLE -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toDouble())
+    IntentExtraType.INTEGER -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toInt())
+    IntentExtraType.FLOAT -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toFloat())
+    IntentExtraType.SHORT -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toShort())
+    IntentExtraType.STRING -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value)
 }
 
 private fun <T> T?.toIntentExtraType(): IntentExtraType = when (this) {

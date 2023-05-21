@@ -51,17 +51,33 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     testOptions {
         unitTests.includeAndroidResources = true
     }
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}"
 
+    implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
+    implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
+    implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
+    implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
+
+    implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
+    implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
+
+    implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+
+    implementation project(path: ':base-ui')
     implementation project(path: ':database')
+    implementation project(path: ':domain')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"

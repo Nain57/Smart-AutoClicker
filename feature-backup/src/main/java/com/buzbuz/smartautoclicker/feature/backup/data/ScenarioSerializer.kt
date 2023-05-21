@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.backup
+package com.buzbuz.smartautoclicker.feature.backup.data
 
 import android.graphics.Point
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 
-import com.buzbuz.smartautoclicker.feature.backup.ext.getBoolean
-import com.buzbuz.smartautoclicker.feature.backup.ext.getEnum
-import com.buzbuz.smartautoclicker.feature.backup.ext.getInt
-import com.buzbuz.smartautoclicker.feature.backup.ext.getJsonArray
-import com.buzbuz.smartautoclicker.feature.backup.ext.getJsonObject
-import com.buzbuz.smartautoclicker.feature.backup.ext.getLong
-import com.buzbuz.smartautoclicker.feature.backup.ext.getString
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.getBoolean
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.getEnum
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.getInt
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.getJsonArray
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.getJsonObject
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.getLong
+import com.buzbuz.smartautoclicker.feature.backup.data.ext.getString
 import com.buzbuz.smartautoclicker.database.room.CLICK_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.database.room.entity.*
 
