@@ -24,7 +24,6 @@
         <activity
             android:name="com.buzbuz.smartautoclicker.billing.ui.ProModeBillingActivity"
             android:theme="@style/AppTheme.TranslucentActivity"
-            android:screenOrientation="locked"
             android:exported="false"
             android:noHistory="true"
             android:excludeFromRecents="true"/>

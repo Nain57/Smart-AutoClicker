@@ -31,6 +31,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.billing.R
 import com.buzbuz.smartautoclicker.billing.databinding.FragmentProModeBillingDialogBinding
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
@@ -83,7 +84,10 @@ internal class ProModeBillingDialogFragment : DialogFragment() {
                     false
                 }
             }
+
             create()
+
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
