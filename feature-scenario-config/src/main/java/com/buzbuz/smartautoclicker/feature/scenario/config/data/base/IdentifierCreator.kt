@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data.base
 
-import com.buzbuz.smartautoclicker.domain.model.DATABASE_ID_INSERTION
-import com.buzbuz.smartautoclicker.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.DATABASE_ID_INSERTION
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 
 internal class IdentifierCreator {
 

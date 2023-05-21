@@ -77,7 +77,7 @@ dependencies {
     implementation project(path: ':core-ui')
 
     implementation project(path: ':database')
-    implementation project(path: ':domain')
+    implementation project(path: ':core-domain')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"

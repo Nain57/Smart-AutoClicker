@@ -27,10 +27,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.ScenarioListFragmentUiState.ScenarioListItem
-import com.buzbuz.smartautoclicker.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.databinding.ItemScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemScenarioEmptyBinding
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 
 import kotlinx.coroutines.Job
 

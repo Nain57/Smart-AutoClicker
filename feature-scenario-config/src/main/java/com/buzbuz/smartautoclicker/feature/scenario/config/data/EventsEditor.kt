@@ -18,10 +18,10 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
 import android.content.Context
 
-import com.buzbuz.smartautoclicker.domain.model.AND
-import com.buzbuz.smartautoclicker.domain.model.Identifier
-import com.buzbuz.smartautoclicker.domain.model.action.Action
-import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.AND
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 

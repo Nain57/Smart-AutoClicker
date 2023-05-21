@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data.base
 
-import com.buzbuz.smartautoclicker.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 
 internal abstract class ListEditor<Reference, Item> : Editor<Reference, List<Item>>() {
 

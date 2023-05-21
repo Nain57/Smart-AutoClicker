@@ -20,8 +20,8 @@ import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
 

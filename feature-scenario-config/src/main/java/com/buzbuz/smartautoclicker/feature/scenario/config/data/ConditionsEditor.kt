@@ -20,9 +20,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.domain.model.EXACT
-import com.buzbuz.smartautoclicker.domain.model.Identifier
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 

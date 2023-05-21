@@ -25,7 +25,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
-import com.buzbuz.smartautoclicker.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getDisplayNameRes
 

@@ -22,8 +22,8 @@ import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebugReport
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository

@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings
 
 import android.view.View
 
-import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.IncludeEventPickerBinding
 
 /** Update the ui state of the selected event. */

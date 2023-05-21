@@ -23,9 +23,9 @@ import android.graphics.Bitmap
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyViewModel
-import com.buzbuz.smartautoclicker.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 

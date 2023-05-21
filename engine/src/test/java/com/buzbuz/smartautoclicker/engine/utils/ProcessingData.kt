@@ -18,12 +18,12 @@ package com.buzbuz.smartautoclicker.engine.utils
 
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.domain.model.AND
-import com.buzbuz.smartautoclicker.domain.model.ConditionOperator
-import com.buzbuz.smartautoclicker.domain.model.DetectionType
-import com.buzbuz.smartautoclicker.domain.model.action.Action
-import com.buzbuz.smartautoclicker.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.AND
+import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 /** Test data and helpers for the detection tests. */
 internal object ProcessingData {
