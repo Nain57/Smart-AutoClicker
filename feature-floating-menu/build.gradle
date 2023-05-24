@@ -53,10 +53,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.vectordrawable:vectordrawable-animated:${rootProject.ext.androidxVectorDrawableVersion}"
+    implementation project(path: ':core:domain')
 
-    implementation project(path: ':core-domain')
-    implementation project(path: ':core-processing')
-    implementation project(path: ':core-ui')
+    implementation project(path: ':core:processing')
+    implementation project(path: ':core:ui')
     implementation project(path: ':feature-billing')
     implementation project(path: ':feature-scenario-debugging')
     implementation project(path: ':feature-scenario-config')
