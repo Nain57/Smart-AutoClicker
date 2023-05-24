@@ -72,7 +72,7 @@ dependencies {
     kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}"
-    implementation project(path: ':core-extensions')
+    implementation project(path: ':core:extensions')
 
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
