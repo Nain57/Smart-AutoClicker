@@ -55,6 +55,8 @@
 
     <dimen name="bottom_sheet_min_height">600dp</dimen>
 
+    <dimen name="overlay_menu_btn_size">48dp</dimen>
+
     <!-- This must be equals to android_bottom_navigation_height + 16dp-->
     <dimen name="dialog_create_copy_buttons_bottom_margin">96dp</dimen>
 </resources>

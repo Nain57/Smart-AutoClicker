@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.engine.processor.ProgressListener
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.data.DebugEngine
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugReportEnabled

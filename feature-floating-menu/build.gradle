@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.buzbuz.smartautoclicker.feature.scenario.config'
+    namespace 'com.buzbuz.smartautoclicker.feature.floatingmenu'
     compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
@@ -33,31 +33,31 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
-    buildFeatures {
-        viewBinding true
-    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 
-    implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
-    implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
-    implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
+    implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
+    implementation "androidx.cardview:cardview:${rootProject.ext.androidxCardViewVersion}"
+    implementation "androidx.constraintlayout:constraintlayout:${rootProject.ext.androidxConstraintLayoutVersion}"
     implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
+    implementation "androidx.vectordrawable:vectordrawable-animated:${rootProject.ext.androidxVectorDrawableVersion}"
 
-    implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
-
-    implementation project(path: ':core-capture')
-    implementation project(path: ':core-ui')
-    implementation project(path: ':feature-billing')
     implementation project(path: ':core-domain')
     implementation project(path: ':core-processing')
-    implementation project(path: ':core-extensions')
+    implementation project(path: ':core-ui')
+    implementation project(path: ':feature-billing')
     implementation project(path: ':feature-scenario-debugging')
+    implementation project(path: ':feature-scenario-config')
 }
