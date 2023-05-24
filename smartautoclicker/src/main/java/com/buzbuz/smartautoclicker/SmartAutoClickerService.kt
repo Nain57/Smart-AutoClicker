@@ -27,6 +27,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+
 import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
@@ -36,9 +37,9 @@ import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayController
 import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.engine.AndroidExecutor
-import com.buzbuz.smartautoclicker.engine.DetectorEngine
-import com.buzbuz.smartautoclicker.mainmenu.MainMenu
+import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.feature.floatingmenu.ui.MainMenu
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -95,7 +96,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     /** The metrics of the device screen. */
     private var screenMetrics: ScreenMetrics? = null
     /** The engine for the detection. */
-    private var detectorEngine: DetectorEngine? = null
+    private var detectionRepository: DetectionRepository? = null
     /** The root controller for the overlay ui. */
     private var rootOverlayController: OverlayController? = null
     /** True if the overlay is started, false if not. */
@@ -130,8 +131,14 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 startMonitoring(this@SmartAutoClickerService)
             }
 
-            detectorEngine = DetectorEngine.getDetectorEngine(this@SmartAutoClickerService).apply {
-                startScreenRecord(this@SmartAutoClickerService, resultCode, data, scenario, this@SmartAutoClickerService)
+            detectionRepository = DetectionRepository.getDetectionRepository(this@SmartAutoClickerService).apply {
+                startScreenRecord(
+                    context = this@SmartAutoClickerService,
+                    resultCode = resultCode,
+                    data = data,
+                    androidExecutor = this@SmartAutoClickerService,
+                    scenarioDbId = scenario.id.databaseId,
+                )
             }
 
             Handler(Looper.getMainLooper()).postDelayed({
@@ -153,11 +160,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             rootOverlayController?.destroy()
             rootOverlayController = null
 
-            detectorEngine?.let { detector ->
-                detector.stopScreenRecord()
-                detector.clear()
-            }
-            detectorEngine = null
+            detectionRepository?.stopScreenRecord()
+            detectionRepository = null
 
             screenMetrics?.stopMonitoring(this@SmartAutoClickerService)
             screenMetrics = null
