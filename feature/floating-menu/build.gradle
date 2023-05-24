@@ -57,7 +57,7 @@ dependencies {
 
     implementation project(path: ':core:processing')
     implementation project(path: ':core:ui')
-    implementation project(path: ':feature-billing')
-    implementation project(path: ':feature-scenario-debugging')
-    implementation project(path: ':feature-scenario-config')
+    implementation project(path: ':feature:billing')
+    implementation project(path: ':feature:scenario-debugging')
+    implementation project(path: ':feature:scenario-config')
 }
