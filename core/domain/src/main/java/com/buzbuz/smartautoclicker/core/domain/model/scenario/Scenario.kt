@@ -34,10 +34,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.Identifier
  */
 data class Scenario(
     val id: Identifier,
-    var name: String,
-    var detectionQuality: Int,
-    @ConditionOperator var endConditionOperator: Int,
-    var randomize: Boolean = false,
+    val name: String,
+    val detectionQuality: Int,
+    @ConditionOperator val endConditionOperator: Int,
+    val randomize: Boolean = false,
     val eventCount: Int = 0,
 )
 

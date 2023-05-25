@@ -25,11 +25,11 @@ import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 sealed class Action {
 
     /** The unique identifier for the action. */
-    abstract var id: Identifier
+    abstract val id: Identifier
     /** The identifier of the event for this action. */
-    abstract var eventId: Identifier
+    abstract val eventId: Identifier
     /** The name of the action. */
-    abstract var name: String?
+    abstract val name: String?
 
     /** @return true if this action is complete and can be transformed into its entity. */
     open fun isComplete(): Boolean = name != null
@@ -48,13 +48,13 @@ sealed class Action {
      * @param y the y position of the click.
      */
     data class Click(
-        override var id: Identifier,
-        override var eventId: Identifier,
-        override var name: String? = null,
-        var pressDuration: Long? = null,
-        var x: Int? = null,
-        var y: Int? = null,
-        var clickOnCondition: Boolean,
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String? = null,
+        val pressDuration: Long? = null,
+        val x: Int? = null,
+        val y: Int? = null,
+        val clickOnCondition: Boolean,
     ) : Action() {
 
         override fun isComplete(): Boolean =
@@ -76,14 +76,14 @@ sealed class Action {
      * @param toY the y position of the swipe end.
      */
     data class Swipe(
-        override var id: Identifier,
-        override var eventId: Identifier,
-        override var name: String? = null,
-        var swipeDuration: Long? = null,
-        var fromX: Int? = null,
-        var fromY: Int? = null,
-        var toX: Int? = null,
-        var toY: Int? = null,
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String? = null,
+        val swipeDuration: Long? = null,
+        val fromX: Int? = null,
+        val fromY: Int? = null,
+        val toX: Int? = null,
+        val toY: Int? = null,
     ) : Action() {
 
         override fun isComplete(): Boolean =
@@ -101,10 +101,10 @@ sealed class Action {
      * @param pauseDuration the duration of the pause in milliseconds.
      */
     data class Pause(
-        override var id: Identifier,
-        override var eventId: Identifier,
-        override var name: String? = null,
-        var pauseDuration: Long? = null,
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String? = null,
+        val pauseDuration: Long? = null,
     ) : Action() {
 
         override fun isComplete(): Boolean = super.isComplete() && pauseDuration != null
@@ -126,14 +126,14 @@ sealed class Action {
      * @param extras the list of extras to sent with the intent.
      */
     data class Intent(
-        override var id: Identifier,
-        override var eventId: Identifier,
-        override var name: String? = null,
-        var isAdvanced: Boolean? = null,
-        var isBroadcast: Boolean? = null,
-        var intentAction: String? = null,
-        var componentName: ComponentName? = null,
-        var flags: Int? = null,
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String? = null,
+        val isAdvanced: Boolean? = null,
+        val isBroadcast: Boolean? = null,
+        val intentAction: String? = null,
+        val componentName: ComponentName? = null,
+        val flags: Int? = null,
         val extras: MutableList<IntentExtra<out Any>>? = null,
     ) : Action() {
 
@@ -153,11 +153,11 @@ sealed class Action {
      * @param toggleEventType the type of manipulation to apply.
      */
     data class ToggleEvent(
-        override var id: Identifier,
-        override var eventId: Identifier,
-        override var name: String? = null,
-        var toggleEventId: Identifier? = null,
-        var toggleEventType: ToggleType? = null,
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String? = null,
+        val toggleEventId: Identifier? = null,
+        val toggleEventType: ToggleType? = null,
     ) : Action() {
 
         /**

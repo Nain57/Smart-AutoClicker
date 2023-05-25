@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.domain
 
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
@@ -222,14 +221,15 @@ internal class RepositoryImpl internal constructor(
     }
 
     private suspend fun updateConditions(eventDbId: Long, conditions: List<Condition>) {
-        saveNewConditionsBitmap(conditions)
-
         conditionsUpdater.refreshUpdateValues(
             currentEntities = conditionsDao.getConditions(eventDbId),
             newItems = conditions,
             toEntity = { _, condition ->
                 condition.toEntity().apply {
                     eventId = eventDbId
+                    condition.bitmap?.let {
+                        path = bitmapManager.saveBitmap(it)
+                    }
                 }
             }
         )
@@ -307,23 +307,6 @@ internal class RepositoryImpl internal constructor(
 
     override fun cleanCache(): Unit =
         bitmapManager.releaseCache()
-
-    /**
-     * Save the new conditions bitmap on the application data folder.
-     *
-     * @param conditions the list of conditions to save their bitmap.
-     */
-    private suspend fun saveNewConditionsBitmap(conditions: List<Condition>) {
-        conditions.forEach { condition ->
-            if (condition.path == null) {
-                if (condition.bitmap == null) {
-                    throw IllegalArgumentException("Can't save invalid condition")
-                }
-
-                condition.path = bitmapManager.saveBitmap(condition.bitmap)
-            }
-        }
-    }
 
     /**
      * Remove bitmaps from the application data folder.

@@ -34,14 +34,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.Identifier
  * @param enabledOnStart tells if the event should be evaluated with the scenario, or if it should be enabled by an action.
  */
 data class Event(
-    var id: Identifier,
-    var scenarioId: Identifier,
-    var name: String,
-    @ConditionOperator var conditionOperator: Int,
+    val id: Identifier,
+    val scenarioId: Identifier,
+    val name: String,
+    @ConditionOperator val conditionOperator: Int,
     var priority: Int,
-    val actions: MutableList<Action> = mutableListOf(),
-    val conditions: MutableList<Condition> =  mutableListOf(),
-    var enabledOnStart: Boolean = true,
+    val actions: List<Action> = emptyList(),
+    val conditions: List<Condition> =  emptyList(),
+    val enabledOnStart: Boolean = true,
 ) {
 
     /** Tells if this event is complete and valid for save. */

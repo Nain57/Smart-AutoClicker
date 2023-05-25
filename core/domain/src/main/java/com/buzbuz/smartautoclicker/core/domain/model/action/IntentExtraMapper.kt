@@ -29,8 +29,8 @@ internal fun <T> IntentExtra<T>.toEntity(): IntentExtraEntity {
         id = id.databaseId,
         actionId = actionId.databaseId,
         type = value.toIntentExtraType(),
-        key = key!!,
-        value = value!!.toString(),
+        key = key,
+        value = value.toString(),
     )
 }
 
