@@ -77,7 +77,7 @@ abstract class NavBarDialogController(
         // correctly handle the dialog scrolling behaviour without moving the navigation view from the bottom.
         // This issue does not occurs in landscape mode, as the NavigationBar is replaced by a NavigationRail, which
         // is sticky to the dialog start.
-        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
             navBarView = ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).root
             createCopyButtons = IncludeCreateCopyButtonsBinding.inflate(LayoutInflater.from(context))
         } else {
@@ -103,7 +103,7 @@ abstract class NavBarDialogController(
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         // Setup dialog views. We need to do it here as it is the first place where the dialog is created and where we
         // can access its views.
-        if (screenMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setupPortraitViews()
         }
 

@@ -22,7 +22,7 @@ import android.graphics.Rect
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.capture.ScreenRecorder
+import com.buzbuz.smartautoclicker.core.display.ScreenRecorder
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

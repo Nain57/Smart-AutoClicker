@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.graphics.Bitmap
 import android.media.Image
-import com.buzbuz.smartautoclicker.core.capture.toBitmap
+import com.buzbuz.smartautoclicker.core.display.toBitmap
 
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector

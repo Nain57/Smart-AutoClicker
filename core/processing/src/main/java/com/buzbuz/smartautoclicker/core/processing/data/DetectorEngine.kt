@@ -23,8 +23,8 @@ import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.capture.ScreenRecorder
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.ScreenRecorder
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
@@ -36,7 +36,6 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProces
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
@@ -58,7 +57,7 @@ import kotlinx.coroutines.flow.StateFlow
 internal class DetectorEngine(context: Context) {
 
     /** Monitors the state of the screen. */
-    private val screenMetrics = ScreenMetrics.getInstance(context)
+    private val displayMetrics = DisplayMetrics.getInstance(context)
     /** Listener upon orientation changes. */
     private val orientationListener = ::onOrientationChanged
 
@@ -122,7 +121,7 @@ internal class DetectorEngine(context: Context) {
 
         this.androidExecutor = androidExecutor
         processingScope = CoroutineScope(Dispatchers.IO)
-        screenMetrics.addOrientationListener(orientationListener)
+        displayMetrics.addOrientationListener(orientationListener)
 
         screenRecorder.apply {
             startProjection(context, resultCode, data) {
@@ -130,7 +129,7 @@ internal class DetectorEngine(context: Context) {
             }
 
             processingScope?.launch {
-                startScreenRecord(context, screenMetrics.screenSize)
+                startScreenRecord(context, displayMetrics.screenSize)
 
                 _state.emit(DetectorState.RECORDING)
             }
@@ -200,7 +199,7 @@ internal class DetectorEngine(context: Context) {
 
             screenRecorder.stopScreenRecord()
             detectionProgressListener?.cancelCurrentProcessing()
-            screenRecorder.startScreenRecord(context, screenMetrics.screenSize)
+            screenRecorder.startScreenRecord(context, displayMetrics.screenSize)
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {
@@ -259,7 +258,7 @@ internal class DetectorEngine(context: Context) {
         Log.i(TAG, "stopScreenRecord")
         _state.value = DetectorState.TRANSITIONING
 
-        screenMetrics.removeOrientationListener(orientationListener)
+        displayMetrics.removeOrientationListener(orientationListener)
         processingScope?.launch {
             processingShutdownJob?.join()
 

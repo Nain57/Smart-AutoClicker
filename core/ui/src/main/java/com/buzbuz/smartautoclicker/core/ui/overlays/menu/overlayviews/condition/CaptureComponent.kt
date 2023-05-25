@@ -27,7 +27,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.scale
 import com.buzbuz.smartautoclicker.core.translate
 import com.buzbuz.smartautoclicker.core.ui.R
@@ -40,15 +40,15 @@ import kotlin.math.min
  *
  * @param context the Android context.
  * @param styledAttrs the styled attributes of the [ConditionSelectorView]
- * @param screenMetrics provides information about current display.
+ * @param displayMetrics provides information about current display.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal class CaptureComponent(
     context: Context,
     styledAttrs: TypedArray,
-    screenMetrics: ScreenMetrics,
+    displayMetrics: DisplayMetrics,
     viewInvalidator: () -> Unit,
-): ViewComponent(screenMetrics, viewInvalidator) {
+): ViewComponent(displayMetrics, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {

@@ -30,7 +30,7 @@ import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayController
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -107,7 +107,7 @@ abstract class OverlayDialogController(
             create()
 
             window?.apply {
-                setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
+                setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
                 setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                 decorView.setOnTouchListener(hideSoftInputTouchListener)
             }

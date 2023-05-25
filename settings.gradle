@@ -1,5 +1,5 @@
 rootProject.name='Smart Auto Clicker'
-include ':core:capture'
+include ':core:display'
 include ':core:database'
 include ':core:detection'
 include ':core:domain'

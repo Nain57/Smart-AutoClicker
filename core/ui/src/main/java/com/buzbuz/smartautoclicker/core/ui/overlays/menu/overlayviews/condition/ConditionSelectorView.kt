@@ -32,7 +32,7 @@ import androidx.core.content.res.use
 import androidx.core.graphics.minus
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.hints.HintsComponent
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.R
 
 /**
@@ -41,13 +41,13 @@ import com.buzbuz.smartautoclicker.core.ui.R
  * easily select a section of the screen for a event condition.
  *
  * @param context the Android context
- * @param screenMetrics the current screen metrics.
+ * @param displayMetrics the current screen metrics.
  * @param onSelectorValidityChanged listener upon the selector validity.
  */
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
 class ConditionSelectorView(
     context: Context,
-    private val screenMetrics: ScreenMetrics,
+    private val displayMetrics: DisplayMetrics,
     private val onSelectorValidityChanged: (Boolean) -> Unit,
 ) : View(context) {
 
@@ -71,9 +71,9 @@ class ConditionSelectorView(
     init {
         context.obtainStyledAttributes(null, R.styleable.ConditionSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
             animations = Animations(ta)
-            capture = CaptureComponent(context, ta, screenMetrics, ::invalidate)
-            selector = Selector(context, ta, screenMetrics, ::invalidate)
-            hintsIcons = HintsComponent(context, ta, screenMetrics, ::invalidate)
+            capture = CaptureComponent(context, ta, displayMetrics, ::invalidate)
+            selector = Selector(context, ta, displayMetrics, ::invalidate)
+            hintsIcons = HintsComponent(context, ta, displayMetrics, ::invalidate)
         }
     }
 

@@ -26,7 +26,7 @@ import androidx.core.graphics.toRect
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ConditionSelectorView
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ViewComponent
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.GestureType
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.MoveSelector
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ResizeBottom
@@ -41,15 +41,15 @@ import com.buzbuz.smartautoclicker.core.ui.R
  *
  * @param context the Android Context.
  * @param styledAttrs the styled attributes of the [ConditionSelectorView]
- * @param screenMetrics object providing the current screen size.
+ * @param displayMetrics object providing the current screen size.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal class HintsComponent(
     context: Context,
     styledAttrs: TypedArray,
-    screenMetrics: ScreenMetrics,
+    displayMetrics: DisplayMetrics,
     viewInvalidator: () -> Unit,
-): ViewComponent(screenMetrics, viewInvalidator) {
+): ViewComponent(displayMetrics, viewInvalidator) {
 
     /** The distance between the hint and the selector border. */
     private val iconsMargin: Int = styledAttrs.getDimensionPixelSize(

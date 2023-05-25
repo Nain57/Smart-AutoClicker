@@ -29,7 +29,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogController
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
@@ -171,7 +171,7 @@ class EventDialog(
             .setNegativeButton(android.R.string.cancel, null)
             .create()
             .apply {
-                window?.setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
+                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
             }
             .show()
     }

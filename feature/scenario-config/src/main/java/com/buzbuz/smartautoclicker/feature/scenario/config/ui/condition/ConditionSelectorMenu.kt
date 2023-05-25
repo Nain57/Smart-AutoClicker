@@ -64,7 +64,7 @@ class ConditionSelectorMenu(
     /** The view binding for the overlay menu. */
     private lateinit var viewBinding: OverlayValidationMenuBinding
     /** The view displaying the screenshot and the selector for the capture. */
-    private val selectorView = ConditionSelectorView(context, screenMetrics, ::onSelectorValidityChanged)
+    private val selectorView = ConditionSelectorView(context, displayMetrics, ::onSelectorValidityChanged)
 
     /** The current state of the overlay. */
     @ConditionCaptureState
@@ -128,7 +128,7 @@ class ConditionSelectorMenu(
         if (state == SELECTION) {
             state = CAPTURE
 
-            val screenSize = screenMetrics.screenSize
+            val screenSize = displayMetrics.screenSize
             val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
             viewModel.takeScreenshot(screenRect) { screenshot ->
                 selectorView.showCapture(screenshot)

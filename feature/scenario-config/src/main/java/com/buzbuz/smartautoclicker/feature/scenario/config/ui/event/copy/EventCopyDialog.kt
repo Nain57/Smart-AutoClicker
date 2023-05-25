@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -89,7 +89,7 @@ class EventCopyDialog(
             .setNegativeButton(android.R.string.cancel, null)
             .create()
             .apply {
-                window?.setType(ScreenMetrics.TYPE_COMPAT_OVERLAY)
+                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
             }
             .show()
     }
