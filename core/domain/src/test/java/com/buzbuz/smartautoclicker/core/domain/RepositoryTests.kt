@@ -20,14 +20,14 @@ import android.content.Context
 import android.os.Build
 
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
-import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
-import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.dao.ConditionDao
-import com.buzbuz.smartautoclicker.database.room.dao.EndConditionDao
-import com.buzbuz.smartautoclicker.database.room.dao.EventDao
-import com.buzbuz.smartautoclicker.database.room.dao.ScenarioDao
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteEventEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEndConditions
+import com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
+import com.buzbuz.smartautoclicker.core.database.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
+import com.buzbuz.smartautoclicker.core.database.dao.EndConditionDao
+import com.buzbuz.smartautoclicker.core.database.dao.EventDao
+import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEndConditions
 import com.buzbuz.smartautoclicker.core.domain.utils.TestsData
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -57,7 +57,7 @@ import java.io.File
 class RepositoryTests {
 
     /** A mocked version of the bitmap manager. */
-    @Mock private lateinit var mockBitmapManager: BitmapManager
+    @Mock private lateinit var mockBitmapManager: com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
     /** A mocked version of the backup engine. */
     @Mock private lateinit var mockBackupEngine: BackupEngine
     /** A mocked version of the Scenario Dao. */

@@ -18,10 +18,10 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
 
-import com.buzbuz.smartautoclicker.database.room.entity.ActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ActionType
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.ToggleEventType
+import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ActionType
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 
 internal fun Action.toEntity(): CompleteActionEntity = when (this) {

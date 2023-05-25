@@ -21,8 +21,8 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.database.room.CLICK_DATABASE_VERSION
-import com.buzbuz.smartautoclicker.database.room.entity.*
+import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
+import com.buzbuz.smartautoclicker.core.database.entity.*
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
