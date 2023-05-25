@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.buzbuz.smartautoclicker.core.capture'
+    namespace 'com.buzbuz.smartautoclicker.core.bitmaps'
     compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
@@ -21,7 +21,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -29,11 +28,5 @@ android {
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}"
-
-    testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
-    testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
-    testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
-    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
-    testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 }

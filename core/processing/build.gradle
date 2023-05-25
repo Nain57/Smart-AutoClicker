@@ -55,10 +55,10 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
-    implementation project(path: ':core:display')
 
-    implementation project(path: ':core:domain')
     implementation project(path: ':core:detection')
+    implementation project(path: ':core:display')
+    implementation project(path: ':core:domain')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"

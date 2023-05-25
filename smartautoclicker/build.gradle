@@ -125,9 +125,9 @@ dependencies {
     // Google Play Store version dependencies only
     playStoreImplementation platform("com.google.firebase:firebase-bom:${rootProject.ext.firebaseBomVersion}")
     playStoreImplementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation project(path: ':core:display')
 
     implementation project(path: ':core:detection')
+    implementation project(path: ':core:display')
     implementation project(path: ':core:domain')
     implementation project(path: ':core:extensions')
     implementation project(path: ':core:processing')
