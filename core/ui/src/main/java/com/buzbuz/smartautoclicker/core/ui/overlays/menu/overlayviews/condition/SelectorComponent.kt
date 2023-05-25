@@ -31,7 +31,7 @@ import android.view.MotionEvent
 
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.translate
 import com.buzbuz.smartautoclicker.core.ui.R
 
@@ -43,15 +43,15 @@ import kotlin.math.min
  *
  * @param context the Android Context.
  * @param styledAttrs the styled attributes of the [ConditionSelectorView]
- * @param screenMetrics object providing the current screen size.
+ * @param displayMetrics object providing the current screen size.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal class Selector(
     context: Context,
     styledAttrs: TypedArray,
-    screenMetrics: ScreenMetrics,
+    displayMetrics: DisplayMetrics,
     viewInvalidator: () -> Unit,
-): ViewComponent(screenMetrics, viewInvalidator) {
+): ViewComponent(displayMetrics, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move/resize gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {

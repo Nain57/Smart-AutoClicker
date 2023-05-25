@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.capture
+package com.buzbuz.smartautoclicker.core.display
 
 import android.content.Context
 import android.content.Intent
@@ -32,8 +32,8 @@ import android.view.Surface
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.capture.shadows.ShadowImageReader
-import com.buzbuz.smartautoclicker.core.capture.utils.anyNotNull
+import com.buzbuz.smartautoclicker.core.display.shadows.ShadowImageReader
+import com.buzbuz.smartautoclicker.core.display.utils.anyNotNull
 
 import kotlinx.coroutines.runBlocking
 

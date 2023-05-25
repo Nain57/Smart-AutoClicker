@@ -74,10 +74,11 @@ dependencies {
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
-    implementation project(path: ':core:ui')
+    implementation project(path: ':core:display')
 
     implementation project(path: ':core:database')
     implementation project(path: ':core:domain')
+    implementation project(path: ':core:ui')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"

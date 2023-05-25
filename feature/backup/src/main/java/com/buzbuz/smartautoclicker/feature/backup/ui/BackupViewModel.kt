@@ -26,7 +26,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.feature.backup.R
 
 import com.buzbuz.smartautoclicker.feature.backup.domain.Backup
@@ -48,7 +48,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
     /** The repository providing access to the database. */
     private val repository = BackupRepository.getInstance(application)
     /** The metrics of the screen.  */
-    private val screenMetrics = ScreenMetrics.getInstance(application.applicationContext)
+    private val displayMetrics = DisplayMetrics.getInstance(application.applicationContext)
 
     /** The state of the backup. Null if not started yet. */
     private val _backupState = MutableStateFlow<BackupDialogUiState?>(null)
@@ -89,11 +89,11 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
     fun startBackup(uri: Uri, isImport: Boolean, scenarios: List<Long> = emptyList()) {
         viewModelScope.launch(Dispatchers.IO) {
             if (isImport) {
-                repository.restoreScenarioBackup(uri, screenMetrics.screenSize).collect { backup ->
+                repository.restoreScenarioBackup(uri, displayMetrics.screenSize).collect { backup ->
                     updateBackupState(backup, true)
                 }
             } else {
-                repository.createScenarioBackup(uri, scenarios, screenMetrics.screenSize).collect { backup ->
+                repository.createScenarioBackup(uri, scenarios, displayMetrics.screenSize).collect { backup ->
                     updateBackupState(backup, false)
                 }
             }

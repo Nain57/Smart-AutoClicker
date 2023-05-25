@@ -58,8 +58,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
-    implementation project(path: ':core:extensions')
+    implementation project(path: ':core:display')
 
+    implementation project(path: ':core:extensions')
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 

@@ -31,7 +31,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +57,7 @@ abstract class OverlayController internal constructor(
 ) : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
 
     /** The metrics of the device screen. */
-    protected val screenMetrics = ScreenMetrics.getInstance(appContext)
+    protected val displayMetrics = DisplayMetrics.getInstance(appContext)
     /** The listener upon screen rotation. */
     private val orientationListener: (Context) -> Unit = ::onOrientationChanged
 
@@ -123,7 +123,7 @@ abstract class OverlayController internal constructor(
 
         Log.d(TAG, "create overlay ${hashCode()}")
         onDestroyListener = dismissListener
-        screenMetrics.addOrientationListener(orientationListener)
+        displayMetrics.addOrientationListener(orientationListener)
 
         onCreate()
         lifecycleRegistry.currentState = State.CREATED
@@ -186,7 +186,7 @@ abstract class OverlayController internal constructor(
             subOverlayController?.destroy()
         }
 
-        screenMetrics.removeOrientationListener(orientationListener)
+        displayMetrics.removeOrientationListener(orientationListener)
         onDestroyed()
 
         if (!shouldBeRecreated) {
@@ -323,7 +323,7 @@ abstract class OverlayController internal constructor(
      * @param appContext the Android application context.
      */
     private fun newOverlayContext(appContext: Context): Context =
-        if (theme != null) newOverlayContextThemeWrapper(appContext, theme, screenMetrics.orientation)
+        if (theme != null) newOverlayContextThemeWrapper(appContext, theme, displayMetrics.orientation)
         else appContext
 
     /**

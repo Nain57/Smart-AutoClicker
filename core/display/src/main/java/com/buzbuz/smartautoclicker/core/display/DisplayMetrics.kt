@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @file:Suppress("DEPRECATION")
-package com.buzbuz.smartautoclicker.core.ui.utils
+package com.buzbuz.smartautoclicker.core.display
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -35,7 +35,7 @@ import android.view.WindowManager
  *
  * @param context the Android context.
  */
-class ScreenMetrics internal constructor(context: Context) {
+class DisplayMetrics internal constructor(context: Context) {
 
     companion object {
         /** WindowManager LayoutParams type for a window over applications. */
@@ -47,7 +47,7 @@ class ScreenMetrics internal constructor(context: Context) {
 
         /** Singleton preventing multiple instances at the same time. */
         @Volatile
-        private var INSTANCE: ScreenMetrics? = null
+        private var INSTANCE: DisplayMetrics? = null
 
         /**
          * Get the ScreenMetrics singleton, or instantiates it if it wasn't yet.
@@ -56,9 +56,9 @@ class ScreenMetrics internal constructor(context: Context) {
          *
          * @return the ScreenMetrics singleton.
          */
-        fun getInstance(context: Context): ScreenMetrics {
+        fun getInstance(context: Context): DisplayMetrics {
             return INSTANCE ?: synchronized(this) {
-                val instance = ScreenMetrics(context)
+                val instance = DisplayMetrics(context)
                 INSTANCE = instance
                 instance
             }

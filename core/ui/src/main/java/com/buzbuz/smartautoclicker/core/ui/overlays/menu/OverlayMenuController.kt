@@ -39,7 +39,7 @@ import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayController
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.R
 
 /**
@@ -91,7 +91,7 @@ abstract class OverlayMenuController(
     private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
-        ScreenMetrics.TYPE_COMPAT_OVERLAY,
+        DisplayMetrics.TYPE_COMPAT_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
@@ -160,7 +160,7 @@ abstract class OverlayMenuController(
      */
     protected open fun onCreateOverlayViewLayoutParams(): WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
         copyFrom(menuLayoutParams)
-        screenMetrics.screenSize.let { size ->
+        displayMetrics.screenSize.let { size ->
             width = size.x
             height = size.y
         }
@@ -198,7 +198,7 @@ abstract class OverlayMenuController(
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
-        loadMenuPosition(screenMetrics.orientation)
+        loadMenuPosition(displayMetrics.orientation)
 
         // Handle window resize animations
         resizeController = OverlayWindowResizeController(
@@ -270,7 +270,7 @@ abstract class OverlayMenuController(
     @CallSuper
     override fun onDestroyed() {
         // Save last user position
-        saveMenuPosition(screenMetrics.orientation)
+        saveMenuPosition(displayMetrics.orientation)
 
         resizeController.release()
         screenOverlayView = null
@@ -282,17 +282,17 @@ abstract class OverlayMenuController(
      * orientation.
      */
     override fun onOrientationChanged() {
-        saveMenuPosition(if (screenMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        saveMenuPosition(if (displayMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE)
             Configuration.ORIENTATION_PORTRAIT
         else
             Configuration.ORIENTATION_LANDSCAPE
         )
-        loadMenuPosition(screenMetrics.orientation)
+        loadMenuPosition(displayMetrics.orientation)
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             windowManager.updateViewLayout(menuLayout, menuLayoutParams)
             screenOverlayView?.let { overlayView ->
-                screenMetrics.screenSize.let { size ->
+                displayMetrics.screenSize.let { size ->
                     overlayLayoutParams?.width = size.x
                     overlayLayoutParams?.height = size.y
                 }
@@ -429,7 +429,7 @@ abstract class OverlayMenuController(
      * @param y the vertical position.
      */
     private fun setMenuLayoutPosition(x: Int, y: Int) {
-        val displaySize = screenMetrics.screenSize
+        val displaySize = displayMetrics.screenSize
         menuLayoutParams.x = x.coerceIn(0, displaySize.x - menuLayout.width)
         menuLayoutParams.y = y.coerceIn(0, displaySize.y - menuLayout.height)
     }

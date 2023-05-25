@@ -22,22 +22,22 @@ import android.view.MotionEvent
 
 import androidx.annotation.CallSuper
 
-import com.buzbuz.smartautoclicker.core.ui.utils.ScreenMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 /**
  * Base class for all view components displayed in the [ConditionSelectorView].
  *
- * @param screenMetrics provides information about current display.
+ * @param displayMetrics provides information about current display.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal abstract class ViewComponent(
-    private val screenMetrics: ScreenMetrics,
+    private val displayMetrics: DisplayMetrics,
     private val viewInvalidator: () -> Unit,
 ) {
 
     /** The maximum size of the selector. */
     protected val maxArea: RectF = RectF().apply {
-        val screenSize = screenMetrics.screenSize
+        val screenSize = displayMetrics.screenSize
         right = screenSize.x.toFloat()
         bottom = screenSize.y.toFloat()
     }
@@ -51,7 +51,7 @@ internal abstract class ViewComponent(
      */
     @CallSuper
     open fun onViewSizeChanged(w: Int, h: Int) {
-        val screenSize = screenMetrics.screenSize
+        val screenSize = displayMetrics.screenSize
         maxArea.apply {
             right = screenSize.x.toFloat()
             bottom = screenSize.y.toFloat()
