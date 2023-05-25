@@ -20,7 +20,7 @@ import android.content.Context
 import android.graphics.Point
 import android.net.Uri
 
-import com.buzbuz.smartautoclicker.database.room.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupProgress

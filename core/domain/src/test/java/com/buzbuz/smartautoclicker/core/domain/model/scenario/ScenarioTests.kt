@@ -20,7 +20,7 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.database.room.entity.ScenarioWithEvents
+import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.core.domain.utils.TestsData
 
 import org.junit.Assert.assertEquals

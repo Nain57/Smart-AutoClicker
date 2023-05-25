@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.scenario
 
-import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 

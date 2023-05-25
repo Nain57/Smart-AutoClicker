@@ -55,7 +55,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 
-    implementation project(path: ':database')
+    implementation project(path: ':core:database')
     implementation project(path: ':core:extensions')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"

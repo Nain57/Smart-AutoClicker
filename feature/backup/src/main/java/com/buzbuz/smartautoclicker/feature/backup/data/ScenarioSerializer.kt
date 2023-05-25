@@ -27,8 +27,8 @@ import com.buzbuz.smartautoclicker.feature.backup.data.ext.getJsonArray
 import com.buzbuz.smartautoclicker.feature.backup.data.ext.getJsonObject
 import com.buzbuz.smartautoclicker.feature.backup.data.ext.getLong
 import com.buzbuz.smartautoclicker.feature.backup.data.ext.getString
-import com.buzbuz.smartautoclicker.database.room.CLICK_DATABASE_VERSION
-import com.buzbuz.smartautoclicker.database.room.entity.*
+import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
+import com.buzbuz.smartautoclicker.core.database.entity.*
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

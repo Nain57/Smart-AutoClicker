@@ -23,8 +23,8 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.feature.backup.data.ext.readEntryFile
 import com.buzbuz.smartautoclicker.feature.backup.data.ext.writeEntryFile
-import com.buzbuz.smartautoclicker.database.bitmap.CLICK_CONDITION_FILE_PREFIX
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.bitmap.CLICK_CONDITION_FILE_PREFIX
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -44,7 +44,7 @@ internal class BackupEngine(private val appDataDir: File, private val contentRes
      *
      * You can try it out here: https://regex101.com
      */
-    private val conditionUnzipMatchRegex = """[0-9]+/$CLICK_CONDITION_FILE_PREFIX-?[0-9]+"""
+    private val conditionUnzipMatchRegex = """[0-9]+/${com.buzbuz.smartautoclicker.core.bitmap.CLICK_CONDITION_FILE_PREFIX}-?[0-9]+"""
         .toRegex()
 
     /** Serializer/Deserializer for database scenarios. */

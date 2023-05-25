@@ -16,13 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.core.domain
 
-import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
-import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteActionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EndConditionEntity
-import com.buzbuz.smartautoclicker.database.room.entity.EndConditionWithEvent
+import com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
+import com.buzbuz.smartautoclicker.core.database.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.EndConditionWithEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
@@ -57,7 +57,7 @@ import kotlinx.coroutines.flow.mapNotNull
  */
 internal class RepositoryImpl internal constructor(
     database: ClickDatabase,
-    private val bitmapManager: BitmapManager,
+    private val bitmapManager: com.buzbuz.smartautoclicker.core.bitmap.BitmapManager,
 ): Repository {
 
     /** The Dao for accessing the database. */

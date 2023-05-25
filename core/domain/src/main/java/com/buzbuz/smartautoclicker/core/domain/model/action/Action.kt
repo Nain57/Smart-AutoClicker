@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
 
-import com.buzbuz.smartautoclicker.database.room.entity.ToggleEventType
+import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 
 /** Base for for all possible actions for an Event. */

@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.database.room.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 
 /** @return the entity equivalent of this condition. */

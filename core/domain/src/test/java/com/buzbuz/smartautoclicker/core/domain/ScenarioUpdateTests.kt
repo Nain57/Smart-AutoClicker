@@ -23,9 +23,9 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
-import com.buzbuz.smartautoclicker.database.bitmap.BitmapManager
-import com.buzbuz.smartautoclicker.database.room.ClickDatabase
-import com.buzbuz.smartautoclicker.database.room.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
+import com.buzbuz.smartautoclicker.core.database.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toScenario
 import com.buzbuz.smartautoclicker.core.domain.utils.TestsData
@@ -69,7 +69,7 @@ class ScenarioUpdateTests {
     private lateinit var repository: RepositoryImpl
 
     /** A mocked version of the bitmap manager. */
-    @Mock private lateinit var mockBitmapManager: BitmapManager
+    @Mock private lateinit var mockBitmapManager: com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
     /** A mocked version of the backup engine. */
     @Mock private lateinit var mockBackupEngine: BackupEngine
 

@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.backup.data
 
-import com.buzbuz.smartautoclicker.database.room.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 
 /**
  * Notifies for a backup progress and state.
