@@ -49,7 +49,7 @@ internal open class DatabaseListUpdater<I, E>(
      * @param newItems the updated list of items to be inserted in the database.
      * @param toEntity provides the conversion between [I] and [E].
      */
-    fun refreshUpdateValues(currentEntities: List<E>, newItems: List<I>, toEntity: (index: Int, item: I) -> E) {
+    suspend fun refreshUpdateValues(currentEntities: List<E>, newItems: List<I>, toEntity: suspend (index: Int, item: I) -> E) {
         // Clear previous use values and init entities to be removed with all current entities
         toBeAdded.clear()
         toBeUpdated.clear()

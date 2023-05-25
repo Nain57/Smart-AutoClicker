@@ -61,7 +61,7 @@ data class ConditionEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "path") val path: String,
+    @ColumnInfo(name = "path") var path: String,
     @ColumnInfo(name = "area_left") val areaLeft: Int,
     @ColumnInfo(name = "area_top") val areaTop: Int,
     @ColumnInfo(name = "area_right") val areaRight: Int,

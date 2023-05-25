@@ -110,7 +110,7 @@ internal class ScenarioProcessor(
 
         for (event in scenarioState.getEnabledEvents()) {
             // No conditions ? This should not happen, skip this event
-            if (event.conditions?.isEmpty() == true) {
+            if (event.conditions.isEmpty() == true) {
                 continue
             }
 
@@ -121,7 +121,7 @@ internal class ScenarioProcessor(
 
             // If conditions are fulfilled, execute this event's actions !
             if (result.eventMatched) {
-                event.actions?.let { actions ->
+                event.actions.let { actions ->
                     actionExecutor.executeActions(actions, result.detectionResult?.position)
                 }
 
@@ -147,7 +147,7 @@ internal class ScenarioProcessor(
      * @param event the event to verify the conditions of.
      */
     private suspend fun verifyConditions(event: Event) : ProcessorResult {
-        event.conditions?.forEachIndexed { index, condition ->
+        event.conditions.forEachIndexed { index, condition ->
             // Verify if the condition is fulfilled.
             progressListener?.onConditionProcessingStarted(condition)
             val result = checkCondition(condition) ?: return ProcessorResult(false)
@@ -159,7 +159,7 @@ internal class ScenarioProcessor(
                     return ProcessorResult(
                         false,
                         event,
-                        event.conditions?.get(index),
+                        event.conditions[index],
                         result,
                     )
                 }
@@ -168,25 +168,25 @@ internal class ScenarioProcessor(
                 return ProcessorResult(
                     true,
                     event,
-                    event.conditions?.get(index),
+                    event.conditions[index],
                     result,
                 )
             }
 
             // All conditions passed for AND, none are for OR.
-            if (index == (event.conditions?.size ?: 0) - 1) {
+            if (index == event.conditions.size - 1) {
                 return if (event.conditionOperator == AND) {
                     ProcessorResult(
                         true,
                         event,
-                        event.conditions?.get(index),
+                        event.conditions[index],
                         result,
                     )
                 } else {
                     ProcessorResult(
                         false,
                         event,
-                        event.conditions?.get(index),
+                        event.conditions[index],
                         result,
                     )
                 }

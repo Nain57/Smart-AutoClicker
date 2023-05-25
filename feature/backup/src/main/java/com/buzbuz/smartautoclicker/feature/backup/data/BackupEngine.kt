@@ -44,7 +44,7 @@ internal class BackupEngine(private val appDataDir: File, private val contentRes
      *
      * You can try it out here: https://regex101.com
      */
-    private val conditionUnzipMatchRegex = """[0-9]+/${com.buzbuz.smartautoclicker.core.bitmaps.CLICK_CONDITION_FILE_PREFIX}-?[0-9]+"""
+    private val conditionUnzipMatchRegex = """[0-9]+/${CLICK_CONDITION_FILE_PREFIX}-?[0-9]+"""
         .toRegex()
 
     /** Serializer/Deserializer for database scenarios. */

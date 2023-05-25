@@ -35,12 +35,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.Identifier
  * @param bitmap the bitmap for the condition. Not set when fetched from the repository.
  */
 data class Condition(
-    var id: Identifier,
-    var eventId: Identifier,
-    var name: String,
-    var path: String? = null,
-    var area: Rect,
-    var threshold: Int,
+    val id: Identifier,
+    val eventId: Identifier,
+    val name: String,
+    val path: String? = null,
+    val area: Rect,
+    val threshold: Int,
     @DetectionType val detectionType: Int,
     val shouldBeDetected: Boolean,
     val bitmap: Bitmap? = null,
