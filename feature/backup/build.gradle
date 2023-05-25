@@ -64,7 +64,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}"
 
-    implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
+    implementation "androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}"
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
     implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
     implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
@@ -74,9 +74,9 @@ dependencies {
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
-    implementation project(path: ':core:display')
 
     implementation project(path: ':core:database')
+    implementation project(path: ':core:display')
     implementation project(path: ':core:domain')
     implementation project(path: ':core:ui')
 

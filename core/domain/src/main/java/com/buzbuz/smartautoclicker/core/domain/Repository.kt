@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.domain
 import android.content.Context
 import android.graphics.Bitmap
 
-import com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -54,7 +54,7 @@ interface Repository {
             return INSTANCE ?: synchronized(this) {
                 val instance = RepositoryImpl(
                     ClickDatabase.getDatabase(context),
-                    com.buzbuz.smartautoclicker.core.bitmap.BitmapManager.getBitmapManager(context),
+                    com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager.getBitmapManager(context),
                 )
                 INSTANCE = instance
                 instance

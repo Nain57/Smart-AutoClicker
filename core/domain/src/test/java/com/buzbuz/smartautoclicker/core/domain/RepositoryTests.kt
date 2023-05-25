@@ -20,7 +20,7 @@ import android.content.Context
 import android.os.Build
 
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
-import com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EndConditionDao
@@ -57,7 +57,7 @@ import java.io.File
 class RepositoryTests {
 
     /** A mocked version of the bitmap manager. */
-    @Mock private lateinit var mockBitmapManager: com.buzbuz.smartautoclicker.core.bitmap.BitmapManager
+    @Mock private lateinit var mockBitmapManager: com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
     /** A mocked version of the backup engine. */
     @Mock private lateinit var mockBackupEngine: BackupEngine
     /** A mocked version of the Scenario Dao. */

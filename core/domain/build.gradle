@@ -50,11 +50,12 @@ android {
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:{$rootProject.ext.androidxAnnotationVersion}"
-    implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
-
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 
+    implementation "androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}"
+    implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
+
+    implementation project(path: ':core:bitmaps')
     implementation project(path: ':core:database')
     implementation project(path: ':core:extensions')
 
