@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.*
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -58,7 +59,7 @@ internal object TestsData {
         @ConditionOperator endConditionOperator: Int = SCENARIO_END_CONDITION_OPERATOR,
         randomize: Boolean = SCENARIO_RANDOMIZE,
         eventCount: Int = 0,
-    ) = Scenario(id, name, detectionQuality, endConditionOperator, randomize, eventCount)
+    ) = Scenario(id.asIdentifier(), name, detectionQuality, endConditionOperator, randomize, eventCount)
 
 
     /* ------- Event Data ------- */
@@ -82,11 +83,11 @@ internal object TestsData {
         name: String = EVENT_NAME,
         @ConditionOperator conditionOperator: Int = EVENT_CONDITION_OPERATOR,
         enabledOnStart: Boolean = EVENT_ENABLED_ON_START,
-        actions: MutableList<Action>? = null,
-        conditions: MutableList<Condition>? = null,
+        actions: List<Action> = emptyList(),
+        conditions: List<Condition> = emptyList(),
         scenarioId: Long,
         priority: Int,
-    ) = Event(id, scenarioId, name, conditionOperator, priority, actions, conditions, enabledOnStart)
+    ) = Event(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, priority, actions, conditions, enabledOnStart)
 
 
     /* ------- End Condition Data ------- */
@@ -110,7 +111,7 @@ internal object TestsData {
         eventId: Long = END_EVENT_ID,
         eventName: String = END_EVENT_NAME,
         executions: Int = END_EXECUTIONS,
-    ) = EndCondition(id, scenarioId, eventId, eventName, executions)
+    ) = EndCondition(id.asIdentifier(), scenarioId.asIdentifier(), eventId.asIdentifier(), eventName, executions)
 
     fun getNewEndConditionWithEvent(
         id: Long = END_ID,
@@ -151,7 +152,7 @@ internal object TestsData {
         y: Int? = CLICK_Y_POSITION,
         clickOnCondition: Boolean = x != null && y != null,
         eventId: Long,
-    ) = Action.Click(id, eventId, name, pressDuration, x, y, clickOnCondition)
+    ) = Action.Click(id.asIdentifier(), eventId.asIdentifier(), name, pressDuration, x, y, clickOnCondition)
 
 
     /* ------- Swipe Action Data ------- */
@@ -189,7 +190,7 @@ internal object TestsData {
         toX: Int? = SWIPE_TO_X_POSITION,
         toY: Int? = SWIPE_TO_Y_POSITION,
         eventId: Long,
-    ) : Action.Swipe = Action.Swipe(id, eventId, name, swipeDuration, fromX, fromY, toX, toY)
+    ) : Action.Swipe = Action.Swipe(id.asIdentifier(), eventId.asIdentifier(), name, swipeDuration, fromX, fromY, toX, toY)
 
 
     /* ------- Pause Action Data ------- */
@@ -214,7 +215,7 @@ internal object TestsData {
         name: String? = PAUSE_NAME,
         pauseDuration: Long? = PAUSE_DURATION,
         eventId: Long,
-    ) = Action.Pause(id, eventId, name, pauseDuration)
+    ) = Action.Pause(id.asIdentifier(), eventId.asIdentifier(), name, pauseDuration)
 
 
     /* ------- Intent Action Data ------- */
@@ -255,7 +256,7 @@ internal object TestsData {
         flags: Int = INTENT_FLAGS,
         eventId: Long,
         intentExtras: MutableList<IntentExtra<out Any>> = mutableListOf()
-    ) = Action.Intent(id, eventId, name, isAdvanced, isBroadcast, action, componentName, flags, intentExtras)
+    ) = Action.Intent(id.asIdentifier(), eventId.asIdentifier(), name, isAdvanced, isBroadcast, action, componentName, flags, intentExtras)
 
 
     /* ------- Intent Extra Data ------- */
@@ -278,7 +279,7 @@ internal object TestsData {
         actionId: Long = INTENT_EXTRA_ACTION_ID,
         key: String = INTENT_EXTRA_KEY,
         value: T,
-    ) = IntentExtra(id, actionId, key, value)
+    ) = IntentExtra(id.asIdentifier(), actionId.asIdentifier(), key, value)
 
 
     /* ------- Toggle Event Action Data ------- */
@@ -306,7 +307,7 @@ internal object TestsData {
         toggleEventId: Long = TOGGLE_EVENT_EVENT_ID,
         toggleType: Action.ToggleEvent.ToggleType = TOGGLE_EVENT_TYPE,
         eventId: Long,
-    ) = Action.ToggleEvent(id, eventId, name, toggleEventId, toggleType)
+    ) = Action.ToggleEvent(id.asIdentifier(), eventId.asIdentifier(), name, Identifier(databaseId = toggleEventId), toggleType)
 
     /* ------- Condition Data ------- */
 
@@ -345,5 +346,10 @@ internal object TestsData {
         detectionType: Int = CONDITION_DETECTION_TYPE,
         bitmap: Bitmap? = null,
         eventId: Long
-    ) = Condition(id, eventId, name, path, Rect(left, top, right, bottom), threshold, detectionType, true, bitmap)
+    ) = Condition(id.asIdentifier(), eventId.asIdentifier(), name, path, Rect(left, top, right, bottom), threshold, detectionType, true, bitmap)
+
+    private fun Long.asIdentifier() = Identifier(
+        databaseId = this,
+        domainId = if (this == 0L) 1L else null,
+    )
 }

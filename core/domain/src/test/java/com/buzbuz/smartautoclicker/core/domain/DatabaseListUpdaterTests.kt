@@ -17,8 +17,10 @@
 package com.buzbuz.smartautoclicker.core.domain
 
 import android.os.Build
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -35,9 +37,9 @@ import org.robolectric.annotation.Config
 class DatabaseListUpdaterTests {
 
     @Test
-    fun emptyLists() {
+    fun emptyLists() = runTest {
         val updater = DatabaseListUpdater<Long, Long>(
-            itemPrimaryKeySupplier = { it },
+            itemPrimaryKeySupplier = { Identifier(databaseId = it, domainId = 1L) },
             entityPrimaryKeySupplier = { it },
         )
         updater.refreshUpdateValues(emptyList(), emptyList()) { _, it -> it }
@@ -48,11 +50,11 @@ class DatabaseListUpdaterTests {
     }
 
     @Test
-    fun onlyAdd() {
+    fun onlyAdd() = runTest {
         val newItems = listOf(DEFAULT_PRIMARY_KEY, DEFAULT_PRIMARY_KEY, DEFAULT_PRIMARY_KEY)
 
         val updater = DatabaseListUpdater<Long, Long>(
-            itemPrimaryKeySupplier = { it },
+            itemPrimaryKeySupplier = { Identifier(databaseId = it, domainId = 1L) },
             entityPrimaryKeySupplier = { it },
         )
         updater.refreshUpdateValues(emptyList(), newItems) { _, it -> it }
@@ -63,11 +65,11 @@ class DatabaseListUpdaterTests {
     }
 
     @Test
-    fun onlyUpdate() {
+    fun onlyUpdate() = runTest {
         val updateItems = listOf(1L, 2L, 3L)
 
         val updater = DatabaseListUpdater<Long, Long>(
-            itemPrimaryKeySupplier = { it },
+            itemPrimaryKeySupplier = { Identifier(databaseId = it, domainId = if (it == 0L) 1L else null) },
             entityPrimaryKeySupplier = { it },
         )
         updater.refreshUpdateValues(updateItems, updateItems) { _, it -> it }
@@ -78,11 +80,11 @@ class DatabaseListUpdaterTests {
     }
 
     @Test
-    fun onlyRemove() {
+    fun onlyRemove() = runTest {
         val oldItems = listOf(DEFAULT_PRIMARY_KEY, DEFAULT_PRIMARY_KEY, DEFAULT_PRIMARY_KEY)
 
         val updater = DatabaseListUpdater<Long, Long>(
-            itemPrimaryKeySupplier = { it },
+            itemPrimaryKeySupplier = { Identifier(databaseId = it, domainId = 1L) },
             entityPrimaryKeySupplier = { it },
         )
         updater.refreshUpdateValues(oldItems, emptyList()) { _, it -> it }
@@ -93,14 +95,14 @@ class DatabaseListUpdaterTests {
     }
 
     @Test
-    fun allAtOnce() {
+    fun allAtOnce() = runTest {
         val deletedKey = 47L
         val updatedKey = 56L
         val oldItems = listOf(deletedKey, updatedKey)
         val newItems = listOf(DEFAULT_PRIMARY_KEY, updatedKey)
 
         val updater = DatabaseListUpdater<Long, Long>(
-            itemPrimaryKeySupplier = { it },
+            itemPrimaryKeySupplier = { Identifier(databaseId = it, domainId = if (it == 0L) 1L else null) },
             entityPrimaryKeySupplier = { it },
         )
         updater.refreshUpdateValues(oldItems, newItems) { _, it -> it }

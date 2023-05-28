@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.database.utils.getInsertV9Click
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV9EmptyAction
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV9Swipe
 import com.buzbuz.smartautoclicker.core.database.utils.getV10Actions
-import com.buzbuz.smartautoclicker.core.utils.*
+import com.buzbuz.smartautoclicker.core.database.utils.*
 
 import org.junit.Rule
 import org.junit.Test

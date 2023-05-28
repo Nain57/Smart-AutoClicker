@@ -48,14 +48,14 @@ private fun assertSameEventNoIdCheck(expected: Event, actual: Event) {
             && expected.priority == actual.priority
     )
 
-    val expectedConditions = expected.conditions ?: emptyList()
-    val actualConditions = actual.conditions ?: emptyList()
+    val expectedConditions = expected.conditions
+    val actualConditions = actual.conditions
     forEachExpectedAndActual(expectedConditions, actualConditions) { expectedCondition, actualCondition ->
         assertSameConditionNoIdCheck(expectedCondition, actualCondition)
     }
 
-    val expectedActions = expected.actions ?: emptyList()
-    val actualActions = actual.actions ?: emptyList()
+    val expectedActions = expected.actions
+    val actualActions = actual.actions
     forEachExpectedAndActual(expectedActions, actualActions) { expectedAction, actualAction ->
         assertSameActionNoIdCheck(expectedAction, actualAction)
     }

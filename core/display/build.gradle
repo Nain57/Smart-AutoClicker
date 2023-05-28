@@ -26,9 +26,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+
     implementation "androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}"
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"

@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.database.utils.getInsertV8Event
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV8Scenario
 import com.buzbuz.smartautoclicker.core.database.utils.getV9Events
 import com.buzbuz.smartautoclicker.core.database.utils.getV9Scenario
-import com.buzbuz.smartautoclicker.core.utils.*
+import com.buzbuz.smartautoclicker.core.database.utils.*
 import com.buzbuz.smartautoclicker.core.database.utils.TestsData
 import org.junit.Assert
 import org.junit.Rule

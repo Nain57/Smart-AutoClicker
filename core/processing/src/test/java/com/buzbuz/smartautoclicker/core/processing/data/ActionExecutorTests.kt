@@ -22,11 +22,10 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.processing.data.ActionExecutor
-import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
-import com.buzbuz.smartautoclicker.core.processing.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
+
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 
@@ -53,7 +52,7 @@ import org.robolectric.annotation.Config
 class ActionExecutorTests {
 
     private companion object {
-        private const val TEST_EVENT_ID = 42L
+        private val TEST_EVENT_ID = Identifier(42L)
         private const val TEST_NAME = "Action name"
         private const val TEST_DURATION = 25L
         private const val TEST_X1 = 12
@@ -62,11 +61,11 @@ class ActionExecutorTests {
         private const val TEST_Y2 = 76
 
         fun getNewDefaultClick(id: Long, clickOnCondition: Boolean, duration: Long = TEST_DURATION) =
-            Action.Click(id, TEST_EVENT_ID, TEST_NAME, duration, TEST_X1, TEST_Y1, clickOnCondition)
+            Action.Click(Identifier(id), TEST_EVENT_ID, TEST_NAME, duration, TEST_X1, TEST_Y1, clickOnCondition)
         fun getNewDefaultSwipe(id: Long) =
-            Action.Swipe(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
+            Action.Swipe(Identifier(id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
         fun getNewDefaultPause(id: Long) =
-            Action.Pause(id, TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
+            Action.Pause(Identifier(id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
     }
 
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor

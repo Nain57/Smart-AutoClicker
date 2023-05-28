@@ -118,7 +118,7 @@ class ScreenRecorderTests {
             null)
         ).thenReturn(mockVirtualDisplay)
 
-        screenRecorder = ScreenRecorder.getInstance()
+        screenRecorder = ScreenRecorder()
     }
 
     @After

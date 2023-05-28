@@ -18,9 +18,8 @@ package com.buzbuz.smartautoclicker.core.domain
 
 import android.content.Context
 import android.os.Build
-
-import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
+
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EndConditionDao
@@ -57,9 +56,7 @@ import java.io.File
 class RepositoryTests {
 
     /** A mocked version of the bitmap manager. */
-    @Mock private lateinit var mockBitmapManager: com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
-    /** A mocked version of the backup engine. */
-    @Mock private lateinit var mockBackupEngine: BackupEngine
+    @Mock private lateinit var mockBitmapManager: BitmapManager
     /** A mocked version of the Scenario Dao. */
     @Mock private lateinit var mockScenarioDao: ScenarioDao
     /** A mocked version of the Event Dao. */
@@ -83,7 +80,7 @@ class RepositoryTests {
         mockWhen(mockDatabase.conditionDao()).thenReturn(mockConditionDao)
         mockWhen(mockDatabase.endConditionDao()).thenReturn(mockEndConditionDao)
 
-        repository = RepositoryImpl(mockDatabase, mockBitmapManager, mockBackupEngine)
+        repository = RepositoryImpl(mockDatabase, mockBitmapManager)
         clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao, mockEndConditionDao)
     }
 

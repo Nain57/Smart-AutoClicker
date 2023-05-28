@@ -24,7 +24,6 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.core.domain.utils.TestsData
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotSame
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -67,51 +66,5 @@ class EventTests {
         ).toEvent()
 
         assertEquals("Complete event is not as expected", expectedEvent, completeEvent)
-    }
-
-    @Test
-    fun cleanupIds() {
-        val completeEvent = TestsData.getNewEvent(
-            actions = mutableListOf(
-                TestsData.getNewClick(eventId = TestsData.EVENT_ID),
-                TestsData.getNewSwipe(eventId = TestsData.EVENT_ID),
-                TestsData.getNewPause(eventId = TestsData.EVENT_ID)
-            ),
-            conditions = mutableListOf(TestsData.getNewCondition(eventId = TestsData.EVENT_ID)),
-            priority = 0,
-            scenarioId = TestsData.SCENARIO_ID,
-        )
-
-        completeEvent.cleanUpIds()
-
-        assertEquals("Event id is not cleaned",0L, completeEvent.id)
-        completeEvent.conditions!!.forEach { condition ->
-            assertEquals("Condition id is not cleaned", 0L, condition.id)
-            assertEquals("Condition event id is not cleaned", 0L, condition.eventId)
-        }
-        completeEvent.actions!!.forEach { action ->
-            assertEquals("Action id is not cleaned", 0L, action.id)
-        }
-    }
-
-    @Test
-    fun deepCopy() {
-        val event = TestsData.getNewEvent(
-            actions = mutableListOf(
-                TestsData.getNewClick(eventId = TestsData.EVENT_ID),
-                TestsData.getNewSwipe(eventId = TestsData.EVENT_ID),
-                TestsData.getNewPause(eventId = TestsData.EVENT_ID),
-            ),
-            conditions = mutableListOf(TestsData.getNewCondition(eventId = TestsData.EVENT_ID)),
-            priority = 0,
-            scenarioId = TestsData.SCENARIO_ID,
-        )
-        val copy = event.deepCopy()
-
-        assertEquals("Event copy is not the same", event, copy)
-        assertNotSame("Click is the same object", event.actions!![0], copy.actions!![0])
-        assertNotSame("Swipe is the same object", event.actions!![1], copy.actions!![1])
-        assertNotSame("Pause is the same object", event.actions!![2], copy.actions!![2])
-        assertNotSame("Condition is the same object", event.actions!![0], copy.conditions!![0])
     }
 }

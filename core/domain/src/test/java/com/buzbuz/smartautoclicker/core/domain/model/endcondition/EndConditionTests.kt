@@ -43,7 +43,7 @@ class EndConditionTests {
 
     @Test(expected = IllegalStateException::class)
     fun toEntityWithNoScenario() {
-        TestsData.getNewEndCondition(scenarioId = 0).toEntity()
+        TestsData.getNewEndCondition(scenarioId = 0L).toEntity()
     }
 
     @Test(expected = IllegalStateException::class)
