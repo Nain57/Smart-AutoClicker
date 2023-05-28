@@ -25,7 +25,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV4Condition
 import com.buzbuz.smartautoclicker.core.database.utils.getV5Conditions
-import com.buzbuz.smartautoclicker.core.utils.*
+import com.buzbuz.smartautoclicker.core.database.utils.*
 
 import org.junit.Assert
 import org.junit.Rule

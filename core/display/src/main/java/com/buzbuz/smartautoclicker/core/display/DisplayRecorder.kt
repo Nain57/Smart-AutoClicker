@@ -49,7 +49,7 @@ import androidx.annotation.WorkerThread
  * [stopProjection] in order to release all resources associated with this object.
  */
 @MainThread
-class ScreenRecorder private constructor() {
+class ScreenRecorder internal constructor() {
 
     companion object {
         /** Tag for logs. */

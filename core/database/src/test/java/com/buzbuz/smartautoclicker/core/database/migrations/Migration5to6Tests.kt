@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.database.utils.getInsertV5Pause
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV5Swipe
 import com.buzbuz.smartautoclicker.core.database.utils.getV6Actions
 import com.buzbuz.smartautoclicker.core.database.utils.getV6Conditions
-import com.buzbuz.smartautoclicker.core.utils.*
+import com.buzbuz.smartautoclicker.core.database.utils.*
 
 import org.junit.Assert
 import org.junit.Rule

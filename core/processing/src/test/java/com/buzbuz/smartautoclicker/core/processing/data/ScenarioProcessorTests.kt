@@ -30,12 +30,14 @@ import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newCondition
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newEvent
@@ -93,6 +95,15 @@ class ScenarioProcessorTests {
 
         private val TEST_DETECTION_OK = DetectionResult(true)
         private val TEST_DETECTION_KO = DetectionResult(false)
+
+        private fun newDefaultClickAction(duration: Long = 1) =
+            Action.Click(
+                id = Identifier(1),
+                eventId = Identifier(1),
+                pressDuration = duration,
+                x = 10, y = 10,
+                clickOnCondition = false,
+            )
     }
 
     /** Interface to be mocked in order to verify the calls to the bitmap supplier. */
@@ -208,7 +219,7 @@ class ScenarioProcessorTests {
     fun noConditions_withActions() = runTest {
         val event = newEvent(
             conditions = emptyList(),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -234,7 +245,7 @@ class ScenarioProcessorTests {
             operator = AND,
 
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -260,7 +271,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -287,7 +298,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -310,11 +321,10 @@ class ScenarioProcessorTests {
             isDetected = true,
             shouldBeOnScreen = false,
         )
-        val expectedDuration = 1L
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -338,7 +348,7 @@ class ScenarioProcessorTests {
         )
         val event = newEvent(
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -363,7 +373,7 @@ class ScenarioProcessorTests {
         val expectedDuration = 1L
         val event = newEvent(
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -390,7 +400,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -413,11 +423,10 @@ class ScenarioProcessorTests {
             isDetected = true,
             shouldBeOnScreen = false,
         )
-        val expectedDuration = 1L
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -459,7 +468,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -497,11 +506,10 @@ class ScenarioProcessorTests {
             isDetected = false,
             shouldBeOnScreen = true,
         )
-        val expectedDuration = 1L
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -543,7 +551,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -586,7 +594,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -628,7 +636,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -672,7 +680,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -713,11 +721,10 @@ class ScenarioProcessorTests {
             shouldBeOnScreen = true,
         )
 
-        val expectedDuration = 1L
         val event = newEvent(
             operator = AND,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -757,11 +764,10 @@ class ScenarioProcessorTests {
             shouldBeOnScreen = true,
         )
 
-        val expectedDuration = 1L
         val event = newEvent(
             operator = OR,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -804,7 +810,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = OR,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -848,7 +854,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = OR,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -892,7 +898,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = OR,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -936,7 +942,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = OR,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -980,7 +986,7 @@ class ScenarioProcessorTests {
         val event = newEvent(
             operator = OR,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -1020,11 +1026,10 @@ class ScenarioProcessorTests {
             shouldBeOnScreen = false,
         )
 
-        val expectedDuration = 1L
         val event = newEvent(
             operator = OR,
             conditions = listOf(condition1, condition2, condition3),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = expectedDuration, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(),
@@ -1046,11 +1051,10 @@ class ScenarioProcessorTests {
             isDetected = false,
             shouldBeOnScreen = true,
         )
-        val actionDuration1 = 1L
         val event1 = newEvent(
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         val condition2 = createTestCondition(
@@ -1061,11 +1065,10 @@ class ScenarioProcessorTests {
             isDetected = false,
             shouldBeOnScreen = true,
         )
-        val actionDuration2 = 1L
         val event2 = newEvent(
             operator = AND,
             conditions = listOf(condition2),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
@@ -1092,7 +1095,7 @@ class ScenarioProcessorTests {
             id = 10L,
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration1)),
         )
 
         val condition2 = createTestCondition(
@@ -1103,12 +1106,12 @@ class ScenarioProcessorTests {
             isDetected = false,
             shouldBeOnScreen = true,
         )
-        val actionDuration2 = 1L
+        val actionDuration2 = 3L
         val event2 = newEvent(
             id = 11L,
             operator = AND,
             conditions = listOf(condition2),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration2)),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
@@ -1133,7 +1136,7 @@ class ScenarioProcessorTests {
         val event1 = newEvent(
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration1)),
         )
 
         val condition2 = createTestCondition(
@@ -1144,11 +1147,11 @@ class ScenarioProcessorTests {
             isDetected = true,
             shouldBeOnScreen = true,
         )
-        val actionDuration2 = 1L
+        val actionDuration2 = 3L
         val event2 = newEvent(
             operator = AND,
             conditions = listOf(condition2),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration2)),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
@@ -1175,7 +1178,7 @@ class ScenarioProcessorTests {
         val event1 = newEvent(
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration1)),
         )
 
         val condition2 = createTestCondition(
@@ -1190,7 +1193,7 @@ class ScenarioProcessorTests {
         val event2 = newEvent(
             operator = AND,
             conditions = listOf(condition2),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration2, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration2)),
         )
 
         scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(),
@@ -1213,11 +1216,10 @@ class ScenarioProcessorTests {
             isDetected = false,
             shouldBeOnScreen = true,
         )
-        val actionDuration1 = 1L
         val event1 = newEvent(
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
             enableOnStart = true,
         )
 
@@ -1242,13 +1244,14 @@ class ScenarioProcessorTests {
         val event1 = newEvent(
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration1)),
         )
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
             listOf(
                 EndCondition(
+                    id = Identifier(1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
@@ -1277,17 +1280,18 @@ class ScenarioProcessorTests {
         val event1 = newEvent(
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
             listOf(
                 EndCondition(
+                    id = Identifier(1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
-                    executions = 3
+                    executions = 3,
                 )
             ),
             OR
@@ -1325,25 +1329,27 @@ class ScenarioProcessorTests {
             id = 42,
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
         val event2 = newEvent(
             id = 85,
             operator = OR,
             conditions = listOf(condition2),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1, event2),
             listOf(
                 EndCondition(
+                    id = Identifier(1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
                     executions = 1
                 ),
                 EndCondition(
+                    id = Identifier(2),
                     scenarioId = event2.scenarioId,
                     eventId = event2.id,
                     eventName = event2.name,
@@ -1371,13 +1377,14 @@ class ScenarioProcessorTests {
         val event1 = newEvent(
             operator = AND,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = actionDuration1, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction(actionDuration1)),
         )
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
             listOf(
                 EndCondition(
+                    id = Identifier(1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
@@ -1406,13 +1413,14 @@ class ScenarioProcessorTests {
         val event1 = newEvent(
             operator = AND,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1),
             listOf(
                 EndCondition(
+                    id = Identifier(1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
@@ -1453,25 +1461,27 @@ class ScenarioProcessorTests {
             id = 42,
             operator = OR,
             conditions = listOf(condition1),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
         val event2 = newEvent(
             id = 85,
             operator = OR,
             conditions = listOf(condition2),
-            actions = listOf(Action.Click(eventId = 1, pressDuration = 1L, x = 10, y = 10, clickOnCondition = false)),
+            actions = listOf(newDefaultClickAction()),
         )
 
         scenarioProcessor = createNewScenarioProcessor(
             listOf(event1, event2),
             listOf(
                 EndCondition(
+                    id = Identifier(1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
                     executions = 1
                 ),
                 EndCondition(
+                    id = Identifier(2),
                     scenarioId = event2.scenarioId,
                     eventId = event2.id,
                     eventName = event2.name,

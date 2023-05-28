@@ -31,8 +31,8 @@ import android.widget.ImageView
 
 import androidx.annotation.IdRes
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
-import com.buzbuz.smartautoclicker.core.utils.ScreenMetrics
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedMenuView
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedViews
 import com.buzbuz.smartautoclicker.core.ui.R
@@ -105,7 +105,7 @@ class OverlayMenuControllerTests {
     /** The object under tests. */
     private lateinit var overlayMenuController: OverlayMenuControllerTestImpl
     /** The screen metrics singleton for the tests. */
-    private lateinit var screenMetrics: ScreenMetrics
+    private lateinit var screenMetrics: DisplayMetrics
 
     /**
      * Create a mock for the menu view.
@@ -175,7 +175,7 @@ class OverlayMenuControllerTests {
             null
         }.`when`(mockDisplay).getRealSize(any())
 
-        screenMetrics = ScreenMetrics.getInstance(mockContext)
+        screenMetrics = DisplayMetrics.getInstance(mockContext)
         screenMetrics.startMonitoring(mockContext)
     }
 

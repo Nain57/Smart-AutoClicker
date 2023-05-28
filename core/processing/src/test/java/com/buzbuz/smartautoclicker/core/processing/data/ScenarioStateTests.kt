@@ -84,7 +84,7 @@ class ScenarioStateTests {
         )
 
         val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id, Action.ToggleEvent.ToggleType.ENABLE)
+            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.ENABLE)
         }
 
         Assert.assertTrue("Event not enabled", scenarioState.getEnabledEvents().contains(changingEvent))
@@ -100,7 +100,7 @@ class ScenarioStateTests {
         )
 
         val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id, Action.ToggleEvent.ToggleType.ENABLE)
+            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.ENABLE)
         }
 
         Assert.assertTrue("Event not enabled", scenarioState.getEnabledEvents().contains(changingEvent))
@@ -116,7 +116,7 @@ class ScenarioStateTests {
         )
 
         val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id, Action.ToggleEvent.ToggleType.DISABLE)
+            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.DISABLE)
         }
 
         Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledEvents().contains(changingEvent))
@@ -132,7 +132,7 @@ class ScenarioStateTests {
         )
 
         val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id, Action.ToggleEvent.ToggleType.DISABLE)
+            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.DISABLE)
         }
 
         Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledEvents().contains(changingEvent))
@@ -148,7 +148,7 @@ class ScenarioStateTests {
         )
 
         val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id, Action.ToggleEvent.ToggleType.TOGGLE)
+            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.TOGGLE)
         }
 
         Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledEvents().contains(changingEvent))
@@ -164,7 +164,7 @@ class ScenarioStateTests {
         )
 
         val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id, Action.ToggleEvent.ToggleType.ENABLE)
+            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.ENABLE)
         }
 
         Assert.assertTrue("Event not enabled", scenarioState.getEnabledEvents().contains(changingEvent))
