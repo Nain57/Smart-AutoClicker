@@ -35,7 +35,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionToggleEventBinding
@@ -50,9 +49,9 @@ import kotlinx.coroutines.launch
 
 class ToggleEventDialog(
     context: Context,
-    private val editedToggleEvent: Action.ToggleEvent,
-    private val onDeleteClicked: (Action.ToggleEvent) -> Unit,
-    private val onConfirmClicked: (Action.ToggleEvent) -> Unit,
+    private val onConfirmClicked: () -> Unit,
+    private val onDeleteClicked: () -> Unit,
+    private val onDismissClicked: () -> Unit,
 ) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -64,13 +63,14 @@ class ToggleEventDialog(
     private lateinit var viewBinding: DialogConfigActionToggleEventBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredToggleEvent(editedToggleEvent)
-
         viewBinding = DialogConfigActionToggleEventBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_toggle_event)
 
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener {
+                    onDismissClicked()
+                    destroy()
+                }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -113,12 +113,12 @@ class ToggleEventDialog(
     }
 
     private fun onSaveButtonClicked() {
-        onConfirmClicked(viewModel.getConfiguredToggleEvent())
+        onConfirmClicked()
         destroy()
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked(editedToggleEvent)
+        onDeleteClicked()
         destroy()
     }
 

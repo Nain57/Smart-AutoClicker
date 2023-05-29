@@ -35,4 +35,9 @@ data class EndCondition(
     val eventId: Identifier? = null,
     val eventName: String? = null,
     @IntRange(from = 1) val executions: Int = 1,
-)
+) {
+
+    /** @return true if this end condition is complete and can be transformed into its entity. */
+    fun isComplete(): Boolean =
+        eventId != null && eventName != null
+}

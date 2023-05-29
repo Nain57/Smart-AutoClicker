@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
@@ -56,7 +57,7 @@ import kotlinx.coroutines.flow.mapNotNull
  */
 internal class RepositoryImpl internal constructor(
     database: ClickDatabase,
-    private val bitmapManager: com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager,
+    private val bitmapManager: BitmapManager,
 ): Repository {
 
     /** The Dao for accessing the database. */
@@ -225,11 +226,12 @@ internal class RepositoryImpl internal constructor(
             currentEntities = conditionsDao.getConditions(eventDbId),
             newItems = conditions,
             toEntity = { _, condition ->
-                condition.toEntity().apply {
+                val completeCondition = condition.bitmap?.let {
+                    condition.copy(path = bitmapManager.saveBitmap(it))
+                } ?: condition
+
+                completeCondition.toEntity().apply {
                     eventId = eventDbId
-                    condition.bitmap?.let {
-                        path = bitmapManager.saveBitmap(it)
-                    }
                 }
             }
         )

@@ -38,22 +38,23 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.CoordinatesSelector
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
+
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
 class ClickDialog(
     context: Context,
-    private val editedClick: Action.Click,
-    private val onDeleteClicked: (Action.Click) -> Unit,
-    private val onConfirmClicked: (Action.Click) -> Unit,
+    private val onConfirmClicked: () -> Unit,
+    private val onDeleteClicked: () -> Unit,
+    private val onDismissClicked: () -> Unit,
 ) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -65,13 +66,14 @@ class ClickDialog(
     private lateinit var viewBinding: DialogConfigActionClickBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredClick(editedClick)
-
         viewBinding = DialogConfigActionClickBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_click)
 
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener {
+                    onDismissClicked()
+                    destroy()
+                }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -128,12 +130,12 @@ class ClickDialog(
 
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
-        onConfirmClicked(viewModel.getConfiguredClick())
+        onConfirmClicked()
         destroy()
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked(editedClick)
+        onDeleteClicked()
         destroy()
     }
 
@@ -175,7 +177,7 @@ class ClickDialog(
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     private fun showPositionSelector() {

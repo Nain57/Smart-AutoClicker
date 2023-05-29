@@ -22,20 +22,23 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isValidDuration
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putPauseDurationConfig
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.mapNotNull
 
 class PauseViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The action being configured by the user. Defined using [setConfiguredPause]. */
-    private val configuredPause = MutableStateFlow<Action.Pause?>(null)
+    /** Repository providing access to the edited items. */
+    private val editionRepository = EditionRepository.getInstance(application)
+    /** The action being configured by the user. */
+    private val configuredPause = editionRepository.editionState.editedActionState
+        .mapNotNull { action -> action.value?.let { it as Action.Pause } }
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
@@ -45,7 +48,7 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredPause.map { it?.name?.isEmpty() ?: true }
+    val nameError: Flow<Boolean> = configuredPause.map { it.name?.isEmpty() ?: true }
 
     /** The duration of the pause in milliseconds. */
     val pauseDuration: Flow<String?> = configuredPause
@@ -53,36 +56,19 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
         .map { it.pauseDuration?.toString() }
         .take(1)
     /** Tells if the pause duration value is valid or not. */
-    val pauseDurationError: Flow<Boolean> = configuredPause.map { (it?.pauseDuration ?: -1) <= 0 }
+    val pauseDurationError: Flow<Boolean> = configuredPause.map { (it.pauseDuration ?: -1) <= 0 }
 
     /** Tells if the configured pause is valid and can be saved. */
-    val isValidAction: Flow<Boolean> = configuredPause
-        .map { pause ->
-            pause != null && !pause.name.isNullOrEmpty() && pause.pauseDuration.isValidDuration()
-        }
-
-    /**
-     * Set the configured pause.
-     * This will update all values represented by this view model.
-     *
-     * @param action the pause to configure.
-     */
-    fun setConfiguredPause(action: Action.Pause) {
-        configuredPause.value = action.deepCopy()
-    }
-
-    /** @return the pause containing all user changes. */
-    fun getConfiguredPause(): Action.Pause =
-        configuredPause.value
-            ?: throw IllegalStateException("Can't get the configured pause, none were defined.")
+    val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
+        .map { it.canBeSaved }
 
     /**
      * Set the name of the pause.
      * @param name the new name.
      */
     fun setName(name: String) {
-        configuredPause.value?.let { pause ->
-            configuredPause.value = pause.copy(name = "" + name)
+        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { pause ->
+            editionRepository.updateEditedAction(pause.copy(name = "" + name))
         }
     }
 
@@ -91,14 +77,14 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
      * @param durationMs the new duration in milliseconds.
      */
     fun setPauseDuration(durationMs: Long?) {
-        configuredPause.value?.let { pause ->
-            configuredPause.value = pause.copy(pauseDuration = durationMs)
+        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { pause ->
+            editionRepository.updateEditedAction(pause.copy(pauseDuration = durationMs))
         }
     }
 
     fun saveLastConfig() {
-        configuredPause.value?.let { swipe ->
-            sharedPreferences.edit().putPauseDurationConfig(swipe.pauseDuration ?: 0).apply()
+        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { pause ->
+            sharedPreferences.edit().putPauseDurationConfig(pause.pauseDuration ?: 0).apply()
         }
     }
 }

@@ -23,8 +23,8 @@ import android.graphics.Rect
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.domain.Repository
 
+import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -44,33 +44,33 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     private val billingRepository = IBillingRepository.getRepository(application)
 
     /** Currently configured event. */
-    private val configuredEvent = editionRepository.editedEvent
-        .filterNotNull()
+    val configuredEventConditions = editionRepository.editionState.editedEventConditionsState
+        .mapNotNull { it.value }
 
     /** Tells if the limitation in conditions count have been reached. */
     val isConditionLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
-        .combine(configuredEvent) { isProModePurchased, event ->
-            !isProModePurchased && (event.conditions.size  >= ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT.limit)
+        .combine(configuredEventConditions) { isProModePurchased, conditions ->
+            !isProModePurchased && (conditions.size  >= ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT.limit)
         }
 
     /** Tells if there is at least one condition to copy. */
-    val canCopyCondition: Flow<Boolean> = repository.getAllConditions()
-        .map { it.isNotEmpty() }
+    val canCopyCondition: Flow<Boolean> = combine(
+        repository.getAllConditions(),
+        configuredEventConditions,
+        editionRepository.editionState.eventsState
+    ) { dbConds, editedConds, scenarioEvents ->
+
+        if (dbConds.isNotEmpty()) return@combine true
+        if (editedConds.isNotEmpty()) return@combine true
+
+        scenarioEvents.value?.forEach { event ->
+            if (event.conditions.isNotEmpty()) return@combine true
+        }
+        false
+    }
 
     /** Tells if the pro mode billing flow is being displayed. */
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
-
-    /** Backing property for [conditions]. */
-    private val _conditions = configuredEvent
-        .map { it.conditions }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            emptyList()
-        )
-
-    /** The event conditions currently edited by the user. */
-    val conditions: StateFlow<List<Condition>?> get() = _conditions
 
     /**
      * Create a new condition with the default values from configuration.
@@ -80,21 +80,27 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param bitmap the image for the condition to create.
      */
     fun createCondition(context: Context, area: Rect, bitmap: Bitmap): Condition =
-        editionRepository.createNewCondition(context, area, bitmap, from = null)
+        editionRepository.editedItemsBuilder.createNewCondition(context, area, bitmap)
 
     /**
-     * Insert/update a new condition to the event.
-     * @param condition the new condition.
+     * Get a new condition based on the provided one.
+     * @param condition the condition to copy.
      */
-    fun upsertCondition(condition: Condition) =
-        editionRepository.upsertConditionToEditedEvent(condition)
+    fun createNewConditionFromCopy(condition: Condition): Condition =
+        editionRepository.editedItemsBuilder.createNewConditionFrom(condition)
 
-    /**
-     * Remove a condition from the event.
-     * @param condition the condition to be removed.
-     */
-    fun removeCondition(condition: Condition) =
-        editionRepository.deleteConditionFromEditedEvent(condition)
+    fun startConditionEdition(condition: Condition) = editionRepository.startConditionEdition(condition)
+
+    /** Insert/update a new condition to the event. */
+    fun upsertEditedCondition() =
+        editionRepository.upsertEditedCondition()
+
+    /** Remove a condition from the event. */
+    fun removeEditedCondition() =
+        editionRepository.deleteEditedCondition()
+
+    /** Drop all changes made to the currently edited event. */
+    fun dismissEditedCondition() = editionRepository.stopConditionEdition()
 
     /**
      * Get the bitmap corresponding to a condition.

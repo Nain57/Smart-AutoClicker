@@ -34,7 +34,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionIntentExtraBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
@@ -51,15 +50,14 @@ import kotlin.reflect.KClass
  * This dialog is generic for all extra value types. The UI will change according to the selected type.
  *
  * @param context the Android Context for the dialog shown by this controller.
- * @param extra the intent extra that will be edited.
  * @param onConfigComplete the listener called when the user presses the ok button.
  * @param onDeleteClicked the listener called when the user presses the delete button.
  */
 class ExtraConfigDialog(
     context: Context,
-    private val extra: IntentExtra<out Any>,
-    private val onConfigComplete: (IntentExtra<out Any>) -> Unit,
-    private val onDeleteClicked: (() -> Unit)? = null,
+    private val onConfigComplete: () -> Unit,
+    private val onDeleteClicked: () -> Unit,
+    private val onDismissClicked: () -> Unit,
 ) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
 
     /** The view model for the data displayed in this dialog. */
@@ -71,13 +69,14 @@ class ExtraConfigDialog(
     private lateinit var viewBinding: DialogConfigActionIntentExtraBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfigExtra(extra)
-
         viewBinding = DialogConfigActionIntentExtraBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_extra_config)
 
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener {
+                    onDismissClicked()
+                    destroy()
+                }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -124,12 +123,12 @@ class ExtraConfigDialog(
     }
 
     private fun onSaveButtonClicked() {
-        onConfigComplete(viewModel.getConfiguredExtra())
+        onConfigComplete()
         destroy()
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked?.invoke()
+        onDeleteClicked()
         destroy()
     }
 

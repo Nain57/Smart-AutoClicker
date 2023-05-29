@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemNewCo
  */
 class ExtrasAdapter(
     private val addExtraClickedListener: () -> Unit,
-    private val extraClickedListener: (IntentExtra<out Any>, Int) -> Unit,
+    private val extraClickedListener: (IntentExtra<out Any>) -> Unit,
 ) : ListAdapter<ExtraListItem, RecyclerView.ViewHolder>(ExtraDiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -98,14 +98,14 @@ private class AddExtraViewHolder(
 /** View holder for an extra item. */
 private class ExtraItemViewHolder(
     private val viewBinding: ItemIntentExtraCardBinding,
-    private val onExtraClickedListener: (IntentExtra<out Any>, Int) -> Unit,
+    private val onExtraClickedListener: (IntentExtra<out Any>) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root)  {
 
     fun onBind(extra: ExtraListItem.ExtraItem) {
         viewBinding.apply {
             textExtraName.text = extra.name
             textExtraValue.text = extra.value
-            root.setOnClickListener { onExtraClickedListener(extra.extra, bindingAdapterPosition) }
+            root.setOnClickListener { onExtraClickedListener(extra.extra) }
         }
     }
 }

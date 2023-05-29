@@ -36,6 +36,9 @@ data class IntentExtra<T>(
     val value: T?,
 ) {
 
+    /** @return true if this extra is complete and can be transformed into its entity. */
+    fun isComplete(): Boolean = key != null && value != null
+
     /**
      * Copy and change the type of the value contained in this IntentExtra.
      * @param V the new value type.

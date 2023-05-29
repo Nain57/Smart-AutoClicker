@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogController
@@ -54,7 +55,7 @@ class ScenarioDialog(
 
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
-            topBarBinding.setButtonVisibility(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, View.VISIBLE)
+            topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
             topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_scenario_config)
         }
     }
@@ -78,10 +79,10 @@ class ScenarioDialog(
         }
     }
 
-    override fun onDialogButtonPressed(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) {
+    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
         when (buttonType) {
-            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE -> onConfigSaved()
-            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DISMISS -> onConfigDiscarded()
+            DialogNavigationButton.SAVE -> onConfigSaved()
+            DialogNavigationButton.DISMISS -> onConfigDiscarded()
             else -> { /* Nothing to do */ }
         }
 
@@ -96,7 +97,7 @@ class ScenarioDialog(
 
     /** */
     private fun updateSaveButtonState(isEnabled: Boolean) {
-        topBarBinding.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isEnabled)
+        topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, isEnabled)
     }
 
     private fun onNewSubOverlayRequest(request: NavigationRequest?) {

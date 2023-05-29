@@ -55,7 +55,7 @@ class ActionCopyDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->
-            onActionSelected(viewModel.createNewActionFrom(context, selectedAction))
+            onActionSelected(selectedAction.actionDetails.action)
             destroy()
         }
 

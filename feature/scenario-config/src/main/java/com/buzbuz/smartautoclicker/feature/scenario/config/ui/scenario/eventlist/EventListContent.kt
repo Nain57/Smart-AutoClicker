@@ -171,9 +171,9 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
             NavigationRequest(
                 overlay = EventDialog(
                     context = context,
-                    onConfigComplete = { viewModel.saveEventEdition() },
-                    onDelete = { viewModel.deleteEditedEvent() },
-                    onDismiss = { viewModel.dismissEditedEvent() }
+                    onConfigComplete = viewModel::saveEventEdition,
+                    onDelete = viewModel::deleteEditedEvent,
+                    onDismiss = viewModel::dismissEditedEvent,
                 ),
                 hideCurrent = true
             )

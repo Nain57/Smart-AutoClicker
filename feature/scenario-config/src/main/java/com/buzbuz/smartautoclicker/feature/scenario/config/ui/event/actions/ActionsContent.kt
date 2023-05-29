@@ -135,7 +135,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun onActionClicked(action: Action) {
-        dialogViewModel.requestSubOverlay(newActionConfigNavigationRequest(action))
+        showActionConfigDialog(action)
     }
 
     private fun updateActionLimitationVisibility(isVisible: Boolean) {
@@ -176,11 +176,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
                     false
                 } else {
                     actionTypeSelectionDialog = null
-                    dialogViewModel.requestSubOverlay(
-                        newActionConfigNavigationRequest(
-                            viewModel.createAction(context, choiceClicked)
-                        )
-                    )
+                    showActionConfigDialog(viewModel.createAction(context, choiceClicked))
                     true
                 }
             },
@@ -195,26 +191,57 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         ActionCopyDialog(
             context = context,
             onActionSelected = { newCopyAction ->
-                dialogViewModel.requestSubOverlay(
-                    newActionConfigNavigationRequest(newCopyAction)
-                )
+                showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction))
             }
         )
     )
 
-    private fun newActionConfigNavigationRequest(action: Action): NavigationRequest {
+    private fun showActionConfigDialog(action: Action) {
+        viewModel.startActionEdition(action)
+
         val overlay = when (action) {
-            is Action.Click -> ClickDialog(context, action, viewModel::removeAction, viewModel::upsertAction)
-            is Action.Swipe -> SwipeDialog(context, action, viewModel::removeAction, viewModel::upsertAction)
-            is Action.Pause -> PauseDialog(context, action, viewModel::removeAction, viewModel::upsertAction)
-            is Action.Intent -> IntentDialog(context, action, viewModel::removeAction, viewModel::upsertAction)
-            is Action.ToggleEvent -> ToggleEventDialog(context, action, viewModel::removeAction, viewModel::upsertAction)
+            is Action.Click -> ClickDialog(
+                context = context,
+                onConfirmClicked = viewModel::upsertEditedAction,
+                onDeleteClicked = viewModel::removeEditedAction,
+                onDismissClicked = viewModel::dismissEditedAction,
+            )
+
+            is Action.Swipe -> SwipeDialog(
+                context = context,
+                onConfirmClicked = viewModel::upsertEditedAction,
+                onDeleteClicked = viewModel::removeEditedAction,
+                onDismissClicked = viewModel::dismissEditedAction,
+            )
+
+            is Action.Pause -> PauseDialog(
+                context = context,
+                onConfirmClicked = viewModel::upsertEditedAction,
+                onDeleteClicked = viewModel::removeEditedAction,
+                onDismissClicked = viewModel::dismissEditedAction,
+            )
+
+            is Action.Intent -> IntentDialog(
+                context = context,
+                onConfirmClicked = viewModel::upsertEditedAction,
+                onDeleteClicked = viewModel::removeEditedAction,
+                onDismissClicked = viewModel::dismissEditedAction,
+            )
+
+            is Action.ToggleEvent -> ToggleEventDialog(
+                context = context,
+                onConfirmClicked = viewModel::upsertEditedAction,
+                onDeleteClicked = viewModel::removeEditedAction,
+                onDismissClicked = viewModel::dismissEditedAction,
+            )
             else -> throw IllegalArgumentException("Not yet supported")
         }
 
-        return NavigationRequest(
-            overlay = overlay,
-            hideCurrent = true,
+        dialogViewModel.requestSubOverlay(
+            NavigationRequest(
+                overlay = overlay,
+                hideCurrent = true,
+            )
         )
     }
 }

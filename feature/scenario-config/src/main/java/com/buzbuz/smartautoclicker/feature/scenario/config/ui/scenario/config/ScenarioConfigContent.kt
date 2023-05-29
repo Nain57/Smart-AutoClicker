@@ -92,7 +92,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
 
             endConditionAdapter = EndConditionAdapter(
                 addEndConditionClickedListener = ::onAddEndConditionClicked,
-                endConditionClickedListener = ::onEndConditionClicked,
+                endConditionClickedListener = ::showEndConditionDialog,
             )
             endConditionsList.adapter = endConditionAdapter
         }
@@ -207,28 +207,18 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun onAddEndConditionClicked() {
-        viewModel.createNewEndCondition().let { endCondition ->
-            dialogViewModel.requestSubOverlay(
-                NavigationRequest(
-                    EndConditionConfigDialog(
-                        context = context,
-                        endCondition = endCondition,
-                        onConfirmClicked = { newEndCondition -> viewModel.upsertEndCondition(newEndCondition) },
-                        onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
-                    )
-                )
-            )
-        }
+        showEndConditionDialog(viewModel.createNewEndCondition())
     }
 
-    private fun onEndConditionClicked(endCondition: EndCondition) {
+    private fun showEndConditionDialog(endCondition: EndCondition) {
+        viewModel.startEndConditionEdition(endCondition)
         dialogViewModel.requestSubOverlay(
             NavigationRequest(
                 EndConditionConfigDialog(
                     context = context,
-                    endCondition = endCondition,
-                    onConfirmClicked = { newEndCondition -> viewModel.upsertEndCondition(newEndCondition) },
-                    onDeleteClicked = { viewModel.deleteEndCondition(endCondition) }
+                    onConfirmClicked = viewModel::upsertEndCondition,
+                    onDeleteClicked = viewModel::deleteEndCondition,
+                    onDismissClicked = viewModel::discardEndCondition,
                 )
             )
         )

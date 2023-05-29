@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy
 
 import android.app.Application
-import android.content.Context
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
@@ -53,8 +52,8 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      * This list can contains all events with headers, or the search result depending on the current search query.
      */
     val eventList: Flow<List<EventCopyItem>?> =
-        combine(repository.getAllEvents(), editionRepository.editedEvents, searchQuery) { dbEvents, scenarioEvents, query ->
-            if (query.isNullOrEmpty()) getAllItems(dbEvents, scenarioEvents)
+        combine(repository.getAllEvents(), editionRepository.editionState.eventsState, searchQuery) { dbEvents, editedEvents, query ->
+            if (query.isNullOrEmpty()) getAllItems(dbEvents, editedEvents.value)
             else getSearchedItems(dbEvents, query)
         }
 
@@ -109,21 +108,12 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
         .map { it.toEventItem() }
         .distinct()
 
-    /**
-     * Get a copy of the provided event.
-     *
-     * @param context the Android context.
-     * @param event the event to get the copy of.
-     */
-    fun createNewEventFrom(context: Context, event: Event): Event =
-        editionRepository.createNewEvent(context, event)
-
     /** If that's not the same scenario and we are copying an event with a toggle event action, warn the user */
     fun eventCopyShouldWarnUser(event: Event): Boolean =
         !event.isFromEditedScenario() && event.actions.firstOrNull { it is Action.ToggleEvent } != null
 
     private fun Event.isFromEditedScenario(): Boolean =
-        editionRepository.editedScenario.value?.id == scenarioId
+        editionRepository.editionState.getScenario()?.id == scenarioId
 
     /** @return the [EventCopyItem.EventItem] corresponding to this event. */
     private fun Event.toEventItem(): EventCopyItem.EventItem =

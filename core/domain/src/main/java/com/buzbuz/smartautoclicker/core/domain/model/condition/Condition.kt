@@ -53,5 +53,5 @@ data class Condition(
     )
 
     /** Tells if this condition is complete and valid to be saved. */
-    fun isComplete(): Boolean = (path != null || bitmap != null)
+    fun isComplete(): Boolean = name.isNotEmpty() && (path != null || bitmap != null)
 }

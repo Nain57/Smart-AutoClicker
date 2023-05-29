@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 
 /**
@@ -41,15 +41,9 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
 
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
-    /** Currently configured events. */
-    private val editedEvents = editionRepository.editedEvents
-        .filterNotNull()
     /** Currently configured end conditions. */
-    private val editedEndConditions = editionRepository.editedEndConditions
-        .filterNotNull()
-
-    /** The configured end condition. */
-    private val editedEndCondition = MutableStateFlow<EndCondition?>(null)
+    private val editedEndCondition: Flow<EndCondition> = editionRepository.editionState.editedEndConditionState
+        .mapNotNull { it.value }
 
     /** The number of executions before triggering the end condition. */
     val executions = editedEndCondition
@@ -58,53 +52,38 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
         .take(1)
     /** Tells if the execution count is valid or not. */
     val executionCountError: Flow<Boolean> = editedEndCondition
-        .map { (it?.executions ?: -1) <= 0 }
+        .map { it.executions <= 0 }
 
     /** True if this end condition is valid and can be saved, false if not. */
-    val isValidEndCondition: Flow<Boolean> = editedEndCondition.map { endCondition ->
-        endCondition?.eventId != null && endCondition.executions > 0
-    }
-
-    /** Events available as end condition event for this end condition */
-    private val eventsAvailable: Flow<List<Event>> = editedEvents
-        .combine(editedEndConditions) { events, endConditions ->
-            events.filter { event ->
-                endConditions.find { it.eventId == event.id } == null
-            }
-        }
+    val endConditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEndConditionState
+        .map { it.canBeSaved }
 
     /** The event selected for the end condition. Null if none is. */
-    val eventViewState: Flow<EventPickerViewState> = editedEvents
+    val eventViewState: Flow<EventPickerViewState> = editionRepository.editionState.eventsState
         .combine(editedEndCondition) { events, endCondition ->
-            events.find { event ->
-                endCondition?.eventId == event.id
-            }
+            events.value?.find { event -> endCondition.eventId == event.id }
         }
-        .combine(eventsAvailable) { selectedEvent, scenarioEvents ->
+        .combine(editionRepository.editionState.eventsAvailableForNewEndCondition) { selectedEvent, events ->
             when {
-                selectedEvent != null -> EventPickerViewState.Selected(selectedEvent, scenarioEvents)
-                scenarioEvents.isEmpty() -> EventPickerViewState.NoEvents
-                else -> EventPickerViewState.NoSelection(scenarioEvents)
+                selectedEvent != null -> EventPickerViewState.Selected(selectedEvent, events)
+                events.isEmpty() -> EventPickerViewState.NoEvents
+                else -> EventPickerViewState.NoSelection(events)
             }
         }
-
-    /**
-     * Set the end condition to be configured.
-     * @param endCondition the end condition.
-     */
-    fun setConfiguredEndCondition(endCondition: EndCondition) {
-        editedEndCondition.value = endCondition
-    }
 
     /**
      * Set the event for the configured end condition
      * @param event the new event.
      */
     fun setEvent(event: Event) {
-        editedEndCondition.value = editedEndCondition.value?.copy(
-            eventId = event.id,
-            eventName = event.name
-        )
+        editionRepository.editionState.getEditedEndCondition()?.let { endCondition ->
+            editionRepository.updateEditedEndCondition(
+                endCondition.copy(
+                    eventId = event.id,
+                    eventName = event.name,
+                )
+            )
+        }
     }
 
     /**
@@ -112,11 +91,12 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
      * @param executions the number of event executions.
      */
     fun setExecutions(executions: Int) {
-        editedEndCondition.value = editedEndCondition.value?.copy(
-            executions = executions
-        )
+        editionRepository.editionState.getEditedEndCondition()?.let { endCondition ->
+            editionRepository.updateEditedEndCondition(
+                endCondition.copy(
+                    executions = executions
+                )
+            )
+        }
     }
-
-    /** @return the end condition currently configured. */
-    fun getConfiguredEndCondition(): EndCondition = editedEndCondition.value!!
 }

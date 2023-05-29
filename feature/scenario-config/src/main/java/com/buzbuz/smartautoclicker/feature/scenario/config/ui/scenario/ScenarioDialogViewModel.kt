@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.combine
 /** ViewModel for the [ScenarioDialog] and its content. */
 class ScenarioDialogViewModel(application: Application) : NavigationViewModel(application) {
 
-    /** */
     private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
 
     /**
@@ -38,23 +37,17 @@ class ScenarioDialogViewModel(application: Application) : NavigationViewModel(ap
      * Used to display the red badge if indicating if there is something missing.
      */
     val navItemsValidity: Flow<Map<Int, Boolean>> = combine(
-        editionRepository.isEventListValid.filterNotNull(),
-        editionRepository.editedScenario.filterNotNull(),
-    ) { isEventListValid, scenario ->
+        editionRepository.editionState.eventsState.filterNotNull(),
+        editionRepository.editionState.scenarioState.filterNotNull(),
+    ) { eventListState, scenarioState ->
         buildMap {
-            put(R.id.page_events, isEventListValid)
-            put(R.id.page_config, scenario.name.isNotEmpty())
+            put(R.id.page_events, eventListState.canBeSaved)
+            put(R.id.page_config, scenarioState.canBeSaved)
             put(R.id.page_debug, true)
         }
     }
 
     /** Tells if the configured scenario is valid and can be saved in database. */
-    val scenarioCanBeSaved: Flow<Boolean> = navItemsValidity
-        .map { itemsValidity ->
-            var allValid = true
-            itemsValidity.values.forEach { validity ->
-                allValid = allValid && validity
-            }
-            allValid
-        }
+    val scenarioCanBeSaved: Flow<Boolean> = editionRepository.editionState.scenarioCompleteState
+        .map { it.canBeSaved }
 }

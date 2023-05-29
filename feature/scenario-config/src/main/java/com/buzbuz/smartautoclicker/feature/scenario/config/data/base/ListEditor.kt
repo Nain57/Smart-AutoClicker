@@ -16,68 +16,123 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data.base
 
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import androidx.annotation.CallSuper
 
-internal abstract class ListEditor<Reference, Item> : Editor<Reference, List<Item>>() {
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditedElementState
 
-    /** Manages the creation of the identifiers for the new elements. */
-    private val idCreator = IdentifierCreator()
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 
-    /**
-     * Update/Insert a new item to the list.
-     * @param item the item to be added.
-     */
-    fun upsertItem(item: Item) {
-        val newItems = getEditedValueOrThrow().toMutableList()
-        val itemIndex = newItems.indexOfItem(item)
+abstract class ListEditor<Item>(
+    private val onListUpdated: ((List<Item>) -> Unit)? = null,
+    canBeEmpty: Boolean = false,
+) {
 
-        if (itemIndex == -1) newItems.add(item)
-        else newItems[itemIndex] = item
+    private val referenceList: MutableStateFlow<List<Item>?> = MutableStateFlow(null)
+    private val _editedList: MutableStateFlow<List<Item>?> = MutableStateFlow((null))
+    val editedList: StateFlow<List<Item>?> = _editedList
+    val listState: Flow<EditedElementState<List<Item>>> = combine(referenceList, _editedList) { ref, edit ->
+        val hasChanged =
+            if (ref == null || edit == null) false
+            else ref != edit
 
-        _editedValue.value = newItems
+        val canBeSaved = when {
+            edit == null -> false
+            edit.isEmpty() -> canBeEmpty
+            else -> edit.find { !isItemComplete(it) } == null
+        }
+
+        EditedElementState(edit, hasChanged, canBeSaved)
     }
 
-    /**
-     * Delete a item from the scenario.
-     * @param item the item to be removed.
-     */
-    fun deleteItem(item: Item) {
-        _editedValue.value?.let { items ->
-            val index = items.indexOfItem(item)
-            if (index == -1) return
+    private val referenceEditedItem: MutableStateFlow<Item?> = MutableStateFlow(null)
+    protected val _editedItem: MutableStateFlow<Item?> = MutableStateFlow((null))
+    val editedItem: StateFlow<Item?> = _editedItem
+    val editedItemState: Flow<EditedElementState<Item>> = combine(referenceEditedItem, _editedItem) { ref, edit ->
+        val hasChanged =
+            if (ref == null || edit == null) false
+            else ref != edit
 
-            _editedValue.value = items.toMutableList().apply { removeAt(index) }
+        val canBeSaved = edit?.let { isItemComplete(it) } ?: false
+
+        EditedElementState(edit, hasChanged, canBeSaved)
+    }
+
+    abstract fun areItemsTheSame(a: Item, b: Item): Boolean
+    abstract fun isItemComplete(item: Item): Boolean
+
+    fun startEdition(referenceItems: List<Item>) {
+        referenceList.value = referenceItems
+        _editedList.value = referenceItems.toList()
+    }
+
+    @CallSuper
+    open fun startItemEdition(item: Item) {
+        _editedList.value ?: return
+
+        referenceEditedItem.value = item
+        _editedItem.value = item
+    }
+
+    @CallSuper
+    open fun stopItemEdition() {
+        referenceEditedItem.value = null
+        _editedItem.value = null
+    }
+
+    fun stopEdition() {
+        referenceList.value = null
+        _editedList.value = null
+    }
+
+    fun updateEditedItem(item: Item) {
+        _editedItem.value ?: return
+        _editedItem.value = item
+    }
+
+    /** Update/Insert a new item to the list. */
+    fun upsertEditedItem() {
+        val newItem = _editedItem.value ?: return
+        val newItems = _editedList.value?.toMutableList() ?: return
+        val itemIndex = newItems.indexOfItem(newItem)
+
+        if (itemIndex == -1) newItems.add(newItem)
+        else newItems[itemIndex] = newItem
+
+        updateList(newItems)
+        stopItemEdition()
+    }
+
+    /** Delete a item from the scenario. */
+    @CallSuper
+    open fun deleteEditedItem() {
+        val newItem = _editedItem.value ?: return
+        val newItems = _editedList.value?.toMutableList() ?: return
+        val index = newItems.indexOfItem(newItem)
+
+        if (index == -1) {
+            stopItemEdition()
+            return
         }
+
+        newItems.removeAt(index)
+        updateList(newItems)
+        stopItemEdition()
     }
 
     /**
      * Update the order of the items in the list.
-     *
      * @param items the items, ordered by their new order.
      */
-    fun updateList(items: List<Item>) {
-        _editedValue.value = items.toList()
+    fun updateList(items: List<Item>?) {
+        val newList = items?.toList() ?: return
+
+        _editedList.value = newList
+        onListUpdated?.invoke(newList)
     }
-
-    /** Finish the list edition and returns the last value. */
-    final override fun onEditionFinished(): Reference {
-        val endReference = createReferenceFromEdition()
-
-        return endReference
-    }
-
-    /** */
-    protected fun generateNewIdentifier(): Identifier = idCreator.generateNewIdentifier()
-
-    protected fun getEditedListSize(): Int =
-        _editedValue.value?.size ?: 0
 
     private fun List<Item>.indexOfItem(item: Item): Int =
-        indexOfFirst { itemMatcher(it, item) }
-
-    /** */
-    protected abstract fun createReferenceFromEdition(): Reference
-
-    /** */
-    protected abstract fun itemMatcher(first: Item, second: Item): Boolean
+        indexOfFirst { areItemsTheSame(it, item) }
 }

@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.config
 
 import android.app.Application
 import android.content.Context
-import androidx.annotation.DrawableRes
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
@@ -45,8 +46,8 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     private val billingRepository = IBillingRepository.getRepository(application)
 
     /** Currently configured event. */
-    private val configuredEvent = editionRepository.editedEvent
-        .filterNotNull()
+    private val configuredEvent = editionRepository.editionState.editedEventState
+        .mapNotNull { it.value }
 
     private val enableEventItem = DropdownItem(
         title = R.string.dropdown_item_title_event_state_enabled,
@@ -111,16 +112,16 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Set a new name for the configured event. */
     fun setEventName(newName: String) {
-        editionRepository.editedEvent.value?.let { conf ->
+        editionRepository.editionState.getEditedEvent()?.let { event ->
             viewModelScope.launch {
-                editionRepository.updateEditedEvent(conf.copy(name = newName))
+                editionRepository.updateEditedEvent(event.copy(name = newName))
             }
         }
     }
 
     /** Toggle the end condition operator between AND and OR. */
     fun setConditionOperator(operatorItem: DropdownItem) {
-        editionRepository.editedEvent.value?.let { conf ->
+        editionRepository.editionState.getEditedEvent()?.let { event ->
             val operator = when (operatorItem) {
                 conditionAndItem -> AND
                 conditionOrItem -> OR
@@ -128,14 +129,14 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
             }
 
             viewModelScope.launch {
-                editionRepository.updateEditedEvent(conf.copy(conditionOperator = operator))
+                editionRepository.updateEditedEvent(event.copy(conditionOperator = operator))
             }
         }
     }
 
     /** Toggle the event state between true and false. */
     fun setEventState(state: DropdownItem) {
-        editionRepository.editedEvent.value?.let { conf ->
+        editionRepository.editionState.getEditedEvent()?.let { conf ->
             val value = when (state) {
                 enableEventItem -> true
                 disableEventItem -> false

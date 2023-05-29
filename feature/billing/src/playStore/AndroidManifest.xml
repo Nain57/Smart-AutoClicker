@@ -22,7 +22,7 @@
     <application>
 
         <activity
-            android:name="com.buzbuz.smartautoclicker.billing.ui.ProModeBillingActivity"
+            android:name="com.buzbuz.smartautoclicker.feature.billing.ui.ProModeBillingActivity"
             android:theme="@style/AppTheme.TranslucentActivity"
             android:exported="false"
             android:noHistory="true"

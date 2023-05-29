@@ -29,6 +29,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setItems
@@ -38,7 +39,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
@@ -50,9 +50,9 @@ import kotlin.math.roundToInt
 
 class ConditionDialog(
     context: Context,
-    private val condition: Condition,
-    private val onConfirmClicked: (Condition) -> Unit,
-    private val onDeleteClicked: () -> Unit
+    private val onConfirmClicked: () -> Unit,
+    private val onDeleteClicked: () -> Unit,
+    private val onDismissClicked: () -> Unit,
 ) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -64,17 +64,18 @@ class ConditionDialog(
     private lateinit var viewBinding: DialogConfigConditionBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfigCondition(condition)
-
         viewBinding = DialogConfigConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_condition_config)
 
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener {
+                    onDismissClicked()
+                    destroy()
+                }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener {
-                        onConfirmClicked(viewModel.getConfiguredCondition())
+                        onConfirmClicked()
                         destroy()
                     }
                 }
@@ -128,7 +129,7 @@ class ConditionDialog(
                 launch { viewModel.shouldBeDetected.collect(::updateShouldBeDetected) }
                 launch { viewModel.detectionType.collect(::updateConditionType) }
                 launch { viewModel.threshold.collect(::updateThreshold) }
-                launch { viewModel.isValidCondition.collect(::updateSaveButton) }
+                launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
             }
         }
     }
@@ -170,6 +171,6 @@ class ConditionDialog(
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 }

@@ -134,11 +134,18 @@ sealed class Action {
         val intentAction: String? = null,
         val componentName: ComponentName? = null,
         val flags: Int? = null,
-        val extras: MutableList<IntentExtra<out Any>>? = null,
+        val extras: List<IntentExtra<out Any>>? = null,
     ) : Action() {
 
-        override fun isComplete(): Boolean =
-            super.isComplete() && isAdvanced != null && intentAction != null && flags != null
+        override fun isComplete(): Boolean {
+            if (!super.isComplete()) return false
+
+            if (isAdvanced == null || intentAction == null || flags == null) return false
+            extras?.forEach { extra -> if (!extra.isComplete()) return false }
+
+            return true
+        }
+
 
         override fun deepCopy(): Intent = copy(name = "" + name)
     }

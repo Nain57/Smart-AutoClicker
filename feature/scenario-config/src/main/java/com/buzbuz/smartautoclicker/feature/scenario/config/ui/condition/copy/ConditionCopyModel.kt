@@ -17,14 +17,13 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.copy
 
 import android.app.Application
-import android.content.Context
 import android.graphics.Bitmap
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyViewModel
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -32,6 +31,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -41,31 +41,26 @@ import kotlinx.coroutines.withContext
  * View model for the [ConditionCopyDialog].
  * @param application the Android application.
  */
-class ConditionCopyModel(application: Application) : CopyViewModel<Condition>(application) {
+class ConditionCopyModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the click database. */
     private val repository = Repository.getRepository(application)
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
 
+    /** The currently searched action name. Null if no is. */
+    private val searchQuery = MutableStateFlow<String?>(null)
+
     /** List of displayed condition items. */
     val conditionList: Flow<List<ConditionCopyItem>?> =
-        combine(repository.getAllConditions(), itemsFromCurrentContainer, searchQuery) { dbCond, eventCond, query ->
-            eventCond ?: return@combine null
-            if (query.isNullOrEmpty()) getAllItems(dbCond, eventCond) else dbCond.toCopyItemsFromSearch(query)
+        combine(repository.getAllConditions(), editionRepository.editionState.editedEventConditionsState, searchQuery) { dbCond, eventCond, query ->
+            val editedConditions = eventCond.value ?: return@combine null
+            if (query.isNullOrEmpty()) getAllItems(dbCond, editedConditions) else dbCond.toCopyItemsFromSearch(query)
         }
 
-    /**
-     * Get a new condition based on the provided one.
-     * @param condition the condition to copy.
-     */
-    fun createNewConditionForCopy(context: Context, condition: Condition): Condition =
-        editionRepository.createNewCondition(
-            context = context,
-            from = condition,
-            area = null,
-            bitmap = null,
-        )
+    fun updateSearchQuery(query: String?) {
+        searchQuery.value = query
+    }
 
     /**
      * Get the bitmap corresponding to a condition.

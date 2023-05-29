@@ -23,20 +23,23 @@ import android.graphics.Point
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isValidDuration
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putSwipeDurationConfig
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.mapNotNull
 
 class SwipeViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The action being configured by the user. Defined using [setConfiguredSwipe]. */
-    private val configuredSwipe = MutableStateFlow<Action.Swipe?>(null)
+    /** Repository providing access to the edited items. */
+    private val editionRepository = EditionRepository.getInstance(application)
+    /** The action being configured by the user. */
+    private val configuredSwipe = editionRepository.editionState.editedActionState
+        .mapNotNull { action -> action.value?.let { it as Action.Swipe } }
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
@@ -46,7 +49,7 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredSwipe.map { it?.name?.isEmpty() ?: true }
+    val nameError: Flow<Boolean> = configuredSwipe.map { it.name?.isEmpty() ?: true }
 
     /** The duration between the start and end of the swipe in milliseconds. */
     val swipeDuration: Flow<String?> = configuredSwipe
@@ -54,7 +57,7 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
         .map { it.swipeDuration?.toString() }
         .take(1)
     /** Tells if the swipe duration value is valid or not. */
-    val swipeDurationError: Flow<Boolean> = configuredSwipe.map { (it?.swipeDuration ?: -1) <= 0 }
+    val swipeDurationError: Flow<Boolean> = configuredSwipe.map { (it.swipeDuration ?: -1) <= 0 }
 
     /** The start and end positions of the swipe. */
     val positions: Flow<Pair<Point, Point>?> = configuredSwipe
@@ -68,34 +71,16 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
         }
 
     /** Tells if the configured swipe is valid and can be saved. */
-    val isValidAction: Flow<Boolean> = configuredSwipe
-        .map { swipe ->
-            swipe != null && !swipe.name.isNullOrEmpty()
-                    && swipe.fromX != null && swipe.fromY != null && swipe.toX != null && swipe.toY != null
-                    && swipe.swipeDuration.isValidDuration()
-        }
-
-    /**
-     * Set the configured swipe.
-     * This will update all values represented by this view model.
-     *
-     * @param action the swipe to configure.
-     */
-    fun setConfiguredSwipe(action: Action.Swipe) {
-        configuredSwipe.value = action.deepCopy()
-    }
-
-    /** @return the swipe containing all user changes. */
-    fun getConfiguredSwipe(): Action.Swipe =
-        configuredSwipe.value ?: throw IllegalStateException("Can't get the configured swipe, none were defined.")
+    val isValidAction: Flow<Boolean> =  editionRepository.editionState.editedActionState
+        .map { it.canBeSaved }
 
     /**
      * Set the name of the swipe.
      * @param name the new name.
      */
     fun setName(name: String) {
-        configuredSwipe.value?.let { swipe ->
-            configuredSwipe.value = swipe.copy(name = "" + name)
+        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
+            editionRepository.updateEditedAction(swipe.copy(name = "" + name))
         }
     }
 
@@ -105,8 +90,8 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
      * @param to the new end position.
      */
     fun setPositions(from: Point, to: Point) {
-        configuredSwipe.value?.let { swipe ->
-            configuredSwipe.value = swipe.copy(fromX = from.x, fromY = from.y, toX = to.x, toY = to.y)
+        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
+            editionRepository.updateEditedAction(swipe.copy(fromX = from.x, fromY = from.y, toX = to.x, toY = to.y))
         }
     }
 
@@ -115,13 +100,13 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
      * @param durationMs the new duration in milliseconds.
      */
     fun setSwipeDuration(durationMs: Long?) {
-        configuredSwipe.value?.let { swipe ->
-            configuredSwipe.value = swipe.copy(swipeDuration = durationMs)
+        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
+            editionRepository.updateEditedAction(swipe.copy(swipeDuration = durationMs))
         }
     }
 
     fun saveLastConfig() {
-        configuredSwipe.value?.let { swipe ->
+        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
             sharedPreferences.edit().putSwipeDurationConfig(swipe.swipeDuration ?: 0).apply()
         }
     }

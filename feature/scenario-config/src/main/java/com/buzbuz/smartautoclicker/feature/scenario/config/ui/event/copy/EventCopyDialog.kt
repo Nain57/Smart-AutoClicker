@@ -95,7 +95,7 @@ class EventCopyDialog(
     }
 
     private fun notifySelectionAndDestroy(event: Event) {
-        onEventSelected(viewModel.createNewEventFrom(context, event))
+        onEventSelected(event)
         destroy()
     }
 
