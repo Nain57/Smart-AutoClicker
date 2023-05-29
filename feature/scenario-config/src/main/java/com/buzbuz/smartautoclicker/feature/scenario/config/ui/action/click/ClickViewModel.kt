@@ -25,20 +25,23 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isValidDuration
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putClickPressDurationConfig
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.mapNotNull
 
 class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The action being configured by the user. Defined using [setConfiguredClick]. */
-    private val configuredClick = MutableStateFlow<Action.Click?>(null)
+    /** Repository providing access to the edited items. */
+    private val editionRepository = EditionRepository.getInstance(application)
+    /** The action being configured by the user. */
+    private val configuredClick = editionRepository.editionState.editedActionState
+        .mapNotNull { action -> action.value?.let { it as Action.Click } }
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
@@ -48,7 +51,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredClick.map { it?.name?.isEmpty() ?: true }
+    val nameError: Flow<Boolean> = configuredClick.map { it.name?.isEmpty() ?: true }
 
     /** The duration between the press and release of the click in milliseconds. */
     val pressDuration: Flow<String?> = configuredClick
@@ -56,7 +59,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         .map { it.pressDuration?.toString() }
         .take(1)
     /** Tells if the press duration value is valid or not. */
-    val pressDurationError: Flow<Boolean> = configuredClick.map { (it?.pressDuration ?: -1) <= 0 }
+    val pressDurationError: Flow<Boolean> = configuredClick.map { (it.pressDuration ?: -1) <= 0 }
 
     /** The position of the click. */
     val position: Flow<Point?> = configuredClick
@@ -79,55 +82,37 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     /** If the click should be made on the detected condition. */
     val clickOnCondition: Flow<DropdownItem> = configuredClick
         .map { click ->
-            when (click?.clickOnCondition) {
+            when (click.clickOnCondition) {
                 true -> clickTypeItemOnCondition
                 false -> clickTypeItemOnPosition
-                null -> null
             }
         }
         .filterNotNull()
 
     /** Tells if the configured click is valid and can be saved. */
-    val isValidAction: Flow<Boolean> = configuredClick
-        .map { click ->
-            click != null && !click.name.isNullOrEmpty()
-                    && ((click.x != null && click.y != null) || click.clickOnCondition)
-                    && click.pressDuration.isValidDuration()
-        }
-
-    /**
-     * Set the configured click.
-     * This will update all values represented by this view model.
-     *
-     * @param action the click to configure.
-     */
-    fun setConfiguredClick(action: Action.Click) {
-        configuredClick.value = action.deepCopy()
-    }
-
-    /** @return the click containing all user changes. */
-    fun getConfiguredClick(): Action.Click =
-        configuredClick.value ?: throw IllegalStateException("Can't get the configured click, none were defined.")
+    val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
+        .map { it.canBeSaved }
 
     /**
      * Set the name of the click.
      * @param name the new name.
      */
     fun setName(name: String) {
-        configuredClick.value?.let { click ->
-            configuredClick.value = click.copy(name = "" + name)
+        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+            editionRepository.updateEditedAction(click.copy(name = "" + name))
         }
     }
 
     /** Set if this click should be made on the detected condition. */
     fun setClickOnCondition(newItem: DropdownItem) {
-        configuredClick.value?.let { click ->
+        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
             val clickOnCondition = when (newItem) {
                 clickTypeItemOnCondition -> true
                 clickTypeItemOnPosition -> false
                 else -> return
             }
-            configuredClick.value = click.copy(clickOnCondition = clickOnCondition)
+
+            editionRepository.updateEditedAction(click.copy(clickOnCondition = clickOnCondition))
         }
     }
 
@@ -136,8 +121,8 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
      * @param position the new position.
      */
     fun setPosition(position: Point) {
-        configuredClick.value?.let { click ->
-            configuredClick.value =  click.copy(x = position.x, y = position.y)
+        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+            editionRepository.updateEditedAction(click.copy(x = position.x, y = position.y))
         }
     }
 
@@ -146,14 +131,14 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
      * @param durationMs the new duration in milliseconds.
      */
     fun setPressDuration(durationMs: Long?) {
-        configuredClick.value?.let { click ->
-            configuredClick.value = click.copy(pressDuration = durationMs)
+        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+            editionRepository.updateEditedAction(click.copy(pressDuration = durationMs))
         }
     }
 
     /** Save the configured values to restore them at next creation. */
     fun saveLastConfig() {
-        configuredClick.value?.let { click ->
+        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
             sharedPreferences.edit().putClickPressDurationConfig(click.pressDuration ?: 0).apply()
         }
     }

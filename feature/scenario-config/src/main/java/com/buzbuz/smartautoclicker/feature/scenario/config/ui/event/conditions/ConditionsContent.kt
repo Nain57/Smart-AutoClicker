@@ -105,7 +105,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isConditionLimitReached.collect(::updateConditionLimitationVisibility) }
                 launch { viewModel.canCopyCondition.collect(::updateCopyButtonVisibility) }
-                launch { viewModel.conditions.collect(::updateConditionList) }
+                launch { viewModel.configuredEventConditions.collect(::updateConditionList) }
             }
         }
     }
@@ -126,7 +126,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun onConditionClicked(condition: Condition) {
-        dialogViewModel.requestSubOverlay(newConditionConfigNavigationRequest(condition))
+        showConditionConfigDialog(condition)
     }
 
     private fun updateConditionLimitationVisibility(isVisible: Boolean) {
@@ -158,11 +158,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         overlay = ConditionSelectorMenu(
             context = context,
             onConditionSelected = { area, bitmap ->
-                dialogViewModel.requestSubOverlay(
-                    newConditionConfigNavigationRequest(
-                        viewModel.createCondition(context, area, bitmap)
-                    )
-                )
+                showConditionConfigDialog(viewModel.createCondition(context, area, bitmap))
             }
         ),
         hideCurrent = true,
@@ -171,21 +167,23 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun newConditionCopyNavigationRequest() = NavigationRequest(
         ConditionCopyDialog(
             context = context,
-            conditions = viewModel.conditions.value!!,
             onConditionSelected = { conditionSelected ->
-                dialogViewModel.requestSubOverlay(
-                    newConditionConfigNavigationRequest(conditionSelected)
-                )
+                showConditionConfigDialog(viewModel.createNewConditionFromCopy(conditionSelected))
             }
         )
     )
 
-    private fun newConditionConfigNavigationRequest(condition: Condition) = NavigationRequest(
-        ConditionDialog(
-            context = context,
-            condition = condition,
-            onConfirmClicked = { viewModel.upsertCondition(it) },
-            onDeleteClicked = { viewModel.removeCondition(condition) }
+    private fun showConditionConfigDialog(condition: Condition) {
+        viewModel.startConditionEdition(condition)
+        dialogViewModel.requestSubOverlay(
+            NavigationRequest(
+                ConditionDialog(
+                    context = context,
+                    onConfirmClicked = viewModel::upsertEditedCondition,
+                    onDeleteClicked = viewModel::removeEditedCondition,
+                    onDismissClicked = viewModel::dismissEditedCondition
+                )
+            )
         )
-    )
+    }
 }

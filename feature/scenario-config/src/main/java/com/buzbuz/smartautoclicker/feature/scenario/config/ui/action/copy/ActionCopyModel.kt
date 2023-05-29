@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.copy
 
 import android.app.Application
-import android.content.Context
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
@@ -51,15 +50,16 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
 
     /** List of all actions available for copy */
     private val allCopyItems: Flow<List<ActionCopyItem>> = combine(
-        editionRepository.editedEvents,
-        editionRepository.editedEvent,
+        editionRepository.editionState.eventsState,
+        editionRepository.editionState.editedEventState,
         repository.getAllActions(),
     ) { editedEvents, editedEvent, dbActions ->
-        editedEvent ?: return@combine emptyList()
+        val event = editedEvent.value ?: return@combine emptyList()
+        val events = editedEvents.value ?: emptyList()
 
         buildList {
             // First, add the actions from the current event
-            val eventItems = editedEvent.actions
+            val eventItems = event.actions
                 .toCopyItemsFromEditedEvents()
                 .sortedBy { it.actionDetails.name }
             if (eventItems.isNotEmpty()) {
@@ -71,11 +71,9 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
             // There should be no ToggleEvent action, as we can't reference an event from another scenario.
             val allOtherActions = buildList {
                 val otherEventsActions = buildList {
-                    editedEvents
-                        ?.filter { otherEvent -> editedEvent.id != otherEvent.id }
-                        ?.forEach { otherEditedEvent ->
-                            addAll(otherEditedEvent.actions.toCopyItemsFromEditedEvents())
-                        }
+                    events
+                        .filter { otherEvent -> event.id != otherEvent.id }
+                        .forEach { otherEditedEvent -> addAll(otherEditedEvent.actions.toCopyItemsFromEditedEvents()) }
                 }
 
                 addAll(otherEventsActions)
@@ -113,19 +111,6 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
     fun updateSearchQuery(query: String?) {
         searchQuery.value = query
     }
-
-    /**
-     * Get a new action based on the provided one.
-     * @param item the item containing the action to copy.
-     */
-    fun createNewActionFrom(context: Context, item: ActionCopyItem.ActionItem): Action =
-        when (item.actionDetails.action) {
-            is Action.Click -> editionRepository.createNewClick(context, item.actionDetails.action)
-            is Action.Swipe -> editionRepository.createNewSwipe(context, item.actionDetails.action)
-            is Action.Pause -> editionRepository.createNewPause(context, item.actionDetails.action)
-            is Action.Intent -> editionRepository.createNewIntent(context, item.actionDetails.action)
-            is Action.ToggleEvent -> editionRepository.createNewToggleEvent(context, item.actionDetails.action)
-        }
 
     /** Creates copy items from a list of edited actions from this scenario. */
     private fun List<Action>.toCopyItemsFromEditedEvents() = map { action ->

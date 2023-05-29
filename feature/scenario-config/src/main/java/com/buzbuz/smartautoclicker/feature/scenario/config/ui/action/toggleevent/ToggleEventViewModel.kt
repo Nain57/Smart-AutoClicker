@@ -31,17 +31,17 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 
 /** ViewModel for the [ToggleEventDialog].  */
 class ToggleEventViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The currently loaded scenario info. */
-    private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
-
+    /** Repository providing access to the edited items. */
+    private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
-    private val configuredToggleEvent = MutableStateFlow<Action.ToggleEvent?>(null)
+    private val configuredToggleEvent = editionRepository.editionState.editedActionState
+        .mapNotNull { action -> action.value?.let { it as Action.ToggleEvent } }
 
     /** The name of the toggle event. */
     val name: Flow<String?> = configuredToggleEvent
@@ -49,7 +49,7 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredToggleEvent.map { it?.name?.isEmpty() ?: true }
+    val nameError: Flow<Boolean> = configuredToggleEvent.map { it.name?.isEmpty() ?: true }
 
     private val enableEventItem = DropdownItem(
         title = R.string.dropdown_item_title_toggle_event_state_enable,
@@ -68,7 +68,7 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
     /** The selected toggle state for the action. */
     val toggleStateItem: Flow<DropdownItem> = configuredToggleEvent
         .map { toggleEventAction ->
-            when (toggleEventAction?.toggleEventType) {
+            when (toggleEventAction.toggleEventType) {
                 Action.ToggleEvent.ToggleType.ENABLE -> enableEventItem
                 Action.ToggleEvent.ToggleType.DISABLE -> disableEventItem
                 Action.ToggleEvent.ToggleType.TOGGLE -> toggleEventItem
@@ -77,20 +77,10 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
         }
         .filterNotNull()
 
-    /** All events currently edited in the attached scenario for this action. */
-    private val availableEvents = editionRepository.editedEvents
-        .filterNotNull()
-        .combine(editionRepository.editedEvent) { scenarioEvents, editedEvent ->
-            buildList {
-                val found = scenarioEvents.find { scenarioEvent -> editedEvent?.id == scenarioEvent.id } != null
-                if (!found && editedEvent != null) add(editedEvent)
-                addAll(scenarioEvents)
-            }
-        }
     /** The event selected for the toggle action. Null if none is. */
     val eventViewState: Flow<EventPickerViewState> = configuredToggleEvent
         .filterNotNull()
-        .combine(availableEvents) { editedAction, editedEvents ->
+        .combine(editionRepository.editionState.eventsAvailableForToggleEventAction) { editedAction, editedEvents ->
             val selectedEvent = editedEvents.find { editedEvent ->
                 editedAction.toggleEventId == editedEvent.id
             }
@@ -99,36 +89,17 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
             else EventPickerViewState.NoSelection(editedEvents)
         }
 
-    /** Tells if the configured click is valid and can be saved. */
-    val isValidAction: Flow<Boolean> = configuredToggleEvent
-        .map { toggleEvent ->
-            toggleEvent != null && !toggleEvent.name.isNullOrEmpty() && toggleEvent.toggleEventId != null
-                    && toggleEvent.toggleEventType != null
-        }
-
-    /**
-     * Set the configured toggle event.
-     * This will update all values represented by this view model.
-     *
-     * @param action the toggle event action to configure.
-     */
-    fun setConfiguredToggleEvent(action: Action.ToggleEvent) {
-        configuredToggleEvent.value = action.deepCopy()
-    }
-
-    /** @return the toggle event containing all user changes. */
-    fun getConfiguredToggleEvent(): Action.ToggleEvent =
-        configuredToggleEvent.value
-            ?: throw IllegalStateException("Can't get the configured toggle event action, none were defined.")
-
+    /** Tells if the configured toggle event action is valid and can be saved. */
+    val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
+        .map { it.canBeSaved }
 
     /**
      * Set the name of the toggle event action.
      * @param name the new name.
      */
     fun setName(name: String) {
-        configuredToggleEvent.value?.let { action ->
-            configuredToggleEvent.value = action.copy (name = "" + name)
+        editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
+            editionRepository.updateEditedAction(toggleEvent.copy (name = "" + name))
         }
     }
 
@@ -137,15 +108,15 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
      * @param item the new selected type.
      */
     fun setToggleType(item: DropdownItem) {
-        val type = when (item) {
-            enableEventItem -> Action.ToggleEvent.ToggleType.ENABLE
-            disableEventItem -> Action.ToggleEvent.ToggleType.DISABLE
-            toggleEventItem -> Action.ToggleEvent.ToggleType.TOGGLE
-            else -> return
-        }
+        editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
+            val type = when (item) {
+                enableEventItem -> Action.ToggleEvent.ToggleType.ENABLE
+                disableEventItem -> Action.ToggleEvent.ToggleType.DISABLE
+                toggleEventItem -> Action.ToggleEvent.ToggleType.TOGGLE
+                else -> return
+            }
 
-        configuredToggleEvent.value?.let { action ->
-            configuredToggleEvent.value = action.copy(toggleEventType = type)
+            editionRepository.updateEditedAction(toggleEvent.copy(toggleEventType = type))
         }
     }
 
@@ -154,10 +125,8 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
      * @param confEvent the new event.
      */
     fun setEvent(confEvent: Event) {
-        configuredToggleEvent.value?.let { action ->
-            configuredToggleEvent.value = action.copy(
-                toggleEventId = confEvent.id,
-            )
+        editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
+            editionRepository.updateEditedAction(toggleEvent.copy(toggleEventId = confEvent.id))
         }
     }
 }

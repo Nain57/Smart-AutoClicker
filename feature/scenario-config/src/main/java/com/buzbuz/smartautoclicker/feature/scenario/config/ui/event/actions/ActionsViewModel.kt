@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.mapList
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.copy.ActionCopyModel
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.toActionDetails
 
@@ -37,8 +38,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 
 class ActionsViewModel(application: Application) : AndroidViewModel(application) {
@@ -50,23 +51,33 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
     /** The repository for the pro mode billing. */
     private val billingRepository = IBillingRepository.getRepository(application)
 
-    /** Currently configured event. */
-    private val configuredEvent = editionRepository.editedEvent
-        .filterNotNull()
+    /** Currently configured actions. */
+    private val configuredActions = editionRepository.editionState.editedEventActionsState
+        .mapNotNull { it.value }
 
     /** Tells if the limitation in action count have been reached. */
     val isActionLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
-        .combine(configuredEvent) { isProModePurchased, event ->
-            !isProModePurchased && (event.actions.size >= ProModeAdvantage.Limitation.ACTION_COUNT_LIMIT.limit)
+        .combine(configuredActions) { isProModePurchased, actions ->
+            !isProModePurchased && (actions.size >= ProModeAdvantage.Limitation.ACTION_COUNT_LIMIT.limit)
         }
 
     /** Tells if there is at least one action to copy. */
-    val canCopyAction: Flow<Boolean> = repository.getAllActions()
-        .map { it.isNotEmpty() }
+    val canCopyAction: Flow<Boolean> = combine(
+        repository.getAllActions(),
+        configuredActions,
+        editionRepository.editionState.eventsState,
+    ) { dbActions, editedActions, scenarioEvents ->
+        if (dbActions.isNotEmpty()) return@combine true
+        if (editedActions.isNotEmpty()) return@combine true
+
+        scenarioEvents.value?.forEach { event ->
+            if (event.actions.isNotEmpty()) return@combine true
+        }
+        false
+    }
 
     /** List of action details. */
-    val actionDetails: Flow<List<Pair<Action, ActionDetails>>> = configuredEvent
-        .map { it.actions }
+    val actionDetails: Flow<List<Pair<Action, ActionDetails>>> = configuredActions
         .mapList { action -> action to action.toActionDetails(application) }
     /** Type of actions to be displayed in the new action creation dialog. */
     val actionCreationItems: StateFlow<List<ActionTypeChoice>> = billingRepository.isProModePurchased
@@ -94,24 +105,27 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
      * @param actionType the type of action to create.
      */
     fun createAction(context: Context, actionType: ActionTypeChoice): Action = when (actionType) {
-        is ActionTypeChoice.Click -> editionRepository.createNewClick(context, from = null)
-        is ActionTypeChoice.Swipe -> editionRepository.createNewSwipe(context, from = null)
-        is ActionTypeChoice.Pause -> editionRepository.createNewPause(context, from = null)
-        is ActionTypeChoice.Intent -> editionRepository.createNewIntent(context, from = null)
-        is ActionTypeChoice.ToggleEvent -> editionRepository.createNewToggleEvent(context, from = null)
-    }
-
-    fun upsertAction(action: Action) {
-        editionRepository.upsertActionToEditedEvent(action)
+        is ActionTypeChoice.Click -> editionRepository.editedItemsBuilder.createNewClick(context)
+        is ActionTypeChoice.Swipe -> editionRepository.editedItemsBuilder.createNewSwipe(context)
+        is ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
+        is ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
+        is ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
     }
 
     /**
-     * Remove an action from the event.
-     * @param action the action to be removed.
+     * Get a new action based on the provided one.
+     * @param action the item containing the action to copy.
      */
-    fun removeAction(action: Action) {
-        editionRepository.removeActionFromEditedEvent(action)
-    }
+    fun createNewActionFrom(action: Action): Action =
+        editionRepository.editedItemsBuilder.createNewActionFrom(action)
+
+    fun startActionEdition(action: Action) = editionRepository.startActionEdition(action)
+
+    fun upsertEditedAction(): Unit = editionRepository.upsertEditedAction()
+
+    fun removeEditedAction(): Unit = editionRepository.deleteEditedAction()
+
+    fun dismissEditedAction() = editionRepository.stopActionEdition()
 
     /**
      * Update the priority of the actions.

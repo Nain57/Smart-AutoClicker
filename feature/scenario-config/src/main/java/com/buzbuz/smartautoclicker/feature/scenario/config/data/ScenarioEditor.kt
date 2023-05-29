@@ -16,102 +16,64 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
-import android.content.Context
-
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.Editor
-
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditedElementState
 import kotlinx.coroutines.flow.Flow
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 
-internal class ScenarioEditor : Editor<ScenarioEditor.Reference, Scenario>() {
+internal class ScenarioEditor {
 
-    val eventsEditor: EventsEditor = EventsEditor()
-    val endConditionsEditor: EndConditionsEditor = EndConditionsEditor()
+    private val referenceScenario: MutableStateFlow<Scenario?> = MutableStateFlow(null)
+    private val _editedScenario: MutableStateFlow<Scenario?> = MutableStateFlow((null))
 
-    val containsChange: Flow<Boolean> = combine(
-        reference,
-        editedValue,
-        eventsEditor.editedValue,
-        endConditionsEditor.editedValue,
-    ) { ref, editedScenario, editedEvents, editedEndConditions, ->
-        if (ref == null || editedScenario == null || editedEvents == null || editedEndConditions == null) false
-        else ref.scenario != editedScenario || ref.events != editedEvents || ref.endConditions != editedEndConditions
+    val editedScenario: StateFlow<Scenario?> = _editedScenario
+    val editedScenarioState: Flow<EditedElementState<Scenario>> = combine(referenceScenario, _editedScenario) { ref, edit ->
+        val hasChanged =
+            if (ref == null || edit == null) false
+            else ref != edit
+
+        EditedElementState(edit, hasChanged, true)
     }
 
-    override fun getValueFromReference(reference: Reference): Scenario =
-        reference.scenario
-
-    override fun onEditionStarted(reference: Reference) {
-        eventsEditor.startEdition(
-            EventsEditor.Reference(
-                reference.scenario.id,
-                reference.events,
-            )
-        )
-
-        endConditionsEditor.startEdition(
-            EndConditionsEditor.Reference(
-                reference.scenario.id,
-                reference.endConditions,
-            )
-        )
+    val eventsEditor = EventsEditor(::deleteAllReferencesToEvent)
+    val endConditionsEditor = object : ListEditor<EndCondition>(canBeEmpty = true) {
+        override fun areItemsTheSame(a: EndCondition, b: EndCondition): Boolean = a.id == b.id
+        override fun isItemComplete(item: EndCondition): Boolean = item.isComplete()
     }
 
-    fun createNewEvent(context: Context, from: Event?) =
-        from?.let { eventsEditor.createNewItemFrom(it) }
-            ?: eventsEditor.createNewItem(context)
+    fun startEdition(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>) {
+        referenceScenario.value = scenario
+        _editedScenario.value = scenario
 
-    fun setEditedEvent(event: Event) {
-        eventsEditor.startEventEdition(event)
+        eventsEditor.startEdition(events)
+        endConditionsEditor.startEdition(endConditions)
     }
 
-    fun updateEditedEvent(event: Event) {
-        eventsEditor.updateEditedEvent(event)
+    fun stopEdition() {
+        endConditionsEditor.stopEdition()
+        eventsEditor.stopEdition()
+
+        referenceScenario.value = null
+        _editedScenario.value = null
     }
 
-    fun commitEditedEvent() {
-        eventsEditor.commitEventEditions()
+    fun updateEditedScenario(item: Scenario) {
+        _editedScenario.value ?: return
+        _editedScenario.value = item
     }
 
-    fun deleteEditedEvent() {
-        endConditionsEditor.deleteAllItemsReferencing(eventsEditor.eventEditor.getEditedValueOrThrow())
-        eventsEditor.deleteEditedEvent()
+    private fun deleteAllReferencesToEvent(event: Event) {
+        eventsEditor.deleteAllActionsReferencing(event)
+
+        endConditionsEditor.editedList.value
+            ?.filter { it.eventId != event.id }
+            ?.let { endConditionsEditor.updateList(it) }
+
     }
-
-    fun discardEditedEvent() {
-        eventsEditor.discardEventEditions()
-    }
-
-    fun updateEventsOrder(newEvents: List<Event>) {
-        eventsEditor.updateList(newEvents)
-    }
-
-    fun createNewEndCondition(from: EndCondition?) =
-        from?.let { endConditionsEditor.createNewItemFrom(it) }
-            ?: endConditionsEditor.createNewItem()
-
-    fun upsertEndCondition(endCondition: EndCondition) {
-        endConditionsEditor.upsertItem(endCondition)
-    }
-
-    fun deleteEndCondition(endCondition: EndCondition) {
-        endConditionsEditor.deleteItem(endCondition)
-    }
-
-    override fun onEditionFinished(): Reference =
-        Reference(
-            scenario = getEditedValueOrThrow(),
-            events = eventsEditor.finishEdition().events,
-            endConditions = endConditionsEditor.finishEdition().endConditions,
-        )
-
-    internal data class Reference(
-        val scenario: Scenario,
-        val events: List<Event>,
-        val endConditions: List<EndCondition>,
-    )
 }
-

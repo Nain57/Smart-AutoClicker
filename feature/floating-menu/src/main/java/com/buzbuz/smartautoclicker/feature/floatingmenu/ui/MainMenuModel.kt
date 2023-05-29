@@ -140,7 +140,7 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     /** Cancel all changes made by the user. */
     fun cancelScenarioChanges() {
         viewModelScope.launch(Dispatchers.IO) {
-            editionRepository.cancelEditions()
+            editionRepository.stopEdition()
         }
     }
 

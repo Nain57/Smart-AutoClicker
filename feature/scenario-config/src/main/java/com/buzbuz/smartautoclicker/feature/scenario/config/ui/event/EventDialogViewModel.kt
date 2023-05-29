@@ -18,15 +18,12 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event
 
 import android.app.Application
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.NavigationViewModel
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class EventDialogViewModel(application: Application) : NavigationViewModel(application) {
@@ -34,48 +31,31 @@ class EventDialogViewModel(application: Application) : NavigationViewModel(appli
     /** Repository containing the user editions. */
     private val editionRepository = EditionRepository.getInstance(application)
 
-    /** The event currently configured. */
-    private val configuredEvent: Flow<Event> = editionRepository.editedEvent
-        .filterNotNull()
-
     /**
      * Tells if all content have their field correctly configured.
      * Used to display the red badge if indicating if there is something missing.
      */
-    val navItemsValidity: Flow<Map<Int, Boolean>> = configuredEvent
-        .map { configuredItem ->
+    val navItemsValidity: Flow<Map<Int, Boolean>> = combine(
+        editionRepository.editionState.editedEventState,
+        editionRepository.editionState.editedEventConditionsState,
+        editionRepository.editionState.editedEventActionsState,
+    ) { editedEvent, conditions, actions, ->
             buildMap {
-                put(R.id.page_event, configuredItem.name.isNotEmpty())
-                put(R.id.page_conditions, configuredItem.conditions.isValidConditionList())
-                put(R.id.page_actions, configuredItem.actions.isValidActionList())
+                put(R.id.page_event, editedEvent.value?.name?.isNotEmpty() ?: false)
+                put(R.id.page_conditions, conditions.canBeSaved)
+                put(R.id.page_actions, actions.canBeSaved)
             }
         }
 
     /** Tells if the configured event is valid and can be saved. */
-    val eventCanBeSaved: Flow<Boolean> = navItemsValidity
-        .map { itemsValidity ->
-            var allValid = true
-            itemsValidity.values.forEach { validity ->
-                allValid = allValid && validity
-            }
-            allValid
-        }
+    val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState
+        .map { it.canBeSaved }
 
     /** Tells if this event have associated end conditions. */
-    fun isEventHaveRelatedEndConditions(): Boolean = editionRepository.isEditedEventUsedByEndCondition()
+    fun isEventHaveRelatedEndConditions(): Boolean =
+        editionRepository.editionState.isEditedEventReferencedByEndCondition()
 
     /** Tells if this event have associated actions. */
-    fun isEventHaveRelatedActions(): Boolean = editionRepository.isEditedEventUsedByAction()
-
-    private fun List<Action>?.isValidActionList(): Boolean {
-        if (this == null) return false
-        forEach { if (!it.isComplete()) return false }
-        return true
-    }
-
-    private fun List<Condition>?.isValidConditionList(): Boolean {
-        if (this == null) return false
-        forEach { if (!it.isComplete()) return false }
-        return true
-    }
+    fun isEventHaveRelatedActions(): Boolean =
+        editionRepository.editionState.isEditedEventReferencedByAction()
 }

@@ -39,10 +39,11 @@ import kotlinx.coroutines.flow.*
 
 class IntentViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** Repository containing all scenario changes made by the user. */
+    /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
-    /** The action being configured by the user. Defined using [setConfiguredIntent]. */
-    private val configuredIntent = MutableStateFlow<Action.Intent?>(null)
+    /** The action being configured by the user. */
+    private val configuredIntent = editionRepository.editionState.editedActionState
+        .mapNotNull { action -> action.value?.let { it as Action.Intent } }
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
     /** The Android package manager. */
@@ -54,7 +55,7 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredIntent.map { it?.name?.isEmpty() ?: true }
+    val nameError: Flow<Boolean> = configuredIntent.map { it.name?.isEmpty() ?: true }
 
     /* The intent action. */
     val action: Flow<String?> = configuredIntent
@@ -62,7 +63,7 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .map { it.intentAction }
         .take(1)
     /** Tells if the intent action is valid or not. */
-    val actionError: Flow<Boolean> = configuredIntent.map { it?.intentAction?.isEmpty() ?: true }
+    val actionError: Flow<Boolean> = configuredIntent.map { it.intentAction?.isEmpty() ?: true }
 
     /** The flags for this intent. */
     val flags: Flow<String> = configuredIntent
@@ -77,7 +78,6 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .take(1)
     /** Tells if the intent component name is valid or not. */
     val componentNameError: Flow<Boolean> = configuredIntent.map { intent ->
-        intent ?: return@map true
         intent.isBroadcast == false && intent.componentName == null
     }
 
@@ -88,7 +88,7 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
     /** Current choice for the sending type dropdown field. */
     val isBroadcast: Flow<DropdownItem> = configuredIntent
         .map {
-            when (it?.isBroadcast) {
+            when (it.isBroadcast) {
                 true -> sendingTypeBroadcast
                 false -> sendingTypeActivity
                 null -> null
@@ -97,11 +97,10 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .filterNotNull()
 
     /** The list of extra items to be displayed. */
-    val extras: Flow<List<ExtraListItem>> = configuredIntent
-        .filterNotNull()
-        .map { intent ->
+    val extras: Flow<List<ExtraListItem>> = editionRepository.editionState.editedActionIntentExtrasState
+        .map { intentExtra ->
             buildList {
-                intent.extras?.forEach { extra ->
+                intentExtra.value?.forEach { extra ->
                     val lastDotIndex = extra.key!!.lastIndexOf('.', 0)
                     add(
                         ExtraListItem.ExtraItem(
@@ -128,46 +127,29 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         }
 
     /** Tells if the configured intent is valid and can be saved. */
-    val isValidAction: Flow<Boolean> = configuredIntent
-        .map { intent ->
-            intent != null
-                    && !intent.name.isNullOrEmpty()
-                    && intent.isAdvanced != null && intent.intentAction != null && intent.flags != null
-                    && (intent.isBroadcast == true || (intent.isBroadcast == false && intent.componentName != null))
-        }
+    val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
+        .map { it.canBeSaved }
 
-    /**
-     * Set the configured intent.
-     * This will update all values represented by this view model.
-     *
-     * @param action the intent to configure.
-     */
-    fun setConfiguredIntent(action: Action.Intent) {
-        configuredIntent.value = action.deepCopy()
-    }
-
-    /** @return the intent containing all user changes. */
-    fun getConfiguredIntent(): Action.Intent =
-        configuredIntent.value ?: throw IllegalStateException("Can't get the configured click, none were defined.")
-
-    fun isAdvanced(): Boolean = configuredIntent.value?.isAdvanced ?: false
+    fun isAdvanced(): Boolean = editionRepository.editionState.getEditedAction<Action.Intent>()?.isAdvanced ?: false
 
     /**
      * Set the name of the intent.
      * @param name the new name.
      */
     fun setName(name: String) {
-        configuredIntent.value?.let { intent ->
-            configuredIntent.value = intent.copy(name = "" + name)
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+            editionRepository.updateEditedAction(intent.copy(name = "" + name))
         }
     }
 
     /** Set the configuration mode. */
     fun setIsAdvancedConfiguration(isAdvanced: Boolean) {
-        configuredIntent.value?.let { intent ->
-            configuredIntent.value = intent.copy(
-                isAdvanced = isAdvanced,
-                isBroadcast = if(!isAdvanced) false else intent.isBroadcast
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+            editionRepository.updateEditedAction(
+                intent.copy(
+                    isAdvanced = isAdvanced,
+                    isBroadcast = if(!isAdvanced) false else intent.isBroadcast
+                )
             )
         }
     }
@@ -179,100 +161,72 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
      * @param componentName component name of the selected activity.
      */
     fun setActivitySelected(componentName: ComponentName) {
-        configuredIntent.value?.let { intent ->
-            configuredIntent.value = intent.copy(
-                isBroadcast = false,
-                intentAction = Intent.ACTION_MAIN,
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP,
-                componentName = componentName,
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+            editionRepository.updateEditedAction(
+                intent.copy(
+                    isBroadcast = false,
+                    intentAction = Intent.ACTION_MAIN,
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP,
+                    componentName = componentName,
+                )
             )
         }
     }
 
     /** Set the action for the intent. */
     fun setIntentAction(action: String) {
-        configuredIntent.value?.let { intent ->
-            configuredIntent.value = intent.copy(intentAction = action)
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+            editionRepository.updateEditedAction(intent.copy(intentAction = action))
         }
     }
 
     /** Set the action for the intent. */
     fun setIntentFlags(flags: Int?) {
-        configuredIntent.value?.let { intent ->
-            configuredIntent.value = intent.copy(flags = flags)
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+            editionRepository.updateEditedAction(intent.copy(flags = flags))
         }
     }
 
     /** Set the component name for the intent. */
     fun setComponentName(componentName: String) {
-        configuredIntent.value?.let { intent ->
-            configuredIntent.value = intent.copy(componentName = ComponentName.unflattenFromString(componentName))
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+            editionRepository.updateEditedAction(
+                intent.copy(componentName = ComponentName.unflattenFromString(componentName))
+            )
         }
     }
 
     /** Set the sending type. of the intent */
     fun setSendingType(newType: DropdownItem) {
-        configuredIntent.value?.let { intent ->
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
             val isBroadcast = when (newType) {
                 sendingTypeBroadcast -> true
                 sendingTypeActivity -> false
                 else -> return
             }
-            configuredIntent.value = intent.copy(isBroadcast = isBroadcast)
+
+            editionRepository.updateEditedAction(intent.copy(isBroadcast = isBroadcast))
         }
     }
 
     /** @return creates a new extra for this intent. */
     fun createNewExtra(): IntentExtra<Any> =
-        configuredIntent.value?.id?.let {
-            editionRepository.createNewIntentExtra(it)
-        } ?: throw IllegalStateException("Can't create a new intent extra, edited action is null")
+        editionRepository.editedItemsBuilder.createNewIntentExtra()
 
+    /** Start the edition of an intent extra. */
+    fun startIntentExtraEdition(extra: IntentExtra<out Any>) = editionRepository.startIntentExtraEdition(extra)
 
-    fun addUpdateExtra(extra: IntentExtra<out Any>, index: Int) {
-        if (index != -1) updateExtra(extra, index)
-        else addNewExtra(extra)
-    }
+    /** Add or update an extra. If the extra id is unset, it will be added. If not, updated. */
+    fun saveIntentExtraEdition() = editionRepository.upsertEditedIntentExtra()
 
-    /**
-     * Add a new extra to the configured intent.
-     * @param extra the new extra to add.
-     */
-    private fun addNewExtra(extra: IntentExtra<out Any>) {
-        configuredIntent.value?.let { intent ->
-            val newList = intent.extras?.toMutableList() ?: mutableListOf()
-            newList.add(extra)
-            configuredIntent.value = intent.copy(extras = newList)
-        }
-    }
+    /** Delete an extra. */
+    fun deleteIntentExtraEvent() = editionRepository.deleteEditedIntentExtra()
 
-    /**
-     * Update an extra in the configured intent.
-     * @param extra the extra to update.
-     * @param index the index of the extra in the extra list.
-     */
-    private fun updateExtra(extra: IntentExtra<out Any>, index: Int) {
-        configuredIntent.value?.let { intent ->
-            val newList = intent.extras?.toMutableList() ?: return
-            newList[index] = extra
-            configuredIntent.value = intent.copy(extras = newList)
-        }
-    }
-
-    /**
-     * Delete an extra in the configured intent.
-     * @param index the index of the extra in the extra list.
-     */
-    fun deleteExtra(index: Int) {
-        configuredIntent.value?.let { intent ->
-            val newList = intent.extras?.toMutableList() ?: return
-            newList.removeAt(index)
-            configuredIntent.value = intent.copy(extras = newList)
-        }
-    }
+    /** Drop all changes made to the currently edited extra. */
+    fun dismissIntentExtraEvent() = editionRepository.stopIntentExtraEdition()
 
     fun saveLastConfig() {
-        configuredIntent.value?.let { intent ->
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
             sharedPreferences.edit().putIntentIsAdvancedConfig(intent.isAdvanced == true).apply()
         }
     }

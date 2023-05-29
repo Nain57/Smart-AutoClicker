@@ -57,7 +57,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     override fun onCreateView(container: ViewGroup): ViewGroup {
         extrasAdapter = ExtrasAdapter(
             addExtraClickedListener = { showExtraDialog(dialogViewModel.createNewExtra()) },
-            extraClickedListener = { extra, index ->  showExtraDialog(extra, index) },
+            extraClickedListener = { extra -> showExtraDialog(extra) },
         )
 
         viewBinding = ContentIntentConfigAdvancedBinding.inflate(LayoutInflater.from(context)).apply {
@@ -141,15 +141,14 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
         viewBinding.editComponentNameLayout.setText(componentName)
     }
 
-    private fun showExtraDialog(extra: IntentExtra<out Any>, index: Int = -1) {
+    private fun showExtraDialog(extra: IntentExtra<out Any>) {
+        dialogViewModel.startIntentExtraEdition(extra)
         dialogController.showSubOverlay(
             overlayController = ExtraConfigDialog(
                 context = context,
-                extra = extra,
-                onConfigComplete = { configuredExtra ->
-                    dialogViewModel.addUpdateExtra(configuredExtra, index)
-                },
-                onDeleteClicked = { if (index != -1) dialogViewModel.deleteExtra(index) }
+                onConfigComplete = dialogViewModel::saveIntentExtraEdition,
+                onDeleteClicked = dialogViewModel::deleteIntentExtraEvent,
+                onDismissClicked = dialogViewModel::dismissIntentExtraEvent,
             ),
             hideCurrent = false,
         )

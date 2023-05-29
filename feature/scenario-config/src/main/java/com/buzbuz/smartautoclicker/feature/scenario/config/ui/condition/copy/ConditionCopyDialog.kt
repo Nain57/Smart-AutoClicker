@@ -37,12 +37,10 @@ import kotlinx.coroutines.launch
  * [CopyDialog] implementation for displaying the whole list of conditions for a copy.
  *
  * @param context the Android Context for the dialog shown by this controller.
- * @param conditions the list of edited conditions for the configured event.
  * @param onConditionSelected the listener called when the user select a Condition.
  */
 class ConditionCopyDialog(
     context: Context,
-    private val conditions: List<Condition>,
     private val onConditionSelected: (Condition) -> Unit,
 ) : CopyDialog(context, R.style.ScenarioConfigTheme)  {
 
@@ -56,14 +54,10 @@ class ConditionCopyDialog(
     override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        viewModel.setItemsFromContainer(conditions)
-
         conditionAdapter = ConditionCopyAdapter(
             conditionClickedListener = { selectedCondition ->
-                viewModel.let {
-                    onConditionSelected(it.createNewConditionForCopy(context, selectedCondition))
-                    destroy()
-                }
+                onConditionSelected(selectedCondition)
+                destroy()
             },
             bitmapProvider = { bitmap, onLoaded ->
                 viewModel.getConditionBitmap(bitmap, onLoaded)

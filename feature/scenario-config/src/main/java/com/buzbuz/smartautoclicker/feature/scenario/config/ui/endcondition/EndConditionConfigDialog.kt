@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigEndConditionBinding
@@ -53,9 +52,9 @@ import kotlinx.coroutines.launch
  */
 class EndConditionConfigDialog(
     context: Context,
-    private val endCondition: EndCondition,
-    private val onConfirmClicked: (EndCondition) -> Unit,
-    private val onDeleteClicked: () -> Unit
+    private val onConfirmClicked: () -> Unit,
+    private val onDeleteClicked: () -> Unit,
+    private val onDismissClicked: () -> Unit,
 ): OverlayDialogController(context, R.style.ScenarioConfigTheme) {
 
     /** View model for this dialog. */
@@ -65,12 +64,13 @@ class EndConditionConfigDialog(
     private lateinit var viewBinding: DialogConfigEndConditionBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredEndCondition(endCondition)
-
         viewBinding = DialogConfigEndConditionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_end_condition_config)
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener {
+                    onDismissClicked()
+                    destroy()
+                }
 
                 buttonDelete.apply {
                     visibility = View.VISIBLE
@@ -103,7 +103,7 @@ class EndConditionConfigDialog(
                 launch { viewModel.eventViewState.collect(::updateEvent) }
                 launch { viewModel.executionCountError.collect(viewBinding.editExecutionCountLayout::setError) }
                 launch { viewModel.executions.collect(::updateExecutionCount) }
-                launch { viewModel.isValidEndCondition.collect(::updateSaveButton) }
+                launch { viewModel.endConditionCanBeSaved.collect(::updateSaveButton) }
             }
         }
     }
@@ -113,7 +113,7 @@ class EndConditionConfigDialog(
      * Propagate the configured event to the provided listener and dismiss the dialog.
      */
     private fun onSaveButtonClicked() {
-        onConfirmClicked(viewModel.getConfiguredEndCondition())
+        onConfirmClicked()
         destroy()
     }
 

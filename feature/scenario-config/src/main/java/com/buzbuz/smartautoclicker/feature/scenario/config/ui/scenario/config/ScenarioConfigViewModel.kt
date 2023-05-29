@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.config
 
 import android.app.Application
 import android.content.Context
-import androidx.annotation.DrawableRes
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
@@ -56,14 +57,8 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     private val billingRepository = IBillingRepository.getRepository(application)
 
     /** Currently configured scenario. */
-    private val configuredScenario = editionRepository.editedScenario
-        .filterNotNull()
-    /** Currently configured end conditions. */
-    private val configuredEvents = editionRepository.editedEvents
-        .filterNotNull()
-    /** Currently configured end conditions. */
-    private val configuredEndConditions = editionRepository.editedEndConditions
-        .filterNotNull()
+    private val configuredScenario = editionRepository.editionState.scenarioState
+        .mapNotNull { it.value }
 
     /** The event name value currently edited by the user. */
     val scenarioName: Flow<String> =  configuredScenario
@@ -128,19 +123,14 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
 
     /** Events available for a new end condition. */
-    private val eventsAvailable: Flow<Boolean> = configuredEndConditions
-        .combine(configuredEvents) { endConditions, events ->
-            if (endConditions.isEmpty()) events.isNotEmpty()
-            else events.any { event ->
-                endConditions.find { it.eventId == event.id } == null
-            }
-        }
+    private val eventsAvailable: Flow<Boolean> = editionRepository.editionState.eventsAvailableForNewEndCondition
+        .map { it.isNotEmpty() }
 
     /** The end conditions for the configured scenario. */
     val endConditions: Flow<List<EndConditionListItem>> =
-        configuredEndConditions.combine(eventsAvailable) { endConditions, eventsAvailable ->
+        editionRepository.editionState.endConditionsState.combine(eventsAvailable) { endConditions, eventsAvailable ->
             buildList {
-                endConditions.forEach { add(EndConditionListItem.EndConditionItem(it)) }
+                endConditions.value?.forEach { add(EndConditionListItem.EndConditionItem(it)) }
                 if (eventsAvailable) add(EndConditionListItem.AddEndConditionItem)
             }
         }
@@ -152,7 +142,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
     /** Set a new name for the scenario. */
     fun setScenarioName(name: String) {
-        editionRepository.editedScenario.value?.let { scenario ->
+        editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(scenario.copy(name = name))
             }
@@ -161,7 +151,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
     /** Toggle the randomization value. */
     fun setRandomization(randomizationItem: DropdownItem) {
-        editionRepository.editedScenario.value?.let { scenario ->
+        editionRepository.editionState.getScenario()?.let { scenario ->
             val value = when (randomizationItem) {
                 enabledRandomization -> true
                 disableRandomization -> false
@@ -176,7 +166,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
     /** Remove one to the detection quality */
     fun decreaseDetectionQuality() {
-        editionRepository.editedScenario.value?.let { scenario ->
+        editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(
                     scenario.copy(
@@ -189,7 +179,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
     /** Add one to the detection quality */
     fun increaseDetectionQuality() {
-        editionRepository.editedScenario.value?.let { scenario ->
+        editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(
                     scenario.copy(
@@ -205,7 +195,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
      * @param quality the value from the seekbar.
      */
     fun setDetectionQuality(quality: Int) {
-        editionRepository.editedScenario.value?.let { scenario ->
+        editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(scenario.copy(detectionQuality = quality))
             }
@@ -214,7 +204,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
     /** Toggle the end condition operator between AND and OR. */
     fun setConditionOperator(operatorItem: DropdownItem) {
-        editionRepository.editedScenario.value?.let { scenario ->
+        editionRepository.editionState.getScenario()?.let { scenario ->
             val operator = when (operatorItem) {
                 conditionAndItem -> AND
                 conditionOrItem -> OR
@@ -229,21 +219,19 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
 
     /** @return a new empty end condition. */
     fun createNewEndCondition(): EndCondition =
-        editionRepository.createNewEndCondition(null)
+        editionRepository.editedItemsBuilder.createNewEndCondition()
 
-    /**
-     * Add a new end condition to the scenario.
-     * @param endCondition the end condition to be added.
-     */
-    fun upsertEndCondition(endCondition: EndCondition) =
-        editionRepository.upsertEndCondition(endCondition)
+    fun startEndConditionEdition(endCondition: EndCondition) =
+        editionRepository.startEndConditionEdition(endCondition)
 
-    /**
-     * Delete a end condition from the scenario.
-     * @param endCondition the end condition to be removed.
-     */
-    fun deleteEndCondition(endCondition: EndCondition) =
-        editionRepository.deleteEndCondition(endCondition)
+    fun upsertEndCondition() =
+        editionRepository.upsertEditedEndCondition()
+
+    fun deleteEndCondition() =
+        editionRepository.deleteEditedEndCondition()
+
+    fun discardEndCondition() =
+        editionRepository.stopEndConditionEdition()
 
     fun onAntiDetectionClickedWithoutProMode(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_ANTI_DETECTION)

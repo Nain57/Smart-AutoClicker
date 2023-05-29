@@ -21,19 +21,18 @@ import android.text.InputFilter
 import android.text.InputType
 
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getDisplayNameRes
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 /**
@@ -43,17 +42,20 @@ import kotlin.reflect.KClass
  */
 class ExtraConfigModel(application: Application) : AndroidViewModel(application) {
 
+    /** Repository providing access to the edited items. */
+    private val editionRepository = EditionRepository.getInstance(application)
     /** The extra currently configured. */
-    private val configuredExtra = MutableStateFlow<IntentExtra<out Any>?>(null)
+    private val configuredExtra = editionRepository.editionState.editedIntentExtraState
+        .mapNotNull { it.value }
 
     /** The key for the extra. */
     val key: Flow<String?> = configuredExtra
-        .map { it?.key }
+        .map { it.key }
         .take(1)
     /** The state for the input views. Changes with the value type. */
     val valueInputState: Flow<ExtraValueInputState> = configuredExtra
         .map {
-            when (val value = it?.value) {
+            when (val value = it.value) {
                 null,
                 is Boolean -> ExtraValueInputState.BooleanInputTypeSelected(
                     BOOLEAN_ITEM,
@@ -80,35 +82,21 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
     val booleanItems = listOf(BOOLEAN_ITEM_TRUE, BOOLEAN_ITEM_FALSE)
 
     /** Tells if the action name is valid or not. */
-    val keyError: Flow<Boolean> = configuredExtra.map { it?.key?.isEmpty() ?: true }
+    val keyError: Flow<Boolean> = configuredExtra.map { it.key?.isEmpty() ?: true }
     /** Tells if the action name is valid or not. */
-    val valueError: Flow<Boolean> = configuredExtra.map { it?.value == null }
+    val valueError: Flow<Boolean> = configuredExtra.map { it.value == null }
 
     /** Tells if this extra if valid for save or not. */
-    val isExtraValid: Flow<Boolean> = configuredExtra
-        .map { extra ->
-            extra != null && !extra.key.isNullOrEmpty() && extra.value != null
-        }
-
-    /**
-     * Set the extra configured by this model.
-     * @param extra the extra to be configured.
-     */
-    fun setConfigExtra(extra: IntentExtra<out Any>) {
-        viewModelScope.launch {
-            configuredExtra.value =
-                if (extra.value == null) extra.changeType(value = false)
-                else extra.copy()
-        }
-    }
+    val isExtraValid: Flow<Boolean> = editionRepository.editionState.editedIntentExtraState
+        .map { it.canBeSaved }
 
     /**
      * Set the key of the extra.
      * @param key the new extra key.
      */
     fun setKey(key: String) {
-        viewModelScope.launch {
-            configuredExtra.value = configuredExtra.value?.copy(key = key)
+        editionRepository.editionState.getEditedIntentExtra()?.let { extra ->
+            editionRepository.updateEditedIntentExtra(extra.copy(key = key))
         }
     }
 
@@ -117,22 +105,21 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
      * @param value the new extra value.
      */
     fun setValue(value: String) {
-        viewModelScope.launch {
-            val extraValue = configuredExtra.value?: return@launch
-            configuredExtra.value = extraValue.copyFromString(value)
+        editionRepository.editionState.getEditedIntentExtra()?.let { extra ->
+            editionRepository.updateEditedIntentExtra(extra.copyFromString(value))
         }
     }
 
     /** Set the value to true or false. Should be called for a Boolean extra only. */
     fun setBooleanValue(value: DropdownItem) {
-        viewModelScope.launch {
-            val extraValue = when (value) {
-                BOOLEAN_ITEM_TRUE -> true
-                BOOLEAN_ITEM_FALSE -> false
-                else -> return@launch
-            }
+        val extraValue = when (value) {
+            BOOLEAN_ITEM_TRUE -> true
+            BOOLEAN_ITEM_FALSE -> false
+            else -> return
+        }
 
-            configuredExtra.value = configuredExtra.value?.changeType(value = extraValue)
+        editionRepository.editionState.getEditedIntentExtra()?.let { extra ->
+            editionRepository.updateEditedIntentExtra(extra.changeType(value = extraValue))
         }
     }
 
@@ -141,25 +128,22 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
      * @param type the new type.
      */
     fun setType(type: DropdownItem) {
-        viewModelScope.launch {
-            val oldValue = configuredExtra.value ?: return@launch
-
-            configuredExtra.value = when (type) {
-                BYTE_ITEM -> oldValue.changeType<Byte>(value = 0)
-                BOOLEAN_ITEM -> oldValue.changeType(value = false)
-                CHAR_ITEM -> oldValue.changeType(value = 'a')
-                DOUBLE_ITEM -> oldValue.changeType(value = 0.0)
-                INT_ITEM -> oldValue.changeType(value = 0)
-                FLOAT_ITEM -> oldValue.changeType(value = 0f)
-                SHORT_ITEM -> oldValue.changeType<Short>(value = 0)
-                STRING_ITEM -> oldValue.changeType(value = "")
-                else -> throw IllegalArgumentException("Unsupported extra type $type")
-            }
+        editionRepository.editionState.getEditedIntentExtra()?.let { extra ->
+            editionRepository.updateEditedIntentExtra(
+                when (type) {
+                    BYTE_ITEM -> extra.changeType<Byte>(value = 0)
+                    BOOLEAN_ITEM -> extra.changeType(value = false)
+                    CHAR_ITEM -> extra.changeType(value = 'a')
+                    DOUBLE_ITEM -> extra.changeType(value = 0.0)
+                    INT_ITEM -> extra.changeType(value = 0)
+                    FLOAT_ITEM -> extra.changeType(value = 0f)
+                    SHORT_ITEM -> extra.changeType<Short>(value = 0)
+                    STRING_ITEM -> extra.changeType(value = "")
+                    else -> throw IllegalArgumentException("Unsupported extra type $type")
+                }
+            )
         }
     }
-
-    /** @return the extra currently configured. */
-    fun getConfiguredExtra(): IntentExtra<out Any> = configuredExtra.value!!
 
     /**
      * Get the configuration for the IME for a given type.

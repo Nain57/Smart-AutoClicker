@@ -17,23 +17,20 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.StateFlow
 
-/** Repository handling the user edition of a scenario. */
+
 class EditionRepository private constructor(context: Context) {
 
     companion object {
@@ -58,195 +55,131 @@ class EditionRepository private constructor(context: Context) {
 
     /** The repository providing access to the database. */
     private val repository: Repository = Repository.getRepository(context)
-    /** */
+    /** Keep tracks of all changes in the currently edited scenario. */
     private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
-    /**
-     * The scenario currently edited by the user.
-     * Set as the database scenario when starting the edition with [startEdition], it will contains all modifications
-     * made by the user.
-     */
-    val editedScenario: StateFlow<Scenario?> = scenarioEditor.editedValue
-    /** The event list for scenario currently edited by the user. */
-    val editedEvents: StateFlow<List<Event>?> = scenarioEditor.eventsEditor.editedValue
-    /** The event of the event list currently edited. Defined with [startEventEdition]. */
-    val editedEvent: StateFlow<Event?> = scenarioEditor.eventsEditor.eventEditor.editedValue
-    /** The list of end conditions currently edited by the user. */
-    val editedEndConditions: StateFlow<List<EndCondition>?> = scenarioEditor.endConditionsEditor.editedValue
-
-    /** Tells if the scenario have changed since the edition start. */
-    val isEditedScenarioContainsChanges: Flow<Boolean> = scenarioEditor.containsChange
-    /** Tells if the event have changed since the edition start. */
-    val isEditedEventContainsChanges: Flow<Boolean> = scenarioEditor.eventsEditor.eventEditor.containsChange
-
-    /** Tells if the event list is not empty and contains only complete events. */
-    val isEventListValid: Flow<Boolean> = scenarioEditor.eventsEditor.isEventListValid
-
+    /** Provides creators for all elements in an edited scenario. */
+    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(scenarioEditor)
+    /** Provides the states of all elements in the edited scenario. */
+    val editionState: EditionState = EditionState(scenarioEditor)
     /** Tells if the editions made on the scenario are synchronized with the database values. */
-    val isEditionSynchronized: Flow<Boolean> = scenarioEditor.editedValue.map { it == null }
+    val isEditionSynchronized: Flow<Boolean> = scenarioEditor.editedScenario.map { it == null }
+
+    // --- SCENARIO - START ---
 
     /** Set the scenario to be configured. */
     suspend fun startEdition(scenarioId: Long) {
         scenarioEditor.startEdition(
-            ScenarioEditor.Reference(
-                scenario = repository.getScenario(scenarioId),
-                events = repository.getEvents(scenarioId),
-                endConditions = repository.getEndConditions(scenarioId),
-            )
+            scenario = repository.getScenario(scenarioId),
+            events = repository.getEvents(scenarioId),
+            endConditions = repository.getEndConditions(scenarioId),
         )
     }
 
     /** Save editions changes in the database. */
-    suspend fun saveEditions() {
+    suspend fun saveEditions(): Boolean {
         repository.updateScenario(
-            scenario = scenarioEditor.getEditedValueOrThrow(),
-            events = scenarioEditor.eventsEditor.getEditedValueOrThrow(),
-            endConditions = scenarioEditor.endConditionsEditor.getEditedValueOrThrow(),
+            scenario = scenarioEditor.editedScenario.value ?: return false,
+            events = scenarioEditor.eventsEditor.editedList.value ?: return false,
+            endConditions = scenarioEditor.endConditionsEditor.editedList.value ?: return false,
         )
-        scenarioEditor.finishEdition()
-    }
 
-    /** Cancel all changes made during the edition. */
-    fun cancelEditions() {
-        scenarioEditor.finishEdition()
+        scenarioEditor.stopEdition()
+        editedItemsBuilder.resetGeneratedIdsCount()
+
+        return true
     }
 
     /** Update the currently edited scenario. */
-    fun updateEditedScenario(scenario: Scenario) {
-        scenarioEditor.updateEditedValue(scenario)
-    }
+    fun updateEditedScenario(scenario: Scenario): Unit = scenarioEditor.updateEditedScenario(scenario)
+    /** Update the priority of the events in the scenario. */
+    fun updateEventsOrder(newEvents: List<Event>): Unit = scenarioEditor.eventsEditor.updateList(newEvents)
 
-    /**
-     * Update the priority of the events in the scenario.
-     * @param newEvents the events, ordered by their new priorities.
-     */
-    fun updateEventsOrder(newEvents: List<Event>) {
-        scenarioEditor.updateEventsOrder(newEvents)
-    }
 
-    /**
-     * Create a new edited event.
-     *
-     */
-    fun createNewEvent(context: Context, from: Event?) =
-        scenarioEditor.createNewEvent(context, from)
+    // --- EVENT - START ---
 
-    /** Set the event currently edited. */
-    fun startEventEdition(event: Event) {
-        scenarioEditor.setEditedEvent(event)
-    }
+    fun startEventEdition(event: Event): Unit =
+        scenarioEditor.eventsEditor.startItemEdition(event)
+    fun updateEditedEvent(event: Event): Unit =
+        scenarioEditor.eventsEditor.updateEditedItem(event)
+    fun updateActionsOrder(actions: List<Action>): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.updateList(actions)
+    fun upsertEditedEvent(): Unit =
+        scenarioEditor.eventsEditor.upsertEditedItem()
+    fun deleteEditedEvent(): Unit =
+        scenarioEditor.eventsEditor.deleteEditedItem()
 
-    fun updateEditedEvent(event: Event) {
-        scenarioEditor.updateEditedEvent(event)
-    }
 
-    fun createNewCondition(context: Context, area: Rect?, bitmap: Bitmap?, from: Condition?) =
-        scenarioEditor.eventsEditor.eventEditor.createCondition(context, area, bitmap, from)
+    // --- CONDITION - START ---
 
-    fun upsertConditionToEditedEvent(condition: Condition) {
-        scenarioEditor.eventsEditor.eventEditor.upsertCondition(condition)
-    }
+    fun startConditionEdition(condition: Condition): Unit =
+        scenarioEditor.eventsEditor.conditionsEditor.startItemEdition(condition)
+    fun updateEditedCondition(condition: Condition): Unit =
+        scenarioEditor.eventsEditor.conditionsEditor.updateEditedItem(condition)
+    fun upsertEditedCondition(): Unit =
+        scenarioEditor.eventsEditor.conditionsEditor.upsertEditedItem()
+    fun deleteEditedCondition(): Unit =
+        scenarioEditor.eventsEditor.conditionsEditor.deleteEditedItem()
+    fun stopConditionEdition(): Unit =
+        scenarioEditor.eventsEditor.conditionsEditor.stopEdition()
 
-    /**
-     * Remove a condition from the edited event.
-     * @param condition the condition to be removed.
-     */
-    fun deleteConditionFromEditedEvent(condition: Condition) {
-        scenarioEditor.eventsEditor.eventEditor.deleteCondition(condition)
-    }
+    // --- CONDITION - END ---
 
-    fun createNewClick(context: Context, from: Action.Click?) =
-        scenarioEditor.eventsEditor.eventEditor.createNewClick(context, from)
 
-    fun createNewSwipe(context: Context, from: Action.Swipe?) =
-        scenarioEditor.eventsEditor.eventEditor.createNewSwipe(context, from)
+    // --- ACTION - START ---
 
-    fun createNewPause(context: Context, from: Action.Pause?) =
-        scenarioEditor.eventsEditor.eventEditor.createNewPause(context, from)
+    fun startActionEdition(action: Action): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.startItemEdition(action)
+    fun updateEditedAction(action: Action): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.updateEditedItem(action)
+    fun upsertEditedAction(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.upsertEditedItem()
+    fun deleteEditedAction(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.deleteEditedItem()
 
-    fun createNewIntent(context: Context, from: Action.Intent?) =
-        scenarioEditor.eventsEditor.eventEditor.createNewIntent(context, from)
 
-    fun createNewIntentExtra(actionId: Identifier) =
-        scenarioEditor.eventsEditor.eventEditor.createNewIntentExtra(actionId)
+    // --- INTENT EXTRA - START ---
 
-    fun createNewToggleEvent(context: Context, from: Action.ToggleEvent?) =
-        scenarioEditor.eventsEditor.eventEditor.createNewToggleEvent(context, from)
+    fun startIntentExtraEdition(extra: IntentExtra<out Any>): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.startItemEdition(extra)
+    fun updateEditedIntentExtra(extra: IntentExtra<out Any>): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.updateEditedItem(extra)
+    fun upsertEditedIntentExtra(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.upsertEditedItem()
+    fun deleteEditedIntentExtra(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.deleteEditedItem()
+    fun stopIntentExtraEdition(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.stopEdition()
 
-    /**
-     * Add a new action to the edited event.
-     * @param action the new action.
-     */
-    fun upsertActionToEditedEvent(action: Action) {
-        scenarioEditor.eventsEditor.eventEditor.upsertAction(action)
-    }
+    // --- INTENT EXTRA - END ---
 
-    /**
-     * Remove an action from the edited event.
-     * @param action the action to be removed.
-     */
-    fun removeActionFromEditedEvent(action: Action) {
-        scenarioEditor.eventsEditor.eventEditor.deleteAction(action)
-    }
+    fun stopActionEdition(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.stopEdition()
 
-    /**
-     * Update the priority of the actions.
-     * @param actions the new actions order.
-     */
-    fun updateActionsOrder(actions: List<Action>) {
-        scenarioEditor.eventsEditor.eventEditor.updateActionsOrder(actions)
-    }
+    // --- ACTION - END ---
 
-    /** Check if the [editedEvent] is referenced by an end condition in the edited scenario. */
-    fun isEditedEventUsedByEndCondition(): Boolean {
-        val event = editedEvent.value ?: return false
-        val endConditions = editedEndConditions.value ?: return false
+    fun stopEventEdition(): Unit =
+        scenarioEditor.eventsEditor.stopItemEdition()
 
-        return endConditions.find { it.eventId == event.id } != null
-    }
+    // --- EVENT - End ---
 
-    /** Check if the [editedEvent] is referenced by an action in the edited scenario. */
-    fun isEditedEventUsedByAction(): Boolean {
-        val event = editedEvent.value ?: return false
-        val scenarioEvents = editedEvents.value ?: return false
+    // --- END CONDITION - START ---
 
-        return scenarioEvents.find { scenarioEvent ->
-            if (scenarioEvent.id == event.id) return@find false
+    fun startEndConditionEdition(endCondition: EndCondition): Unit =
+        scenarioEditor.endConditionsEditor.startItemEdition(endCondition)
+    fun updateEditedEndCondition(endCondition: EndCondition): Unit =
+        scenarioEditor.endConditionsEditor.updateEditedItem(endCondition)
+    fun upsertEditedEndCondition(): Unit =
+        scenarioEditor.endConditionsEditor.upsertEditedItem()
+    fun deleteEditedEndCondition(): Unit =
+        scenarioEditor.endConditionsEditor.deleteEditedItem()
+    fun stopEndConditionEdition(): Unit =
+        scenarioEditor.endConditionsEditor.stopEdition()
 
-            scenarioEvent.actions.find { action ->
-                action is Action.ToggleEvent && action.toggleEventId == event.id
-            } != null
-        } != null
-    }
+    // --- END CONDITION - END ---
 
-    /**
-     * Add or update the edited event to the edited scenario.
-     * If the event id is unset, it will be added. If not, updated.
-     */
-    fun commitEditedEvent() {
-        scenarioEditor.commitEditedEvent()
-    }
+    /** Cancel all changes made during the edition. */
+    fun stopEdition(): Unit =scenarioEditor.stopEdition()
 
-    fun deleteEditedEvent() {
-        scenarioEditor.deleteEditedEvent()
-    }
-
-    fun discardEditedEvent() {
-        scenarioEditor.discardEditedEvent()
-    }
-
-    fun createNewEndCondition(from: EndCondition?) =
-        scenarioEditor.createNewEndCondition(from)
-
-    /**
-     * Insert/Update a new end condition to the edited event.
-     * @param endCondition the new condition.
-     */
-    fun upsertEndCondition(endCondition: EndCondition) {
-        scenarioEditor.upsertEndCondition(endCondition)
-    }
-
-    fun deleteEndCondition(endCondition: EndCondition) {
-        scenarioEditor.deleteEndCondition(endCondition)
-    }
+    // --- SCENARIO - END ---
 }

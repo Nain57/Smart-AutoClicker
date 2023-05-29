@@ -16,92 +16,67 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
-import android.content.Context
-
-import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+class EventsEditor(private val onDeleteEvent: (Event) -> Unit): ListEditor<Event>() {
 
-internal class EventsEditor : ListEditor<EventsEditor.Reference, Event>() {
+    override fun areItemsTheSame(a: Event, b: Event): Boolean = a.id == b.id
+    override fun isItemComplete(item: Event): Boolean = item.isComplete()
 
-    val eventEditor: EventEditor = EventEditor()
-
-    val isEventListValid: Flow<Boolean> = editedValue.map { eventList ->
-        if (eventList.isNullOrEmpty()) return@map false
-        eventList.firstOrNull { !it.isComplete() } == null
+    val conditionsEditor = object : ListEditor<Condition>(::onEditedEventConditionsUpdated, false) {
+        override fun areItemsTheSame(a: Condition, b: Condition): Boolean = a.id == b.id
+        override fun isItemComplete(item: Condition): Boolean = item.isComplete()
     }
 
-    override fun createReferenceFromEdition(): Reference =
-        Reference(
-            scenarioId = getReferenceOrThrow().scenarioId,
-            events = editedValue.value ?: emptyList(),
-        )
+    val actionsEditor = ActionsEditor(::onEditedEventActionsUpdated)
 
-    override fun getValueFromReference(reference: Reference): List<Event> =
-        reference.events
-
-    override fun itemMatcher(first: Event, second: Event): Boolean =
-        first.id == second.id
-
-    fun startEventEdition(event: Event) {
-        eventEditor.startEdition(EventEditor.Reference(event))
+    override fun startItemEdition(item: Event) {
+        super.startItemEdition(item)
+        conditionsEditor.startEdition(item.conditions)
+        actionsEditor.startEdition(item.actions)
     }
 
-    fun updateEditedEvent(event: Event) {
-        eventEditor.updateEditedValue(event)
+    override fun deleteEditedItem() {
+        val editedItem = editedItem.value ?: return
+        onDeleteEvent(editedItem)
+        super.deleteEditedItem()
     }
 
-    fun commitEventEditions() {
-        upsertItem(eventEditor.finishEdition().event)
+    override fun stopItemEdition() {
+        actionsEditor.stopEdition()
+        conditionsEditor.stopEdition()
+        super.stopItemEdition()
     }
 
-    fun deleteEditedEvent() {
-        getEditedValueOrThrow().forEach { event ->
-            // Skip the currently edited event
-            if (event.id == eventEditor.getEditedValueOrThrow().id) return@forEach
+    fun deleteAllActionsReferencing(event: Event) {
+        val events = editedList.value ?: return
 
-            event.actions.forEach { action ->
-                if (action is Action.ToggleEvent && action.toggleEventId == event.id) eventEditor.deleteAction(action)
+        val newEvents = events.mapNotNull { scenarioEvent ->
+            if (scenarioEvent.id == event.id) return@mapNotNull null // Skip same item
+
+            val newActions = scenarioEvent.actions.toMutableList()
+            scenarioEvent.actions.forEach { action ->
+                if (action is Action.ToggleEvent && action.toggleEventId == event.id) newActions.remove(action)
             }
+
+            scenarioEvent.copy(actions = newActions)
         }
-        deleteItem(eventEditor.finishEdition().event)
+
+        updateList(newEvents)
     }
 
-    fun discardEventEditions() {
-        eventEditor.finishEdition()
+    private fun onEditedEventConditionsUpdated(conditions: List<Condition>) {
+        _editedItem.value?.let { event ->
+            updateEditedItem(event.copy(conditions = conditions))
+        }
     }
 
-    fun createNewItem(context: Context): Event =
-        Event(
-            id = generateNewIdentifier(),
-            scenarioId = getReferenceOrThrow().scenarioId,
-            name = context.getString(R.string.default_event_name),
-            conditionOperator = AND,
-            priority = getEditedListSize(),
-            conditions = mutableListOf(),
-            actions = mutableListOf(),
-        )
-
-    fun createNewItemFrom(item: Event): Event {
-        val eventId = generateNewIdentifier()
-
-        return item.copy(
-            id = eventId,
-            scenarioId = getReferenceOrThrow().scenarioId,
-            name = "" + item.name,
-            conditions = eventEditor.conditionsEditor.createNewItemsFrom(item.conditions, eventId).toMutableList(),
-            actions = eventEditor.actionsEditor.createNewItemsFrom(item.actions, eventId).toMutableList(),
-        )
+    private fun onEditedEventActionsUpdated(actions: List<Action>) {
+        _editedItem.value?.let { event ->
+            updateEditedItem(event.copy(actions = actions))
+        }
     }
-
-    internal data class Reference(
-        val scenarioId: Identifier,
-        val events: List<Event>,
-    )
 }

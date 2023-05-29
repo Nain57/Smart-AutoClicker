@@ -35,7 +35,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionSwipeBinding
@@ -48,9 +47,9 @@ import kotlinx.coroutines.launch
 
 class SwipeDialog(
     context: Context,
-    private val editedSwipe: Action.Swipe,
-    private val onDeleteClicked: (Action.Swipe) -> Unit,
-    private val onConfirmClicked: (Action.Swipe) -> Unit,
+    private val onConfirmClicked: () -> Unit,
+    private val onDeleteClicked: () -> Unit,
+    private val onDismissClicked: () -> Unit,
 ) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -62,13 +61,14 @@ class SwipeDialog(
     private lateinit var viewBinding: DialogConfigActionSwipeBinding
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setConfiguredSwipe(editedSwipe)
-
         viewBinding = DialogConfigActionSwipeBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_swipe)
 
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener {
+                    onDismissClicked()
+                    destroy()
+                }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener { onSaveButtonClicked() }
@@ -118,12 +118,12 @@ class SwipeDialog(
 
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
-        onConfirmClicked(viewModel.getConfiguredSwipe())
+        onConfirmClicked()
         destroy()
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked(editedSwipe)
+        onDeleteClicked()
         destroy()
     }
 
