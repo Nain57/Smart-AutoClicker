@@ -27,10 +27,10 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putSwipeDurationConfig
 
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
 
 class SwipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -39,13 +39,13 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
     private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredSwipe = editionRepository.editionState.editedActionState
-        .mapNotNull { action -> action.value?.let { it as Action.Swipe } }
+        .mapNotNull { action -> action.value }
+        .filterIsInstance<Action.Swipe>()
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
     /** The name of the swipe. */
     val name: Flow<String?> = configuredSwipe
-        .filterNotNull()
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
@@ -53,7 +53,6 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The duration between the start and end of the swipe in milliseconds. */
     val swipeDuration: Flow<String?> = configuredSwipe
-        .filterNotNull()
         .map { it.swipeDuration?.toString() }
         .take(1)
     /** Tells if the swipe duration value is valid or not. */
@@ -61,7 +60,6 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The start and end positions of the swipe. */
     val positions: Flow<Pair<Point, Point>?> = configuredSwipe
-        .filterNotNull()
         .map { swipe ->
             if (swipe.fromX != null && swipe.fromY != null && swipe.toX != null && swipe.toY != null) {
                 Point(swipe.fromX!!, swipe.fromY!!) to Point(swipe.toX!!, swipe.toY!!)

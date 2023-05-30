@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
 
 class ClickViewModel(application: Application) : AndroidViewModel(application) {
@@ -41,13 +42,13 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredClick = editionRepository.editionState.editedActionState
-        .mapNotNull { action -> action.value?.let { it as Action.Click } }
+        .mapNotNull { action -> action.value }
+        .filterIsInstance<Action.Click>()
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
     /** The name of the click. */
     val name: Flow<String?> = configuredClick
-        .filterNotNull()
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
@@ -55,7 +56,6 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The duration between the press and release of the click in milliseconds. */
     val pressDuration: Flow<String?> = configuredClick
-        .filterNotNull()
         .map { it.pressDuration?.toString() }
         .take(1)
     /** Tells if the press duration value is valid or not. */
@@ -63,7 +63,6 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The position of the click. */
     val position: Flow<Point?> = configuredClick
-        .filterNotNull()
         .map { click ->
             if (click.clickOnCondition || click.x == null || click.y == null) null
             else Point(click.x!!, click.y!!)

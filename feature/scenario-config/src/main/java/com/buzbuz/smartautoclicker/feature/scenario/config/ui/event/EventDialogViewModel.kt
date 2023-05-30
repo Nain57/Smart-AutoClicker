@@ -40,12 +40,12 @@ class EventDialogViewModel(application: Application) : NavigationViewModel(appli
         editionRepository.editionState.editedEventConditionsState,
         editionRepository.editionState.editedEventActionsState,
     ) { editedEvent, conditions, actions, ->
-            buildMap {
-                put(R.id.page_event, editedEvent.value?.name?.isNotEmpty() ?: false)
-                put(R.id.page_conditions, conditions.canBeSaved)
-                put(R.id.page_actions, actions.canBeSaved)
-            }
+        buildMap {
+            put(R.id.page_event, editedEvent.value?.name?.isNotEmpty() ?: false)
+            put(R.id.page_conditions, conditions.canBeSaved)
+            put(R.id.page_actions, actions.canBeSaved)
         }
+    }
 
     /** Tells if the configured event is valid and can be saved. */
     val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState

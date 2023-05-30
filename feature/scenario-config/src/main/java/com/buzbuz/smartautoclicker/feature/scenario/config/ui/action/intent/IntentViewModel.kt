@@ -43,7 +43,9 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
     private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredIntent = editionRepository.editionState.editedActionState
-        .mapNotNull { action -> action.value?.let { it as Action.Intent } }
+        .mapNotNull { action -> action.value }
+        .filterIsInstance<Action.Intent>()
+
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
     /** The Android package manager. */
@@ -51,7 +53,6 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
 
     /** The name of the pause. */
     val name: Flow<String?> = configuredIntent
-        .filterNotNull()
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
@@ -59,7 +60,6 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
 
     /* The intent action. */
     val action: Flow<String?> = configuredIntent
-        .filterNotNull()
         .map { it.intentAction }
         .take(1)
     /** Tells if the intent action is valid or not. */
@@ -67,13 +67,11 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
 
     /** The flags for this intent. */
     val flags: Flow<String> = configuredIntent
-        .filterNotNull()
         .map { it.flags?.toString() ?: "" }
         .take(1)
 
     /** The component name for the intent. */
     val componentName: Flow<String?> = configuredIntent
-        .filterNotNull()
         .map { it.componentName?.flattenToString() }
         .take(1)
     /** Tells if the intent component name is valid or not. */
@@ -117,7 +115,6 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
 
     /** Name and icon of the selected application in simple edition mode. */
     val activityInfo: Flow<ActivityDisplayInfo?> = configuredIntent
-        .filterNotNull()
         .filter { it.isAdvanced == false }
         .map { intent ->
             if (intent.componentName == null) return@map null

@@ -26,10 +26,10 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putPauseDurationConfig
 
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
 
 class PauseViewModel(application: Application) : AndroidViewModel(application) {
@@ -38,13 +38,13 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
     private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredPause = editionRepository.editionState.editedActionState
-        .mapNotNull { action -> action.value?.let { it as Action.Pause } }
+        .mapNotNull { action -> action.value }
+        .filterIsInstance<Action.Pause>()
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
     /** The name of the pause. */
     val name: Flow<String?> = configuredPause
-        .filterNotNull()
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
@@ -52,7 +52,6 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The duration of the pause in milliseconds. */
     val pauseDuration: Flow<String?> = configuredPause
-        .filterNotNull()
         .map { it.pauseDuration?.toString() }
         .take(1)
     /** Tells if the pause duration value is valid or not. */

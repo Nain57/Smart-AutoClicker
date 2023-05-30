@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPick
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -41,11 +42,11 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
     private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredToggleEvent = editionRepository.editionState.editedActionState
-        .mapNotNull { action -> action.value?.let { it as Action.ToggleEvent } }
+        .mapNotNull { action -> action.value }
+        .filterIsInstance<Action.ToggleEvent>()
 
     /** The name of the toggle event. */
     val name: Flow<String?> = configuredToggleEvent
-        .filterNotNull()
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
@@ -79,7 +80,6 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
 
     /** The event selected for the toggle action. Null if none is. */
     val eventViewState: Flow<EventPickerViewState> = configuredToggleEvent
-        .filterNotNull()
         .combine(editionRepository.editionState.eventsAvailableForToggleEventAction) { editedAction, editedEvents ->
             val selectedEvent = editedEvents.find { editedEvent ->
                 editedAction.toggleEventId == editedEvent.id
