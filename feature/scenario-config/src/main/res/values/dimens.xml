@@ -16,8 +16,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <dimen name="dialog_condition_max_height">600dp</dimen>
+    <dimen name="dialog_condition_max_width">400dp</dimen>
     <dimen name="dialog_item_condition_height">100dp</dimen>
     <dimen name="dialog_item_condition_width">100dp</dimen>
+    <dimen name="dialog_item_condition_copy_icons_height">30dp</dimen>
+    <dimen name="dialog_item_condition_copy_condition_size">100dp</dimen>
 
     <dimen name="overlay_click_selector_thickness">6dp</dimen>
     <dimen name="overlay_click_selector_radius">28dp</dimen>
