@@ -75,13 +75,14 @@ class EditionState internal constructor(private val editor: ScenarioEditor) {
         editor.eventsEditor.actionsEditor.intentExtraEditor.editedItemState
     val eventsAvailableForToggleEventAction: Flow<List<Event>> =
         combine(eventsState, editedEventState) { scenarioEvents, editedEvent ->
-            buildList {
-                val isEditedEventInList = scenarioEvents.value
-                    ?.let { find { scenarioEvent -> scenarioEvent.id == editedEvent.value?.id } != null }
-                    ?: false
+            if (editedEvent.value == null || scenarioEvents.value == null) return@combine emptyList()
 
-                if (!isEditedEventInList && editedEvent.value != null) add(editedEvent.value)
-                scenarioEvents.value?.let { addAll(it) }
+            buildList {
+                val availableEvents = scenarioEvents.value
+                    .filter { event -> event.id != editedEvent.value.id }
+
+                add(editedEvent.value)
+                addAll(availableEvents)
             }
         }
     fun getEditedIntentExtra(): IntentExtra<out Any>? =
