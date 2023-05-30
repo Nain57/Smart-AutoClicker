@@ -123,16 +123,15 @@ internal class DetectorEngine(context: Context) {
         processingScope = CoroutineScope(Dispatchers.IO)
         displayMetrics.addOrientationListener(orientationListener)
 
-        screenRecorder.apply {
-            startProjection(context, resultCode, data) {
-                this@DetectorEngine.stopScreenRecord()
-            }
-
-            processingScope?.launch {
+        processingScope?.launch {
+            screenRecorder.apply {
+                startProjection(context, resultCode, data) {
+                    this@DetectorEngine.stopScreenRecord()
+                }
                 startScreenRecord(context, displayMetrics.screenSize)
-
-                _state.emit(DetectorState.RECORDING)
             }
+
+            _state.emit(DetectorState.RECORDING)
         }
     }
 

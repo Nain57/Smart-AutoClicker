@@ -29,10 +29,14 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Record the screen and provide [Image] from it.
@@ -76,6 +80,8 @@ class ScreenRecorder internal constructor() {
         }
     }
 
+    /** Synchronization mutex. */
+    private val mutex = Mutex()
     /**
      * The token granting applications the ability to capture screen contents by creating a [VirtualDisplay].
      * Can only be not null if the user have granted the permission displayed by
@@ -111,7 +117,7 @@ class ScreenRecorder internal constructor() {
      * [android.app.Activity.onActivityResult]
      * @param stoppedListener listener called when the projection have been stopped unexpectedly.
      */
-    fun startProjection(context: Context, resultCode: Int, data: Intent, stoppedListener: () -> Unit) {
+    suspend fun startProjection(context: Context, resultCode: Int, data: Intent, stoppedListener: () -> Unit) = mutex.withLock {
         if (projection != null) {
             Log.w(TAG, "Attempting to start media projection while already started.")
             return
@@ -123,7 +129,7 @@ class ScreenRecorder internal constructor() {
         val projectionManager = context.getSystemService(Context.MEDIA_PROJECTION_SERVICE)
                 as MediaProjectionManager
         projection = projectionManager.getMediaProjection(resultCode, data).apply {
-            registerCallback(projectionCallback, null)
+            registerCallback(projectionCallback, Handler(Looper.getMainLooper()))
         }
     }
 
@@ -134,7 +140,7 @@ class ScreenRecorder internal constructor() {
      * @param context the Android context.
      * @param displaySize the size of the display, in pixels.
      */
-    fun startScreenRecord(context: Context, displaySize: Point) {
+    suspend fun startScreenRecord(context: Context, displaySize: Point) = mutex.withLock {
         if (projection == null || imageReader != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
@@ -151,7 +157,7 @@ class ScreenRecorder internal constructor() {
     }
 
     /** @return the last image of the screen, or null if they have been processed. */
-    fun acquireLatestImage(): Image? = imageReader?.acquireLatestImage()
+    suspend fun acquireLatestImage(): Image? = mutex.withLock { imageReader?.acquireLatestImage() }
 
     suspend fun takeScreenshot(area: Rect, completion: suspend (Bitmap) -> Unit) {
         var image: Image?
@@ -175,8 +181,7 @@ class ScreenRecorder internal constructor() {
      * Stop the screen recording.
      * This method should not be called from the main thread, but the processing thread.
      */
-    @WorkerThread
-    fun stopScreenRecord() {
+    suspend fun stopScreenRecord() = mutex.withLock {
         Log.d(TAG, "Stop screen record")
 
         virtualDisplay?.apply {
@@ -195,17 +200,19 @@ class ScreenRecorder internal constructor() {
      * This method will free/close any resources related to screen recording. If a detection was started, it will be
      * stopped. If the screen record wasn't started, this method will have no effect.
      */
-    @WorkerThread
-    fun stopProjection() {
+    suspend fun stopProjection() {
         Log.d(TAG, "Stop media projection")
 
         stopScreenRecord()
-        projection?.apply {
-            unregisterCallback(projectionCallback)
-            stop()
+
+        mutex.withLock {
+            projection?.apply {
+                unregisterCallback(projectionCallback)
+                stop()
+            }
             projection = null
+            stopListener = null
         }
-        stopListener = null
     }
 
     /** Called when the user have stopped the projection by clicking on the 'Cast' icon in the status bar. */
