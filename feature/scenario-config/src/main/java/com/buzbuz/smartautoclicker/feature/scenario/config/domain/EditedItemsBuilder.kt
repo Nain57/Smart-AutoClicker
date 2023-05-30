@@ -179,12 +179,19 @@ class EditedItemsBuilder internal constructor(private val editor: ScenarioEditor
         )
     }
 
-    private fun createNewToggleEventFrom(from: Action.ToggleEvent, eventId: Identifier): Action.ToggleEvent =
-        from.copy(
+    private fun createNewToggleEventFrom(from: Action.ToggleEvent, eventId: Identifier): Action.ToggleEvent {
+        // If the referenced event is in this scenario, keep it. If not, clear it.
+        val toggleEventId = from.toggleEventId?.let { toggleEventId ->
+            getEditedScenarioEvent(toggleEventId)?.id
+        }
+
+        return from.copy(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + from.name,
+            toggleEventId = toggleEventId,
         )
+    }
 
     fun createNewIntentExtra() : IntentExtra<Any> =
         IntentExtra(
@@ -214,6 +221,9 @@ class EditedItemsBuilder internal constructor(private val editor: ScenarioEditor
             eventId = from.eventId?.copy(),
             eventName = from.eventName?.let { "" + it },
         )
+
+    private fun getEditedScenarioEvent(eventId: Identifier): Event? =
+        editor.eventsEditor.editedList.value?.find { event -> event.id == eventId }
 
     private fun getEditedScenarioIdOrThrow(): Identifier = editor.editedScenario.value?.id
         ?: throw IllegalStateException("Can't create items without an edited scenario")
