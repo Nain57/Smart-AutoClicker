@@ -53,7 +53,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 
     implementation "androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}"
-    implementation "androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}"
+    implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
 
     implementation project(path: ':core:bitmaps')
     implementation project(path: ':core:database')

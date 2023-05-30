@@ -78,7 +78,7 @@ interface Repository {
      *
      * @param completeScenario the scenario to copy.
      */
-    suspend fun addScenarioCopy(completeScenario: CompleteScenario)
+    suspend fun addScenarioCopy(completeScenario: CompleteScenario): Boolean
 
     /**
      * Update a scenario.
@@ -89,7 +89,7 @@ interface Repository {
      *
      * @throws IllegalArgumentException if the edited scenario is incomplete.
      */
-    suspend fun updateScenario(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>)
+    suspend fun updateScenario(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>): Boolean
 
     /**
      * Delete a scenario.

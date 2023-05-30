@@ -35,7 +35,6 @@
     <string name="dialog_overlay_title_scenario_config">场景</string>
     <string name="dialog_overlay_title_swipe">滑动</string>
     <string name="dialog_overlay_title_toggle_event">场景状态</string>
-    <string name="dialog_overlay_title_warning">警告</string>
 
     <!--
       - Text for menu items.

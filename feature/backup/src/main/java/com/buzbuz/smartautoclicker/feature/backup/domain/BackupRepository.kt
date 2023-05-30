@@ -105,8 +105,17 @@ internal class BackupRepository private constructor(context: Context) {
                     onProgressChanged = { current, max -> send(Backup.Loading(current, max)) },
                     onVerification = { send(Backup.Verification) },
                     onCompleted = { success, failureCount, compatWarning ->
-                        success.forEach { localDataRepository.addScenarioCopy(it) }
-                        send(Backup.Completed(success.size, failureCount, compatWarning))
+
+                        var totalFailures = failureCount
+                        val actualSuccess = success.toMutableList()
+                        success.forEach { completeScenario ->
+                            if (!localDataRepository.addScenarioCopy(completeScenario)) {
+                                actualSuccess.remove(completeScenario)
+                                totalFailures++
+                            }
+                        }
+
+                        send(Backup.Completed(actualSuccess.size, totalFailures, compatWarning))
                     }
                 )
             )

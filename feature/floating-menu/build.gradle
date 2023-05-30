@@ -54,6 +54,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.vectordrawable:vectordrawable-animated:${rootProject.ext.androidxVectorDrawableVersion}"
 
+    implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+
+    implementation project(path: ':core:display')
     implementation project(path: ':core:domain')
     implementation project(path: ':core:processing')
     implementation project(path: ':core:ui')

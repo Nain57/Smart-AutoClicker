@@ -16,6 +16,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_warning">Avertissement</string>
+
     <string name="content_desc_add_button">Le button pour créer un élément</string>
     <string name="content_desc_copy_button">Le button pour créer une copie à partir d\'un élément existant</string>
 </resources>

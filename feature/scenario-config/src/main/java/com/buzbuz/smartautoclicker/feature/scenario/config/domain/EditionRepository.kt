@@ -78,11 +78,14 @@ class EditionRepository private constructor(context: Context) {
 
     /** Save editions changes in the database. */
     suspend fun saveEditions(): Boolean {
-        repository.updateScenario(
+        val updateResult = repository.updateScenario(
             scenario = scenarioEditor.editedScenario.value ?: return false,
             events = scenarioEditor.eventsEditor.editedList.value ?: return false,
             endConditions = scenarioEditor.endConditionsEditor.editedList.value ?: return false,
         )
+
+        // In case of error, do not stop the edition
+        if (!updateResult) return false
 
         scenarioEditor.stopEdition()
         editedItemsBuilder.resetGeneratedIdsCount()
@@ -161,7 +164,7 @@ class EditionRepository private constructor(context: Context) {
     fun stopEventEdition(): Unit =
         scenarioEditor.eventsEditor.stopItemEdition()
 
-    // --- EVENT - End ---
+    // --- EVENT - END ---
 
     // --- END CONDITION - START ---
 
