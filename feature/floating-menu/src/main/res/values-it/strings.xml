@@ -16,12 +16,6 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <!--
-      - Titles for the dialogs displayed as overlay.
-      - Allowed characters can be small due to save/delete/close buttons.
-      -->
-    <string name="dialog_overlay_title_warning">Attenzione</string>
-
-    <string name="content_desc_add_button">Il pulsante per creare un elemento</string>
-    <string name="content_desc_copy_button">Il pulsante per creare una copia da un elemento esistente</string>
+    <string name="message_scenario_saving_error">Il tuo scenario non può essere salvato a causa di un errore interno. \nVuoi modificarlo o annullare tutte le tue modifiche?</string>
+    <string name="button_dialog_modify">Modificare</string>
 </resources>

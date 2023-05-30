@@ -36,6 +36,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.minutes
 
 /**
@@ -131,9 +132,13 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     }
 
     /** Save the configured scenario in the database. */
-    fun saveScenarioChanges() {
+    fun saveScenarioChanges(onCompleted: (success: Boolean) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            editionRepository.saveEditions()
+            val result = editionRepository.saveEditions()
+
+            withContext(Dispatchers.Main) {
+                onCompleted(result)
+            }
         }
     }
 

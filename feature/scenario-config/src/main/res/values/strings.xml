@@ -34,7 +34,6 @@
     <string name="dialog_overlay_title_scenario_config">Scenario</string>
     <string name="dialog_overlay_title_swipe">Swipe</string>
     <string name="dialog_overlay_title_toggle_event">Event state</string>
-    <string name="dialog_overlay_title_warning">Warning</string>
 
     <!--
       - Text for menu items.

@@ -30,6 +30,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogController
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
@@ -60,8 +61,8 @@ class EventDialog(
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
             topBarBinding.apply {
-                setButtonVisibility(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, View.VISIBLE)
-                setButtonVisibility(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DELETE, View.VISIBLE)
+                setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+                setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
                 dialogTitle.setText(R.string.dialog_overlay_title_event_config)
             }
         }
@@ -88,14 +89,14 @@ class EventDialog(
         }
     }
 
-    override fun onDialogButtonPressed(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) {
+    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
         when (buttonType) {
-            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE -> onConfigComplete()
-            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DELETE -> {
+            DialogNavigationButton.SAVE -> onConfigComplete()
+            DialogNavigationButton.DELETE -> {
                 onDeleteButtonPressed()
                 return
             }
-            com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DISMISS -> onDismiss()
+            DialogNavigationButton.DISMISS -> onDismiss()
             else -> {}
         }
 
@@ -109,7 +110,7 @@ class EventDialog(
     }
 
     private fun updateSaveButton(enabled: Boolean) {
-        topBarBinding.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, enabled)
+        topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
     }
 
     private fun onNewSubOverlayRequest(request: NavigationRequest?) {

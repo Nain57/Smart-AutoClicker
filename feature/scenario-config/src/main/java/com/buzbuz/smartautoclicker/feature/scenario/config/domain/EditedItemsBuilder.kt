@@ -207,7 +207,7 @@ class EditedItemsBuilder internal constructor(private val editor: ScenarioEditor
             scenarioId = getEditedScenarioIdOrThrow(),
         )
 
-    fun createNewItemFrom(from: EndCondition, scenarioId: Identifier = getEditedScenarioIdOrThrow()): EndCondition =
+    fun createNewEndConditionFrom(from: EndCondition, scenarioId: Identifier = getEditedScenarioIdOrThrow()): EndCondition =
         from.copy(
             id = endConditionsIdCreator.generateNewIdentifier(),
             scenarioId = scenarioId,

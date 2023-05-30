@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
 
 import android.content.Context
+import android.content.DialogInterface
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenuController
 import com.buzbuz.smartautoclicker.feature.floatingmenu.R
 import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuBinding
@@ -36,6 +38,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioD
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -132,7 +136,10 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
                     hide()
                 }
             }
-            R.id.btn_click_list -> showScenarioConfigDialog()
+            R.id.btn_click_list -> {
+                viewModel.startScenarioEdition()
+                showScenarioConfigDialog()
+            }
             R.id.btn_stop -> destroy()
         }
     }
@@ -185,15 +192,32 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
     }
 
     private fun showScenarioConfigDialog() {
-        viewModel.startScenarioEdition()
         showSubOverlay(
             overlayController = ScenarioDialog(
                 context = context,
-                onConfigSaved = viewModel::saveScenarioChanges,
                 onConfigDiscarded = viewModel::cancelScenarioChanges,
+                onConfigSaved = { viewModel.saveScenarioChanges { success -> if (!success) showScenarioSaveErrorDialog() } },
             ),
             hideCurrent = true,
         )
+    }
+
+    private fun showScenarioSaveErrorDialog() {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.dialog_overlay_title_warning)
+            .setMessage(R.string.message_scenario_saving_error)
+            .setPositiveButton(R.string.button_dialog_modify) { _: DialogInterface, _: Int ->
+                showScenarioConfigDialog()
+            }
+            .setNegativeButton(android.R.string.cancel) { _: DialogInterface, _: Int ->
+                viewModel.cancelScenarioChanges()
+            }
+            .create()
+            .apply {
+                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
+            }
+            .show()
+        showScenarioConfigDialog()
     }
 
     /**
