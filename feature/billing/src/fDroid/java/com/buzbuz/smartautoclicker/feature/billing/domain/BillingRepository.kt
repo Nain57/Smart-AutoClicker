@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.billing.model
+package com.buzbuz.smartautoclicker.feature.billing.domain
 
 import android.content.Context
-import com.buzbuz.smartautoclicker.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.billing.ProModeAdvantage
+
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

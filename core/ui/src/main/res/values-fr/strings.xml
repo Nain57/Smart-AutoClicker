@@ -22,6 +22,12 @@
       -->
     <string name="dialog_overlay_title_warning">Avertissement</string>
 
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_name">Nom</string>
+
     <string name="content_desc_add_button">Le button pour créer un élément</string>
     <string name="content_desc_copy_button">Le button pour créer une copie à partir d\'un élément existant</string>
 </resources>
