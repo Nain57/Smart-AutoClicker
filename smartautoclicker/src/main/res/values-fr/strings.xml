@@ -59,7 +59,7 @@
       - Empty list messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_empty_scenario_list">Créez votre premier scénario et commencez au automatiser des tâches dès maintenant</string>
+    <string name="message_empty_scenario_list">Créez votre premier scénario et commencez à automatiser des tâches dès maintenant</string>
 
     <!--
       - Messages.
