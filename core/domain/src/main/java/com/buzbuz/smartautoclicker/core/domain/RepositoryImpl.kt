@@ -243,13 +243,17 @@ internal class RepositoryImpl internal constructor(
             currentEntities = conditionsDao.getConditions(eventDbId),
             newItems = conditions,
             toEntity = { _, condition ->
-                val completeCondition = condition.bitmap?.let {
-                    condition.copy(path = bitmapManager.saveBitmap(it))
-                } ?: condition
-
-                completeCondition.toEntity().apply {
-                    eventId = eventDbId
+                val path = if (condition.path.isNullOrEmpty()) {
+                    condition.bitmap?.let { bitmapManager.saveBitmap(it) }
+                        ?: throw IllegalArgumentException("Can't insert condition, bitmap and path are both null.")
+                } else {
+                    condition.path
                 }
+
+                condition.copy(
+                    eventId = Identifier(databaseId = eventDbId),
+                    path = path,
+                ).toEntity()
             }
         )
 
@@ -293,9 +297,9 @@ internal class RepositoryImpl internal constructor(
             currentEntities = endConditionDao.getEndConditions(scenarioId),
             newItems = endConditions,
             toEntity = { _, endCondition ->
-                endCondition.toEntity().apply {
-                    eventId = evtItemIdToDbIdMap.getDatabaseId(endCondition.eventId)
-                }
+                endCondition.copy(
+                    eventId = Identifier(databaseId = evtItemIdToDbIdMap.getDatabaseId(endCondition.eventId)),
+                ).toEntity()
             }
         )
 
