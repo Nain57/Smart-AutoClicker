@@ -60,7 +60,10 @@ internal class Selector(
             return onNewDownEvent(e.x, e.y)
         }
 
-        override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+        // SDK 33 defines MotionEvents as NonNull, but sometimes they are null and this can leads on a crash on
+        // some devices. Force the two parameters as nullable and remove compiler warnings.
+        @Suppress("NOTHING_TO_OVERRIDE", "ACCIDENTAL_OVERRIDE")
+        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
             if (currentGesture == null) return false
             onTranslateSelector(-distanceX, -distanceY)
             return true

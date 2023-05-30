@@ -52,7 +52,11 @@ internal class CaptureComponent(
 
     /** Listener for the [gestureDetector] handling the move gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-        override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+
+        // SDK 33 defines MotionEvents as NonNull, but sometimes they are null and this can leads on a crash on
+        // some devices. Force the two parameters as nullable and remove compiler warnings.
+        @Suppress("NOTHING_TO_OVERRIDE", "ACCIDENTAL_OVERRIDE")
+        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
             translateCapture(-distanceX, -distanceY)
             return true
         }
