@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,10 @@ class ConditionSelectorMenu(
 ) : OverlayMenuController(context) {
 
     private companion object {
+
+        /** Tag for logs */
+        private const val TAG = "ConditionSelectorMenu"
+
         /** Describe the state of the capture. */
         @IntDef(SELECTION, CAPTURE, ADJUST)
         @Retention(AnnotationRetention.SOURCE)
@@ -125,19 +130,27 @@ class ConditionSelectorMenu(
      * Depending on the current [state], this will have different effect.
      */
     private fun onConfirm() {
-        if (state == SELECTION) {
-            state = CAPTURE
+        when (state) {
+            SELECTION -> {
+                state = CAPTURE
 
-            val screenSize = displayMetrics.screenSize
-            val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
-            viewModel.takeScreenshot(screenRect) { screenshot ->
-                selectorView.showCapture(screenshot)
-                state = ADJUST
+                val screenSize = displayMetrics.screenSize
+                val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
+                viewModel.takeScreenshot(screenRect) { screenshot ->
+                    selectorView.showCapture(screenshot)
+                    state = ADJUST
+                }
             }
-        } else {
-            val selection = selectorView.getSelection()
-            onConditionSelected(selection.first, selection.second)
-            destroy()
+
+            ADJUST -> {
+                try {
+                    val selection = selectorView.getSelection()
+                    onConditionSelected(selection.first, selection.second)
+                } catch (ex: IllegalStateException) {
+                    Log.e(TAG, "Condition selection failed", ex)
+                }
+                destroy()
+            }
         }
     }
 

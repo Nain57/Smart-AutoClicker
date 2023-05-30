@@ -155,13 +155,13 @@ class ConditionSelectorView(
      * @return a pair of the capture area and a bitmap of its content.
      */
     fun getSelection(): Pair<Rect, Bitmap> {
-        if (!isSelectorValid) {
-            throw IllegalStateException("Can't get a selection, selector is invalid.")
-        }
+        if (!isSelectorValid) throw IllegalStateException("Can't get a selection, selector is invalid.")
 
-        val selectionArea = selector.getSelectionArea(capture.captureArea, capture.zoomLevel)
-        return selectionArea to Bitmap.createBitmap(capture.screenCapture!!.bitmap, selectionArea.left,
-            selectionArea.top, selectionArea.width(), selectionArea.height())
+        return capture.screenCapture?.let { screenCapture ->
+            val selectionArea = selector.getSelectionArea(capture.captureArea, capture.zoomLevel)
+            selectionArea to Bitmap.createBitmap(screenCapture.bitmap, selectionArea.left,
+                selectionArea.top, selectionArea.width(), selectionArea.height())
+        } ?: throw IllegalStateException("Can't get a selection, there is no screen capture.")
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
