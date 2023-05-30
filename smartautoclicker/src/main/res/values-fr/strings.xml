@@ -167,6 +167,8 @@
     <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>
     <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée.</string>
     <string name="toast_denied_screen_sharing_permission">L\'utilisateur a refusé l\'autorisation de partage d\'écran</string>
+    <string name="toast_denied_foreground_permission">L\'utilisateur a refusé l\'autorisation de service au premier plan</string>
+
 
     <!--
       - Section titles.

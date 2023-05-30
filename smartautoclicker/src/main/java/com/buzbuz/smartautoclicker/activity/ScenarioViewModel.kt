@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.activity
 
+import android.Manifest
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
@@ -25,6 +26,7 @@ import android.os.Build
 import android.provider.Settings
 
 import androidx.annotation.IntRange
+import androidx.core.content.PermissionChecker
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -334,8 +336,14 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * [android.app.Activity.onActivityResult]
      * @param scenario the identifier of the scenario of clicks to be used for detection.
      */
-    fun loadScenario(resultCode: Int, data: Intent, scenario: Scenario) {
+    fun loadScenario(context: Context, resultCode: Int, data: Intent, scenario: Scenario): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val foregroundPermission = PermissionChecker.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE)
+            if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
+        }
+
         clickerService?.start(resultCode, data, scenario)
+        return true
     }
 
     /** Stop the overlay UI and release all associated resources. */

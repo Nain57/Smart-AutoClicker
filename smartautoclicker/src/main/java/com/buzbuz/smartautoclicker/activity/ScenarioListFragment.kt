@@ -96,8 +96,9 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 Toast.makeText(requireContext(), R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
             } else {
                 requestedScenario?.let { scenario ->
-                    scenarioViewModel.loadScenario(result.resultCode, result.data!!, scenario)
-                    activity?.finish()
+                    val started = scenarioViewModel.loadScenario(requireContext(), result.resultCode, result.data!!, scenario)
+                    if (started) activity?.finish()
+                    else Toast.makeText(requireContext(), R.string.toast_denied_foreground_permission, Toast.LENGTH_SHORT).show()
                 }
             }
         }

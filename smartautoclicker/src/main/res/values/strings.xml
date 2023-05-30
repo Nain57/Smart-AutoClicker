@@ -168,6 +168,7 @@
     <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
     <string name="toast_configure_swipe_to">Touch the position to end the swipe to.</string>
     <string name="toast_denied_screen_sharing_permission">User denied screen sharing permission</string>
+    <string name="toast_denied_foreground_permission">User denied foreground service permission</string>
 
     <!--
       - Section titles.

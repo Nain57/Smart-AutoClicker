@@ -163,6 +163,7 @@
     <string name="toast_configure_swipe_from">请点击滑动开始的位置。</string>
     <string name="toast_configure_swipe_to">请点击滑动结束的位置。</string>
     <string name="toast_denied_screen_sharing_permission">用户拒绝屏幕共享权限</string>
+    <string name="toast_denied_foreground_permission">用户拒绝前台服务权限</string>
 
     <!--
       - Section titles.
