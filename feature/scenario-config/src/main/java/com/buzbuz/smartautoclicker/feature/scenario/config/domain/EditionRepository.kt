@@ -124,7 +124,7 @@ class EditionRepository private constructor(context: Context) {
     fun deleteEditedCondition(): Unit =
         scenarioEditor.eventsEditor.conditionsEditor.deleteEditedItem()
     fun stopConditionEdition(): Unit =
-        scenarioEditor.eventsEditor.conditionsEditor.stopEdition()
+        scenarioEditor.eventsEditor.conditionsEditor.stopItemEdition()
 
     // --- CONDITION - END ---
 
@@ -152,12 +152,12 @@ class EditionRepository private constructor(context: Context) {
     fun deleteEditedIntentExtra(): Unit =
         scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.deleteEditedItem()
     fun stopIntentExtraEdition(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.stopEdition()
+        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.stopItemEdition()
 
     // --- INTENT EXTRA - END ---
 
     fun stopActionEdition(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.stopEdition()
+        scenarioEditor.eventsEditor.actionsEditor.stopItemEdition()
 
     // --- ACTION - END ---
 
@@ -177,7 +177,7 @@ class EditionRepository private constructor(context: Context) {
     fun deleteEditedEndCondition(): Unit =
         scenarioEditor.endConditionsEditor.deleteEditedItem()
     fun stopEndConditionEdition(): Unit =
-        scenarioEditor.endConditionsEditor.stopEdition()
+        scenarioEditor.endConditionsEditor.stopItemEdition()
 
     // --- END CONDITION - END ---
 
