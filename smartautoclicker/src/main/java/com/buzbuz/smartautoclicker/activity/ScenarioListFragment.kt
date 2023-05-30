@@ -114,24 +114,6 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
             appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
             topAppBar.apply {
                 setOnMenuItemClickListener { onMenuItemSelected(it) }
-                (menu.findItem(R.id.action_search).actionView as SearchView).apply {
-                    setIconifiedByDefault(true)
-                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                        override fun onQueryTextSubmit(query: String?) = false
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            scenarioViewModel.updateSearchQuery(newText)
-                            return true
-                        }
-                    })
-                    addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-                        override fun onViewDetachedFromWindow(arg0: View) {
-                            scenarioViewModel.updateSearchQuery(null)
-                            scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SELECTION)
-                        }
-
-                        override fun onViewAttachedToWindow(arg0: View) {}
-                    })
-                }
             }
         }
 
@@ -187,11 +169,33 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      */
     private fun updateMenu(menuState: ScenarioListFragmentUiState.Menu) {
         viewBinding.topAppBar.menu.apply {
-            findItem(R.id.action_search).bind(menuState.searchItemState)
-            findItem(R.id.action_select_all).bind(menuState.selectAllItemState)
-            findItem(R.id.action_cancel).bind(menuState.cancelItemState)
-            findItem(R.id.action_import).bind(menuState.importItemState)
-            findItem(R.id.action_export).bind(menuState.exportItemState)
+            findItem(R.id.action_select_all)?.bind(menuState.selectAllItemState)
+            findItem(R.id.action_cancel)?.bind(menuState.cancelItemState)
+            findItem(R.id.action_import)?.bind(menuState.importItemState)
+            findItem(R.id.action_export)?.bind(menuState.exportItemState)
+            findItem(R.id.action_search)?.apply {
+                bind(menuState.searchItemState)
+                actionView?.let { actionView ->
+                    (actionView as SearchView).apply {
+                        setIconifiedByDefault(true)
+                        setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                            override fun onQueryTextSubmit(query: String?) = false
+                            override fun onQueryTextChange(newText: String?): Boolean {
+                                scenarioViewModel.updateSearchQuery(newText)
+                                return true
+                            }
+                        })
+                        addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+                            override fun onViewDetachedFromWindow(arg0: View) {
+                                scenarioViewModel.updateSearchQuery(null)
+                                scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SELECTION)
+                            }
+
+                            override fun onViewAttachedToWindow(arg0: View) {}
+                        })
+                    }
+                }
+            }
         }
     }
 
