@@ -32,8 +32,8 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.utils.DurationInputFilter
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionPauseBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
@@ -86,7 +86,7 @@ class PauseDialog(
             hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editPauseDurationLayout.apply {
-                textField.filters = arrayOf(DurationInputFilter())
+                textField.filters = arrayOf(MinMaxInputFilter(min = 1))
                 setLabel(R.string.input_field_label_pause_duration)
                 setOnTextChangedListener {
                     viewModel.setPauseDuration(if (it.isNotEmpty()) it.toString().toLong() else null)

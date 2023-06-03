@@ -21,25 +21,6 @@ import android.text.Spanned
 
 import kotlin.reflect.KClass
 
-/** Input filter for an Action duration. */
-class DurationInputFilter : InputFilter {
-
-    override fun filter(
-        source: CharSequence?,
-        start: Int,
-        end: Int,
-        dest: Spanned?,
-        dstart: Int,
-        dend: Int
-    ): CharSequence? {
-        try {
-            if (Integer.parseInt(dest.toString() + source.toString()) > 0) return null
-        } catch (_: NumberFormatException) { }
-        return ""
-    }
-
-}
-
 /** Input filter for a number. Ensure the value is within bounds. */
 class NumberInputFilter<T : Number>(private val type: KClass<T>): InputFilter {
 
@@ -77,8 +58,8 @@ class NumberInputFilter<T : Number>(private val type: KClass<T>): InputFilter {
 
 /** Input filter for a number between a min and a max. */
 class MinMaxInputFilter(
-    private val min: Int,
-    private val max: Int,
+    private val min: Int? = null,
+    private val max: Int? = null,
 ) : InputFilter {
 
     override fun filter(
@@ -91,7 +72,10 @@ class MinMaxInputFilter(
     ): CharSequence? {
         try {
             val input = (dest.toString() + source.toString()).toInt()
-            if (input in min..max) return null
+
+            val isOverMin = min == null || min <= input
+            val isBelowMax = max == null || input <= max
+            if (isOverMin && isBelowMax) return null
         } catch (_: NumberFormatException) { }
         return ""
     }

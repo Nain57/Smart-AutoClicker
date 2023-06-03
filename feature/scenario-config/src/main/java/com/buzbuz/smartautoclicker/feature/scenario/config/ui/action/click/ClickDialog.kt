@@ -94,7 +94,7 @@ class ClickDialog(
             hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editPressDurationLayout.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(0, GESTURE_DURATION_MAX_VALUE.toInt()))
+                textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_click_press_duration)
                 setOnTextChangedListener {
                     viewModel.setPressDuration(if (it.isNotEmpty()) it.toString().toLong() else null)

@@ -89,7 +89,7 @@ class SwipeDialog(
             hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editSwipeDurationLayout.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(0, GESTURE_DURATION_MAX_VALUE.toInt()))
+                textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_swipe_duration)
                 setOnTextChangedListener {
                     viewModel.setSwipeDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
