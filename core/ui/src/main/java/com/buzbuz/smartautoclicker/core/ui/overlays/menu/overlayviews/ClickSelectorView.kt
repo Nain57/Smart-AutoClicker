@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,10 +30,7 @@ import androidx.core.content.res.use
 
 import com.buzbuz.smartautoclicker.core.ui.R
 
-/**
- * Overlay view used as [com.buzbuz.smartautoclicker.core.dialog.OverlayMenuController.screenOverlayView] showing
- * the positions selected by the user.
- */
+/** Overlay view used as screenOverlayView showing the positions selected by the user. */
 class ClickSelectorView(context: Context) : View(context) {
 
     /** Position of the first point selected. */
@@ -147,11 +144,11 @@ class ClickSelectorView(context: Context) : View(context) {
             super.onTouchEvent(event)
         }
 
-        onTouchListener?.invoke()
         when (selectionStep) {
-            FIRST -> position1 = PointF(event.x, event.y)
-            SECOND -> position2 = PointF(event.x, event.y)
+            FIRST -> position1 = event.getValidPosition()
+            SECOND -> position2 = event.getValidPosition()
         }
+        onTouchListener?.invoke()
 
         invalidate()
         return true
@@ -177,6 +174,13 @@ class ClickSelectorView(context: Context) : View(context) {
         canvas.drawCircle(position.x, position.y, innerCircleRadius, innerPaint)
         canvas.drawCircle(position.x, position.y, backgroundCircleRadius, backgroundPaint)
     }
+
+    /** Get the position of the motion event and ensure it is within screen bounds. */
+    private fun MotionEvent.getValidPosition(): PointF =
+        PointF(
+            x.coerceIn(0f, width.toFloat()),
+            y.coerceIn(0f, height.toFloat()),
+        )
 }
 
 /** Defines the different points captured by a [ClickSelectorView]. */
