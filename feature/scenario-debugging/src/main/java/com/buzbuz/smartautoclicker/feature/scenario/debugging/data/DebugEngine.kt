@@ -75,6 +75,7 @@ internal class DebugEngine {
     fun onSessionStarted(context: Context, scenario: Scenario, events: List<Event>) {
         if (_isDebugging.value) return
         _isDebugging.value = true
+        _debugReport.value = null
 
         with(context.getDebugConfigPreferences()) {
             instantData = getIsDebugViewEnabled(context)
@@ -168,7 +169,10 @@ internal class DebugEngine {
             resetReplayCache()
             emit(null)
         }
-        if (!generateReport) return
+        if (!generateReport) {
+            _isDebugging.value = false
+            return
+        }
 
         sessionRecorder.onProcessingEnd()
 

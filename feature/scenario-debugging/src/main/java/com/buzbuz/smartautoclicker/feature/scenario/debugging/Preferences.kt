@@ -23,7 +23,7 @@ import android.content.SharedPreferences
 internal fun Context.getDebugConfigPreferences(): SharedPreferences =
     getSharedPreferences(
         DEBUG_CONFIGURATION_PREFERENCES_NAME,
-        Context.MODE_PRIVATE
+        Context.MODE_PRIVATE,
     )
 
 /** @return the isEnabled value for the debug view. */

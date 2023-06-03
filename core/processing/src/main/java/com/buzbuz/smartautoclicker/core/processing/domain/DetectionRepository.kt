@@ -95,13 +95,14 @@ class DetectionRepository private constructor(context: Context) {
         }
     }
 
-    suspend fun startDetection(progressListener: ProgressListener) {
+    suspend fun startDetection(context: Context, progressListener: ProgressListener) {
         val id = scenarioId.value ?: return
         val scenario = scenarioRepository.getScenario(id)
         val events = scenarioRepository.getCompleteEventList(id)
         val endCondition = scenarioRepository.getEndConditions(id)
 
         detectorEngine.value?.startDetection(
+            context = context,
             scenario = scenario,
             events = events,
             endConditions = endCondition,

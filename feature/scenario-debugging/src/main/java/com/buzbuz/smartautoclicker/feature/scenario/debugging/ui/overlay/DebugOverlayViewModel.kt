@@ -81,11 +81,16 @@ class DebugModel(application: Application) : AndroidViewModel(application) {
     /** True when a debug report is available. */
     val isDebugReportReady: Flow<Boolean> = repository.debugReport
         .combine(isDebugReportConsumed) { debugReport, consumed ->
-            if (debugReport == null) {
-                _isDebugReportConsumed.value = false
-                false
-            } else {
-                !consumed
+            when {
+                debugReport == null -> {
+                    _isDebugReportConsumed.value = false
+                    false
+                }
+                !consumed -> {
+                    delay(1000)
+                    true
+                }
+                else -> false
             }
         }
 

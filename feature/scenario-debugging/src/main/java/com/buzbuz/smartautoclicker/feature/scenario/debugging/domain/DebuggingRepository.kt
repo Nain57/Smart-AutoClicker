@@ -28,6 +28,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.debugging.data.DebugEngine
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugViewEnabled
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.putIsDebugReportEnabled
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.putIsDebugViewEnabled
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -106,10 +108,16 @@ class DebuggingRepository private constructor(context: Context) {
             debugEngine.cancelCurrentProcessing()
     }
 
-
     fun isDebugViewEnabled(context: Context): Boolean =
         sharedPreferences.getIsDebugViewEnabled(context)
 
     fun isDebugReportEnabled(context: Context): Boolean =
         sharedPreferences.getIsDebugReportEnabled(context)
+
+    fun setDebuggingConfig(debugView: Boolean, debugReport: Boolean) =
+        sharedPreferences
+            .edit()
+            .putIsDebugViewEnabled(debugView)
+            .putIsDebugReportEnabled(debugReport)
+            .apply()
 }
