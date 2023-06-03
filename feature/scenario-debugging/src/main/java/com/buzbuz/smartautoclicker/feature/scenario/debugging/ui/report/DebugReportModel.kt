@@ -43,8 +43,10 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
 
     /** Repository providing access to the click database. */
     private val repository = Repository.getRepository(application.applicationContext)
+    /** Repository for the processing session debugging info. */
+    private val debuggingRepository = DebuggingRepository.getDebuggingRepository(application)
     /** The debug report of the last detection session. */
-    private val debugReport: Flow<DebugReport?> = DebuggingRepository.getDebuggingRepository(application).debugReport
+    private val debugReport: Flow<DebugReport?> = debuggingRepository.debugReport
 
     /** The dialog is represented by a list. This is the items populating it. */
     val reportItems = debugReport.map { report ->
@@ -85,6 +87,11 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
 
         onBitmapLoaded.invoke(null)
         return null
+    }
+
+    /** Consume the current debug report. */
+    fun consumeDebugReport() {
+        debuggingRepository.consumeDebugReport()
     }
 
     private fun newScenarioItem(debugInfo: DebugReport) =

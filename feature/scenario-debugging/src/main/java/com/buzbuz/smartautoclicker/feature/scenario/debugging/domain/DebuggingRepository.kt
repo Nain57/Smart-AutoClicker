@@ -108,6 +108,8 @@ class DebuggingRepository private constructor(context: Context) {
             debugEngine.cancelCurrentProcessing()
     }
 
+    fun consumeDebugReport() = debugEngine.consumeDebugReport()
+
     fun isDebugViewEnabled(context: Context): Boolean =
         sharedPreferences.getIsDebugViewEnabled(context)
 

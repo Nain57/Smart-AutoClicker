@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.data
 
+import androidx.annotation.CallSuper
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.ProcessingDebugInfo
 
@@ -53,6 +54,13 @@ internal open class Recorder {
         minProcessingTimeMs = processingTimingRecorder.minTimeMs,
         maxProcessingTimeMs = processingTimingRecorder.maxTimeMs,
     )
+
+    @CallSuper
+    open fun clear() {
+        count = 0
+        successCount = 0
+        processingTimingRecorder.clear()
+    }
 }
 
 /** Record the processing of a condition event. */
@@ -77,6 +85,11 @@ internal class ConditionRecorder : Recorder() {
         minConfidenceRate = if (successCount != 0L) detectionResultsRecorder.min else 0.0,
         maxConfidenceRate = if (successCount != 0L) detectionResultsRecorder.max else 0.0,
     )
+
+    override fun clear() {
+        super.clear()
+        detectionResultsRecorder.clear()
+    }
 
     override fun onProcessingEnd(success: Boolean) =
         throw UnsupportedOperationException("You must use onProcessingEnd(Boolean, Double?)")
@@ -112,6 +125,13 @@ internal class TimingRecorder {
         minTimeMs = min(processingDurationMs, minTimeMs)
         maxTimeMs = max(processingDurationMs, maxTimeMs)
     }
+
+    fun clear() {
+        currentRecordStartTimeMs = INVALID_TIME_VALUE
+        totalTimeMs = 0L
+        minTimeMs = Long.MAX_VALUE
+        maxTimeMs = Long.MIN_VALUE
+    }
 }
 
 /** Record the min, max and total values for an event. */
@@ -131,6 +151,12 @@ internal class MinMaxTotalRecorder {
         total += newResult
         min = min(newResult, min)
         max = max(newResult, max)
+    }
+
+    fun clear() {
+        total = 0.0
+        min = Double.MAX_VALUE
+        max = Double.MIN_VALUE
     }
 }
 

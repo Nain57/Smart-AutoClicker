@@ -268,8 +268,6 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
 
     private fun showDebugReportDialog(reportReady: Boolean) {
         if (!reportReady) return
-
-        debuggingViewModel.consumeDebugReport()
         showSubOverlay(DebugReportDialog(context))
     }
 }

@@ -76,6 +76,11 @@ class DebugReportDialog(context: Context): OverlayDialogController(context, R.st
         }
     }
 
+    override fun onDestroyed() {
+        viewModel.consumeDebugReport()
+        super.onDestroyed()
+    }
+
     private fun updateReport(reportItems: List<DebugReportItem>) {
         listBinding.updateState(reportItems)
         reportAdapter.submitList(reportItems)

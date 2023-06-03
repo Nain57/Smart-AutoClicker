@@ -77,6 +77,11 @@ internal class DebugEngine {
         _isDebugging.value = true
         _debugReport.value = null
 
+        sessionRecorder.clear()
+        imageRecorder.clear()
+        eventsRecorderMap.clear()
+        conditionsRecorderMap.clear()
+
         with(context.getDebugConfigPreferences()) {
             instantData = getIsDebugViewEnabled(context)
             generateReport = getIsDebugReportEnabled(context)
@@ -219,6 +224,10 @@ internal class DebugEngine {
     fun cancelCurrentProcessing() {
         currProcEvtId = null
         currProcCondId = null
+    }
+
+    fun consumeDebugReport() {
+        _debugReport.value = null
     }
 }
 
