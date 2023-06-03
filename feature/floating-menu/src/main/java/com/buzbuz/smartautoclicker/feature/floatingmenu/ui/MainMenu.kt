@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.view.ContextThemeWrapper
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +39,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioD
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
+import com.google.android.material.color.DynamicColors
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -203,7 +205,7 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
     }
 
     private fun showScenarioSaveErrorDialog() {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
             .setTitle(R.string.dialog_overlay_title_warning)
             .setMessage(R.string.message_scenario_saving_error)
             .setPositiveButton(R.string.button_dialog_modify) { _: DialogInterface, _: Int ->
@@ -217,7 +219,6 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
                 window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
             }
             .show()
-        showScenarioConfigDialog()
     }
 
     /**
