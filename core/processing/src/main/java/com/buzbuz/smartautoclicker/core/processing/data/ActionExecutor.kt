@@ -75,26 +75,30 @@ internal class ActionExecutor(
         val clickPath = Path()
         val clickBuilder = GestureDescription.Builder()
 
-        if (click.clickOnCondition) {
-            conditionPosition?.let { conditionCenter ->
-                clickPath.moveTo(conditionCenter.x, conditionCenter.y, randomize)
-            } ?: run {
-                Log.w(TAG, "Can't click on position, there is no condition position")
-                return
+        try {
+            if (click.clickOnCondition) {
+                conditionPosition?.let { conditionCenter ->
+                    clickPath.moveTo(conditionCenter.x, conditionCenter.y, randomize)
+                } ?: run {
+                    Log.w(TAG, "Can't click on position, there is no condition position")
+                    return
+                }
+            } else {
+                clickPath.moveTo(click.x!!, click.y!!, randomize)
             }
-        } else {
-            clickPath.moveTo(click.x!!, click.y!!, randomize)
-        }
-        clickBuilder.addStroke(
-            GestureDescription.StrokeDescription(
-                clickPath,
-                0,
-                if (randomize) random.getRandomizedDuration(click.pressDuration!!) else click.pressDuration!!,
+            clickBuilder.addStroke(
+                GestureDescription.StrokeDescription(
+                    clickPath,
+                    0,
+                    if (randomize) random.getRandomizedDuration(click.pressDuration!!) else click.pressDuration!!,
+                )
             )
-        )
 
-        withContext(Dispatchers.Main) {
-            androidExecutor.executeGesture(clickBuilder.build())
+            withContext(Dispatchers.Main) {
+                androidExecutor.executeGesture(clickBuilder.build())
+            }
+        } catch (ex: IllegalArgumentException) {
+            Log.e(TAG, "Can't execute click, description is invalid $click", ex)
         }
     }
 
@@ -106,18 +110,22 @@ internal class ActionExecutor(
         val swipePath = Path()
         val swipeBuilder = GestureDescription.Builder()
 
-        swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, randomize)
-        swipePath.lineTo(swipe.toX!!, swipe.toY!!, randomize)
-        swipeBuilder.addStroke(
-            GestureDescription.StrokeDescription(
-                swipePath,
-                0,
-                if (randomize) random.getRandomizedDuration(swipe.swipeDuration!!) else swipe.swipeDuration!!,
+        try {
+            swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, randomize)
+            swipePath.lineTo(swipe.toX!!, swipe.toY!!, randomize)
+            swipeBuilder.addStroke(
+                GestureDescription.StrokeDescription(
+                    swipePath,
+                    0,
+                    if (randomize) random.getRandomizedDuration(swipe.swipeDuration!!) else swipe.swipeDuration!!,
+                )
             )
-        )
 
-        withContext(Dispatchers.Main) {
-            androidExecutor.executeGesture(swipeBuilder.build())
+            withContext(Dispatchers.Main) {
+                androidExecutor.executeGesture(swipeBuilder.build())
+            }
+        } catch (ex: IllegalArgumentException) {
+            Log.e(TAG, "Can't execute swipe, description is invalid $swipe", ex)
         }
     }
 
@@ -177,13 +185,13 @@ internal class ActionExecutor(
     }
 
     private fun Random.getRandomizedPosition(position: Int): Float = nextInt(
-        position - RANDOMIZATION_POSITION_MAX_OFFSET_PX,
-        position + RANDOMIZATION_POSITION_MAX_OFFSET_PX + 1,
+        from = max(position - RANDOMIZATION_POSITION_MAX_OFFSET_PX, 0),
+        until = position + RANDOMIZATION_POSITION_MAX_OFFSET_PX + 1,
     ).toFloat()
 
     private fun Random.getRandomizedDuration(duration: Long): Long = nextLong(
-        max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
-        duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1,
+        from = max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
+        until = duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1,
     )
 }
 
