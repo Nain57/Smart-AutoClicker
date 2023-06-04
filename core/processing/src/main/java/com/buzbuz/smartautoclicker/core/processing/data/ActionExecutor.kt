@@ -27,12 +27,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.domain.model.action.putDomainExtra
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -75,30 +77,26 @@ internal class ActionExecutor(
         val clickPath = Path()
         val clickBuilder = GestureDescription.Builder()
 
-        try {
-            if (click.clickOnCondition) {
-                conditionPosition?.let { conditionCenter ->
-                    clickPath.moveTo(conditionCenter.x, conditionCenter.y, randomize)
-                } ?: run {
-                    Log.w(TAG, "Can't click on position, there is no condition position")
-                    return
-                }
-            } else {
-                clickPath.moveTo(click.x!!, click.y!!, randomize)
+        if (click.clickOnCondition) {
+            conditionPosition?.let { conditionCenter ->
+                clickPath.moveTo(conditionCenter.x, conditionCenter.y, randomize)
+            } ?: run {
+                Log.w(TAG, "Can't click on position, there is no condition position")
+                return
             }
-            clickBuilder.addStroke(
-                GestureDescription.StrokeDescription(
-                    clickPath,
-                    0,
-                    if (randomize) random.getRandomizedDuration(click.pressDuration!!) else click.pressDuration!!,
-                )
+        } else {
+            clickPath.moveTo(click.x!!, click.y!!, randomize)
+        }
+        clickBuilder.addStroke(
+            GestureDescription.StrokeDescription(
+                clickPath,
+                0,
+                if (randomize) random.getRandomizedGestureDuration(click.pressDuration!!) else click.pressDuration!!,
             )
+        )
 
-            withContext(Dispatchers.Main) {
-                androidExecutor.executeGesture(clickBuilder.build())
-            }
-        } catch (ex: IllegalArgumentException) {
-            Log.e(TAG, "Can't execute click, description is invalid $click", ex)
+        withContext(Dispatchers.Main) {
+            androidExecutor.executeGesture(clickBuilder.build())
         }
     }
 
@@ -110,22 +108,18 @@ internal class ActionExecutor(
         val swipePath = Path()
         val swipeBuilder = GestureDescription.Builder()
 
-        try {
-            swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, randomize)
-            swipePath.lineTo(swipe.toX!!, swipe.toY!!, randomize)
-            swipeBuilder.addStroke(
-                GestureDescription.StrokeDescription(
-                    swipePath,
-                    0,
-                    if (randomize) random.getRandomizedDuration(swipe.swipeDuration!!) else swipe.swipeDuration!!,
-                )
+        swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, randomize)
+        swipePath.lineTo(swipe.toX!!, swipe.toY!!, randomize)
+        swipeBuilder.addStroke(
+            GestureDescription.StrokeDescription(
+                swipePath,
+                0,
+                if (randomize) random.getRandomizedGestureDuration(swipe.swipeDuration!!) else swipe.swipeDuration!!,
             )
+        )
 
-            withContext(Dispatchers.Main) {
-                androidExecutor.executeGesture(swipeBuilder.build())
-            }
-        } catch (ex: IllegalArgumentException) {
-            Log.e(TAG, "Can't execute swipe, description is invalid $swipe", ex)
+        withContext(Dispatchers.Main) {
+            androidExecutor.executeGesture(swipeBuilder.build())
         }
     }
 
@@ -192,6 +186,11 @@ internal class ActionExecutor(
     private fun Random.getRandomizedDuration(duration: Long): Long = nextLong(
         from = max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
         until = duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1,
+    )
+
+    private fun Random.getRandomizedGestureDuration(duration: Long): Long = nextLong(
+        from = max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
+        until = min(duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1, GESTURE_DURATION_MAX_VALUE),
     )
 }
 
