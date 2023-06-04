@@ -20,7 +20,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 // Only apply gms/firebase plugins if we are building for the play store
-if (getGradle().getStartParameter().getTaskRequests().toString().contains("PlayStore")) {
+def isPlayStoreBuild = getGradle().getStartParameter().getTaskRequests().toString().contains("PlayStore")
+if (isPlayStoreBuild) {
     apply plugin: "com.google.gms.google-services"
     apply plugin: "com.google.firebase.crashlytics"
 }
@@ -61,7 +62,7 @@ android {
     if (signingStoreFile.exists()) {
         signingConfigs {
             release {
-                storeFile file('./smartautoclicker.jks')
+                storeFile signingStoreFile
                 storePassword signingProperties['signingStorePassword'] ?: rootProject.signingStorePassword
                 keyAlias signingProperties['signingKeyAlias'] ?: rootProject.signingKeyAlias
                 keyPassword signingProperties['signingKeyPassword'] ?: rootProject.signingKeyPassword
@@ -77,6 +78,13 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            if (isPlayStoreBuild) {
+                firebaseCrashlytics {
+                    nativeSymbolUploadEnabled true
+                    unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/playStoreRelease/out/lib'
+                }
+            }
         }
 
         debugFDroid {
@@ -125,6 +133,7 @@ dependencies {
     // Google Play Store version dependencies only
     playStoreImplementation platform("com.google.firebase:firebase-bom:${rootProject.ext.firebaseBomVersion}")
     playStoreImplementation 'com.google.firebase:firebase-crashlytics-ktx'
+    playStoreImplementation 'com.google.firebase:firebase-crashlytics-ndk'
 
     implementation project(path: ':core:detection')
     implementation project(path: ':core:display')
@@ -137,4 +146,12 @@ dependencies {
     implementation project(path: ':feature:floating-menu')
     implementation project(path: ':feature:scenario-config')
     implementation project(path: ':feature:scenario-debugging')
+}
+
+project.afterEvaluate {
+    tasks.findAll { task ->
+        task.name.startsWith("generateCrashlyticsSymbolFilePlayStoreRelease")
+    }.forEach {task ->
+        task.dependsOn("mergePlayStoreReleaseNativeLibs")
+    }
 }

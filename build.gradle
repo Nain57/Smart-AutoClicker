@@ -34,7 +34,7 @@ buildscript {
 
         // Google Mobile Services, only used for releaseGms build type
         classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.5'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
     }
 }
 
@@ -80,7 +80,7 @@ ext {
     robolectricVersion = '4.8.1'
 
     // Google PlayStore version dependencies
-    firebaseBomVersion = '30.4.0'
+    firebaseBomVersion = '32.1.0'
     billingVersion = "6.0.0"
 }
 
