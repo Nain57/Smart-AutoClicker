@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugViewEnabled
@@ -31,13 +32,15 @@ import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebugInfo
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebugReport
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.ProcessingDebugInfo
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /** Engine for the debugging of a scenario processing. */
-@OptIn(ExperimentalCoroutinesApi::class)
-internal class DebugEngine {
+internal class DebugEngine : ProgressListener {
 
+    /** Mutex to ensure correct synchronization of received progress events. */
+    private val mutex = Mutex()
     /** Record the detection session duration. */
     private val sessionRecorder = Recorder()
     /** Record all images processed. */
@@ -70,17 +73,12 @@ internal class DebugEngine {
     val debugReport: Flow<DebugReport?> = _debugReport
 
     /** The DebugInfo for the current image. */
-    val currentInfo = MutableSharedFlow<DebugInfo?>()
+    val currentInfo = MutableStateFlow<DebugInfo?>(null)
 
-    fun onSessionStarted(context: Context, scenario: Scenario, events: List<Event>) {
+    override suspend fun onSessionStarted(context: Context, scenario: Scenario, events: List<Event>) = mutex.withLock {
         if (_isDebugging.value) return
         _isDebugging.value = true
         _debugReport.value = null
-
-        sessionRecorder.clear()
-        imageRecorder.clear()
-        eventsRecorderMap.clear()
-        conditionsRecorderMap.clear()
 
         with(context.getDebugConfigPreferences()) {
             instantData = getIsDebugViewEnabled(context)
@@ -93,13 +91,13 @@ internal class DebugEngine {
         if (generateReport) sessionRecorder.onProcessingStart()
     }
 
-    fun onImageProcessingStarted() {
+    override suspend fun onImageProcessingStarted() = mutex.withLock {
         if (!generateReport) return
 
         imageRecorder.onProcessingStart()
     }
 
-    fun onEventProcessingStarted(event: Event) {
+    override suspend fun onEventProcessingStarted(event: Event) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcEvtId != null) throw IllegalStateException("start called without a complete")
@@ -110,7 +108,7 @@ internal class DebugEngine {
             .onProcessingStart()
     }
 
-    fun onConditionProcessingStarted(condition: Condition) {
+    override suspend fun onConditionProcessingStarted(condition: Condition) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcCondId != null) throw IllegalStateException("start called without a complete")
@@ -121,7 +119,7 @@ internal class DebugEngine {
             .onProcessingStart()
     }
 
-    fun onConditionProcessingCompleted(detectionResult: DetectionResult) {
+    override suspend fun onConditionProcessingCompleted(detectionResult: DetectionResult) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcCondId == null) throw IllegalStateException("completed called before start")
@@ -133,12 +131,12 @@ internal class DebugEngine {
         currProcCondId = null
     }
 
-    suspend fun onEventProcessingCompleted(
+    override suspend fun onEventProcessingCompleted(
         isEventMatched: Boolean,
         event: Event?,
         condition: Condition?,
         result: DetectionResult?,
-    ) {
+    ) = mutex.withLock {
         if (generateReport) {
             if (currProcEvtId == null) throw IllegalStateException("completed called before start")
 
@@ -159,21 +157,19 @@ internal class DebugEngine {
                 result.position.y + halfHeight
             )
 
-            currentInfo.emit(DebugInfo(event, condition, result, coordinates))
+            currentInfo.value = DebugInfo(event, condition, result, coordinates)
         }
     }
 
-    fun onImageProcessingCompleted() {
+    override suspend fun onImageProcessingCompleted() = mutex.withLock {
         if (!generateReport) return
 
         imageRecorder.onProcessingEnd()
     }
 
-    suspend fun onSessionEnded() {
-        currentInfo.apply {
-            resetReplayCache()
-            emit(null)
-        }
+    override suspend fun onSessionEnded() = mutex.withLock {
+        currentInfo.value = null
+
         if (!generateReport) {
             _isDebugging.value = false
             return
@@ -218,10 +214,17 @@ internal class DebugEngine {
             conditionReport,
         )
 
+        currProcEvtId = null
+        currProcCondId = null
+        sessionRecorder.clear()
+        imageRecorder.clear()
+        eventsRecorderMap.clear()
+        conditionsRecorderMap.clear()
+
         _isDebugging.value = false
     }
 
-    fun cancelCurrentProcessing() {
+    override suspend fun cancelCurrentProcessing() = mutex.withLock {
         currProcEvtId = null
         currProcCondId = null
     }

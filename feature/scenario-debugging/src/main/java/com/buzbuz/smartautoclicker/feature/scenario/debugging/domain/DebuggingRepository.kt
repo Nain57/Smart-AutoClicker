@@ -75,38 +75,7 @@ class DebuggingRepository private constructor(context: Context) {
         .filter { it?.detectionResult?.isDetected ?: false }
 
     /** The listener upon scenario detection progress. Must be set at detection start in order to get debugging info. */
-    val detectionProgressListener: ProgressListener = object : ProgressListener {
-        override fun onSessionStarted(context: Context, scenario: Scenario, events: List<Event>) =
-            debugEngine.onSessionStarted(context, scenario, events)
-
-        override fun onImageProcessingStarted() =
-            debugEngine.onImageProcessingStarted()
-
-        override fun onEventProcessingStarted(event: Event) =
-            debugEngine.onEventProcessingStarted(event)
-
-        override fun onConditionProcessingStarted(condition: Condition) =
-            debugEngine.onConditionProcessingStarted(condition)
-
-        override fun onConditionProcessingCompleted(detectionResult: DetectionResult) =
-            debugEngine.onConditionProcessingCompleted(detectionResult)
-
-        override suspend fun onEventProcessingCompleted(
-            isEventMatched: Boolean,
-            event: Event?,
-            condition: Condition?,
-            result: DetectionResult?,
-        ) = debugEngine.onEventProcessingCompleted(isEventMatched, event, condition, result)
-
-        override fun onImageProcessingCompleted() =
-            debugEngine.onImageProcessingCompleted()
-
-        override suspend fun onSessionEnded() =
-            debugEngine.onSessionEnded()
-
-        override fun cancelCurrentProcessing() =
-            debugEngine.cancelCurrentProcessing()
-    }
+    val detectionProgressListener: ProgressListener = debugEngine
 
     fun consumeDebugReport() = debugEngine.consumeDebugReport()
 

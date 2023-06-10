@@ -25,15 +25,15 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
 interface ProgressListener {
 
-    fun onSessionStarted(context: Context, scenario: Scenario, events: List<Event>)
+    suspend fun onSessionStarted(context: Context, scenario: Scenario, events: List<Event>)
 
-    fun onImageProcessingStarted()
+    suspend fun onImageProcessingStarted()
 
-    fun onEventProcessingStarted(event: Event)
+    suspend fun onEventProcessingStarted(event: Event)
 
-    fun onConditionProcessingStarted(condition: Condition)
+    suspend fun onConditionProcessingStarted(condition: Condition)
 
-    fun onConditionProcessingCompleted(detectionResult: DetectionResult)
+    suspend fun onConditionProcessingCompleted(detectionResult: DetectionResult)
 
     suspend fun onEventProcessingCompleted(
         isEventMatched: Boolean,
@@ -42,11 +42,11 @@ interface ProgressListener {
         result: DetectionResult?,
     )
 
-    fun onImageProcessingCompleted()
+    suspend fun onImageProcessingCompleted()
 
     suspend fun onSessionEnded()
 
-    fun cancelCurrentProcessing()
+    suspend fun cancelCurrentProcessing()
 }
 
 internal suspend fun ProgressListener.onEventProcessingCompleted(result: ProcessorResult) =

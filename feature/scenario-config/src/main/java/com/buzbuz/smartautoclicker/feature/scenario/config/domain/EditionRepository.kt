@@ -182,7 +182,7 @@ class EditionRepository private constructor(context: Context) {
     // --- END CONDITION - END ---
 
     /** Cancel all changes made during the edition. */
-    fun stopEdition(): Unit =scenarioEditor.stopEdition()
+    fun stopEdition(): Unit = scenarioEditor.stopEdition()
 
     // --- SCENARIO - END ---
 }

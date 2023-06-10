@@ -110,7 +110,7 @@ internal class ScenarioProcessor(
 
         for (event in scenarioState.getEnabledEvents()) {
             // No conditions ? This should not happen, skip this event
-            if (event.conditions.isEmpty() == true) {
+            if (event.conditions.isEmpty()) {
                 continue
             }
 
