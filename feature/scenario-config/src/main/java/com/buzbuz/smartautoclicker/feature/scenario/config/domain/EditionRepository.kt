@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
 import android.content.Context
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -35,6 +36,8 @@ class EditionRepository private constructor(context: Context) {
 
     companion object {
 
+        /** Tag for logs */
+        private const val TAG = "EditionRepository"
         /** Singleton preventing multiple instances of the EditionRepository at the same time. */
         @Volatile
         private var INSTANCE: EditionRepository? = null
@@ -68,12 +71,18 @@ class EditionRepository private constructor(context: Context) {
     // --- SCENARIO - START ---
 
     /** Set the scenario to be configured. */
-    suspend fun startEdition(scenarioId: Long) {
+    suspend fun startEdition(scenarioId: Long): Boolean {
+        val scenario = repository.getScenario(scenarioId) ?: run {
+            Log.e(TAG, "Can't start edition, scenario $scenarioId not found")
+            return false
+        }
+
         scenarioEditor.startEdition(
-            scenario = repository.getScenario(scenarioId),
+            scenario = scenario,
             events = repository.getEvents(scenarioId),
             endConditions = repository.getEndConditions(scenarioId),
         )
+        return true
     }
 
     /** Save editions changes in the database. */

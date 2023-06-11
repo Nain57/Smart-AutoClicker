@@ -48,7 +48,7 @@ abstract class ListEditor<Item>(
     }
 
     private val referenceEditedItem: MutableStateFlow<Item?> = MutableStateFlow(null)
-    protected val _editedItem: MutableStateFlow<Item?> = MutableStateFlow((null))
+    private val _editedItem: MutableStateFlow<Item?> = MutableStateFlow((null))
     val editedItem: StateFlow<Item?> = _editedItem
     val editedItemState: Flow<EditedElementState<Item>> = combine(referenceEditedItem, _editedItem) { ref, edit ->
         val hasChanged =
