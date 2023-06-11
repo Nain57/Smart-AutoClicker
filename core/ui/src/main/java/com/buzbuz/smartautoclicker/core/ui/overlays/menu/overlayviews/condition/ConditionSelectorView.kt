@@ -29,7 +29,6 @@ import android.view.MotionEvent
 import android.view.View
 
 import androidx.core.content.res.use
-import androidx.core.graphics.minus
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.hints.HintsComponent
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
@@ -128,7 +127,12 @@ class ConditionSelectorView(
      */
     private fun verifySelectorValidity() {
         selectorValidityTempValue.set(RectF(selector.selectedArea))
-        if (selectorValidityTempValue.intersect(capture.captureArea.minus(CAPTURE_MINIMUM_SIZE)) != isSelectorValid) {
+
+        val isSelectorOverCapture = selectorValidityTempValue.intersect(capture.captureArea)
+        val isBiggerThanMinimumSize = selectorValidityTempValue.width() >= CAPTURE_MINIMUM_SIZE
+                && selectorValidityTempValue.height() >= CAPTURE_MINIMUM_SIZE
+
+        if ((isSelectorOverCapture && isBiggerThanMinimumSize) != isSelectorValid) {
             isSelectorValid = !isSelectorValid
             onSelectorValidityChanged(isSelectorValid)
         }
