@@ -91,16 +91,6 @@ abstract class EventDao {
     abstract suspend fun getEventsIds(scenarioId: Long): List<Long>
 
     /**
-     * Get the list of events for a scenario ordered by priority.
-     *
-     * @param scenarioId the identifier of the scenario to get the events from.
-     * @return the flow on the list of events.
-     */
-    @Transaction
-    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId AND id=:eventId")
-    abstract fun getEvent(scenarioId: Long, eventId: Long): Flow<CompleteEventEntity>
-
-    /**
      * Add an event to the database.
      * @param event the event to be added.
      */

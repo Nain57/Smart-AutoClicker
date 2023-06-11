@@ -123,10 +123,12 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun startScenarioEdition() {
+    fun startScenarioEdition(onEditionStarted: () -> Unit) {
         scenarioDbId.value?.let { scenarioDatabaseId ->
             viewModelScope.launch(Dispatchers.IO) {
-                editionRepository.startEdition(scenarioDatabaseId)
+                if (editionRepository.startEdition(scenarioDatabaseId)) {
+                    withContext(Dispatchers.Main) { onEditionStarted() }
+                }
             }
         }
     }

@@ -69,13 +69,13 @@ class EventsEditor(private val onDeleteEvent: (Event) -> Unit): ListEditor<Event
     }
 
     private fun onEditedEventConditionsUpdated(conditions: List<Condition>) {
-        _editedItem.value?.let { event ->
+        editedItem.value?.let { event ->
             updateEditedItem(event.copy(conditions = conditions))
         }
     }
 
     private fun onEditedEventActionsUpdated(actions: List<Action>) {
-        _editedItem.value?.let { event ->
+        editedItem.value?.let { event ->
             updateEditedItem(event.copy(actions = actions))
         }
     }

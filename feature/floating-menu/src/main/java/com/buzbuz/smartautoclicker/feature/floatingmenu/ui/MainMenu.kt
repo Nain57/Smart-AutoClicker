@@ -139,8 +139,9 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
                 }
             }
             R.id.btn_click_list -> {
-                viewModel.startScenarioEdition()
-                showScenarioConfigDialog()
+                viewModel.startScenarioEdition {
+                    showScenarioConfigDialog()
+                }
             }
             R.id.btn_stop -> destroy()
         }

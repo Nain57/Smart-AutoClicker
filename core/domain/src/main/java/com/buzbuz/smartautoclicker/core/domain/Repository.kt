@@ -113,7 +113,7 @@ interface Repository {
      * @param scenarioId the identifier of the scenario.
      * @return the scenario.
      */
-    suspend fun getScenario(scenarioId: Long): Scenario
+    suspend fun getScenario(scenarioId: Long): Scenario?
 
     /**
      * Get the list of events for a given scenario.

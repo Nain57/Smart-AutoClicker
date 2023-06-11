@@ -89,8 +89,8 @@ internal class RepositoryImpl internal constructor(
         entityPrimaryKeySupplier = { endConditionEntity -> endConditionEntity.id },
     )
 
-    override suspend fun getScenario(scenarioId: Long): Scenario =
-        scenarioDao.getScenario(scenarioId).toScenario()
+    override suspend fun getScenario(scenarioId: Long): Scenario? =
+        scenarioDao.getScenario(scenarioId)?.toScenario()
 
     override suspend fun getEvents(scenarioId: Long): List<Event> =
         eventDao.getCompleteEvents(scenarioId).map { it.toEvent() }

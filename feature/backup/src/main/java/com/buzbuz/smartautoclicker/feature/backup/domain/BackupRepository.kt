@@ -72,7 +72,7 @@ internal class BackupRepository private constructor(context: Context) {
         launch {
             backupEngine.createBackup(
                 zipFileUri,
-                scenarios.map {
+                scenarios.mapNotNull {
                     database.scenarioDao().getCompleteScenario(it)
                 },
                 screenSize,
