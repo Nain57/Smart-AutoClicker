@@ -146,6 +146,7 @@ dependencies {
     implementation project(path: ':feature:floating-menu')
     implementation project(path: ':feature:scenario-config')
     implementation project(path: ':feature:scenario-debugging')
+    implementation project(path: ':feature:tutorial')
 }
 
 project.afterEvaluate {
