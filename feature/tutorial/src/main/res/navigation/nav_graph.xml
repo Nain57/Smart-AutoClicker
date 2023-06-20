@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    tools:ignore="InvalidNavigation">
+
+    <fragment
+        android:id="@+id/fragment_intro"
+        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.intro.TutorialIntroFragment"
+        android:label="fragment_one"
+        tools:layout="@layout/fragment_tutorial_intro">
+
+        <action
+            android:id="@+id/tutorial_intro_to_list"
+            app:destination="@id/fragment_tutorial_list" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_tutorial_list"
+        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.list.TutorialListFragment"
+        android:label="fragment_two"
+        tools:layout="@layout/fragment_tutorial_list">
+
+        <action
+            android:id="@+id/tutorial_list_to_intro"
+            app:destination="@id/fragment_intro"/>
+
+        <action
+            android:id="@+id/tutorial_list_to_game"
+            app:destination="@id/fragment_game"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_game"
+        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.game.TutorialGameFragment"
+        android:label="fragment_two"
+        tools:layout="@layout/fragment_tutorial_game">
+
+        <argument
+            android:name="gameIndex"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+    </fragment>
+
+</navigation>

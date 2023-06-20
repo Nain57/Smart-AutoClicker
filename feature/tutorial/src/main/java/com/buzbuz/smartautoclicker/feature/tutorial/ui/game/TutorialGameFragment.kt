@@ -31,6 +31,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.navArgs
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialGameBinding
@@ -49,10 +50,12 @@ class TutorialGameFragment : Fragment() {
     private val viewModel: TutorialGameViewModel by viewModels()
     /** ViewBinding containing the views for this fragment. */
     private lateinit var viewBinding: FragmentTutorialGameBinding
+    /** Start arguments for this fragment. */
+    private val args: TutorialGameFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.toFirstGame()
+        viewModel.selectGame(args.gameIndex)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

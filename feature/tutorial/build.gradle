@@ -18,6 +18,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -55,6 +56,9 @@ dependencies {
     implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
     implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${rootProject.androidxNavigationVersion}"
+    implementation "androidx.navigation:navigation-ui-ktx:${rootProject.androidxNavigationVersion}"
+    implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 

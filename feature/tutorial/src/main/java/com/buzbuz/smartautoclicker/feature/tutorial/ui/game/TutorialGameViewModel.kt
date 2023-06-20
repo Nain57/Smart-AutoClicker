@@ -84,8 +84,8 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
         currentGame.value?.stop()
     }
 
-    fun toFirstGame() {
-        tutorialRepository.setGameIndex(0)
+    fun selectGame(gameIndex: Int) {
+        tutorialRepository.setGameIndex(gameIndex)
     }
 
     fun toNextGame() {
