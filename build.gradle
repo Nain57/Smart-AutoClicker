@@ -19,6 +19,7 @@
 buildscript {
     ext.kotlin_version = '1.8.10'
     ext.kotlinx_version = '1.6.3-native-mt'
+    ext.navigation_plugin_version = '2.6.0'
 
     repositories {
         google()
@@ -29,8 +30,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_plugin_version"
 
         // Google Mobile Services, only used for releaseGms build type
         classpath 'com.google.gms:google-services:4.3.15'
@@ -55,10 +55,11 @@ ext {
     androidxCardViewVersion = '1.0.0'
     androidxConstraintLayoutVersion = '2.1.4'
     androidxCoreVersion = '1.10.1'
+    androidxFragmentVersion = '1.5.7'
     androidxLifecycleVersion = '2.6.1'
     androidxLifecycleExtensionVersion = '2.2.0'
+    androidxNavigationVersion = '2.6.0'
     androidxRecyclerViewVersion = '1.3.0'
-    androidxFragmentVersion = '1.5.7'
     androidxRoomVersion = '2.5.1'
     androidxVectorDrawableVersion = '1.1.0'
 

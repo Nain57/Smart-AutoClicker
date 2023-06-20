@@ -45,7 +45,7 @@ class TutorialRepository(gamesDataSource: TutorialGamesDataSource) {
         }
     }
 
-    private val games: List<TutorialGame> = gamesDataSource.tutorialGames
+    val games: List<TutorialGame> = gamesDataSource.tutorialGames
 
     private val currentGameIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     val currentGame: Flow<TutorialGame> = currentGameIndex.map { gameIndex -> games[gameIndex] }

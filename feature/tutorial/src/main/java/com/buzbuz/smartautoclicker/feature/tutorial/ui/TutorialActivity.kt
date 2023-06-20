@@ -16,14 +16,75 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 
+
 class TutorialActivity : AppCompatActivity() {
+
+    companion object {
+
+        private const val EXTRA_STARTING_PAGE = "extra_starting_page"
+
+        fun getStartIntent(context: Context, startingPage: TutorialStartingPage): Intent =
+            Intent(context, TutorialActivity::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtra(EXTRA_STARTING_PAGE, startingPage.name)
+
+        private fun Intent.getStartingPage(): TutorialStartingPage? {
+            val startingPageString = getStringExtra(EXTRA_STARTING_PAGE) ?: return null
+
+            return try {
+                TutorialStartingPage.valueOf(startingPageString)
+            } catch (ex: IllegalArgumentException) {
+                null
+            }
+        }
+    }
+
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
+
+        setSupportActionBar(findViewById(R.id.topAppBar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        setupNavGraph(intent.getStartingPage())
     }
+
+    private fun setupNavGraph(startingPage: TutorialStartingPage?) {
+        supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.let { fragment ->
+            val navHostFragment = (fragment as NavHostFragment)
+
+            navController = navHostFragment.navController
+            val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+
+            when (startingPage) {
+                TutorialStartingPage.INTRO -> navGraph.setStartDestination(R.id.fragment_intro)
+                TutorialStartingPage.LIST -> navGraph.setStartDestination(R.id.fragment_tutorial_list)
+                null -> finish()
+            }
+
+            navController.graph = navGraph
+        } ?: finish()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        if (!navController.navigateUp()) finish()
+        return true
+    }
+}
+
+enum class TutorialStartingPage {
+    INTRO,
+    LIST,
 }

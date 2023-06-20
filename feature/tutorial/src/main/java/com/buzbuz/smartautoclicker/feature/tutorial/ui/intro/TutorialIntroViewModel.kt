@@ -14,17 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.domain.game
+package com.buzbuz.smartautoclicker.feature.tutorial.ui.intro
 
-import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
 
-data class TutorialGame(
-    @StringRes val instructionsResId: Int,
-    val highScore: Int,
-    val gameRules: TutorialGameRules,
-): TutorialGameRules by gameRules
-
-
-
-
-
+class TutorialIntroViewModel : ViewModel() {
+}
