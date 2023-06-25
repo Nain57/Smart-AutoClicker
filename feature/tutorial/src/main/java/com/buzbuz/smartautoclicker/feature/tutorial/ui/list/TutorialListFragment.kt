@@ -64,6 +64,16 @@ class TutorialListFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.setOverlayVisibility(visible = false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.setOverlayVisibility(visible = true)
+    }
+
     private fun onIntroClicked() {
         findNavController().navigate(TutorialListFragmentDirections.tutorialListToIntro())
     }

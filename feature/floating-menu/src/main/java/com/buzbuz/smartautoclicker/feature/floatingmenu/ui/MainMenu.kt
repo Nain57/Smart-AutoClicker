@@ -30,7 +30,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.floatingmenu.R
@@ -39,6 +39,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioD
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialStartingPage
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

@@ -16,8 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.list
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.OneMovingTargetRules
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.OneStillTargetRules
@@ -30,9 +32,10 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGameRule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class TutorialListViewModel : ViewModel() {
+class TutorialListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository()
+    private val overlayManager: OverlayManager = OverlayManager.getInstance(application)
 
     val items: Flow<List<TutorialItem>> = flowOf(
         buildList {
@@ -42,6 +45,11 @@ class TutorialListViewModel : ViewModel() {
             }
         }
     )
+
+    fun setOverlayVisibility(visible: Boolean) {
+        if (visible) overlayManager.restoreAll()
+        else overlayManager.hideAll()
+    }
 
     private fun TutorialGameRules.toItem(index: Int): TutorialItem? =
         when (this) {

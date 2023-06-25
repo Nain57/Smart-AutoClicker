@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.R
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.DialogDebugReportBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
