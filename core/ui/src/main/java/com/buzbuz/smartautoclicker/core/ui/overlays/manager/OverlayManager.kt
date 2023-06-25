@@ -1,27 +1,14 @@
-/*
- * Copyright (C) 2023 Kevin Buzeau
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package com.buzbuz.smartautoclicker.core.ui.overlays
+package com.buzbuz.smartautoclicker.core.ui.overlays.manager
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-import com.buzbuz.smartautoclicker.core.ui.overlays.navigation.OverlayNavigationRequest
-import com.buzbuz.smartautoclicker.core.ui.overlays.navigation.OverlayNavigationRequestStack
+import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequest
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
 
 import java.io.PrintWriter
 
@@ -54,15 +41,22 @@ class OverlayManager private constructor(context: Context) {
 
     /** Contains all overlays, from root to top visible overlay. */
     private val overlayBackStack: ArrayDeque<BaseOverlay> = ArrayDeque(emptyList())
-    /** */
+    /** The stack containing the navigation requests. */
     private val overlayNavigationRequestStack = OverlayNavigationRequestStack()
+    /**
+     * Keep track of all overlay lifecycle state in the back stack when required.
+     * Useful when you need to save the state of the ui, change it and then restore its previous state.
+     */
+    private val lifecyclesRegistry = LifecycleStatesRegistry()
 
     private var isNavigating: Boolean = false
     private var closingChildren: Boolean = false
 
     fun navigateTo(context: Context, newOverlay: BaseOverlay, hideCurrent: Boolean = false) {
-        Log.d(TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
-                ", currently navigating: $isNavigating")
+        Log.d(
+            TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
+                    ", currently navigating: $isNavigating"
+        )
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateTo(newOverlay, hideCurrent))
         if (!isNavigating) executeNextNavigationRequest(context)
@@ -82,6 +76,36 @@ class OverlayManager private constructor(context: Context) {
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.CloseAll)
         if (!isNavigating) executeNextNavigationRequest(context)
+    }
+
+    fun hideAll() {
+        overlayBackStack.toMutableList().apply {
+            // Save the overlays states to restore them when restoreAll is called
+            lifecyclesRegistry.saveStates(this)
+
+            // Hide from top to bottom of the stack
+            reverse()
+            forEach { it.hide() }
+        }
+    }
+
+    fun restoreAll() {
+        val backStack = overlayBackStack.toMutableList()
+        val overlayStates = lifecyclesRegistry.restoreStates()
+
+        if (backStack.isEmpty() || overlayStates.isEmpty()) return
+
+        // Restore from bottom to top
+        backStack.forEach { overlay ->
+            overlayStates[overlay]?.let { state ->
+                when (state) {
+                    Lifecycle.State.STARTED -> overlay.start()
+                    Lifecycle.State.RESUMED -> overlay.resume()
+                    else -> Unit
+                }
+
+            } ?: Log.w(TAG, "State for overlay ${overlay.hashCode()} not found, can't restore state")
+        }
     }
 
     private fun executeNextNavigationRequest(context: Context) {

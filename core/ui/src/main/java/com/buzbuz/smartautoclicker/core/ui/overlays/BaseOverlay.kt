@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
 import com.google.android.material.color.DynamicColors
 
@@ -83,7 +84,7 @@ abstract class BaseOverlay internal constructor(
     private var shouldBeRecreated: Boolean = false
 
     override fun show() {
-        start()
+        resume()
     }
 
     override fun hide() {
