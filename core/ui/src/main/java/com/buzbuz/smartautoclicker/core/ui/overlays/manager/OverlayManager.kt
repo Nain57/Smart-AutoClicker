@@ -35,7 +35,7 @@ class OverlayManager private constructor(context: Context) {
     }
 
     /** The metrics of the device screen. */
-    protected val displayMetrics = DisplayMetrics.getInstance(context)
+    private val displayMetrics = DisplayMetrics.getInstance(context)
     /** The listener upon screen rotation. */
     private val orientationListener: (Context) -> Unit = ::onOrientationChanged
 
@@ -51,12 +51,11 @@ class OverlayManager private constructor(context: Context) {
 
     private var isNavigating: Boolean = false
     private var closingChildren: Boolean = false
+    private var topOverlay: Overlay? = null
 
     fun navigateTo(context: Context, newOverlay: BaseOverlay, hideCurrent: Boolean = false) {
-        Log.d(
-            TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
-                    ", currently navigating: $isNavigating"
-        )
+        Log.d(TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
+                    ", currently navigating: $isNavigating")
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateTo(newOverlay, hideCurrent))
         if (!isNavigating) executeNextNavigationRequest(context)
@@ -106,6 +105,20 @@ class OverlayManager private constructor(context: Context) {
 
             } ?: Log.w(TAG, "State for overlay ${overlay.hashCode()} not found, can't restore state")
         }
+    }
+
+    fun setTopOverlay(context: Context, overlay: Overlay) {
+        topOverlay = overlay.apply {
+            create(
+                appContext = context,
+                dismissListener = { _, _ -> topOverlay = null },
+            )
+            resume()
+        }
+    }
+
+    fun removeTopOverlay() {
+        topOverlay?.destroy()
     }
 
     private fun executeNextNavigationRequest(context: Context) {
@@ -163,6 +176,8 @@ class OverlayManager private constructor(context: Context) {
     }
 
     private fun executeCloseAll() {
+        topOverlay?.destroy()
+
         if (overlayBackStack.isEmpty()) {
             isNavigating = false
             return
