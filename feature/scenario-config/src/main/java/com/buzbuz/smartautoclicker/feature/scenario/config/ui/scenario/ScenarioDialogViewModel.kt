@@ -17,10 +17,10 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.NavigationViewModel
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 /** ViewModel for the [ScenarioDialog] and its content. */
-class ScenarioDialogViewModel(application: Application) : NavigationViewModel(application) {
+class ScenarioDialogViewModel(application: Application): AndroidViewModel(application) {
 
     private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
 

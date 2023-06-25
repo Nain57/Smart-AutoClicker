@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.dialog
 
-import android.content.Context
 import android.content.res.Configuration
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -36,10 +35,7 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.ViewBottomNavBarBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView
 
-abstract class NavBarDialogController(
-    context: Context,
-    @StyleRes theme: Int,
-) : OverlayDialogController(context, theme) {
+abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()
@@ -123,12 +119,12 @@ abstract class NavBarDialogController(
         contentMap[navBarView.selectedItemId]?.pause()
     }
 
-    override fun onDestroyed() {
+    override fun onDestroy() {
         contentMap.values.forEach { content ->
             content.destroy()
         }
         contentMap.clear()
-        super.onDestroyed()
+        super.onDestroy()
     }
 
     protected fun setMissingInputBadge(navItemId: Int, haveMissingInput: Boolean) {
@@ -163,7 +159,7 @@ abstract class NavBarDialogController(
 
     private fun createContentView(itemId: Int): NavBarDialogContent =
         onCreateContent(itemId).apply {
-            create(this@NavBarDialogController, baseViewBinding.dialogContent, itemId)
+            create(this@NavBarDialog, baseViewBinding.dialogContent, itemId)
         }
 
     /**

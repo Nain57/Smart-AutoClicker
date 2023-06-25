@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.endcondition
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -39,10 +38,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class EventSelectionDialog(
-    context: Context,
     private val eventList: List<Event>,
     private val onEventClicked: (Event) -> Unit,
-): OverlayDialogController(context, R.style.ScenarioConfigTheme) {
+): OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseSelectionBinding
@@ -55,7 +53,7 @@ class EventSelectionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_event_selection)
                 buttonSave.visibility = View.GONE
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener { back() }
             }
         }
 
@@ -83,7 +81,7 @@ class EventSelectionDialog(
      */
     private fun onEventSelected(event: Event) {
         onEventClicked(event)
-        destroy()
+        back()
     }
 }
 

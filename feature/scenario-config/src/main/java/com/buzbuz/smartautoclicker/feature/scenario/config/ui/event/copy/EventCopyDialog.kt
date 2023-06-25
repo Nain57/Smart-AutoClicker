@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy
 
-import android.content.Context
 import android.content.DialogInterface
 
 import androidx.lifecycle.Lifecycle
@@ -37,9 +36,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 class EventCopyDialog(
-    context: Context,
     private val onEventSelected: (Event) -> Unit,
-) : CopyDialog(context, R.style.ScenarioConfigTheme) {
+) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */
     private val viewModel: EventCopyModel by lazy { ViewModelProvider(this).get(EventCopyModel::class.java) }
@@ -95,8 +93,8 @@ class EventCopyDialog(
     }
 
     private fun notifySelectionAndDestroy(event: Event) {
+        back()
         onEventSelected(event)
-        destroy()
     }
 
     private fun updateEventList(newItems: List<EventCopyModel.EventCopyItem>?) {

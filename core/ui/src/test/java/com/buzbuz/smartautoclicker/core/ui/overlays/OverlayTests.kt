@@ -39,31 +39,31 @@ import org.mockito.MockitoAnnotations
 
 import org.robolectric.annotation.Config
 
-/** Test the [OverlayController] class. */
+/** Test the [BaseOverlay] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
-class OverlayControllerTests {
+class OverlayTests {
 
     /**
      * Tested class implementation redirecting the abstract method calls to the provided mock interface.
      * @param context the android context.
      * @param impl the mock called for each abstract method calls.
      */
-    class OverlayControllerTestImpl(context: Context, private val impl: OverlayControllerImpl? = null) : OverlayController(context) {
+    class OverlayTestImpl(context: Context, private val impl: OverlayImpl? = null) : BaseOverlay(context) {
         override fun onCreate() { impl?.onCreate() }
         override fun onStart() { impl?.onStart() }
         override fun onStop() { impl?.onStop() }
-        override fun onDestroyed() { impl?.onDismissed() }
-        fun publicShowSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
-            showSubOverlay(overlayController, hideCurrent)
+        override fun onDestroy() { impl?.onDismissed() }
+        fun publicShowSubOverlay(overlay: BaseOverlay, hideCurrent: Boolean = false) {
+            showSubOverlay(overlay, hideCurrent)
         }
     }
 
     /**
-     * Interface to be mocked in order to instantiates an [OverlayControllerTestImpl].
-     * Calls on abstract members of [OverlayController] can be verified on this mock.
+     * Interface to be mocked in order to instantiates an [OverlayTestImpl].
+     * Calls on abstract members of [BaseOverlay] can be verified on this mock.
      */
-    interface OverlayControllerImpl {
+    interface OverlayImpl {
         fun onCreate()
         fun onStart()
         fun onStop()
@@ -78,10 +78,10 @@ class OverlayControllerTests {
     @Mock private lateinit var mockContext: Context
     @Mock private lateinit var mockDisplayManager: DisplayManager
     @Mock private lateinit var mockDisplay: Display
-    @Mock private lateinit var overlayControllerImpl: OverlayControllerImpl
+    @Mock private lateinit var overlayControllerImpl: OverlayImpl
     @Mock private lateinit var dismissListener: DismissListener
 
-    private lateinit var overlayController: OverlayControllerTestImpl
+    private lateinit var overlayController: OverlayTestImpl
 
     @Before
     fun setUp() {
@@ -89,7 +89,7 @@ class OverlayControllerTests {
         Mockito.`when`(mockContext.getSystemService(DisplayManager::class.java)).thenReturn(mockDisplayManager)
         Mockito.`when`(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
 
-        overlayController = OverlayControllerTestImpl(mockContext, overlayControllerImpl)
+        overlayController = OverlayTestImpl(mockContext, overlayControllerImpl)
     }
 
     @Test
@@ -122,10 +122,10 @@ class OverlayControllerTests {
     @Test
     fun hide() {
         overlayController.create()
-        overlayController.show()
+        overlayController.start()
         clearInvocations(overlayControllerImpl)
 
-        overlayController.hide()
+        overlayController.stop()
 
         verify(overlayControllerImpl).onStop()
         verify(overlayControllerImpl, never()).onCreate()
@@ -137,7 +137,7 @@ class OverlayControllerTests {
     @Test
     fun hideNotCreated() {
         val expectedState = overlayController.lifecycle.currentState
-        overlayController.hide()
+        overlayController.stop()
 
         verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onCreate()
@@ -149,11 +149,11 @@ class OverlayControllerTests {
     @Test
     fun hideAlreadyHidden() {
         overlayController.create()
-        overlayController.hide()
+        overlayController.stop()
         clearInvocations(overlayControllerImpl)
         val expectedState = overlayController.lifecycle.currentState
 
-        overlayController.hide()
+        overlayController.stop()
 
         verify(overlayControllerImpl, never()).onStop()
         verify(overlayControllerImpl, never()).onCreate()
@@ -165,10 +165,10 @@ class OverlayControllerTests {
     @Test
     fun show() {
         overlayController.create()
-        overlayController.hide()
+        overlayController.stop()
         clearInvocations(overlayControllerImpl)
 
-        overlayController.show()
+        overlayController.start()
 
         verify(overlayControllerImpl).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -180,7 +180,7 @@ class OverlayControllerTests {
     @Test
     fun showNotCreated() {
         val expectedState = overlayController.lifecycle.currentState
-        overlayController.show()
+        overlayController.start()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -192,11 +192,11 @@ class OverlayControllerTests {
     @Test
     fun showAlreadyShown() {
         overlayController.create()
-        overlayController.show()
+        overlayController.start()
         clearInvocations(overlayControllerImpl)
         val expectedState = overlayController.lifecycle.currentState
 
-        overlayController.show()
+        overlayController.start()
 
         verify(overlayControllerImpl, never()).onStart()
         verify(overlayControllerImpl, never()).onCreate()
@@ -235,7 +235,7 @@ class OverlayControllerTests {
     @Test
     fun dismissNotShown() {
         overlayController.create(dismissListener::onDismissed)
-        overlayController.hide()
+        overlayController.stop()
         clearInvocations(overlayControllerImpl)
 
         overlayController.destroy()
@@ -251,9 +251,9 @@ class OverlayControllerTests {
     @Test
     fun showSubOverlay() {
         overlayController.create()
-        overlayController.show()
+        overlayController.start()
         clearInvocations(overlayControllerImpl)
-        val subOverlay = OverlayControllerTestImpl(mockContext)
+        val subOverlay = OverlayTestImpl(mockContext)
 
         overlayController.publicShowSubOverlay(subOverlay, true)
 
@@ -267,9 +267,9 @@ class OverlayControllerTests {
     @Test
     fun showSubOverlayHide() {
         overlayController.create()
-        overlayController.show()
+        overlayController.start()
         clearInvocations(overlayControllerImpl)
-        val subOverlay = OverlayControllerTestImpl(mockContext)
+        val subOverlay = OverlayTestImpl(mockContext)
 
         overlayController.publicShowSubOverlay(subOverlay, true)
 
@@ -282,7 +282,7 @@ class OverlayControllerTests {
 
     @Test
     fun showSubOverlayNotCreated() {
-        val subOverlay = OverlayControllerTestImpl(mockContext)
+        val subOverlay = OverlayTestImpl(mockContext)
         val expectedState = subOverlay.lifecycle.currentState
         overlayController.publicShowSubOverlay(subOverlay)
 
@@ -292,8 +292,8 @@ class OverlayControllerTests {
     @Test
     fun subOverlayDismissed() {
         overlayController.create()
-        overlayController.show()
-        val subOverlay = OverlayControllerTestImpl(mockContext)
+        overlayController.start()
+        val subOverlay = OverlayTestImpl(mockContext)
         overlayController.publicShowSubOverlay(subOverlay, true)
         clearInvocations(overlayControllerImpl)
 
@@ -309,8 +309,8 @@ class OverlayControllerTests {
     @Test
     fun subOverlayDismissedWasHidden() {
         overlayController.create()
-        overlayController.show()
-        val subOverlay = OverlayControllerTestImpl(mockContext)
+        overlayController.start()
+        val subOverlay = OverlayTestImpl(mockContext)
         overlayController.publicShowSubOverlay(subOverlay, true)
         clearInvocations(overlayControllerImpl)
 
@@ -326,8 +326,8 @@ class OverlayControllerTests {
     @Test
     fun dismissWithSubOverlay() {
         overlayController.create()
-        overlayController.show()
-        val subOverlay = OverlayControllerTestImpl(mockContext)
+        overlayController.start()
+        val subOverlay = OverlayTestImpl(mockContext)
         overlayController.publicShowSubOverlay(subOverlay)
         clearInvocations(overlayControllerImpl)
 
@@ -344,8 +344,8 @@ class OverlayControllerTests {
     @Test
     fun dismissWithSubOverlayWasHidden() {
         overlayController.create()
-        overlayController.show()
-        val subOverlay = OverlayControllerTestImpl(mockContext)
+        overlayController.start()
+        val subOverlay = OverlayTestImpl(mockContext)
         overlayController.publicShowSubOverlay(subOverlay, true)
         clearInvocations(overlayControllerImpl)
 

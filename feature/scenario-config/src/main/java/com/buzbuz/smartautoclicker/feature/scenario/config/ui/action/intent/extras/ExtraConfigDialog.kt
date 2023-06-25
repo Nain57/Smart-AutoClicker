@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionIntentExtraBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
@@ -45,20 +44,18 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 /**
- * [OverlayDialogController] implementation for displaying an intent extra and providing a button to delete it.
+ * [OverlayDialog] implementation for displaying an intent extra and providing a button to delete it.
  *
  * This dialog is generic for all extra value types. The UI will change according to the selected type.
  *
- * @param context the Android Context for the dialog shown by this controller.
  * @param onConfigComplete the listener called when the user presses the ok button.
  * @param onDeleteClicked the listener called when the user presses the delete button.
  */
 class ExtraConfigDialog(
-    context: Context,
     private val onConfigComplete: () -> Unit,
     private val onDeleteClicked: () -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
+) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for the data displayed in this dialog. */
     private val viewModel: ExtraConfigModel by lazy {
@@ -75,7 +72,7 @@ class ExtraConfigDialog(
 
                 buttonDismiss.setOnClickListener {
                     onDismissClicked()
-                    destroy()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
@@ -124,12 +121,12 @@ class ExtraConfigDialog(
 
     private fun onSaveButtonClicked() {
         onConfigComplete()
-        destroy()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked()
-        destroy()
+        back()
     }
 
     private fun updateExtraKey(newKey: String?) {

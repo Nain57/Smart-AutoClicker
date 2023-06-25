@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.overlays.menu
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.util.Size
@@ -38,7 +39,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayController
+import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.R
 
@@ -66,12 +67,8 @@ import com.buzbuz.smartautoclicker.core.ui.R
  * the user on the [R.id.btn_hide_overlay] button.
  *
  * The position of the menu is saved in the [android.content.SharedPreferences] for each orientation.
- *
- * @param context the Android context to be used to display the overlay menu and view.
  */
-abstract class OverlayMenuController(
-    context: Context,
-) : OverlayController(context, recreateOnRotation = false) {
+abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
     @VisibleForTesting
     internal companion object {
@@ -97,13 +94,11 @@ abstract class OverlayMenuController(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
         PixelFormat.TRANSLUCENT)
+
     /** The shared preference storing the position of the menu in order to save/restore the last user position. */
-    private val sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+    private lateinit var sharedPreferences: SharedPreferences
     /** The Android window manager. Used to add/remove the overlay menu and view. */
-    private val windowManager = context.getSystemService(WindowManager::class.java)!!
-    /** Value of the alpha for a disabled item view in the menu. */
-    @SuppressLint("ResourceType")
-    private val disabledItemAlpha = context.resources.getFraction(R.dimen.alpha_menu_item_disabled, 1, 1)
+    private lateinit var windowManager: WindowManager
 
     /** The root view of the menu overlay. Retrieved from [onCreateMenu] implementation. */
     private lateinit var menuLayout: ViewGroup
@@ -111,6 +106,10 @@ abstract class OverlayMenuController(
     private lateinit var menuBackground: ViewGroup
     /** Handles the window size computing when animating a resize of the overlay. */
     private lateinit var resizeController: OverlayWindowResizeController
+
+    /** Value of the alpha for a disabled item view in the menu. */
+    private var disabledItemAlpha: Float = 1f
+
     /** The hide overlay button, if provided. */
     private var hideOverlayButton: View? = null
     /** The move button, if provided. */
@@ -167,7 +166,12 @@ abstract class OverlayMenuController(
     }
 
     @CallSuper
+    @SuppressLint("ResourceType")
     override fun onCreate() {
+        sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+        windowManager = context.getSystemService(WindowManager::class.java)!!
+        disabledItemAlpha = context.resources.getFraction(R.dimen.alpha_menu_item_disabled, 1, 1)
+
         // First, call implementation methods to check what we should display
         menuLayout = onCreateMenu(context.getSystemService(LayoutInflater::class.java))
         screenOverlayView = onCreateOverlayView()
@@ -256,7 +260,7 @@ abstract class OverlayMenuController(
                 override fun onAnimationStart(animation: Animation?) {}
                 override fun onAnimationRepeat(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
-                    super@OverlayMenuController.destroy()
+                    super@OverlayMenu.destroy()
                 }
             })
         })
@@ -268,7 +272,7 @@ abstract class OverlayMenuController(
     }
 
     @CallSuper
-    override fun onDestroyed() {
+    override fun onDestroy() {
         // Save last user position
         saveMenuPosition(displayMetrics.orientation)
 

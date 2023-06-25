@@ -17,16 +17,16 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.NavigationViewModel
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
-class EventDialogViewModel(application: Application) : NavigationViewModel(application) {
+class EventDialogViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository containing the user editions. */
     private val editionRepository = EditionRepository.getInstance(application)

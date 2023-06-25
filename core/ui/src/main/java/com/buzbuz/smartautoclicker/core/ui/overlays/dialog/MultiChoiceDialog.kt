@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.dialog
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,23 +34,21 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.ItemMultiChoiceSmallBindi
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
- * [OverlayDialogController] implementation for a dialog displaying a list of choices to the user.
+ * [OverlayDialog] implementation for a dialog displaying a list of choices to the user.
  *
  * @param T the type of choices in the list. Must extends [DialogChoice].
- * @param context the Android Context for the dialog shown by this controller.
  * @param theme the resource id of the theme to apply.
  * @param dialogTitleText the title of the dialog.
  * @param choices the choices to be displayed.
  * @param onChoiceSelected the callback to be notified upon user choice selection.
  */
 class MultiChoiceDialog<T : DialogChoice>(
-    context: Context,
     @StyleRes theme: Int,
     @StringRes private val dialogTitleText: Int,
     private val choices: List<T>,
-    private val onChoiceSelected: (T) -> Boolean,
+    private val onChoiceSelected: (T) -> Unit,
     private val onCanceled: () -> Unit,
-) : OverlayDialogController(context, theme) {
+) : OverlayDialog(theme) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseMultiChoiceBinding
@@ -64,12 +61,13 @@ class MultiChoiceDialog<T : DialogChoice>(
                 dialogTitle.setText(dialogTitleText)
                 buttonDismiss.setOnClickListener {
                     onCanceled()
-                    destroy()
+                    back()
                 }
             }
 
             adapter = ChoiceAdapter(choices) { choice ->
-                if (onChoiceSelected(choice)) destroy()
+                back()
+                onChoiceSelected(choice)
             }
         }
 

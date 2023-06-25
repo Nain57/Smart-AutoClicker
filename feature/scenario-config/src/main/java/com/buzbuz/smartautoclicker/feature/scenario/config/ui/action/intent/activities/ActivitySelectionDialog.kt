@@ -17,12 +17,10 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.activities
 
 import android.content.ComponentName
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DiffUtil
@@ -31,7 +29,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemApplicationBinding
@@ -43,20 +42,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 /**
- * [OverlayDialogController] implementation for displaying a list of Android activities.
+ * [OverlayDialog] implementation for displaying a list of Android activities.
  *
- * @param context the Android Context for the dialog shown by this controller.
  * @param onApplicationSelected called when the user clicks on an application.
  */
 class ActivitySelectionDialog(
-    context: Context,
     private val onApplicationSelected: (ComponentName) -> Unit,
-) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
+) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ActivitySelectionModel by lazy {
-        ViewModelProvider(this).get(ActivitySelectionModel::class.java)
-    }
+    private val viewModel: ActivitySelectionModel by viewModels()
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseSelectionBinding
 
@@ -67,12 +62,12 @@ class ActivitySelectionDialog(
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_application_selection)
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener { back() }
             }
 
             activitiesAdapter = ApplicationAdapter { selectedComponentName ->
                 onApplicationSelected(selectedComponentName)
-                destroy()
+                back()
             }
 
             layoutLoadableList.list.apply {

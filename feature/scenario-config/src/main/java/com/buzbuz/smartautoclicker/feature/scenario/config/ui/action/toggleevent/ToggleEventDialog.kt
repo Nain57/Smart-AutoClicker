@@ -16,14 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.toggleevent
 
-import android.content.Context
 import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -34,8 +32,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionToggleEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
@@ -48,16 +49,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 class ToggleEventDialog(
-    context: Context,
     private val onConfirmClicked: () -> Unit,
     private val onDeleteClicked: () -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
+) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ToggleEventViewModel by lazy {
-        ViewModelProvider(this).get(ToggleEventViewModel::class.java)
-    }
+    private val viewModel: ToggleEventViewModel by viewModels()
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionToggleEventBinding
@@ -69,7 +67,7 @@ class ToggleEventDialog(
 
                 buttonDismiss.setOnClickListener {
                     onDismissClicked()
-                    destroy()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
@@ -114,12 +112,12 @@ class ToggleEventDialog(
 
     private fun onSaveButtonClicked() {
         onConfirmClicked()
-        destroy()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked()
-        destroy()
+        back()
     }
 
     private fun updateToggleEventName(newName: String?) {
@@ -135,17 +133,16 @@ class ToggleEventDialog(
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     /** Show the event selection dialog. */
-    private fun showEventSelectionDialog(availableEvents: List<Event>) {
-        showSubOverlay(
-            EventSelectionDialog(
-                context = context,
+    private fun showEventSelectionDialog(availableEvents: List<Event>) =
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = EventSelectionDialog(
                 eventList = availableEvents,
                 onEventClicked = { event -> viewModel.setEvent(event) }
             )
         )
-    }
 }

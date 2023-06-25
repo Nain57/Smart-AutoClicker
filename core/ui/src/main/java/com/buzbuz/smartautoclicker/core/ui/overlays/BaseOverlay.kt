@@ -18,20 +18,22 @@ package com.buzbuz.smartautoclicker.core.ui.overlays
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 
 import androidx.annotation.CallSuper
-import androidx.lifecycle.HasDefaultViewModelProviderFactory
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
+
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+
+import com.google.android.material.color.DynamicColors
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,28 +49,24 @@ import java.io.PrintWriter
  *
  * Initialization starts with the [create] method, which will call the correct implementation methods to creates and
  * show the overlay ui object.
- * Back stack management is ensured by the method [showSubOverlay], resuming the parent ui object once the child is
- * dismissed.
  */
-abstract class OverlayController internal constructor(
-    appContext: Context,
+abstract class BaseOverlay internal constructor(
     private val theme: Int? = null,
     private val recreateOnRotation: Boolean = false,
-) : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
+) : Overlay() {
 
+    /** The context for this overlay. */
+    protected lateinit var context: Context
     /** The metrics of the device screen. */
-    protected val displayMetrics = DisplayMetrics.getInstance(appContext)
-    /** The listener upon screen rotation. */
-    private val orientationListener: (Context) -> Unit = ::onOrientationChanged
-
-    /** The context for this overlay. See [newOverlayContext]. */
-    protected var context: Context = newOverlayContext(appContext)
+    protected val displayMetrics: DisplayMetrics by lazy {
+        DisplayMetrics.getInstance(context)
+    }
 
     /** The lifecycle of the ui component controlled by this class */
     private var lifecycleRegistry = LifecycleRegistry(this)
     override val lifecycle: Lifecycle = lifecycleRegistry
 
-    /** The store for the view models of the [OverlayController] implementations. */
+    /** The store for the view models of the [BaseOverlay] implementations. */
     private val modelStore: ViewModelStore by lazy { ViewModelStore() }
     override val viewModelStore: ViewModelStore
         get() = modelStore
@@ -77,53 +75,46 @@ abstract class OverlayController internal constructor(
     }
 
     /**
-     * OverlayController for an overlay shown from this OverlayController using [showSubOverlay].
-     * Null if none has been shown, or if a previous sub OverlayController has been dismissed.
-     */
-    private var subOverlayController: OverlayController? = null
-    /**
      * Listener called when the overlay shown by the controller is dismissed.
      * Null unless the overlay is shown.
      */
     private var onDestroyListener: (() -> Unit)? = null
-
-    /**
-     * Call to [showSubOverlay] that has been made while hidden.
-     * It will be executed once [show] is called.
-     */
-    private var pendingSubOverlayRequest: Pair<OverlayController, Boolean>? = null
-
-    /** True if the overlay should be recreated on next [show] call, false if not. */
+    /** True if the overlay should be recreated on next [start] call, false if not. */
     private var shouldBeRecreated: Boolean = false
 
-    /** Creates the ui object to be shown. */
-    protected open fun onCreate() = Unit
-    /** Show the ui object to the user. */
-    protected open fun onStart() = Unit
-    /** The ui object is in foreground. */
-    protected open fun onResume() = Unit
-    /** The ui object is visible but no in foreground. */
-    protected open fun onPause() = Unit
-    /** Hide the ui object from the user. */
-    protected open fun onStop() = Unit
-    /** Destroys the ui object. */
-    protected open fun onDestroyed() = Unit
-    /** The device screen orientation have changed. */
-    protected open fun onOrientationChanged() = Unit
+    override fun show() {
+        start()
+    }
+
+    override fun hide() {
+        stop()
+    }
+
+    override fun back() {
+        if (!OverlayManager.getInstance(context).navigateUp(context)) {
+            Log.w(TAG, "Overlay can't be removed from back stack, destroying manually...")
+            destroy()
+        }
+    }
+
+    override fun finish() {
+        destroy()
+    }
 
     /**
      * Creates and show the ui object.
      * If the lifecycle doesn't allows it, does nothing.
      *
+     * @param appContext the application context.
      * @param dismissListener object notified upon the shown ui dismissing.
      */
-    fun create(dismissListener: (() -> Unit)? = null) {
+    override fun create(appContext: Context, dismissListener: ((Context, Overlay) -> Unit)?) {
         if (lifecycleRegistry.currentState == State.DESTROYED) lifecycleRegistry.currentState = State.INITIALIZED
         if (lifecycleRegistry.currentState != State.INITIALIZED) return
 
         Log.d(TAG, "create overlay ${hashCode()}")
-        onDestroyListener = dismissListener
-        displayMetrics.addOrientationListener(orientationListener)
+        context = newOverlayContext(appContext)
+        dismissListener?.let { listener -> onDestroyListener = { listener(appContext, this@BaseOverlay) } }
 
         onCreate()
         lifecycleRegistry.currentState = State.CREATED
@@ -133,7 +124,7 @@ abstract class OverlayController internal constructor(
      * Show the ui object.
      * If the lifecycle doesn't allows it, does nothing.
      */
-    fun show() {
+    override fun start() {
         if (lifecycleRegistry.currentState != State.CREATED) return
 
         if (shouldBeRecreated) {
@@ -145,25 +136,33 @@ abstract class OverlayController internal constructor(
 
         onStart()
         lifecycleRegistry.currentState = State.STARTED
+    }
 
-        // If there is no sub overlay, this one is in foreground.
-        if (subOverlayController == null) {
-            onResume()
-            lifecycleRegistry.currentState = State.RESUMED
-        }
+    override fun resume() {
+        if (lifecycleRegistry.currentState == State.CREATED) start()
+        if (lifecycleRegistry.currentState != State.STARTED) return
+
+        Log.d(TAG, "resume overlay ${hashCode()}")
+        onResume()
+        lifecycleRegistry.currentState = State.RESUMED
+    }
+
+    override fun pause() {
+        if (lifecycleRegistry.currentState != State.RESUMED) return
+
+        Log.d(TAG, "pause overlay ${hashCode()}")
+        lifecycleRegistry.currentState = State.STARTED
+        onPause()
     }
 
     /**
      * Hide the ui object.
      * If the lifecycle doesn't allows it, does nothing.
      */
-    fun hide() {
+    override fun stop() {
         if (!lifecycleRegistry.currentState.isAtLeast(State.STARTED)) return
 
-        if (lifecycleRegistry.currentState == State.RESUMED) {
-            lifecycleRegistry.currentState = State.STARTED
-            onPause()
-        }
+        pause()
 
         Log.d(TAG, "hide overlay ${hashCode()}")
         lifecycleRegistry.currentState = State.CREATED
@@ -175,19 +174,14 @@ abstract class OverlayController internal constructor(
      * If the lifecycle doesn't allows it, does nothing.
      */
     @CallSuper
-    open fun destroy() {
+    override fun destroy() {
         if (!lifecycleRegistry.currentState.isAtLeast(State.CREATED)) return
-        if (lifecycleRegistry.currentState.isAtLeast(State.STARTED)) hide()
+        if (lifecycleRegistry.currentState.isAtLeast(State.STARTED)) stop()
 
         Log.d(TAG, "destroy overlay ${hashCode()}")
 
         lifecycleRegistry.currentState = State.DESTROYED
-        if (!shouldBeRecreated) {
-            subOverlayController?.destroy()
-        }
-
-        displayMetrics.removeOrientationListener(orientationListener)
-        onDestroyed()
+        onDestroy()
 
         if (!shouldBeRecreated) {
             onDestroyListener?.invoke()
@@ -203,12 +197,11 @@ abstract class OverlayController internal constructor(
 
     /**
      * Destroy and create the overlay. once again.
-     * The [onDestroyListener] will not be called during the process and the [subOverlayController] (if any) will not
-     * be destroyed.
+     * The [onDestroyListener] will not be called during the process.
      *
-     * @param show true if the overlay should be immediately show after recreation, false if not.
+     * @param resume true if the overlay should be immediately shown after recreation, false if not.
      */
-    private fun recreate(show: Boolean) {
+    private fun recreate(resume: Boolean) {
         if (!lifecycleRegistry.currentState.isAtLeast(State.CREATED)) return
 
         Log.d(TAG, "recreating overlay ${hashCode()}")
@@ -216,10 +209,12 @@ abstract class OverlayController internal constructor(
         destroy()
         shouldBeRecreated = false
 
-        context = newOverlayContext(context.applicationContext)
         lifecycleRegistry = LifecycleRegistry(this)
-        create(onDestroyListener)
-        if (show) show()
+        create(context)
+        if (resume) {
+            start()
+            resume()
+        }
     }
 
     /**
@@ -232,11 +227,12 @@ abstract class OverlayController internal constructor(
      * - If [recreateOnRotation] is but the lifecycle is below [Lifecycle.State.STARTED]: the overlay is created but
      * not hidden => Flag the overlay for recreation and delay it until next show call.
      *
-     * In all cases, [onOrientationChanged] will be called to notify this [OverlayController] implementation for
+     * In all cases, [onOrientationChanged] will be called to notify this [BaseOverlay] implementation for
      * rotation.
      */
-    private fun onOrientationChanged(@Suppress("UNUSED_PARAMETER") context: Context) {
+    internal fun changeOrientation() {
         Log.d(TAG, "onOrientationChanged for overlay ${hashCode()}")
+
         onOrientationChanged()
 
         if (!recreateOnRotation) return
@@ -250,71 +246,6 @@ abstract class OverlayController internal constructor(
     }
 
     /**
-     * Creates and show another overlay managed by a OverlayController from this dialog.
-     *
-     * Using this method instead of directly calling [create] and [show] on the new OverlayController will allow to keep
-     * a back stack of OverlayController, allowing to resume the current overlay once the new overlay is dismissed.
-     *
-     * @param overlayController the controller of the new overlay to be shown.
-     * @param hideCurrent true to hide the current overlay, false to display the new overlay over it.
-     */
-    @CallSuper
-    open fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean = false) {
-        if (!lifecycleRegistry.currentState.isAtLeast(State.CREATED)) {
-            Log.e(TAG, "Can't show ${overlayController.hashCode()}, parent ${hashCode()} is not created")
-            return
-        }
-
-        if (lifecycleRegistry.currentState < State.RESUMED) {
-            Log.i(TAG, "Delaying sub overlay: ${overlayController.hashCode()}; hide=$hideCurrent; parent=${hashCode()}")
-            pendingSubOverlayRequest = overlayController to hideCurrent
-            return
-        }
-
-        Log.d(TAG, "show sub overlay: ${overlayController.hashCode()}; hide=$hideCurrent; parent=${hashCode()}")
-
-        subOverlayController = overlayController
-        overlayController.create(dismissListener = { onSubOverlayDismissed(overlayController) })
-
-        if (hideCurrent) {
-            hide()
-        } else {
-            lifecycleRegistry.currentState = State.STARTED
-            onPause()
-        }
-
-        overlayController.show()
-    }
-
-    /**
-     * Listener upon the closing of a overlay opened with [showSubOverlay].
-     *
-     * @param dismissedOverlay the sub overlay dismissed.
-     */
-    private fun onSubOverlayDismissed(dismissedOverlay: OverlayController) {
-        Log.d(TAG, "sub overlay dismissed: ${dismissedOverlay.hashCode()}; parent=${hashCode()}")
-
-        if (dismissedOverlay == subOverlayController) {
-            subOverlayController = null
-
-            when (lifecycleRegistry.currentState) {
-                State.DESTROYED -> return
-                State.CREATED -> show()
-                State.STARTED -> {
-                    onResume()
-                    lifecycleRegistry.currentState = State.RESUMED
-                }
-                else -> {}
-            }
-
-            if (pendingSubOverlayRequest != null) {
-                showSubOverlay(pendingSubOverlayRequest!!.first, pendingSubOverlayRequest!!.second)
-                pendingSubOverlayRequest = null
-            }
-        }
-    }
-
-    /**
      * Get a new context wrapper from the provided theme. If the theme is null, the application theme is used.
      *
      * This is required because an overlay can be attached to a context without UI configuration changes notification,
@@ -323,8 +254,16 @@ abstract class OverlayController internal constructor(
      * @param appContext the Android application context.
      */
     private fun newOverlayContext(appContext: Context): Context =
-        if (theme != null) newOverlayContextThemeWrapper(appContext, theme, displayMetrics.orientation)
-        else appContext
+        if (theme == null) appContext
+        else DynamicColors.wrapContextIfAvailable(
+            ContextThemeWrapper(appContext, theme).apply {
+                applyOverrideConfiguration(
+                    Configuration(applicationContext.resources.configuration).apply {
+                        orientation = DisplayMetrics.getInstance(appContext).orientation
+                    }
+                )
+            }
+        )
 
     /**
      * Dump the state of this overlay controller into the provided writer.
@@ -334,15 +273,11 @@ abstract class OverlayController internal constructor(
      */
     fun dump(writer: PrintWriter, prefix: String) {
         writer.apply {
-            println("$prefix * ${this@OverlayController.toDumpString()}:")
+            println("$prefix * ${this@BaseOverlay.toDumpString()}:")
 
             val contentPrefix = "$prefix\t"
             println("$contentPrefix Lifecycle: ${lifecycleRegistry.currentState}")
             if (recreateOnRotation) println("$contentPrefix\t - shouldBeRecreated")
-
-            println("$contentPrefix SubOverlay: ${subOverlayController?.toDumpString()}")
-
-            subOverlayController?.dump(writer, prefix)
         }
     }
 
@@ -350,7 +285,7 @@ abstract class OverlayController internal constructor(
     private fun toDumpString() = "${javaClass.simpleName}@${hashCode()}"
 }
 
-inline fun <reified VM : ViewModel> OverlayController.viewModels(): Lazy<VM> =
+inline fun <reified VM : ViewModel> BaseOverlay.viewModels(): Lazy<VM> =
     ViewModelLazy(
         VM::class,
         { viewModelStore },
@@ -359,4 +294,4 @@ inline fun <reified VM : ViewModel> OverlayController.viewModels(): Lazy<VM> =
     )
 
 /** Tag for logs. */
-private const val TAG = "OverlayController"
+private const val TAG = "BaseOverlay"
