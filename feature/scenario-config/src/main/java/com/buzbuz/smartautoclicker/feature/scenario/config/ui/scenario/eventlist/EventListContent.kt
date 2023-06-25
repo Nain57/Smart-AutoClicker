@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 
@@ -32,26 +31,20 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.NavigationRequest
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCopyDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 
 import kotlinx.coroutines.launch
 
 class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: EventListViewModel by lazy {
-        ViewModelProvider(this).get(EventListViewModel::class.java)
-    }
-    /** View model for the container dialog. */
-    private val dialogViewModel: ScenarioDialogViewModel by lazy {
-        ViewModelProvider(dialogController).get(ScenarioDialogViewModel::class.java)
-    }
+    private val viewModel: EventListViewModel by viewModels()
 
     /** TouchHelper applied to [eventAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(EventReorderTouchHelper())
@@ -153,13 +146,11 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** Opens the dialog allowing the user to copy an event. */
     private fun showEventCopyDialog() {
-        dialogViewModel.requestSubOverlay(
-            NavigationRequest(
-                EventCopyDialog(
-                    context = context,
-                    onEventSelected = { event -> showEventConfigDialog(viewModel.createNewEvent(context, event)) }
-                ),
-            )
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = EventCopyDialog(
+                onEventSelected = { event -> showEventConfigDialog(viewModel.createNewEvent(context, event)) },
+            ),
         )
     }
 
@@ -167,16 +158,14 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun showEventConfigDialog(item: Event) {
         viewModel.startEventEdition(item)
 
-        dialogViewModel.requestSubOverlay(
-            NavigationRequest(
-                overlay = EventDialog(
-                    context = context,
-                    onConfigComplete = viewModel::saveEventEdition,
-                    onDelete = viewModel::deleteEditedEvent,
-                    onDismiss = viewModel::dismissEditedEvent,
-                ),
-                hideCurrent = true
-            )
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = EventDialog(
+                onConfigComplete = viewModel::saveEventEdition,
+                onDelete = viewModel::deleteEditedEvent,
+                onDismiss = viewModel::dismissEditedEvent,
+            ),
+            hideCurrent = true,
         )
     }
 }

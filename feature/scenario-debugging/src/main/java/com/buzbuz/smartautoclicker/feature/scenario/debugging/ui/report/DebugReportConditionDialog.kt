@@ -16,22 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.R
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.DialogDebugReportConditionBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /** Dialog displaying the full debug report for a condition. */
-class DebugReportConditionDialog(
-    context: Context,
-    private val conditionReport: ConditionReport,
-): OverlayDialogController(context, R.style.AppTheme) {
+class DebugReportConditionDialog(private val conditionReport: ConditionReport) : OverlayDialog(R.style.AppTheme) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogDebugReportConditionBinding
@@ -41,7 +37,7 @@ class DebugReportConditionDialog(
             layoutTopBar.apply {
                 dialogTitle.text = conditionReport.condition.name
                 buttonSave.visibility = View.GONE
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener { back() }
             }
         }
 

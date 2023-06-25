@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.text.InputFilter
@@ -26,7 +25,6 @@ import android.view.ViewGroup
 
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
@@ -38,7 +36,8 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
@@ -49,16 +48,13 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class ConditionDialog(
-    context: Context,
     private val onConfirmClicked: () -> Unit,
     private val onDeleteClicked: () -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
+) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ConditionViewModel by lazy {
-        ViewModelProvider(this).get(ConditionViewModel::class.java)
-    }
+    private val viewModel: ConditionViewModel by viewModels()
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigConditionBinding
@@ -70,20 +66,20 @@ class ConditionDialog(
 
                 buttonDismiss.setOnClickListener {
                     onDismissClicked()
-                    destroy()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener {
                         onConfirmClicked()
-                        destroy()
+                        back()
                     }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
                     setOnClickListener {
                         onDeleteClicked()
-                        destroy()
+                        back()
                     }
                 }
             }

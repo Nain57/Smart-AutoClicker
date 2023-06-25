@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.core.view.children
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -38,11 +37,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
+import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentScenarioConfigBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.NavigationRequest
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.endcondition.EndConditionConfigDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
@@ -55,13 +54,7 @@ import kotlin.math.roundToInt
 class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: ScenarioConfigViewModel by lazy {
-        ViewModelProvider(this).get(ScenarioConfigViewModel::class.java)
-    }
-    /** View model for the container dialog. */
-    private val dialogViewModel: ScenarioDialogViewModel by lazy {
-        ViewModelProvider(dialogController).get(ScenarioDialogViewModel::class.java)
-    }
+    private val viewModel: ScenarioConfigViewModel by viewModels()
 
     private lateinit var viewBinding: ContentScenarioConfigBinding
     private lateinit var endConditionAdapter: EndConditionAdapter
@@ -212,14 +205,12 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
 
     private fun showEndConditionDialog(endCondition: EndCondition) {
         viewModel.startEndConditionEdition(endCondition)
-        dialogViewModel.requestSubOverlay(
-            NavigationRequest(
-                EndConditionConfigDialog(
-                    context = context,
-                    onConfirmClicked = viewModel::upsertEndCondition,
-                    onDeleteClicked = viewModel::deleteEndCondition,
-                    onDismissClicked = viewModel::discardEndCondition,
-                )
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = EndConditionConfigDialog(
+                onConfirmClicked = viewModel::upsertEndCondition,
+                onDeleteClicked = viewModel::deleteEndCondition,
+                onDismissClicked = viewModel::discardEndCondition,
             )
         )
     }

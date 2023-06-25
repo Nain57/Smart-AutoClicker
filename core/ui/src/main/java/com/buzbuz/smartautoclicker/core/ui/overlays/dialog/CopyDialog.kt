@@ -28,9 +28,8 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.databinding.DialogBaseCopyBinding
 
 abstract class CopyDialog(
-    context: Context,
     @StyleRes theme: Int,
-) : OverlayDialogController(context, theme) {
+) : OverlayDialog(theme) {
 
     /** ViewBinding containing the views for this dialog. */
     protected lateinit var viewBinding: DialogBaseCopyBinding
@@ -43,7 +42,7 @@ abstract class CopyDialog(
         viewBinding = DialogBaseCopyBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(titleRes)
-                buttonDismiss.setOnClickListener { destroy() }
+                buttonDismiss.setOnClickListener { back() }
 
                 search.apply {
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener {

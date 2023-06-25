@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.pause
 
-import android.content.Context
 import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
@@ -24,7 +23,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -32,7 +30,8 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionPauseBinding
@@ -43,16 +42,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 class PauseDialog(
-    context: Context,
     private val onConfirmClicked: () -> Unit,
     private val onDeleteClicked: () -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialogController(context, R.style.ScenarioConfigTheme) {
+) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: PauseViewModel by lazy {
-        ViewModelProvider(this).get(PauseViewModel::class.java)
-    }
+    private val viewModel: PauseViewModel by viewModels()
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionPauseBinding
@@ -64,7 +60,7 @@ class PauseDialog(
 
                 buttonDismiss.setOnClickListener {
                     onDismissClicked()
-                    destroy()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
@@ -113,12 +109,12 @@ class PauseDialog(
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
         onConfirmClicked()
-        destroy()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
         onDeleteClicked()
-        destroy()
+        back()
     }
 
     private fun updateClickName(newName: String?) {

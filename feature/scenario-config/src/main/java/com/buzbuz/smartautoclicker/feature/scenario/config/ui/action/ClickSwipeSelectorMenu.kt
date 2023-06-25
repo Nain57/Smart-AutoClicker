@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ import android.widget.Toast
 
 import androidx.core.graphics.toPoint
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.ClickSelectorView
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.FIRST
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.SECOND
@@ -34,38 +33,40 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayValidationMenuBinding
 
 /**
- * [OverlayMenuController] implementation for displaying the click area selection menu and its overlay view.
+ * [OverlayMenu] implementation for displaying the click area selection menu and its overlay view.
  *
  * This class will display the overlay menu for selecting the positions for an action. The overlay view
  * displayed between the menu and the activity shows those positions.
  *
- * @param context the Android Context for the overlay menu shown by this controller.
  * @param selector the count of coordinates this overlay offers to select.
  * @param onCoordinatesSelected listener on the type of click and area(s) to user have selected.
  */
 class ClickSwipeSelectorMenu(
-    context: Context,
     private val selector: CoordinatesSelector,
     private val onCoordinatesSelected: (CoordinatesSelector) -> Unit
-) : OverlayMenuController(context) {
+) : OverlayMenu() {
 
     /** The view binding for the overlay menu. */
     private lateinit var viewBinding: OverlayValidationMenuBinding
 
     /** The view model for this dialog. */
     @SuppressLint("ClickableViewAccessibility")
-    private val selectorView = ClickSelectorView(context).apply {
-        onTouchListener = {
-            setMenuItemViewEnabled(viewBinding.btnConfirm, true, true)
-        }
-    }
+    private lateinit var selectorView: ClickSelectorView
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }
 
-    override fun onCreateOverlayView(): ClickSelectorView = selectorView
+    override fun onCreateOverlayView(): ClickSelectorView {
+        selectorView = ClickSelectorView(context).apply {
+            onTouchListener = {
+                setMenuItemViewEnabled(viewBinding.btnConfirm, true, true)
+            }
+        }
+
+        return selectorView
+    }
 
     override fun onStart() {
         super.onStart()
@@ -106,8 +107,8 @@ class ClickSwipeSelectorMenu(
         when {
             selectorView.selectionStep == FIRST && selector is CoordinatesSelector.One -> {
                 selector.coordinates = selectorView.position1!!.toPoint()
-                onCoordinatesSelected.invoke(selector)
-                destroy()
+                back()
+                onCoordinatesSelected(selector)
             }
             selectorView.selectionStep == FIRST && selector is CoordinatesSelector.Two -> {
                 toSelectionStep(SECOND)
@@ -115,8 +116,8 @@ class ClickSwipeSelectorMenu(
             selectorView.selectionStep == SECOND && selector is CoordinatesSelector.Two -> {
                 selector.coordinates1 = selectorView.position1!!.toPoint()
                 selector.coordinates2 = selectorView.position2!!.toPoint()
-                onCoordinatesSelected.invoke(selector)
-                destroy()
+                back()
+                onCoordinatesSelected(selector)
             }
         }
     }
@@ -127,7 +128,7 @@ class ClickSwipeSelectorMenu(
      */
     private fun onCancel() {
         when (selectorView.selectionStep) {
-            FIRST -> destroy()
+            FIRST -> back()
             SECOND -> toSelectionStep(FIRST)
         }
     }

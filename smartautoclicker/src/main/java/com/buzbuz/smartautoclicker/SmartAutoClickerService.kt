@@ -34,11 +34,11 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVI
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.LocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
-import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayController
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
 import com.buzbuz.smartautoclicker.feature.floatingmenu.ui.MainMenu
 
 import java.io.FileDescriptor
@@ -51,7 +51,7 @@ import kotlin.coroutines.suspendCoroutine
  * AccessibilityService implementation for the SmartAutoClicker.
  *
  * Started automatically by Android once the user has defined this service has an accessibility service, it provides
- * an API to start and stop the [DetectorEngine] correctly in order to display the overlay UI and record the screen for
+ * an API to start and stop the DetectorEngine correctly in order to display the overlay UI and record the screen for
  * clicks detection.
  * This API is offered through the [LocalService] class, which is instantiated in the [LOCAL_SERVICE_INSTANCE] object.
  * This system is used instead of the usual binder interface because an [AccessibilityService] already has its own
@@ -97,8 +97,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     private var displayMetrics: DisplayMetrics? = null
     /** The engine for the detection. */
     private var detectionRepository: DetectionRepository? = null
-    /** The root controller for the overlay ui. */
-    private var rootOverlayController: OverlayController? = null
+    /** Manages the overlays for the application. */
+    private var overlayManager: OverlayManager? = null
     /** True if the overlay is started, false if not. */
     private var isStarted: Boolean = false
 
@@ -142,9 +142,11 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             }
 
             Handler(Looper.getMainLooper()).postDelayed({
-                rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario.id.databaseId).apply {
-                    create { this@LocalService.stop() }
-                    show()
+                overlayManager = OverlayManager.getInstance(this@SmartAutoClickerService).apply {
+                    navigateTo(
+                        context = this@SmartAutoClickerService,
+                        newOverlay = MainMenu(scenario.id.databaseId),
+                    )
                 }
             }, 350)
         }
@@ -157,8 +159,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
             isStarted = false
 
-            rootOverlayController?.destroy()
-            rootOverlayController = null
+            overlayManager?.closeAll(this@SmartAutoClickerService)
+            overlayManager = null
 
             detectionRepository?.stopScreenRecord()
             detectionRepository = null
@@ -251,7 +253,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         writer.println("* UI:")
         val prefix = "\t"
 
-        rootOverlayController?.dump(writer, prefix) ?: writer.println("$prefix None")
+        overlayManager?.dump(writer, prefix) ?: writer.println("$prefix None")
     }
 
     override fun onInterrupt() { /* Unused */ }

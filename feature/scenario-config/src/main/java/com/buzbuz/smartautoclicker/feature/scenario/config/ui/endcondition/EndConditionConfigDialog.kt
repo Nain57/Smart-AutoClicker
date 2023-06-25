@@ -16,14 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.endcondition
 
-import android.content.Context
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -31,8 +29,10 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialogController
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigEndConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
@@ -44,21 +44,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 /**
- * [OverlayDialogController] implementation for displaying the end condition configuration.
+ * [OverlayDialog] implementation for displaying the end condition configuration.
  **
- * @param context the Android Context for the dialog shown by this controller.
  * @param onConfirmClicked called when the user clicks on confirm.
  * @param onDeleteClicked called when the user clicks on delete.
  */
 class EndConditionConfigDialog(
-    context: Context,
     private val onConfirmClicked: () -> Unit,
     private val onDeleteClicked: () -> Unit,
     private val onDismissClicked: () -> Unit,
-): OverlayDialogController(context, R.style.ScenarioConfigTheme) {
+): OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this dialog. */
-    private val viewModel: EndConditionConfigModel by lazy { ViewModelProvider(this).get(EndConditionConfigModel::class.java) }
+    private val viewModel: EndConditionConfigModel by viewModels()
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigEndConditionBinding
@@ -69,7 +67,7 @@ class EndConditionConfigDialog(
                 dialogTitle.setText(R.string.dialog_overlay_title_end_condition_config)
                 buttonDismiss.setOnClickListener {
                     onDismissClicked()
-                    destroy()
+                    back()
                 }
 
                 buttonDelete.apply {
@@ -114,7 +112,7 @@ class EndConditionConfigDialog(
      */
     private fun onSaveButtonClicked() {
         onConfirmClicked()
-        destroy()
+        back()
     }
 
     /**
@@ -123,7 +121,7 @@ class EndConditionConfigDialog(
      */
     private fun onDeleteButtonClicked() {
         onDeleteClicked()
-        destroy()
+        back()
     }
 
     /** Update the enabled state of the save button. */
@@ -143,12 +141,12 @@ class EndConditionConfigDialog(
 
     /** Show the event selection dialog. */
     private fun showEventSelectionDialog(availableEvents: List<Event>) {
-        showSubOverlay(
-            EventSelectionDialog(
-                context = context,
+        OverlayManager.getInstance(context).navigateTo(
+            context= context,
+            newOverlay = EventSelectionDialog(
                 eventList = availableEvents,
-                onEventClicked = { event -> viewModel.setEvent(event) }
-            )
+                onEventClicked = { event -> viewModel.setEvent(event) },
+            ),
         )
     }
 }

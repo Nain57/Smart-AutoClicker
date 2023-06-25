@@ -23,14 +23,15 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.dialogViewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigSimpleBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.activities.ActivitySelectionDialog
@@ -43,9 +44,7 @@ import kotlinx.coroutines.launch
 class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
-    private val dialogViewModel: IntentViewModel by lazy {
-        ViewModelProvider(dialogController).get(IntentViewModel::class.java)
-    }
+    private val dialogViewModel: IntentViewModel by dialogViewModels()
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentIntentConfigSimpleBinding
@@ -95,15 +94,14 @@ class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext)
         }
     }
 
-    private fun showApplicationSelectionDialog() {
-        dialogController.showSubOverlay(
-            overlayController = ActivitySelectionDialog(
-                context = context,
+    private fun showApplicationSelectionDialog() =
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = ActivitySelectionDialog(
                 onApplicationSelected = { componentName ->
                     dialogViewModel.setActivitySelected(componentName)
                 }
             ),
-            false,
+            hideCurrent = false,
         )
-    }
 }

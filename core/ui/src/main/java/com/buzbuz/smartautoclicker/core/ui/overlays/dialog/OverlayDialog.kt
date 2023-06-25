@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.dialog
 
-import android.content.Context
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -29,7 +28,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayController
+import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -39,17 +38,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  * Controller for a dialog opened from a service as an overlay.
  *
  * This class ensure that all dialogs opened from a service will have the same behaviour. It provides basic lifecycle
- * alike methods to ease the view initialization/cleaning, as well as a back stack management with other
- * [OverlayController] opened through the [showSubOverlay] methods, allowing to open another dialog from this one and
- * easily go back to this one once the sub dialog is closed.
+ * alike methods to ease the view initialization/cleaning.
  */
-abstract class OverlayDialogController(
-    context: Context,
-    @StyleRes theme: Int? = null,
-) : OverlayController(context, theme, recreateOnRotation = true) {
+abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, recreateOnRotation = true) {
 
     /** The Android InputMethodManger, for ensuring the keyboard dismiss on dialog dismiss. */
-    private val inputMethodManager: InputMethodManager = context.getSystemService(InputMethodManager::class.java)
+    private lateinit var inputMethodManager: InputMethodManager
     /** Touch listener hiding the software keyboard and propagating the touch event normally. */
     protected val hideSoftInputTouchListener = { view: View, _: MotionEvent ->
         hideSoftInput()
@@ -91,6 +85,8 @@ abstract class OverlayDialogController(
     protected abstract fun onDialogCreated(dialog: BottomSheetDialog)
 
     final override fun onCreate() {
+        inputMethodManager = context.getSystemService(InputMethodManager::class.java)
+
         dialog = BottomSheetDialog(context).apply {
             val view = onCreateView()
 
@@ -98,7 +94,7 @@ abstract class OverlayDialogController(
             setCancelable(false)
             setOnKeyListener { _, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                    this@OverlayDialogController.destroy()
+                    this@OverlayDialog.back()
                     true
                 } else {
                     false
@@ -132,6 +128,12 @@ abstract class OverlayDialogController(
     }
 
     @CallSuper
+    override fun onPause() {
+        super.onPause()
+        hideSoftInput()
+    }
+
+    @CallSuper
     override fun onStop() {
         if (!isShowing) return
 
@@ -141,14 +143,9 @@ abstract class OverlayDialogController(
     }
 
     @CallSuper
-    override fun onDestroyed() {
+    override fun onDestroy() {
         dialog?.dismiss()
         dialog = null
-    }
-
-    final override fun showSubOverlay(overlayController: OverlayController, hideCurrent: Boolean) {
-        super.showSubOverlay(overlayController, true)
-        hideSoftInput()
     }
 
     /**

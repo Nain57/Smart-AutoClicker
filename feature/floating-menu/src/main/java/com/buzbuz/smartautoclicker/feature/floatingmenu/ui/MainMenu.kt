@@ -16,38 +16,38 @@
  */
 package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
 
-import android.content.Context
 import android.content.DialogInterface
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
 import android.view.WindowManager
-import androidx.appcompat.view.ContextThemeWrapper
 
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenuController
+import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.floatingmenu.R
 import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
-import com.google.android.material.color.DynamicColors
 
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
- * [OverlayMenuController] implementation for displaying the main menu overlay.
+ * [OverlayMenu] implementation for displaying the main menu overlay.
  *
  * This is the menu displayed once the service is started via the [com.buzbuz.smartautoclicker.activity.ScenarioActivity]
  * once the user has selected a scenario to be used. It allows the user to start the detection on the currently loaded
@@ -55,34 +55,29 @@ import kotlinx.coroutines.launch
  *
  * There is no overlay views attached to this overlay menu, meaning that the user will always be able to clicks on the
  * Activities displayed below it.
- *
- * @param context the Android Context for the overlay menu shown by this controller.
  */
-class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuController(context) {
+class MainMenu(private val scenarioId: Long) : OverlayMenu() {
 
     /** The view model for this menu. */
-    private val viewModel: MainMenuModel by lazy { ViewModelProvider(this).get(MainMenuModel::class.java) }
+    private val viewModel: MainMenuModel by viewModels()
     /** The view model for the debugging features. */
-    private val debuggingViewModel: DebugModel by lazy {
-        ViewModelProvider(this).get(DebugModel::class.java)
-    }
-
-    /** Animation from play to pause. */
-    private val playToPauseDrawable =
-        AnimatedVectorDrawableCompat.create(context, R.drawable.anim_play_pause)!!
-    /** Animation from pause to play. */
-    private val pauseToPlayDrawable =
-        AnimatedVectorDrawableCompat.create(context, R.drawable.anim_pause_play)!!
-
-    private var billingFlowTriggeredByDetectionLimitation: Boolean = false
-
-    /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
-    private var debugObservableJob: Job? = null
+    private val debuggingViewModel: DebugModel by viewModels()
 
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayMenuBinding
+    /** Animation from play to pause. */
+    private lateinit var playToPauseDrawable: AnimatedVectorDrawableCompat
+    /** Animation from pause to play. */
+    private lateinit var pauseToPlayDrawable: AnimatedVectorDrawableCompat
+
+    private var billingFlowTriggeredByDetectionLimitation: Boolean = false
+    /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
+    private var debugObservableJob: Job? = null
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
+        playToPauseDrawable = AnimatedVectorDrawableCompat.create(context, R.drawable.anim_play_pause)!!
+        pauseToPlayDrawable = AnimatedVectorDrawableCompat.create(context, R.drawable.anim_pause_play)!!
+
         viewBinding = OverlayMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }
@@ -143,7 +138,7 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
                     showScenarioConfigDialog()
                 }
             }
-            R.id.btn_stop -> destroy()
+            R.id.btn_stop -> finish()
         }
     }
 
@@ -194,16 +189,15 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
         }
     }
 
-    private fun showScenarioConfigDialog() {
-        showSubOverlay(
-            overlayController = ScenarioDialog(
-                context = context,
+    private fun showScenarioConfigDialog() =
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = ScenarioDialog(
                 onConfigDiscarded = viewModel::cancelScenarioChanges,
                 onConfigSaved = { viewModel.saveScenarioChanges { success -> if (!success) showScenarioSaveErrorDialog() } },
             ),
             hideCurrent = true,
         )
-    }
 
     private fun showScenarioSaveErrorDialog() {
         MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
@@ -269,6 +263,10 @@ class MainMenu(context: Context, private val scenarioId: Long) : OverlayMenuCont
 
     private fun showDebugReportDialog(reportReady: Boolean) {
         if (!reportReady) return
-        showSubOverlay(DebugReportDialog(context))
+
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = DebugReportDialog(),
+        )
     }
 }
