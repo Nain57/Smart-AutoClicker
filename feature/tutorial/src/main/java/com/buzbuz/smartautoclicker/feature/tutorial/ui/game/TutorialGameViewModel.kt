@@ -24,8 +24,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGame
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -34,25 +35,33 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import java.lang.Thread.State
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TutorialGameViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository()
+    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
 
-    val currentGame: StateFlow<TutorialGame?> = tutorialRepository.currentGame
-        .stateInWhileSubscribed(null)
+    val currentGame: StateFlow<TutorialGame?> = tutorialRepository.activeTutorial
+        .map { it?.game }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(3_000),
+            null,
+        )
+
+    val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.tutorialOverlayState
+        .map { it != null }
 
     private val isStarted: Flow<Boolean> = currentGame
-        .flatMapLatest { it?.isStarted ?: flowOf(false) }
+        .flatMapLatest { it?.state?.map { it.isStarted } ?: flowOf(false) }
 
     val gameTimerValue: Flow<Int> = currentGame
-        .flatMapLatest { it?.timer ?: flowOf(0) }
+        .flatMapLatest { it?.state?.map { it.timeLeft } ?: flowOf(0) }
 
     val gameScore: Flow<Int> = currentGame
-        .flatMapLatest { it?.score ?: flowOf(0) }
+        .flatMapLatest { it?.state?.map { it.score } ?: flowOf(0) }
 
     val gameTargets: Flow<Map<TutorialGameTargetType, PointF>> = currentGame
         .flatMapLatest { it?.targets ?: flowOf(emptyMap()) }
@@ -72,32 +81,21 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
             !started && score >= game.highScore
         }
 
+    fun selectGame(gameIndex: Int) {
+        tutorialRepository.startTutorial(gameIndex)
+    }
+
     fun startGame(area: Rect, targetsSize: Int) {
-        currentGame.value?.start(viewModelScope, area, targetsSize)
+        tutorialRepository.startGame(viewModelScope, area, targetsSize)
     }
 
     fun onTargetHit(color: TutorialGameTargetType) {
-        currentGame.value?.onTargetHit(color)
+        tutorialRepository.onGameTargetHit(color)
     }
 
-    fun stopGame() {
-        currentGame.value?.stop()
+    fun stopTutorial() {
+        tutorialRepository.stopTutorial()
     }
-
-    fun selectGame(gameIndex: Int) {
-        tutorialRepository.setGameIndex(gameIndex)
-    }
-
-    fun toNextGame() {
-        tutorialRepository.nextGame()
-    }
-
-    private fun <T> Flow<T>.stateInWhileSubscribed(value: T): StateFlow<T> =
-        stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(3_000),
-            value,
-        )
 }
 
 enum class PlayRetryButtonState {

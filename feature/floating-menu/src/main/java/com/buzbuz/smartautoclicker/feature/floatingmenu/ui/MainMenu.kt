@@ -130,10 +130,11 @@ class MainMenu(private val scenarioId: Long) : OverlayMenu() {
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> {
-                viewModel.toggleDetection(context) {
+                context.startActivity(TutorialActivity.getStartIntent(context, TutorialStartingPage.LIST))
+                /*viewModel.toggleDetection(context) {
                     billingFlowTriggeredByDetectionLimitation = true
                     hide()
-                }
+                }*/
             }
             R.id.btn_click_list -> {
                 viewModel.startScenarioEdition {

@@ -27,21 +27,22 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoMovingTar
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoStillTargetsPressWhenBothVisibleRules
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoStillTargetsPressWhenOneVisibleRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class TutorialListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository()
+    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
     private val overlayManager: OverlayManager = OverlayManager.getInstance(application)
 
     val items: Flow<List<TutorialItem>> = flowOf(
         buildList {
             add(TutorialItem.Intro)
-            tutorialRepository.games.forEachIndexed { index, tutorialGame ->
-                tutorialGame.gameRules.toItem(index)?.let { add(it) }
+            tutorialRepository.tutorials.forEachIndexed { index, tutorial ->
+                add(tutorial.toItem(index))
             }
         }
     )
@@ -50,6 +51,13 @@ class TutorialListViewModel(application: Application) : AndroidViewModel(applica
         if (visible) overlayManager.restoreAll()
         else overlayManager.hideAll()
     }
+
+    private fun Tutorial.toItem(index: Int): TutorialItem =
+        TutorialItem.Game(
+            nameResId = nameResId,
+            descResId = descResId,
+            index = index,
+        )
 
     private fun TutorialGameRules.toItem(index: Int): TutorialItem? =
         when (this) {

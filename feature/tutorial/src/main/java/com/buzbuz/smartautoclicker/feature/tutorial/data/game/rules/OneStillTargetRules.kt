@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules
 import android.graphics.PointF
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
-internal class OneStillTargetRules : BaseGameRules() {
+internal class OneStillTargetRules(highScore: Int) : BaseGameRules(highScore) {
 
     override fun onStart(area: Rect, targetSize: Int) {
         _targets.value = mapOf(
@@ -31,7 +31,7 @@ internal class OneStillTargetRules : BaseGameRules() {
 
     override fun onTargetHit(type: TutorialGameTargetType) {
         if (type != TutorialGameTargetType.BLUE) return
-        _score.value++
+        score.value++
     }
 
 }

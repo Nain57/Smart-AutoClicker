@@ -16,42 +16,35 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation
 
+import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
 import java.io.PrintWriter
 
-internal class OverlayNavigationRequestStack {
+internal class OverlayNavigationRequestStack : LifoStack<OverlayNavigationRequest>() {
 
-    /** Contains all requests, from oldest to most recent. */
-    private val stack: ArrayDeque<OverlayNavigationRequest> = ArrayDeque(emptyList())
-
-    fun isEmpty(): Boolean = stack.isEmpty()
-
-    fun pop(): OverlayNavigationRequest? =
-        if (stack.isNotEmpty()) stack.removeLast() else null
-
-    fun push(request: OverlayNavigationRequest) =
-        when(request) {
-            is OverlayNavigationRequest.NavigateUp -> pushNavigateUp(request)
-            is OverlayNavigationRequest.NavigateTo -> pushNavigateTo(request)
-            is OverlayNavigationRequest.CloseAll -> pushCloseAll(request)
+    override fun push(element: OverlayNavigationRequest) =
+        when(element) {
+            is OverlayNavigationRequest.NavigateUp -> pushNavigateUp(element)
+            is OverlayNavigationRequest.NavigateTo -> pushNavigateTo(element)
+            is OverlayNavigationRequest.CloseAll -> pushCloseAll(element)
         }
 
     private fun pushNavigateUp(request: OverlayNavigationRequest.NavigateUp) {
         when {
-            stack.isNotEmpty() && stack.last() is OverlayNavigationRequest.NavigateTo -> stack.removeLast()
-            else -> stack.addLast(request)
+            isNotEmpty() && top is OverlayNavigationRequest.NavigateTo -> pop()
+            else -> super.push(request)
         }
     }
 
     private fun pushNavigateTo(request: OverlayNavigationRequest.NavigateTo) {
-        if (!stack.contains(request)) stack.addLast(request)
+        if (!contains(request)) super.push(request)
     }
 
     private fun pushCloseAll(request: OverlayNavigationRequest.CloseAll) {
-        stack.clear()
-        stack.addLast(request)
+        clear()
+        super.push(request)
     }
 
     fun dump(writer: PrintWriter, prefix: String) {
-        stack.forEach { writer.println("$prefix $it") }
+        forEach { writer.println("$prefix $it") }
     }
 }

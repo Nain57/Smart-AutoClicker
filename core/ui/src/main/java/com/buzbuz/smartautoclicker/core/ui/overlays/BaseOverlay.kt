@@ -46,7 +46,7 @@ import java.io.PrintWriter
 
 
 /**
- * Base class for an overlay based ui providing lifecycle and back stack management.
+ * Base class for an overlay based ui providing lifecycle management.
  *
  * Initialization starts with the [create] method, which will call the correct implementation methods to creates and
  * show the overlay ui object.

@@ -21,11 +21,11 @@ import android.graphics.Rect
 import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.extensions.nextFloat
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlin.random.Random
 
-internal class OneMovingTargetRules : BaseGameRules() {
+internal class OneMovingTargetRules(highScore: Int) : BaseGameRules(highScore) {
 
     private val random: Random = Random(System.currentTimeMillis())
 
@@ -45,7 +45,7 @@ internal class OneMovingTargetRules : BaseGameRules() {
     override fun onTargetHit(type: TutorialGameTargetType) {
         if (type != TutorialGameTargetType.BLUE) return
 
-        _score.value++
+        score.value++
         updateTargetPosition()
     }
 

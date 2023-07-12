@@ -14,17 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.domain.game
+package com.buzbuz.smartautoclicker.feature.tutorial.domain
 
-import androidx.annotation.StringRes
+import android.view.View
+import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
 
-data class TutorialGame(
-    @StringRes val instructionsResId: Int,
-    val highScore: Int,
-    val gameRules: TutorialGameRules,
-): TutorialGameRules by gameRules
+interface TutorialMonitoredViewsManager {
 
+    companion object {
+        fun getInstance(): TutorialMonitoredViewsManager = MonitoredViewsManager.getInstance()
+    }
 
+    fun attach(type: TutorialMonitoredViewType, monitoredView: View)
 
-
-
+    fun detach(type: TutorialMonitoredViewType)
+}

@@ -14,23 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.domain.game
+package com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game
 
-import android.graphics.PointF
-import android.graphics.Rect
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
-
-interface TutorialGameRules {
-
-    val isStarted: StateFlow<Boolean>
-    val timer: StateFlow<Int>
-    val score: StateFlow<Int>
-    val targets: StateFlow<Map<TutorialGameTargetType, PointF>>
-
-    fun start(coroutineScope: CoroutineScope, area: Rect, targetSize: Int)
-    fun stop()
-
-    fun onTargetHit(type: TutorialGameTargetType)
+enum class TutorialGameTargetType {
+    BLUE,
+    RED,
 }
