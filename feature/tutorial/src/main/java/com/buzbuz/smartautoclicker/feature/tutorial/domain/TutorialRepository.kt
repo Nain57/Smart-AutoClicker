@@ -16,14 +16,25 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.domain
 
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGamesDataSource
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGame
+import android.content.Context
+import android.graphics.Rect
 
+import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
+import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialPlayer
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
+
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
-class TutorialRepository(gamesDataSource: TutorialGamesDataSource) {
+class TutorialRepository private constructor(
+    context: Context,
+    private val dataSource: TutorialDataSource,
+) {
 
     companion object {
 
@@ -36,29 +47,51 @@ class TutorialRepository(gamesDataSource: TutorialGamesDataSource) {
          *
          * @return the TutorialRepository singleton.
          */
-        fun getTutorialRepository(): TutorialRepository {
+        fun getTutorialRepository(context: Context): TutorialRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = TutorialRepository(TutorialGamesDataSource)
+                val instance = TutorialRepository(context, TutorialDataSource)
                 INSTANCE = instance
                 instance
             }
         }
     }
 
-    val games: List<TutorialGame> = gamesDataSource.tutorialGames
+    private val tutorialPlayer: TutorialPlayer = TutorialPlayer(context)
 
-    private val currentGameIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    val currentGame: Flow<TutorialGame> = currentGameIndex.map { gameIndex -> games[gameIndex] }
+    val tutorials: List<Tutorial> = dataSource.tutorials.map { it.toDomain() }
 
-    fun setGameIndex(index: Int) {
-        if (index < 0 || index >= games.size) return
-        currentGameIndex.value = index
+    val activeTutorial: Flow<Tutorial?> = tutorialPlayer.tutorial.map { it?.toDomain() }
+
+    val tutorialOverlayState: Flow<TutorialOverlayState?> =
+        combine(tutorialPlayer.currentStep, tutorialPlayer.stepMonitoredViewPosition) { step, position ->
+            step?.toDomain(position)
+        }
+
+    fun startTutorial(index: Int) {
+        if (index < 0 || index >= tutorials.size) return
+        tutorialPlayer.startTutorial(dataSource.tutorials[index])
     }
 
-    fun nextGame() {
-        val gameIndex = currentGameIndex.value + 1
-        if (gameIndex < 0 || gameIndex >= games.size) return
+    fun nextTutorialStep() {
+        tutorialPlayer.nextStep()
+    }
 
-        currentGameIndex.value = gameIndex
+    fun skipAllTutorialSteps() {
+        tutorialPlayer.skipAllSteps()
+    }
+
+    fun startGame(scope: CoroutineScope, area: Rect, targetSize: Int) {
+        tutorialPlayer.startGame(scope, area, targetSize)
+    }
+
+    fun onGameTargetHit(targetType: TutorialGameTargetType) {
+        tutorialPlayer.onGameTargetHit(targetType)
+    }
+
+    fun stopGame() {
+        tutorialPlayer.stopGame()
+    }
+    fun stopTutorial() {
+        tutorialPlayer.stopTutorial()
     }
 }

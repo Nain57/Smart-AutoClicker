@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules
 import android.graphics.PointF
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
-internal class TwoStillTargetsPressWhenOneVisibleRules : BaseGameRules() {
+internal class TwoStillTargetsPressWhenOneVisibleRules(highScore: Int) : BaseGameRules(highScore) {
 
     private var redTargetPosition: PointF? = null
     private var nextRedVisibilityToggleTimerValue: Int? = null
@@ -44,8 +44,8 @@ internal class TwoStillTargetsPressWhenOneVisibleRules : BaseGameRules() {
         val blueIsVisible = _targets.value.containsKey(TutorialGameTargetType.BLUE)
         val redIsVisible = _targets.value.containsKey(TutorialGameTargetType.RED)
 
-        if (type == TutorialGameTargetType.BLUE && blueIsVisible && !redIsVisible) _score.value++
-        else _score.value--
+        if (type == TutorialGameTargetType.BLUE && blueIsVisible && !redIsVisible) score.value++
+        else score.value--
     }
 
     private fun toggleRedVisibility() {

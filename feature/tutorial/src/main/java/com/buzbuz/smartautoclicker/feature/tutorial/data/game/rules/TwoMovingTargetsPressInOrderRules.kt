@@ -21,11 +21,11 @@ import android.graphics.Rect
 import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.extensions.getNextPositionIn
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlin.random.Random
 
-internal class TwoMovingTargetsPressInOrderRules : BaseGameRules() {
+internal class TwoMovingTargetsPressInOrderRules(highScore: Int) : BaseGameRules(highScore) {
 
     private val random: Random = Random(System.currentTimeMillis())
 
@@ -53,10 +53,10 @@ internal class TwoMovingTargetsPressInOrderRules : BaseGameRules() {
             type == TutorialGameTargetType.BLUE && !targets.containsKey(TutorialGameTargetType.RED) && targets.containsKey(
                 TutorialGameTargetType.BLUE
             ) -> {
-                _score.value += 2
+                score.value += 2
                 showNewTargets()
             }
-            else -> _score.value--
+            else -> score.value--
         }
     }
 

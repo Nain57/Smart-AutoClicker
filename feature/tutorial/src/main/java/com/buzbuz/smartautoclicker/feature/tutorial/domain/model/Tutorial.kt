@@ -14,9 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.domain.game
+package com.buzbuz.smartautoclicker.feature.tutorial.domain.model
 
-enum class TutorialGameTargetType {
-    BLUE,
-    RED,
-}
+import androidx.annotation.StringRes
+
+import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialData
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.toDomain
+
+data class Tutorial(
+    @StringRes val nameResId: Int,
+    @StringRes val descResId: Int,
+    val game: TutorialGame,
+)
+
+internal fun TutorialData.toDomain(): Tutorial =
+    Tutorial(
+        nameResId = nameResId,
+        descResId = descResId,
+        game = game.toDomain(),
+    )
