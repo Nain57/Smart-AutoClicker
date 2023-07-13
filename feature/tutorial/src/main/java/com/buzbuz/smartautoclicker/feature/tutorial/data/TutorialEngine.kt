@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data
 
 import android.content.Context
 import android.graphics.Rect
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
@@ -31,11 +32,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class TutorialPlayer(context: Context) {
+internal class TutorialEngine(context: Context) {
 
     private val overlayManager: OverlayManager = OverlayManager.getInstance(context)
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
@@ -47,7 +49,9 @@ internal class TutorialPlayer(context: Context) {
     private var stepStartBackStackTop: MutableStateFlow<Overlay?> = MutableStateFlow(null)
 
     val gameState: Flow<TutorialGameStateData?> = _tutorial
-        .flatMapLatest { it?.game?.gameState ?: flowOf(null) }
+        .flatMapLatest { tutorial ->
+            tutorial?.game?.gameState ?: flowOf(null)
+        }
 
     val currentStep: Flow<TutorialStepData?> =
         combine(_tutorial, stepIndex, gameState, overlayManager.backStackTop) { tuto, index, gameState, top ->
@@ -55,6 +59,8 @@ internal class TutorialPlayer(context: Context) {
             if (index < 0 || index >= tuto.steps.size) return@combine null
 
             val step = tuto.steps[index]
+            Log.d(TAG, "New tutorial step $index - $step; backStackTop=$top")
+
             when (step.stepStartCondition) {
                 StepStartCondition.Immediate ->
                     step
@@ -67,21 +73,16 @@ internal class TutorialPlayer(context: Context) {
                     if (gameState?.isWon == true) step
                     else null
 
-                StepStartCondition.GameLost ->
+                StepStartCondition.GameLost -> {
                     if (gameState?.isWon == false) step
                     else null
+                }
             }
-        }
-
-    val stepMonitoredViewPosition: Flow<Rect?> = currentStep
-        .flatMapLatest { step ->
-            if (step != null && step.stepEndCondition is StepEndCondition.MonitoredViewClicked)
-                monitoredViewsManager.getViewPosition(step.stepEndCondition.type) ?: flowOf(null)
-            else
-                flowOf(null)
-        }
+        }.distinctUntilChanged()
 
     fun startTutorial(newTutorial: TutorialData) {
+        Log.d(TAG, "Start tutorial")
+
         // Keep track of current top of back stack value and monitored views
         setTutorialExpectedViews(newTutorial)
         stepStartBackStackTop.value = overlayManager.backStackTop.value
@@ -93,6 +94,8 @@ internal class TutorialPlayer(context: Context) {
     fun nextStep() {
         val step = getCurrentStep() ?: return
         val index = stepIndex.value ?: return
+
+        Log.d(TAG, "End current step: $index - $step")
 
         // Keep track of current top of back stack value
         stepStartBackStackTop.value = overlayManager.backStackTop.value
@@ -110,23 +113,30 @@ internal class TutorialPlayer(context: Context) {
     }
 
     fun skipAllSteps() {
+        Log.d(TAG, "Skip all steps")
+
         stepIndex.value = null
         stepStartBackStackTop.value = null
     }
 
     fun startGame(scope: CoroutineScope, area: Rect, targetSize: Int) {
+        Log.d(TAG, "Start game on area $area with target size $targetSize")
         _tutorial.value?.game?.start(scope, area, targetSize)
     }
 
     fun onGameTargetHit(target: TutorialGameTargetType) {
+        Log.d(TAG, "onTargetHit $target")
         _tutorial.value?.game?.onTargetHit(target)
     }
 
     fun stopGame() {
+        Log.d(TAG, "Stop game")
         _tutorial.value?.game?.stop()
     }
 
     fun stopTutorial() {
+        Log.d(TAG, "Stop tutorial")
+
         _tutorial.value?.game?.stop()
         monitoredViewsManager.clearExpectedViews()
         stepIndex.value = null
@@ -149,3 +159,5 @@ internal class TutorialPlayer(context: Context) {
         )
     }
 }
+
+private const val TAG = "TutorialEngine"

@@ -30,6 +30,7 @@ internal data class TutorialData(
 
 internal data class TutorialStepData(
     @StringRes val contentTextResId: Int,
+    val hideFloatingUi: Boolean,
     val stepStartCondition: StepStartCondition,
     val stepEndCondition: StepEndCondition,
 )

@@ -73,6 +73,16 @@ class ScenarioDialog(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.monitorCreateEventView(createCopyButtons.buttonNew)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
         when (buttonType) {
             DialogNavigationButton.SAVE -> onConfigSaved()

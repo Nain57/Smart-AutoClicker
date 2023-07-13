@@ -23,6 +23,9 @@ import androidx.lifecycle.ViewModelStoreOwner
 
 abstract class Overlay : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
 
+    /** The context for this overlay. */
+    abstract var context: Context
+
     /**
      * Make the overlay visible again after calling [hide].
      * If the overlay is already visible, does nothing.

@@ -17,10 +17,13 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario
 
 import android.app.Application
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -31,6 +34,7 @@ import kotlinx.coroutines.flow.combine
 class ScenarioDialogViewModel(application: Application): AndroidViewModel(application) {
 
     private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /**
      * Tells if all content have their field correctly configured.
@@ -50,4 +54,12 @@ class ScenarioDialogViewModel(application: Application): AndroidViewModel(applic
     /** Tells if the configured scenario is valid and can be saved in database. */
     val scenarioCanBeSaved: Flow<Boolean> = editionRepository.editionState.scenarioCompleteState
         .map { it.canBeSaved }
+
+    fun monitorCreateEventView(view: View) {
+        monitoredViewsManager.attach(TutorialMonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(TutorialMonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT)
+    }
 }

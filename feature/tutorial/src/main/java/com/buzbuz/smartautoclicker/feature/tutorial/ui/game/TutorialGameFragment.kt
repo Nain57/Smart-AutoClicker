@@ -42,7 +42,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setHeaderIn
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setNextLevelBtnVisibility
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setScore
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setTimeLeft
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialOverlay
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialTopOverlay
 
 import kotlinx.coroutines.launch
 
@@ -138,7 +138,7 @@ class TutorialGameFragment : Fragment() {
 
     private fun showHideStepOverlay(show: Boolean) {
         OverlayManager.getInstance(requireContext()).apply {
-            if (show) setTopOverlay(requireContext(), TutorialOverlay())
+            if (show) setTopOverlay(TutorialTopOverlay())
             else removeTopOverlay()
         }
     }

@@ -33,7 +33,7 @@ data class TutorialGame(
 
 data class TutorialGameState(
     val isStarted: Boolean,
-    val isWon: Boolean,
+    val isWon: Boolean?,
     val timeLeft: Int,
     val score: Int,
 )

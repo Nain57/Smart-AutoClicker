@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay
 
+import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 
@@ -23,13 +24,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.OverlayFullScreen
+import com.buzbuz.smartautoclicker.core.ui.overlays.TopOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.OverlayTutorialBinding
 
 import kotlinx.coroutines.launch
 
-class TutorialOverlay : OverlayFullScreen() {
+class TutorialTopOverlay : TopOverlay(theme = R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: TutorialOverlayViewModel by viewModels()
@@ -50,6 +52,7 @@ class TutorialOverlay : OverlayFullScreen() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.collect(::updateUiState) }
+                launch { viewModel.monitoredViewPosition.collect(::updateExpectedViewPosition) }
             }
         }
     }
@@ -67,10 +70,13 @@ class TutorialOverlay : OverlayFullScreen() {
                 }
 
                 is TutorialExitButton.MonitoredView -> {
-                    tutorialBackground.expectedViewPosition = uiState.exitButton.position
                     buttonNext.visibility = View.GONE
                 }
             }
         }
+    }
+
+    private fun updateExpectedViewPosition(position: Rect?) {
+        viewBinding.tutorialBackground.expectedViewPosition = position
     }
 }

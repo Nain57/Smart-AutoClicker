@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.domain.model
 
-import android.graphics.Rect
 import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.StepEndCondition
@@ -26,6 +25,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.Tuto
 
 data class TutorialOverlayState(
     @StringRes val tutorialInstructionsResId: Int,
+    val hideFloatingUi: Boolean,
     val stepEnd: TutorialStepEnd,
 )
 
@@ -35,24 +35,18 @@ sealed class TutorialStepEnd {
 
     data class MonitoredViewClick(
         val type: TutorialMonitoredViewType,
-        val position: Rect = Rect(),
     ) : TutorialStepEnd()
 }
 
-internal fun TutorialStepData.toDomain(monitoredViewPosition: Rect?): TutorialOverlayState =
+internal fun TutorialStepData.toDomain(): TutorialOverlayState =
     TutorialOverlayState(
         tutorialInstructionsResId = contentTextResId,
-        stepEnd = stepEndCondition.toDomain(monitoredViewPosition),
+        hideFloatingUi = hideFloatingUi,
+        stepEnd = stepEndCondition.toDomain(),
     )
 
-private fun StepEndCondition.toDomain(monitoredViewPosition: Rect?): TutorialStepEnd =
+private fun StepEndCondition.toDomain(): TutorialStepEnd =
     when (this) {
-        StepEndCondition.NextButton ->
-            TutorialStepEnd.NextButton
-
-        is StepEndCondition.MonitoredViewClicked ->
-            TutorialStepEnd.MonitoredViewClick(
-                type = type,
-                position = monitoredViewPosition ?: Rect()
-            )
+        StepEndCondition.NextButton -> TutorialStepEnd.NextButton
+        is StepEndCondition.MonitoredViewClicked -> TutorialStepEnd.MonitoredViewClick(type)
     }
