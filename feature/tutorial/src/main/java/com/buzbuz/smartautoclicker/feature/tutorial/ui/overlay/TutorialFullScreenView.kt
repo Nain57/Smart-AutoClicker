@@ -19,15 +19,14 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
-import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+
+import com.buzbuz.smartautoclicker.feature.tutorial.R
 
 class TutorialFullScreenView @JvmOverloads constructor(
     context: Context,
@@ -35,7 +34,10 @@ class TutorialFullScreenView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : View(context, attrs, defStyleAttr) {
 
-    private val backgroundPaint: Paint = Paint()
+    private val backgroundPaint: Paint = Paint().apply {
+        isAntiAlias = true
+        color = context.getColor(R.color.tutorial_overlay_background)
+    }
     private val drawPath: Path =
         Path().apply {
             fillType = Path.FillType.WINDING
@@ -60,19 +62,16 @@ class TutorialFullScreenView @JvmOverloads constructor(
         super.invalidate()
 
         measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
-        backgroundPaint.shader = LinearGradient(
-            0f, 0f,
-            0f, height.toFloat(),
-            intArrayOf(Color.BLACK, 0x77000000, Color.TRANSPARENT),
-            floatArrayOf(0f , 0.5f, 0.9f),
-            Shader.TileMode.CLAMP,
-        )
 
         drawPath.apply {
             reset()
             addRect(0f, 0f, width.toFloat(), height.toFloat(), Path.Direction.CW)
             expectedViewPosition?.let { position ->
-                addCircle(position.left.toFloat(), position.top.toFloat(), height * 2f, Path.Direction.CCW)
+                addCircle(
+                    position.centerX().toFloat(), position.centerY().toFloat(),
+                    position.height().toFloat(),
+                    Path.Direction.CCW,
+                )
             }
         }
     }
@@ -88,7 +87,7 @@ class TutorialFullScreenView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event ?: return false
 
-        return if (event.action == MotionEvent.ACTION_UP && event.isOnMonitoredView()) {
+        return if (event.action == MotionEvent.ACTION_DOWN && event.isOnMonitoredView()) {
             onMonitoredViewClickedListener?.invoke()
             true
         } else super.onTouchEvent(event)
