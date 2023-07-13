@@ -24,7 +24,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
@@ -33,6 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -56,15 +56,19 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
 
     private val isStarted: Flow<Boolean> = currentGame
         .flatMapLatest { it?.state?.map { it.isStarted } ?: flowOf(false) }
+        .distinctUntilChanged()
 
     val gameTimerValue: Flow<Int> = currentGame
         .flatMapLatest { it?.state?.map { it.timeLeft } ?: flowOf(0) }
+        .distinctUntilChanged()
 
     val gameScore: Flow<Int> = currentGame
         .flatMapLatest { it?.state?.map { it.score } ?: flowOf(0) }
+        .distinctUntilChanged()
 
     val gameTargets: Flow<Map<TutorialGameTargetType, PointF>> = currentGame
         .flatMapLatest { it?.targets ?: flowOf(emptyMap()) }
+        .distinctUntilChanged()
 
     val playRetryBtnState: Flow<PlayRetryButtonState> =
         combine(currentGame, isStarted, gameScore) { game, started, score ->

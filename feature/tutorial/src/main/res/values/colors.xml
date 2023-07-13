@@ -18,4 +18,5 @@
 <resources>
     <color name="tutorial_game_target_blue">#2196F3</color>
     <color name="tutorial_game_target_red">#F44336</color>
+    <color name="tutorial_overlay_background">#BB000000</color>
 </resources>

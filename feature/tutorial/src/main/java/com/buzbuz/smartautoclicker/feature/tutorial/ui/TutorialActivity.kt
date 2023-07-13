@@ -23,8 +23,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialTopOverlay
 
 
 class TutorialActivity : AppCompatActivity() {
@@ -55,10 +57,13 @@ class TutorialActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
 
+        setupActionBar()
+        setupNavGraph(intent.getStartingPage())
+    }
+
+    private fun setupActionBar() {
         setSupportActionBar(findViewById(R.id.topAppBar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        setupNavGraph(intent.getStartingPage())
     }
 
     private fun setupNavGraph(startingPage: TutorialStartingPage?) {

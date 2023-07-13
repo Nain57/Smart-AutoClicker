@@ -45,7 +45,7 @@ internal interface TutorialGameRules {
 
 internal data class TutorialGameStateData(
     val isStarted: Boolean = false,
-    val isWon: Boolean = false,
+    val isWon: Boolean? = null,
     val timeLeft: Int = 0,
     val score: Int = 0,
 )

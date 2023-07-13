@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.OneStillTarg
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoMovingTargetsPressInOrderRules
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoStillTargetsPressWhenBothVisibleRules
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoStillTargetsPressWhenOneVisibleRules
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
 
 internal object TutorialDataSource {
 
@@ -35,10 +36,25 @@ internal object TutorialDataSource {
                 gameRules = OneStillTargetRules(10),
             ),
             steps = listOf(
-                TutorialStepData(
+                /*TutorialStepData(
                     contentTextResId = R.string.message_tutorial_instructions_1,
+                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
+                ),
+                TutorialStepData(
+                    contentTextResId = R.string.message_tutorial_instructions_1,
+                    hideFloatingUi = true,
+                    stepStartCondition = StepStartCondition.GameLost,
+                    stepEndCondition = StepEndCondition.NextButton,
+                ),*/
+                TutorialStepData(
+                    contentTextResId = R.string.message_tutorial_instructions_1,
+                    hideFloatingUi = false,
+                    stepStartCondition = StepStartCondition.NextOverlay,
+                    stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                        TutorialMonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT,
+                    ),
                 ),
             )
         ),
@@ -54,6 +70,7 @@ internal object TutorialDataSource {
                 TutorialStepData(
                     contentTextResId = R.string.message_tutorial_instructions_1,
                     stepStartCondition = StepStartCondition.Immediate,
+                    hideFloatingUi = true,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
             )
@@ -69,6 +86,7 @@ internal object TutorialDataSource {
             steps = listOf(
                 TutorialStepData(
                     contentTextResId = R.string.message_tutorial_instructions_1,
+                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
@@ -85,6 +103,7 @@ internal object TutorialDataSource {
             steps = listOf(
                 TutorialStepData(
                     contentTextResId = R.string.message_tutorial_instructions_1,
+                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
@@ -101,6 +120,7 @@ internal object TutorialDataSource {
             steps = listOf(
                 TutorialStepData(
                     contentTextResId = R.string.message_tutorial_instructions_1,
+                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),

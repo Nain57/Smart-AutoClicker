@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.Tuto
 
 import kotlinx.coroutines.flow.StateFlow
 
-internal class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager {
+class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager {
 
     companion object {
 
@@ -57,19 +57,19 @@ internal class MonitoredViewsManager private constructor(): TutorialMonitoredVie
         monitoredViews[type]?.detachView()
     }
 
-    fun setExpectedViews(types: Set<TutorialMonitoredViewType>) {
+    internal fun setExpectedViews(types: Set<TutorialMonitoredViewType>) {
         types.forEach { type ->
             if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor()
         }
     }
 
-    fun clearExpectedViews() {
+    internal fun clearExpectedViews() {
         monitoredViews.clear()
     }
 
-    fun getViewPosition(type: TutorialMonitoredViewType): StateFlow<Rect>? =
+    internal fun getViewPosition(type: TutorialMonitoredViewType): StateFlow<Rect>? =
         monitoredViews[type]?.position
 
-    fun performClick(type: TutorialMonitoredViewType): Boolean =
+    internal fun performClick(type: TutorialMonitoredViewType): Boolean =
         monitoredViews[type]?.performClick() ?: false
 }

@@ -23,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.TopOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
@@ -122,19 +123,25 @@ class OverlayManager private constructor(context: Context) {
         }
     }
 
-    fun setTopOverlay(context: Context, overlay: Overlay) {
+    fun setTopOverlay(overlay: TopOverlay) {
         if (topOverlay != null) return
+        val stackTop = overlayBackStack.top ?: return
+
+        Log.d(TAG, "Create top overlay ${overlay.hashCode()} using context of ${stackTop.hashCode()}")
 
         topOverlay = overlay.apply {
             create(
-                appContext = context,
+                appContext = stackTop.context,
                 dismissListener = { _, _ -> topOverlay = null },
             )
+
             resume()
         }
     }
 
     fun removeTopOverlay() {
+        Log.d(TAG, "Remove top overlay")
+
         topOverlay?.destroy()
         topOverlay = null
     }
@@ -152,7 +159,7 @@ class OverlayManager private constructor(context: Context) {
             null -> {
                 // If there is no more navigation requests, set the top overlay as current
                 if (overlayBackStack.isNotEmpty()) {
-                    Log.d(TAG, "No more pending request, resume top overlay")
+                    Log.d(TAG, "No more pending request, resume stack top overlay")
                     overlayBackStack.peek().resume()
                 }
 
@@ -177,13 +184,15 @@ class OverlayManager private constructor(context: Context) {
             appContext = context,
             dismissListener = ::onOverlayDismissed,
         )
-        overlayBackStack.push(request.overlay)
 
         // Update current lifecycle
         currentOverlay?.apply {
             if (request.hideCurrent) stop()
             else pause()
         }
+
+        request.overlay.start()
+        overlayBackStack.push(request.overlay)
 
         executeNextNavigationRequest(context)
     }

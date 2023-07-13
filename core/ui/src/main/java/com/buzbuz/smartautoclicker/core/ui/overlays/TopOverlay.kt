@@ -20,10 +20,11 @@ import android.graphics.PixelFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.StyleRes
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
-abstract class OverlayFullScreen : BaseOverlay() {
+abstract class TopOverlay(@StyleRes theme: Int) : BaseOverlay(theme) {
 
     /** The layout parameters of the menu layout. */
     private val viewLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
@@ -46,8 +47,9 @@ abstract class OverlayFullScreen : BaseOverlay() {
     protected abstract fun onViewCreated()
 
     final override fun onCreate() {
-        windowManager = context.getSystemService(WindowManager::class.java)!!
+        windowManager = context.getSystemService(WindowManager::class.java)
         view = onCreateView(context.getSystemService(LayoutInflater::class.java))
+
         onViewCreated()
     }
 
@@ -57,5 +59,9 @@ abstract class OverlayFullScreen : BaseOverlay() {
 
     override fun onStop() {
         windowManager.removeView(view)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

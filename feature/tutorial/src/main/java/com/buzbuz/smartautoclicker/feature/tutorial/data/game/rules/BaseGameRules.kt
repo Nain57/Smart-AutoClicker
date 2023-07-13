@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules
 
 import android.graphics.PointF
 import android.graphics.Rect
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameStateData
@@ -36,7 +37,7 @@ import kotlin.time.Duration.Companion.seconds
 internal abstract class BaseGameRules(override val highScore: Int) : TutorialGameRules {
 
     private val isStarted: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val isWon: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val isWon: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     protected val timer: MutableStateFlow<Int> = MutableStateFlow(GAME_DURATION_SECONDS)
     protected val score: MutableStateFlow<Int> = MutableStateFlow(0)
     final override val gameState: Flow<TutorialGameStateData> =
@@ -57,7 +58,9 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
             isStarted.value = true
             timer.value = GAME_DURATION_SECONDS
             score.value = 0
-            isWon.value = false
+            isWon.value = null
+
+            Log.d(TAG, "Start game")
 
             onStart(area, targetSize)
             onTimerTick(GAME_DURATION_SECONDS)
@@ -66,10 +69,14 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
             for (i in GAME_DURATION_SECONDS - 1 downTo  0) {
                 delay(1.seconds)
                 timer.value = i
+
+                Log.d(TAG, "onTimerTick $i")
                 onTimerTick(i)
             }
 
             // Game is over
+            Log.d(TAG, "Game over")
+
             isStarted.value = false
             isWon.value = score.value > highScore
             _targets.value = emptyMap()
@@ -79,19 +86,24 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
     final override fun stop() {
         if (!isStarted.value) return
 
+        Log.d(TAG, "Stop game")
+
         gameJob?.cancel()
         gameJob = null
 
         isStarted.value = false
         timer.value = 0
+        isWon.value = null
         _targets.value = emptyMap()
     }
 
     override fun reset() {
+        Log.d(TAG, "Reset game")
+
         isStarted.value = false
         timer.value = 0
         score.value = 0
-        isWon.value = false
+        isWon.value = null
         _targets.value = emptyMap()
     }
 
@@ -99,4 +111,5 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
     open fun onTimerTick(timeLeft: Int) { /* Default impl does nothing. */ }
 }
 
-private const val GAME_DURATION_SECONDS = 20
+private const val TAG = "TutorialGameRules"
+private const val GAME_DURATION_SECONDS = 5

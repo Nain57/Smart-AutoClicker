@@ -57,7 +57,7 @@ abstract class BaseOverlay internal constructor(
 ) : Overlay() {
 
     /** The context for this overlay. */
-    protected lateinit var context: Context
+    override lateinit var context: Context
     /** The metrics of the device screen. */
     protected val displayMetrics: DisplayMetrics by lazy {
         DisplayMetrics.getInstance(context)

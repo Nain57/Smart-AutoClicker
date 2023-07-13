@@ -18,9 +18,10 @@ package com.buzbuz.smartautoclicker.feature.tutorial.domain
 
 import android.content.Context
 import android.graphics.Rect
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
-import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialPlayer
+import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
@@ -28,7 +29,6 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class TutorialRepository private constructor(
@@ -56,42 +56,45 @@ class TutorialRepository private constructor(
         }
     }
 
-    private val tutorialPlayer: TutorialPlayer = TutorialPlayer(context)
+    private val tutorialEngine: TutorialEngine = TutorialEngine(context)
 
     val tutorials: List<Tutorial> = dataSource.tutorials.map { it.toDomain() }
 
-    val activeTutorial: Flow<Tutorial?> = tutorialPlayer.tutorial.map { it?.toDomain() }
+    val activeTutorial: Flow<Tutorial?> = tutorialEngine.tutorial.map { it?.toDomain() }
 
-    val tutorialOverlayState: Flow<TutorialOverlayState?> =
-        combine(tutorialPlayer.currentStep, tutorialPlayer.stepMonitoredViewPosition) { step, position ->
-            step?.toDomain(position)
+    val tutorialOverlayState: Flow<TutorialOverlayState?> = tutorialEngine.currentStep
+        .map { step ->
+            Log.d(TAG, "Update overlay state for step $step")
+            step?.toDomain()
         }
 
     fun startTutorial(index: Int) {
         if (index < 0 || index >= tutorials.size) return
-        tutorialPlayer.startTutorial(dataSource.tutorials[index])
+        tutorialEngine.startTutorial(dataSource.tutorials[index])
     }
 
     fun nextTutorialStep() {
-        tutorialPlayer.nextStep()
+        tutorialEngine.nextStep()
     }
 
     fun skipAllTutorialSteps() {
-        tutorialPlayer.skipAllSteps()
+        tutorialEngine.skipAllSteps()
     }
 
     fun startGame(scope: CoroutineScope, area: Rect, targetSize: Int) {
-        tutorialPlayer.startGame(scope, area, targetSize)
+        tutorialEngine.startGame(scope, area, targetSize)
     }
 
     fun onGameTargetHit(targetType: TutorialGameTargetType) {
-        tutorialPlayer.onGameTargetHit(targetType)
+        tutorialEngine.onGameTargetHit(targetType)
     }
 
     fun stopGame() {
-        tutorialPlayer.stopGame()
+        tutorialEngine.stopGame()
     }
     fun stopTutorial() {
-        tutorialPlayer.stopTutorial()
+        tutorialEngine.stopTutorial()
     }
 }
+
+private const val TAG = "TutorialRepository"
