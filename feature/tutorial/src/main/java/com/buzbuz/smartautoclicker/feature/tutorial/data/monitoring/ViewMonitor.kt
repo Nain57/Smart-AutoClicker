@@ -37,6 +37,8 @@ internal class ViewMonitor {
 
     fun attachView(view: View) {
         monitoredView = view
+
+        onMonitoredViewLayoutChanged(view, Rect(view.left, view.top, view.right, view.bottom))
         view.addOnLayoutChangeListener(onMonitoredViewLayoutChangedListener)
     }
 
