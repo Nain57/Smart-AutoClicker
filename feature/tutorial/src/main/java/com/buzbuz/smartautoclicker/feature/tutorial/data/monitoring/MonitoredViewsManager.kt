@@ -47,6 +47,7 @@ class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager
     }
 
     private val monitoredViews: MutableMap<TutorialMonitoredViewType, ViewMonitor> = mutableMapOf()
+    private val monitoredClicks: MutableMap<TutorialMonitoredViewType, () -> Unit> = mutableMapOf()
 
     override fun attach(type: TutorialMonitoredViewType, monitoredView: View) {
         if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor()
@@ -55,6 +56,10 @@ class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager
 
     override fun detach(type: TutorialMonitoredViewType) {
         monitoredViews[type]?.detachView()
+    }
+
+    override fun notifyClick(type: TutorialMonitoredViewType) {
+        monitoredClicks[type]?.invoke()
     }
 
     internal fun setExpectedViews(types: Set<TutorialMonitoredViewType>) {
@@ -72,4 +77,11 @@ class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager
 
     internal fun performClick(type: TutorialMonitoredViewType): Boolean =
         monitoredViews[type]?.performClick() ?: false
+
+    internal fun monitorNextClick(type: TutorialMonitoredViewType, listener: () -> Unit) {
+        monitoredClicks[type] = {
+            monitoredClicks.remove(type)
+            listener()
+        }
+    }
 }

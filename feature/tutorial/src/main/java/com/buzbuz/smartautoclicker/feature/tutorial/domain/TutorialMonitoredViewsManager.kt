@@ -29,4 +29,6 @@ interface TutorialMonitoredViewsManager {
     fun attach(type: TutorialMonitoredViewType, monitoredView: View)
 
     fun detach(type: TutorialMonitoredViewType)
+
+    fun notifyClick(type: TutorialMonitoredViewType)
 }

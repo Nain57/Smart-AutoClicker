@@ -40,6 +40,7 @@ internal sealed class StepStartCondition {
     object NextOverlay : StepStartCondition()
     object GameWon : StepStartCondition()
     object GameLost : StepStartCondition()
+    data class MonitoredViewClicked(val type: TutorialMonitoredViewType) : StepStartCondition()
 }
 
 internal sealed class StepEndCondition {
