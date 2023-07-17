@@ -16,10 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.graphics.PixelFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.LinearInterpolator
 import androidx.annotation.StyleRes
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
@@ -39,8 +42,17 @@ abstract class TopOverlay(@StyleRes theme: Int) : BaseOverlay(theme) {
 
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     private lateinit var windowManager: WindowManager
-
+    /** The root view for this overlay; created by implementation via [onCreateView]. */
     private lateinit var view: View
+
+    /** Animator for the overlay showing. */
+    private val showAnimator: Animator = ValueAnimator.ofFloat(0f, 1f).apply {
+        duration = 250
+        interpolator = LinearInterpolator()
+        addUpdateListener {
+            view.alpha = it.animatedValue as Float
+        }
+    }
 
     protected abstract fun onCreateView(layoutInflater: LayoutInflater): View
 
@@ -54,7 +66,9 @@ abstract class TopOverlay(@StyleRes theme: Int) : BaseOverlay(theme) {
     }
 
     override fun onStart() {
+        view.alpha = 0f
         windowManager.addView(view, viewLayoutParams)
+        showAnimator.start()
     }
 
     override fun onStop() {
