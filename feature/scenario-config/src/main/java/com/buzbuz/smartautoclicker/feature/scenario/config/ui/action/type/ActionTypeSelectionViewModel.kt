@@ -14,26 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.domain
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.type
 
+import android.app.Application
 import android.view.View
+
+import androidx.lifecycle.AndroidViewModel
+
 import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
 
-interface TutorialMonitoredViewsManager {
+class ActionTypeSelectionViewModel(application: Application) : AndroidViewModel(application) {
 
-    companion object {
-        fun getInstance(): TutorialMonitoredViewsManager = MonitoredViewsManager.getInstance()
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+
+    fun monitorCreateClickView(view: View) {
+        println("TOTO: monitorCreateClickView $view")
+        monitoredViewsManager.attach(TutorialMonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION, view)
     }
 
-    fun attach(
-        type: TutorialMonitoredViewType,
-        monitoredView: View,
-        positioningType: ViewPositioningType = ViewPositioningType.WINDOW,
-    )
-
-    fun detach(type: TutorialMonitoredViewType)
-
-    fun notifyClick(type: TutorialMonitoredViewType)
+    fun stopViewMonitoring() {
+        println("TOTO: stopViewMonitoring")
+        monitoredViewsManager.detach(TutorialMonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION)
+    }
 }

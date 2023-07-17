@@ -19,9 +19,11 @@ package com.buzbuz.smartautoclicker.core.ui.overlays
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.graphics.PixelFormat
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
 import android.view.animation.LinearInterpolator
 import androidx.annotation.StyleRes
 
@@ -38,7 +40,12 @@ abstract class TopOverlay(@StyleRes theme: Int) : BaseOverlay(theme) {
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-        PixelFormat.TRANSLUCENT)
+        PixelFormat.TRANSLUCENT,
+    ).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+        }
+    }
 
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     private lateinit var windowManager: WindowManager
