@@ -49,9 +49,13 @@ class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager
     private val monitoredViews: MutableMap<TutorialMonitoredViewType, ViewMonitor> = mutableMapOf()
     private val monitoredClicks: MutableMap<TutorialMonitoredViewType, () -> Unit> = mutableMapOf()
 
-    override fun attach(type: TutorialMonitoredViewType, monitoredView: View) {
+    override fun attach(
+        type: TutorialMonitoredViewType,
+        monitoredView: View,
+        positioningType: ViewPositioningType,
+    ) {
         if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor()
-        monitoredViews[type]?.attachView(monitoredView)
+        monitoredViews[type]?.attachView(monitoredView, positioningType)
     }
 
     override fun detach(type: TutorialMonitoredViewType) {

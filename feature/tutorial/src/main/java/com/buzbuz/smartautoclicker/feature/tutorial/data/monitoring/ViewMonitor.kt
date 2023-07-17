@@ -16,9 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring
 
+import android.graphics.Point
 import android.graphics.Rect
 import android.view.View
-import android.view.View.OnLayoutChangeListener
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import androidx.core.view.WindowInsetsCompat
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,24 +28,26 @@ import kotlinx.coroutines.flow.StateFlow
 internal class ViewMonitor {
 
     private val onMonitoredViewLayoutChangedListener =
-        OnLayoutChangeListener { v, left, top, right, bottom, _, _, _, _ ->
-            onMonitoredViewLayoutChanged(v, Rect(left, top, right, bottom))
+        OnGlobalLayoutListener {
+            refreshViewSize()
         }
 
     private var monitoredView: View? = null
+    private var positioningType: ViewPositioningType? = null
 
     private val _position: MutableStateFlow<Rect> = MutableStateFlow(Rect())
     val position: StateFlow<Rect> = _position
 
-    fun attachView(view: View) {
+    fun attachView(view: View, type: ViewPositioningType) {
         monitoredView = view
+        positioningType = type
 
-        onMonitoredViewLayoutChanged(view, Rect(view.left, view.top, view.right, view.bottom))
-        view.addOnLayoutChangeListener(onMonitoredViewLayoutChangedListener)
+        refreshViewSize()
+        view.viewTreeObserver.addOnGlobalLayoutListener(onMonitoredViewLayoutChangedListener)
     }
 
     fun detachView() {
-        monitoredView?.removeOnLayoutChangeListener(onMonitoredViewLayoutChangedListener)
+        monitoredView?.viewTreeObserver?.removeOnGlobalLayoutListener(onMonitoredViewLayoutChangedListener)
         monitoredView = null
 
         _position.value = Rect()
@@ -52,12 +56,31 @@ internal class ViewMonitor {
     fun performClick(): Boolean =
         monitoredView?.performClick() ?: false
 
-    private fun onMonitoredViewLayoutChanged(view: View, relativePosition: Rect) {
-        val location = IntArray(2)
-        view.getLocationInWindow(location)
-        val x = location[0]
-        val y = location[1]
+    private fun refreshViewSize() {
+        val view = monitoredView ?: return
+        val type = positioningType ?: return
 
-        _position.value = Rect(x, y, x + relativePosition.width(), y + relativePosition.height())
+        val location = when (type) {
+            ViewPositioningType.WINDOW -> view.getLocationInWindow()
+            ViewPositioningType.SCREEN -> view.getLocationOnScreen()
+        }
+        _position.value = Rect(location.x, location.y, location.x + view.width, location.y + view.height)
     }
+
+    private fun View.getLocationInWindow(): Point {
+        val location = IntArray(2)
+        getLocationInWindow(location)
+        return Point(location[0], location[1])
+    }
+
+    private fun View.getLocationOnScreen(): Point {
+        val location = IntArray(2)
+        getLocationOnScreen(location)
+        return Point(location[0], location[1])
+    }
+}
+
+enum class ViewPositioningType {
+    WINDOW,
+    SCREEN,
 }
