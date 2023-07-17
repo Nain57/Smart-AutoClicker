@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.overlays.manager
 
 import android.content.Context
 import android.util.Log
+
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
@@ -27,8 +28,17 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.TopOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.shareIn
 
 import java.io.PrintWriter
 
@@ -69,34 +79,43 @@ class OverlayManager private constructor(context: Context) {
      */
     private val lifecyclesRegistry = LifecycleStatesRegistry()
 
-    private var isNavigating: Boolean = false
+    private var isNavigating: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var closingChildren: Boolean = false
     private var topOverlay: Overlay? = null
 
-    val backStackTop: StateFlow<Overlay?> = overlayBackStack.topFlow
+    val backStackTop: Flow<Overlay?> = isNavigating
+        .filter { navigating -> !navigating }
+        .combine(overlayBackStack.topFlow) { _, stackTop ->
+            Log.d(TAG, "New back stack top: $stackTop")
+            stackTop
+        }
+        .distinctUntilChanged()
+
+    fun getBackStackTop(): Overlay? =
+        overlayBackStack.top
 
     fun navigateTo(context: Context, newOverlay: BaseOverlay, hideCurrent: Boolean = false) {
         Log.d(TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
-                    ", currently navigating: $isNavigating")
+                    ", currently navigating: ${isNavigating.value}")
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateTo(newOverlay, hideCurrent))
-        if (!isNavigating) executeNextNavigationRequest(context)
+        if (!isNavigating.value) executeNextNavigationRequest(context)
     }
 
     fun navigateUp(context: Context): Boolean {
         if (overlayBackStack.isEmpty()) return false
-        Log.d(TAG, "Pushing NavigateUp request, currently navigating: $isNavigating")
+        Log.d(TAG, "Pushing NavigateUp request, currently navigating: ${isNavigating.value}")
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
-        if (!isNavigating) executeNextNavigationRequest(context)
+        if (!isNavigating.value) executeNextNavigationRequest(context)
         return true
     }
 
     fun closeAll(context: Context) {
-        Log.d(TAG, "Pushing CloseAll request, currently navigating: $isNavigating")
+        Log.d(TAG, "Pushing CloseAll request, currently navigating: ${isNavigating.value}")
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.CloseAll)
-        if (!isNavigating) executeNextNavigationRequest(context)
+        if (!isNavigating.value) executeNextNavigationRequest(context)
     }
 
     fun hideAll() {
@@ -147,7 +166,7 @@ class OverlayManager private constructor(context: Context) {
     }
 
     private fun executeNextNavigationRequest(context: Context) {
-        isNavigating = true
+        isNavigating.value = true
 
         val request = if (overlayNavigationRequestStack.isNotEmpty()) overlayNavigationRequestStack.pop() else null
         Log.d(TAG, "Executing next navigation request $request")
@@ -163,7 +182,7 @@ class OverlayManager private constructor(context: Context) {
                     overlayBackStack.peek().resume()
                 }
 
-                isNavigating = false
+                isNavigating.value = false
             }
         }
     }
@@ -206,14 +225,14 @@ class OverlayManager private constructor(context: Context) {
         topOverlay?.destroy()
 
         if (overlayBackStack.isEmpty()) {
-            isNavigating = false
+            isNavigating.value = false
             return
         }
         overlayBackStack.bottom?.destroy()
     }
 
     private fun onOverlayDismissed(context: Context, overlay: Overlay) {
-        isNavigating = true
+        isNavigating.value = true
 
         val dismissedIndex = overlayBackStack.indexOf(overlay)
 

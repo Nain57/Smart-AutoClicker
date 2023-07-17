@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.utils.internal
 
-import androidx.annotation.CallSuper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
