@@ -120,6 +120,7 @@ abstract class NavBarDialogContent(
     fun stop() {
         if (lifecycleRegistry.currentState != Lifecycle.State.STARTED) return
 
+        onStop()
         rootContainer.removeView(root)
 
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
@@ -144,6 +145,8 @@ abstract class NavBarDialogContent(
     protected abstract fun onViewCreated()
 
     protected open fun onStart() = Unit
+
+    protected open fun onStop() = Unit
 
     open fun onDialogButtonClicked(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) = Unit
 
