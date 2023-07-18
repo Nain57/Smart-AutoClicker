@@ -19,6 +19,11 @@ package com.buzbuz.smartautoclicker.core
 import android.graphics.PointF
 import android.graphics.RectF
 
+/** Get the center of this rectangle. */
+fun RectF.center(): PointF =
+    PointF(centerX(), centerY())
+
+
 /**
  * Scale this RectF around the given pivot.
  *

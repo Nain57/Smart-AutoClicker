@@ -25,6 +25,9 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.graphics.toRectF
+import com.buzbuz.smartautoclicker.core.center
+import com.buzbuz.smartautoclicker.core.scale
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 
@@ -62,17 +65,10 @@ class TutorialFullScreenView @JvmOverloads constructor(
         super.invalidate()
 
         measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
-
         drawPath.apply {
             reset()
-            addRect(0f, 0f, width.toFloat(), height.toFloat(), Path.Direction.CW)
-            expectedViewPosition?.let { position ->
-                addCircle(
-                    position.centerX().toFloat(), position.centerY().toFloat(),
-                    position.height().toFloat(),
-                    Path.Direction.CCW,
-                )
-            }
+            addBackgroundRect()
+            addExpectedViewHole()
         }
     }
 
@@ -95,4 +91,29 @@ class TutorialFullScreenView @JvmOverloads constructor(
 
     private fun MotionEvent.isOnMonitoredView(): Boolean =
         expectedViewPosition?.contains(x.toInt(), y.toInt()) ?: false
+
+    private fun Path.addBackgroundRect(): Unit =
+        addRect(0f, 0f, width.toFloat(), height.toFloat(), Path.Direction.CW)
+
+    private fun Path.addExpectedViewHole() {
+        val viewPosition = expectedViewPosition ?: return
+
+        if (viewPosition.width().toDouble() in (0.5 * viewPosition.height())..(1.5 * viewPosition.height())) {
+            addCircle(
+                /* x */ viewPosition.centerX().toFloat(),
+                /* y */ viewPosition.centerY().toFloat(),
+                /* radius */ viewPosition.height().toFloat() * 0.8f,
+                /* dir */ Path.Direction.CCW,
+            )
+        } else {
+            addRoundRect(
+                /* rect */ viewPosition.toRectF().apply {
+                    scale(1.05f, center())
+                },
+                /* rx */ 25f,
+                /* ry */ 25f,
+                /* dir */ Path.Direction.CCW,
+            )
+        }
+    }
 }
