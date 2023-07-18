@@ -20,7 +20,7 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import androidx.core.view.WindowInsetsCompat
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -76,7 +76,7 @@ internal class ViewMonitor {
     private fun View.getLocationOnScreen(): Point {
         val location = IntArray(2)
         getLocationOnScreen(location)
-        return Point(location[0], location[1])
+        return Point(location[0], location[1] -  DisplayMetrics.getInstance(context).safeInsetTop)
     }
 }
 
