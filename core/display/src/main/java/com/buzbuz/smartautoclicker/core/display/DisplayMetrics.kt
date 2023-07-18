@@ -25,6 +25,7 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.hardware.display.DisplayManager
 import android.os.Build
+import android.view.DisplayCutout
 import android.view.Surface
 import android.view.WindowManager
 
@@ -83,6 +84,9 @@ class DisplayMetrics internal constructor(context: Context) {
             }
         }
     }
+
+    val safeInsetTop: Int
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) display.cutout?.safeInsetTop ?: 0 else 0
 
     /** The orientation of the display. */
     var orientation: Int = Configuration.ORIENTATION_UNDEFINED
