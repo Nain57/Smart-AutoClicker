@@ -20,7 +20,7 @@ import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.StepEndCondition
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialStepData
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 
 data class TutorialOverlayState(
@@ -34,7 +34,7 @@ sealed class TutorialStepEnd {
     object NextButton : TutorialStepEnd()
 
     data class MonitoredViewClick(
-        val type: TutorialMonitoredViewType,
+        val type: MonitoredViewType,
     ) : TutorialStepEnd()
 }
 

@@ -14,17 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring
+package com.buzbuz.smartautoclicker.core.ui.monitoring
 
 import android.graphics.Rect
 import android.view.View
 
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialMonitoredViewsManager
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
-
 import kotlinx.coroutines.flow.StateFlow
 
-class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager {
+class MonitoredViewsManager private constructor() {
 
     companion object {
 
@@ -46,43 +43,43 @@ class MonitoredViewsManager private constructor(): TutorialMonitoredViewsManager
         }
     }
 
-    private val monitoredViews: MutableMap<TutorialMonitoredViewType, ViewMonitor> = mutableMapOf()
-    private val monitoredClicks: MutableMap<TutorialMonitoredViewType, () -> Unit> = mutableMapOf()
+    private val monitoredViews: MutableMap<MonitoredViewType, ViewMonitor> = mutableMapOf()
+    private val monitoredClicks: MutableMap<MonitoredViewType, () -> Unit> = mutableMapOf()
 
-    override fun attach(
-        type: TutorialMonitoredViewType,
+    fun attach(
+        type: MonitoredViewType,
         monitoredView: View,
-        positioningType: ViewPositioningType,
+        positioningType: ViewPositioningType = ViewPositioningType.WINDOW,
     ) {
         if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor()
         monitoredViews[type]?.attachView(monitoredView, positioningType)
     }
 
-    override fun detach(type: TutorialMonitoredViewType) {
+    fun detach(type: MonitoredViewType) {
         monitoredViews[type]?.detachView()
     }
 
-    override fun notifyClick(type: TutorialMonitoredViewType) {
+    fun notifyClick(type: MonitoredViewType) {
         monitoredClicks[type]?.invoke()
     }
 
-    internal fun setExpectedViews(types: Set<TutorialMonitoredViewType>) {
+    fun setExpectedViews(types: Set<MonitoredViewType>) {
         types.forEach { type ->
             if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor()
         }
     }
 
-    internal fun clearExpectedViews() {
+    fun clearExpectedViews() {
         monitoredViews.clear()
     }
 
-    internal fun getViewPosition(type: TutorialMonitoredViewType): StateFlow<Rect>? =
+    fun getViewPosition(type: MonitoredViewType): StateFlow<Rect>? =
         monitoredViews[type]?.position
 
-    internal fun performClick(type: TutorialMonitoredViewType): Boolean =
+    fun performClick(type: MonitoredViewType): Boolean =
         monitoredViews[type]?.performClick() ?: false
 
-    internal fun monitorNextClick(type: TutorialMonitoredViewType, listener: () -> Unit) {
+    fun monitorNextClick(type: MonitoredViewType, listener: () -> Unit) {
         monitoredClicks[type] = {
             monitoredClicks.remove(type)
             listener()
