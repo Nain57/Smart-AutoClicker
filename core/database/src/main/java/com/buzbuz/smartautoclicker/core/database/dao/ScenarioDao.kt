@@ -93,8 +93,8 @@ interface ScenarioDao {
      * Any associated entity will be removed from the database due to the [androidx.room.ForeignKey.CASCADE]
      * deletion of this parent scenario.
      *
-     * @param scenario the scenario to be deleted.
+     * @param scenarioId the identifier of the scenario to be deleted.
      */
-    @Delete
-    suspend fun delete(scenario: ScenarioEntity)
+    @Query("DELETE FROM scenario_table WHERE id = :scenarioId")
+    suspend fun delete(scenarioId: Long)
 }
