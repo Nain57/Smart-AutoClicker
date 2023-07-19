@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data
 import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameData
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 internal data class TutorialData(
     @StringRes val nameResId: Int,
@@ -40,10 +40,10 @@ internal sealed class StepStartCondition {
     object NextOverlay : StepStartCondition()
     object GameWon : StepStartCondition()
     object GameLost : StepStartCondition()
-    data class MonitoredViewClicked(val type: TutorialMonitoredViewType) : StepStartCondition()
+    data class MonitoredViewClicked(val type: MonitoredViewType) : StepStartCondition()
 }
 
 internal sealed class StepEndCondition {
     object NextButton : StepEndCondition()
-    data class MonitoredViewClicked(val type: TutorialMonitoredViewType) : StepEndCondition()
+    data class MonitoredViewClicked(val type: MonitoredViewType) : StepEndCondition()
 }

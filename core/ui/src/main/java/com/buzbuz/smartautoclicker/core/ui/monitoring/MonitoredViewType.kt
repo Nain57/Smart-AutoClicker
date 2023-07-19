@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring
-enum class TutorialMonitoredViewType {
-    ACTION_LOCATION_VALIDATE_BUTTON,
+package com.buzbuz.smartautoclicker.core.ui.monitoring
+enum class MonitoredViewType {
     ACTION_TYPE_DIALOG_CLICK_ACTION,
     CLICK_DIALOG_SELECT_POSITION_BUTTON,
     CONDITION_CAPTURE_BUTTON_CAPTURE,
