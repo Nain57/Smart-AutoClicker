@@ -277,7 +277,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * @param scenario the scenario to be deleted.
      */
     fun deleteScenario(scenario: Scenario) {
-        viewModelScope.launch(Dispatchers.IO) { repository.deleteScenario(scenario) }
+        viewModelScope.launch(Dispatchers.IO) { repository.deleteScenario(scenario.id) }
     }
 
     /**

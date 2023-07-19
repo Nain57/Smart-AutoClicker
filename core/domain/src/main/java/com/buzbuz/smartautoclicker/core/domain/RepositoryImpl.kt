@@ -21,14 +21,24 @@ import androidx.room.withTransaction
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
+import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
+import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
+import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
+import com.buzbuz.smartautoclicker.core.database.dao.EndConditionDao
+import com.buzbuz.smartautoclicker.core.database.dao.EventDao
+import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
+import com.buzbuz.smartautoclicker.core.database.dao.TutorialDao
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionWithEvent
+import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.TutorialSuccessState
 import com.buzbuz.smartautoclicker.core.domain.model.action.toAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toCondition
@@ -44,7 +54,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toScenario
 import com.buzbuz.smartautoclicker.core.mapList
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import java.lang.Exception
 
@@ -57,21 +72,30 @@ import java.lang.Exception
  * @param database the database containing the list of scenario.
  * @param bitmapManager save and loads the bitmap for the conditions.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class RepositoryImpl internal constructor(
     private val database: ClickDatabase,
+    private val tutorialDatabase: TutorialDatabase,
     private val bitmapManager: BitmapManager,
 ): Repository {
 
+    private var currentDatabase: MutableStateFlow<ScenarioDatabase> = MutableStateFlow(database)
+
     /** The Dao for accessing the database. */
-    private val scenarioDao = database.scenarioDao()
+    private fun scenarioDao(): ScenarioDao = currentDatabase.value.scenarioDao()
     /** The Dao for accessing the database. */
-    private val eventDao = database.eventDao()
+    private fun eventDao(): EventDao = database.eventDao()
     /** The Dao for accessing the conditions. */
-    private val conditionsDao = database.conditionDao()
+    private fun conditionsDao(): ConditionDao = database.conditionDao()
     /** The Dao for accessing the actions. */
-    private val actionDao = database.actionDao()
+    private fun actionDao(): ActionDao = database.actionDao()
     /** The Dao for accessing the scenario end conditions. */
-    private val endConditionDao = database.endConditionDao()
+    private fun endConditionDao(): EndConditionDao = database.endConditionDao()
+
+    private fun tutorialDao(): TutorialDao? {
+        val db = currentDatabase
+        return if (db is TutorialDatabase) db.tutorialDao() else null
+    }
 
     /** Updater for a list of conditions. */
     private val conditionsUpdater = DatabaseListUpdater<Condition, ConditionEntity>(
@@ -89,57 +113,66 @@ internal class RepositoryImpl internal constructor(
         entityPrimaryKeySupplier = { endConditionEntity -> endConditionEntity.id },
     )
 
-    override suspend fun getScenario(scenarioId: Long): Scenario? =
-        scenarioDao.getScenario(scenarioId)?.toScenario()
-
-    override suspend fun getEvents(scenarioId: Long): List<Event> =
-        eventDao.getCompleteEvents(scenarioId).map { it.toEvent() }
-
-    override suspend fun getEndConditions(scenarioId: Long): List<EndCondition> =
-        endConditionDao.getEndConditionsWithEvent(scenarioId).map { it.toEndCondition() }
-
-    override suspend fun getCompleteEventList(scenarioId: Long): List<Event> =
-        eventDao.getCompleteEvents(scenarioId).map { it.toEvent() }
-
     override val scenarios: Flow<List<Scenario>> =
-        scenarioDao.getScenariosWithEvents()
+        currentDatabase
+            .flatMapLatest { it.scenarioDao().getScenariosWithEvents() }
             .mapList { it.toScenario() }
 
+    override val tutorialSuccessList: Flow<List<TutorialSuccessState>> =
+        currentDatabase
+            .flatMapLatest {
+                if (it is TutorialDatabase) tutorialDatabase.tutorialDao().getTutorialSuccessList()
+                else flowOf(emptyList())
+            }
+            .map { list -> list.map { TutorialSuccessState(it.scenarioId) } }
+
+    override suspend fun getScenario(scenarioId: Long): Scenario? =
+        scenarioDao().getScenario(scenarioId)?.toScenario()
+
+    override suspend fun getEvents(scenarioId: Long): List<Event> =
+        eventDao().getCompleteEvents(scenarioId).map { it.toEvent() }
+
+    override suspend fun getEndConditions(scenarioId: Long): List<EndCondition> =
+        endConditionDao().getEndConditionsWithEvent(scenarioId).map { it.toEndCondition() }
+
+    override suspend fun getCompleteEventList(scenarioId: Long): List<Event> =
+        eventDao().getCompleteEvents(scenarioId).map { it.toEvent() }
+
     override fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>> =
-        scenarioDao.getScenarioWithEndConditions(scenarioId)
+        scenarioDao().getScenarioWithEndConditions(scenarioId)
             .mapNotNull { scenarioWithEndConditions ->
                 scenarioWithEndConditions ?: return@mapNotNull null
                 scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
             }
 
     override fun getCompleteEventListFlow(scenarioId: Long): Flow<List<Event>> =
-        eventDao.getCompleteEventsFlow(scenarioId)
+        eventDao().getCompleteEventsFlow(scenarioId)
             .mapList { it.toEvent() }
 
     override fun getAllEvents(): Flow<List<Event>> =
-        eventDao.getAllEvents()
+        eventDao().getAllEvents()
             .mapList { it.toEvent() }
 
     override fun getAllActions(): Flow<List<Action>> =
-        actionDao.getAllActions()
+        actionDao().getAllActions()
             .mapList { it.toAction() }
 
     override fun getAllConditions(): Flow<List<Condition>> =
-        conditionsDao.getAllConditions()
+        conditionsDao().getAllConditions()
             .mapList { it.toCondition() }
 
     override suspend fun addScenario(scenario: Scenario): Long =
-        scenarioDao.add(scenario.toEntity())
+        scenarioDao().add(scenario.toEntity())
 
-    override suspend fun deleteScenario(scenario: Scenario) {
+    override suspend fun deleteScenario(scenarioId: Identifier) {
         val removedConditionsPath = mutableListOf<String>()
-        eventDao.getEventsIds(scenario.id.databaseId).forEach { eventId ->
-            conditionsDao.getConditionsPath(eventId).forEach { path ->
+        eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
+            conditionsDao().getConditionsPath(eventId).forEach { path ->
                 if (!removedConditionsPath.contains(path)) removedConditionsPath.add(path)
             }
         }
 
-        scenarioDao.delete(scenario.toEntity())
+        scenarioDao().delete(scenarioId.databaseId)
         clearRemovedConditionsBitmaps(removedConditionsPath)
     }
 
@@ -147,7 +180,7 @@ internal class RepositoryImpl internal constructor(
         return try {
             database.withTransaction {
                 val scenario = completeScenario.scenario.toScenario(asDomain = true)
-                val scenarioDbId = scenarioDao.add(scenario.toEntity())
+                val scenarioDbId = scenarioDao().add(scenario.toEntity())
 
                 /**
                  * Get the entities as domain object to use the same insertion.
@@ -183,7 +216,7 @@ internal class RepositoryImpl internal constructor(
         return try {
             database.withTransaction {
                 // Update scenario entity values
-                scenarioDao.update(scenario.toEntity())
+                scenarioDao().update(scenario.toEntity())
                 // Update scenario content
                 updateScenarioContent(scenario.id.databaseId, events, endConditions)
             }
@@ -206,7 +239,7 @@ internal class RepositoryImpl internal constructor(
         val evtDomainToDbIdMap = mutableMapOf<Long, Long>()
         // Keep track of the events to be removed.
         // First take all events from the database, and then remove the events found in the new event list
-        val eventsToBeRemoved = eventDao.getEvents(scenarioDbId).toMutableList()
+        val eventsToBeRemoved = eventDao().getEvents(scenarioDbId).toMutableList()
 
         // Add/Update all events entities. Removals will be done at the end.
         events.forEachIndexed { index, eventInScenario ->
@@ -214,11 +247,11 @@ internal class RepositoryImpl internal constructor(
 
             val entity = eventInScenario.toEntity()
             if (eventInScenario.id.isInDatabase()) {
-                eventDao.updateEvent(entity)
+                eventDao().updateEvent(entity)
                 eventsToBeRemoved.removeIf { it.id == eventInScenario.id.databaseId }
             } else {
                 eventInScenario.id.domainId?.let {
-                    evtDomainToDbIdMap[it] = eventDao.addEvent(entity)
+                    evtDomainToDbIdMap[it] = eventDao().addEvent(entity)
                 }
             }
         }
@@ -235,12 +268,12 @@ internal class RepositoryImpl internal constructor(
 
         // Remove events that are not in the new scenario.
         // Cascade deletion will remove all linked actions and conditions.
-        if (eventsToBeRemoved.isNotEmpty()) eventDao.deleteEvents(eventsToBeRemoved)
+        if (eventsToBeRemoved.isNotEmpty()) eventDao().deleteEvents(eventsToBeRemoved)
     }
 
     private suspend fun updateConditions(eventDbId: Long, conditions: List<Condition>) {
         conditionsUpdater.refreshUpdateValues(
-            currentEntities = conditionsDao.getConditions(eventDbId),
+            currentEntities = conditionsDao().getConditions(eventDbId),
             newItems = conditions,
             toEntity = { _, condition ->
                 val path = if (condition.path.isNullOrEmpty()) {
@@ -257,7 +290,7 @@ internal class RepositoryImpl internal constructor(
             }
         )
 
-        conditionsDao.syncConditions(
+        conditionsDao().syncConditions(
             conditionsUpdater.toBeAdded,
             conditionsUpdater.toBeUpdated,
             conditionsUpdater.toBeRemoved,
@@ -270,7 +303,7 @@ internal class RepositoryImpl internal constructor(
 
     private suspend fun updateActions(eventDbId: Long, actions: List<Action>, evtItemIdToDbIdMap: Map<Long, Long>) {
         actionsUpdater.refreshUpdateValues(
-            currentEntities = actionDao.getCompleteActions(eventDbId),
+            currentEntities = actionDao().getCompleteActions(eventDbId),
             newItems = actions,
             toEntity = { index, actionInEvent ->
                 actionInEvent.toEntity().apply {
@@ -281,7 +314,7 @@ internal class RepositoryImpl internal constructor(
             }
         )
 
-        actionDao.syncActions(
+        actionDao().syncActions(
             actionsUpdater.toBeAdded,
             actionsUpdater.toBeUpdated,
             actionsUpdater.toBeRemoved,
@@ -294,7 +327,7 @@ internal class RepositoryImpl internal constructor(
         evtItemIdToDbIdMap: Map<Long, Long>,
     ) {
         endConditionsUpdater.refreshUpdateValues(
-            currentEntities = endConditionDao.getEndConditions(scenarioId),
+            currentEntities = endConditionDao().getEndConditions(scenarioId),
             newItems = endConditions,
             toEntity = { _, endCondition ->
                 endCondition.copy(
@@ -303,7 +336,7 @@ internal class RepositoryImpl internal constructor(
             }
         )
 
-        endConditionDao.syncEndConditions(
+        endConditionDao().syncEndConditions(
             endConditionsUpdater.toBeAdded,
             endConditionsUpdater.toBeUpdated,
             endConditionsUpdater.toBeRemoved,
@@ -338,10 +371,32 @@ internal class RepositoryImpl internal constructor(
      */
     private suspend fun clearRemovedConditionsBitmaps(removedPath: List<String>) {
         val deletedPaths = removedPath.filter { path ->
-            conditionsDao.getValidPathCount(path) == 0
+            conditionsDao().getValidPathCount(path) == 0
         }
 
         bitmapManager.deleteBitmaps(deletedPaths)
+    }
+
+    override fun startTutorialMode() {
+        currentDatabase.value = tutorialDatabase
+    }
+
+    override fun stopTutorialMode() {
+        currentDatabase.value = database
+    }
+
+    override suspend fun getTutorialScenarioDatabaseId(index: Int): Identifier? =
+        tutorialDao()?.getTutorialScenarioId(index)?.let {
+            Identifier(databaseId = it)
+        }
+
+    override suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier) {
+        tutorialDao()?.upsert(
+            TutorialSuccessEntity(
+                tutorialIndex = index,
+                scenarioId = scenarioId.databaseId,
+            )
+        )
     }
 }
 
