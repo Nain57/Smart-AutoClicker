@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
 
 import android.app.Application
 import android.content.Context
+import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,6 +31,9 @@ import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
+import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.ViewPositioningType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -55,6 +59,8 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     private val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
     /** The repository for the scenario debugging info. */
     private val debugRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Tells if the pro mode is purchased. */
     private val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased
@@ -64,7 +70,13 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
             false,
         )
 
-    private val scenarioDbId: MutableStateFlow<Long?> = MutableStateFlow(null)
+    private val scenarioDbId: StateFlow<Long?> = detectionRepository.scenarioId
+        .map { it?.databaseId }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
 
     /** Coroutine Job stopping the detection automatically if user is not in pro mode. */
     private var autoStopJob: Job? = null
@@ -117,12 +129,6 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun setConfiguredScenario(scenarioId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            scenarioDbId.value = scenarioId
-        }
-    }
-
     fun startScenarioEdition(onEditionStarted: () -> Unit) {
         scenarioDbId.value?.let { scenarioDatabaseId ->
             viewModelScope.launch(Dispatchers.IO) {
@@ -154,6 +160,14 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         repository.cleanCache()
+    }
+
+    fun monitorPlayPauseButtonView(view: View) {
+        monitoredViewsManager.attach(TutorialMonitoredViewType.FLOATING_MENU_BUTTON_PLAY, view, ViewPositioningType.SCREEN)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(TutorialMonitoredViewType.FLOATING_MENU_BUTTON_PLAY)
     }
 }
 
