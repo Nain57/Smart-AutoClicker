@@ -53,7 +53,15 @@ class TutorialItemViewHolder(private val binding: ItemTutorialBinding) : ViewHol
         binding.apply {
             choiceTitle.setText(item.nameResId)
             choiceDescription.setText(item.descResId)
-            root.setOnClickListener { onGameClicked(item.index) }
+            root.apply {
+                if (item.isEnabled) {
+                    alpha = 1f
+                    setOnClickListener { onGameClicked(item.index) }
+                } else {
+                    alpha = 0.5f
+                    setOnClickListener(null)
+                }
+            }
         }
     }
 }

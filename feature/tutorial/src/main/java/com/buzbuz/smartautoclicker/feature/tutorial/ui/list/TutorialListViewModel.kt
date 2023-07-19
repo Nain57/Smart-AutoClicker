@@ -48,6 +48,7 @@ class TutorialListViewModel(application: Application) : AndroidViewModel(applica
             nameResId = nameResId,
             descResId = descResId,
             index = index,
+            isEnabled = isUnlocked,
         )
 }
 
@@ -55,4 +56,5 @@ data class TutorialItem(
     val nameResId: Int,
     val descResId: Int,
     val index: Int,
+    val isEnabled: Boolean,
 )

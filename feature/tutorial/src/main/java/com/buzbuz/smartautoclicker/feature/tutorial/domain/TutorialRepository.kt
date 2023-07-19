@@ -83,7 +83,7 @@ class TutorialRepository private constructor(
     val tutorials: Flow<List<Tutorial>> = scenarioRepository.tutorialSuccessList
         .map { successList ->
             dataSource.tutorials.mapIndexed { index, tutorialData ->
-                tutorialData.toDomain(index < successList.lastIndex)
+                tutorialData.toDomain(index == 0 || index <= successList.size)
             }
         }
 
