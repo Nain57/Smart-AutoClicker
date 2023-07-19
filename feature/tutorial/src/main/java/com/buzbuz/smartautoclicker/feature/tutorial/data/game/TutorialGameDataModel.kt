@@ -37,7 +37,7 @@ internal interface TutorialGameRules {
     val gameState: Flow<TutorialGameStateData>
     val targets: StateFlow<Map<TutorialGameTargetType, PointF>>
 
-    fun start(coroutineScope: CoroutineScope, area: Rect, targetSize: Int)
+    fun start(coroutineScope: CoroutineScope, area: Rect, targetSize: Int, onResult: (Boolean) -> Unit)
     fun stop()
     fun reset()
     fun onTargetHit(type: TutorialGameTargetType)

@@ -57,7 +57,7 @@ class TutorialGameFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.selectGame(args.gameIndex)
+        viewModel.startTutorial(args.gameIndex)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -90,10 +90,9 @@ class TutorialGameFragment : Fragment() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         viewModel.stopTutorial()
-        showHideStepOverlay(false)
     }
 
     private fun onGameUpdated(tutorialGame: TutorialGame?) {

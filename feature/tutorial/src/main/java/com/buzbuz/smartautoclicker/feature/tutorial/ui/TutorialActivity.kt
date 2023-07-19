@@ -20,13 +20,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialTopOverlay
 
 
 class TutorialActivity : AppCompatActivity() {
@@ -51,6 +50,8 @@ class TutorialActivity : AppCompatActivity() {
         }
     }
 
+    private val viewModel: TutorialViewModel by viewModels()
+
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +60,16 @@ class TutorialActivity : AppCompatActivity() {
 
         setupActionBar()
         setupNavGraph(intent.getStartingPage())
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.startTutorialMode()
+    }
+
+    override fun onStop() {
+        viewModel.stopTutorialMode()
+        super.onStop()
     }
 
     private fun setupActionBar() {
