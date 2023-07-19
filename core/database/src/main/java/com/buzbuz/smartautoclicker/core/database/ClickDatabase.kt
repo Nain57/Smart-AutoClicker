@@ -24,11 +24,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
-import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
-import com.buzbuz.smartautoclicker.core.database.dao.EndConditionDao
-import com.buzbuz.smartautoclicker.core.database.dao.EventDao
-import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionTypeStringConverter
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
@@ -70,18 +65,7 @@ import com.buzbuz.smartautoclicker.core.database.migrations.*
     IntentExtraTypeStringConverter::class,
     ToggleEventTypeStringConverter::class,
 )
-abstract class ClickDatabase : RoomDatabase() {
-
-    /** The data access object for the scenario in the database. */
-    abstract fun scenarioDao(): ScenarioDao
-    /** The data access object for the events in the database. */
-    abstract fun eventDao(): EventDao
-    /** The data access object for the conditions in the database. */
-    abstract fun conditionDao(): ConditionDao
-    /** The data access object for the actions in the database. */
-    abstract fun actionDao(): ActionDao
-    /** The data access object for the end conditions in the database. */
-    abstract fun endConditionDao(): EndConditionDao
+abstract class ClickDatabase : RoomDatabase(), ScenarioDatabase {
 
     companion object {
 
