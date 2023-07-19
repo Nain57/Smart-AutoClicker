@@ -40,7 +40,6 @@ import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugMo
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialStartingPage
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -58,7 +57,7 @@ import kotlinx.coroutines.launch
  * There is no overlay views attached to this overlay menu, meaning that the user will always be able to clicks on the
  * Activities displayed below it.
  */
-class MainMenu(private val scenarioId: Long) : OverlayMenu() {
+class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     /** The view model for this menu. */
     private val viewModel: MainMenuModel by viewModels()
@@ -97,8 +96,6 @@ class MainMenu(private val scenarioId: Long) : OverlayMenu() {
     override fun onCreate() {
         super.onCreate()
 
-        viewModel.setConfiguredScenario(scenarioId)
-
         // Ensure the debug view state is correct
         viewBinding.layoutDebug.visibility = View.GONE
         setOverlayViewVisibility(View.GONE)
@@ -127,10 +124,20 @@ class MainMenu(private val scenarioId: Long) : OverlayMenu() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorPlayPauseButtonView(viewBinding.btnPlay)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> {
-                context.startActivity(TutorialActivity.getStartIntent(context, TutorialStartingPage.LIST))
+                context.startActivity(TutorialActivity.getStartIntent(context))
                 /*viewModel.toggleDetection(context) {
                     billingFlowTriggeredByDetectionLimitation = true
                     hide()
@@ -141,7 +148,7 @@ class MainMenu(private val scenarioId: Long) : OverlayMenu() {
                     showScenarioConfigDialog()
                 }
             }
-            R.id.btn_stop -> finish()
+            R.id.btn_stop -> onStopClicked()
         }
     }
 

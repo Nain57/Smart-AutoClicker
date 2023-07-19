@@ -18,11 +18,21 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TutorialViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
+    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(application)
+
+    val shouldBeStopped: Flow<Boolean> = detectionRepository.detectionState
+        .map { it == DetectionState.INACTIVE }
 
     fun startTutorialMode(): Unit = tutorialRepository.setupTutorialMode()
 

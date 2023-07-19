@@ -145,7 +145,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 overlayManager = OverlayManager.getInstance(this@SmartAutoClickerService).apply {
                     navigateTo(
                         context = this@SmartAutoClickerService,
-                        newOverlay = MainMenu(),
+                        newOverlay = MainMenu { stop() },
                     )
                 }
             }, 350)

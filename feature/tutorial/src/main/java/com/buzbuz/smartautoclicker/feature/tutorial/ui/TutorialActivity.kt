@@ -22,10 +22,14 @@ import android.os.Bundle
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
+import kotlinx.coroutines.launch
 
 
 class TutorialActivity : AppCompatActivity() {
@@ -47,6 +51,15 @@ class TutorialActivity : AppCompatActivity() {
 
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment)
             .navController
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.shouldBeStopped.collect { shouldBeStopped ->
+                    println("TOTO: shouldBeStopped=$shouldBeStopped")
+                    if (shouldBeStopped) finish()
+                }
+            }
+        }
     }
 
     override fun onStart() {
