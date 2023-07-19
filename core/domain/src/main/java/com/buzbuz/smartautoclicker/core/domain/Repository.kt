@@ -18,10 +18,13 @@ package com.buzbuz.smartautoclicker.core.domain
 
 import android.content.Context
 import android.graphics.Bitmap
-
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
+
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.TutorialSuccessState
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
@@ -54,7 +57,8 @@ interface Repository {
             return INSTANCE ?: synchronized(this) {
                 val instance = RepositoryImpl(
                     ClickDatabase.getDatabase(context),
-                    com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager.getBitmapManager(context),
+                    TutorialDatabase.getDatabase(context),
+                    BitmapManager.getBitmapManager(context),
                 )
                 INSTANCE = instance
                 instance
@@ -95,9 +99,9 @@ interface Repository {
      * Delete a scenario.
      * This will delete all of its actions and conditions as well. All associated bitmaps will be removed in unused.
      *
-     * @param scenario the scenario to delete.
+     * @param scenarioId the identifier of the scenario to delete.
      */
-    suspend fun deleteScenario(scenario: Scenario)
+    suspend fun deleteScenario(scenarioId: Identifier)
 
     /**
      * Get a flow on the scenario and its and conditions.
@@ -182,4 +186,15 @@ interface Repository {
 
     /** Clean the cache of this repository. */
     fun cleanCache()
+
+    /** The list of scenarios. */
+    val tutorialSuccessList: Flow<List<TutorialSuccessState>>
+
+    fun startTutorialMode()
+
+    fun stopTutorialMode()
+
+    suspend fun getTutorialScenarioDatabaseId(index: Int): Identifier?
+
+    suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier)
 }

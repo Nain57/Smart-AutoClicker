@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
@@ -28,10 +29,11 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -63,7 +65,8 @@ class DetectionRepository private constructor(context: Context) {
     /** Engine controlling the screen recording and the scenario processing. */
     private val detectorEngine: MutableStateFlow<DetectorEngine?> = MutableStateFlow(null)
     /** The current scenario unique identifier. */
-    private val scenarioId = MutableStateFlow<Long?>(null)
+    private val _scenarioId: MutableStateFlow<Identifier?> = MutableStateFlow(null)
+    val scenarioId: StateFlow<Identifier?> = _scenarioId
 
     /** The state of the scenario processing. */
     val detectionState: Flow<DetectionState> = detectorEngine.flatMapLatest { engine ->
@@ -77,26 +80,34 @@ class DetectionRepository private constructor(context: Context) {
      */
     val canStartDetection: Flow<Boolean> = scenarioId
         .filterNotNull()
-        .map { id ->
-            scenarioRepository.getCompleteEventList(id).forEach { event -> if (event.enabledOnStart) return@map true }
+        .combine(detectionState) { id, state ->
+            if (state == DetectionState.INACTIVE)  return@combine false
+
+            scenarioRepository.getCompleteEventList(id.databaseId).forEach {
+                event -> if (event.enabledOnStart) return@combine true
+            }
             false
         }
+
+    fun setScenarioId(identifier: Identifier) {
+        _scenarioId.value = identifier
+    }
+
+    fun getScenarioId(): Identifier? = _scenarioId.value
 
     fun startScreenRecord(
         context: Context,
         resultCode: Int,
         data: Intent,
         androidExecutor: AndroidExecutor,
-        scenarioDbId: Long,
     ) {
-        scenarioId.value = scenarioDbId
         detectorEngine.value = DetectorEngine(context).also { newEngine ->
             newEngine.startScreenRecord(context, resultCode, data, androidExecutor)
         }
     }
 
     suspend fun startDetection(context: Context, progressListener: ProgressListener) {
-        val id = scenarioId.value ?: return
+        val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getCompleteEventList(id)
         val endCondition = scenarioRepository.getEndConditions(id)
@@ -121,6 +132,7 @@ class DetectionRepository private constructor(context: Context) {
             clear()
         }
         detectorEngine.value = null
+        _scenarioId.value = null
     }
 
     private fun DetectorState.toDetectionState(): DetectionState? = when (this) {

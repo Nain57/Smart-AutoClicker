@@ -132,12 +132,12 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             }
 
             detectionRepository = DetectionRepository.getDetectionRepository(this@SmartAutoClickerService).apply {
+                setScenarioId(scenario.id)
                 startScreenRecord(
                     context = this@SmartAutoClickerService,
                     resultCode = resultCode,
                     data = data,
                     androidExecutor = this@SmartAutoClickerService,
-                    scenarioDbId = scenario.id.databaseId,
                 )
             }
 
@@ -145,7 +145,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 overlayManager = OverlayManager.getInstance(this@SmartAutoClickerService).apply {
                     navigateTo(
                         context = this@SmartAutoClickerService,
-                        newOverlay = MainMenu(scenario.id.databaseId),
+                        newOverlay = MainMenu(),
                     )
                 }
             }, 350)
