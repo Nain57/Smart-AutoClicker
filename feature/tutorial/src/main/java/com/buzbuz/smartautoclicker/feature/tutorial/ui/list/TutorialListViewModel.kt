@@ -31,21 +31,19 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
 class TutorialListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
     private val overlayManager: OverlayManager = OverlayManager.getInstance(application)
 
-    val items: Flow<List<TutorialItem>> = flowOf(
-        buildList {
-            add(TutorialItem.Intro)
-            tutorialRepository.tutorials.forEachIndexed { index, tutorial ->
-                add(tutorial.toItem(index))
+    val items: Flow<List<TutorialItem>> = tutorialRepository.tutorials
+        .map { tutorials ->
+            tutorials.mapIndexed { index, tutorial ->
+                tutorial.toItem(index)
             }
         }
-    )
 
     fun setOverlayVisibility(visible: Boolean) {
         if (visible) overlayManager.restoreAll()

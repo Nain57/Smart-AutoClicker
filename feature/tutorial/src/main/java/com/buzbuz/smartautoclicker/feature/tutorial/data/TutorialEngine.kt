@@ -51,6 +51,7 @@ internal class TutorialEngine(context: Context) {
 
     private val stepIndex: MutableStateFlow<Int?> = MutableStateFlow(null)
     private val stepStartBackStackTop: MutableStateFlow<Overlay?> = MutableStateFlow(null)
+    private val stepGameIsWon: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private val isMonitoredViewClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     val gameState: Flow<TutorialGameStateData?> = _tutorial
@@ -62,10 +63,10 @@ internal class TutorialEngine(context: Context) {
         combine(
             _tutorial,
             stepIndex,
-            gameState,
+            stepGameIsWon,
             overlayManager.backStackTop,
             isMonitoredViewClicked,
-        ) { tuto, index, gameState, top, isTargetClicked ->
+        ) { tuto, index, isWon, top, isTargetClicked ->
             if (tuto == null || index == null) return@combine null
             if (index < 0 || index >= tuto.steps.size) return@combine null
 
@@ -81,11 +82,11 @@ internal class TutorialEngine(context: Context) {
                     else null
 
                 StepStartCondition.GameWon ->
-                    if (gameState?.isWon == true) step
+                    if (isWon == true) step
                     else null
 
                 StepStartCondition.GameLost -> {
-                    if (gameState?.isWon == false) step
+                    if (isWon == false) step
                     else null
                 }
 
@@ -95,6 +96,8 @@ internal class TutorialEngine(context: Context) {
                 }
             }
         }.shareIn(coroutineScope, SharingStarted.WhileSubscribed(3_000), 1)
+
+    fun isStarted(): Boolean = _tutorial.value != null
 
     fun startTutorial(newTutorial: TutorialData) {
         Log.d(TAG, "Start tutorial")
@@ -107,12 +110,13 @@ internal class TutorialEngine(context: Context) {
         _tutorial.value = newTutorial
     }
 
-    fun nextStep() {
-        val step = getCurrentStep() ?: return
-        val index = stepIndex.value ?: return
+    fun nextStep(): Boolean {
+        val step = getCurrentStep() ?: return false
+        val index = stepIndex.value ?: return false
 
         // Keep track of current top of back stack value
         stepStartBackStackTop.value = overlayManager.getBackStackTop()
+        stepGameIsWon.value = null
 
         isMonitoredViewClicked.value = false
         getNextStep()?.let { nextStep ->
@@ -125,12 +129,16 @@ internal class TutorialEngine(context: Context) {
 
         Log.d(TAG, "End current step: $index - $step; current stack top: ${stepStartBackStackTop.value}")
 
-        stepIndex.value = index + 1
+        val newIndex = index + 1
+        stepIndex.value = newIndex
 
         val stepEndCondition = step.stepEndCondition
         if (stepEndCondition is StepEndCondition.MonitoredViewClicked) {
             monitoredViewsManager.performClick(stepEndCondition.type)
         }
+
+        val lastStepIndex = _tutorial.value?.steps?.lastIndex ?: return false
+        return newIndex > lastStepIndex
     }
 
     fun skipAllSteps() {
@@ -138,12 +146,15 @@ internal class TutorialEngine(context: Context) {
 
         stepIndex.value = null
         stepStartBackStackTop.value = null
+        stepGameIsWon.value = null
         isMonitoredViewClicked.value = false
     }
 
     fun startGame(scope: CoroutineScope, area: Rect, targetSize: Int) {
         Log.d(TAG, "Start game on area $area with target size $targetSize")
-        _tutorial.value?.game?.start(scope, area, targetSize)
+        _tutorial.value?.game?.start(scope, area, targetSize) { isWon ->
+            stepGameIsWon.value = isWon
+        }
     }
 
     fun onGameTargetHit(target: TutorialGameTargetType) {

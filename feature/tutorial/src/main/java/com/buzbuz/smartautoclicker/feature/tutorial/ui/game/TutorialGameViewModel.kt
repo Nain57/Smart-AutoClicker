@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
+import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TutorialGameViewModel(application: Application) : AndroidViewModel(application) {
@@ -85,8 +87,10 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
             !started && score >= game.highScore
         }
 
-    fun selectGame(gameIndex: Int) {
-        tutorialRepository.startTutorial(gameIndex)
+    fun startTutorial(gameIndex: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tutorialRepository.startTutorial(gameIndex)
+        }
     }
 
     fun startGame(area: Rect, targetsSize: Int) {
@@ -98,7 +102,9 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun stopTutorial() {
-        tutorialRepository.stopTutorial()
+        viewModelScope.launch(Dispatchers.IO) {
+            tutorialRepository.stopTutorial()
+        }
     }
 }
 

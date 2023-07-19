@@ -26,11 +26,13 @@ data class Tutorial(
     @StringRes val nameResId: Int,
     @StringRes val descResId: Int,
     val game: TutorialGame,
+    val isUnlocked: Boolean,
 )
 
-internal fun TutorialData.toDomain(): Tutorial =
+internal fun TutorialData.toDomain(isUnlocked: Boolean): Tutorial =
     Tutorial(
         nameResId = nameResId,
         descResId = descResId,
         game = game.toDomain(),
+        isUnlocked = isUnlocked,
     )

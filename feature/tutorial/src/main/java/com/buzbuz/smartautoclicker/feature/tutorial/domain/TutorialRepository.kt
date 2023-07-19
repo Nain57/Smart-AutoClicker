@@ -20,6 +20,12 @@ import android.content.Context
 import android.graphics.Rect
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.DATABASE_ID_INSERTION
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
@@ -28,8 +34,12 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGa
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class TutorialRepository private constructor(
     context: Context,
@@ -56,11 +66,32 @@ class TutorialRepository private constructor(
         }
     }
 
+    private val scenarioRepository: Repository = Repository.getRepository(context)
+    private val detectionRepository: DetectionRepository =  DetectionRepository.getDetectionRepository(context)
+
     private val tutorialEngine: TutorialEngine = TutorialEngine(context)
 
-    val tutorials: List<Tutorial> = dataSource.tutorials.map { it.toDomain() }
+    /**
+     * The identifier of the user scenario when he enters the tutorial mode.
+     * Kept to be restored once he quit the tutorial.
+     */
+    private var scenarioId: Identifier? = null
+    private var allStepsCompleted: Boolean = false
 
-    val activeTutorial: Flow<Tutorial?> = tutorialEngine.tutorial.map { it?.toDomain() }
+    private val activeTutorialIndex: MutableStateFlow<Int?> = MutableStateFlow(null)
+
+    val tutorials: Flow<List<Tutorial>> = scenarioRepository.tutorialSuccessList
+        .map { successList ->
+            dataSource.tutorials.mapIndexed { index, tutorialData ->
+                tutorialData.toDomain(index < successList.lastIndex)
+            }
+        }
+
+    val activeTutorial: Flow<Tutorial?> = tutorials
+        .combine(activeTutorialIndex) { tutorialList, activeIndex ->
+            activeIndex ?: return@combine null
+            tutorialList[activeIndex]
+        }
 
     val tutorialOverlayState: Flow<TutorialOverlayState?> = tutorialEngine.currentStep
         .map { step ->
@@ -68,13 +99,70 @@ class TutorialRepository private constructor(
             step?.toDomain()
         }
 
-    fun startTutorial(index: Int) {
-        if (index < 0 || index >= tutorials.size) return
-        tutorialEngine.startTutorial(dataSource.tutorials[index])
+    fun setupTutorialMode() {
+        if (scenarioId != null) return
+
+        scenarioId = detectionRepository.getScenarioId()
+
+        Log.d(TAG, "Setup tutorial mode, user scenario is $scenarioId")
+        scenarioRepository.startTutorialMode()
+    }
+
+    fun stopTutorialMode() {
+        scenarioId ?: return
+
+        Log.d(TAG, "Stop tutorial mode, restoring user scenario $scenarioId")
+
+        scenarioId?.let { detectionRepository.setScenarioId(it) }
+        scenarioId = null
+        allStepsCompleted = false
+        activeTutorialIndex.value = null
+        scenarioRepository.stopTutorialMode()
+    }
+
+    suspend fun startTutorial(index: Int) {
+        if (scenarioId == null) {
+            Log.e(TAG, "Tutorial mode is not setup, can't start tutorial $index")
+            return
+        }
+        if (tutorialEngine.isStarted()) return
+        if (index < 0 || index >= dataSource.tutorials.size) {
+            Log.e(TAG, "Can't start tutorial, index is invalid $index")
+            return
+        }
+
+        val tutoScenarioDbId = initTutorialScenario(index) ?: return
+        Log.d(TAG, "Start tutorial $index, set current scenario to $tutoScenarioDbId")
+
+        activeTutorialIndex.value = index
+        allStepsCompleted = false
+        detectionRepository.setScenarioId(Identifier(databaseId = tutoScenarioDbId))
+        withContext(Dispatchers.Main) {
+            tutorialEngine.startTutorial(dataSource.tutorials[index])
+        }
+    }
+
+    suspend fun stopTutorial() {
+        withContext(Dispatchers.Main) {
+            tutorialEngine.stopTutorial()
+        }
+
+        val scenarioIdentifier = scenarioId ?: return
+        val tutoIndex = activeTutorialIndex.value ?: return
+
+        if (allStepsCompleted) {
+            scenarioRepository.setTutorialSuccess(tutoIndex, scenarioIdentifier)
+        } else {
+            scenarioRepository.deleteScenario(scenarioIdentifier)
+        }
+
+        detectionRepository.setScenarioId(scenarioIdentifier)
+        activeTutorialIndex.value = null
+        allStepsCompleted = false
     }
 
     fun nextTutorialStep() {
-        tutorialEngine.nextStep()
+        allStepsCompleted = tutorialEngine.nextStep()
     }
 
     fun skipAllTutorialSteps() {
@@ -85,15 +173,29 @@ class TutorialRepository private constructor(
         tutorialEngine.startGame(scope, area, targetSize)
     }
 
+    fun stopGame() {
+        tutorialEngine.stopGame()
+    }
+
     fun onGameTargetHit(targetType: TutorialGameTargetType) {
         tutorialEngine.onGameTargetHit(targetType)
     }
 
-    fun stopGame() {
-        tutorialEngine.stopGame()
-    }
-    fun stopTutorial() {
-        tutorialEngine.stopTutorial()
+    private suspend fun initTutorialScenario(tutorialIndex: Int): Long? {
+        val scenarioDbId =
+            if (tutorialIndex == 0) {
+                scenarioRepository.addScenario(
+                    Scenario(
+                        id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0L),
+                        name = "Tutorial",
+                        detectionQuality = 600,
+                        endConditionOperator = OR,
+                    )
+                )
+            } else scenarioRepository.getTutorialScenarioDatabaseId(tutorialIndex - 1)?.databaseId
+
+        if (scenarioDbId == null) Log.e(TAG, "Can't get the scenario for the tutorial $tutorialIndex")
+        return scenarioDbId
     }
 }
 

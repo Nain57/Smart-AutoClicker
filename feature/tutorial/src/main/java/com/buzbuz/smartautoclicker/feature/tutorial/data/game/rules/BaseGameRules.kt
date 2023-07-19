@@ -50,7 +50,7 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
 
     private var gameJob: Job? = null
 
-    final override fun start(coroutineScope: CoroutineScope, area: Rect, targetSize: Int) {
+    final override fun start(coroutineScope: CoroutineScope, area: Rect, targetSize: Int, onResult: (Boolean) -> Unit) {
         if (isStarted.value) return
 
         gameJob = coroutineScope.launch {
@@ -78,8 +78,9 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
             Log.d(TAG, "Game over")
 
             isStarted.value = false
-            isWon.value = score.value > highScore
             _targets.value = emptyMap()
+            isWon.value = score.value > highScore
+            onResult(isWon.value == true)
         }
     }
 
