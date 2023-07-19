@@ -45,7 +45,6 @@ class TutorialListFragment : Fragment() {
         viewBinding = FragmentTutorialListBinding.inflate(inflater, container, false)
 
         adapter = TutorialListAdapter(
-            onIntroClicked = ::onIntroClicked,
             onGameClicked = ::onGameClicked,
         )
 
@@ -72,10 +71,6 @@ class TutorialListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.setOverlayVisibility(visible = true)
-    }
-
-    private fun onIntroClicked() {
-        findNavController().navigate(TutorialListFragmentDirections.tutorialListToIntro())
     }
 
     private fun onGameClicked(gameIndex: Int) {

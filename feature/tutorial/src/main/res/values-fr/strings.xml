@@ -21,8 +21,6 @@
     <string name="message_score">Player: %1$d</string>
     <string name="message_high_score">Best: %1$d</string>
     <string name="message_time_left">Time left: %1$d</string>
-    <string name="item_title_tutorial_intro">Getting started</string>
-    <string name="item_desc_tutorial_intro">Learn the basics of Smart Autoclicker</string>
     <string name="item_desc_game_1">Learn how to create your first event in order to click on an non moving target</string>
     <string name="item_title_game_1">Press a still target</string>
     <string name="item_title_game_2">Press a moving target</string>

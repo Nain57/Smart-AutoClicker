@@ -19,29 +19,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    tools:ignore="InvalidNavigation">
-
-    <fragment
-        android:id="@+id/fragment_intro"
-        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.intro.TutorialIntroFragment"
-        android:label="fragment_one"
-        tools:layout="@layout/fragment_tutorial_intro">
-
-        <action
-            android:id="@+id/tutorial_intro_to_list"
-            app:destination="@id/fragment_tutorial_list" />
-
-    </fragment>
+    app:startDestination="@id/fragment_tutorial_list">
 
     <fragment
         android:id="@+id/fragment_tutorial_list"
         android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.list.TutorialListFragment"
         android:label="fragment_two"
         tools:layout="@layout/fragment_tutorial_list">
-
-        <action
-            android:id="@+id/tutorial_list_to_intro"
-            app:destination="@id/fragment_intro"/>
 
         <action
             android:id="@+id/tutorial_list_to_game"

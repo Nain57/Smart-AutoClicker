@@ -20,14 +20,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.OneMovingTargetRules
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.OneStillTargetRules
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoMovingTargetsPressInOrderRules
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoStillTargetsPressWhenBothVisibleRules
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoStillTargetsPressWhenOneVisibleRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 
 import kotlinx.coroutines.flow.Flow
@@ -51,41 +44,15 @@ class TutorialListViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun Tutorial.toItem(index: Int): TutorialItem =
-        TutorialItem.Game(
+        TutorialItem(
             nameResId = nameResId,
             descResId = descResId,
             index = index,
         )
-
-    private fun TutorialGameRules.toItem(index: Int): TutorialItem? =
-        when (this) {
-            is OneStillTargetRules ->
-                TutorialItem.Game(R.string.item_title_game_1, R.string.item_desc_game_1, index)
-            is OneMovingTargetRules ->
-                TutorialItem.Game(R.string.item_title_game_2, R.string.item_desc_game_2, index)
-            is TwoStillTargetsPressWhenBothVisibleRules ->
-                TutorialItem.Game(R.string.item_title_game_3, R.string.item_desc_game_3, index)
-            is TwoStillTargetsPressWhenOneVisibleRules ->
-                TutorialItem.Game(R.string.item_title_game_4, R.string.item_desc_game_4, index)
-            is TwoMovingTargetsPressInOrderRules ->
-                TutorialItem.Game(R.string.item_title_game_5, R.string.item_desc_game_5, index)
-            else -> null
-        }
 }
 
-sealed class TutorialItem {
-
-    abstract val nameResId: Int
-    abstract val descResId: Int
-
-    object Intro : TutorialItem() {
-        override val nameResId: Int = R.string.item_title_tutorial_intro
-        override val descResId: Int = R.string.item_desc_tutorial_intro
-    }
-
-    data class Game(
-        override val nameResId: Int,
-        override val descResId: Int,
-        val index: Int,
-    ) : TutorialItem()
-}
+data class TutorialItem(
+    val nameResId: Int,
+    val descResId: Int,
+    val index: Int,
+)
