@@ -22,6 +22,8 @@ import android.os.Bundle
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 
@@ -36,12 +38,15 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private val viewModel: TutorialViewModel by viewModels()
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
-
         setupActionBar()
+
+        navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment)
+            .navController
     }
 
     override fun onStart() {
@@ -52,6 +57,11 @@ class TutorialActivity : AppCompatActivity() {
     override fun onStop() {
         viewModel.stopTutorialMode()
         super.onStop()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        if (!navController.navigateUp()) finish()
+        return true
     }
 
     private fun setupActionBar() {
