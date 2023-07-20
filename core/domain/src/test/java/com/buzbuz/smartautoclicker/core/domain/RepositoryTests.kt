@@ -18,15 +18,17 @@ package com.buzbuz.smartautoclicker.core.domain
 
 import android.content.Context
 import android.os.Build
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EndConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEndConditions
+import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.core.domain.utils.TestsData
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +43,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
-
 import org.mockito.MockitoAnnotations
 import org.mockito.Mockito.`when` as mockWhen
 
@@ -55,16 +56,20 @@ import java.io.File
 @Config(sdk = [Build.VERSION_CODES.Q])
 class RepositoryTests {
 
-    /** A mocked version of the bitmap manager. */
     @Mock private lateinit var mockBitmapManager: BitmapManager
-    /** A mocked version of the Scenario Dao. */
+
+    @Mock private lateinit var mockDatabase: ClickDatabase
     @Mock private lateinit var mockScenarioDao: ScenarioDao
-    /** A mocked version of the Event Dao. */
     @Mock private lateinit var mockEventDao: EventDao
-    /** A mocked version of the Condition Dao. */
     @Mock private lateinit var mockConditionDao: ConditionDao
-    /** A mocked version of the End condition Dao. */
     @Mock private lateinit var mockEndConditionDao: EndConditionDao
+
+    @Mock private lateinit var mockTutoDatabase: TutorialDatabase
+    @Mock private lateinit var mockTutoScenarioDao: ScenarioDao
+    @Mock private lateinit var mockTutoEventDao: EventDao
+    @Mock private lateinit var mockTutoConditionDao: ConditionDao
+    @Mock private lateinit var mockTutoEndConditionDao: EndConditionDao
+
     /** Object under tests. */
     private lateinit var repository: RepositoryImpl
 
@@ -74,13 +79,18 @@ class RepositoryTests {
 
         val mockContext = mock(Context::class.java)
         mockWhen(mockContext.filesDir).thenReturn(File(DATA_FILE_DIR))
-        val mockDatabase = mock(ClickDatabase::class.java)
+
         mockWhen(mockDatabase.scenarioDao()).thenReturn(mockScenarioDao)
         mockWhen(mockDatabase.eventDao()).thenReturn(mockEventDao)
         mockWhen(mockDatabase.conditionDao()).thenReturn(mockConditionDao)
         mockWhen(mockDatabase.endConditionDao()).thenReturn(mockEndConditionDao)
 
-        repository = RepositoryImpl(mockDatabase, mockBitmapManager)
+        mockWhen(mockTutoDatabase.scenarioDao()).thenReturn(mockTutoScenarioDao)
+        mockWhen(mockTutoDatabase.eventDao()).thenReturn(mockTutoEventDao)
+        mockWhen(mockTutoDatabase.conditionDao()).thenReturn(mockTutoConditionDao)
+        mockWhen(mockTutoDatabase.endConditionDao()).thenReturn(mockTutoEndConditionDao)
+
+        repository = RepositoryImpl(mockDatabase, mockTutoDatabase, mockBitmapManager)
         clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao, mockEndConditionDao)
     }
 
@@ -94,9 +104,9 @@ class RepositoryTests {
     @Test
     fun deleteScenario() = runTest {
         mockWhen(mockEventDao.getEventsIds(TestsData.SCENARIO_ID)).thenReturn(emptyList())
-        repository.deleteScenario(TestsData.getNewScenario())
+        repository.deleteScenario(Identifier(databaseId = TestsData.SCENARIO_ID))
 
-        verify(mockScenarioDao).delete(TestsData.getNewScenarioEntity())
+        verify(mockScenarioDao).delete(TestsData.SCENARIO_ID)
     }
 
     @Test
@@ -106,7 +116,7 @@ class RepositoryTests {
         mockWhen(mockConditionDao.getConditionsPath(4L)).thenReturn(listOf("tutu"))
         mockWhen(mockConditionDao.getValidPathCount("toto")).thenReturn(1)
         mockWhen(mockConditionDao.getValidPathCount("tutu")).thenReturn(0)
-        repository.deleteScenario(TestsData.getNewScenario())
+        repository.deleteScenario(Identifier(databaseId = TestsData.SCENARIO_ID))
 
         verify(mockBitmapManager).deleteBitmaps(listOf("tutu"))
     }
