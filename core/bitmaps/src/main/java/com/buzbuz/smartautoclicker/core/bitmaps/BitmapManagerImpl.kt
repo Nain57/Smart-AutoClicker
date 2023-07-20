@@ -34,7 +34,6 @@ import java.nio.ByteBuffer
  *
  * @param appDataDir the directory where all bitmaps will be saved/loaded.
  */
-@Suppress("BlockingMethodInNonBlockingContext") // All are handled in IO dispatcher
 internal class BitmapManagerImpl(private val appDataDir: File) : BitmapManager {
 
     companion object {
@@ -54,12 +53,12 @@ internal class BitmapManagerImpl(private val appDataDir: File) : BitmapManager {
         }
     }
 
-    override suspend fun saveBitmap(bitmap: Bitmap) : String {
+    override suspend fun saveBitmap(bitmap: Bitmap, prefix: String) : String {
         val uncompressedBuffer = ByteBuffer.allocateDirect(bitmap.byteCount)
         bitmap.copyPixelsToBuffer(uncompressedBuffer)
         uncompressedBuffer.position(0)
 
-        val path = "$CLICK_CONDITION_FILE_PREFIX${uncompressedBuffer.hashCode()}"
+        val path = "$prefix${uncompressedBuffer.hashCode()}"
         val file = File(appDataDir, path)
         if (!file.exists()) {
             Log.d(TAG, "Saving $path")

@@ -51,7 +51,7 @@ interface BitmapManager {
      *
      * @return the path of the bitmap.
      */
-    suspend fun saveBitmap(bitmap: Bitmap) : String
+    suspend fun saveBitmap(bitmap: Bitmap, prefix: String = CONDITION_FILE_PREFIX) : String
 
     /**
      * Load a bitmap.
@@ -78,4 +78,6 @@ interface BitmapManager {
 }
 
 /** The prefix appended to all bitmap file names. */
-const val CLICK_CONDITION_FILE_PREFIX = "Condition_"
+const val CONDITION_FILE_PREFIX = "Condition_"
+/** The prefix appended to all bitmap file names. */
+const val TUTORIAL_CONDITION_FILE_PREFIX = "Tutorial_Condition_"

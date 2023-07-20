@@ -20,6 +20,8 @@ import android.util.Log
 import androidx.room.withTransaction
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
+import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
@@ -96,6 +98,10 @@ internal class RepositoryImpl internal constructor(
         val db = currentDatabase
         return if (db is TutorialDatabase) db.tutorialDao() else null
     }
+
+    private fun getBitmapFilePrefix(): String =
+        if (currentDatabase.value == database) CONDITION_FILE_PREFIX
+        else TUTORIAL_CONDITION_FILE_PREFIX
 
     /** Updater for a list of conditions. */
     private val conditionsUpdater = DatabaseListUpdater<Condition, ConditionEntity>(
@@ -272,12 +278,14 @@ internal class RepositoryImpl internal constructor(
     }
 
     private suspend fun updateConditions(eventDbId: Long, conditions: List<Condition>) {
+        val prefix = getBitmapFilePrefix()
+
         conditionsUpdater.refreshUpdateValues(
             currentEntities = conditionsDao().getConditions(eventDbId),
             newItems = conditions,
             toEntity = { _, condition ->
                 val path = if (condition.path.isNullOrEmpty()) {
-                    condition.bitmap?.let { bitmapManager.saveBitmap(it) }
+                    condition.bitmap?.let { bitmapManager.saveBitmap(it, prefix) }
                         ?: throw IllegalArgumentException("Can't insert condition, bitmap and path are both null.")
                 } else {
                     condition.path
