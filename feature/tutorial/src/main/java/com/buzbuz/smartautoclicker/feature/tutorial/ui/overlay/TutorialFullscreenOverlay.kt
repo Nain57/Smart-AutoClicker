@@ -24,14 +24,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.TopOverlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.OverlayTutorialBinding
 
 import kotlinx.coroutines.launch
 
-class TutorialTopOverlay : TopOverlay(theme = R.style.AppTheme) {
+class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: TutorialOverlayViewModel by viewModels()

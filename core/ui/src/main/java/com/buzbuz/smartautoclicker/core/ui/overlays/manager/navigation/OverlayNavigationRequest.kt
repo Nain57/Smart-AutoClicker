@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 
 internal sealed class OverlayNavigationRequest {
 
@@ -24,7 +24,7 @@ internal sealed class OverlayNavigationRequest {
     object NavigateUp : OverlayNavigationRequest()
 
     data class NavigateTo(
-        val overlay: BaseOverlay,
+        val overlay: Overlay,
         val hideCurrent: Boolean = false,
     ) : OverlayNavigationRequest()
 }

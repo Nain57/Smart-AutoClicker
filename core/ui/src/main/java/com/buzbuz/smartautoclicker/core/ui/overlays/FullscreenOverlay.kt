@@ -23,13 +23,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.LinearInterpolator
+
+import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
-abstract class TopOverlay(@StyleRes theme: Int) : BaseOverlay(theme) {
+/** BaseOverlay class for an overlay displayed as full screen. */
+abstract class FullscreenOverlay(@StyleRes theme: Int? = null) : BaseOverlay(theme) {
 
-    /** The layout parameters of the menu layout. */
+    /** The layout parameters of the window displaying the view. */
     private val viewLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.MATCH_PARENT,
@@ -66,12 +69,14 @@ abstract class TopOverlay(@StyleRes theme: Int) : BaseOverlay(theme) {
         onViewCreated()
     }
 
+    @CallSuper
     override fun onStart() {
         view.alpha = 0f
         windowManager.addView(view, viewLayoutParams)
         showAnimator.start()
     }
 
+    @CallSuper
     override fun onStop() {
         windowManager.removeView(view)
     }

@@ -24,25 +24,24 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
-import com.buzbuz.smartautoclicker.core.ui.overlays.TopOverlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.shareIn
 
 import java.io.PrintWriter
 
-class OverlayManager private constructor(context: Context) {
+/**
+ * Manages the overlays navigation and backstack.
+ * Can be seen as the equivalent of the Android FragmentManager, but for [Overlay].
+ */
+class OverlayManager internal constructor(context: Context) {
 
     companion object {
 
@@ -67,7 +66,7 @@ class OverlayManager private constructor(context: Context) {
     /** The metrics of the device screen. */
     private val displayMetrics = DisplayMetrics.getInstance(context)
     /** The listener upon screen rotation. */
-    private val orientationListener: (Context) -> Unit = ::onOrientationChanged
+    private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
 
     /** Contains all overlays, from root to top visible overlay. */
     private val overlayBackStack: LifoStack<Overlay> = LifoStack()
@@ -79,10 +78,14 @@ class OverlayManager private constructor(context: Context) {
      */
     private val lifecyclesRegistry = LifecycleStatesRegistry()
 
+    /** Tells if we are currently executing navigation requests. */
     private var isNavigating: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    /** Tells if we are currently closing the children a of dismissed overlay. */
     private var closingChildren: Boolean = false
+    /** The overlay at the top of the stack (the top visible one). Null if the stack is empty. */
     private var topOverlay: Overlay? = null
 
+    /** Flow on the top of the overlay stack. Null if the stack is empty. */
     val backStackTop: Flow<Overlay?> = isNavigating
         .filter { navigating -> !navigating }
         .combine(overlayBackStack.topFlow) { _, stackTop ->
@@ -91,10 +94,12 @@ class OverlayManager private constructor(context: Context) {
         }
         .distinctUntilChanged()
 
+    /** @return the top of the overlay back stack. */
     fun getBackStackTop(): Overlay? =
         overlayBackStack.top
 
-    fun navigateTo(context: Context, newOverlay: BaseOverlay, hideCurrent: Boolean = false) {
+    /** Display the provided overlay and pause the current one, if any. */
+    fun navigateTo(context: Context, newOverlay: Overlay, hideCurrent: Boolean = false) {
         Log.d(TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
                     ", currently navigating: ${isNavigating.value}")
 
@@ -102,6 +107,7 @@ class OverlayManager private constructor(context: Context) {
         if (!isNavigating.value) executeNextNavigationRequest(context)
     }
 
+    /** Destroys the currently shown overlay. */
     fun navigateUp(context: Context): Boolean {
         if (overlayBackStack.isEmpty()) return false
         Log.d(TAG, "Pushing NavigateUp request, currently navigating: ${isNavigating.value}")
@@ -111,6 +117,7 @@ class OverlayManager private constructor(context: Context) {
         return true
     }
 
+    /** Destroys all overlays on the back stack. */
     fun closeAll(context: Context) {
         Log.d(TAG, "Pushing CloseAll request, currently navigating: ${isNavigating.value}")
 
@@ -118,6 +125,10 @@ class OverlayManager private constructor(context: Context) {
         if (!isNavigating.value) executeNextNavigationRequest(context)
     }
 
+    /**
+     * Hide all overlays on the backstack.
+     * Their lifecycles will be saved, and can be restored using [restoreAll].
+     */
     fun hideAll() {
         // Save the overlays states to restore them when restoreAll is called
         lifecyclesRegistry.saveStates(overlayBackStack.toList())
@@ -125,6 +136,10 @@ class OverlayManager private constructor(context: Context) {
         overlayBackStack.forEachReversed { it.hide() }
     }
 
+    /**
+     * Restore the states of all overlays on the backstack.
+     * The states must have been saved using [hideAll].
+     */
     fun restoreAll() {
         val overlayStates = lifecyclesRegistry.restoreStates()
         if (overlayBackStack.isEmpty() || overlayStates.isEmpty()) return
@@ -142,7 +157,11 @@ class OverlayManager private constructor(context: Context) {
         }
     }
 
-    fun setTopOverlay(overlay: TopOverlay) {
+    /**
+     * Set an overlay as being shown above all overlays in the backstack.
+     * It will not be added to the backstack, and can be seen as "an overlay for overlays".
+     */
+    fun setTopOverlay(overlay: FullscreenOverlay) {
         if (topOverlay != null) return
         val stackTop = overlayBackStack.top ?: return
 
@@ -158,6 +177,7 @@ class OverlayManager private constructor(context: Context) {
         }
     }
 
+    /** Remove and destroys the top overlay defined with [setTopOverlay]. */
     fun removeTopOverlay() {
         Log.d(TAG, "Remove top overlay")
 
@@ -206,8 +226,8 @@ class OverlayManager private constructor(context: Context) {
 
         // Update current lifecycle
         currentOverlay?.apply {
+            pause()
             if (request.hideCurrent) stop()
-            else pause()
         }
 
         request.overlay.start()
@@ -218,7 +238,12 @@ class OverlayManager private constructor(context: Context) {
 
     private fun executeNavigateUp() {
         if (overlayBackStack.isEmpty()) return
-        overlayBackStack.peek().destroy()
+
+        overlayBackStack.peek().apply {
+            pause()
+            stop()
+            destroy()
+        }
     }
 
     private fun executeCloseAll() {
@@ -261,7 +286,7 @@ class OverlayManager private constructor(context: Context) {
         executeNextNavigationRequest(context)
     }
 
-    private fun onOrientationChanged(context: Context) {
+    private fun onOrientationChanged() {
         overlayBackStack.forEachReversed { (it as BaseOverlay).changeOrientation() }
     }
 
