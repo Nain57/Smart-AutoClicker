@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ import android.widget.ImageView
 
 import androidx.annotation.IdRes
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedMenuView
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedViews
 import com.buzbuz.smartautoclicker.core.ui.R
@@ -42,20 +42,18 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.mockito.Mockito.`when` as mockWhen
-
 import org.robolectric.annotation.Config
 
 /** Test the [OverlayMenu] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
-class OverlayMenuControllerTests {
+class OverlayMenuTests {
 
     private companion object {
         private const val TEST_DATA_DISABLED_ALPHA = 0.4f
@@ -65,10 +63,9 @@ class OverlayMenuControllerTests {
 
     /**
      * Tested class implementation redirecting the abstract method calls to the provided mock interface.
-     * @param context the android context.
      * @param impl the mock called for each abstract method calls.
      */
-    class OverlayMenuTestImpl(context: Context, private val impl: OverlayMenuControllerImpl) : OverlayMenu(context) {
+    class OverlayMenuTestImpl(private val impl: OverlayMenuControllerImpl) : OverlayMenu() {
         override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup = impl.onCreateMenu(layoutInflater)
         override fun onCreateOverlayView(): View? = impl.onCreateOverlayView()
         override fun onMenuItemClicked(viewId: Int): Unit? = impl.onMenuItemClicked(viewId)
@@ -186,10 +183,10 @@ class OverlayMenuControllerTests {
 
     @Test
     fun createLifecycle() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         mockViewsFromImpl()
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         inOrder(overlayMenuControllerImpl).apply {
             verify(overlayMenuControllerImpl).onCreateMenu(mockLayoutInflater)
@@ -199,11 +196,11 @@ class OverlayMenuControllerTests {
 
     @Test
     fun createAddMenuView() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         mockViewsFromImpl(menuView)
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
         overlayMenuController.start()
 
         val wmAddedView = captureWindowManagerAddedMenuView(mockWindowManager)
@@ -212,12 +209,12 @@ class OverlayMenuControllerTests {
 
     @Test
     fun createAddViews() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         val overlayView = mock(View::class.java)
         mockViewsFromImpl(menuView, overlayView)
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
         overlayMenuController.start()
 
         val wmAddedView = captureWindowManagerAddedViews(mockWindowManager)
@@ -227,10 +224,10 @@ class OverlayMenuControllerTests {
 
     @Test
     fun getInitialMenuPositionFirstTime() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         mockViewsFromImpl()
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
         overlayMenuController.start()
 
         val wmAddedView = captureWindowManagerAddedMenuView(mockWindowManager)
@@ -240,7 +237,7 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setupViewClickListeners() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
             createMockMenuItemView(),
@@ -248,14 +245,14 @@ class OverlayMenuControllerTests {
         )
         mockViewsFromImpl(createMockMenuView(menuItems))
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         menuItems.forEach { verify(it).setOnClickListener(any()) }
     }
 
     @Test
     fun setupMoveItemTouchListener() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val moveItem = createMockMenuItemView(R.id.btn_move)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
@@ -264,14 +261,14 @@ class OverlayMenuControllerTests {
         )
         mockViewsFromImpl(createMockMenuView(menuItems))
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         verify(moveItem).setOnTouchListener(any())
     }
 
     @Test
     fun setupHideItemTouchListener() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         val menuItems = sequenceOf(
             createMockMenuItemView(),
@@ -280,18 +277,18 @@ class OverlayMenuControllerTests {
         )
         mockViewsFromImpl(createMockMenuView(menuItems))
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         verify(hideItem).setOnClickListener(any())
     }
 
     @Test
     fun hideButtonInitialState() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         mockViewsFromImpl(createMockMenuView(sequenceOf(createMockMenuItemView(), hideItem)))
 
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
         overlayMenuController.start()
 
         verify(hideItem).isEnabled = true
@@ -300,10 +297,10 @@ class OverlayMenuControllerTests {
 
     @Test
     fun hideMenu() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         mockViewsFromImpl(menuView)
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
         overlayMenuController.start()
 
         overlayMenuController.stop()
@@ -313,11 +310,11 @@ class OverlayMenuControllerTests {
 
     @Test
     fun hideAll() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         val overlayView = mock(View::class.java)
         mockViewsFromImpl(menuView, overlayView)
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
         overlayMenuController.start()
 
         overlayMenuController.stop()
@@ -328,13 +325,13 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setMenuItemDisabledNotClickable() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val item = createMockMenuItemView(42)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             item,
         )))
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         overlayMenuController.publicSetMenuItemViewEnabled(item, false, false)
 
@@ -344,13 +341,13 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setMenuItemDisabledClickable() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val item = createMockMenuItemView(42)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             item,
         )))
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         overlayMenuController.publicSetMenuItemViewEnabled(item, false, true)
 
@@ -360,13 +357,13 @@ class OverlayMenuControllerTests {
 
     @Test
     fun setMenuItemEnabled() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val item = createMockMenuItemView(51)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             item,
         )))
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         overlayMenuController.publicSetMenuItemViewEnabled(item, true)
 
@@ -376,14 +373,14 @@ class OverlayMenuControllerTests {
 
     @Test
     fun onMenuItemClicked() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val itemId = 42
         val item = createMockMenuItemView(itemId)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             item,
         )))
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         // Get the button click listener and calls it
         val clickListenerCaptor = ArgumentCaptor.forClass(View.OnClickListener::class.java)
@@ -395,14 +392,14 @@ class OverlayMenuControllerTests {
 
     @Test
     fun onHideOverlayClickedOverlayVisible() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val overlayView = mock(View::class.java)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             hideItem,
         )), overlayView)
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         // Get the hide button click listener
         val clickListenerCaptor = ArgumentCaptor.forClass(View.OnClickListener::class.java)
@@ -425,14 +422,14 @@ class OverlayMenuControllerTests {
 
     @Test
     fun onHideOverlayClickedOverlayGone() {
-        overlayMenuController = OverlayMenuTestImpl(mockContext, overlayMenuControllerImpl)
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val overlayView = mock(View::class.java)
         val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
         mockViewsFromImpl(createMockMenuView(sequenceOf(
             createMockMenuItemView(),
             hideItem,
         )), overlayView)
-        overlayMenuController.create()
+        overlayMenuController.create(mockContext)
 
         // Get the hide button click listener
         val clickListenerCaptor = ArgumentCaptor.forClass(View.OnClickListener::class.java)
