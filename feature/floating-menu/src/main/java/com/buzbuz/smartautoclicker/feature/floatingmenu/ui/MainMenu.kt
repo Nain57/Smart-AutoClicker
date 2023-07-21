@@ -129,6 +129,11 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         viewModel.monitorPlayPauseButtonView(viewBinding.btnPlay)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.shouldShowFirstTimeTutorialDialog()) showFirstTimeTutorialDialog()
+    }
+
     override fun onStop() {
         super.onStop()
         viewModel.stopViewMonitoring()
@@ -137,11 +142,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> {
-                context.startActivity(TutorialActivity.getStartIntent(context))
-                /*viewModel.toggleDetection(context) {
+                viewModel.toggleDetection(context) {
                     billingFlowTriggeredByDetectionLimitation = true
                     hide()
-                }*/
+                }
             }
             R.id.btn_click_list -> {
                 viewModel.startScenarioEdition {
@@ -278,5 +282,22 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             context = context,
             newOverlay = DebugReportDialog(),
         )
+    }
+
+    private fun showFirstTimeTutorialDialog() {
+        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+            .setTitle(R.string.dialog_title_tutorial_first_time)
+            .setMessage(R.string.message_tutorial_first_time)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                context.startActivity(TutorialActivity.getStartIntent(context))
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .create()
+            .apply {
+                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
+            }
+            .show()
+
+        viewModel.onFirstTimeTutorialDialogShown()
     }
 }

@@ -18,4 +18,6 @@
 <resources>
     <string name="message_scenario_saving_error">由于内部错误，您的方案无法保存。您要修改还是取消所有修改？</string>
     <string name="button_dialog_modify">调整</string>
+    <string name="dialog_title_tutorial_first_time">Tutorial</string>
+    <string name="message_tutorial_first_time">恭喜，Smart AutoClicker 现已在您的设备上正常运行！\n您想按照教程学习该应用程序的基础知识吗？</string>
 </resources>

@@ -14,17 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.content
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.more
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class DebugConfigViewModel(application: Application) : AndroidViewModel(application) {
+class MoreViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Debug configuration shared preferences. */
     private val repository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)

@@ -47,7 +47,7 @@
     <string name="menu_item_title_advanced">Avancé</string>
     <string name="menu_item_title_events">Évènements</string>
     <string name="menu_item_title_config">Configuration</string>
-    <string name="menu_item_title_debug">Debug</string>
+    <string name="menu_item_title_more">Plus</string>
     <string name="menu_item_title_actions">Actions</string>
     <string name="menu_item_title_conditions">Conditions</string>
 
@@ -109,7 +109,7 @@
     <string name="message_event_copy_with_toggle_action_from_another_scenario">Cet évènement possède une ou plusieures actions de changement d\'état référenceant un évènement d\'un autre scénario.\nVous devrez mettre à jour ces actions avant de pouvoir sauvegarder le scénario.</string>
     <string name="message_event_delete_associated_end_condition">Cet évènement est référencé par une ou plusieures conditions de fin. Le supprimer supprimera aussi les conditions de fin associées.\nÊtes vous sûr ?</string>
     <string name="message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
-
+    <string name="message_tutorial_start">Apprenez à utiliser Smart AutoClicker</string>
 
     <!--
       - Toast messages.
@@ -129,6 +129,7 @@
     <string name="section_title_end_condition">Conditions de fin</string>
     <string name="section_title_intent_extras_value">Valeur</string>
     <string name="section_title_start_application">Lancer une application</string>
+    <string name="section_title_tutorial">Tutoriel</string>
 
     <!--
       - List header.

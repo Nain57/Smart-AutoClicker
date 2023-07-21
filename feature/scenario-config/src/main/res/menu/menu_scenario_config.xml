@@ -27,8 +27,8 @@
         android:icon="@drawable/ic_settings"
         android:title="@string/menu_item_title_config"/>
     <item
-        android:id="@+id/page_debug"
+        android:id="@+id/page_more"
         android:enabled="true"
-        android:icon="@drawable/ic_debugging"
-        android:title="@string/menu_item_title_debug"/>
+        android:icon="@drawable/ic_more"
+        android:title="@string/menu_item_title_more"/>
 </menu>
