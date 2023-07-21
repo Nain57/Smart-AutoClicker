@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.domain
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Rect
 import android.util.Log
 
@@ -28,6 +29,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine
+import com.buzbuz.smartautoclicker.feature.tutorial.data.getTutorialPreferences
+import com.buzbuz.smartautoclicker.feature.tutorial.data.isFirstTimePopupAlreadyShown
+import com.buzbuz.smartautoclicker.feature.tutorial.data.putFirstTimePopupAlreadyShown
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
@@ -69,6 +73,8 @@ class TutorialRepository private constructor(
     private val scenarioRepository: Repository = Repository.getRepository(context)
     private val detectionRepository: DetectionRepository =  DetectionRepository.getDetectionRepository(context)
 
+    private val sharedPrefs: SharedPreferences = context.getTutorialPreferences()
+
     private val tutorialEngine: TutorialEngine = TutorialEngine(context)
 
     /**
@@ -98,6 +104,12 @@ class TutorialRepository private constructor(
             Log.d(TAG, "Update overlay state for step $step")
             step?.toDomain()
         }
+
+    fun isTutorialFirstTimePopupShown(): Boolean =
+        sharedPrefs.isFirstTimePopupAlreadyShown()
+
+    fun setIsTutorialFirstTimePopupShown() =
+        sharedPrefs.edit().putFirstTimePopupAlreadyShown(true).apply()
 
     fun setupTutorialMode() {
         if (scenarioId != null) return

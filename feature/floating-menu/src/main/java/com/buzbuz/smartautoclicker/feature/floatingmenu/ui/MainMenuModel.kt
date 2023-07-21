@@ -31,9 +31,10 @@ import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.ViewPositioningType
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -49,18 +50,22 @@ import kotlin.time.Duration.Companion.minutes
  */
 class MainMenuModel(application: Application) : AndroidViewModel(application) {
 
-    /** The detection repository. */
-    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(application)
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+
     /** The repository for the scenarios. */
     private val repository: Repository = Repository.getRepository(application)
+    /** The detection repository. */
+    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(application)
+
     /** The currently loaded scenario info. */
     private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
     private val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
     /** The repository for the scenario debugging info. */
     private val debugRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+    /** The repository for the tutorials data. */
+    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
 
     /** Tells if the pro mode is purchased. */
     private val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased
@@ -157,17 +162,23 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        repository.cleanCache()
-    }
-
     fun monitorPlayPauseButtonView(view: View) {
-        monitoredViewsManager.attach(TutorialMonitoredViewType.FLOATING_MENU_BUTTON_PLAY, view, ViewPositioningType.SCREEN)
+        monitoredViewsManager.attach(MonitoredViewType.FLOATING_MENU_BUTTON_PLAY, view, ViewPositioningType.SCREEN)
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.detach(TutorialMonitoredViewType.FLOATING_MENU_BUTTON_PLAY)
+        monitoredViewsManager.detach(MonitoredViewType.FLOATING_MENU_BUTTON_PLAY)
+    }
+
+    fun shouldShowFirstTimeTutorialDialog(): Boolean =
+        !tutorialRepository.isTutorialFirstTimePopupShown()
+
+    fun onFirstTimeTutorialDialogShown(): Unit =
+        tutorialRepository.setIsTutorialFirstTimePopupShown()
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.cleanCache()
     }
 }
 

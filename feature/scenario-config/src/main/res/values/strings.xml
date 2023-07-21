@@ -45,7 +45,7 @@
     <string name="menu_item_title_simple">Simple</string>
     <string name="menu_item_title_events">Events</string>
     <string name="menu_item_title_config">Config</string>
-    <string name="menu_item_title_debug">Debug</string>
+    <string name="menu_item_title_more">More</string>
     <string name="menu_item_title_conditions">Conditions</string>
     <string name="menu_item_title_actions">Actions</string>
 
@@ -107,6 +107,7 @@
     <string name="message_event_copy_with_toggle_action_from_another_scenario">This event have one or more toggle event actions referencing an event from another scenario.\nYou will have to update their target events before saving your scenario.</string>
     <string name="message_event_delete_associated_end_condition">This event have one or more end conditions referencing it. Deleting this event will delete the associated end conditions as well.\nAre you sure ?</string>
     <string name="message_event_delete_associated_action">This event have one or more actions referencing it. Deleting this event will delete the associated actions as well.\nAre you sure ?</string>
+    <string name="message_tutorial_start">Learn how to use Smart AutoClicker</string>
 
     <!--
       - Toast messages.
@@ -126,6 +127,7 @@
     <string name="section_title_end_condition">End conditions</string>
     <string name="section_title_intent_extras_value">Value</string>
     <string name="section_title_start_application">Start application</string>
+    <string name="section_title_tutorial">Tutorial</string>
 
     <!--
       - List header.

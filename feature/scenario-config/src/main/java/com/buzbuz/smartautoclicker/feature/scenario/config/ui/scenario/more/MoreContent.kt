@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.content
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.more
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -27,19 +27,21 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.ContentDebugConfigBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentMoreBinding
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity
 
 import kotlinx.coroutines.launch
 
-class DebugConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
+class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: DebugConfigViewModel by lazy { ViewModelProvider(this).get(DebugConfigViewModel::class.java) }
+    private val viewModel: MoreViewModel by lazy { ViewModelProvider(this).get(MoreViewModel::class.java) }
     /** View binding for this content. */
-    private lateinit var viewBinding: ContentDebugConfigBinding
+    private lateinit var viewBinding: ContentMoreBinding
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewBinding = ContentDebugConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
+        viewBinding = ContentMoreBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            tutorialCard.setOnClickListener { onTutorialClicked() }
             debugOverlay.setOnClickListener { viewModel.toggleIsDebugViewEnabled() }
             debugReport.setOnClickListener { viewModel.toggleIsDebugReportEnabled() }
         }
@@ -60,6 +62,11 @@ class DebugConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
         if (buttonType == DialogNavigationButton.SAVE) {
             viewModel.saveConfig()
         }
+    }
+
+    private fun onTutorialClicked() {
+        dialogController.back()
+        context.startActivity(TutorialActivity.getStartIntent(context))
     }
 
     private fun updateDebugView(isEnabled: Boolean) {

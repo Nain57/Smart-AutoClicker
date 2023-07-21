@@ -28,8 +28,6 @@
       -  * Title should be short and concise.
       -  * Desc can have more space to describe the title
       -->
-    <string name="item_title_debug_generate_report">Genera un rapporto</string>
-    <string name="item_title_debug_show_view">Mostra visualizzazione debug</string>
     <string name="item_title_report_total_duration">Durata totale</string>
     <string name="item_title_report_image_processed">Immagini processate</string>
     <string name="item_title_report_avg_image_processing_duration">Durata di processo media</string>
