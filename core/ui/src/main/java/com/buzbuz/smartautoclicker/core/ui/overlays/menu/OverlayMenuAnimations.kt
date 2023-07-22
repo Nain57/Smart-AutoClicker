@@ -24,7 +24,12 @@ import android.view.animation.DecelerateInterpolator
 internal class OverlayMenuAnimations {
 
     /** Animation for showing the menu. */
-    private val showAnimation: Animation = AlphaAnimation(0f, 1f).apply {
+    private val showOverlayMenuAnimation: Animation = AlphaAnimation(0f, 1f).apply {
+        duration = SHOW_ANIMATION_DURATION_MS
+        interpolator = DecelerateInterpolator()
+    }
+    /** Animation for showing the overlayView. */
+    private val showOverlayViewAnimation: Animation = AlphaAnimation(0f, 1f).apply {
         duration = SHOW_ANIMATION_DURATION_MS
         interpolator = DecelerateInterpolator()
     }
@@ -32,31 +37,38 @@ internal class OverlayMenuAnimations {
         private set
 
     /** Animation for hiding the menu. */
-    private val hideAnimation: Animation = AlphaAnimation(1f, 0f).apply {
+    private val hideOverlayMenuAnimation: Animation = AlphaAnimation(1f, 0f).apply {
+        duration = DISMISS_ANIMATION_DURATION_MS
+        interpolator = DecelerateInterpolator()
+    }
+    /** Animation for showing the overlayView. */
+    private val hideOverlayViewAnimation: Animation = AlphaAnimation(1f, 0f).apply {
         duration = DISMISS_ANIMATION_DURATION_MS
         interpolator = DecelerateInterpolator()
     }
     var hideAnimationIsRunning: Boolean = false
         private set
 
-    fun startShowAnimation(view: View, onAnimationEnded: () -> Unit) {
+    fun startShowAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
         showAnimationIsRunning = true
-        showAnimation.setOnEndListener {
+        showOverlayMenuAnimation.setOnEndListener {
             showAnimationIsRunning = false
             onAnimationEnded()
         }
 
-        view.startAnimation(showAnimation)
+        view.startAnimation(showOverlayMenuAnimation)
+        overlayView?.startAnimation(showOverlayViewAnimation)
     }
 
-    fun startHideAnimation(view: View, onAnimationEnded: () -> Unit) {
+    fun startHideAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
         hideAnimationIsRunning = true
-        hideAnimation.setOnEndListener {
+        hideOverlayMenuAnimation.setOnEndListener {
             hideAnimationIsRunning = false
             onAnimationEnded()
         }
 
-        view.startAnimation(hideAnimation)
+        view.startAnimation(hideOverlayMenuAnimation)
+        overlayView?.startAnimation(hideOverlayViewAnimation)
     }
 
     private fun Animation.setOnEndListener(end: () -> Unit) {
@@ -71,4 +83,4 @@ internal class OverlayMenuAnimations {
 /** Duration of the show overlay menu animation. */
 private const val SHOW_ANIMATION_DURATION_MS = 250L
 /** Duration of the dismiss overlay menu animation. */
-private const val DISMISS_ANIMATION_DURATION_MS = 125L
+private const val DISMISS_ANIMATION_DURATION_MS = 2000L

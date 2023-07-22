@@ -190,6 +190,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
         screenOverlayView?.let {
+            it.visibility = View.GONE
             windowManager.addView(it, overlayLayoutParams)
         }
 
@@ -233,7 +234,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         // Start the show animation for the menu
         Log.d(TAG, "Start show animation...")
         menuBackground.visibility = View.VISIBLE
-        animations.startShowAnimation(menuBackground) {
+        screenOverlayView?.visibility = View.VISIBLE
+        animations.startShowAnimation(menuBackground, screenOverlayView) {
             Log.d(TAG, "Show animation ended")
 
             if (resumeOnceShown) {
@@ -263,10 +265,12 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
         // Start the hide animation for the menu
         Log.d(TAG, "Start hide animation...")
-        animations.startHideAnimation(menuBackground) {
+        animations.startHideAnimation(menuBackground, screenOverlayView) {
             Log.d(TAG, "Hide animation ended")
 
             menuBackground.visibility = View.GONE
+            screenOverlayView?.visibility = View.GONE
+
             super.stop()
 
             if (destroyOnceHidden) {
