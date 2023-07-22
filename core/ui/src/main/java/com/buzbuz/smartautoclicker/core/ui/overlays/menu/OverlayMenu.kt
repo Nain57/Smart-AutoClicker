@@ -434,7 +434,10 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     private fun onNewMenuPosition(position: Point) {
         menuLayoutParams.x = position.x
         menuLayoutParams.y = position.y
-        windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+        }
     }
 }
 /** Tag for logs */
