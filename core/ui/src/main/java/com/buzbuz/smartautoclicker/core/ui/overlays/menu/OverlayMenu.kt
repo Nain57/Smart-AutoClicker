@@ -17,10 +17,9 @@
 package com.buzbuz.smartautoclicker.core.ui.overlays.menu
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.util.Log
 import android.util.Size
 import android.view.Gravity
@@ -33,7 +32,6 @@ import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
-import androidx.annotation.VisibleForTesting
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
@@ -68,20 +66,6 @@ import com.buzbuz.smartautoclicker.core.ui.R
  */
 abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
-    @VisibleForTesting
-    internal companion object {
-        /** Name of the preference file. */
-        const val PREFERENCE_NAME = "OverlayMenuController"
-        /** Preference key referring to the landscape X position of the menu during the last call to [destroy]. */
-        const val PREFERENCE_MENU_X_LANDSCAPE_KEY = "Menu_X_Landscape_Position"
-        /** Preference key referring to the landscape Y position of the menu during the last call to [destroy]. */
-        const val PREFERENCE_MENU_Y_LANDSCAPE_KEY = "Menu_Y_Landscape_Position"
-        /** Preference key referring to the portrait X position of the menu during the last call to [destroy]. */
-        const val PREFERENCE_MENU_X_PORTRAIT_KEY = "Menu_X_Portrait_Position"
-        /** Preference key referring to the portrait Y position of the menu during the last call to [destroy]. */
-        const val PREFERENCE_MENU_Y_PORTRAIT_KEY = "Menu_Y_Portrait_Position"
-    }
-
     /** The layout parameters of the menu layout. */
     private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
@@ -98,8 +82,6 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     private var resumeOnceShown: Boolean = false
     private var destroyOnceHidden: Boolean = false
 
-    /** The shared preference storing the position of the menu in order to save/restore the last user position. */
-    private lateinit var sharedPreferences: SharedPreferences
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     private lateinit var windowManager: WindowManager
 
@@ -109,6 +91,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     private lateinit var menuBackground: ViewGroup
     /** Handles the window size computing when animating a resize of the overlay. */
     private lateinit var resizeController: OverlayWindowResizeController
+    /** Handles the position of the menu. */
+    private lateinit var positionController: OverlayMenuPositionController
 
     /** Value of the alpha for a disabled item view in the menu. */
     private var disabledItemAlpha: Float = 1f
@@ -126,11 +110,6 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     protected var screenOverlayView: View? = null
     /** The layout parameters of the overlay view. */
     private var overlayLayoutParams:  WindowManager.LayoutParams? = null
-
-    /** The initial position of the overlay menu when pressing the move menu item. */
-    private var moveInitialMenuPosition = 0 to 0
-    /** The initial position of the touch event that as initiated the move of the overlay menu. */
-    private var moveInitialTouchPosition = 0 to 0
 
     /** Tells if there is a hide overlay view button or not. */
     private var haveHideButton = false
@@ -171,7 +150,6 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     @CallSuper
     @SuppressLint("ResourceType")
     override fun onCreate() {
-        sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
         windowManager = context.getSystemService(WindowManager::class.java)!!
         disabledItemAlpha = context.resources.getFraction(R.dimen.alpha_menu_item_disabled, 1, 1)
 
@@ -188,7 +166,12 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
-        loadMenuPosition(displayMetrics.orientation)
+        positionController = OverlayMenuPositionController(
+            menuLayout = menuLayout,
+            displayMetrics = displayMetrics,
+            onMenuPositionChanged = ::onNewMenuPosition,
+        )
+        positionController.loadMenuPosition(displayMetrics.orientation)
 
         // Handle window resize animations
         resizeController = OverlayWindowResizeController(
@@ -308,7 +291,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         screenOverlayView = null
 
         // Save last user position
-        saveMenuPosition(displayMetrics.orientation)
+        positionController.saveMenuPosition(displayMetrics.orientation)
 
         resizeController.release()
         super@OverlayMenu.destroy()
@@ -320,12 +303,12 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
      * orientation.
      */
     override fun onOrientationChanged() {
-        saveMenuPosition(if (displayMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        positionController.saveMenuPosition(if (displayMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE)
             Configuration.ORIENTATION_PORTRAIT
         else
             Configuration.ORIENTATION_LANDSCAPE
         )
-        loadMenuPosition(displayMetrics.orientation)
+        positionController.loadMenuPosition(displayMetrics.orientation)
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             windowManager.updateViewLayout(menuLayout, menuLayoutParams)
@@ -441,76 +424,18 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     private fun onMoveTouched(event: MotionEvent) : Boolean {
         if (resizeController.isAnimating) return false
 
-        return when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                menuLayout.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                moveInitialMenuPosition = menuLayoutParams.x to menuLayoutParams.y
-                moveInitialTouchPosition = event.rawX.toInt() to event.rawY.toInt()
-                true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                setMenuLayoutPosition(
-                    moveInitialMenuPosition.first + (event.rawX.toInt() - moveInitialTouchPosition.first),
-                    moveInitialMenuPosition.second + (event.rawY.toInt() - moveInitialTouchPosition.second)
-                )
-                windowManager.updateViewLayout(menuLayout, menuLayoutParams)
-                true
-            }
-            else -> false
-        }
+        if (event.action == MotionEvent.ACTION_DOWN)
+            menuLayout.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+
+        return positionController.onMoveButtonTouchEvent(event)
     }
 
-    /**
-     * Safe setter for the position of the overlay menu ensuring it will not be displayed outside the screen.
-     *
-     * @param x the horizontal position.
-     * @param y the vertical position.
-     */
-    private fun setMenuLayoutPosition(x: Int, y: Int) {
-        val displaySize = displayMetrics.screenSize
-        menuLayoutParams.x = x.coerceIn(0, displaySize.x - menuLayout.width)
-        menuLayoutParams.y = y.coerceIn(0, displaySize.y - menuLayout.height)
+    /** Safe setter for the position of the overlay menu ensuring it will not be displayed outside the screen. */
+    private fun onNewMenuPosition(position: Point) {
+        menuLayoutParams.x = position.x
+        menuLayoutParams.y = position.y
+        windowManager.updateViewLayout(menuLayout, menuLayoutParams)
     }
-
-    /**
-     * Load last user menu position for the current orientation, if any.
-     *
-     * @param orientation the orientation to load the position for.
-     */
-    private fun loadMenuPosition(orientation: Int) {
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setMenuLayoutPosition(
-                sharedPreferences.getInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, 0),
-                sharedPreferences.getInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, 0)
-            )
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            setMenuLayoutPosition(
-                sharedPreferences.getInt(PREFERENCE_MENU_X_PORTRAIT_KEY, 0),
-                sharedPreferences.getInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, 0)
-            )
-        }
-    }
-
-    /**
-     * Save the last user menu position for the current orientation.
-     *
-     * @param orientation the orientation to save the position for.
-     */
-    private fun saveMenuPosition(orientation: Int) {
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            sharedPreferences.edit()
-                .putInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, menuLayoutParams.x)
-                .putInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, menuLayoutParams.y)
-                .apply()
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            sharedPreferences.edit()
-                .putInt(PREFERENCE_MENU_X_PORTRAIT_KEY, menuLayoutParams.x)
-                .putInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, menuLayoutParams.y)
-                .apply()
-        }
-    }
-
-
 }
 /** Tag for logs */
 private const val TAG = "OverlayMenu"

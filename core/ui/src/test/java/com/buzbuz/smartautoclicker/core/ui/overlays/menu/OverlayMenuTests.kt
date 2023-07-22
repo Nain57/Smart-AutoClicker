@@ -139,6 +139,7 @@ class OverlayMenuTests {
     private fun mockViewsFromImpl(mockMenu: ViewGroup = mock(ViewGroup::class.java), mockOverlay: View? = null) {
         mockWhen(mockMenu.findViewById<ViewGroup>(R.id.menu_items)).thenReturn(mockMenu)
         mockWhen(mockMenu.findViewById<ViewGroup>(R.id.menu_background)).thenReturn(mockMenu)
+        mockWhen(mockMenu.context).thenReturn(mockContext)
         mockWhen(overlayMenuControllerImpl.onCreateMenu(mockLayoutInflater)).thenReturn(mockMenu)
         mockWhen(overlayMenuControllerImpl.onCreateOverlayView()).thenReturn(mockOverlay)
     }
@@ -152,7 +153,7 @@ class OverlayMenuTests {
         mockWhen(mockContext.getSystemService(DisplayManager::class.java)).thenReturn(mockDisplayManager)
         mockWhen(mockContext.getSystemService(LayoutInflater::class.java)).thenReturn(mockLayoutInflater)
         mockWhen(mockContext.getSystemService(WindowManager::class.java)).thenReturn(mockWindowManager)
-        mockWhen(mockContext.getSharedPreferences(OverlayMenu.PREFERENCE_NAME, Context.MODE_PRIVATE))
+        mockWhen(mockContext.getSharedPreferences(OverlayMenuPositionController.PREFERENCE_NAME, Context.MODE_PRIVATE))
             .thenReturn(mockSharedPrefs)
 
         // Mock config
