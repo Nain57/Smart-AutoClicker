@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.hints
+package com.buzbuz.smartautoclicker.core.ui.views.condition.hints
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -24,16 +24,16 @@ import android.view.MotionEvent
 
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ConditionSelectorView
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ViewComponent
+import com.buzbuz.smartautoclicker.core.ui.views.ConditionSelectorView
+import com.buzbuz.smartautoclicker.core.ui.views.condition.ViewComponent
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.GestureType
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.MoveSelector
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ResizeBottom
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ResizeLeft
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ResizeRight
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ResizeTop
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ZoomCapture
+import com.buzbuz.smartautoclicker.core.ui.views.condition.GestureType
+import com.buzbuz.smartautoclicker.core.ui.views.condition.MoveSelector
+import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeBottom
+import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeLeft
+import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeRight
+import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeTop
+import com.buzbuz.smartautoclicker.core.ui.views.condition.ZoomCapture
 import com.buzbuz.smartautoclicker.core.ui.R
 
 /**

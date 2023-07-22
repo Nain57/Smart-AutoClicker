@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition
+package com.buzbuz.smartautoclicker.core.ui.views
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -23,16 +23,18 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
-import android.view.KeyEvent.ACTION_DOWN
-import android.view.KeyEvent.ACTION_UP
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 
 import androidx.core.content.res.use
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.hints.HintsComponent
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.views.condition.Animations
+import com.buzbuz.smartautoclicker.core.ui.views.condition.CaptureComponent
+import com.buzbuz.smartautoclicker.core.ui.views.condition.Selector
+import com.buzbuz.smartautoclicker.core.ui.views.condition.hints.HintsComponent
 
 /**
  * Overlay view used as screenOverlayView showing the area to capture the content as an event condition.
@@ -68,7 +70,9 @@ class ConditionSelectorView(
 
     /** Get the attributes from the style file and initialize all components. */
     init {
-        context.obtainStyledAttributes(null, R.styleable.ConditionSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
+        context.obtainStyledAttributes(null,
+            R.styleable.ConditionSelectorView,
+            R.attr.conditionSelectorStyle, 0).use { ta ->
             animations = Animations(ta)
             capture = CaptureComponent(context, ta, displayMetrics, ::invalidate)
             selector = Selector(context, ta, displayMetrics, ::invalidate)
@@ -163,8 +167,10 @@ class ConditionSelectorView(
 
         return capture.screenCapture?.let { screenCapture ->
             val selectionArea = selector.getSelectionArea(capture.captureArea, capture.zoomLevel)
-            selectionArea to Bitmap.createBitmap(screenCapture.bitmap, selectionArea.left,
-                selectionArea.top, selectionArea.width(), selectionArea.height())
+            selectionArea to Bitmap.createBitmap(
+                screenCapture.bitmap, selectionArea.left,
+                selectionArea.top, selectionArea.width(), selectionArea.height()
+            )
         } ?: throw IllegalStateException("Can't get a selection, there is no screen capture.")
     }
 
@@ -187,7 +193,7 @@ class ConditionSelectorView(
             hintsIcons.show(gestureType)
             animations.cancelHideHintsAnimation()
 
-            if (event.action == ACTION_UP) {
+            if (event.action == KeyEvent.ACTION_UP) {
                 animations.startHideHintsAnimation()
             }
         }
@@ -203,7 +209,7 @@ class ConditionSelectorView(
 
         // An event was ignored, force this first event to down
         if (haveTouchEventIgnored) {
-            event.action = ACTION_DOWN
+            event.action = KeyEvent.ACTION_DOWN
             haveTouchEventIgnored = false
         }
 
