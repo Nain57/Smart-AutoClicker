@@ -162,8 +162,7 @@ abstract class BaseOverlay internal constructor(
      */
     override fun stop() {
         if (!lifecycleRegistry.currentState.isAtLeast(State.STARTED)) return
-
-        pause()
+        if (lifecycleRegistry.currentState.isAtLeast(State.RESUMED)) pause()
 
         Log.d(TAG, "hide overlay ${hashCode()}")
         lifecycleRegistry.currentState = State.CREATED

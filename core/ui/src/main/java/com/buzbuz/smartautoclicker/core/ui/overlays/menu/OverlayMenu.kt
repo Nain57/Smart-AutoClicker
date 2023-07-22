@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.util.Log
 import android.util.Size
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
@@ -29,9 +30,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.DecelerateInterpolator
 
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
@@ -94,6 +92,11 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
         PixelFormat.TRANSLUCENT)
+
+    private val animations: OverlayMenuAnimations = OverlayMenuAnimations()
+
+    private var resumeOnceShown: Boolean = false
+    private var destroyOnceHidden: Boolean = false
 
     /** The shared preference storing the position of the menu in order to save/restore the last user position. */
     private lateinit var sharedPreferences: SharedPreferences
@@ -180,24 +183,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         // Set the clicks listener on the menu items
         menuBackground = menuLayout.findViewById<ViewGroup>(R.id.menu_background)
         val buttonsContainer = menuLayout.findViewById<ViewGroup>(R.id.menu_items)
-        buttonsContainer.forEach { view ->
-            @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
-            when (view.id) {
-                R.id.btn_move -> {
-                    moveButton = view
-                    view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
-                }
-                R.id.btn_hide_overlay -> {
-                    hideOverlayButton = view
-                    haveHideButton = true
-                    view.setOnClickListener { onHideOverlayClicked() }
-                }
-                else -> view.setOnClickListener { v ->
-                    if (resizeController.isAnimating) return@setOnClickListener
-                    onMenuItemClicked(v.id)
-                }
-            }
-        }
+        setupButtons(buttonsContainer)
 
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
@@ -218,66 +204,114 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
                 }
             }
         )
-    }
 
-    @CallSuper
-    override fun onStart() {
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
         screenOverlayView?.let {
             windowManager.addView(it, overlayLayoutParams)
         }
+
+        // Add the menu view to the window manager, but hidden
+        menuBackground.visibility = View.GONE
         windowManager.addView(menuLayout, menuLayoutParams)
-        hideOverlayButton?.let { setMenuItemViewEnabled(it, false , true) }
+    }
 
-        // Start the show animation
-        menuBackground.startAnimation(
-            AlphaAnimation(0f, 1f).apply {
-                duration = SHOW_ANIMATION_DURATION_MS
-                interpolator = DecelerateInterpolator()
+    private fun setupButtons(buttonsContainer: ViewGroup) {
+        buttonsContainer.forEach { view ->
+            @SuppressLint("ClickableViewAccessibility") // View is only drag and drop, no click
+            when (view.id) {
+                R.id.btn_move -> {
+                    moveButton = view
+                    view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
+                }
+                R.id.btn_hide_overlay -> {
+                    hideOverlayButton = view
+                    haveHideButton = true
+                    setMenuItemViewEnabled(
+                        view = view,
+                        enabled = false,
+                        clickable = true,
+                    )
+                    view.setOnClickListener { onHideOverlayClicked() }
+                }
+                else -> view.setOnClickListener { v ->
+                    if (resizeController.isAnimating) return@setOnClickListener
+                    onMenuItemClicked(v.id)
+                }
             }
-        )
-    }
-
-    @CallSuper
-    override fun onStop() {
-        screenOverlayView?.let {
-            windowManager.removeView(it)
         }
-
-        windowManager.removeView(menuLayout)
     }
 
-    final override fun destroy() {
-        if (lifecycle.currentState < Lifecycle.State.CREATED) {
+    final override fun start() {
+        if (lifecycle.currentState != Lifecycle.State.CREATED) return
+        if (animations.showAnimationIsRunning) return
+
+        super.start()
+
+        // Start the show animation for the menu
+        Log.d(TAG, "Start show animation...")
+        menuBackground.visibility = View.VISIBLE
+        animations.startShowAnimation(menuBackground) {
+            Log.d(TAG, "Show animation ended")
+
+            if (resumeOnceShown) {
+                resumeOnceShown = false
+                resume()
+            }
+        }
+    }
+
+    final override fun resume() {
+        if (lifecycle.currentState == Lifecycle.State.CREATED) start()
+        if (lifecycle.currentState != Lifecycle.State.STARTED) return
+
+        if (animations.showAnimationIsRunning) {
+            Log.d(TAG, "Show animation is running, delaying resume...")
+            resumeOnceShown = true
             return
         }
 
-        // Start the hide animation
-        menuBackground.startAnimation(AlphaAnimation(1f, 0f).apply {
-            duration = DISMISS_ANIMATION_DURATION_MS
-            interpolator = DecelerateInterpolator()
-            setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {}
-                override fun onAnimationRepeat(animation: Animation?) {}
-                override fun onAnimationEnd(animation: Animation?) {
-                    super@OverlayMenu.destroy()
-                }
-            })
-        })
+        super.resume()
     }
 
-    @VisibleForTesting
-    internal fun dismissNoAnimation() {
-        super.destroy()
+    final override fun stop() {
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
+        if (animations.hideAnimationIsRunning) return
+        if (lifecycle.currentState == Lifecycle.State.RESUMED) pause()
+
+        // Start the hide animation for the menu
+        Log.d(TAG, "Start hide animation...")
+        animations.startHideAnimation(menuBackground) {
+            Log.d(TAG, "Hide animation ended")
+
+            menuBackground.visibility = View.GONE
+            super.stop()
+
+            if (destroyOnceHidden) {
+                destroyOnceHidden = false
+                destroy()
+            }
+        }
     }
 
-    @CallSuper
-    override fun onDestroy() {
+    final override fun destroy() {
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) return
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) stop()
+
+        if (animations.hideAnimationIsRunning) {
+            Log.d(TAG, "Hide animation is running, delaying destroy...")
+            destroyOnceHidden = true
+            return
+        }
+
+        windowManager.removeView(menuLayout)
+        screenOverlayView?.let { windowManager.removeView(it) }
+        screenOverlayView = null
+
         // Save last user position
         saveMenuPosition(displayMetrics.orientation)
 
         resizeController.release()
-        screenOverlayView = null
+        super@OverlayMenu.destroy()
     }
 
     /**
@@ -475,9 +509,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
                 .apply()
         }
     }
-}
 
-/** Duration of the show overlay menu animation. */
-private const val SHOW_ANIMATION_DURATION_MS = 250L
-/** Duration of the dismiss overlay menu animation. */
-private const val DISMISS_ANIMATION_DURATION_MS = 125L
+
+}
+/** Tag for logs */
+private const val TAG = "OverlayMenu"
