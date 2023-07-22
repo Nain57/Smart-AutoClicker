@@ -296,28 +296,26 @@ class OverlayMenuTests {
     }
 
     @Test
-    fun hideMenu() {
+    fun destroy_removeView() {
         overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         mockViewsFromImpl(menuView)
         overlayMenuController.create(mockContext)
-        overlayMenuController.start()
 
-        overlayMenuController.stop()
+        overlayMenuController.destroy()
 
         verify(mockWindowManager).removeView(menuView)
     }
 
     @Test
-    fun hideAll() {
+    fun destroy_removeAllViews() {
         overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
         val overlayView = mock(View::class.java)
         mockViewsFromImpl(menuView, overlayView)
         overlayMenuController.create(mockContext)
-        overlayMenuController.start()
 
-        overlayMenuController.stop()
+        overlayMenuController.destroy()
 
         verify(mockWindowManager).removeView(menuView)
         verify(mockWindowManager).removeView(overlayView)

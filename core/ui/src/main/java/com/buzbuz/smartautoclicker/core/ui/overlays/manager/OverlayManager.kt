@@ -257,6 +257,8 @@ class OverlayManager internal constructor(context: Context) {
     }
 
     private fun onOverlayDismissed(context: Context, overlay: Overlay) {
+        Log.d(TAG, "Overlay dismissed ${overlay.hashCode()}")
+
         isNavigating.value = true
 
         val dismissedIndex = overlayBackStack.indexOf(overlay)
