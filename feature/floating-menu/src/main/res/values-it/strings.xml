@@ -19,5 +19,5 @@
     <string name="message_scenario_saving_error">Il tuo scenario non può essere salvato a causa di un errore interno. \nVuoi modificarlo o annullare tutte le tue modifiche?</string>
     <string name="button_dialog_modify">Modificare</string>
     <string name="dialog_title_tutorial_first_time">Tutorial</string>
-    <string name="message_tutorial_first_time">Congratulazioni, Smart AutoClicker è ora funzionante sul tuo dispositivo!\nVuoi seguire un tutorial che ti insegnerà le basi dell'applicazione?</string>
+    <string name="message_tutorial_first_time">Congratulazioni, Smart AutoClicker è ora funzionante sul tuo dispositivo! \nVuoi seguire un tutorial che ti insegnerà le basi dell\'applicazione?</string>
 </resources>
