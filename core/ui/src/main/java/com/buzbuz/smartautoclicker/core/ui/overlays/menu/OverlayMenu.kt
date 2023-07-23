@@ -111,9 +111,6 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     /** The layout parameters of the overlay view. */
     private var overlayLayoutParams:  WindowManager.LayoutParams? = null
 
-    /** Tells if there is a hide overlay view button or not. */
-    private var haveHideButton = false
-
     /**
      * Creates the root view of the menu overlay.
      *
@@ -132,6 +129,9 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
      * @return the overlay view, or null if none is required.
      */
     protected open fun onCreateOverlayView(): View? = null
+
+    /** Tells if the overlay view should be animated when shown/hidden. True by default. */
+    protected open fun animateOverlayView(): Boolean = true
 
     /**
      * Creates the layout parameters for the [screenOverlayView].
@@ -190,12 +190,12 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
         screenOverlayView?.let {
-            it.visibility = View.GONE
+            if (animateOverlayView()) it.visibility = View.GONE
             windowManager.addView(it, overlayLayoutParams)
         }
 
         // Add the menu view to the window manager, but hidden
-        menuBackground.visibility = View.GONE
+        if (animateOverlayView()) menuBackground.visibility = View.GONE
         windowManager.addView(menuLayout, menuLayoutParams)
     }
 
@@ -209,12 +209,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
                 }
                 R.id.btn_hide_overlay -> {
                     hideOverlayButton = view
-                    haveHideButton = true
-                    setMenuItemViewEnabled(
-                        view = view,
-                        enabled = false,
-                        clickable = true,
-                    )
+                    setOverlayViewVisibility(View.VISIBLE)
                     view.setOnClickListener { onHideOverlayClicked() }
                 }
                 else -> view.setOnClickListener { v ->
@@ -233,9 +228,11 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
         // Start the show animation for the menu
         Log.d(TAG, "Start show animation...")
+
+        val animatedOverlayView = if (animateOverlayView()) screenOverlayView else null
         menuBackground.visibility = View.VISIBLE
-        screenOverlayView?.visibility = View.VISIBLE
-        animations.startShowAnimation(menuBackground, screenOverlayView) {
+        animatedOverlayView?.visibility = View.VISIBLE
+        animations.startShowAnimation(menuBackground, animatedOverlayView) {
             Log.d(TAG, "Show animation ended")
 
             if (resumeOnceShown) {
@@ -265,7 +262,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
         // Start the hide animation for the menu
         Log.d(TAG, "Start hide animation...")
-        animations.startHideAnimation(menuBackground, screenOverlayView) {
+        val animatedOverlayView = if (animateOverlayView()) screenOverlayView else null
+        animations.startHideAnimation(menuBackground, animatedOverlayView) {
             Log.d(TAG, "Hide animation ended")
 
             menuBackground.visibility = View.GONE
@@ -409,10 +407,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     protected fun setOverlayViewVisibility(newVisibility: Int) {
         screenOverlayView?.apply {
             visibility = newVisibility
-            if (haveHideButton) {
-                hideOverlayButton?.let {
-                    setMenuItemViewEnabled(it, visibility == View.VISIBLE , true)
-                }
+            hideOverlayButton?.let {
+                setMenuItemViewEnabled(it, visibility == View.GONE , true)
             }
         }
     }

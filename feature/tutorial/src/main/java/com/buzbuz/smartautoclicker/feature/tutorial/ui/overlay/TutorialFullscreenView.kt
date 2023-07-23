@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.scale
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 
-class TutorialFullScreenView @JvmOverloads constructor(
+class TutorialFullscreenView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

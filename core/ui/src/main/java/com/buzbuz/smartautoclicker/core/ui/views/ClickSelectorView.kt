@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 
@@ -31,7 +32,11 @@ import androidx.core.content.res.use
 import com.buzbuz.smartautoclicker.core.ui.R
 
 /** Overlay view used as screenOverlayView showing the positions selected by the user. */
-class ClickSelectorView(context: Context) : View(context) {
+class ClickSelectorView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+) : View(context, attrs, defStyleAttr) {
 
     /** Position of the first point selected. */
     var position1: PointF? = null
@@ -65,47 +70,50 @@ class ClickSelectorView(context: Context) : View(context) {
     private var backgroundCircleRadius: Float = 0F
 
     init {
-        context.obtainStyledAttributes(null, R.styleable.ClickSelectorView, R.attr.clickSelectorStyle, 0).use { ta ->
-            val thickness = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_thickness, 4).toFloat()
-            outerRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_radius, 30).toFloat()
-            innerCircleRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_innerRadius, 4)
-                .toFloat()
-            val backgroundCircleStroke = outerRadius - (thickness / 2 + innerCircleRadius)
-            backgroundCircleRadius = outerRadius - thickness / 2 - backgroundCircleStroke / 2
+        attrs?.let {
+            context.obtainStyledAttributes(it, R.styleable.ClickSelectorView, R.attr.clickSelectorStyle, defStyleAttr).use { ta ->
+                val thickness = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_thickness, 4).toFloat()
+                outerRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_radius, 30).toFloat()
+                innerCircleRadius = ta.getDimensionPixelSize(R.styleable.ClickSelectorView_innerRadius, 4)
+                    .toFloat()
+                val backgroundCircleStroke = outerRadius - (thickness / 2 + innerCircleRadius)
+                backgroundCircleRadius = outerRadius - thickness / 2 - backgroundCircleStroke / 2
 
-            outerFromPaint.apply {
-                isAntiAlias = true
-                style = Paint.Style.STROKE
-                color = ta.getColor(R.styleable.ClickSelectorView_colorOutlinePrimary, Color.RED)
-                strokeWidth = thickness
-            }
+                outerFromPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.STROKE
+                    color = ta.getColor(R.styleable.ClickSelectorView_colorOutlinePrimary, Color.RED)
+                    strokeWidth = thickness
+                }
 
-            innerFromPaint.apply {
-                isAntiAlias = true
-                style = Paint.Style.FILL
-                color = ta.getColor(R.styleable.ClickSelectorView_colorInner, Color.WHITE)
-            }
+                innerFromPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.FILL
+                    color = ta.getColor(R.styleable.ClickSelectorView_colorInner, Color.WHITE)
+                }
 
-            outerToPaint.apply {
-                isAntiAlias = true
-                style = Paint.Style.STROKE
-                color = ta.getColor(R.styleable.ClickSelectorView_colorOutlineSecondary, Color.GREEN)
-                strokeWidth = thickness
-            }
+                outerToPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.STROKE
+                    color = ta.getColor(R.styleable.ClickSelectorView_colorOutlineSecondary, Color.GREEN)
+                    strokeWidth = thickness
+                }
 
-            innerToPaint.apply {
-                isAntiAlias = true
-                style = Paint.Style.FILL
-                color = innerFromPaint.color
-            }
+                innerToPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.FILL
+                    color = innerFromPaint.color
+                }
 
-            backgroundPaint.apply {
-                isAntiAlias = true
-                style = Paint.Style.STROKE
-                color = ta.getColor(R.styleable.ClickSelectorView_colorBackground, Color.TRANSPARENT)
-                strokeWidth = backgroundCircleStroke
+                backgroundPaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.STROKE
+                    color = ta.getColor(R.styleable.ClickSelectorView_colorBackground, Color.TRANSPARENT)
+                    strokeWidth = backgroundCircleStroke
+                }
             }
         }
+
     }
 
     /**

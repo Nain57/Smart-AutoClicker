@@ -115,9 +115,9 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
-    <string name="toast_configure_single_click">Appuyez sur la position à cliquer.</string>
-    <string name="toast_configure_swipe_from">Appuyez sur la position de départ.</string>
-    <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée.</string>
+    <string name="toast_configure_single_click">Appuyez sur la position à cliquer</string>
+    <string name="toast_configure_swipe_from">Appuyez sur la position de départ</string>
+    <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée</string>
 
     <!--
       - Section titles.

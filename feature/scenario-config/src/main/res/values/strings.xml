@@ -113,9 +113,9 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
-    <string name="toast_configure_single_click">Touch the position to click on.</string>
-    <string name="toast_configure_swipe_from">Touch the position to start the swipe from.</string>
-    <string name="toast_configure_swipe_to">Touch the position to end the swipe to.</string>
+    <string name="toast_configure_single_click">Touch the position to click on</string>
+    <string name="toast_configure_swipe_from">Touch the position to start the swipe from</string>
+    <string name="toast_configure_swipe_to">Touch the position to end the swipe to</string>
 
     <!--
       - Section titles.

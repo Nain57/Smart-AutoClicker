@@ -17,9 +17,11 @@
 package com.buzbuz.smartautoclicker.core.ui.overlays.menu
 
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
+import androidx.core.view.children
 
 internal class OverlayMenuAnimations {
 
@@ -57,7 +59,9 @@ internal class OverlayMenuAnimations {
         }
 
         view.startAnimation(showOverlayMenuAnimation)
-        overlayView?.startAnimation(showOverlayViewAnimation)
+        if (overlayView is ViewGroup && overlayView.childCount == 1) {
+            overlayView.children.first().startAnimation(showOverlayViewAnimation)
+        }
     }
 
     fun startHideAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
@@ -68,7 +72,9 @@ internal class OverlayMenuAnimations {
         }
 
         view.startAnimation(hideOverlayMenuAnimation)
-        overlayView?.startAnimation(hideOverlayViewAnimation)
+        if (overlayView is ViewGroup && overlayView.childCount == 1) {
+            overlayView.children.first().startAnimation(hideOverlayViewAnimation)
+        }
     }
 
     private fun Animation.setOnEndListener(end: () -> Unit) {
@@ -83,4 +89,4 @@ internal class OverlayMenuAnimations {
 /** Duration of the show overlay menu animation. */
 private const val SHOW_ANIMATION_DURATION_MS = 250L
 /** Duration of the dismiss overlay menu animation. */
-private const val DISMISS_ANIMATION_DURATION_MS = 2000L
+private const val DISMISS_ANIMATION_DURATION_MS = 150L
