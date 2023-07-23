@@ -16,21 +16,21 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action
 
-import android.annotation.SuppressLint
 import android.graphics.Point
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 
 import androidx.core.graphics.toPoint
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.ClickSelectorView
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.FIRST
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.SECOND
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.SelectionIndex
+import com.buzbuz.smartautoclicker.core.ui.views.FIRST
+import com.buzbuz.smartautoclicker.core.ui.views.SECOND
+import com.buzbuz.smartautoclicker.core.ui.views.SelectionIndex
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayValidationMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayPositionSelectionMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayPositionSelectionViewBinding
 
 /**
  * [OverlayMenu] implementation for displaying the click area selection menu and its overlay view.
@@ -47,25 +47,29 @@ class ClickSwipeSelectorMenu(
 ) : OverlayMenu() {
 
     /** The view binding for the overlay menu. */
-    private lateinit var viewBinding: OverlayValidationMenuBinding
-
-    /** The view model for this dialog. */
-    @SuppressLint("ClickableViewAccessibility")
-    private lateinit var selectorView: ClickSelectorView
+    private lateinit var viewBinding: OverlayPositionSelectionMenuBinding
+    /** The view binding for the position selector. */
+    private lateinit var selectorViewBinding: OverlayPositionSelectionViewBinding
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
+        viewBinding = OverlayPositionSelectionMenuBinding.inflate(layoutInflater)
+        selectorViewBinding = OverlayPositionSelectionViewBinding.inflate(layoutInflater)
         return viewBinding.root
     }
 
-    override fun onCreateOverlayView(): ClickSelectorView {
-        selectorView = ClickSelectorView(context).apply {
+    override fun onCreateOverlayView(): View {
+        selectorViewBinding.positionSelector.apply {
             onTouchListener = {
                 setMenuItemViewEnabled(viewBinding.btnConfirm, true, true)
             }
         }
 
-        return selectorView
+        selectorViewBinding.textInstructions.layoutParams =
+            (selectorViewBinding.textInstructions.layoutParams as ConstraintLayout.LayoutParams).apply {
+                setMargins(leftMargin, topMargin + displayMetrics.safeInsetTop, rightMargin, bottomMargin)
+            }
+
+        return selectorViewBinding.root
     }
 
     override fun onStart() {
@@ -85,17 +89,17 @@ class ClickSwipeSelectorMenu(
      * @param step the selection step.
      */
     private fun toSelectionStep(@SelectionIndex step: Int) {
-        selectorView.toSelectionStep(step)
+        selectorViewBinding.positionSelector.toSelectionStep(step)
         setMenuItemViewEnabled(viewBinding.btnConfirm, false)
 
-        val toastStringId = when {
+        val instructionsStringId = when {
             step == FIRST && selector is CoordinatesSelector.One -> R.string.toast_configure_single_click
             step == FIRST && selector is CoordinatesSelector.Two -> R.string.toast_configure_swipe_from
             step == SECOND -> R.string.toast_configure_swipe_to
             else -> -1
         }
-        if (toastStringId != -1) {
-            Toast.makeText(context, toastStringId, Toast.LENGTH_SHORT).show()
+        if (instructionsStringId != -1) {
+            selectorViewBinding.textInstructions.setText(instructionsStringId)
         }
     }
 
@@ -105,17 +109,17 @@ class ClickSwipeSelectorMenu(
      */
     private fun onConfirm() {
         when {
-            selectorView.selectionStep == FIRST && selector is CoordinatesSelector.One -> {
-                selector.coordinates = selectorView.position1!!.toPoint()
+            selectorViewBinding.positionSelector.selectionStep == FIRST && selector is CoordinatesSelector.One -> {
+                selector.coordinates = selectorViewBinding.positionSelector.position1!!.toPoint()
                 back()
                 onCoordinatesSelected(selector)
             }
-            selectorView.selectionStep == FIRST && selector is CoordinatesSelector.Two -> {
+            selectorViewBinding.positionSelector.selectionStep == FIRST && selector is CoordinatesSelector.Two -> {
                 toSelectionStep(SECOND)
             }
-            selectorView.selectionStep == SECOND && selector is CoordinatesSelector.Two -> {
-                selector.coordinates1 = selectorView.position1!!.toPoint()
-                selector.coordinates2 = selectorView.position2!!.toPoint()
+            selectorViewBinding.positionSelector.selectionStep == SECOND && selector is CoordinatesSelector.Two -> {
+                selector.coordinates1 = selectorViewBinding.positionSelector.position1!!.toPoint()
+                selector.coordinates2 = selectorViewBinding.positionSelector.position2!!.toPoint()
                 back()
                 onCoordinatesSelected(selector)
             }
@@ -127,7 +131,7 @@ class ClickSwipeSelectorMenu(
      * If this is the initial step, dismiss the overlay without notifying the listener.
      */
     private fun onCancel() {
-        when (selectorView.selectionStep) {
+        when (selectorViewBinding.positionSelector.selectionStep) {
             FIRST -> back()
             SECOND -> toSelectionStep(FIRST)
         }
