@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.overlays.manager
 
 import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 
 internal class LifecycleStatesRegistry {
 
@@ -26,7 +27,13 @@ internal class LifecycleStatesRegistry {
     fun saveStates(overlays: List<Overlay>) {
         overlaysLifecycleState.clear()
         overlays.forEach { overlay ->
-            overlaysLifecycleState[overlay] = overlay.lifecycle.currentState
+            val state = when {
+                overlay is OverlayMenu && overlay.resumeOnceShown -> Lifecycle.State.RESUMED
+                overlay is OverlayMenu && overlay.destroyOnceHidden -> Lifecycle.State.DESTROYED
+                else -> overlay.lifecycle.currentState
+            }
+
+            overlaysLifecycleState[overlay] = state
         }
     }
 
@@ -35,4 +42,6 @@ internal class LifecycleStatesRegistry {
         overlaysLifecycleState.clear()
         return states
     }
+
+    fun haveStates(): Boolean = overlaysLifecycleState.isNotEmpty()
 }
