@@ -83,6 +83,19 @@ class EventDialog(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.apply {
+            monitorActionTabView(navBarView.findViewById(R.id.page_actions))
+            monitorConditionTabView(navBarView.findViewById(R.id.page_conditions))
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
         when (buttonType) {
             DialogNavigationButton.SAVE -> onConfigComplete()

@@ -22,8 +22,8 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -47,7 +47,7 @@ class ScenarioDialogViewModel(application: Application): AndroidViewModel(applic
         buildMap {
             put(R.id.page_events, eventListState.canBeSaved)
             put(R.id.page_config, scenarioState.canBeSaved)
-            put(R.id.page_debug, true)
+            put(R.id.page_more, true)
         }
     }
 
@@ -56,10 +56,10 @@ class ScenarioDialogViewModel(application: Application): AndroidViewModel(applic
         .map { it.canBeSaved }
 
     fun monitorCreateEventView(view: View) {
-        monitoredViewsManager.attach(TutorialMonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT, view)
+        monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT, view)
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.detach(TutorialMonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT)
+        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT)
     }
 }

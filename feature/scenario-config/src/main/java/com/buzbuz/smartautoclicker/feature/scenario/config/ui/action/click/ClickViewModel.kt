@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.click
 import android.app.Application
 import android.content.SharedPreferences
 import android.graphics.Point
+import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 
@@ -28,6 +29,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putClickPressDurationConfig
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -40,6 +43,9 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+
     /** The action being configured by the user. */
     private val configuredClick = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
@@ -140,5 +146,13 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
             sharedPreferences.edit().putClickPressDurationConfig(click.pressDuration ?: 0).apply()
         }
+    }
+
+    fun monitorSelectPositionView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_SELECT_POSITION_BUTTON, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_SELECT_POSITION_BUTTON)
     }
 }

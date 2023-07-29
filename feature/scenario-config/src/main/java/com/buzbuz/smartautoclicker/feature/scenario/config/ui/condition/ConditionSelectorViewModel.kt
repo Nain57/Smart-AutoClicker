@@ -19,10 +19,13 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.Rect
+
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.display.ScreenRecorder
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,6 +36,8 @@ class ConditionSelectorViewModel(application: Application) : AndroidViewModel(ap
 
     /** Provides screen images. */
     private val screenRecorder: ScreenRecorder = ScreenRecorder.getInstance()
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     fun takeScreenshot(area: Rect, resultCallback: (Bitmap) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,6 +45,7 @@ class ConditionSelectorViewModel(application: Application) : AndroidViewModel(ap
             screenRecorder.takeScreenshot(area) { screenshot ->
                 withContext(Dispatchers.Main) {
                     resultCallback(screenshot)
+                    monitoredViewsManager.notifyClick(MonitoredViewType.CONDITION_CAPTURE_BUTTON_CAPTURE)
                 }
             }
         }

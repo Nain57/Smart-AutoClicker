@@ -43,6 +43,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_I
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.type.ActionTypeSelectionDialog
 
 import kotlinx.coroutines.launch
 
@@ -112,12 +113,20 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorCreateActionView(dialogController.createCopyButtons.buttonNew)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun onCreateButtonClicked() {
-        val dialog = MultiChoiceDialog(
-            theme = R.style.ScenarioConfigTheme,
-            dialogTitleText = R.string.dialog_overlay_title_action_type,
+        val dialog = ActionTypeSelectionDialog(
             choices = viewModel.actionCreationItems.value,
-            onChoiceSelected = { choiceClicked ->
+            onChoiceSelectedListener = { choiceClicked ->
                 if (!choiceClicked.enabled) {
                     actionTypeSelectionDialog?.show()
                     viewModel.onProModeUnsubscribedActionClicked(context, choiceClicked)
@@ -126,7 +135,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
                     showActionConfigDialog(viewModel.createAction(context, choiceClicked))
                 }
             },
-            onCanceled = { actionTypeSelectionDialog = null }
+            onCancelledListener = { actionTypeSelectionDialog = null }
         )
         actionTypeSelectionDialog = dialog
 

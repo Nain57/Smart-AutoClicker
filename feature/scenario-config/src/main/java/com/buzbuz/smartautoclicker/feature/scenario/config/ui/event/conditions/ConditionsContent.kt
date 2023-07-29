@@ -103,6 +103,16 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorCreateConditionView(dialogController.createCopyButtons.buttonNew)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun onCreateButtonClicked() =
         OverlayManager.getInstance(context).navigateTo(
             context = context,

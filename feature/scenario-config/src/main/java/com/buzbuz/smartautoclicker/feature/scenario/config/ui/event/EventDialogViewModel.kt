@@ -17,10 +17,13 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event
 
 import android.app.Application
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -30,6 +33,8 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Repository containing the user editions. */
     private val editionRepository = EditionRepository.getInstance(application)
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /**
      * Tells if all content have their field correctly configured.
@@ -58,4 +63,18 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
     /** Tells if this event have associated actions. */
     fun isEventHaveRelatedActions(): Boolean =
         editionRepository.editionState.isEditedEventReferencedByAction()
+
+    fun monitorActionTabView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS, view)
+    }
+    fun monitorConditionTabView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.apply {
+            detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS)
+            detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS)
+        }
+    }
 }

@@ -127,6 +127,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onStart() {
         super.onStart()
         viewModel.monitorPlayPauseButtonView(viewBinding.btnPlay)
+        viewModel.monitorConfigButtonView(viewBinding.btnClickList)
     }
 
     override fun onResume() {

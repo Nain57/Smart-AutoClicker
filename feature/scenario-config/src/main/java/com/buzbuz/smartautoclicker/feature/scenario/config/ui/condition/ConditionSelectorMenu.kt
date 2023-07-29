@@ -27,7 +27,7 @@ import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.overlayviews.condition.ConditionSelectorView
+import com.buzbuz.smartautoclicker.core.ui.views.ConditionSelectorView
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayValidationMenuBinding
 
@@ -92,6 +92,8 @@ class ConditionSelectorMenu(
                 }
             }
         }
+
+    override fun animateOverlayView(): Boolean = false
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         selectorView = ConditionSelectorView(context, displayMetrics, ::onSelectorValidityChanged)

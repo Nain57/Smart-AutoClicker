@@ -44,7 +44,6 @@ class ActionTypeSelectionDialog(
     }
 
     override fun onChoiceViewBound(choice: ActionTypeChoice, view: View?) {
-        println("TOTO: onChoiceViewBound $choice $view")
         if (choice !is ActionTypeChoice.Click) return
 
         if (view != null) viewModel.monitorCreateClickView(view)
