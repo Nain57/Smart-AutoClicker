@@ -37,13 +37,13 @@ internal class OverlayMenuPositionController(
     internal companion object {
         /** Name of the preference file. */
         const val PREFERENCE_NAME = "OverlayMenuController"
-        /** Preference key referring to the landscape X position of the menu during the last call to [destroy]. */
+        /** Preference key referring to the landscape X position. */
         const val PREFERENCE_MENU_X_LANDSCAPE_KEY = "Menu_X_Landscape_Position"
-        /** Preference key referring to the landscape Y position of the menu during the last call to [destroy]. */
+        /** Preference key referring to the landscape Y position. */
         const val PREFERENCE_MENU_Y_LANDSCAPE_KEY = "Menu_Y_Landscape_Position"
-        /** Preference key referring to the portrait X position of the menu during the last call to [destroy]. */
+        /** Preference key referring to the portrait X position. */
         const val PREFERENCE_MENU_X_PORTRAIT_KEY = "Menu_X_Portrait_Position"
-        /** Preference key referring to the portrait Y position of the menu during the last call to [destroy]. */
+        /** Preference key referring to the portrait Y position. */
         const val PREFERENCE_MENU_Y_PORTRAIT_KEY = "Menu_Y_Portrait_Position"
     }
 
@@ -59,14 +59,21 @@ internal class OverlayMenuPositionController(
     /** The initial position of the touch event that as initiated the move of the overlay menu. */
     private var moveInitialTouchPosition: Point = Point(0, 0)
 
+    /**
+     * Tells if the position have been locked by [lockPosition].
+     * If true, the position will not change until [unlockPosition] is called.
+     */
+    private var isPositionLocked: Boolean = false
+
     fun onMoveButtonTouchEvent(event: MotionEvent) =
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
+        when {
+            isPositionLocked -> false
+            event.action == MotionEvent.ACTION_DOWN -> {
                 moveInitialMenuPosition = Point(menuPosition.x, menuPosition.y)
                 moveInitialTouchPosition = Point(event.rawX.toInt(), event.rawY.toInt())
                 true
             }
-            MotionEvent.ACTION_MOVE -> {
+            event.action == MotionEvent.ACTION_MOVE -> {
                 updateMenuPosition(
                     moveInitialMenuPosition.x + (event.rawX.toInt() - moveInitialTouchPosition.x),
                     moveInitialMenuPosition.y + (event.rawY.toInt() - moveInitialTouchPosition.y)
@@ -112,6 +119,21 @@ internal class OverlayMenuPositionController(
                 .putInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, menuPosition.y)
                 .apply()
         }
+    }
+
+    fun lockPosition(position: Point, orientation: Int) {
+        if (isPositionLocked) return
+
+        isPositionLocked = true
+        saveMenuPosition(orientation)
+        updateMenuPosition(position.x, position.y)
+    }
+
+    fun unlockPosition(orientation: Int) {
+        if (!isPositionLocked) return
+
+        isPositionLocked = false
+        loadMenuPosition(orientation)
     }
 
     /**
