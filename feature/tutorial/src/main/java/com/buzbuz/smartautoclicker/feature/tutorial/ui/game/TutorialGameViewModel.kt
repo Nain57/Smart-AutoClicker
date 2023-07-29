@@ -26,8 +26,8 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
-import kotlinx.coroutines.Dispatchers
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -52,6 +52,9 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
             SharingStarted.WhileSubscribed(3_000),
             null,
         )
+
+    val showOverlayMenu: Flow<Boolean> = tutorialRepository.tutorialOverlayState
+        .map { it?.hideFloatingUi == false }
 
     val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.tutorialOverlayState
         .map { it != null }

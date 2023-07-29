@@ -79,8 +79,10 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
     private val animations: OverlayMenuAnimations = OverlayMenuAnimations()
 
-    private var resumeOnceShown: Boolean = false
-    private var destroyOnceHidden: Boolean = false
+    internal var resumeOnceShown: Boolean = false
+        private set
+    internal var destroyOnceHidden: Boolean = false
+        private set
 
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     private lateinit var windowManager: WindowManager
@@ -438,6 +440,16 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             windowManager.updateViewLayout(menuLayout, menuLayoutParams)
         }
+    }
+
+    internal fun lockPosition(position: Point) {
+        moveButton?.let { setMenuItemVisibility(it, false) }
+        positionController.lockPosition(position, displayMetrics.orientation)
+    }
+
+    internal fun unlockPosition() {
+        moveButton?.let { setMenuItemVisibility(it, true) }
+        positionController.unlockPosition(displayMetrics.orientation)
     }
 }
 /** Tag for logs */

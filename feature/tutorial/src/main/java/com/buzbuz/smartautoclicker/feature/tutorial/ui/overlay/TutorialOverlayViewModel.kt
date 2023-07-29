@@ -22,11 +22,11 @@ import android.graphics.Rect
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStepEnd
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -60,7 +60,6 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
 
 data class UiTutorialOverlayState(
     @StringRes val instructionsResId: Int,
-    val hideFloatingUi: Boolean,
     val exitButton: TutorialExitButton,
 )
 
@@ -72,7 +71,6 @@ sealed class TutorialExitButton {
 private fun TutorialOverlayState.toUi(): UiTutorialOverlayState =
     UiTutorialOverlayState(
         instructionsResId = tutorialInstructionsResId,
-        hideFloatingUi = hideFloatingUi,
         exitButton = stepEnd.toUi(),
     )
 

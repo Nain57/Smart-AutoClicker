@@ -17,4 +17,5 @@
 -->
 <resources>
     <dimen name="tutorial_game_target_size">75dp</dimen>
+    <dimen name="tutorial_overlay_menu_width">56dp</dimen>
 </resources>

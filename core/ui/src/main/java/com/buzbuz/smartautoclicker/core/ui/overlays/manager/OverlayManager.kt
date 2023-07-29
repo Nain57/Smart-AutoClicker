@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.ui.overlays.manager
 
 import android.content.Context
+import android.graphics.Point
 import android.util.Log
 
 import androidx.lifecycle.Lifecycle
@@ -27,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
 
 import kotlinx.coroutines.flow.Flow
@@ -84,6 +86,11 @@ class OverlayManager internal constructor(context: Context) {
     private var closingChildren: Boolean = false
     /** The overlay at the top of the stack (the top visible one). Null if the stack is empty. */
     private var topOverlay: Overlay? = null
+    /**
+     * When defined with [lockMenuPosition], all [OverlayMenu] will be displayed at this position with the move button
+     * removed. Use [unlockMenuPosition] to restore the user position and allow menu moving.
+     */
+    private var menuLockedPosition: Point? = null
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
     val backStackTop: Flow<Overlay?> = isNavigating
@@ -127,9 +134,12 @@ class OverlayManager internal constructor(context: Context) {
 
     /**
      * Hide all overlays on the backstack.
-     * Their lifecycles will be saved, and can be restored using [restoreAll].
+     * Their lifecycles will be saved, and can be restored using [restoreVisibility].
      */
     fun hideAll() {
+        if (lifecyclesRegistry.haveStates()) return
+        Log.d(TAG, "Hide all overlays from the stack")
+
         // Save the overlays states to restore them when restoreAll is called
         lifecyclesRegistry.saveStates(overlayBackStack.toList())
         // Hide from top to bottom of the stack
@@ -140,13 +150,17 @@ class OverlayManager internal constructor(context: Context) {
      * Restore the states of all overlays on the backstack.
      * The states must have been saved using [hideAll].
      */
-    fun restoreAll() {
+    fun restoreVisibility() {
         val overlayStates = lifecyclesRegistry.restoreStates()
         if (overlayBackStack.isEmpty() || overlayStates.isEmpty()) return
+
+        Log.d(TAG, "Restore overlays visibility")
 
         // Restore from bottom to top
         overlayBackStack.forEach { overlay ->
             overlayStates[overlay]?.let { state ->
+                Log.d(TAG, "Restoring ${overlay.hashCode()} state to $state")
+
                 when (state) {
                     Lifecycle.State.STARTED -> overlay.start()
                     Lifecycle.State.RESUMED -> overlay.resume()
@@ -183,6 +197,24 @@ class OverlayManager internal constructor(context: Context) {
 
         topOverlay?.destroy()
         topOverlay = null
+    }
+
+    fun lockMenuPosition(position: Point) {
+        Log.d(TAG, "Locking menu position to $position")
+        menuLockedPosition = position
+
+        overlayBackStack.forEach { overlay ->
+            if (overlay is OverlayMenu) overlay.lockPosition(position)
+        }
+    }
+
+    fun unlockMenuPosition() {
+        Log.d(TAG, "Unlocking menu position")
+        menuLockedPosition = null
+
+        overlayBackStack.forEach { overlay ->
+            if (overlay is OverlayMenu) overlay.unlockPosition()
+        }
     }
 
     private fun executeNextNavigationRequest(context: Context) {
@@ -223,6 +255,10 @@ class OverlayManager internal constructor(context: Context) {
             appContext = context,
             dismissListener = ::onOverlayDismissed,
         )
+        // Lock this new overlay position if its a menu and if the lock has been requested
+        menuLockedPosition?.let {
+            if (request.overlay is OverlayMenu) request.overlay.lockPosition(it)
+        }
 
         // Update current lifecycle
         currentOverlay?.apply {
