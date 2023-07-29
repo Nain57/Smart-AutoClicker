@@ -20,6 +20,7 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,8 @@ import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.*
 
@@ -42,6 +45,8 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
     private val billingRepository = IBillingRepository.getRepository(application)
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured event. */
     val configuredEventConditions = editionRepository.editionState.editedEventConditionsState
@@ -133,5 +138,13 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onConditionCountReachedAddCopyClicked(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT)
+    }
+
+    fun monitorCreateConditionView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION)
     }
 }

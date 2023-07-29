@@ -21,8 +21,8 @@ import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.feature.tutorial.data.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.monitoring.TutorialMonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 class ActionTypeSelectionViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -30,12 +30,10 @@ class ActionTypeSelectionViewModel(application: Application) : AndroidViewModel(
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     fun monitorCreateClickView(view: View) {
-        println("TOTO: monitorCreateClickView $view")
-        monitoredViewsManager.attach(TutorialMonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION, view)
+        monitoredViewsManager.attach(MonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION, view)
     }
 
     fun stopViewMonitoring() {
-        println("TOTO: stopViewMonitoring")
-        monitoredViewsManager.detach(TutorialMonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION)
+        monitoredViewsManager.detach(MonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION)
     }
 }

@@ -125,6 +125,16 @@ class ClickDialog(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorSelectPositionView(viewBinding.onPositionSelectButton)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
         onConfirmClicked()

@@ -166,8 +166,15 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
         monitoredViewsManager.attach(MonitoredViewType.FLOATING_MENU_BUTTON_PLAY, view, ViewPositioningType.SCREEN)
     }
 
+    fun monitorConfigButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.FLOATING_MENU_BUTTON_CONFIG, view, ViewPositioningType.SCREEN)
+    }
+
     fun stopViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.FLOATING_MENU_BUTTON_PLAY)
+        monitoredViewsManager.apply {
+            detach(MonitoredViewType.FLOATING_MENU_BUTTON_PLAY)
+            detach(MonitoredViewType.FLOATING_MENU_BUTTON_CONFIG)
+        }
     }
 
     fun shouldShowFirstTimeTutorialDialog(): Boolean =

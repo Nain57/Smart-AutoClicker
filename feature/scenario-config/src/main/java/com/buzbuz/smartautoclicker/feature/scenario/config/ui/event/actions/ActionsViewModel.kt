@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.actions
 
 import android.app.Application
 import android.content.Context
+import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,6 +33,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.toActionDetails
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
@@ -49,6 +52,8 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
     private val billingRepository = IBillingRepository.getRepository(application)
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured actions. */
     private val configuredActions = editionRepository.editionState.editedEventActionsState
@@ -145,6 +150,15 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
         }
 
         billingRepository.startBillingActivity(context, feature)
+    }
+
+
+    fun monitorCreateActionView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_ACTION, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_ACTION)
     }
 }
 
