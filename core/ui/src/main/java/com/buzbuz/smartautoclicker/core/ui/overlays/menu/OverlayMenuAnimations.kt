@@ -58,6 +58,9 @@ internal class OverlayMenuAnimations {
             onAnimationEnded()
         }
 
+        hideOverlayMenuAnimation.cancel()
+        hideOverlayViewAnimation.cancel()
+
         view.startAnimation(showOverlayMenuAnimation)
         if (overlayView is ViewGroup && overlayView.childCount == 1) {
             overlayView.children.first().startAnimation(showOverlayViewAnimation)
@@ -70,6 +73,9 @@ internal class OverlayMenuAnimations {
             hideAnimationIsRunning = false
             onAnimationEnded()
         }
+
+        showOverlayMenuAnimation.cancel()
+        showOverlayViewAnimation.cancel()
 
         view.startAnimation(hideOverlayMenuAnimation)
         if (overlayView is ViewGroup && overlayView.childCount == 1) {

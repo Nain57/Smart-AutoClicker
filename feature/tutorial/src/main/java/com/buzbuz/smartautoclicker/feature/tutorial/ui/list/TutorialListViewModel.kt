@@ -39,7 +39,7 @@ class TutorialListViewModel(application: Application) : AndroidViewModel(applica
         }
 
     fun setOverlayVisibility(visible: Boolean) {
-        if (visible) overlayManager.restoreAll()
+        if (visible) overlayManager.restoreVisibility()
         else overlayManager.hideAll()
     }
 

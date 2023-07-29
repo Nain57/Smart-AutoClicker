@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
 
+import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.Rect
 import android.os.Bundle
@@ -23,17 +24,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.annotation.DrawableRes
 
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.marginStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialGameBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
@@ -42,7 +44,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setHeaderIn
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setNextLevelBtnVisibility
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setScore
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setTimeLeft
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialTopOverlay
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscreenOverlay
 
 import kotlinx.coroutines.launch
 
@@ -68,6 +70,8 @@ class TutorialGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        lockMenuPosition()
+
         viewBinding.apply {
             blueTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.BLUE) }
             redTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.RED) }
@@ -86,13 +90,20 @@ class TutorialGameFragment : Fragment() {
                 launch { viewModel.nextGameBtnVisibility.collect(::onNextLevelButtonVisibilityUpdated) }
                 launch { viewModel.gameTargets.collect(::onTargetsUpdated) }
                 launch { viewModel.shouldDisplayStepOverlay.collect(::showHideStepOverlay) }
+                launch { viewModel.showOverlayMenu.collect(::showHideOverlayMenu) }
             }
         }
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         viewModel.stopTutorial()
+        OverlayManager.getInstance(requireContext()).apply {
+            removeTopOverlay()
+            restoreVisibility()
+            unlockMenuPosition()
+        }
+
+        super.onDestroy()
     }
 
     private fun onGameUpdated(tutorialGame: TutorialGame?) {
@@ -137,9 +148,24 @@ class TutorialGameFragment : Fragment() {
 
     private fun showHideStepOverlay(show: Boolean) {
         OverlayManager.getInstance(requireContext()).apply {
-            if (show) setTopOverlay(TutorialTopOverlay())
+            if (show) setTopOverlay(TutorialFullscreenOverlay())
             else removeTopOverlay()
         }
+    }
+
+    private fun showHideOverlayMenu(show: Boolean) {
+        OverlayManager.getInstance(requireContext()).apply {
+            if (show) restoreVisibility()
+            else hideAll()
+        }
+    }
+
+    private fun lockMenuPosition() {
+        val location = IntArray(2)
+        viewBinding.spaceOverlayMenu.getLocationInWindow(location)
+
+        OverlayManager.getInstance(requireContext())
+            .lockMenuPosition(Point(viewBinding.spaceOverlayMenu.marginStart + location[0], location[1]))
     }
 }
 

@@ -55,7 +55,6 @@ class TutorialActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.shouldBeStopped.collect { shouldBeStopped ->
-                    println("TOTO: shouldBeStopped=$shouldBeStopped")
                     if (shouldBeStopped) finish()
                 }
             }
