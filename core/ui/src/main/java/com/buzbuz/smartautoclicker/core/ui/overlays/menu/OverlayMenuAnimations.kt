@@ -58,8 +58,11 @@ internal class OverlayMenuAnimations {
             onAnimationEnded()
         }
 
-        hideOverlayMenuAnimation.cancel()
-        hideOverlayViewAnimation.cancel()
+        if (hideAnimationIsRunning) {
+            hideOverlayMenuAnimation.cancel()
+            hideOverlayViewAnimation.cancel()
+            hideAnimationIsRunning = false
+        }
 
         view.startAnimation(showOverlayMenuAnimation)
         if (overlayView is ViewGroup && overlayView.childCount == 1) {
@@ -74,8 +77,11 @@ internal class OverlayMenuAnimations {
             onAnimationEnded()
         }
 
-        showOverlayMenuAnimation.cancel()
-        showOverlayViewAnimation.cancel()
+        if (showAnimationIsRunning) {
+            showOverlayMenuAnimation.cancel()
+            showOverlayViewAnimation.cancel()
+            showAnimationIsRunning = false
+        }
 
         view.startAnimation(hideOverlayMenuAnimation)
         if (overlayView is ViewGroup && overlayView.childCount == 1) {

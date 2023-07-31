@@ -90,20 +90,28 @@ class TutorialGameFragment : Fragment() {
                 launch { viewModel.nextGameBtnVisibility.collect(::onNextLevelButtonVisibilityUpdated) }
                 launch { viewModel.gameTargets.collect(::onTargetsUpdated) }
                 launch { viewModel.shouldDisplayStepOverlay.collect(::showHideStepOverlay) }
-                launch { viewModel.showOverlayMenu.collect(::showHideOverlayMenu) }
             }
         }
     }
 
-    override fun onDestroy() {
-        viewModel.stopTutorial()
+    override fun onStart() {
+        showHideOverlayMenu(false)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
         OverlayManager.getInstance(requireContext()).apply {
             removeTopOverlay()
             restoreVisibility()
             unlockMenuPosition()
         }
+    }
 
+    override fun onDestroy() {
         super.onDestroy()
+        viewModel.stopTutorial()
     }
 
     private fun onGameUpdated(tutorialGame: TutorialGame?) {

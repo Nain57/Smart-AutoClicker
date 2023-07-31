@@ -41,6 +41,8 @@ class TutorialListFragment : Fragment() {
     /** Adapter for the list of tutorials. */
     private lateinit var adapter: TutorialListAdapter
 
+    private var isOpeningTutorial: Boolean = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewBinding = FragmentTutorialListBinding.inflate(inflater, container, false)
 
@@ -70,10 +72,13 @@ class TutorialListFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        viewModel.setOverlayVisibility(visible = true)
+
+        if (!isOpeningTutorial) viewModel.setOverlayVisibility(visible = true)
+        else isOpeningTutorial = false
     }
 
     private fun onGameClicked(gameIndex: Int) {
+        isOpeningTutorial = true
         findNavController().navigate(TutorialListFragmentDirections.tutorialListToGame(gameIndex))
     }
 }
