@@ -171,6 +171,9 @@ class OverlayManager internal constructor(context: Context) {
         }
     }
 
+    fun isOverlayStackVisible(): Boolean =
+        getBackStackTop()?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: false
+
     /**
      * Set an overlay as being shown above all overlays in the backstack.
      * It will not be added to the backstack, and can be seen as "an overlay for overlays".

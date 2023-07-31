@@ -28,6 +28,7 @@ import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.marginStart
+import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -95,7 +96,7 @@ class TutorialGameFragment : Fragment() {
     }
 
     override fun onStart() {
-        showHideOverlayMenu(false)
+        OverlayManager.getInstance(requireContext()).hideAll()
         super.onStart()
     }
 
@@ -155,25 +156,28 @@ class TutorialGameFragment : Fragment() {
     }
 
     private fun showHideStepOverlay(show: Boolean) {
+        if (OverlayManager.getInstance(requireContext()).isOverlayStackVisible()) {
+            viewBinding.spaceOverlayMenu.visibility = View.INVISIBLE
+        } else {
+            viewBinding.spaceOverlayMenu.visibility = View.VISIBLE
+        }
+
         OverlayManager.getInstance(requireContext()).apply {
             if (show) setTopOverlay(TutorialFullscreenOverlay())
             else removeTopOverlay()
         }
     }
-
-    private fun showHideOverlayMenu(show: Boolean) {
-        OverlayManager.getInstance(requireContext()).apply {
-            if (show) restoreVisibility()
-            else hideAll()
-        }
-    }
-
     private fun lockMenuPosition() {
         val location = IntArray(2)
         viewBinding.spaceOverlayMenu.getLocationInWindow(location)
 
         OverlayManager.getInstance(requireContext())
-            .lockMenuPosition(Point(viewBinding.spaceOverlayMenu.marginStart + location[0], location[1]))
+            .lockMenuPosition(
+                Point(
+                    viewBinding.spaceOverlayMenu.marginStart + location[0],
+                    viewBinding.spaceOverlayMenu.marginTop + location[1],
+                )
+            )
     }
 }
 

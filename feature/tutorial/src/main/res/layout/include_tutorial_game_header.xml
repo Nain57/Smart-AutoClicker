@@ -20,28 +20,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="175dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_instructions"
         style="@style/AppTheme.Widget.Card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/card_score">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_instructions"
             style="@style/AppTheme.TextAppearance.BodyLarge"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:layout_marginVertical="@dimen/margin_vertical_extra_large"
             android:text="@string/message_tutorial_instructions_1"
-            android:gravity="center_horizontal"/>
+            android:gravity="center"/>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -50,7 +50,7 @@
         style="@style/AppTheme.Widget.Card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/margin_vertical_large"
+        android:layout_marginTop="@dimen/margin_vertical_large"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         app:layout_constraintEnd_toStartOf="@id/card_high_score"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,7 +77,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_large"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        android:layout_marginBottom="@dimen/margin_vertical_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/card_score"
         app:layout_constraintTop_toBottomOf="@id/card_instructions"
