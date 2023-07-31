@@ -24,8 +24,9 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/space_overlay_menu"
+        style="@style/AppTheme.Widget.CardOutlined"
         android:layout_width="@dimen/tutorial_overlay_menu_width"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/tutorial_overlay_menu_height"
         android:layout_marginTop="@dimen/margin_vertical_large"
         android:layout_marginBottom="@dimen/margin_vertical_large"
         android:layout_marginStart="@dimen/margin_horizontal_default"
@@ -37,11 +38,11 @@
     <include layout="@layout/include_tutorial_game_header"
         android:id="@+id/header"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintStart_toEndOf="@id/space_overlay_menu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/game_area"/>
+        app:layout_constraintTop_toTopOf="@id/space_overlay_menu"
+        app:layout_constraintBottom_toBottomOf="@id/space_overlay_menu"/>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/game_area"
@@ -52,7 +53,7 @@
         app:layout_constraintBottom_toTopOf="@+id/footer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/space_overlay_menu">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/blue_target"
