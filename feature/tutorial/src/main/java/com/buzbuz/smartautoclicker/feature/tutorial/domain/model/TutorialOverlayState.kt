@@ -25,7 +25,6 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 data class TutorialOverlayState(
     @StringRes val tutorialInstructionsResId: Int,
-    val hideFloatingUi: Boolean,
     val stepEnd: TutorialStepEnd,
 )
 
@@ -38,10 +37,9 @@ sealed class TutorialStepEnd {
     ) : TutorialStepEnd()
 }
 
-internal fun TutorialStepData.toDomain(): TutorialOverlayState =
+internal fun TutorialStepData.TutorialOverlay.toDomain(): TutorialOverlayState =
     TutorialOverlayState(
         tutorialInstructionsResId = contentTextResId,
-        hideFloatingUi = hideFloatingUi,
         stepEnd = stepEndCondition.toDomain(),
     )
 

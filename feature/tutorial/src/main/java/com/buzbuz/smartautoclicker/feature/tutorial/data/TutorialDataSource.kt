@@ -37,155 +37,141 @@ internal object TutorialDataSource {
             ),
             steps = listOf(
                 // Start screen, before first play
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
                 // First play lost, open edit scenario
-                TutorialStepData(
-                    contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
+                TutorialStepData.ChangeFloatingUiVisibility(
                     stepStartCondition = StepStartCondition.GameLost,
+                    isVisible = true,
+                ),
+                // First play lost, open edit scenario
+                TutorialStepData.TutorialOverlay(
+                    contentTextResId = R.string.message_tutorial_instructions_1,
+                    stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.FLOATING_MENU_BUTTON_CONFIG,
                     ),
                 ),
                 // Create a new event
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT,
                     ),
                 ),
                 // Select condition tab
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS,
                     ),
                 ),
                 // Create a new condition
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION,
                     ),
                 ),
                 // Take a screenshot
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
                 // Adjust screenshot
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.MonitoredViewClicked(
                         MonitoredViewType.CONDITION_CAPTURE_BUTTON_CAPTURE,
                     ),
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
                 // Save condition
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
                 // Select action tab
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS,
                     ),
                 ),
                 // Create a new action
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_ACTION,
                     ),
                 ),
                 // Create a new click
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION,
                     ),
                 ),
                 // Select click location
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CLICK_DIALOG_SELECT_POSITION_BUTTON,
                     ),
                 ),
                 // Pick location
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
                 // Save click
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.NextButton
                 ),
                 // Save event
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.NextButton
                 ),
                 // Save scenario
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.NextButton
                 ),
                 // Play scenario
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.NextOverlay,
                     stepEndCondition = StepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.FLOATING_MENU_BUTTON_PLAY,
                     ),
                 ),
                 // Start game
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
                 // Game won
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = false,
                     stepStartCondition = StepStartCondition.GameWon,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
@@ -200,10 +186,9 @@ internal object TutorialDataSource {
                 gameRules = OneMovingTargetRules(10),
             ),
             steps = listOf(
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
                     stepStartCondition = StepStartCondition.Immediate,
-                    hideFloatingUi = true,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
             )
@@ -217,9 +202,8 @@ internal object TutorialDataSource {
                 gameRules = TwoStillTargetsPressWhenBothVisibleRules(10),
             ),
             steps = listOf(
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
@@ -234,9 +218,8 @@ internal object TutorialDataSource {
                 gameRules = TwoStillTargetsPressWhenOneVisibleRules(10),
             ),
             steps = listOf(
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),
@@ -251,9 +234,8 @@ internal object TutorialDataSource {
                 gameRules = TwoMovingTargetsPressInOrderRules(10),
             ),
             steps = listOf(
-                TutorialStepData(
+                TutorialStepData.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_instructions_1,
-                    hideFloatingUi = true,
                     stepStartCondition = StepStartCondition.Immediate,
                     stepEndCondition = StepEndCondition.NextButton,
                 ),

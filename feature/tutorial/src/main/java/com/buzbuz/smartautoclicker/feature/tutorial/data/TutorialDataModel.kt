@@ -28,12 +28,21 @@ internal data class TutorialData(
     val steps: List<TutorialStepData>,
 )
 
-internal data class TutorialStepData(
-    @StringRes val contentTextResId: Int,
-    val hideFloatingUi: Boolean,
-    val stepStartCondition: StepStartCondition,
-    val stepEndCondition: StepEndCondition,
-)
+internal sealed class TutorialStepData {
+
+    abstract val stepStartCondition: StepStartCondition
+
+    internal data class ChangeFloatingUiVisibility(
+        override val stepStartCondition: StepStartCondition,
+        val isVisible: Boolean,
+    ) : TutorialStepData()
+
+    internal data class TutorialOverlay(
+        @StringRes val contentTextResId: Int,
+        override val stepStartCondition: StepStartCondition,
+        val stepEndCondition: StepEndCondition,
+    ) : TutorialStepData()
+}
 
 internal sealed class StepStartCondition {
     object Immediate : StepStartCondition()

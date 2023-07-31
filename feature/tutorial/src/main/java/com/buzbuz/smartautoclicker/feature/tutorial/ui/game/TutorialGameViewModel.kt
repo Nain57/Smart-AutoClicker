@@ -53,9 +53,6 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
             null,
         )
 
-    val showOverlayMenu: Flow<Boolean> = tutorialRepository.tutorialOverlayState
-        .map { it?.hideFloatingUi == false }
-
     val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.tutorialOverlayState
         .map { it != null }
 
