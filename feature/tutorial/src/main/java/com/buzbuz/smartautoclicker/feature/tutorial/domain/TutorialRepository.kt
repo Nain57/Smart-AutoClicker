@@ -168,7 +168,6 @@ class TutorialRepository private constructor(
             scenarioRepository.deleteScenario(scenarioIdentifier)
         }
 
-        detectionRepository.setScenarioId(scenarioIdentifier)
         activeTutorialIndex.value = null
         allStepsCompleted = false
     }

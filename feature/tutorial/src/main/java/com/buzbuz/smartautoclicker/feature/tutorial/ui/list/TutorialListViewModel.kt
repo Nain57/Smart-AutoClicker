@@ -33,9 +33,9 @@ class TutorialListViewModel(application: Application) : AndroidViewModel(applica
 
     val items: Flow<List<TutorialItem>> = tutorialRepository.tutorials
         .map { tutorials ->
-            tutorials.mapIndexed { index, tutorial ->
-                tutorial.toItem(index)
-            }
+            tutorials
+                .filter { it.isUnlocked }
+                .mapIndexed { index, tutorial -> tutorial.toItem(index) }
         }
 
     fun setOverlayVisibility(visible: Boolean) {
@@ -48,7 +48,6 @@ class TutorialListViewModel(application: Application) : AndroidViewModel(applica
             nameResId = nameResId,
             descResId = descResId,
             index = index,
-            isEnabled = isUnlocked,
         )
 }
 
@@ -56,5 +55,4 @@ data class TutorialItem(
     val nameResId: Int,
     val descResId: Int,
     val index: Int,
-    val isEnabled: Boolean,
 )

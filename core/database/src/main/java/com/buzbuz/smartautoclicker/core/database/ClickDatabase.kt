@@ -65,7 +65,7 @@ import com.buzbuz.smartautoclicker.core.database.migrations.*
     IntentExtraTypeStringConverter::class,
     ToggleEventTypeStringConverter::class,
 )
-abstract class ClickDatabase : RoomDatabase(), ScenarioDatabase {
+abstract class ClickDatabase : ScenarioDatabase() {
 
     companion object {
 

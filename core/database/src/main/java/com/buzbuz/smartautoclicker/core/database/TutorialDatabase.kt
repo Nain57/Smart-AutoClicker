@@ -52,7 +52,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
     IntentExtraTypeStringConverter::class,
     ToggleEventTypeStringConverter::class,
 )
-abstract class TutorialDatabase : RoomDatabase(), ScenarioDatabase {
+abstract class TutorialDatabase : ScenarioDatabase() {
 
     abstract fun tutorialDao(): TutorialDao
 
