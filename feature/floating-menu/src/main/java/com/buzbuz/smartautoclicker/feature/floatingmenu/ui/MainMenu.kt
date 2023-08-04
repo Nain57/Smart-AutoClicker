@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
 
 import android.content.DialogInterface
+import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.ViewGroup

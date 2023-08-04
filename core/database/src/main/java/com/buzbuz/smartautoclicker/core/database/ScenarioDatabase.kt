@@ -16,23 +16,24 @@
  */
 package com.buzbuz.smartautoclicker.core.database
 
+import androidx.room.RoomDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EndConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
 
-interface ScenarioDatabase {
+abstract class ScenarioDatabase : RoomDatabase() {
 
     /** The data access object for the scenario in the database. */
-    fun scenarioDao(): ScenarioDao
+    abstract fun scenarioDao(): ScenarioDao
     /** The data access object for the events in the database. */
-    fun eventDao(): EventDao
+    abstract fun eventDao(): EventDao
     /** The data access object for the conditions in the database. */
-    fun conditionDao(): ConditionDao
+    abstract fun conditionDao(): ConditionDao
     /** The data access object for the actions in the database. */
-    fun actionDao(): ActionDao
+    abstract fun actionDao(): ActionDao
     /** The data access object for the end conditions in the database. */
-    fun endConditionDao(): EndConditionDao
+    abstract fun endConditionDao(): EndConditionDao
 
 }

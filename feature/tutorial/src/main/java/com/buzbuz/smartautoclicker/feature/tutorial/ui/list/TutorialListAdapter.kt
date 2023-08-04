@@ -32,7 +32,6 @@ class TutorialListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TutorialItemViewHolder =
         TutorialItemViewHolder(ItemTutorialBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-
     override fun onBindViewHolder(holder: TutorialItemViewHolder, position: Int) {
         holder.onBind(getItem(position), onGameClicked)
     }
@@ -53,15 +52,7 @@ class TutorialItemViewHolder(private val binding: ItemTutorialBinding) : ViewHol
         binding.apply {
             choiceTitle.setText(item.nameResId)
             choiceDescription.setText(item.descResId)
-            root.apply {
-                if (item.isEnabled) {
-                    alpha = 1f
-                    setOnClickListener { onGameClicked(item.index) }
-                } else {
-                    alpha = 0.5f
-                    setOnClickListener(null)
-                }
-            }
+            root.setOnClickListener { onGameClicked(item.index) }
         }
     }
 }
