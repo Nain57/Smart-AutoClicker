@@ -51,22 +51,8 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
 
     private val stepState: MutableStateFlow<TutorialStepState?> = MutableStateFlow(null)
 
-    val gameState: Flow<TutorialGameStateData?> = _tutorial
-        .flatMapLatest { tutorial ->
-            tutorial?.game?.gameState ?: flowOf(null)
-        }
-
-    val currentStep: Flow<TutorialStepData.TutorialOverlay?> = _tutorial
+    val currentStep: Flow<TutorialStepData?> = _tutorial
         .flowOnCurrentAndStartedStep()
-        .onEach { step ->
-            if (step is TutorialStepData.ChangeFloatingUiVisibility) {
-                Log.d(TAG, "Started step is ChangeFloatingUiVisibility, update visibility and end step")
-                if (step.isVisible) overlayManager.restoreVisibility() else overlayManager.hideAll()
-
-                coroutineScope.launch { nextStep() }
-            }
-        }
-        .map { step -> if (step is TutorialStepData.TutorialOverlay) step else null }
         .shareIn(coroutineScope, SharingStarted.WhileSubscribed(3_000), 1)
 
     fun isStarted(): Boolean = _tutorial.value != null

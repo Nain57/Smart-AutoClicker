@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.getTutorialPreferences
 import com.buzbuz.smartautoclicker.feature.tutorial.data.isFirstTimePopupAlreadyShown
 import com.buzbuz.smartautoclicker.feature.tutorial.data.putFirstTimePopupAlreadyShown
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
 
@@ -103,7 +103,7 @@ class TutorialRepository private constructor(
             tutorialList[activeIndex]
         }
 
-    val tutorialOverlayState: Flow<TutorialOverlayState?> = tutorialEngine.currentStep
+    val activeStep: Flow<TutorialStep?> = tutorialEngine.currentStep
         .map { step ->
             Log.d(TAG, "Update overlay state for step $step")
             step?.toDomain()
@@ -129,6 +129,7 @@ class TutorialRepository private constructor(
 
         Log.d(TAG, "Stop tutorial mode, restoring user scenario $scenarioId")
 
+        stopTutorial()
         scenarioId?.let { detectionRepository.setScenarioId(it) }
         scenarioId = null
         allStepsCompleted = false
@@ -177,13 +178,7 @@ class TutorialRepository private constructor(
                     return@withContext
                 }
 
-                if (allStepsCompleted) {
-                    Log.d(TAG, "All tutorial steps are completed, mark tutorial $tutoIndex as success.")
-                    scenarioRepository.setTutorialSuccess(tutoIndex, scenarioIdentifier)
-                } else {
-                    Log.d(TAG, "Tutorial wasn't completed, removing user created scenario for this tutorial.")
-                    scenarioRepository.deleteScenario(scenarioIdentifier)
-                }
+                scenarioRepository.setTutorialSuccess(tutoIndex, scenarioIdentifier, allStepsCompleted)
             }
 
             activeTutorialIndex.value = null
@@ -201,10 +196,6 @@ class TutorialRepository private constructor(
 
     fun startGame(area: Rect, targetSize: Int) {
         tutorialEngine.startGame(area, targetSize)
-    }
-
-    fun stopGame() {
-        tutorialEngine.stopGame()
     }
 
     fun onGameTargetHit(targetType: TutorialGameTargetType) {

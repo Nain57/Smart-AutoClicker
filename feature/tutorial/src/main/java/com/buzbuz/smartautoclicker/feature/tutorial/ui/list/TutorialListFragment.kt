@@ -27,6 +27,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialListBinding
 
@@ -67,14 +68,7 @@ class TutorialListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.setOverlayVisibility(visible = false)
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        if (!isOpeningTutorial) viewModel.setOverlayVisibility(visible = true)
-        else isOpeningTutorial = false
+        OverlayManager.getInstance(requireContext()).hideAll()
     }
 
     private fun onGameClicked(gameIndex: Int) {

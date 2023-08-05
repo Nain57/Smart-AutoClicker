@@ -24,10 +24,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TutorialGameViewModel(application: Application) : AndroidViewModel(application) {
@@ -53,8 +52,8 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
             null,
         )
 
-    val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.tutorialOverlayState
-        .map { it != null }
+    val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.activeStep
+        .map { step -> step != null && step is TutorialStep.TutorialOverlay }
 
     private val isStarted: Flow<Boolean> = currentGame
         .flatMapLatest { it?.state?.map { it.isStarted } ?: flowOf(false) }
