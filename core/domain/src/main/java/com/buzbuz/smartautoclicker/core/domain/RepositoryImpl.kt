@@ -415,6 +415,9 @@ internal class RepositoryImpl internal constructor(
         )
     }
 
+    override suspend fun isTutorialSucceed(index: Int): Boolean =
+        getTutorialDao()?.getTutorialSuccess(index) != null
+
     private fun getTutorialDao(): TutorialDao? {
         val db = currentDatabase.value
         return if (db is TutorialDatabase) db.tutorialDao() else null

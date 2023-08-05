@@ -137,11 +137,11 @@ class TutorialRepository private constructor(
     }
 
     fun startTutorial(index: Int) {
+        if (tutorialEngine.isStarted()) return
         if (scenarioId == null) {
             Log.e(TAG, "Tutorial mode is not setup, can't start tutorial $index")
             return
         }
-        if (tutorialEngine.isStarted()) return
         if (index < 0 || index >= dataSource.tutorials.size) {
             Log.e(TAG, "Can't start tutorial, index is invalid $index")
             return
@@ -161,6 +161,8 @@ class TutorialRepository private constructor(
     }
 
     fun stopTutorial() {
+        if (!tutorialEngine.isStarted()) return
+
         val scenarioIdentifier = scenarioId ?: return
         val tutoIndex = activeTutorialIndex.value ?: return
 
@@ -170,6 +172,11 @@ class TutorialRepository private constructor(
             tutorialEngine.stopTutorial()
 
             withContext(Dispatchers.IO) {
+                if (scenarioRepository.isTutorialSucceed(tutoIndex)) {
+                    Log.d(TAG, "Tutorial was already completed")
+                    return@withContext
+                }
+
                 if (allStepsCompleted) {
                     Log.d(TAG, "All tutorial steps are completed, mark tutorial $tutoIndex as success.")
                     scenarioRepository.setTutorialSuccess(tutoIndex, scenarioIdentifier)
