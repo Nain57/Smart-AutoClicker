@@ -22,10 +22,14 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameData
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 internal data class TutorialData(
-    @StringRes val nameResId: Int,
-    @StringRes val descResId: Int,
+    val info: TutorialInfo,
     val game: TutorialGameData,
     val steps: List<TutorialStepData>,
+)
+
+internal data class TutorialInfo(
+    @StringRes val nameResId: Int,
+    @StringRes val descResId: Int,
 )
 
 internal sealed class TutorialStepData {

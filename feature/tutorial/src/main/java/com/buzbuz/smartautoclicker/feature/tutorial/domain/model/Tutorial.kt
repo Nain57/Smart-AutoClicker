@@ -18,21 +18,17 @@ package com.buzbuz.smartautoclicker.feature.tutorial.domain.model
 
 import androidx.annotation.StringRes
 
-import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialData
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.toDomain
+import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialInfo
 
 data class Tutorial(
     @StringRes val nameResId: Int,
     @StringRes val descResId: Int,
-    val game: TutorialGame,
     val isUnlocked: Boolean,
 )
 
-internal fun TutorialData.toDomain(isUnlocked: Boolean): Tutorial =
+internal fun TutorialInfo.toDomain(isUnlocked: Boolean): Tutorial =
     Tutorial(
         nameResId = nameResId,
         descResId = descResId,
-        game = game.toDomain(),
         isUnlocked = isUnlocked,
     )

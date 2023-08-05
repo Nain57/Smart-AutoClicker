@@ -21,7 +21,6 @@ import android.graphics.PointF
 import android.graphics.Rect
 
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
@@ -30,27 +29,18 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGa
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TutorialGameViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
 
-    val currentGame: StateFlow<TutorialGame?> = tutorialRepository.activeTutorial
-        .map { it?.game }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(3_000),
-            null,
-        )
+    val currentGame: Flow<TutorialGame?> = tutorialRepository.activeGame
 
     val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.activeStep
         .map { step -> step != null && step is TutorialStep.TutorialOverlay }

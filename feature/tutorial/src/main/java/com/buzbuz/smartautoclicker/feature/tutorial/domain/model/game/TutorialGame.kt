@@ -46,7 +46,7 @@ internal fun TutorialGameData.toDomain(): TutorialGame =
         targets = targets,
     )
 
-internal fun TutorialGameStateData.toDomain(): TutorialGameState =
+private fun TutorialGameStateData.toDomain(): TutorialGameState =
     TutorialGameState(
         isStarted = isStarted,
         isWon = isWon,
