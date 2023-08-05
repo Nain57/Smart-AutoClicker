@@ -23,24 +23,16 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameStateData
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class TutorialEngine(context: Context, private val coroutineScope: CoroutineScope) {
 
     private val overlayManager: OverlayManager = OverlayManager.getInstance(context)
@@ -126,11 +118,6 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
     fun onGameTargetHit(target: TutorialGameTargetType) {
         Log.d(TAG, "onTargetHit $target")
         _tutorial.value?.game?.onTargetHit(target)
-    }
-
-    fun stopGame() {
-        Log.d(TAG, "Stop game")
-        _tutorial.value?.game?.stop()
     }
 
     fun stopTutorial() {

@@ -34,7 +34,9 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.isFirstTimePopupAlready
 import com.buzbuz.smartautoclicker.feature.tutorial.data.putFirstTimePopupAlreadyShown
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.toDomain
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
 
 import kotlinx.coroutines.CoroutineScope
@@ -92,7 +94,7 @@ class TutorialRepository private constructor(
 
     val tutorials: Flow<List<Tutorial>> = scenarioRepository.tutorialSuccessList
         .map { successList ->
-            dataSource.tutorials.mapIndexed { index, tutorialData ->
+            dataSource.tutorialsInfo.mapIndexed { index, tutorialData ->
                 tutorialData.toDomain(index == 0 || index <= successList.size)
             }
         }
@@ -108,6 +110,9 @@ class TutorialRepository private constructor(
             Log.d(TAG, "Update overlay state for step $step")
             step?.toDomain()
         }
+
+    val activeGame: Flow<TutorialGame?> = tutorialEngine.tutorial
+        .map { tutorial -> tutorial?.game?.toDomain() }
 
     fun isTutorialFirstTimePopupShown(): Boolean =
         sharedPrefs.isFirstTimePopupAlreadyShown()
@@ -143,11 +148,12 @@ class TutorialRepository private constructor(
             Log.e(TAG, "Tutorial mode is not setup, can't start tutorial $index")
             return
         }
-        if (index < 0 || index >= dataSource.tutorials.size) {
+        if (index < 0 || index >= dataSource.tutorialsInfo.size) {
             Log.e(TAG, "Can't start tutorial, index is invalid $index")
             return
         }
 
+        val tutorialData = dataSource.getTutorialData(index) ?: return
         coroutineScopeMain.launch {
             val tutoScenarioDbId = withContext(Dispatchers.IO) { initTutorialScenario(index) } ?: return@launch
 
@@ -157,7 +163,7 @@ class TutorialRepository private constructor(
             allStepsCompleted = false
             detectionRepository.setScenarioId(Identifier(databaseId = tutoScenarioDbId))
 
-            tutorialEngine.startTutorial(dataSource.tutorials[index])
+            tutorialEngine.startTutorial(tutorialData)
         }
     }
 
