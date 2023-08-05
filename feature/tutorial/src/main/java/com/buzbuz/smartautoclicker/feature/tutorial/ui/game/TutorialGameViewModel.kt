@@ -88,13 +88,11 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
         }
 
     fun startTutorial(gameIndex: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            tutorialRepository.startTutorial(gameIndex)
-        }
+        tutorialRepository.startTutorial(gameIndex)
     }
 
     fun startGame(area: Rect, targetsSize: Int) {
-        tutorialRepository.startGame(viewModelScope, area, targetsSize)
+        tutorialRepository.startGame(area, targetsSize)
     }
 
     fun onTargetHit(color: TutorialGameTargetType) {
@@ -102,9 +100,7 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun stopTutorial() {
-        viewModelScope.launch(Dispatchers.IO) {
-            tutorialRepository.stopTutorial()
-        }
+        tutorialRepository.stopTutorial()
     }
 }
 

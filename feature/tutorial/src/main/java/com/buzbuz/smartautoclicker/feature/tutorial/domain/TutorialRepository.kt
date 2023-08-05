@@ -39,10 +39,12 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TutorialRepository private constructor(
@@ -70,12 +72,14 @@ class TutorialRepository private constructor(
         }
     }
 
+    private val coroutineScopeMain: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     private val scenarioRepository: Repository = Repository.getRepository(context)
     private val detectionRepository: DetectionRepository =  DetectionRepository.getDetectionRepository(context)
 
     private val sharedPrefs: SharedPreferences = context.getTutorialPreferences()
 
-    private val tutorialEngine: TutorialEngine = TutorialEngine(context)
+    private val tutorialEngine: TutorialEngine = TutorialEngine(context, coroutineScopeMain)
 
     /**
      * The identifier of the user scenario when he enters the tutorial mode.
@@ -132,7 +136,7 @@ class TutorialRepository private constructor(
         scenarioRepository.stopTutorialMode()
     }
 
-    suspend fun startTutorial(index: Int) {
+    fun startTutorial(index: Int) {
         if (scenarioId == null) {
             Log.e(TAG, "Tutorial mode is not setup, can't start tutorial $index")
             return
@@ -143,33 +147,41 @@ class TutorialRepository private constructor(
             return
         }
 
-        val tutoScenarioDbId = initTutorialScenario(index) ?: return
-        Log.d(TAG, "Start tutorial $index, set current scenario to $tutoScenarioDbId")
+        coroutineScopeMain.launch {
+            val tutoScenarioDbId = withContext(Dispatchers.IO) { initTutorialScenario(index) } ?: return@launch
 
-        activeTutorialIndex.value = index
-        allStepsCompleted = false
-        detectionRepository.setScenarioId(Identifier(databaseId = tutoScenarioDbId))
-        withContext(Dispatchers.Main) {
+            Log.d(TAG, "Start tutorial $index, set current scenario to $tutoScenarioDbId")
+
+            activeTutorialIndex.value = index
+            allStepsCompleted = false
+            detectionRepository.setScenarioId(Identifier(databaseId = tutoScenarioDbId))
+
             tutorialEngine.startTutorial(dataSource.tutorials[index])
         }
     }
 
-    suspend fun stopTutorial() {
-        withContext(Dispatchers.Main) {
-            tutorialEngine.stopTutorial()
-        }
-
+    fun stopTutorial() {
         val scenarioIdentifier = scenarioId ?: return
         val tutoIndex = activeTutorialIndex.value ?: return
 
-        if (allStepsCompleted) {
-            scenarioRepository.setTutorialSuccess(tutoIndex, scenarioIdentifier)
-        } else {
-            scenarioRepository.deleteScenario(scenarioIdentifier)
-        }
+        coroutineScopeMain.launch {
+            Log.d(TAG, "Stop tutorial $tutoIndex")
 
-        activeTutorialIndex.value = null
-        allStepsCompleted = false
+            tutorialEngine.stopTutorial()
+
+            withContext(Dispatchers.IO) {
+                if (allStepsCompleted) {
+                    Log.d(TAG, "All tutorial steps are completed, mark tutorial $tutoIndex as success.")
+                    scenarioRepository.setTutorialSuccess(tutoIndex, scenarioIdentifier)
+                } else {
+                    Log.d(TAG, "Tutorial wasn't completed, removing user created scenario for this tutorial.")
+                    scenarioRepository.deleteScenario(scenarioIdentifier)
+                }
+            }
+
+            activeTutorialIndex.value = null
+            allStepsCompleted = false
+        }
     }
 
     fun nextTutorialStep() {
@@ -180,8 +192,8 @@ class TutorialRepository private constructor(
         tutorialEngine.skipAllSteps()
     }
 
-    fun startGame(scope: CoroutineScope, area: Rect, targetSize: Int) {
-        tutorialEngine.startGame(scope, area, targetSize)
+    fun startGame(area: Rect, targetSize: Int) {
+        tutorialEngine.startGame(area, targetSize)
     }
 
     fun stopGame() {
