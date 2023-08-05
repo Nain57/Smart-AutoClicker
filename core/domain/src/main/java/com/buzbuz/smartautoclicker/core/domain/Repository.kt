@@ -197,4 +197,6 @@ interface Repository {
     suspend fun getTutorialScenarioDatabaseId(index: Int): Identifier?
 
     suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier)
+
+    suspend fun isTutorialSucceed(index: Int): Boolean
 }

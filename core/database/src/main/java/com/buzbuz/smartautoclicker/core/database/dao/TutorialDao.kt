@@ -43,7 +43,11 @@ interface TutorialDao {
     @Query("SELECT * FROM tutorial_success_table ORDER BY tutorial_index ASC")
     fun getTutorialSuccessList(): Flow<List<TutorialSuccessEntity>>
 
-    /** @return all tutorials successes, ordered by their index. */
+    /** @return the success for a tutorial, or null if none was found. */
+    @Query("SELECT * FROM tutorial_success_table WHERE tutorial_index=:index")
+    suspend fun getTutorialSuccess(index: Int): TutorialSuccessEntity?
+
+    /** @return the scenario id for a tutorial if a success for it was found, null if not. */
     @Query("SELECT scenario_id FROM tutorial_success_table WHERE tutorial_index=:index")
     suspend fun getTutorialScenarioId(index: Int): Long?
 }
