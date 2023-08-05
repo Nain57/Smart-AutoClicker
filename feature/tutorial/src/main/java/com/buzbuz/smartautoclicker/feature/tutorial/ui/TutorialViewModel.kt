@@ -22,8 +22,10 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 
 class TutorialViewModel(application: Application) : AndroidViewModel(application) {
@@ -33,6 +35,14 @@ class TutorialViewModel(application: Application) : AndroidViewModel(application
 
     val shouldBeStopped: Flow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.INACTIVE }
+
+    val onFloatingUiVisibilityStep: Flow<Boolean> = tutorialRepository.activeStep
+        .filterIsInstance<TutorialStep.ChangeFloatingUiVisibility>()
+        .map { it.isVisible }
+
+    fun validateFloatingUiVisibilityStep() {
+        tutorialRepository.nextTutorialStep()
+    }
 
     fun startTutorialMode(): Unit = tutorialRepository.setupTutorialMode()
 

@@ -85,21 +85,10 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
     }
 
     final override fun stop() {
-        if (!isStarted.value) return
-
         Log.d(TAG, "Stop game")
 
         gameJob?.cancel()
         gameJob = null
-
-        isStarted.value = false
-        timer.value = 0
-        isWon.value = null
-        _targets.value = emptyMap()
-    }
-
-    override fun reset() {
-        Log.d(TAG, "Reset game")
 
         isStarted.value = false
         timer.value = 0

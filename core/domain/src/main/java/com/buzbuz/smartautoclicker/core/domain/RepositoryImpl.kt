@@ -404,15 +404,32 @@ internal class RepositoryImpl internal constructor(
             Identifier(databaseId = it)
         }
 
-    override suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier) {
-        Log.d(TAG, "Set tutorial success for tutorial $index with scenario $scenarioId")
+    override suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier, success: Boolean) {
+        if (success) {
+            Log.d(TAG, "Set tutorial success for tutorial $index with scenario $scenarioId")
 
-        getTutorialDao()?.upsert(
-            TutorialSuccessEntity(
-                tutorialIndex = index,
-                scenarioId = scenarioId.databaseId,
+            getTutorialDao()?.upsert(
+                TutorialSuccessEntity(
+                    tutorialIndex = index,
+                    scenarioId = scenarioId.databaseId,
+                )
             )
-        )
+        } else {
+            Log.d(TAG, "Set tutorial failure, removing user created scenario for this tutorial.")
+
+            val removedConditionsPath = mutableListOf<String>()
+            tutorialDatabase.eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
+                currentDatabase.value.conditionDao().getConditionsPath(eventId).forEach { path ->
+                    if (!removedConditionsPath.contains(path)) removedConditionsPath.add(path)
+                }
+            }
+
+            tutorialDatabase.scenarioDao().delete(scenarioId.databaseId)
+            val deletedPaths = removedConditionsPath.filter { path ->
+                tutorialDatabase.conditionDao().getValidPathCount(path) == 0
+            }
+            bitmapManager.deleteBitmaps(deletedPaths)
+        }
     }
 
     override suspend fun isTutorialSucceed(index: Int): Boolean =

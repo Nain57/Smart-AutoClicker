@@ -23,28 +23,46 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialStepData
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 
-data class TutorialOverlayState(
-    @StringRes val tutorialInstructionsResId: Int,
-    val stepEnd: TutorialStepEnd,
-)
+sealed class TutorialStep {
 
-sealed class TutorialStepEnd {
+    data class ChangeFloatingUiVisibility(
+        val isVisible: Boolean,
+    ): TutorialStep()
 
-    object NextButton : TutorialStepEnd()
+    data class TutorialOverlay(
+        @StringRes val tutorialInstructionsResId: Int,
+        val stepEnd: CloseType,
+    ): TutorialStep()
+}
+
+sealed class CloseType {
+
+    object NextButton : CloseType()
 
     data class MonitoredViewClick(
         val type: MonitoredViewType,
-    ) : TutorialStepEnd()
+    ) : CloseType()
 }
 
-internal fun TutorialStepData.TutorialOverlay.toDomain(): TutorialOverlayState =
-    TutorialOverlayState(
+internal fun TutorialStepData.toDomain(): TutorialStep =
+    when (this) {
+        is TutorialStepData.ChangeFloatingUiVisibility -> toDomain()
+        is TutorialStepData.TutorialOverlay -> toDomain()
+    }
+
+private fun TutorialStepData.ChangeFloatingUiVisibility.toDomain(): TutorialStep.ChangeFloatingUiVisibility =
+    TutorialStep.ChangeFloatingUiVisibility(
+        isVisible = isVisible,
+    )
+
+private fun TutorialStepData.TutorialOverlay.toDomain(): TutorialStep =
+    TutorialStep.TutorialOverlay(
         tutorialInstructionsResId = contentTextResId,
         stepEnd = stepEndCondition.toDomain(),
     )
 
-private fun StepEndCondition.toDomain(): TutorialStepEnd =
+private fun StepEndCondition.toDomain(): CloseType =
     when (this) {
-        StepEndCondition.NextButton -> TutorialStepEnd.NextButton
-        is StepEndCondition.MonitoredViewClicked -> TutorialStepEnd.MonitoredViewClick(type)
+        StepEndCondition.NextButton -> CloseType.NextButton
+        is StepEndCondition.MonitoredViewClicked -> CloseType.MonitoredViewClick(type)
     }

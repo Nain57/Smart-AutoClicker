@@ -25,8 +25,8 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialOverlayState
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStepEnd
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.CloseType
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -40,8 +40,11 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
     private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
 
-    val uiState: Flow<UiTutorialOverlayState?> = tutorialRepository.tutorialOverlayState
-        .map { overlayState -> overlayState?.toUi() }
+    val uiState: Flow<UiTutorialOverlayState?> = tutorialRepository.activeStep
+        .map { step ->
+            if (step is TutorialStep.TutorialOverlay) step.toUi()
+            else null
+        }
 
     val monitoredViewPosition: Flow<Rect?> = uiState
         .flatMapLatest {
@@ -68,14 +71,14 @@ sealed class TutorialExitButton {
     data class MonitoredView(val type: MonitoredViewType) : TutorialExitButton()
 }
 
-private fun TutorialOverlayState.toUi(): UiTutorialOverlayState =
+private fun TutorialStep.TutorialOverlay.toUi(): UiTutorialOverlayState =
     UiTutorialOverlayState(
         instructionsResId = tutorialInstructionsResId,
         exitButton = stepEnd.toUi(),
     )
 
-private fun TutorialStepEnd.toUi(): TutorialExitButton =
+private fun CloseType.toUi(): TutorialExitButton =
     when (this) {
-        TutorialStepEnd.NextButton -> TutorialExitButton.Next
-        is TutorialStepEnd.MonitoredViewClick -> TutorialExitButton.MonitoredView(type)
+        CloseType.NextButton -> TutorialExitButton.Next
+        is CloseType.MonitoredViewClick -> TutorialExitButton.MonitoredView(type)
     }

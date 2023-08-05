@@ -103,11 +103,7 @@ class TutorialGameFragment : Fragment() {
     override fun onStop() {
         super.onStop()
 
-        OverlayManager.getInstance(requireContext()).apply {
-            removeTopOverlay()
-            restoreVisibility()
-            unlockMenuPosition()
-        }
+        OverlayManager.getInstance(requireContext()).removeTopOverlay()
         viewModel.stopTutorial()
     }
 
@@ -163,6 +159,7 @@ class TutorialGameFragment : Fragment() {
             else removeTopOverlay()
         }
     }
+
     private fun lockMenuPosition() {
         val location = IntArray(2)
         viewBinding.spaceOverlayMenu.getLocationInWindow(location)

@@ -39,7 +39,6 @@ internal interface TutorialGameRules {
 
     fun start(coroutineScope: CoroutineScope, area: Rect, targetSize: Int, onResult: (Boolean) -> Unit)
     fun stop()
-    fun reset()
     fun onTargetHit(type: TutorialGameTargetType)
 }
 
