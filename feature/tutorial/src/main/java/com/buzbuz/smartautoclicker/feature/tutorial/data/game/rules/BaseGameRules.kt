@@ -75,11 +75,11 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
             }
 
             // Game is over
-            Log.d(TAG, "Game over")
-
             isStarted.value = false
             _targets.value = emptyMap()
             isWon.value = score.value > highScore
+
+            Log.d(TAG, "Game over, victory=${isWon.value}")
             onResult(isWon.value == true)
         }
     }

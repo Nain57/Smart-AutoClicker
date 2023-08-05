@@ -20,16 +20,14 @@ import android.content.Context
 import android.graphics.Rect
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameStateData
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,9 +41,8 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class TutorialEngine(context: Context) {
+internal class TutorialEngine(context: Context, private val coroutineScope: CoroutineScope) {
 
-    private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val overlayManager: OverlayManager = OverlayManager.getInstance(context)
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
@@ -132,9 +129,10 @@ internal class TutorialEngine(context: Context) {
         stepState.value = null
     }
 
-    fun startGame(scope: CoroutineScope, area: Rect, targetSize: Int) {
+    fun startGame(area: Rect, targetSize: Int) {
         Log.d(TAG, "Start game on area $area with target size $targetSize")
-        _tutorial.value?.game?.start(scope, area, targetSize) { isWon ->
+
+        _tutorial.value?.game?.start(coroutineScope, area, targetSize) { isWon ->
             stepState.value = stepState.value?.copy(isGameWon = isWon)
         }
     }

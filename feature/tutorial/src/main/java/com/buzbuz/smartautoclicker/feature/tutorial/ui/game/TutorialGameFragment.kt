@@ -108,10 +108,6 @@ class TutorialGameFragment : Fragment() {
             restoreVisibility()
             unlockMenuPosition()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
         viewModel.stopTutorial()
     }
 

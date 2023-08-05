@@ -160,10 +160,14 @@ internal class RepositoryImpl internal constructor(
         conditionsDao.flatMapLatest { it.getAllConditions() }
             .mapList { it.toCondition() }
 
-    override suspend fun addScenario(scenario: Scenario): Long =
-        currentDatabase.value.scenarioDao().add(scenario.toEntity())
+    override suspend fun addScenario(scenario: Scenario): Long {
+        Log.d(TAG, "Add scenario to the database: ${scenario.id}")
+        return currentDatabase.value.scenarioDao().add(scenario.toEntity())
+    }
 
     override suspend fun deleteScenario(scenarioId: Identifier) {
+        Log.d(TAG, "Delete scenario from the database: $scenarioId")
+
         val removedConditionsPath = mutableListOf<String>()
         currentDatabase.value.eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
             currentDatabase.value.conditionDao().getConditionsPath(eventId).forEach { path ->
@@ -177,6 +181,8 @@ internal class RepositoryImpl internal constructor(
 
     override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Boolean {
         if (currentDatabase.value is TutorialDatabase) return false
+
+        Log.d(TAG, "Add scenario copy to the database: ${completeScenario.scenario.id}")
 
         return try {
             database.withTransaction {
@@ -214,6 +220,8 @@ internal class RepositoryImpl internal constructor(
     }
 
     override suspend fun updateScenario(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>): Boolean {
+        Log.d(TAG, "Update scenario in the database: ${scenario.id}")
+
         return try {
             currentDatabase.value.withTransaction {
                 // Update scenario entity values
@@ -377,14 +385,17 @@ internal class RepositoryImpl internal constructor(
             currentDatabase.value.conditionDao().getValidPathCount(path) == 0
         }
 
+        Log.d(TAG, "Removed conditions count: ${removedPath.size}; Unused bitmaps after removal: ${deletedPaths.size}")
         bitmapManager.deleteBitmaps(deletedPaths)
     }
 
     override fun startTutorialMode() {
+        Log.d(TAG, "Start tutorial mode, use tutorial database")
         currentDatabase.value = tutorialDatabase
     }
 
     override fun stopTutorialMode() {
+        Log.d(TAG, "Stop tutorial mode, use regular database")
         currentDatabase.value = database
     }
 
@@ -394,6 +405,8 @@ internal class RepositoryImpl internal constructor(
         }
 
     override suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier) {
+        Log.d(TAG, "Set tutorial success for tutorial $index with scenario $scenarioId")
+
         getTutorialDao()?.upsert(
             TutorialSuccessEntity(
                 tutorialIndex = index,
