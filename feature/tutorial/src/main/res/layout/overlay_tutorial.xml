@@ -18,7 +18,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,62 +27,44 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_skip_all"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.Material3.Button.IconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_default"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:clickable="true"
         android:focusable="true"
-        android:text="Skip all"/>
+        app:icon="@drawable/ic_cancel"
+        app:iconTint="@android:color/white"/>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_instructions"
-        style="@style/AppTheme.Widget.Card"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical_extra_large"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-        app:layout_constraintTop_toBottomOf="@id/button_skip_all"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/text_instructions"
-            style="@style/AppTheme.TextAppearance.BodyLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
-            android:layout_marginVertical="@dimen/margin_vertical_default"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="@string/item_title_game_5"
-            tools:textColor="@android:color/black"/>
-
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="horizontal"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_next"
         style="@style/Widget.Material3.Button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_vertical_extra_large"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_large"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:clickable="true"
         android:focusable="true"
-        android:text="Next"/>
+        android:text="@string/button_text_tutorial_next"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

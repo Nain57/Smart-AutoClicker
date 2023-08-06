@@ -19,9 +19,11 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay
 import android.app.Application
 import android.graphics.Rect
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
@@ -39,17 +41,31 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
 
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
     private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
+    private val displayMetrics: DisplayMetrics = DisplayMetrics.getInstance(application)
 
     val uiState: Flow<UiTutorialOverlayState?> = tutorialRepository.activeStep
-        .map { step ->
-            if (step is TutorialStep.TutorialOverlay) step.toUi()
-            else null
-        }
+        .map { step -> if (step is TutorialStep.TutorialOverlay) step else null }
+        .flatMapLatest { tutorialOverlay ->
+            tutorialOverlay ?: return@flatMapLatest flowOf(null)
 
-    val monitoredViewPosition: Flow<Rect?> = uiState
-        .flatMapLatest {
-            if (it == null || it.exitButton !is TutorialExitButton.MonitoredView) return@flatMapLatest flowOf(null)
-            monitoredViewsManager.getViewPosition(it.exitButton.type) ?: flowOf(null)
+            when (tutorialOverlay.closeType) {
+                CloseType.NextButton -> flowOf(
+                    UiTutorialOverlayState(
+                        instructionsResId = tutorialOverlay.tutorialInstructionsResId,
+                        exitButton = TutorialExitButton.Next,
+                    )
+                )
+
+                is CloseType.MonitoredViewClick -> {
+                    monitoredViewsManager.getViewPosition(tutorialOverlay.closeType.type)?.map { position ->
+                        UiTutorialOverlayState(
+                            instructionsResId = tutorialOverlay.tutorialInstructionsResId,
+                            exitButton = TutorialExitButton.MonitoredView(tutorialOverlay.closeType.type, position),
+                            isDisplayedInTopHalf = position.centerY() > displayMetrics.screenSize.y / 2,
+                        )
+                    } ?: flowOf(UiTutorialOverlayState(tutorialOverlay.tutorialInstructionsResId))
+                }
+            }
         }
 
     fun toNextTutorialStep() {
@@ -63,22 +79,12 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
 
 data class UiTutorialOverlayState(
     @StringRes val instructionsResId: Int,
-    val exitButton: TutorialExitButton,
+    @DrawableRes val imageResId: Int? = null,
+    val exitButton: TutorialExitButton? = null,
+    val isDisplayedInTopHalf: Boolean = true,
 )
 
 sealed class TutorialExitButton {
     object Next : TutorialExitButton()
-    data class MonitoredView(val type: MonitoredViewType) : TutorialExitButton()
+    data class MonitoredView(val type: MonitoredViewType, val position: Rect) : TutorialExitButton()
 }
-
-private fun TutorialStep.TutorialOverlay.toUi(): UiTutorialOverlayState =
-    UiTutorialOverlayState(
-        instructionsResId = tutorialInstructionsResId,
-        exitButton = stepEnd.toUi(),
-    )
-
-private fun CloseType.toUi(): TutorialExitButton =
-    when (this) {
-        CloseType.NextButton -> TutorialExitButton.Next
-        is CloseType.MonitoredViewClick -> TutorialExitButton.MonitoredView(type)
-    }

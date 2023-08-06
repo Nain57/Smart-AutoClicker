@@ -31,7 +31,7 @@ sealed class TutorialStep {
 
     data class TutorialOverlay(
         @StringRes val tutorialInstructionsResId: Int,
-        val stepEnd: CloseType,
+        val closeType: CloseType,
     ): TutorialStep()
 }
 
@@ -58,7 +58,7 @@ private fun TutorialStepData.ChangeFloatingUiVisibility.toDomain(): TutorialStep
 private fun TutorialStepData.TutorialOverlay.toDomain(): TutorialStep =
     TutorialStep.TutorialOverlay(
         tutorialInstructionsResId = contentTextResId,
-        stepEnd = stepEndCondition.toDomain(),
+        closeType = stepEndCondition.toDomain(),
     )
 
 private fun StepEndCondition.toDomain(): CloseType =
