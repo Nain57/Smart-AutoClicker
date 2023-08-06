@@ -16,6 +16,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <dimen name="tutorial_instructions_horizontal_margin">40dp</dimen>
     <dimen name="tutorial_game_target_size">75dp</dimen>
     <dimen name="tutorial_overlay_menu_width">56dp</dimen>
     <dimen name="tutorial_overlay_menu_height">152dp</dimen>

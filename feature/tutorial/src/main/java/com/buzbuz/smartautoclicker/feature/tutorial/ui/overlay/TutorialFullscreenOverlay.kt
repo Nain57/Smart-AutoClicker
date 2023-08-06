@@ -16,27 +16,34 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay
 
-import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 
+import androidx.annotation.IdRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.contains
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
-import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.feature.tutorial.R
+import com.buzbuz.smartautoclicker.feature.tutorial.databinding.IncludeTutorialInstructionsBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.OverlayTutorialBinding
 
 import kotlinx.coroutines.launch
 
 class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
 
-    /** The view model for this dialog. */
+    /** The view model for this overlay. */
     private val viewModel: TutorialOverlayViewModel by viewModels()
+
     /** ViewBinding containing the views for this overlay. */
     private lateinit var viewBinding: OverlayTutorialBinding
+    /** ViewBinding containing the instructions. */
+    private lateinit var instructionsViewBinding: IncludeTutorialInstructionsBinding
 
     override fun onCreateView(layoutInflater: LayoutInflater): View {
         viewBinding = OverlayTutorialBinding.inflate(layoutInflater).apply {
@@ -45,6 +52,8 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
             tutorialBackground.onMonitoredViewClickedListener = viewModel::toNextTutorialStep
         }
 
+        instructionsViewBinding = IncludeTutorialInstructionsBinding.inflate(layoutInflater)
+
         return viewBinding.root
     }
 
@@ -52,7 +61,6 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.collect(::updateUiState) }
-                launch { viewModel.monitoredViewPosition.collect(::updateExpectedViewPosition) }
             }
         }
     }
@@ -60,23 +68,107 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
     private fun updateUiState(uiState: UiTutorialOverlayState?) {
         uiState ?: return
 
-        viewBinding.apply {
-            textInstructions.setText(uiState.instructionsResId)
-
-            when(uiState.exitButton) {
-                TutorialExitButton.Next -> {
-                    tutorialBackground.expectedViewPosition = null
-                    buttonNext.visibility = View.VISIBLE
-                }
-
-                is TutorialExitButton.MonitoredView -> {
-                    buttonNext.visibility = View.GONE
-                }
-            }
+        when(uiState.exitButton) {
+            TutorialExitButton.Next -> updateUiStateWithNextButton(uiState)
+            is TutorialExitButton.MonitoredView -> updateUiStateWithMonitoredViewHole(uiState)
+            else -> updateUiStateWithoutButton(uiState)
         }
     }
 
-    private fun updateExpectedViewPosition(position: Rect?) {
-        viewBinding.tutorialBackground.expectedViewPosition = position
+    private fun updateUiStateWithNextButton(uiState: UiTutorialOverlayState) {
+        viewBinding.apply {
+            buttonNext.visibility = View.VISIBLE
+            tutorialBackground.expectedViewPosition = null
+        }
+
+        // Next button is in the bottom of the screen, always display instructions on top
+        setInstructions(uiState)
+    }
+
+    private fun updateUiStateWithMonitoredViewHole(uiState: UiTutorialOverlayState) {
+        val exitButton = uiState.exitButton as TutorialExitButton.MonitoredView
+
+        viewBinding.apply {
+            buttonNext.visibility = View.GONE
+            tutorialBackground.expectedViewPosition = exitButton.position
+        }
+
+        // Depending on the monitored view position, use the correct instructions position
+        setInstructions(uiState)
+    }
+
+    private fun updateUiStateWithoutButton(uiState: UiTutorialOverlayState) {
+        viewBinding.apply {
+            buttonNext.visibility = View.GONE
+            tutorialBackground.expectedViewPosition = null
+        }
+
+        // No buttons is shown, always display instructions on top
+        setInstructions(uiState)
+    }
+
+    private fun setInstructions(uiState: UiTutorialOverlayState) {
+        instructionsViewBinding.apply {
+            textInstructions.setText(uiState.instructionsResId)
+
+            if (uiState.imageResId != null) {
+                layoutImageInstructions.visibility = View.VISIBLE
+                imageInstructions.setImageResource(uiState.imageResId)
+            } else {
+                layoutImageInstructions.visibility = View.GONE
+            }
+        }
+
+        addInstructionViewIfNeeded()
+
+        if (uiState.isDisplayedInTopHalf) setInstructionsToTopPosition()
+        else setInstructionsToBottomPosition()
+    }
+
+    private fun addInstructionViewIfNeeded() {
+        if (viewBinding.root.contains(instructionsViewBinding.root)) return
+
+        val margin = context.resources.getDimensionPixelSize(R.dimen.tutorial_instructions_horizontal_margin)
+        viewBinding.root.addView(
+            instructionsViewBinding.root,
+            ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+            ).apply { setMargins(margin, 0, margin, 0) },
+        )
+    }
+
+    private fun setInstructionsToTopPosition() {
+        ConstraintSet().apply {
+            clone(viewBinding.root)
+            connectTopToBottom(instructionsViewBinding.cardInstructions.id, viewBinding.buttonSkipAll.id)
+            connectBottomToTop(instructionsViewBinding.cardInstructions.id, viewBinding.guidelineVerticalCenter.id)
+            connectStartEndToParent(instructionsViewBinding.cardInstructions.id)
+            applyTo(viewBinding.root)
+        }
+    }
+
+    private fun setInstructionsToBottomPosition() {
+        ConstraintSet().apply {
+            clone(viewBinding.root)
+            connectTopToBottom(instructionsViewBinding.cardInstructions.id, viewBinding.guidelineVerticalCenter.id)
+            connectBottomToParentBottom(instructionsViewBinding.cardInstructions.id)
+            connectStartEndToParent(instructionsViewBinding.cardInstructions.id)
+            applyTo(viewBinding.root)
+        }
+    }
+    
+    private fun ConstraintSet.connectTopToBottom(@IdRes startId: Int, @IdRes endInd: Int): Unit =
+        connect(startId, ConstraintSet.TOP, endInd, ConstraintSet.BOTTOM)
+
+    private fun ConstraintSet.connectBottomToTop(@IdRes startId: Int, @IdRes endInd: Int): Unit =
+        connect(startId, ConstraintSet.BOTTOM, endInd, ConstraintSet.TOP)
+
+    private fun ConstraintSet.connectBottomToParentBottom(@IdRes viewId: Int): Unit =
+        connect(viewId, ConstraintSet.BOTTOM, 0, ConstraintSet.BOTTOM)
+
+    private fun ConstraintSet.connectStartEndToParent(@IdRes viewId: Int) {
+        connect(viewId, ConstraintSet.START, 0, ConstraintSet.START)
+        connect(viewId, ConstraintSet.END, 0, ConstraintSet.END)
     }
 }

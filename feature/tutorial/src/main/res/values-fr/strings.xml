@@ -31,4 +31,5 @@
     <string name="item_desc_game_4">Verify that something is not displayed before executing an action</string>
     <string name="item_title_game_5">Multiple events scenario</string>
     <string name="item_desc_game_5">Learn how to combine multiple events to achieve complex automation</string>
+    <string name="button_text_tutorial_next">Next</string>
 </resources>
