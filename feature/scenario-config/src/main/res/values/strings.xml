@@ -128,6 +128,7 @@
     <string name="section_title_intent_extras_value">Value</string>
     <string name="section_title_start_application">Start application</string>
     <string name="section_title_tutorial">Tutorial</string>
+    <string name="section_title_debug">Debug</string>
 
     <!--
       - List header.

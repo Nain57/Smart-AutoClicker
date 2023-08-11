@@ -102,7 +102,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/menu_item_title_more" />
+                android:text="@string/section_title_debug" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/debug_overlay"
