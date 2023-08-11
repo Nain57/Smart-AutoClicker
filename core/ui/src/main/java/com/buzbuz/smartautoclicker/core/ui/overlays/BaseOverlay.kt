@@ -44,7 +44,6 @@ import kotlinx.coroutines.launch
 
 import java.io.PrintWriter
 
-
 /**
  * Base class for an overlay based ui providing lifecycle management.
  *
@@ -93,7 +92,7 @@ abstract class BaseOverlay internal constructor(
 
     override fun back() {
         if (!OverlayManager.getInstance(context).navigateUp(context)) {
-            Log.w(TAG, "Overlay can't be removed from back stack, destroying manually...")
+            Log.w(TAG, "Overlay ${hashCode()} can't be removed from back stack, destroying manually...")
             destroy()
         }
     }
@@ -225,7 +224,7 @@ abstract class BaseOverlay internal constructor(
      * - If [recreateOnRotation] is true and the lifecycle at least [Lifecycle.State.STARTED]: the overlay is visible
      * and thus, must be recreated => Destroy and Create the overlay again.
      * - If [recreateOnRotation] is but the lifecycle is below [Lifecycle.State.STARTED]: the overlay is created but
-     * not hidden => Flag the overlay for recreation and delay it until next show call.
+     * hidden => Flag the overlay for recreation and delay it until next show call.
      *
      * In all cases, [onOrientationChanged] will be called to notify this [BaseOverlay] implementation for
      * rotation.

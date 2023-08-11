@@ -229,13 +229,13 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         super.start()
 
         // Start the show animation for the menu
-        Log.d(TAG, "Start show animation...")
+        Log.d(TAG, "Start show overlay ${hashCode()} animation...")
 
         val animatedOverlayView = if (animateOverlayView()) screenOverlayView else null
         menuBackground.visibility = View.VISIBLE
         animatedOverlayView?.visibility = View.VISIBLE
         animations.startShowAnimation(menuBackground, animatedOverlayView) {
-            Log.d(TAG, "Show animation ended")
+            Log.d(TAG, "Show overlay ${hashCode()} animation ended")
 
             if (resumeOnceShown) {
                 resumeOnceShown = false
@@ -249,7 +249,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         if (lifecycle.currentState != Lifecycle.State.STARTED) return
 
         if (animations.showAnimationIsRunning) {
-            Log.d(TAG, "Show animation is running, delaying resume...")
+            Log.d(TAG, "Show overlay ${hashCode()} animation is running, delaying resume...")
             resumeOnceShown = true
             return
         }
@@ -263,10 +263,10 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         if (lifecycle.currentState == Lifecycle.State.RESUMED) pause()
 
         // Start the hide animation for the menu
-        Log.d(TAG, "Start hide animation...")
+        Log.d(TAG, "Start overlay ${hashCode()} hide animation...")
         val animatedOverlayView = if (animateOverlayView()) screenOverlayView else null
         animations.startHideAnimation(menuBackground, animatedOverlayView) {
-            Log.d(TAG, "Hide animation ended")
+            Log.d(TAG, "Hide overlay ${hashCode()} animation ended")
 
             menuBackground.visibility = View.GONE
             screenOverlayView?.visibility = View.GONE
@@ -285,7 +285,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) stop()
 
         if (animations.hideAnimationIsRunning) {
-            Log.d(TAG, "Hide animation is running, delaying destroy...")
+            Log.d(TAG, "Hide overlay ${hashCode()} animation is running, delaying destroy...")
             destroyOnceHidden = true
             return
         }
@@ -370,6 +370,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
      * @param visible true for visible, false for gone.
      */
     protected fun setMenuItemVisibility(view: View, visible: Boolean) {
+        Log.d(TAG, "setMenuItemVisibility $view to $visible")
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
@@ -443,11 +444,15 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     }
 
     internal fun lockPosition(position: Point) {
+        Log.d(TAG, "Locking menu position of overlay ${hashCode()}")
+
         moveButton?.let { setMenuItemVisibility(it, false) }
         positionController.lockPosition(position, displayMetrics.orientation)
     }
 
     internal fun unlockPosition() {
+        Log.d(TAG, "Unlocking menu position of overlay ${hashCode()}")
+
         moveButton?.let { setMenuItemVisibility(it, true) }
         positionController.unlockPosition(displayMetrics.orientation)
     }
