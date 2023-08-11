@@ -129,6 +129,7 @@
     <string name="section_title_intent_extras_value">参数值</string>
     <string name="section_title_start_application">启动应用程序</string>
     <string name="section_title_tutorial">教程</string>
+    <string name="section_title_debug">调试</string>
 
     <!--
       - List header.
