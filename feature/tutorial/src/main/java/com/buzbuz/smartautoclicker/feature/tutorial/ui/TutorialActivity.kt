@@ -84,8 +84,6 @@ class TutorialActivity : AppCompatActivity() {
     override fun onStop() {
         viewModel.stopTutorialMode()
         super.onStop()
-
-        OverlayManager.getInstance(this).unlockMenuPosition()
         setFloatingUiVisibility(true)
     }
 
