@@ -22,7 +22,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
@@ -146,39 +145,6 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
     override fun onDestroy() {
         dialog?.dismiss()
         dialog = null
-    }
-
-    /**
-     * Update the selected button display.
-     *
-     * @param button the button to be updated.
-     * @param visibility the new button visibility.
-     * @param textId the string resource identifier for the text of the button.
-     * @param listener the new click listener of the button. Can be null if none is needed.
-     */
-    protected fun changeButtonState(button: Button, visibility: Int, textId: Int = -1, listener: View.OnClickListener? = null) {
-        button.apply {
-            when (visibility) {
-                View.VISIBLE -> {
-                    this.visibility = View.VISIBLE
-                    if (textId != -1) {
-                        setText(textId)
-                    }
-                    setOnClickListener(listener)
-                    isEnabled = true
-                }
-                View.INVISIBLE -> {
-                    this.visibility = View.VISIBLE
-                    if (textId != -1) {
-                        setText(textId)
-                    }
-                    isEnabled = false
-                }
-                View.GONE -> {
-                    this.visibility = View.GONE
-                }
-            }
-        }
     }
 
     /** Hide automatically the software keyboard when the provided view lose the focus. */
