@@ -105,6 +105,7 @@ class TutorialGameFragment : Fragment() {
 
         OverlayManager.getInstance(requireContext()).apply {
             removeTopOverlay()
+            navigateUpToRoot(requireContext())
             unlockMenuPosition()
         }
         viewModel.stopTutorial()

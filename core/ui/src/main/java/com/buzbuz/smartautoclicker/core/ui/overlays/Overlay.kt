@@ -34,7 +34,7 @@ abstract class Overlay : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewMode
 
     /**
      * Make the overlay invisible.
-     * If the overlay is already invisible, does nothing.
+     * If the overlay is already invisible, does nothing. After a call to [hide], lifecycle will be set to CREATED.
      */
     abstract fun hide()
 

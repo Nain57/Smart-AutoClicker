@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Point
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 
@@ -89,17 +90,23 @@ internal class OverlayMenuPositionController(
      * @param orientation the orientation to load the position for.
      */
     fun loadMenuPosition(orientation: Int) {
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            updateMenuPosition(
-                sharedPreferences.getInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, 0),
-                sharedPreferences.getInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, 0)
-            )
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            updateMenuPosition(
-                sharedPreferences.getInt(PREFERENCE_MENU_X_PORTRAIT_KEY, 0),
-                sharedPreferences.getInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, 0)
-            )
+        val x: Int
+        val y: Int
+        when (orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                x = sharedPreferences.getInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, 0)
+                y = sharedPreferences.getInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, 0)
+            }
+            Configuration.ORIENTATION_PORTRAIT -> {
+                x = sharedPreferences.getInt(PREFERENCE_MENU_X_PORTRAIT_KEY, 0)
+                y = sharedPreferences.getInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, 0)
+            }
+            else -> return
         }
+
+        Log.d(TAG, "loadMenuPosition for orientation $orientation = [$x, $y]")
+
+        updateMenuPosition(x, y)
     }
 
     /**
@@ -108,6 +115,10 @@ internal class OverlayMenuPositionController(
      * @param orientation the orientation to save the position for.
      */
     fun saveMenuPosition(orientation: Int) {
+        if (isPositionLocked) return
+
+        Log.d(TAG, "saveMenuPosition for orientation $orientation = $menuPosition")
+
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             sharedPreferences.edit()
                 .putInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, menuPosition.x)
@@ -121,11 +132,11 @@ internal class OverlayMenuPositionController(
         }
     }
 
-    fun lockPosition(position: Point, orientation: Int) {
+    fun lockPosition(position: Point, orientation: Int, savePosition: Boolean) {
         if (isPositionLocked) return
 
+        if (savePosition) saveMenuPosition(orientation)
         isPositionLocked = true
-        saveMenuPosition(orientation)
         updateMenuPosition(position.x, position.y)
     }
 
@@ -152,3 +163,5 @@ internal class OverlayMenuPositionController(
         onMenuPositionChanged(menuPosition)
     }
 }
+
+private const val TAG = "OverlayMenuPositionController"

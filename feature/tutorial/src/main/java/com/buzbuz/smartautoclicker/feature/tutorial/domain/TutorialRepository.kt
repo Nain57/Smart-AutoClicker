@@ -171,20 +171,21 @@ class TutorialRepository private constructor(
         if (!tutorialEngine.isStarted()) return
 
         val scenarioIdentifier = scenarioId ?: return
-        val tutoIndex = activeTutorialIndex.value ?: return
+        val tutorialIndex = activeTutorialIndex.value ?: return
 
         coroutineScopeMain.launch {
-            Log.d(TAG, "Stop tutorial $tutoIndex")
+            Log.d(TAG, "Stop tutorial $tutorialIndex")
 
             tutorialEngine.stopTutorial()
+            detectionRepository.stopDetection()
 
             withContext(Dispatchers.IO) {
-                if (scenarioRepository.isTutorialSucceed(tutoIndex)) {
+                if (scenarioRepository.isTutorialSucceed(tutorialIndex)) {
                     Log.d(TAG, "Tutorial was already completed")
                     return@withContext
                 }
 
-                scenarioRepository.setTutorialSuccess(tutoIndex, scenarioIdentifier, allStepsCompleted)
+                scenarioRepository.setTutorialSuccess(tutorialIndex, scenarioIdentifier, allStepsCompleted)
             }
 
             activeTutorialIndex.value = null
