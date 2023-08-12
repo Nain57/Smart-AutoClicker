@@ -443,18 +443,18 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         }
     }
 
-    internal fun lockPosition(position: Point) {
+    internal fun lockPosition(position: Point, savePosition: Boolean = true) {
         Log.d(TAG, "Locking menu position of overlay ${hashCode()}")
 
         moveButton?.let { setMenuItemVisibility(it, false) }
-        positionController.lockPosition(position, displayMetrics.orientation)
+        positionController.lockPosition(position, displayMetrics.orientation, savePosition)
     }
 
     internal fun unlockPosition() {
         Log.d(TAG, "Unlocking menu position of overlay ${hashCode()}")
 
-        moveButton?.let { setMenuItemVisibility(it, true) }
         positionController.unlockPosition(displayMetrics.orientation)
+        moveButton?.let { setMenuItemVisibility(it, true) }
     }
 }
 /** Tag for logs */

@@ -124,6 +124,19 @@ class OverlayManager internal constructor(context: Context) {
         return true
     }
 
+    /** Destroys all overlays in the backstack except the root one. */
+    fun navigateUpToRoot(context: Context) {
+        if (overlayBackStack.size <= 1) return
+
+        val navigateUpCount = overlayBackStack.size - 1
+        Log.d(TAG, "Navigating to root, pushing $navigateUpCount NavigateUp requests, currently navigating: ${isNavigating.value}")
+
+        repeat(overlayBackStack.size - 1) {
+            overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
+        }
+        if (!isNavigating.value) executeNextNavigationRequest(context)
+    }
+
     /** Destroys all overlays on the back stack. */
     fun closeAll(context: Context) {
         Log.d(TAG, "Pushing CloseAll request, currently navigating: ${isNavigating.value}")
@@ -137,7 +150,8 @@ class OverlayManager internal constructor(context: Context) {
      * Their lifecycles will be saved, and can be restored using [restoreVisibility].
      */
     fun hideAll() {
-        if (lifecyclesRegistry.haveStates()) return
+        if (isStackHidden()) return
+
         Log.d(TAG, "Hide all overlays from the stack")
 
         // Save the overlays states to restore them when restoreAll is called
@@ -151,6 +165,8 @@ class OverlayManager internal constructor(context: Context) {
      * The states must have been saved using [hideAll].
      */
     fun restoreVisibility() {
+        if (!isStackHidden()) return
+
         val overlayStates = lifecyclesRegistry.restoreStates()
         if (overlayBackStack.isEmpty() || overlayStates.isEmpty()) return
 
@@ -170,6 +186,10 @@ class OverlayManager internal constructor(context: Context) {
             } ?: Log.w(TAG, "State for overlay ${overlay.hashCode()} not found, can't restore state")
         }
     }
+
+    /** @return true if the overlay stack has been hidden via [hideAll], false if not. */
+    private fun isStackHidden(): Boolean =
+        lifecyclesRegistry.haveStates()
 
     fun isOverlayStackVisible(): Boolean =
         getBackStackTop()?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: false
@@ -228,13 +248,18 @@ class OverlayManager internal constructor(context: Context) {
 
         when (request) {
             is OverlayNavigationRequest.NavigateTo -> executeNavigateTo(context, request)
-            is OverlayNavigationRequest.NavigateUp -> executeNavigateUp()
-            is OverlayNavigationRequest.CloseAll -> executeCloseAll()
-            null -> {
-                // If there is no more navigation requests, set the top overlay as current
+            OverlayNavigationRequest.NavigateUp -> executeNavigateUp()
+            OverlayNavigationRequest.CloseAll -> executeCloseAll()
+            else -> {
+                // If there is no more navigation requests, resume the top overlay
                 if (overlayBackStack.isNotEmpty()) {
-                    Log.d(TAG, "No more pending request, resume stack top overlay")
-                    overlayBackStack.peek().resume()
+                    // If the overlay stack was requested hidden, do nothing
+                    if (!isStackHidden()) {
+                        Log.d(TAG, "No more pending request, resume stack top overlay")
+                        overlayBackStack.peek().resume()
+                    } else {
+                        Log.d(TAG, "No more pending request, but stack is hidden, delaying resume...")
+                    }
                 }
 
                 isNavigating.value = false
@@ -259,8 +284,15 @@ class OverlayManager internal constructor(context: Context) {
             dismissListener = ::onOverlayDismissed,
         )
         // Lock this new overlay position if its a menu and if the lock has been requested
-        menuLockedPosition?.let {
-            if (request.overlay is OverlayMenu) request.overlay.lockPosition(it)
+        menuLockedPosition?.let { position ->
+            if (request.overlay is OverlayMenu) {
+                // We do not save the position because it has already been done if we reach this, and the position is
+                // shared among all OverlayMenu
+                request.overlay.lockPosition(
+                    position = position,
+                    savePosition = false,
+                )
+            }
         }
 
         // Update current lifecycle
