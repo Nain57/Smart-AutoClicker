@@ -103,12 +103,12 @@ class TutorialGameFragment : Fragment() {
     override fun onStop() {
         super.onStop()
 
-        OverlayManager.getInstance(requireContext()).apply {
-            removeTopOverlay()
-            navigateUpToRoot(requireContext())
-            unlockMenuPosition()
+        val overlayManager = OverlayManager.getInstance(requireContext())
+        overlayManager.removeTopOverlay()
+        overlayManager.navigateUpToRoot(requireContext()) {
+            overlayManager.unlockMenuPosition()
+            viewModel.stopTutorial()
         }
-        viewModel.stopTutorial()
     }
 
     private fun onGameUpdated(tutorialGame: TutorialGame?) {
