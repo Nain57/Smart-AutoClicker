@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toTopOf="@id/choice_description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/choice_chevron"
-            tools:text="@string/item_title_game_5"
+            tools:text="@string/item_title_tutorial_5"
             tools:textColor="@android:color/black"/>
 
         <com.google.android.material.textview.MaterialTextView
@@ -54,7 +54,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/choice_chevron"
-            tools:text="@string/item_desc_game_5"/>
+            tools:text="@string/item_desc_tutorial_5"/>
 
         <ImageView
             android:id="@+id/choice_chevron"
