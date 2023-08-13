@@ -238,22 +238,24 @@ class TutorialRepository private constructor(
     }
 
     private suspend fun setTutorialSuccess(success: Boolean) {
-        val scenarioIdentifier = tutorialScenarioId ?: return
+        val tutoScenarioIdentifier = tutorialScenarioId ?: return
         val tutorialIndex = activeTutorialIndex.value ?: return
 
         Log.d(TAG, "setTutorialSuccess for tutorial $tutorialIndex to $success")
 
         withContext(Dispatchers.IO) {
-            if (scenarioRepository.isTutorialSucceed(tutorialIndex)) {
-                Log.d(TAG, "Tutorial was already completed")
-                return@withContext
-            }
-
+            val previousSuccessDbId = scenarioRepository.getTutorialScenarioDatabaseId(tutorialIndex)
             if (success) {
-                scenarioRepository.setTutorialSuccess(tutorialIndex, scenarioIdentifier, true)
-            } else {
-                Log.d(TAG, "Deleting tutorial scenario $scenarioIdentifier")
-                scenarioRepository.deleteScenario(scenarioIdentifier)
+                if (previousSuccessDbId != null) {
+                    Log.d(TAG, "Tutorial was already completed, removing this scenario")
+                    scenarioRepository.deleteScenario(tutoScenarioIdentifier)
+                    return@withContext
+                }
+
+                scenarioRepository.setTutorialSuccess(tutorialIndex, tutoScenarioIdentifier, true)
+            } else if (previousSuccessDbId != tutorialScenarioId) {
+                Log.d(TAG, "Deleting tutorial scenario $tutoScenarioIdentifier")
+                scenarioRepository.setTutorialSuccess(tutorialIndex, tutoScenarioIdentifier, false)
             }
         }
     }
