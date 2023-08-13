@@ -17,7 +17,11 @@
 -->
 <resources>
     <dimen name="tutorial_instructions_horizontal_margin">40dp</dimen>
+    <dimen name="tutorial_instructions_image_min_size">@dimen/overlay_menu_btn_size</dimen>
+    <dimen name="tutorial_instructions_image_max_size">72dp</dimen>
+
     <dimen name="tutorial_game_target_size">75dp</dimen>
+
     <dimen name="tutorial_overlay_menu_width">56dp</dimen>
     <dimen name="tutorial_overlay_menu_height">152dp</dimen>
 </resources>

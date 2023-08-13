@@ -22,21 +22,130 @@
     <string name="message_high_score">Best: %1$d</string>
     <string name="message_time_left">Time left: %1$d</string>
 
-    <string name="item_title_game_1">Press a still target</string>
-    <string name="item_desc_game_1">Learn how to create your first event in order to click on a still target</string>
-    <string name="message_tutorial_instructions_1">Click on the blue button as fast as possible!</string>
-
-    <string name="item_title_game_2">Press a moving target</string>
-    <string name="item_desc_game_2">Change your event to click on a randomly moving target</string>
-
-    <string name="item_title_game_3">Combine multiple conditions</string>
-    <string name="item_desc_game_3">Create and combine multiple conditions for your event</string>
-
-    <string name="item_title_game_4">Negative conditions</string>
-    <string name="item_desc_game_4">Verify that something is not displayed before executing an action</string>
-    <string name="item_title_game_5">Multiple events scenario</string>
-    <string name="item_desc_game_5">Learn how to combine multiple events to achieve complex automation</string>
     <string name="button_text_tutorial_next">Next</string>
 
+    <!--
+      - Tutorials definition
+      - Each tutorial must contains the following strings:
+      -
+      - * "item_title_tutorial_n": The name of the tutorial n in the tutorial list. Must be short.
+      - * "item_desc_tutorial_n": The secondary text of the tutorial n in the tutorial list. Can contains more details,
+      - is displayed on two lines if needed.
+      - * "message_tutorial_n_game_instructions": The instructions for the game associated with the tutorial n.
+      - * The following strings for each steps:
+      -   * message_tutorial_n_step_i": The text displayed in the tutorial step i to guide the user during tutorial n.
+      -   * message_tutorial_n_step_secondary_i": The text displayed below the tutorial step i image, if any, during
+      - the tutorial n. This string is not mandatory for each step.
+      -
+      - Note: not all steps are displaying text, this is why there is not necessarily all step indexes defined here.
+    -->
+
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_1">Press a still target</string>
+    <string name="item_desc_tutorial_1">Learn how to create your first event in order to click on a still target</string>
+    <string name="message_tutorial_1_game_instructions">Click on the blue button as fast as possible!</string>
+
+    <string name="message_tutorial_1_step_1">Welcome to your first tutorial!\n\nHere, you will try to beat the high score
+        of a game with the help of Smart AutoClicker.\n\nFirst, start the game and try to win by yourself.</string>
+
+    <string name="message_tutorial_1_step_3">Difficult, isn\'t it?\nLet\'s use Smart AutoClicker to beat it !\n\n
+        Click on the scenario configuration icon to start editing your new scenario.</string>
+
+    <string name="message_tutorial_1_step_4">A Scenario is the root structure of Smart AutoClicker automation.\n\n
+        It contains the general detection settings and a list of Events describing what will be executed when running
+        your Scenario. \n\nClick on the create event button to create your first event.</string>
+
+    <string name="message_tutorial_1_step_5">An Event describe what Actions (click, swipe…) to execute when certain
+        Conditions are met.\n\nYou must create at least one Condition and one Action in order to create a valid Event
+        and use it in your scenario\n\nClick on the Conditions tab to display the Conditions list.</string>
+
+    <string name="message_tutorial_1_step_6">A Condition is a part of a screenshot that will be compared to each screen
+        frame of your device.\n\nTo beat the game, we want to click on the blue character when it\'s visible, so we need
+        a Condition that is fulfilled when the character is shown on your device screen.\n\nClick on the create
+        Condition button to create your first Condition.</string>
+
+    <string name="message_tutorial_1_step_7">The first step of a Condition creation is to take a screenshot for it.\n\n
+        As we want to click when the blue character is visible, the screenshot must contains it. Start the game again in
+        order to display it, and then take the screenshot.</string>
+    <string name="message_tutorial_1_step_secondary_7">Use the capture button in the floating menu to take the screenshot.</string>
+
+    <string name="message_tutorial_1_step_8">Once the screenshot is taken, you can crop it in order to only get the part
+        that is interesting for the detection.</string>
+    <string name="message_tutorial_1_step_secondary_8">If your screenshot does not contains the blue character, you can
+        press this button to take a new one.</string>
+
+    <string name="message_tutorial_1_step_9">For this game, the interesting part is the blue character, so crop your
+        screenshot to only get him.\n\nYou can pinch on the screenshot to zoom on it and get a better
+        accuracy for the crop selector.</string>
+    <string name="message_tutorial_1_step_secondary_9">Ensure the character is complete in the selector. Also try to
+        crop it as close as possible to him in order to ease the image detection.</string>
+
+    <string name="message_tutorial_1_step_10">Your Condition image is now recorded!\n\There is now several adjustments
+        that can be made to it, but the default settings suits our basic use case. As our target is not moving, it will
+        only detect at the capture position, which is faster than detecting on the whole screen.\n\nClick on the save
+        button to register it and return to the Event configuration dialog.</string>
+
+    <string name="message_tutorial_1_step_11">With this Condition, the scenario knows when to trigger the Actions.\n\n
+        You now need to define what Actions to trigger, so for this game, a click on the blue character.\n\nClick on the
+        Actions tab to display the Actions list.</string>
+
+    <string name="message_tutorial_1_step_12">An Action is something that is executed once the Conditions of its Event
+        are fulfilled.\n\nIt can be a click, a swipe, a pause, an Intent (an interaction with another application) or a
+        change in the Scenario execution, and multiple Actions can be defined for the same Event.\n\nClick on the create
+        Action button to create your first Action.</string>
+
+    <string name="message_tutorial_1_step_13">First, we need to pick a type for your Action.\n\nFor this game, we simply
+        need to click on the blue character, so choose Click to create a new Click Action.</string>
+
+    <string name="message_tutorial_1_step_14">A Click Action is defined by a position and a press duration.\n\nAs we
+        want to click as quickly as possible, we can keep the default press duration of 1ms, which is the lowest
+        possible value. So we only need to define a position.\n\nClick on the position picker button to select the Click
+        Action position.</string>
+
+    <string name="message_tutorial_1_step_15">You need to select the exact position to be clicked, so you need to start
+        the game again to display the blue character, and then select its position.\n\nOnce the position is correct,
+        click on the validate button to save it.</string>
+    <string name="message_tutorial_1_step_secondary_15">You can\'t interact with the game while the position selector is
+        visible, but you can use this button to show and hide it, allowing you to remove that restriction at will.</string>
+
+    <string name="message_tutorial_1_step_16">The click is now correctly configured!\n\nClick on the save button to
+        register it and return to the Event configuration dialog.</string>
+
+    <string name="message_tutorial_1_step_17">Your Event now have a Condition and an Action, which means it knows what
+        to execute and when to execute it.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
+
+    <string name="message_tutorial_1_step_18">The only requirement for a Scenario is to have at least one Event.\n
+        As our Event already cover how to win the game, we don\'t need anything else.\n\nClick on the save button the
+        save the Scenario in database and close the configuration dialogs.</string>
+
+    <string name="message_tutorial_1_step_19">As you can see, the play button is now available, meaning that your
+        Scenario is valid and can be used for detection\n\nClick on it to start the detection.</string>
+
+    <string name="message_tutorial_1_step_20">It\'s playing but nothing happens?\n\nThat\'s normal, it will click only
+        when the blue character is visible, remember? While keeping the scenario running, press the start game button
+        and just watch as Smart AutoClicker will beat it for you!</string>
+
+    <string name="message_tutorial_1_step_21">Congratulations!\n\nYou now know the basics of Smart AutoClicker, but not
+        all use cases will be as simple as this game.\nTake a look at the next tutorial to learn how to track a moving
+        target</string>
+
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_2">Press a moving target</string>
+    <string name="item_desc_tutorial_2">Change your event to click on a randomly moving target</string>
+
+
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_3">Combine multiple conditions</string>
+    <string name="item_desc_tutorial_3">Create and combine multiple conditions for your event</string>
+
+
+    <!-- Two still targets press when only one is visible tutorial -->
+    <string name="item_title_tutorial_4">Negative conditions</string>
+    <string name="item_desc_tutorial_4">Verify that something is not displayed before executing an action</string>
+
+
+    <!-- Two moving targets press in order tutorial -->
+    <string name="item_title_tutorial_5">Multiple events scenario</string>
+    <string name="item_desc_tutorial_5">Learn how to combine multiple events to achieve complex automation</string>
 
 </resources>

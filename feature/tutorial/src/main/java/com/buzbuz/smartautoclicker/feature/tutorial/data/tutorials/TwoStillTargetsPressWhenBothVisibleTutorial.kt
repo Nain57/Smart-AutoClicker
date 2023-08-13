@@ -27,20 +27,20 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.OneMovingTar
 
 internal val twoStillTargetsPressWhenBothVisibleTutorialInfo: TutorialInfo =
     TutorialInfo(
-        nameResId = R.string.item_title_game_3,
-        descResId = R.string.item_desc_game_3,
+        nameResId = R.string.item_title_tutorial_3,
+        descResId = R.string.item_desc_tutorial_3,
     )
 
 internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
     TutorialData(
         info = twoStillTargetsPressWhenBothVisibleTutorialInfo,
         game = TutorialGameData(
-            instructionsResId = R.string.message_tutorial_instructions_1,
+            instructionsResId = R.string.message_tutorial_1_step_1,
             gameRules = OneMovingTargetRules(10),
         ),
         steps = listOf(
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_instructions_1,
+                contentTextResId = R.string.message_tutorial_1_step_1,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.NextButton,
             ),

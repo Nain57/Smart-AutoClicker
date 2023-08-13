@@ -27,8 +27,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_large"
-        android:layout_marginVertical="@dimen/margin_vertical_default"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_vertical_large"
         android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView
@@ -37,28 +37,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            tools:text="@string/item_title_game_5"/>
+            tools:text="@string/message_tutorial_1_step_9"/>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_image_instructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_default"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/margin_vertical_default">
 
             <com.google.android.material.divider.MaterialDivider
                 style="@style/AppTheme.Widget.Divider"
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_small"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/image_instructions"
                 app:dividerInsetStart="@dimen/margin_horizontal_large"
                 app:dividerInsetEnd="@dimen/margin_horizontal_large"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/image_instructions"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/margin_vertical_default"
                 android:layout_gravity="center_horizontal"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                app:layout_constraintBottom_toTopOf="@id/text_image_instructions_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_min="@dimen/tutorial_instructions_image_min_size"
+                app:layout_constraintWidth_max="@dimen/tutorial_instructions_image_max_size"
+                app:layout_constraintHeight_min="@dimen/tutorial_instructions_image_min_size"
+                app:layout_constraintHeight_max="@dimen/tutorial_instructions_image_max_size"
+                app:layout_constrainedWidth="true"
+                app:layout_constrainedHeight="true"
+                android:scaleType="fitCenter"
                 tools:src="@drawable/tutorial_instructions_capture_sizing"/>
 
             <com.google.android.material.textview.MaterialTextView
@@ -66,11 +80,12 @@
                 style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+                app:layout_constraintTop_toBottomOf="@id/image_instructions"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center"
-                tools:text="This is empty !"/>
+                tools:text="@string/message_tutorial_1_step_secondary_9"/>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
