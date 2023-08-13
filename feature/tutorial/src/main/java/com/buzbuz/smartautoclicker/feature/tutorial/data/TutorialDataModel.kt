@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.data
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameData
@@ -43,10 +44,16 @@ internal sealed class TutorialStepData {
 
     internal data class TutorialOverlay(
         @StringRes val contentTextResId: Int,
+        val image: TutorialStepImage? = null,
         override val stepStartCondition: StepStartCondition,
         val stepEndCondition: StepEndCondition,
     ) : TutorialStepData()
 }
+
+internal data class TutorialStepImage(
+    @DrawableRes val imageResId: Int,
+    @StringRes val imageDescResId: Int,
+)
 
 internal sealed class StepStartCondition {
     object Immediate : StepStartCondition()

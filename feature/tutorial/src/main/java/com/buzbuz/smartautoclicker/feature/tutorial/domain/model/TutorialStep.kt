@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.domain.model
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.StepEndCondition
@@ -31,9 +32,15 @@ sealed class TutorialStep {
 
     data class TutorialOverlay(
         @StringRes val tutorialInstructionsResId: Int,
+        val tutorialImage: TutorialImage? = null,
         val closeType: CloseType,
     ): TutorialStep()
 }
+
+data class TutorialImage(
+    @DrawableRes val tutorialImageResId: Int,
+    @StringRes val tutorialImageDescResId: Int,
+)
 
 sealed class CloseType {
 
@@ -58,6 +65,9 @@ private fun TutorialStepData.ChangeFloatingUiVisibility.toDomain(): TutorialStep
 private fun TutorialStepData.TutorialOverlay.toDomain(): TutorialStep =
     TutorialStep.TutorialOverlay(
         tutorialInstructionsResId = contentTextResId,
+        tutorialImage = image?.let {
+            TutorialImage(it.imageResId, it.imageDescResId)
+        },
         closeType = stepEndCondition.toDomain(),
     )
 
