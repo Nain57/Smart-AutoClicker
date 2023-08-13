@@ -91,6 +91,8 @@ class OverlayManager internal constructor(context: Context) {
      * removed. Use [unlockMenuPosition] to restore the user position and allow menu moving.
      */
     private var menuLockedPosition: Point? = null
+    /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
+    private var navigateUpToRootCompletionListener: (() -> Unit)? = null
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
     val backStackTop: Flow<Overlay?> = isNavigating
@@ -125,9 +127,13 @@ class OverlayManager internal constructor(context: Context) {
     }
 
     /** Destroys all overlays in the backstack except the root one. */
-    fun navigateUpToRoot(context: Context) {
-        if (overlayBackStack.size <= 1) return
+    fun navigateUpToRoot(context: Context, completionListener: () -> Unit) {
+        if (overlayBackStack.size <= 1) {
+            completionListener()
+            return
+        }
 
+        navigateUpToRootCompletionListener = completionListener
         val navigateUpCount = overlayBackStack.size - 1
         Log.d(TAG, "Navigating to root, pushing $navigateUpCount NavigateUp requests, currently navigating: ${isNavigating.value}")
 
@@ -260,6 +266,9 @@ class OverlayManager internal constructor(context: Context) {
                     } else {
                         Log.d(TAG, "No more pending request, but stack is hidden, delaying resume...")
                     }
+
+                    navigateUpToRootCompletionListener?.invoke()
+                    navigateUpToRootCompletionListener = null
                 }
 
                 isNavigating.value = false
