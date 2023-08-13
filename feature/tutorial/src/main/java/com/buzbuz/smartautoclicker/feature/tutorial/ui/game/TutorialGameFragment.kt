@@ -42,9 +42,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setHeaderInfo
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setNextLevelBtnVisibility
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setScore
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setTimeLeft
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscreenOverlay
 
 import kotlinx.coroutines.launch
@@ -79,7 +77,6 @@ class TutorialGameFragment : Fragment() {
 
             val targetSize = root.context.resources.getDimensionPixelSize(R.dimen.tutorial_game_target_size)
             buttonStartRetry.setOnClickListener { viewModel.startGame(gameArea.area(), targetSize) }
-            footer.buttonNextLevel.setOnClickListener { viewModel.stopTutorial() }
         }
 
         lifecycleScope.launch {
@@ -87,8 +84,7 @@ class TutorialGameFragment : Fragment() {
                 launch { viewModel.currentGame.collect(::onGameUpdated) }
                 launch { viewModel.gameTimerValue.collect(::onTimerUpdated) }
                 launch { viewModel.gameScore.collect(::onScoreUpdated) }
-                launch { viewModel.playRetryBtnState.collect(::onPlayRetryButtonStateUpdated) }
-                launch { viewModel.nextGameBtnVisibility.collect(::onNextLevelButtonVisibilityUpdated) }
+                launch { viewModel.playRetryBtnVisibility.collect(::onPlayRetryButtonStateUpdated) }
                 launch { viewModel.gameTargets.collect(::onTargetsUpdated) }
                 launch { viewModel.shouldDisplayStepOverlay.collect(::showHideStepOverlay) }
             }
@@ -117,38 +113,26 @@ class TutorialGameFragment : Fragment() {
     }
 
     private fun onTimerUpdated(timerValue: Int) {
-        viewBinding.footer.setTimeLeft(timerValue)
+        viewBinding.footer.textTimeLeft.text = requireContext().getString(R.string.message_time_left, timerValue)
     }
 
     private fun onScoreUpdated(score: Int) {
         viewBinding.header.setScore(score)
     }
 
-    private fun onPlayRetryButtonStateUpdated(state: PlayRetryButtonState) {
-        when (state) {
-            PlayRetryButtonState.GONE -> viewBinding.buttonStartRetry.visibility = View.GONE
-            PlayRetryButtonState.RETRY -> setPlayRetryButtonVisible(R.drawable.ic_game_retry)
-            PlayRetryButtonState.PLAY -> setPlayRetryButtonVisible(R.drawable.ic_play_arrow)
+    private fun onPlayRetryButtonStateUpdated(isVisible: Boolean) {
+        if (isVisible) {
+            viewBinding.buttonStartRetry.visibility = View.VISIBLE
+            viewBinding.blueTarget.visibility = View.GONE
+            viewBinding.redTarget.visibility = View.GONE
+        } else {
+            viewBinding.buttonStartRetry.visibility = View.GONE
         }
-    }
-
-    private fun onNextLevelButtonVisibilityUpdated(isVisible: Boolean) {
-        viewBinding.footer.setNextLevelBtnVisibility(isVisible)
     }
 
     private fun onTargetsUpdated(targets: Map<TutorialGameTargetType, PointF>) {
         viewBinding.blueTarget.updateTargetState(targets[TutorialGameTargetType.BLUE])
         viewBinding.redTarget.updateTargetState(targets[TutorialGameTargetType.RED])
-    }
-
-    private fun setPlayRetryButtonVisible(@DrawableRes iconRes: Int) {
-        viewBinding.blueTarget.visibility = View.GONE
-        viewBinding.redTarget.visibility = View.GONE
-
-        viewBinding.buttonStartRetry.apply {
-            setIconResource(iconRes)
-            visibility = View.VISIBLE
-        }
     }
 
     private fun showHideStepOverlay(show: Boolean) {
