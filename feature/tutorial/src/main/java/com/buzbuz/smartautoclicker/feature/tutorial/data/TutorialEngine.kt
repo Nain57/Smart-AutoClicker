@@ -59,9 +59,9 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         setStepIndex(0)
     }
 
-    fun nextStep(): Boolean {
-        val step = getCurrentStep() ?: return false
-        val index = stepState.value?.index ?: return false
+    fun nextStep() {
+        val step = getCurrentStep() ?: return
+        val index = stepState.value?.index ?: return
 
         val newIndex = index + 1
         setStepIndex(newIndex)
@@ -70,9 +70,6 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         if (step is TutorialStepData.TutorialOverlay && step.stepEndCondition is StepEndCondition.MonitoredViewClicked) {
             monitoredViewsManager.performClick(step.stepEndCondition.type)
         }
-
-        val lastStepIndex = _tutorial.value?.steps?.lastIndex ?: return false
-        return newIndex > lastStepIndex
     }
 
     private fun setStepIndex(newIndex: Int) {

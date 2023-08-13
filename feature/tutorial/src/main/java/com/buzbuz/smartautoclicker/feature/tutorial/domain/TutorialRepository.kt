@@ -41,14 +41,23 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class TutorialRepository private constructor(
     context: Context,
     private val dataSource: TutorialDataSource,
@@ -88,7 +97,10 @@ class TutorialRepository private constructor(
      * Kept to be restored once he quit the tutorial.
      */
     private var scenarioId: Identifier? = null
-    private var allStepsCompleted: Boolean = false
+    /** The identifier for the scenario used during a tutorial. */
+    private var tutorialScenarioId: Identifier? = null
+    /** The coroutine job executing the stop tutorial logic. Null if not stopping. */
+    private var stopTutorialJob: Job? = null
 
     private val activeTutorialIndex: MutableStateFlow<Int?> = MutableStateFlow(null)
 
@@ -99,12 +111,6 @@ class TutorialRepository private constructor(
             }
         }
 
-    val activeTutorial: Flow<Tutorial?> = tutorials
-        .combine(activeTutorialIndex) { tutorialList, activeIndex ->
-            activeIndex ?: return@combine null
-            tutorialList[activeIndex]
-        }
-
     val activeStep: Flow<TutorialStep?> = tutorialEngine.currentStep
         .map { step ->
             Log.d(TAG, "Update overlay state for step $step")
@@ -113,6 +119,17 @@ class TutorialRepository private constructor(
 
     val activeGame: Flow<TutorialGame?> = tutorialEngine.tutorial
         .map { tutorial -> tutorial?.game?.toDomain() }
+
+    private val isGameWon: StateFlow<Boolean> = activeGame
+        .flatMapLatest { it?.state ?: flowOf(null) }
+        .map { it?.isWon == true }
+        .stateIn(coroutineScopeMain, SharingStarted.WhileSubscribed(3_000), false)
+
+    init {
+        isGameWon
+            .onEach { isWon -> if (isWon) setTutorialSuccess(success = true) }
+            .launchIn(coroutineScopeMain)
+    }
 
     fun isTutorialFirstTimePopupShown(): Boolean =
         sharedPrefs.isFirstTimePopupAlreadyShown()
@@ -129,19 +146,6 @@ class TutorialRepository private constructor(
         scenarioRepository.startTutorialMode()
     }
 
-    fun stopTutorialMode() {
-        scenarioId ?: return
-
-        Log.d(TAG, "Stop tutorial mode, restoring user scenario $scenarioId")
-
-        stopTutorial()
-        scenarioId?.let { detectionRepository.setScenarioId(it) }
-        scenarioId = null
-        allStepsCompleted = false
-        activeTutorialIndex.value = null
-        scenarioRepository.stopTutorialMode()
-    }
-
     fun startTutorial(index: Int) {
         if (tutorialEngine.isStarted()) return
         if (scenarioId == null) {
@@ -156,12 +160,13 @@ class TutorialRepository private constructor(
         val tutorialData = dataSource.getTutorialData(index) ?: return
         coroutineScopeMain.launch {
             val tutoScenarioDbId = withContext(Dispatchers.IO) { initTutorialScenario(index) } ?: return@launch
+            val tutoScenarioId = Identifier(databaseId = tutoScenarioDbId)
 
             Log.d(TAG, "Start tutorial $index, set current scenario to $tutoScenarioDbId")
 
             activeTutorialIndex.value = index
-            allStepsCompleted = false
-            detectionRepository.setScenarioId(Identifier(databaseId = tutoScenarioDbId))
+            tutorialScenarioId = tutoScenarioId
+            detectionRepository.setScenarioId(tutoScenarioId)
 
             tutorialEngine.startTutorial(tutorialData)
         }
@@ -169,32 +174,38 @@ class TutorialRepository private constructor(
 
     fun stopTutorial() {
         if (!tutorialEngine.isStarted()) return
-
-        val scenarioIdentifier = scenarioId ?: return
         val tutorialIndex = activeTutorialIndex.value ?: return
 
-        coroutineScopeMain.launch {
+        stopTutorialJob = coroutineScopeMain.launch {
             Log.d(TAG, "Stop tutorial $tutorialIndex")
 
             tutorialEngine.stopTutorial()
             detectionRepository.stopDetection()
 
-            withContext(Dispatchers.IO) {
-                if (scenarioRepository.isTutorialSucceed(tutorialIndex)) {
-                    Log.d(TAG, "Tutorial was already completed")
-                    return@withContext
-                }
-
-                scenarioRepository.setTutorialSuccess(tutorialIndex, scenarioIdentifier, allStepsCompleted)
-            }
+            if (!isGameWon.value) setTutorialSuccess(success = false)
 
             activeTutorialIndex.value = null
-            allStepsCompleted = false
+        }
+    }
+
+    fun stopTutorialMode() {
+        scenarioId ?: return
+
+        Log.d(TAG, "Stop tutorial mode, restoring user scenario $scenarioId")
+
+        stopTutorial()
+        coroutineScopeMain.launch {
+            stopTutorialJob?.join()
+            stopTutorialJob = null
+            scenarioId?.let { detectionRepository.setScenarioId(it) }
+            scenarioId = null
+            activeTutorialIndex.value = null
+            scenarioRepository.stopTutorialMode()
         }
     }
 
     fun nextTutorialStep() {
-        allStepsCompleted = tutorialEngine.nextStep()
+        tutorialEngine.nextStep()
     }
 
     fun skipAllTutorialSteps() {
@@ -224,6 +235,27 @@ class TutorialRepository private constructor(
 
         if (scenarioDbId == null) Log.e(TAG, "Can't get the scenario for the tutorial $tutorialIndex")
         return scenarioDbId
+    }
+
+    private suspend fun setTutorialSuccess(success: Boolean) {
+        val scenarioIdentifier = tutorialScenarioId ?: return
+        val tutorialIndex = activeTutorialIndex.value ?: return
+
+        Log.d(TAG, "setTutorialSuccess for tutorial $tutorialIndex to $success")
+
+        withContext(Dispatchers.IO) {
+            if (scenarioRepository.isTutorialSucceed(tutorialIndex)) {
+                Log.d(TAG, "Tutorial was already completed")
+                return@withContext
+            }
+
+            if (success) {
+                scenarioRepository.setTutorialSuccess(tutorialIndex, scenarioIdentifier, true)
+            } else {
+                Log.d(TAG, "Deleting tutorial scenario $scenarioIdentifier")
+                scenarioRepository.deleteScenario(scenarioIdentifier)
+            }
+        }
     }
 }
 
