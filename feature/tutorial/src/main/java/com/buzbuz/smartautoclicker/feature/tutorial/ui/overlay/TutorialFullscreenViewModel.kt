@@ -52,6 +52,7 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
                 CloseType.NextButton -> flowOf(
                     UiTutorialOverlayState(
                         instructionsResId = tutorialOverlay.tutorialInstructionsResId,
+                        image = tutorialOverlay.getImage(),
                         exitButton = TutorialExitButton.Next,
                     )
                 )
@@ -60,6 +61,7 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
                     monitoredViewsManager.getViewPosition(tutorialOverlay.closeType.type)?.map { position ->
                         UiTutorialOverlayState(
                             instructionsResId = tutorialOverlay.tutorialInstructionsResId,
+                            image = tutorialOverlay.getImage(),
                             exitButton = TutorialExitButton.MonitoredView(tutorialOverlay.closeType.type, position),
                             isDisplayedInTopHalf = position.centerY() > displayMetrics.screenSize.y / 2,
                         )
@@ -79,12 +81,22 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
 
 data class UiTutorialOverlayState(
     @StringRes val instructionsResId: Int,
-    @DrawableRes val imageResId: Int? = null,
+    val image: UiTutorialImage? = null,
     val exitButton: TutorialExitButton? = null,
     val isDisplayedInTopHalf: Boolean = true,
+)
+
+data class UiTutorialImage(
+    @DrawableRes val imageResId: Int,
+    @StringRes val imageDescResId: Int,
 )
 
 sealed class TutorialExitButton {
     object Next : TutorialExitButton()
     data class MonitoredView(val type: MonitoredViewType, val position: Rect) : TutorialExitButton()
 }
+
+private fun TutorialStep.TutorialOverlay.getImage() : UiTutorialImage? =
+    tutorialImage?.let {
+        UiTutorialImage(it.tutorialImageResId, it.tutorialImageDescResId)
+    }

@@ -111,9 +111,10 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
         instructionsViewBinding.apply {
             textInstructions.setText(uiState.instructionsResId)
 
-            if (uiState.imageResId != null) {
+            if (uiState.image != null) {
                 layoutImageInstructions.visibility = View.VISIBLE
-                imageInstructions.setImageResource(uiState.imageResId)
+                imageInstructions.setImageResource(uiState.image.imageResId)
+                textImageInstructionsDescription.setText(uiState.image.imageDescResId)
             } else {
                 layoutImageInstructions.visibility = View.GONE
             }
