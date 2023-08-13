@@ -88,6 +88,7 @@ class EventDialog(
         viewModel.apply {
             monitorActionTabView(navBarView.findViewById(R.id.page_actions))
             monitorConditionTabView(navBarView.findViewById(R.id.page_conditions))
+            monitorSaveButtonView(topBarBinding.buttonSave)
         }
     }
 

@@ -71,8 +71,13 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
         monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS, view)
     }
 
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE, view)
+    }
+
     fun stopViewMonitoring() {
         monitoredViewsManager.apply {
+            detach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE)
             detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS)
             detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS)
         }

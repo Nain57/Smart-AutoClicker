@@ -46,7 +46,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.NextButton,
             ),
-            // First play lost, open edit scenario
+            // First play lost, make floating menu visible
             TutorialStepData.ChangeFloatingUiVisibility(
                 stepStartCondition = StepStartCondition.GameLost,
                 isVisible = true,
@@ -101,7 +101,9 @@ internal fun newOneStillTargetTutorial(): TutorialData =
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_instructions_1,
                 stepStartCondition = StepStartCondition.NextOverlay,
-                stepEndCondition = StepEndCondition.NextButton,
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
+                ),
             ),
             // Select action tab
             TutorialStepData.TutorialOverlay(
@@ -132,7 +134,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_instructions_1,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CLICK_DIALOG_SELECT_POSITION_BUTTON,
+                    MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION,
                 ),
             ),
             // Pick location
@@ -145,19 +147,25 @@ internal fun newOneStillTargetTutorial(): TutorialData =
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_instructions_1,
                 stepStartCondition = StepStartCondition.NextOverlay,
-                stepEndCondition = StepEndCondition.NextButton
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE,
+                ),
             ),
             // Save event
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_instructions_1,
                 stepStartCondition = StepStartCondition.NextOverlay,
-                stepEndCondition = StepEndCondition.NextButton
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE,
+                ),
             ),
             // Save scenario
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_instructions_1,
                 stepStartCondition = StepStartCondition.NextOverlay,
-                stepEndCondition = StepEndCondition.NextButton
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
+                ),
             ),
             // Play scenario
             TutorialStepData.TutorialOverlay(

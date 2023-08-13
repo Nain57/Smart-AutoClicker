@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 
@@ -25,6 +26,8 @@ import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
@@ -36,6 +39,9 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
     private val repository = Repository.getRepository(application)
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
+    /** Monitor the views fot the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+
     /** The condition being configured by the user. */
     private val configuredCondition = editionRepository.editionState.editedConditionState
         .mapNotNull { it.value }
@@ -149,6 +155,14 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
         editionRepository.editionState.getEditedCondition()?.let { condition ->
             editionRepository.updateEditedCondition(condition.copy(threshold = value))
         }
+    }
+
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE)
     }
 }
 
