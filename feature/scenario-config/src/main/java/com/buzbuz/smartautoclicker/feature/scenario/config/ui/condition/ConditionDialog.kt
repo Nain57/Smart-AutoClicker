@@ -130,6 +130,16 @@ class ConditionDialog(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     private fun updateConditionName(newName: String?) {
         viewBinding.editNameLayout.setText(newName)
     }

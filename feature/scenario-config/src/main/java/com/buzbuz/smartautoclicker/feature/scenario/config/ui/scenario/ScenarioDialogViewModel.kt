@@ -55,11 +55,16 @@ class ScenarioDialogViewModel(application: Application): AndroidViewModel(applic
     val scenarioCanBeSaved: Flow<Boolean> = editionRepository.editionState.scenarioCompleteState
         .map { it.canBeSaved }
 
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE, view)
+    }
+
     fun monitorCreateEventView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT, view)
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT)
+        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE)
     }
 }

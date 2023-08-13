@@ -148,11 +148,16 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE, view)
+    }
+
     fun monitorSelectPositionView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_SELECT_POSITION_BUTTON, view)
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION, view)
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_SELECT_POSITION_BUTTON)
+        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE)
+        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION)
     }
 }
