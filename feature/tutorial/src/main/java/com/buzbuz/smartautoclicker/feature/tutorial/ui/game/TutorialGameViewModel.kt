@@ -61,19 +61,9 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
         .flatMapLatest { it?.targets ?: flowOf(emptyMap()) }
         .distinctUntilChanged()
 
-    val playRetryBtnState: Flow<PlayRetryButtonState> =
-        combine(currentGame, isStarted, gameScore) { game, started, score ->
-            when {
-                game == null || started -> PlayRetryButtonState.GONE
-                score == 0 -> PlayRetryButtonState.PLAY
-                else -> PlayRetryButtonState.RETRY
-            }
-        }
-
-    val nextGameBtnVisibility: Flow<Boolean> =
-        combine(currentGame, isStarted, gameScore) { game, started, score ->
-            if (game == null) return@combine false
-            !started && score >= game.highScore
+    val playRetryBtnVisibility: Flow<Boolean> =
+        combine(currentGame, isStarted) { game, started ->
+            game != null && !started
         }
 
     fun startTutorial(gameIndex: Int) {
@@ -91,10 +81,4 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
     fun stopTutorial() {
         tutorialRepository.stopTutorial()
     }
-}
-
-enum class PlayRetryButtonState {
-    GONE,
-    PLAY,
-    RETRY,
 }

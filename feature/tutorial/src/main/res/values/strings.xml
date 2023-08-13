@@ -22,6 +22,7 @@
     <string name="message_high_score">Best: %1$d</string>
     <string name="message_time_left">Time left: %1$d</string>
 
+    <string name="button_text_tutorial_start_game">Start game</string>
     <string name="button_text_tutorial_next">Next</string>
 
     <!--
