@@ -38,6 +38,7 @@ fun IncludeInputFieldDropdownBinding.setItems(
     enabled: Boolean = true,
     @DrawableRes disabledIcon: Int? = null,
     onDisabledClick: (() -> Unit)? = null,
+    onItemBound: ((DropdownItem, View?) -> Unit)? = null,
 ) {
     textLayout.apply {
         if (enabled) {
@@ -51,11 +52,29 @@ fun IncludeInputFieldDropdownBinding.setItems(
         hint = label
     }
 
-    textField.setAdapter(
-        DropdownAdapter(items) { selectedItem ->
-            textField.dismissDropDown()
-            onItemSelected(selectedItem)
+    val dropdownViewMonitor = DropdownViewsMonitor()
+
+    onItemBound?.let { onBoundListener ->
+        textField.setOnDismissListener {
+            items.forEach { item -> onBoundListener(item, null) }
+            dropdownViewMonitor.clearBoundViews()
         }
+    }
+
+    textField.setAdapter(
+        DropdownAdapter(
+            items = items,
+            onItemSelected = { selectedItem ->
+                textField.dismissDropDown()
+                onItemSelected(selectedItem)
+            },
+            onItemViewStateChanged = { item, view, isBound ->
+                when {
+                    isBound && dropdownViewMonitor.onViewBound(item, view) -> onItemBound?.invoke(item, view)
+                    !isBound && dropdownViewMonitor.onViewUnbound(item, view) -> onItemBound?.invoke(item, null)
+                }
+            },
+        )
     )
 
     if (enabled) {
@@ -94,6 +113,7 @@ data class DropdownItem(
 private class DropdownAdapter(
     private val items: List<DropdownItem>,
     private val onItemSelected: (DropdownItem) -> Unit,
+    private val onItemViewStateChanged: ((DropdownItem, View, isBound: Boolean) -> Unit)?,
 ) : Filterable, BaseAdapter() {
 
     override fun getCount(): Int = items.size
@@ -103,11 +123,19 @@ private class DropdownAdapter(
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        // First, check old index of the view and notify for detach
+        val previousViewIndex = convertView?.tag
+        if (previousViewIndex != null) {
+            onItemViewStateChanged?.invoke(getItem(previousViewIndex as Int), convertView, false)
+        }
+
+        // Inflate or Bind the view if already created
         val itemBinding: ItemDropdownBinding =
             if (convertView == null) ItemDropdownBinding.inflate(LayoutInflater.from(parent!!.context), parent, false)
             else ItemDropdownBinding.bind(convertView)
         val item = getItem(position)
 
+        // Update the view with the current dropdown item info
         itemBinding.apply {
             root.setOnClickListener { onItemSelected(item) }
             dropdownItemText.setText(item.title)
@@ -123,6 +151,10 @@ private class DropdownAdapter(
             }
         }
 
+        // Set the index to the view and notify for binding
+        itemBinding.root.tag = position
+        onItemViewStateChanged?.invoke(item, itemBinding.root, true)
+
         return itemBinding.root
     }
 
@@ -131,4 +163,26 @@ private class DropdownAdapter(
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) = Unit
     }
     override fun getFilter(): Filter = filter
+}
+
+private class DropdownViewsMonitor {
+
+    private val viewMap: MutableMap<DropdownItem, View> = mutableMapOf()
+
+    fun onViewBound(item: DropdownItem, view: View): Boolean {
+        if (viewMap.containsKey(item)) return false
+
+        viewMap[item] = view
+        return true
+    }
+
+    fun onViewUnbound(item: DropdownItem, view: View): Boolean {
+        val boundView = viewMap[item] ?: return false
+        if (boundView != view) return false
+
+        viewMap.remove(item)
+        return true
+    }
+
+    fun clearBoundViews(): Unit = viewMap.clear()
 }
