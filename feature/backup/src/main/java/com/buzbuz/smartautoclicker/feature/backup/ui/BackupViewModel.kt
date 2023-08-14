@@ -195,7 +195,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
             backup.failureCount == 0 ->
                 getContext().getString(R.string.message_backup_import_completed, backup.successCount)
             else -> {
-                iconStatus = R.drawable.img_warning
+                iconStatus = R.drawable.ic_warning
                 getContext().getString(
                     R.string.message_backup_import_completed_with_error,
                     backup.successCount,
@@ -205,7 +205,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         val compatVisibility = if (backup.compatWarning) {
-            iconStatus = R.drawable.img_warning
+            iconStatus = R.drawable.ic_warning
             View.VISIBLE
         } else {
             View.GONE
@@ -216,7 +216,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
             loadingVisibility = View.GONE,
             iconStatusVisibility = View.VISIBLE,
             iconStatus = iconStatus,
-            iconTint = if (iconStatus == R.drawable.img_warning) Color.YELLOW else Color.GREEN,
+            iconTint = if (iconStatus == R.drawable.ic_warning) Color.YELLOW else Color.GREEN,
             textStatusVisibility = View.VISIBLE,
             textStatusText = textStatus,
             compatWarningVisibility = compatVisibility,

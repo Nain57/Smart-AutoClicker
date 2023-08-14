@@ -68,6 +68,8 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
     private fun updateUiState(uiState: UiTutorialOverlayState?) {
         uiState ?: return
 
+        println("TOTO!!!!!! New UiState: $uiState")
+
         when(uiState.exitButton) {
             TutorialExitButton.Next -> updateUiStateWithNextButton(uiState)
             is TutorialExitButton.MonitoredView -> updateUiStateWithMonitoredViewHole(uiState)
