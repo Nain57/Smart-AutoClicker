@@ -23,9 +23,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 
-import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
@@ -82,6 +82,7 @@ class TutorialGameFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.currentGame.collect(::onGameUpdated) }
+                launch { viewModel.isStarted.collect(::onGameStartedUpdated) }
                 launch { viewModel.gameTimerValue.collect(::onTimerUpdated) }
                 launch { viewModel.gameScore.collect(::onScoreUpdated) }
                 launch { viewModel.playRetryBtnVisibility.collect(::onPlayRetryButtonStateUpdated) }
@@ -112,6 +113,16 @@ class TutorialGameFragment : Fragment() {
         viewBinding.header.setHeaderInfo(tutorialGame.instructionsResId, tutorialGame.highScore)
     }
 
+    private fun onGameStartedUpdated(isStarted: Boolean) {
+        if (isStarted) {
+            viewBinding.footer.textTimeLeft.startAnimation(
+                AnimationUtils.loadAnimation(requireContext(), R.anim.anim_timer_blink)
+            )
+        } else {
+            viewBinding.footer.textTimeLeft.clearAnimation()
+        }
+    }
+
     private fun onTimerUpdated(timerValue: Int) {
         viewBinding.footer.textTimeLeft.text = requireContext().getString(R.string.message_time_left, timerValue)
     }
@@ -133,6 +144,7 @@ class TutorialGameFragment : Fragment() {
     private fun onTargetsUpdated(targets: Map<TutorialGameTargetType, PointF>) {
         viewBinding.blueTarget.updateTargetState(targets[TutorialGameTargetType.BLUE])
         viewBinding.redTarget.updateTargetState(targets[TutorialGameTargetType.RED])
+        viewBinding.gameArea.forceLayout()
     }
 
     private fun showHideStepOverlay(show: Boolean) {

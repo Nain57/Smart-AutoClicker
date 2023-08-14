@@ -45,7 +45,7 @@ class TutorialGameViewModel(application: Application) : AndroidViewModel(applica
     val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.activeStep
         .map { step -> step != null && step is TutorialStep.TutorialOverlay }
 
-    private val isStarted: Flow<Boolean> = currentGame
+    val isStarted: Flow<Boolean> = currentGame
         .flatMapLatest { it?.state?.map { it.isStarted } ?: flowOf(false) }
         .distinctUntilChanged()
 
