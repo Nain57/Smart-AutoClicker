@@ -158,19 +158,19 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun monitorClickOnDropdownView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION, view)
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON, view)
     }
 
     fun monitorDropdownItemConditionView(view: View) {
         monitoredViewsManager.attach(
-            MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON,
+            MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION,
             view,
             ViewPositioningType.SCREEN,
         )
     }
 
     fun stopDropdownItemConditionViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON)
+        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION)
     }
 
     fun stopViewMonitoring() {
