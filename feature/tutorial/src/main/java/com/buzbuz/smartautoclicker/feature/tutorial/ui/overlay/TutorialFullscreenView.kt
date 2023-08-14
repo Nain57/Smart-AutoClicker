@@ -66,7 +66,6 @@ class TutorialFullscreenView @JvmOverloads constructor(
         super.invalidate()
 
         measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
-        println("TOTO invalidate: expected position=$expectedViewPosition")
         drawPath.apply {
             reset()
             addBackgroundRect()
