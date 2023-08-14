@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.actions
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -71,6 +72,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         actionAdapter = ActionAdapter(
             actionClickedListener = ::onActionClicked,
             actionReorderListener = viewModel::updateActionOrder,
+            itemViewBound = ::onActionItemBound,
         )
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
@@ -120,7 +122,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onStop() {
         super.onStop()
-        viewModel.stopViewMonitoring()
+        viewModel.stopAllViewMonitoring()
     }
 
     override fun onCreateButtonClicked() {
@@ -164,6 +166,13 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     private fun onActionClicked(action: Action) {
         showActionConfigDialog(action)
+    }
+
+    private fun onActionItemBound(index: Int, itemView: View?) {
+        if (index != 0) return
+
+        if (itemView != null) viewModel.monitorFirstActionView(itemView)
+        else viewModel.stopFirstActionViewMonitoring()
     }
 
     private fun updateActionLimitationVisibility(isVisible: Boolean) {

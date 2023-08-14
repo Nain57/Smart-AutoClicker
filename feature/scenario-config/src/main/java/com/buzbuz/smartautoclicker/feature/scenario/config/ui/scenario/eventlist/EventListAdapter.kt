@@ -17,14 +17,16 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceViewHolder
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 
@@ -35,17 +37,25 @@ import java.util.Collections
  *
  * @param itemClickedListener listener called when the user clicks on an item.
  * @param itemReorderListener listener called when the user finish moving an item.
+ * @param itemViewBound listener called when a view is bound to an Event item.
  */
 class EventListAdapter(
     private val itemClickedListener: (Event) -> Unit,
     private val itemReorderListener: (List<Event>) -> Unit,
-) : ListAdapter<Event, EventViewHolder>(EventDiffUtilCallback) {
+    private val itemViewBound: ((Int, View?) -> Unit),
+    ) : ListAdapter<Event, EventViewHolder>(EventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         holder.bindEvent(getItem(position), itemClickedListener)
+        itemViewBound(position, holder.itemView)
+    }
+
+    override fun onViewRecycled(holder: EventViewHolder) {
+        itemViewBound(holder.bindingAdapterPosition, null)
+        super.onViewRecycled(holder)
     }
 
     /**

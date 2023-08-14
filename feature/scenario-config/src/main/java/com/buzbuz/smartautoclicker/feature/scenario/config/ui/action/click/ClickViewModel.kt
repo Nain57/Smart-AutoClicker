@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigP
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putClickPressDurationConfig
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -156,8 +157,26 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION, view)
     }
 
+    fun monitorClickOnDropdownView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION, view)
+    }
+
+    fun monitorDropdownItemConditionView(view: View) {
+        monitoredViewsManager.attach(
+            MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON,
+            view,
+            ViewPositioningType.SCREEN,
+        )
+    }
+
+    fun stopDropdownItemConditionViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON)
+    }
+
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE)
         monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION)
+        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION)
+        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON)
     }
 }

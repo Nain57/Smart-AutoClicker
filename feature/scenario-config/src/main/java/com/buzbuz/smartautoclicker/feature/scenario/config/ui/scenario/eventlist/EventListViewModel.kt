@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlis
 
 import android.app.Application
 import android.content.Context
+import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 
@@ -25,6 +26,8 @@ import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
@@ -39,6 +42,8 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
     private val billingRepository = IBillingRepository.getRepository(application)
+    /** Monitors the views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured events. */
     val eventsItems = editionRepository.editionState.eventsState
@@ -84,5 +89,13 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun onEventCountReachedAddCopyClicked(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT)
+    }
+
+    fun monitorFirstEventView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT)
     }
 }

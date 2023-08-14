@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlis
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -63,6 +64,7 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
         eventAdapter = EventListAdapter(
             itemClickedListener = ::showEventConfigDialog,
             itemReorderListener = viewModel::updateEventsPriority,
+            itemViewBound = ::onEventItemBound,
         )
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
@@ -104,6 +106,11 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun onCreateButtonClicked() {
         showEventConfigDialog(viewModel.createNewEvent(context))
     }
@@ -117,6 +124,13 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         dialogController.hide()
         viewModel.onEventCountReachedAddCopyClicked(context)
+    }
+
+    private fun onEventItemBound(index: Int, eventItemView: View?) {
+        if (index != 0) return
+
+        if (eventItemView != null) viewModel.monitorFirstEventView(eventItemView)
+        else viewModel.stopViewMonitoring()
     }
 
     private fun updateEventLimitationVisibility(isVisible: Boolean) {

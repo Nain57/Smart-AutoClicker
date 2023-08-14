@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.conditions
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -60,6 +61,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         conditionsAdapter = ConditionAdapter(
             conditionClickedListener = ::onConditionClicked,
             bitmapProvider = viewModel::getConditionBitmap,
+            itemViewBound = ::onConditionItemBound,
         )
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
@@ -110,7 +112,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onStop() {
         super.onStop()
-        viewModel.stopViewMonitoring()
+        viewModel.stopAllViewMonitoring()
     }
 
     override fun onCreateButtonClicked() =
@@ -143,6 +145,13 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     private fun onConditionClicked(condition: Condition) {
         showConditionConfigDialog(condition)
+    }
+
+    private fun onConditionItemBound(index: Int, itemView: View?) {
+        if (index != 0) return
+
+        if (itemView != null) viewModel.monitorFirstConditionView(itemView)
+        else viewModel.stopFirstConditionViewMonitoring()
     }
 
     private fun updateConditionLimitationVisibility(isVisible: Boolean) {

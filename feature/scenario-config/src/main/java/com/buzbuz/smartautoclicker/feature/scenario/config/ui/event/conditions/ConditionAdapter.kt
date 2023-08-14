@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.conditions
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.recyclerview.widget.DiffUtil
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlist.EventViewHolder
 
 import kotlinx.coroutines.Job
 
@@ -36,11 +38,13 @@ import kotlinx.coroutines.Job
  *
  * @param conditionClickedListener the listener called when the user clicks on a condition.
  * @param bitmapProvider provides the conditions bitmaps to the items.
+ * @param itemViewBound listener called when a view is bound to a Condition item.
  */
 class ConditionAdapter(
     private val conditionClickedListener: (Condition) -> Unit,
     private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-) : ListAdapter<Condition, ConditionViewHolder>(ConditionDiffUtilCallback) {
+    private val itemViewBound: ((Int, View?) -> Unit),
+    ) : ListAdapter<Condition, ConditionViewHolder>(ConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ConditionViewHolder(
@@ -50,10 +54,12 @@ class ConditionAdapter(
 
     override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) {
         holder.onBindCondition((getItem(position)), conditionClickedListener)
+        itemViewBound(position, holder.itemView)
     }
 
     override fun onViewRecycled(holder: ConditionViewHolder) {
         holder.onUnbind()
+        itemViewBound(holder.bindingAdapterPosition, null)
         super.onViewRecycled(holder)
     }
 }
