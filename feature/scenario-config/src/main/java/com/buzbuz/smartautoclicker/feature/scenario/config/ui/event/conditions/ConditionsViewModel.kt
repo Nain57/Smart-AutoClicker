@@ -144,7 +144,17 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
         monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION, view)
     }
 
-    fun stopViewMonitoring() {
+    fun monitorFirstConditionView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_CONDITION, view)
+    }
+
+    fun stopFirstConditionViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_CONDITION)
+
+    }
+
+    fun stopAllViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION)
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_CONDITION)
     }
 }

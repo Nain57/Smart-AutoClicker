@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
@@ -73,12 +74,12 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
         }
         .filterNotNull()
 
-    private val detectionTypeExact = DropdownItem(
+    val detectionTypeExact = DropdownItem(
         title = R.string.dropdown_item_title_detection_type_exact,
         helperText = R.string.dropdown_helper_text_detection_type_exact,
         icon = R.drawable.ic_detect_exact,
     )
-    private val detectionTypeScreen = DropdownItem(
+    val detectionTypeScreen = DropdownItem(
         title= R.string.dropdown_item_title_detection_type_screen,
         helperText = R.string.dropdown_helper_text_detection_type_screen,
         icon = R.drawable.ic_detect_whole_screen,
@@ -161,8 +162,26 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
         monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE, view)
     }
 
+    fun monitorDetectionTypeDropdownView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE, view)
+    }
+
+    fun monitorDropdownItemWholeScreenView(view: View) {
+        monitoredViewsManager.attach(
+            MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN,
+            view,
+            ViewPositioningType.SCREEN,
+        )
+    }
+
+    fun stopDropdownItemWholeScreenViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN)
+    }
+
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE)
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE)
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN)
     }
 }
 

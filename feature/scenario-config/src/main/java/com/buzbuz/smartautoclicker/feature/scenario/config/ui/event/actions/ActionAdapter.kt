@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.actions
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.recyclerview.widget.DiffUtil
@@ -28,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.conditions.ConditionViewHolder
 
 import java.util.Collections
 
@@ -36,10 +38,13 @@ import java.util.Collections
  * Also provide a item displayed in the last position to add a new action.
  *
  * @param actionClickedListener  the listener called when the user clicks on a action.
+ * @param actionReorderListener listener called when the list have been reordered.
+ * @param itemViewBound listener called when a view is bound to an Action item.
  */
 class ActionAdapter(
     private val actionClickedListener: (Action) -> Unit,
     private val actionReorderListener: (List<Pair<Action, ActionDetails>>) -> Unit,
+    private val itemViewBound: ((Int, View?) -> Unit),
 ) : ListAdapter<Pair<Action, ActionDetails>, ActionViewHolder>(ActionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionViewHolder =
@@ -47,6 +52,12 @@ class ActionAdapter(
 
     override fun onBindViewHolder(holder: ActionViewHolder, position: Int) {
         holder.onBind(getItem(position), actionClickedListener)
+        itemViewBound(position, holder.itemView)
+    }
+
+    override fun onViewRecycled(holder: ActionViewHolder) {
+        itemViewBound(holder.bindingAdapterPosition, null)
+        super.onViewRecycled(holder)
     }
 
     /**

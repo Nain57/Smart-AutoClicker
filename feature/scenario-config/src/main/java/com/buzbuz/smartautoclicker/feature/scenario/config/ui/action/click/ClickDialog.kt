@@ -103,6 +103,7 @@ class ClickDialog(
                 label = context.getString(R.string.dropdown_label_click_position_type),
                 items = viewModel.clickTypeItems,
                 onItemSelected = viewModel::setClickOnCondition,
+                onItemBound = ::onClickOnDropdownItemBound,
             )
 
             onPositionSelectButton.setOnClickListener { showPositionSelector() }
@@ -130,6 +131,7 @@ class ClickDialog(
         viewModel.apply {
             monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
             monitorSelectPositionView(viewBinding.onPositionSelectButton)
+            monitorClickOnDropdownView(viewBinding.clickPositionField.root)
         }
     }
 
@@ -147,6 +149,13 @@ class ClickDialog(
     private fun onDeleteButtonClicked() {
         onDeleteClicked()
         back()
+    }
+
+    private fun onClickOnDropdownItemBound(item: DropdownItem, view: View?) {
+        if (item == viewModel.clickTypeItemOnCondition) {
+            if (view != null) viewModel.monitorDropdownItemConditionView(view)
+            else viewModel.stopDropdownItemConditionViewMonitoring()
+        }
     }
 
     private fun updateClickName(newName: String?) {

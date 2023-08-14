@@ -157,8 +157,17 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
         monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_ACTION, view)
     }
 
-    fun stopViewMonitoring() {
+    fun monitorFirstActionView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_ACTION, view)
+    }
+
+    fun stopFirstActionViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_ACTION)
+    }
+
+    fun stopAllViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_ACTION)
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_ACTION)
     }
 }
 
