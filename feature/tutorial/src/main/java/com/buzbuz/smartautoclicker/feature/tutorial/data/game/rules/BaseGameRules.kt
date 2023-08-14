@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules
 import android.graphics.PointF
 import android.graphics.Rect
 import android.util.Log
+import androidx.annotation.CallSuper
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameStateData
@@ -97,9 +98,15 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
         _targets.value = emptyMap()
     }
 
+    final override fun onTargetHit(type: TutorialGameTargetType) {
+        if (isStarted.value) onValidTargetHit(type)
+        else _targets.value = emptyMap()
+    }
+
     abstract fun onStart(area: Rect, targetSize: Int)
+    abstract fun onValidTargetHit(type: TutorialGameTargetType)
     open fun onTimerTick(timeLeft: Int) { /* Default impl does nothing. */ }
 }
 
 private const val TAG = "TutorialGameRules"
-private const val GAME_DURATION_SECONDS = 5
+private const val GAME_DURATION_SECONDS = 10
