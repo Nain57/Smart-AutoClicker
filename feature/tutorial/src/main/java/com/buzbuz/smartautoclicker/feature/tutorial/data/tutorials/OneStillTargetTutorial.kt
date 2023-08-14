@@ -38,7 +38,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
         info = oneStillTargetTutorialInfo,
         game = TutorialGameData(
             instructionsResId = R.string.message_tutorial_1_game_instructions,
-            gameRules = OneStillTargetRules(10),
+            gameRules = OneStillTargetRules(75),
         ),
         steps = listOf(
             // Start screen, before first play
