@@ -46,12 +46,8 @@ class DebugReportDialog : OverlayDialog(R.style.AppTheme) {
     private lateinit var viewBinding: DialogDebugReportBinding
     /** View binding for all views in this content. */
     private lateinit var listBinding: IncludeLoadableListBinding
-
     /** Adapter for the report */
-    private val reportAdapter = DebugReportAdapter(
-        bitmapProvider = viewModel::getConditionBitmap,
-        onConditionClicked = ::showConditionReportDialog,
-    )
+    private lateinit var reportAdapter: DebugReportAdapter
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogDebugReportBinding.inflate(LayoutInflater.from(context)).apply {
@@ -67,6 +63,10 @@ class DebugReportDialog : OverlayDialog(R.style.AppTheme) {
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
+        reportAdapter = DebugReportAdapter(
+            bitmapProvider = viewModel::getConditionBitmap,
+            onConditionClicked = ::showConditionReportDialog,
+        )
         listBinding.list.adapter = reportAdapter
 
         lifecycleScope.launch {
