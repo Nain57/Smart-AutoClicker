@@ -42,7 +42,7 @@ internal class OneMovingTargetRules(highScore: Int) : BaseGameRules(highScore) {
         updateTargetPosition()
     }
 
-    override fun onTargetHit(type: TutorialGameTargetType) {
+    override fun onValidTargetHit(type: TutorialGameTargetType) {
         if (type != TutorialGameTargetType.BLUE) return
 
         score.value++

@@ -44,7 +44,7 @@ internal class TwoMovingTargetsPressInOrderRules(highScore: Int) : BaseGameRules
         showNewTargets()
     }
 
-    override fun onTargetHit(type: TutorialGameTargetType) {
+    override fun onValidTargetHit(type: TutorialGameTargetType) {
         val targets = _targets.value
         when {
             type == TutorialGameTargetType.RED && targets.containsKey(TutorialGameTargetType.RED) && targets.containsKey(

@@ -29,7 +29,7 @@ internal class OneStillTargetRules(highScore: Int) : BaseGameRules(highScore) {
         )
     }
 
-    override fun onTargetHit(type: TutorialGameTargetType) {
+    override fun onValidTargetHit(type: TutorialGameTargetType) {
         if (type != TutorialGameTargetType.BLUE) return
         score.value++
     }

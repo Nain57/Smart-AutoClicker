@@ -40,7 +40,7 @@ internal class TwoStillTargetsPressWhenBothVisibleRules(highScore: Int) : BaseGa
         toggleRedVisibility()
     }
 
-    override fun onTargetHit(type: TutorialGameTargetType) {
+    override fun onValidTargetHit(type: TutorialGameTargetType) {
         val blueIsVisible = _targets.value.containsKey(TutorialGameTargetType.BLUE)
         val redIsVisible = _targets.value.containsKey(TutorialGameTargetType.RED)
 
