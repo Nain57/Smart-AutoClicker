@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 
@@ -36,13 +34,6 @@ import kotlinx.coroutines.launch
 
 
 class TutorialActivity : AppCompatActivity() {
-
-    companion object {
-
-        fun getStartIntent(context: Context): Intent =
-            Intent(context, TutorialActivity::class.java)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
 
     private val viewModel: TutorialViewModel by viewModels()
     private lateinit var navController: NavController
