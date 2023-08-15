@@ -22,13 +22,11 @@ import android.graphics.Rect
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.domain.model.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine
+import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialStateDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.getTutorialPreferences
 import com.buzbuz.smartautoclicker.feature.tutorial.data.isFirstTimePopupAlreadyShown
 import com.buzbuz.smartautoclicker.feature.tutorial.data.putFirstTimePopupAlreadyShown
@@ -61,6 +59,7 @@ import kotlinx.coroutines.withContext
 class TutorialRepository private constructor(
     context: Context,
     private val dataSource: TutorialDataSource,
+    private val stateDataSource: TutorialStateDataSource,
 ) {
 
     companion object {
@@ -76,7 +75,7 @@ class TutorialRepository private constructor(
          */
         fun getTutorialRepository(context: Context): TutorialRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = TutorialRepository(context, TutorialDataSource)
+                val instance = TutorialRepository(context, TutorialDataSource, TutorialStateDataSource(context))
                 INSTANCE = instance
                 instance
             }
@@ -104,7 +103,7 @@ class TutorialRepository private constructor(
 
     private val activeTutorialIndex: MutableStateFlow<Int?> = MutableStateFlow(null)
 
-    val tutorials: Flow<List<Tutorial>> = scenarioRepository.tutorialSuccessList
+    val tutorials: Flow<List<Tutorial>> = stateDataSource.tutorialSuccessList
         .map { successList ->
             dataSource.tutorialsInfo.mapIndexed { index, tutorialData ->
                 tutorialData.toDomain(index == 0 || index <= successList.size)
@@ -127,7 +126,7 @@ class TutorialRepository private constructor(
 
     init {
         isGameWon
-            .onEach { isWon -> if (isWon) setTutorialSuccess(success = true) }
+            .onEach { isWon -> if (isWon) setTutorialSuccess() }
             .launchIn(coroutineScopeMain)
     }
 
@@ -159,7 +158,9 @@ class TutorialRepository private constructor(
 
         val tutorialData = dataSource.getTutorialData(index) ?: return
         coroutineScopeMain.launch {
-            val tutoScenarioDbId = withContext(Dispatchers.IO) { initTutorialScenario(index) } ?: return@launch
+            val tutoScenarioDbId = withContext(Dispatchers.IO) {
+                stateDataSource.initTutorialScenario(index)
+            } ?: return@launch
             val tutoScenarioId = Identifier(databaseId = tutoScenarioDbId)
 
             Log.d(TAG, "Start tutorial $index, set current scenario to $tutoScenarioDbId")
@@ -181,8 +182,7 @@ class TutorialRepository private constructor(
 
             tutorialEngine.stopTutorial()
             detectionRepository.stopDetection()
-
-            if (!isGameWon.value) setTutorialSuccess(success = false)
+            cleanupTutorialState()
 
             activeTutorialIndex.value = null
         }
@@ -220,44 +220,18 @@ class TutorialRepository private constructor(
         tutorialEngine.onGameTargetHit(targetType)
     }
 
-    private suspend fun initTutorialScenario(tutorialIndex: Int): Long? {
-        val scenarioDbId =
-            if (tutorialIndex == 0) {
-                scenarioRepository.addScenario(
-                    Scenario(
-                        id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0L),
-                        name = "Tutorial",
-                        detectionQuality = 600,
-                        endConditionOperator = OR,
-                    )
-                )
-            } else scenarioRepository.getTutorialScenarioDatabaseId(tutorialIndex - 1)?.databaseId
+    private suspend fun setTutorialSuccess() {
+        val tutorialIndex = activeTutorialIndex.value ?: return
+        val tutoScenarioIdentifier = tutorialScenarioId ?: return
 
-        if (scenarioDbId == null) Log.e(TAG, "Can't get the scenario for the tutorial $tutorialIndex")
-        return scenarioDbId
+        stateDataSource.setTutorialSuccess(tutorialIndex, tutoScenarioIdentifier)
     }
 
-    private suspend fun setTutorialSuccess(success: Boolean) {
-        val tutoScenarioIdentifier = tutorialScenarioId ?: return
+    private suspend fun cleanupTutorialState() {
         val tutorialIndex = activeTutorialIndex.value ?: return
+        val tutoScenarioIdentifier = tutorialScenarioId ?: return
 
-        Log.d(TAG, "setTutorialSuccess for tutorial $tutorialIndex to $success")
-
-        withContext(Dispatchers.IO) {
-            val previousSuccessDbId = scenarioRepository.getTutorialScenarioDatabaseId(tutorialIndex)
-            if (success) {
-                if (previousSuccessDbId != null) {
-                    Log.d(TAG, "Tutorial was already completed, removing this scenario")
-                    scenarioRepository.deleteScenario(tutoScenarioIdentifier)
-                    return@withContext
-                }
-
-                scenarioRepository.setTutorialSuccess(tutorialIndex, tutoScenarioIdentifier, true)
-            } else if (previousSuccessDbId != tutorialScenarioId) {
-                Log.d(TAG, "Deleting tutorial scenario $tutoScenarioIdentifier")
-                scenarioRepository.setTutorialSuccess(tutorialIndex, tutoScenarioIdentifier, false)
-            }
-        }
+        stateDataSource.cleanupTutorialState(tutorialIndex, tutoScenarioIdentifier)
     }
 }
 

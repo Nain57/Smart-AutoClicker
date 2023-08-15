@@ -24,7 +24,6 @@ import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.TutorialSuccessState
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
@@ -81,8 +80,10 @@ interface Repository {
      * Create a copy of a scenario and insert it in the database.
      *
      * @param completeScenario the scenario to copy.
+     *
+     * @return the database id of the copy, or null if the copy has encountered an error.
      */
-    suspend fun addScenarioCopy(completeScenario: CompleteScenario): Boolean
+    suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long?
 
     /**
      * Update a scenario.
@@ -187,16 +188,7 @@ interface Repository {
     /** Clean the cache of this repository. */
     fun cleanCache()
 
-    /** The list of scenarios. */
-    val tutorialSuccessList: Flow<List<TutorialSuccessState>>
-
     fun startTutorialMode()
 
     fun stopTutorialMode()
-
-    suspend fun getTutorialScenarioDatabaseId(index: Int): Identifier?
-
-    suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier, success: Boolean)
-
-    suspend fun isTutorialSucceed(index: Int): Boolean
 }

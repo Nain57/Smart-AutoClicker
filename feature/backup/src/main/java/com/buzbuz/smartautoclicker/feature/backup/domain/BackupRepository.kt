@@ -109,7 +109,7 @@ internal class BackupRepository private constructor(context: Context) {
                         var totalFailures = failureCount
                         val actualSuccess = success.toMutableList()
                         success.forEach { completeScenario ->
-                            if (!localDataRepository.addScenarioCopy(completeScenario)) {
+                            if (localDataRepository.addScenarioCopy(completeScenario) == null) {
                                 actualSuccess.remove(completeScenario)
                                 totalFailures++
                             }
