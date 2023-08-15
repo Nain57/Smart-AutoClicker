@@ -16,7 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.more
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -28,7 +30,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentMoreBinding
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity
 
 import kotlinx.coroutines.launch
 
@@ -66,7 +67,10 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     private fun onTutorialClicked() {
         dialogController.back()
-        context.startActivity(TutorialActivity.getStartIntent(context))
+        val intent = Intent()
+            .setComponent(ComponentName("com.buzbuz.smartautoclicker", "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
+            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     private fun updateDebugView(isEnabled: Boolean) {

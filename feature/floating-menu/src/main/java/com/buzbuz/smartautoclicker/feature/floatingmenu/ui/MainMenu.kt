@@ -16,7 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
 
+import android.content.ComponentName
 import android.content.DialogInterface
+import android.content.Intent
 import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
@@ -291,7 +293,11 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             .setTitle(R.string.dialog_title_tutorial_first_time)
             .setMessage(R.string.message_tutorial_first_time)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                context.startActivity(TutorialActivity.getStartIntent(context))
+                context.startActivity(
+                    Intent()
+                        .setComponent(ComponentName("com.buzbuz.smartautoclicker", "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                )
             }
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .create()
