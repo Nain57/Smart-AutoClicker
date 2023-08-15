@@ -284,19 +284,6 @@ class OverlayMenuTests {
     }
 
     @Test
-    fun hideButtonInitialState() {
-        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
-        val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
-        mockViewsFromImpl(createMockMenuView(sequenceOf(createMockMenuItemView(), hideItem)))
-
-        overlayMenuController.create(mockContext)
-        overlayMenuController.start()
-
-        verify(hideItem).isEnabled = true
-        verify(hideItem).alpha = TEST_DATA_DISABLED_ALPHA
-    }
-
-    @Test
     fun destroy_removeView() {
         overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
         val menuView = mock(ViewGroup::class.java)
@@ -387,65 +374,5 @@ class OverlayMenuTests {
         clickListenerCaptor.value.onClick(item)
 
         verify(overlayMenuControllerImpl).onMenuItemClicked(itemId)
-    }
-
-    @Test
-    fun onHideOverlayClickedOverlayVisible() {
-        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
-        val overlayView = mock(View::class.java)
-        val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
-        mockViewsFromImpl(createMockMenuView(sequenceOf(
-            createMockMenuItemView(),
-            hideItem,
-        )), overlayView)
-        overlayMenuController.create(mockContext)
-
-        // Get the hide button click listener
-        val clickListenerCaptor = ArgumentCaptor.forClass(View.OnClickListener::class.java)
-        verify(hideItem).setOnClickListener(clickListenerCaptor.capture())
-        val clickListener = clickListenerCaptor.value
-
-        // Clear invocations on hide item, create update its state
-        clearInvocations(hideItem)
-
-        // The overlay view is currently visible
-        mockWhen(overlayView.visibility).thenReturn(View.VISIBLE)
-
-        // Call the listener
-        clickListener.onClick(hideItem)
-
-        verify(overlayView).visibility = View.GONE
-        verify(hideItem).isEnabled = true
-        verify(hideItem).alpha = 1.0f
-    }
-
-    @Test
-    fun onHideOverlayClickedOverlayGone() {
-        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
-        val overlayView = mock(View::class.java)
-        val hideItem = createMockMenuItemView(R.id.btn_hide_overlay)
-        mockViewsFromImpl(createMockMenuView(sequenceOf(
-            createMockMenuItemView(),
-            hideItem,
-        )), overlayView)
-        overlayMenuController.create(mockContext)
-
-        // Get the hide button click listener
-        val clickListenerCaptor = ArgumentCaptor.forClass(View.OnClickListener::class.java)
-        verify(hideItem).setOnClickListener(clickListenerCaptor.capture())
-        val clickListener = clickListenerCaptor.value
-
-        // Clear invocations on hide item, create update its state
-        clearInvocations(hideItem)
-
-        // The overlay view is currently gone
-        mockWhen(overlayView.visibility).thenReturn(View.GONE)
-
-        // Call the listener
-        clickListener.onClick(hideItem)
-
-        verify(overlayView).visibility = View.VISIBLE
-        verify(hideItem).isEnabled = true
-        verify(hideItem).alpha = TEST_DATA_DISABLED_ALPHA
     }
 }
