@@ -59,6 +59,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:${rootProject.androidxNavigationVersion}"
     implementation "androidx.navigation:navigation-ui-ktx:${rootProject.androidxNavigationVersion}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
+    implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
@@ -67,4 +68,6 @@ dependencies {
     implementation project(path: ':core:extensions')
     implementation project(path: ':core:processing')
     implementation project(path: ':core:ui')
+    implementation project(path: ':core:database')
+    implementation project(path: ':core:bitmaps')
 }

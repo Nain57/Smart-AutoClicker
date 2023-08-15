@@ -59,7 +59,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import java.lang.Exception
@@ -120,11 +119,6 @@ internal class RepositoryImpl internal constructor(
             .flatMapLatest { it.getScenariosWithEvents() }
             .mapList { it.toScenario() }
 
-    override val tutorialSuccessList: Flow<List<TutorialSuccessState>> =
-        tutorialDao
-            .flatMapLatest { it?.getTutorialSuccessList() ?: flowOf(emptyList()) }
-            .map { list -> list.map { TutorialSuccessState(it.scenarioId) } }
-
     override suspend fun getScenario(scenarioId: Long): Scenario? =
         currentDatabase.value.scenarioDao().getScenario(scenarioId)?.toScenario()
 
@@ -179,15 +173,13 @@ internal class RepositoryImpl internal constructor(
         clearRemovedConditionsBitmaps(removedConditionsPath)
     }
 
-    override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Boolean {
-        if (currentDatabase.value is TutorialDatabase) return false
-
+    override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? {
         Log.d(TAG, "Add scenario copy to the database: ${completeScenario.scenario.id}")
 
         return try {
-            database.withTransaction {
+            currentDatabase.value.withTransaction {
                 val scenario = completeScenario.scenario.toScenario(asDomain = true)
-                val scenarioDbId = database.scenarioDao().add(scenario.toEntity())
+                val scenarioDbId = currentDatabase.value.scenarioDao().add(scenario.toEntity())
 
                 /**
                  * Get the entities as domain object to use the same insertion.
@@ -210,12 +202,12 @@ internal class RepositoryImpl internal constructor(
                 }
 
                 updateScenarioContent(scenarioDbId, events, endConditions)
-            }
 
-            true
+                scenarioDbId
+            }
         } catch (ex: Exception) {
             Log.e(TAG, "Error while inserting scenario copy", ex)
-            false
+            null
         }
     }
 
@@ -397,47 +389,6 @@ internal class RepositoryImpl internal constructor(
     override fun stopTutorialMode() {
         Log.d(TAG, "Stop tutorial mode, use regular database")
         currentDatabase.value = database
-    }
-
-    override suspend fun getTutorialScenarioDatabaseId(index: Int): Identifier? =
-        getTutorialDao()?.getTutorialScenarioId(index)?.let {
-            Identifier(databaseId = it)
-        }
-
-    override suspend fun setTutorialSuccess(index: Int, scenarioId: Identifier, success: Boolean) {
-        if (success) {
-            Log.d(TAG, "Set tutorial success for tutorial $index with scenario $scenarioId")
-
-            getTutorialDao()?.upsert(
-                TutorialSuccessEntity(
-                    tutorialIndex = index,
-                    scenarioId = scenarioId.databaseId,
-                )
-            )
-        } else {
-            Log.d(TAG, "Set tutorial failure, removing user created scenario for this tutorial.")
-
-            val removedConditionsPath = mutableListOf<String>()
-            tutorialDatabase.eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
-                currentDatabase.value.conditionDao().getConditionsPath(eventId).forEach { path ->
-                    if (!removedConditionsPath.contains(path)) removedConditionsPath.add(path)
-                }
-            }
-
-            tutorialDatabase.scenarioDao().delete(scenarioId.databaseId)
-            val deletedPaths = removedConditionsPath.filter { path ->
-                tutorialDatabase.conditionDao().getValidPathCount(path) == 0
-            }
-            bitmapManager.deleteBitmaps(deletedPaths)
-        }
-    }
-
-    override suspend fun isTutorialSucceed(index: Int): Boolean =
-        getTutorialDao()?.getTutorialSuccess(index) != null
-
-    private fun getTutorialDao(): TutorialDao? {
-        val db = currentDatabase.value
-        return if (db is TutorialDatabase) db.tutorialDao() else null
     }
 }
 
