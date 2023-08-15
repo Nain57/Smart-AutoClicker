@@ -29,17 +29,14 @@ import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
-import com.buzbuz.smartautoclicker.core.database.dao.TutorialDao
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionWithEvent
-import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.TutorialSuccessState
 import com.buzbuz.smartautoclicker.core.domain.model.action.toAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toCondition
@@ -58,6 +55,7 @@ import com.buzbuz.smartautoclicker.core.mapList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -89,10 +87,6 @@ internal class RepositoryImpl internal constructor(
     private val conditionsDao: Flow<ConditionDao> = currentDatabase.map { it.conditionDao() }
     /** The Dao for accessing the actions. */
     private val actionDao: Flow<ActionDao> = currentDatabase.map { it.actionDao() }
-
-    /** The Dao for accessing the tutorial specific dao. */
-    private val tutorialDao: Flow<TutorialDao?> = currentDatabase
-        .map { db -> if (db is TutorialDatabase) db.tutorialDao() else null }
 
     private fun getBitmapFilePrefix(): String =
         if (currentDatabase.value == database) CONDITION_FILE_PREFIX
@@ -390,6 +384,10 @@ internal class RepositoryImpl internal constructor(
         Log.d(TAG, "Stop tutorial mode, use regular database")
         currentDatabase.value = database
     }
+
+    override fun isTutorialModeEnabled(): Boolean =
+        currentDatabase.value == tutorialDatabase
+
 }
 
 /** Tag for logs. */

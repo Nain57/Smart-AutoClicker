@@ -191,4 +191,6 @@ interface Repository {
     fun startTutorialMode()
 
     fun stopTutorialMode()
+
+    fun isTutorialModeEnabled(): Boolean
 }

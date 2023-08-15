@@ -20,25 +20,21 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.IdentifierCreator
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getClickPressDurationConfig
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getIntentIsAdvancedConfig
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getPauseDurationConfig
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getSwipeDurationConfig
 
-class EditedItemsBuilder internal constructor(private val editor: ScenarioEditor) {
+class EditedItemsBuilder internal constructor(
+    context: Context,
+    private val editor: ScenarioEditor,
+) {
 
+    private val defaultValues = EditionDefaultValues(context)
     private val eventsIdCreator = IdentifierCreator()
     private val conditionsIdCreator = IdentifierCreator()
     private val actionsIdCreator = IdentifierCreator()
@@ -57,8 +53,8 @@ class EditedItemsBuilder internal constructor(private val editor: ScenarioEditor
         Event(
             id = eventsIdCreator.generateNewIdentifier(),
             scenarioId = getEditedScenarioIdOrThrow(),
-            name = context.getString(R.string.default_event_name),
-            conditionOperator = AND,
+            name = defaultValues.eventName(context),
+            conditionOperator = defaultValues.eventConditionOperator(),
             priority = getEditedEventsCountOrThrow(),
             conditions = mutableListOf(),
             actions = mutableListOf(),
@@ -80,12 +76,12 @@ class EditedItemsBuilder internal constructor(private val editor: ScenarioEditor
         Condition(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = context.resources.getString(R.string.default_condition_name),
+            name = defaultValues.conditionName(context),
             bitmap = bitmap,
             area = area,
-            threshold = context.resources.getInteger(R.integer.default_condition_threshold),
-            detectionType = EXACT,
-            shouldBeDetected = true,
+            threshold = defaultValues.conditionThreshold(context),
+            detectionType = defaultValues.conditionDetectionType(),
+            shouldBeDetected = defaultValues.conditionShouldBeDetected(),
         )
 
     fun createNewConditionFrom(condition: Condition, eventId: Identifier = getEditedEventIdOrThrow()) =
@@ -100,41 +96,41 @@ class EditedItemsBuilder internal constructor(private val editor: ScenarioEditor
         Action.Click(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = context.getString(R.string.default_click_name),
-            pressDuration = context.getEventConfigPreferences().getClickPressDurationConfig(context),
-            clickOnCondition = false,
+            name = defaultValues.clickName(context),
+            pressDuration = defaultValues.clickPressDuration(context),
+            clickOnCondition = defaultValues.clickOnCondition(),
         )
 
     fun createNewSwipe(context: Context): Action.Swipe =
         Action.Swipe(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = context.getString(R.string.default_swipe_name),
-            swipeDuration = context.getEventConfigPreferences().getSwipeDurationConfig(context),
+            name = defaultValues.swipeName(context),
+            swipeDuration = defaultValues.swipeDuration(context),
         )
 
     fun createNewPause(context: Context): Action.Pause =
         Action.Pause(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = context.getString(R.string.default_pause_name),
-            pauseDuration = context.getEventConfigPreferences().getPauseDurationConfig(context)
+            name = defaultValues.pauseName(context),
+            pauseDuration = defaultValues.pauseDuration(context),
         )
 
     fun createNewIntent(context: Context): Action.Intent =
         Action.Intent(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = context.getString(R.string.default_intent_name),
-            isAdvanced = context.getEventConfigPreferences().getIntentIsAdvancedConfig(context),
+            name = defaultValues.intentName(context),
+            isAdvanced = defaultValues.intentIsAdvanced(context),
         )
 
     fun createNewToggleEvent(context: Context): Action.ToggleEvent =
         Action.ToggleEvent(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = context.getString(R.string.default_toggle_event_name),
-            toggleEventType = Action.ToggleEvent.ToggleType.ENABLE,
+            name = defaultValues.toggleEventName(context),
+            toggleEventType = defaultValues.toggleEventType(),
         )
 
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
