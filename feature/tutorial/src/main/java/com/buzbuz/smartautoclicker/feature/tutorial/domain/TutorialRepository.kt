@@ -105,7 +105,8 @@ class TutorialRepository private constructor(
 
     val tutorials: Flow<List<Tutorial>> = stateDataSource.tutorialSuccessList
         .map { successList ->
-            dataSource.tutorialsInfo.mapIndexed { index, tutorialData ->
+            dataSource.tutorialsInfo.mapIndexedNotNull { index, tutorialData ->
+                if (index > 1) return@mapIndexedNotNull null
                 tutorialData.toDomain(index == 0 || index <= successList.size)
             }
         }
