@@ -33,10 +33,10 @@ internal class OneMovingTargetRules(highScore: Int) : BaseGameRules(highScore) {
 
     override fun onStart(area: Rect, targetSize: Int) {
         targetsArea = RectF(
-            area.left.toFloat(),
-            area.top.toFloat(),
-            area.right.toFloat() - targetSize,
-            area.bottom.toFloat() - targetSize,
+            area.left.toFloat() + TARGET_MARGIN,
+            area.top.toFloat() + TARGET_MARGIN,
+            area.right.toFloat() - targetSize - TARGET_MARGIN,
+            area.bottom.toFloat() - targetSize - TARGET_MARGIN,
         )
 
         updateTargetPosition()

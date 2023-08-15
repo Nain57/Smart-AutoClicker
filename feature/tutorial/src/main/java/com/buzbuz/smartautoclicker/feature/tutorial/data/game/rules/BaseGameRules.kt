@@ -108,5 +108,6 @@ internal abstract class BaseGameRules(override val highScore: Int) : TutorialGam
     open fun onTimerTick(timeLeft: Int) { /* Default impl does nothing. */ }
 }
 
+internal const val TARGET_MARGIN = 10
 private const val TAG = "TutorialGameRules"
 private const val GAME_DURATION_SECONDS = 10
