@@ -96,7 +96,7 @@ class ScenarioDaoTests {
         val scenarioEntity = TestsData.getNewScenarioEntity()
         database.scenarioDao().add(scenarioEntity)
 
-        database.scenarioDao().delete(scenarioEntity)
+        database.scenarioDao().delete(scenarioEntity.id)
 
         assertNull(database.scenarioDao().getCompleteScenario(scenarioEntity.id))
     }
