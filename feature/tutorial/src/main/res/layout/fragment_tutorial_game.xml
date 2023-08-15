@@ -57,18 +57,16 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/blue_target"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            app:srcCompat="@drawable/ic_game_target"
-            app:tint="@color/tutorial_game_target_blue"
+            android:layout_width="@dimen/tutorial_game_target_size"
+            android:layout_height="@dimen/tutorial_game_target_size"
+            app:srcCompat="@drawable/ic_game_target_primary"
             android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/red_target"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            app:srcCompat="@drawable/ic_game_target"
-            app:tint="@color/tutorial_game_target_red"
+            android:layout_width="@dimen/tutorial_game_target_size"
+            android:layout_height="@dimen/tutorial_game_target_size"
+            app:srcCompat="@drawable/ic_game_target_secondary"
             android:visibility="gone" />
 
     </com.google.android.material.card.MaterialCardView>

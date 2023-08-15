@@ -1,0 +1,61 @@
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp">
+
+  <!-- Circle background -->
+  <item
+      android:width="48dp"
+      android:height="48dp">
+    <shape android:shape="oval">
+      <solid android:color="@color/tutorial_game_target_background_tertiary"/>
+      <stroke android:color="?attr/colorOnSurface" android:width="2dp"/>
+    </shape>
+  </item>
+
+  <!-- Rectangle in the circle background -->
+  <item
+      android:width="32dp"
+      android:height="32dp"
+      android:start="8dp"
+      android:top="8dp">
+    <shape android:shape="rectangle">
+      <solid android:color="@color/tutorial_game_target_background_secondary"/>
+      <stroke android:color="@android:color/white" android:width="2dp"/>
+    </shape>
+  </item>
+
+  <!-- Horizontal line -->
+  <item
+      android:width="46dp"
+      android:height="4dp"
+      android:top="22dp"
+      android:start="1dp">
+    <shape android:shape="rectangle">
+      <solid android:color="@color/tutorial_game_target_background_primary"/>
+      <stroke android:color="?attr/colorOnSurface" android:width="1dp"/>
+    </shape>
+  </item>
+
+  <!-- Vertical line -->
+  <item
+      android:width="4dp"
+      android:height="46dp"
+      android:start="22dp"
+      android:top="1dp">
+    <shape android:shape="rectangle">
+      <solid android:color="@color/tutorial_game_target_background_primary"/>
+      <stroke android:color="?attr/colorOnSurface" android:width="1dp"/>
+    </shape>
+  </item>
+
+  <!-- Character -->
+  <item
+      android:width="34dp"
+      android:height="34dp"
+      android:start="7dp"
+      android:top="7dp"
+      android:drawable="@drawable/ic_target_red"/>
+
+</layer-list>
+

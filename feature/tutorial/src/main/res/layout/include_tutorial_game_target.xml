@@ -19,8 +19,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
-    app:srcCompat="@drawable/ic_game_target"
+    android:layout_width="@dimen/tutorial_game_target_size"
+    android:layout_height="@dimen/tutorial_game_target_size"
+    app:srcCompat="@drawable/ic_game_target_primary"
     tools:tint="@color/accent" />
 
