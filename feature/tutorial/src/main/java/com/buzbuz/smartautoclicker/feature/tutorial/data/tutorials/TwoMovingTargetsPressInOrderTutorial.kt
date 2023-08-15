@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialData
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialInfo
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialStepData
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameData
-import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.OneMovingTargetRules
+import com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules.TwoMovingTargetsPressInOrderRules
 
 internal val twoMovingTargetsPressInOrderTutorialInfo: TutorialInfo =
     TutorialInfo(
@@ -36,7 +36,7 @@ internal fun newTwoMovingTargetsPressInOrderTutorial(): TutorialData =
         info = twoMovingTargetsPressInOrderTutorialInfo,
         game = TutorialGameData(
             instructionsResId = R.string.message_tutorial_1_step_1,
-            gameRules = OneMovingTargetRules(10),
+            gameRules = TwoMovingTargetsPressInOrderRules(10),
         ),
         steps = listOf(
             TutorialStepData.TutorialOverlay(
