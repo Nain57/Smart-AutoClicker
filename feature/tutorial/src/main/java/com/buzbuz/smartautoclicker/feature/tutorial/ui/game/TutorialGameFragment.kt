@@ -70,6 +70,7 @@ class TutorialGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lockMenuPosition()
+        OverlayManager.getInstance(requireContext()).hideAll()
 
         viewBinding.apply {
             blueTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.BLUE) }
@@ -92,13 +93,8 @@ class TutorialGameFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        OverlayManager.getInstance(requireContext()).hideAll()
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
 
         val overlayManager = OverlayManager.getInstance(requireContext())
         overlayManager.removeTopOverlay()

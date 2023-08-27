@@ -370,7 +370,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
      * @param visible true for visible, false for gone.
      */
     protected fun setMenuItemVisibility(view: View, visible: Boolean) {
-        Log.d(TAG, "setMenuItemVisibility $view to $visible")
+        Log.d(TAG, "setMenuItemVisibility for ${hashCode()}, $view to $visible")
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
@@ -409,6 +409,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
      */
     protected fun setOverlayViewVisibility(newVisibility: Int) {
         screenOverlayView?.apply {
+
+            Log.d(TAG, "setOverlayViewVisibility for ${hashCode()} with visibility $newVisibility")
             visibility = newVisibility
             hideOverlayButton?.let {
                 setMenuItemViewEnabled(it, visibility == View.GONE , true)

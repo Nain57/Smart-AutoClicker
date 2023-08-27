@@ -64,17 +64,13 @@ class TutorialActivity : AppCompatActivity() {
                 }
             }
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        setFloatingUiVisibility(false)
         viewModel.startTutorialMode()
     }
 
-    override fun onStop() {
+    override fun onDestroy() {
         viewModel.stopTutorialMode()
-        super.onStop()
+        super.onDestroy()
         setFloatingUiVisibility(true)
     }
 
