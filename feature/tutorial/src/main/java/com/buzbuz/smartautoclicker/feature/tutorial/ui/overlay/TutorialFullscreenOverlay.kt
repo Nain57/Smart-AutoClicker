@@ -28,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.IncludeTutorialInstructionsBinding
@@ -47,7 +48,7 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
 
     override fun onCreateView(layoutInflater: LayoutInflater): View {
         viewBinding = OverlayTutorialBinding.inflate(layoutInflater).apply {
-            buttonSkipAll.setOnClickListener { viewModel.skipAllTutorialSteps() }
+            buttonSkipAll.setOnClickListener { onSkipAllClicked() }
             buttonNext.setOnClickListener { viewModel.toNextTutorialStep() }
             tutorialBackground.onMonitoredViewClickedListener = viewModel::toNextTutorialStep
         }
@@ -63,6 +64,11 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
                 launch { viewModel.uiState.collect(::updateUiState) }
             }
         }
+    }
+
+    private fun onSkipAllClicked() {
+        OverlayManager.getInstance(context).restoreVisibility()
+        viewModel.toLastTutorialStep()
     }
 
     private fun updateUiState(uiState: UiTutorialOverlayState?) {

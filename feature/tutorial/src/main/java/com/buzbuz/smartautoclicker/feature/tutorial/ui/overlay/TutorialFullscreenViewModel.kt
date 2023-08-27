@@ -74,8 +74,8 @@ class TutorialOverlayViewModel(application: Application) : AndroidViewModel(appl
         tutorialRepository.nextTutorialStep()
     }
 
-    fun skipAllTutorialSteps() {
-        tutorialRepository.skipAllTutorialSteps()
+    fun toLastTutorialStep() {
+        tutorialRepository.lastTutorialStep()
     }
 }
 

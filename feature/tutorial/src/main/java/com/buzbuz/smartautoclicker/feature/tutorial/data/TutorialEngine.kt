@@ -72,6 +72,12 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         }
     }
 
+    fun lastStep() {
+        val lastStepIndex = _tutorial.value?.steps?.lastIndex ?: return
+        Log.d(TAG, "Go to last step")
+        setStepIndex(lastStepIndex)
+    }
+
     private fun setStepIndex(newIndex: Int) {
         Log.d(TAG, "Set step index to $newIndex")
 
@@ -97,11 +103,6 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
             isGameWon = isGameWon,
             stepStartStackTop = stackTop,
         )
-    }
-
-    fun skipAllSteps() {
-        Log.d(TAG, "Skip all steps")
-        stepState.value = null
     }
 
     fun startGame(area: Rect, targetSize: Int) {

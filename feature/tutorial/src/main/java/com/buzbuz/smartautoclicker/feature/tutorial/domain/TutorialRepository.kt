@@ -209,8 +209,8 @@ class TutorialRepository private constructor(
         tutorialEngine.nextStep()
     }
 
-    fun skipAllTutorialSteps() {
-        tutorialEngine.skipAllSteps()
+    fun lastTutorialStep() {
+        tutorialEngine.lastStep()
     }
 
     fun startGame(area: Rect, targetSize: Int) {
