@@ -87,13 +87,18 @@ class ScenarioDialog(
     }
 
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
-        when (buttonType) {
-            DialogNavigationButton.SAVE -> onConfigSaved()
-            DialogNavigationButton.DISMISS -> onConfigDiscarded()
-            else -> { /* Nothing to do */ }
+        if (buttonType == DialogNavigationButton.SAVE) {
+            onConfigSaved()
+            super.back()
+            return
         }
 
         back()
+    }
+
+    override fun back() {
+        onConfigDiscarded()
+        super.back()
     }
 
     private fun updateContentsValidity(itemsValidity: Map<Int, Boolean>) {

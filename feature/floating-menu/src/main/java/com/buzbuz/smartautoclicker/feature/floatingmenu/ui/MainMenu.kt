@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
 import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.Intent
-import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -42,7 +41,6 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioD
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

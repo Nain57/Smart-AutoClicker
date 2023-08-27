@@ -77,6 +77,8 @@ class EditionRepository private constructor(context: Context) {
             return false
         }
 
+        Log.d(TAG, "Start edition of scenario $scenarioId")
+
         scenarioEditor.startEdition(
             scenario = scenario,
             events = repository.getEvents(scenarioId),
@@ -87,6 +89,8 @@ class EditionRepository private constructor(context: Context) {
 
     /** Save editions changes in the database. */
     suspend fun saveEditions(): Boolean {
+        Log.d(TAG, "Save editions")
+
         val updateResult = repository.updateScenario(
             scenario = scenarioEditor.editedScenario.value ?: return false,
             events = scenarioEditor.eventsEditor.editedList.value ?: return false,
@@ -191,7 +195,10 @@ class EditionRepository private constructor(context: Context) {
     // --- END CONDITION - END ---
 
     /** Cancel all changes made during the edition. */
-    fun stopEdition(): Unit = scenarioEditor.stopEdition()
+    fun stopEdition() {
+        Log.d(TAG, "Stop edition")
+        scenarioEditor.stopEdition()
+    }
 
     // --- SCENARIO - END ---
 }
