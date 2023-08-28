@@ -51,24 +51,6 @@ abstract class EndConditionDao {
     abstract suspend fun getEndConditionsWithEvent(scenarioId: Long): List<EndConditionWithEvent>
 
     /**
-     * Synchronize the end conditions in the database.
-     *
-     * @param add the conditions to be added.
-     * @param update the conditions to be updated.
-     * @param delete the conditions to be deleted.
-     */
-    @Transaction
-    open suspend fun syncEndConditions(
-        add: List<EndConditionEntity>,
-        update: List<EndConditionEntity>,
-        delete: List<EndConditionEntity>,
-    ) {
-        addEndConditions(add)
-        updateEndConditions(update)
-        deleteEndConditions(delete)
-    }
-
-    /**
      * Add a new end condition to the database.
      *
      * @param endConditionEntities the list of end condition to be added.
@@ -82,7 +64,6 @@ abstract class EndConditionDao {
      * @param endConditionEntities the list of end condition to be updated.
      */
     @Update
-    @VisibleForTesting
     abstract suspend fun updateEndConditions(endConditionEntities: List<EndConditionEntity>)
 
     /**
@@ -91,6 +72,5 @@ abstract class EndConditionDao {
      * @param endConditionEntities the list of end condition to be deleted.
      */
     @Delete
-    @VisibleForTesting
     abstract suspend fun deleteEndConditions(endConditionEntities: List<EndConditionEntity>)
 }

@@ -23,7 +23,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.utils.TestsData
-import com.buzbuz.smartautoclicker.core.database.utils.assertSameContent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -139,69 +138,5 @@ class ActionDaoTests {
         }
 
         assertEquals(completeAction, database.actionDao().getAllActions().first().first())
-    }
-
-    @Test
-    fun syncActions() = runTest {
-        val event1 = TestsData.getNewEventEntity(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-        )
-        val event2 = TestsData.getNewEventEntity(
-            id = TestsData.EVENT_ID_2,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 1,
-        )
-        val action1 = TestsData.getNewPauseEntity(id = 1, eventId = event1.id, pauseDuration = 5L, priority = 0)
-        val actionToBeUpdated = TestsData.getNewClickEntity(id = 2, eventId = event2.id, priority = 0, name = "titi")
-        val actionToBeRemoved = TestsData.getNewSwipeEntity(id = 3, eventId = event2.id,  priority = 1, name = "tutu")
-        database.apply {
-            eventDao().addEvent(event1)
-            eventDao().addEvent(event2)
-            actionDao().addAction(action1.action)
-            actionDao().addAction(actionToBeUpdated.action)
-            actionDao().addAction(actionToBeRemoved.action)
-        }
-
-        val added = TestsData.getNewPauseEntity(id = 4, eventId = event1.id, pauseDuration = 50L, priority = 1)
-        val updated = actionToBeUpdated.copy(action = actionToBeUpdated.action.copy(name = "tata"))
-        database.actionDao().syncActions(listOf(added), listOf(updated), listOf(actionToBeRemoved))
-
-        val expectedActions = listOf(action1, updated, added)
-        assertSameContent(expectedActions, database.actionDao().getAllActions().first()) { completeAction ->
-            completeAction.action.id
-        }
-    }
-
-    @Test
-    fun syncIntentActions() = runTest {
-        val event = TestsData.getNewEventEntity(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-        )
-        val extra1 = TestsData.getNewIntentExtraEntity(id = 1, actionId = TestsData.INTENT_ID, value = "toto")
-        val extraToBeUpdated = TestsData.getNewIntentExtraEntity(id = 2, actionId = TestsData.INTENT_ID, value = "tutu")
-        val extraToBeRemoved = TestsData.getNewIntentExtraEntity(id = 3, actionId = TestsData.INTENT_ID, value = "tata")
-        val completeAction = TestsData.getNewIntentEntity(
-            id = TestsData.INTENT_ID,
-            eventId = event.id,
-            priority = 0,
-            intentExtras = listOf(extra1, extraToBeUpdated, extraToBeRemoved)
-        )
-
-        database.apply {
-            eventDao().addEvent(event)
-            actionDao().syncActions(listOf(completeAction), emptyList(), emptyList())
-        }
-
-        val added = TestsData.getNewIntentExtraEntity(id = 4, actionId = TestsData.INTENT_ID, value = "toto")
-        val updated = extraToBeUpdated.copy(value = "tyty")
-        val expectedExtras = listOf(extra1, added, updated)
-        val updatedAction = completeAction.copy(intentExtras = expectedExtras)
-        database.actionDao().syncActions(emptyList(), listOf(updatedAction), emptyList())
-
-        assertSameContent(expectedExtras, database.actionDao().getAllActions().first().first().intentExtras) { it.id }
     }
 }

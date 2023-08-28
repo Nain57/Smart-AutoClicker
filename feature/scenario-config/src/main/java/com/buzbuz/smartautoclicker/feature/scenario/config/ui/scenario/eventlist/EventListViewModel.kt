@@ -59,7 +59,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
 
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> =
-        combine(repository.getAllEvents(), editionRepository.editionState.eventsState) { allEvts, scenarioEvts ->
+        combine(repository.getAllEventsFlow(), editionRepository.editionState.eventsState) { allEvts, scenarioEvts ->
             allEvts.isNotEmpty() || !scenarioEvts.value.isNullOrEmpty()
         }
 

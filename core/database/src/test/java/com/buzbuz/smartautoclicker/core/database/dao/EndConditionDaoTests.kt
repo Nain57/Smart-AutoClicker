@@ -23,7 +23,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionWithEvent
 import com.buzbuz.smartautoclicker.core.database.utils.TestsData
-import com.buzbuz.smartautoclicker.core.database.utils.assertSameContent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -176,39 +175,5 @@ class EndConditionDaoTests {
             eventEntity,
             database.eventDao().getEventsFlow(scenarioEntity.id).first().first(),
         )
-    }
-
-    @Test
-    fun syncEndConditions() = runTest {
-        val scenario = TestsData.getNewScenarioEntity()
-        val event1 = TestsData.getNewEventEntity(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-        )
-        val event2 = TestsData.getNewEventEntity(
-            id = TestsData.EVENT_ID_2,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 1,
-        )
-        val endCondition1 = TestsData.getNewEndConditionEntity(id = 1, eventId = event1.id, executions = 5)
-        val endConditionTobeUpdated = TestsData.getNewEndConditionEntity(id = 2, eventId = event2.id, executions = 10)
-        val endConditionToBeRemoved = TestsData.getNewEndConditionEntity(id = 3, eventId = event2.id, executions = 1)
-        val endConditions = mutableListOf(endCondition1, endConditionTobeUpdated, endConditionToBeRemoved)
-        database.apply {
-            scenarioDao().add(scenario)
-            eventDao().addEvent(event1)
-            eventDao().addEvent(event2)
-            endConditionDao().addEndConditions(endConditions)
-        }
-
-        val added = TestsData.getNewEndConditionEntity(id = 4, eventId = event1.id, executions = 99)
-        val updated = endConditionTobeUpdated.copy(executions = 50)
-        database.endConditionDao().syncEndConditions(listOf(added), listOf(updated), listOf(endConditionToBeRemoved))
-
-        val expectedConditions = listOf(endCondition1, updated, added)
-        assertSameContent(expectedConditions, database.endConditionDao().getEndConditions(scenario.id)) { endCondition ->
-            endCondition.id
-        }
     }
 }

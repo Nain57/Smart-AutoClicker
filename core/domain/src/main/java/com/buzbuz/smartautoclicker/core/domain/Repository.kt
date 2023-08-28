@@ -142,22 +142,14 @@ interface Repository {
      * @param scenarioId the identifier of the scenario to ge the events from.
      * @return the list of complete events, ordered by execution priority.
      */
-    suspend fun getCompleteEventList(scenarioId: Long): List<Event>
-
-    /**
-     * Get the list of complete events for a given scenario.
-     *
-     * @param scenarioId the identifier of the scenario to ge the events from.
-     * @return the list of complete events, ordered by execution priority.
-     */
-    fun getCompleteEventListFlow(scenarioId: Long): Flow<List<Event>>
+    fun getEventsFlow(scenarioId: Long): Flow<List<Event>>
 
     /**
      * Get all events from all scenarios.
      *
      * @return the list containing all events.
      */
-    fun getAllEvents(): Flow<List<Event>>
+    fun getAllEventsFlow(): Flow<List<Event>>
 
     /**
      * Get all actions from all events.

@@ -21,7 +21,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
@@ -68,41 +67,23 @@ abstract class ConditionDao {
     abstract suspend fun getValidPathCount(path: String): Int
 
     /**
-     * Synchronize the conditions in the database.
-     *
-     * @param add the conditions to be added.
-     * @param update the conditions to be updated.
-     * @param delete the conditions to be deleted.
-     */
-    @Transaction
-    open suspend fun syncConditions(
-        add: List<ConditionEntity>,
-        update: List<ConditionEntity>,
-        delete: List<ConditionEntity>,
-    ) {
-        addConditions(add)
-        updateConditions(update)
-        deleteConditions(delete)
-    }
-
-    /**
      * Add conditions to the database.
      * @param conditions the conditions to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun addConditions(conditions: List<ConditionEntity>)
+    abstract suspend fun addConditions(conditions: List<ConditionEntity>): List<Long>
 
     /**
      * Update a condition in the database.
      * @param conditions the condition to be updated.
      */
     @Update
-    protected abstract suspend fun updateConditions(conditions: List<ConditionEntity>)
+    abstract suspend fun updateConditions(conditions: List<ConditionEntity>)
 
     /**
      * Delete a list of conditions in the database.
      * @param conditions the conditions to be removed.
      */
     @Delete
-    protected abstract suspend fun deleteConditions(conditions: List<ConditionEntity>)
+    abstract suspend fun deleteConditions(conditions: List<ConditionEntity>)
 }

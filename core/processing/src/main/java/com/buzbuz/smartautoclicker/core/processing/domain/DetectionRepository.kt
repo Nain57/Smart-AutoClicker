@@ -83,7 +83,7 @@ class DetectionRepository private constructor(context: Context) {
         .combine(detectionState) { id, state ->
             if (state == DetectionState.INACTIVE)  return@combine false
 
-            scenarioRepository.getCompleteEventList(id.databaseId).forEach {
+            scenarioRepository.getEvents(id.databaseId).forEach {
                 event -> if (event.enabledOnStart) return@combine true
             }
             false
@@ -109,7 +109,7 @@ class DetectionRepository private constructor(context: Context) {
     suspend fun startDetection(context: Context, progressListener: ProgressListener) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
-        val events = scenarioRepository.getCompleteEventList(id)
+        val events = scenarioRepository.getEvents(id)
         val endCondition = scenarioRepository.getEndConditions(id)
 
         detectorEngine.value?.startDetection(

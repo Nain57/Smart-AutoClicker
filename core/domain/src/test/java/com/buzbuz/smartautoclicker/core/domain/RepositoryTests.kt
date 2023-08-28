@@ -181,7 +181,7 @@ class RepositoryTests {
                     conditions = mutableListOf(TestsData.getNewCondition(eventId = TestsData.EVENT_ID))
                 ),
             ),
-            repository.getCompleteEventListFlow(TestsData.SCENARIO_ID).first(),
+            repository.getEventsFlow(TestsData.SCENARIO_ID).first(),
         )
     }
 

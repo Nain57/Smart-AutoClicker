@@ -52,7 +52,7 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      * This list can contains all events with headers, or the search result depending on the current search query.
      */
     val eventList: Flow<List<EventCopyItem>?> =
-        combine(repository.getAllEvents(), editionRepository.editionState.eventsState, searchQuery) { dbEvents, editedEvents, query ->
+        combine(repository.getAllEventsFlow(), editionRepository.editionState.eventsState, searchQuery) { dbEvents, editedEvents, query ->
             if (query.isNullOrEmpty()) getAllItems(dbEvents, editedEvents.value)
             else getSearchedItems(dbEvents, query)
         }

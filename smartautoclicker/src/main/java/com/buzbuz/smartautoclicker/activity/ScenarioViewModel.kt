@@ -143,7 +143,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
             else ScenarioListItem.EmptyScenarioItem(scenario)
         }
 
-        val events = repository.getCompleteEventList(scenario.id.databaseId).map { event ->
+        val events = repository.getEvents(scenario.id.databaseId).map { event ->
             EventItem(
                 id = event.id.databaseId,
                 eventName = event.name,

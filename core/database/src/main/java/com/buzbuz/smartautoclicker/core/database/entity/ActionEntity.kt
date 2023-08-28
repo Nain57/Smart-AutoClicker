@@ -100,7 +100,7 @@ data class ActionEntity(
     @ColumnInfo(name = "clickPositionType") val clickPositionType: ClickPositionType? = null,
     @ColumnInfo(name = "x") val x: Int? = null,
     @ColumnInfo(name = "y") val y: Int? = null,
-    @ColumnInfo(name = "clickOnConditionId") val clickOnConditionId: Long? = null,
+    @ColumnInfo(name = "clickOnConditionId") var clickOnConditionId: Long? = null,
     @ColumnInfo(name = "pressDuration") val pressDuration: Long? = null,
 
     // ActionType.SWIPE

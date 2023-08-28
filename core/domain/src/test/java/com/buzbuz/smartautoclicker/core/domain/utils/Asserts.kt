@@ -85,9 +85,10 @@ private fun assertSameClickNoIdCheck(expected: Action.Click, actual: Action.Clic
     "Clicks are not the same",
     expected.name == actual.name
             && expected.pressDuration == actual.pressDuration
-            && expected.clickOnCondition == actual.clickOnCondition
+            && expected.positionType == actual.positionType
             && expected.x == actual.x
             && expected.y == actual.y
+            && expected.clickOnConditionId == actual.clickOnConditionId
 )
 
 private fun assertSameSwipeNoIdCheck(expected: Action.Swipe, actual: Action.Swipe) = assertTrue(

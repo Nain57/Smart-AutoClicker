@@ -24,10 +24,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.utils.TestsData
-import com.buzbuz.smartautoclicker.core.database.utils.assertSameContent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
 import org.junit.After
@@ -165,39 +163,5 @@ class ConditionDaoTests {
         }
 
         assertEquals(2, database.conditionDao().getValidPathCount("toto"))
-    }
-
-    @Test
-    fun syncConditions() = runTest {
-        val scenario = TestsData.getNewScenarioEntity()
-        val event1 = TestsData.getNewEventEntity(
-            id = TestsData.EVENT_ID,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 0,
-        )
-        val event2 = TestsData.getNewEventEntity(
-            id = TestsData.EVENT_ID_2,
-            scenarioId = TestsData.SCENARIO_ID,
-            priority = 1,
-        )
-        val condition1 = TestsData.getNewConditionEntity(id = 1, eventId = event1.id, path = "toto")
-        val conditionTobeUpdated = TestsData.getNewConditionEntity(id = 2, eventId = event2.id, path = "titi")
-        val conditionToBeRemoved = TestsData.getNewConditionEntity(id = 3, eventId = event2.id, path = "tutu")
-        val conditions = mutableListOf(condition1, conditionTobeUpdated, conditionToBeRemoved)
-        database.apply {
-            scenarioDao().add(scenario)
-            eventDao().addEvent(event1)
-            eventDao().addEvent(event2)
-            conditionDao().addConditions(conditions)
-        }
-
-        val added = TestsData.getNewConditionEntity(id = 4, eventId = event1.id, path = "tyty")
-        val updated = conditionTobeUpdated.copy(path = "tata")
-        database.conditionDao().syncConditions(listOf(added), listOf(updated), listOf(conditionToBeRemoved))
-
-        val expectedConditions = listOf(condition1, updated, added)
-        assertSameContent(expectedConditions, database.conditionDao().getAllConditions().first()) { condition ->
-            condition.id
-        }
     }
 }

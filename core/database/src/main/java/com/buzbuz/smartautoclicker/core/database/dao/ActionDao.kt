@@ -62,48 +62,6 @@ abstract class ActionDao {
     abstract suspend fun getIntentExtras(actionId: Long): List<IntentExtraEntity>
 
     /**
-     * Synchronize the actions in the database.
-     *
-     * @param add the conditions to be added.
-     * @param update the conditions to be updated.
-     * @param delete the conditions to be deleted.
-     */
-    @Transaction
-    open suspend fun syncActions(
-        add: List<CompleteActionEntity>,
-        update: List<CompleteActionEntity>,
-        delete: List<CompleteActionEntity>,
-    ) {
-        add.forEach { completeAction ->
-            val actionId = addAction(completeAction.action)
-
-            completeAction.intentExtras.forEach { intentExtra ->
-                intentExtra.actionId = actionId
-                addIntentExtra(intentExtra)
-            }
-        }
-
-        update.forEach { completeAction ->
-            updateAction(completeAction.action)
-
-            val extrasToBeRemoved = getIntentExtras(completeAction.action.id).toMutableList()
-            completeAction.intentExtras.forEach { intentExtra ->
-                intentExtra.actionId = completeAction.action.id
-
-                if (intentExtra.id == 0L) {
-                    addIntentExtra(intentExtra)
-                } else {
-                    updateIntentExtra(intentExtra)
-                    extrasToBeRemoved.removeIf { it.id == intentExtra.id }
-                }
-            }
-            if (extrasToBeRemoved.isNotEmpty()) deleteIntentExtras(extrasToBeRemoved)
-        }
-
-        deleteActions(delete.map { it.action })
-    }
-
-    /**
      * Add an action to the database.
      * @param action the action to be added.
      */
@@ -122,26 +80,26 @@ abstract class ActionDao {
      * @param action the action to be updated.
      */
     @Update
-    protected abstract suspend fun updateAction(action: ActionEntity)
+    abstract suspend fun updateAction(action: ActionEntity)
 
     /**
      * Update an intent extra in the database.
      * @param extra the intent extra to be updated.
      */
     @Update
-    protected abstract suspend fun updateIntentExtra(extra: IntentExtraEntity)
+    abstract suspend fun updateIntentExtra(extra: IntentExtraEntity)
 
     /**
      * Delete a list of actions in the database.
      * @param actions the actions to be removed.
      */
     @Delete
-    protected abstract suspend fun deleteActions(actions: List<ActionEntity>)
+    abstract suspend fun deleteActions(actions: List<ActionEntity>)
 
     /**
      * Delete a list of intent extras in the database.
      * @param extras the intent extras to be removed.
      */
     @Delete
-    protected abstract suspend fun deleteIntentExtras(extras: List<IntentExtraEntity>)
+    abstract suspend fun deleteIntentExtras(extras: List<IntentExtraEntity>)
 }

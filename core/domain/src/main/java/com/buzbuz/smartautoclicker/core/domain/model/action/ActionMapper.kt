@@ -20,6 +20,7 @@ import android.content.ComponentName
 
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
+import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
@@ -42,9 +43,10 @@ private fun Action.Click.toClickEntity(): CompleteActionEntity {
             name = name!!,
             type = ActionType.CLICK,
             pressDuration = pressDuration,
+            clickPositionType = positionType.toEntity(),
             x = x,
             y = y,
-            clickOnCondition = clickOnCondition,
+            clickOnConditionId = clickOnConditionId?.databaseId,
         ),
         intentExtras = emptyList(),
     )
@@ -133,9 +135,10 @@ private fun CompleteActionEntity.toClick(asDomain: Boolean = false) = Action.Cli
     eventId = Identifier(id = action.eventId, asDomain = asDomain),
     name = action.name,
     pressDuration = action.pressDuration!!,
+    positionType = action.clickPositionType!!.toDomain(),
     x = action.x,
     y = action.y,
-    clickOnCondition = action.clickOnCondition!!,
+    clickOnConditionId = action.clickOnConditionId?.let { Identifier(id = it, asDomain = asDomain) },
 )
 
 private fun CompleteActionEntity.toSwipe(asDomain: Boolean = false) = Action.Swipe(
@@ -175,6 +178,9 @@ private fun CompleteActionEntity.toToggleEvent(asDomain: Boolean = false) = Acti
     toggleEventId = Identifier(id = action.toggleEventId!!, asDomain = asDomain),
     toggleEventType = action.toggleEventType!!.toDomain(),
 )
+
+private fun ClickPositionType.toDomain(): Action.Click.PositionType =
+    Action.Click.PositionType.valueOf(name)
 
 private fun ToggleEventType.toDomain(): Action.ToggleEvent.ToggleType =
     Action.ToggleEvent.ToggleType.valueOf(name)
