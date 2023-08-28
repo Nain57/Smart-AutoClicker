@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.core.database.utils
 
 import android.database.Cursor
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 
 /**
  * Verify that the content of two lists are the same, in any order.
@@ -42,9 +44,43 @@ fun <T> assertSameContent(expectedItems: List<T>, actualItems: List<T>, identifi
 fun Cursor.assertCountEquals(expectedCount: Int) =
     assertEquals("Invalid list size", expectedCount, count)
 
+fun Cursor.assertColumnEquals(expected: Int, actualColumn: String) =
+    assertEquals(
+        "Invalid column value for $actualColumn",
+        expected,
+        getInt(getColumnIndex(actualColumn))
+    )
+
 fun Cursor.assertColumnEquals(expected: Long, actualColumn: String) =
     assertEquals(
         "Invalid column value for $actualColumn",
         expected,
         getLong(getColumnIndex(actualColumn))
+    )
+
+fun Cursor.assertColumnEquals(expected: String, actualColumn: String) =
+    assertEquals(
+        "Invalid column value for $actualColumn",
+        expected,
+        getString(getColumnIndex(actualColumn))
+    )
+
+fun Cursor.assertColumnEquals(expected: Boolean, actualColumn: String) =
+    assertEquals(
+        "Invalid column value for $actualColumn",
+        expected,
+        getInt(getColumnIndex(actualColumn)) == 1,
+    )
+
+fun <T : Enum<T>> Cursor.assertColumnEquals(expected: T, actualColumn: String) =
+    assertEquals(
+        "Invalid column value for $actualColumn",
+        expected.toString(),
+        getString(getColumnIndex(actualColumn)),
+    )
+
+fun Cursor.assertColumnNull(actualColumn: String) =
+    assertTrue(
+        "Invalid column value for $actualColumn",
+        isNull(getColumnIndex(actualColumn)),
     )

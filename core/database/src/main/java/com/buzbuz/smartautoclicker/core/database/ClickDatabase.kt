@@ -26,6 +26,7 @@ import androidx.room.TypeConverters
 
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionTypeStringConverter
+import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionTypeStringConverter
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
@@ -62,6 +63,7 @@ import com.buzbuz.smartautoclicker.core.database.migrations.*
 )
 @TypeConverters(
     ActionTypeStringConverter::class,
+    ClickPositionTypeStringConverter::class,
     IntentExtraTypeStringConverter::class,
     ToggleEventTypeStringConverter::class,
 )
@@ -95,6 +97,7 @@ abstract class ClickDatabase : ScenarioDatabase() {
                         Migration5to6,
                         Migration6to7,
                         Migration9to10,
+                        Migration10to11,
                     )
                     .build()
 
@@ -106,4 +109,4 @@ abstract class ClickDatabase : ScenarioDatabase() {
 }
 
 /** Current version of the database. */
-const val CLICK_DATABASE_VERSION = 10
+const val CLICK_DATABASE_VERSION = 11

@@ -16,6 +16,15 @@
  */
 package com.buzbuz.smartautoclicker.core.database.utils
 
+import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
+
+
+private fun Boolean?.toSqlite(): String =
+    when (this) {
+        true -> "1"
+        false -> "0"
+        null -> "NULL"
+    }
 
 // ----- Utils for Database V3 -----
 
@@ -172,3 +181,45 @@ fun getInsertV9EmptyAction(id: Long, eventId: Long, name: String, type: String, 
 // ----- Utils for Database V10 -----
 
 fun getV10Actions() = "SELECT * FROM action_table"
+
+fun getInsertV10Swipe(id: Long, eventId: Long, name: String, fromX: Int, fromY: Int, toX: Int, toY: Int, swipeDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, fromX, fromY, toX, toY, swipeDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "SWIPE", $fromX, $fromY, $toX, $toY, $swipeDuration)
+    """.trimIndent()
+
+fun getInsertV10Pause(id: Long, eventId: Long, name: String, pauseDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, pauseDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "PAUSE", $pauseDuration)
+    """.trimIndent()
+
+fun getInsertV10Intent(id: Long, eventId: Long, name: String, advanced: Boolean, broadcast: Boolean, action: String, comp: String, flags: Int, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, isAdvanced, isBroadcast, intent_action, component_name, flags) 
+        VALUES ($id, $eventId, $priority, "$name", "INTENT", ${advanced.toSqlite()}, ${broadcast.toSqlite()}, "$action", "$comp", $flags)
+    """.trimIndent()
+
+fun getInsertV10ToggleEvent(id: Long, eventId: Long, name: String, toggleEventId: Long, toggleType: ToggleEventType, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, toggle_event_id, toggle_type) 
+        VALUES ($id, $eventId, $priority, "$name", "TOGGLE_EVENT", $toggleEventId, "$toggleType")
+    """.trimIndent()
+
+fun getInsertV10Click(id: Long, eventId: Long, name: String, x: Int?, y: Int?, clickOnCondition: Boolean?, pressDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, x, y, clickOnCondition, pressDuration) 
+        VALUES ($id, $eventId, $priority, "$name", "CLICK", $x, $y, ${clickOnCondition.toSqlite()}, $pressDuration)
+    """.trimIndent()
+
+fun getInsertV10Condition(id: Long, eventId: Long, name: String, path: String, left: Int, top: Int, right: Int, bottom: Int,
+                         threshold: Int, detectionType: Int, shouldBeDetected: Boolean) =
+    """
+        INSERT INTO condition_table (id, eventId, name, path, area_left, area_top, area_right, area_bottom, threshold, detection_type, shouldBeDetected) 
+        VALUES ($id, $eventId, "$name","$path", $left, $top, $right, $bottom, $threshold, $detectionType, ${shouldBeDetected.toSqlite()})
+    """.trimIndent()
+
+
+// ----- Utils for Database V11 -----
+
+fun getV11Actions() = "SELECT * FROM action_table"

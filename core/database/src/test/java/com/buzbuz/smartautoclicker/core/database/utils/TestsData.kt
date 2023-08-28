@@ -85,10 +85,11 @@ internal object TestsData {
         y: Int? = CLICK_Y_POSITION,
         eventId: Long,
         priority: Int,
-        clickOnCondition: Boolean = x != null && y != null,
+        clickOnConditionId: Long? = null,
+        clickPositionType: ClickPositionType = if (x != null && y != null) ClickPositionType.USER_SELECTED else ClickPositionType.ON_DETECTED_CONDITION,
     ) = CompleteActionEntity(
         action = ActionEntity(id, eventId, priority, name, ActionType.CLICK, x = x, y = y,
-            clickOnCondition = clickOnCondition, pressDuration = pressDuration),
+            clickPositionType = clickPositionType, clickOnConditionId = clickOnConditionId, pressDuration = pressDuration),
         intentExtras = emptyList(),
     )
 

@@ -19,12 +19,12 @@ package com.buzbuz.smartautoclicker.core.database
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.buzbuz.smartautoclicker.core.database.dao.TutorialDao
 
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionTypeStringConverter
+import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionTypeStringConverter
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
@@ -33,6 +33,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraTypeStringCon
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventTypeStringConverter
 import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
+import com.buzbuz.smartautoclicker.core.database.migrations.Migration10to11
+import com.buzbuz.smartautoclicker.core.database.migrations.Migration1to2
 
 @Database(
     entities = [
@@ -49,6 +51,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
 )
 @TypeConverters(
     ActionTypeStringConverter::class,
+    ClickPositionTypeStringConverter::class,
     IntentExtraTypeStringConverter::class,
     ToggleEventTypeStringConverter::class,
 )
@@ -75,7 +78,11 @@ abstract class TutorialDatabase : ScenarioDatabase() {
                     context.applicationContext,
                     TutorialDatabase::class.java,
                     "tutorial_database",
-                ).build()
+                )
+                    .addMigrations(
+                        Migration10to11,
+                    )
+                    .build()
 
                 INSTANCE = instance
                 instance

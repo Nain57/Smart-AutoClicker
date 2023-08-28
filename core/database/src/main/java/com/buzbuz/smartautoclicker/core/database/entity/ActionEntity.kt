@@ -35,10 +35,13 @@ import kotlinx.serialization.Serializable
  * @param name the name of this action
  * @param type type of this action. Must be the this representation of the [ActionType] enum.
  *
+ * @param clickPositionType [ActionType.CLICK] only: indicates how the click position is interpreted.
+ *                          If USER_SELECTED, [x] and [y] will be used.
+ *                          If ON_DETECTED_CONDITION, the [clickOnConditionId] will be used.
  * @param x [ActionType.CLICK] only: the x position of the click. Null for others [ActionType].
  * @param y [ActionType.CLICK] only: the y position of the click. Null for others [ActionType].
- * @param clickOnCondition [ActionType.CLICK] only: if true, the click will be executed on the detected condition and
- *                         the x and y parameters be null and ignored. If false, the x and y coordinates will be used.
+ * @param clickOnConditionId [ActionType.CLICK] only: if defined, the condition to click on.
+ *                         If null, the x and y coordinates will be used.
  * @param pressDuration [ActionType.CLICK] only: the duration of the click press in milliseconds.
  *                      Null for others [ActionType].
  *
@@ -63,13 +66,19 @@ import kotlinx.serialization.Serializable
  */
 @Entity(
     tableName = "action_table",
-    indices = [Index("eventId"), Index("toggle_event_id")],
+    indices = [Index("eventId"), Index("clickOnConditionId"), Index("toggle_event_id")],
     foreignKeys = [
         ForeignKey(
             entity = EventEntity::class,
             parentColumns = ["id"],
             childColumns = ["eventId"],
             onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = ConditionEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["clickOnConditionId"],
+            onDelete = ForeignKey.SET_NULL,
         ),
         ForeignKey(
             entity = EventEntity::class,
@@ -88,9 +97,10 @@ data class ActionEntity(
     @ColumnInfo(name = "type") val type: ActionType,
 
     // ActionType.CLICK
+    @ColumnInfo(name = "clickPositionType") val clickPositionType: ClickPositionType? = null,
     @ColumnInfo(name = "x") val x: Int? = null,
     @ColumnInfo(name = "y") val y: Int? = null,
-    @ColumnInfo(name = "clickOnCondition") val clickOnCondition: Boolean? = null,
+    @ColumnInfo(name = "clickOnConditionId") val clickOnConditionId: Long? = null,
     @ColumnInfo(name = "pressDuration") val pressDuration: Long? = null,
 
     // ActionType.SWIPE
@@ -141,6 +151,31 @@ internal class ActionTypeStringConverter {
     fun fromString(value: String): ActionType = ActionType.valueOf(value)
     @TypeConverter
     fun toString(action: ActionType): String = action.toString()
+}
+
+/**
+ * Type of click position for a [ActionType.CLICK].
+ * Indicates how to click on the screen for the action.
+ *
+ * /!\ DO NOT RENAME: ClickPositionType enum name is used in the database.
+ */
+enum class ClickPositionType {
+    /** The user must manually select a position to be clicked. */
+    USER_SELECTED,
+    /**
+     * Click on the detected condition.
+     * When the condition operator is AND, click on the condition specified by the user.
+     * When the condition operator is OR, click on the condition detected condition.
+     */
+    ON_DETECTED_CONDITION,
+}
+
+/** Type converter to read/write the [ClickPositionType] into the database. */
+internal class ClickPositionTypeStringConverter {
+    @TypeConverter
+    fun fromString(value: String?): ClickPositionType? = value?.let { ClickPositionType.valueOf(it) }
+    @TypeConverter
+    fun toString(type: ClickPositionType?): String? = type?.toString()
 }
 
 /**
