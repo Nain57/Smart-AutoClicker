@@ -168,7 +168,7 @@ internal class ScenarioSerializer {
                 return@mapNotNull null
             }
 
-            val completeActions = getJsonArray("actions")?.deserializeCompleteActionsCompat()
+            val completeActions = getJsonArray("actions")?.deserializeCompleteActionsCompat(conditions)
             if (completeActions.isNullOrEmpty()) {
                 Log.i(TAG, "Can't deserialize this complete event, there is no actions")
                 return@mapNotNull null
@@ -230,9 +230,10 @@ internal class ScenarioSerializer {
 
     /** @return the deserialized complete action list. */
     @VisibleForTesting
-    internal fun JsonArray.deserializeCompleteActionsCompat(): List<CompleteActionEntity> = mapNotNull { completeActions ->
+    internal fun JsonArray.deserializeCompleteActionsCompat(conditions: List<ConditionEntity>): List<CompleteActionEntity> = mapNotNull { completeActions ->
         with (completeActions.jsonObject) {
-            val action = getJsonObject("action")?.deserializeActionCompat() ?: return@mapNotNull null
+            val action = getJsonObject("action")?.deserializeActionCompat(conditions)
+                ?: return@mapNotNull null
 
             CompleteActionEntity(
                 action = action,
@@ -243,9 +244,9 @@ internal class ScenarioSerializer {
 
     /** @return the deserialized action. */
     @VisibleForTesting
-    internal fun JsonObject.deserializeActionCompat(): ActionEntity? =
+    internal fun JsonObject.deserializeActionCompat(conditions: List<ConditionEntity>): ActionEntity? =
         when (getEnum<ActionType>("type", true)) {
-            ActionType.CLICK -> deserializeClickActionCompat()
+            ActionType.CLICK -> deserializeClickActionCompat(conditions)
             ActionType.SWIPE -> deserializeSwipeActionCompat()
             ActionType.PAUSE -> deserializePauseActionCompat()
             ActionType.INTENT -> deserializeIntentActionCompat()
@@ -255,19 +256,35 @@ internal class ScenarioSerializer {
 
     /** @return the deserialized click action. */
     @VisibleForTesting
-    internal fun JsonObject.deserializeClickActionCompat(): ActionEntity? {
+    internal fun JsonObject.deserializeClickActionCompat(conditions: List<ConditionEntity>): ActionEntity? {
         val id = getLong("id", true) ?: return null
         val eventId = getLong("eventId", true) ?: return null
 
         val x: Int?
         val y: Int?
-        val clickOnCondition = getBoolean("clickOnCondition") ?: false
-        if (clickOnCondition) {
-            x = null
-            y = null
+        val clickOnConditionId: Long?
+        val clickPositionType: ClickPositionType
+
+        // Before v11, they were no condition attached when selecting this option. Starting with v11,
+        // condition id is attached and position type is clearly defined
+        val clickOnCondition = getBoolean("clickOnCondition")
+        if (clickOnCondition != null) {
+            if (clickOnCondition) {
+                x = null
+                y = null
+                clickOnConditionId = conditions.find { it.shouldBeDetected }?.id
+                clickPositionType = ClickPositionType.ON_DETECTED_CONDITION
+            } else {
+                x = getInt("x", true) ?: return null
+                y = getInt("y", true) ?: return null
+                clickOnConditionId = null
+                clickPositionType = ClickPositionType.USER_SELECTED
+            }
         } else {
-            x = getInt("x", true) ?: return null
-            y = getInt("y", true) ?: return null
+            clickPositionType = getEnum<ClickPositionType>("clickPositionType", true) ?: return null
+            clickOnConditionId = getLong("clickOnConditionId")
+            x = getInt("x")
+            y = getInt("y")
         }
 
         return ActionEntity(
@@ -276,7 +293,8 @@ internal class ScenarioSerializer {
             name = getString("name") ?: "",
             priority = getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.CLICK,
-            clickOnCondition = clickOnCondition,
+            clickPositionType = clickPositionType,
+            clickOnConditionId = clickOnConditionId,
             x = x,
             y = y,
             pressDuration = getLong("pressDuration")

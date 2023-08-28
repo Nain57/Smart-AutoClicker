@@ -645,8 +645,8 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertNull(jsonClickNullId.deserializeClickActionCompat())
-            assertNull(jsonClickNullEventId.deserializeClickActionCompat())
+            assertNull(jsonClickNullId.deserializeClickActionCompat(emptyList()))
+            assertNull(jsonClickNullEventId.deserializeClickActionCompat(emptyList()))
         }
     }
 
@@ -679,8 +679,8 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertEquals(DURATION_GESTURE_UPPER_BOUND, jsonClickOver.deserializeClickActionCompat()!!.pressDuration)
-            assertEquals(pressDurationBelow, jsonClickBelow.deserializeClickActionCompat()!!.pressDuration)
+            assertEquals(DURATION_GESTURE_UPPER_BOUND, jsonClickOver.deserializeClickActionCompat(emptyList())!!.pressDuration)
+            assertEquals(pressDurationBelow, jsonClickBelow.deserializeClickActionCompat(emptyList())!!.pressDuration)
         }
     }
 
@@ -711,8 +711,8 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertNull(jsonClickNullX.deserializeClickActionCompat())
-            assertNull(jsonClickNullY.deserializeClickActionCompat())
+            assertNull(jsonClickNullX.deserializeClickActionCompat(emptyList()))
+            assertNull(jsonClickNullY.deserializeClickActionCompat(emptyList()))
         }
     }
 
@@ -743,8 +743,8 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertNotNull(jsonClickNullX.deserializeClickActionCompat())
-            assertNotNull(jsonClickNullY.deserializeClickActionCompat())
+            assertNotNull(jsonClickNullX.deserializeClickActionCompat(emptyList()))
+            assertNotNull(jsonClickNullY.deserializeClickActionCompat(emptyList()))
         }
     }
 
@@ -763,7 +763,7 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertNotNull(jsonClick.deserializeClickActionCompat())
+            assertNotNull(jsonClick.deserializeClickActionCompat(emptyList()))
         }
     }
 
