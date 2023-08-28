@@ -16,9 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.domain
 
+import android.graphics.Point
 import android.graphics.Rect
 
-import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
@@ -26,6 +26,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 data class DebugInfo(
     val event: Event,
     val condition: Condition,
-    val detectionResult: DetectionResult,
+    val isDetected: Boolean,
+    val position: Point = Point(),
+    val confidenceRate: Double,
     val conditionArea: Rect,
 )

@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.core.processing.data
 import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import android.graphics.Path
-import android.graphics.Point
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Pause
@@ -29,6 +29,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.domain.model.action.putDomainExtra
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ProcessingResults
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -55,12 +57,12 @@ internal class ActionExecutor(
     /**
      * Execute the provided actions.
      * @param actions the actions to be executed.
-     * @param conditionPosition the position of the detected condition.
+     * @param processingResults contains the detection results for actions that needs context.
      */
-    suspend fun executeActions(actions: List<Action>, conditionPosition: Point?) {
+    suspend fun executeActions(event: Event, actions: List<Action>, processingResults: ProcessingResults) {
         actions.forEach { action ->
             when (action) {
-                is Click -> executeClick(action, conditionPosition)
+                is Click -> executeClick(event, action, processingResults)
                 is Swipe -> executeSwipe(action)
                 is Pause -> executePause(action)
                 is Action.Intent -> executeIntent(action)
@@ -73,20 +75,32 @@ internal class ActionExecutor(
      * Execute the provided click.
      * @param click the click to be executed.
      */
-    private suspend fun executeClick(click: Click, conditionPosition: Point?) {
+    private suspend fun executeClick(event: Event, click: Click, processingResults: ProcessingResults) {
         val clickPath = Path()
         val clickBuilder = GestureDescription.Builder()
 
-        if (click.clickOnCondition) {
-            conditionPosition?.let { conditionCenter ->
-                clickPath.moveTo(conditionCenter.x, conditionCenter.y, randomize)
-            } ?: run {
-                Log.w(TAG, "Can't click on position, there is no condition position")
-                return
+        when (click.positionType) {
+            Click.PositionType.USER_SELECTED ->
+                clickPath.moveTo(click.x!!, click.y!!, randomize)
+
+            Click.PositionType.ON_DETECTED_CONDITION -> {
+                val result = when {
+                    event.conditionOperator == OR ->
+                        processingResults.getFirstMatchResult()
+                    click.clickOnConditionId != null ->
+                        processingResults.getResult(click.eventId.databaseId, click.clickOnConditionId!!.databaseId)
+                    else -> null
+                }
+
+                if (result == null) {
+                    Log.w(TAG, "Click is invalid, can't execute")
+                    return
+                }
+
+                clickPath.moveTo(result.position.x, result.position.y, randomize)
             }
-        } else {
-            clickPath.moveTo(click.x!!, click.y!!, randomize)
         }
+
         clickBuilder.addStroke(
             GestureDescription.StrokeDescription(
                 clickPath,

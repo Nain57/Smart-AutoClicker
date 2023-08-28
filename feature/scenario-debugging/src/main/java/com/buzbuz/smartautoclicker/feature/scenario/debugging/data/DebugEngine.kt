@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.data
 
 import android.content.Context
+import android.graphics.Point
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
@@ -135,7 +136,9 @@ internal class DebugEngine : ProgressListener {
         isEventMatched: Boolean,
         event: Event?,
         condition: Condition?,
-        result: DetectionResult?,
+        isDetected: Boolean?,
+        position: Point?,
+        confidenceRate: Double?,
     ) = mutex.withLock {
         if (generateReport) {
             if (currProcEvtId == null) throw IllegalStateException("completed called before start")
@@ -145,19 +148,19 @@ internal class DebugEngine : ProgressListener {
         }
 
         // Notify current detection progress
-        if (instantData && event != null && condition != null && result != null) {
+        if (instantData && event != null && condition != null && isDetected != null && position != null && confidenceRate != null) {
             val halfWidth = condition.area.width() / 2
             val halfHeight = condition.area.height() / 2
 
-            val coordinates = if (result.position.x == 0 && result.position.y == 0) Rect()
+            val coordinates = if (position.x == 0 && position.y == 0) Rect()
             else Rect(
-                result.position.x - halfWidth,
-                result.position.y - halfHeight,
-                result.position.x + halfWidth,
-                result.position.y + halfHeight
+                position.x - halfWidth,
+                position.y - halfHeight,
+                position.x + halfWidth,
+                position.y + halfHeight
             )
 
-            currentInfo.value = DebugInfo(event, condition, result, coordinates)
+            currentInfo.value = DebugInfo(event, condition, isDetected, position, confidenceRate, coordinates)
         }
     }
 

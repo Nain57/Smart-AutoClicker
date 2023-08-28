@@ -101,8 +101,8 @@ class ScenarioProcessorTests {
                 id = Identifier(1),
                 eventId = Identifier(1),
                 pressDuration = duration,
+                positionType = Action.Click.PositionType.USER_SELECTED,
                 x = 10, y = 10,
-                clickOnCondition = false,
             )
     }
 
