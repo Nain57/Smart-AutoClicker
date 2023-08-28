@@ -59,7 +59,6 @@ private class EventProcessingResults(event: Event) {
         }
 
     fun addResult(conditionId: Long, detected: Boolean, shouldBe: Boolean, pos: Point, confRate: Double) {
-        println("TOTO: addResultCondition ${conditionId}")
         conditionsResults[conditionId]?.apply {
             isDetected = detected
             shouldBeDetected = shouldBe
