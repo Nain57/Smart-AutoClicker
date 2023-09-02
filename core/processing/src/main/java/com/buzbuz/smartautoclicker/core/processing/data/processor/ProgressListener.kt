@@ -53,6 +53,14 @@ interface ProgressListener {
 }
 
 internal suspend fun ProgressListener.onEventProcessingCompleted(event: Event, result: ConditionProcessingResult?) {
-    if (result != null)
-    onEventProcessingCompleted(true, event, result.condition, result.isDetected, result.position, result.confidenceRate)
+    if (result != null) {
+        onEventProcessingCompleted(
+            true,
+            event,
+            result.condition,
+            result.isDetected,
+            result.position,
+            result.confidenceRate
+        )
+    }
 }

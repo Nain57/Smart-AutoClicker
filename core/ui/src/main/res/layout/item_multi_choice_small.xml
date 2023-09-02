@@ -31,14 +31,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/choice_chevron"
+        app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
         android:textAppearance="@style/AppTheme.TextAppearance.ListItemTitle"
         android:gravity="center_vertical"
         tools:text="Title"
         tools:textColor="@android:color/black"/>
 
     <ImageView
-        android:id="@+id/choice_chevron"
+        android:id="@+id/click_selector_chevron"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"

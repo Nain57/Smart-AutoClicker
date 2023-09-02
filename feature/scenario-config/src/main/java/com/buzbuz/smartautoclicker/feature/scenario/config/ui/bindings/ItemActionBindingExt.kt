@@ -82,7 +82,8 @@ private fun Action.Click.toClickDetails(context: Context): ActionDetails {
         name = name!!,
         details = when {
             error -> context.getString(R.string.item_error_action_invalid_generic)
-            clickOnCondition -> context.getString(R.string.item_desc_click_position_on_condition)
+            positionType == Action.Click.PositionType.ON_DETECTED_CONDITION ->
+                context.getString(R.string.item_desc_click_position_on_condition)
             else  -> context.getString(
                 R.string.item_desc_click_details,
                 formatDuration(pressDuration!!), x, y,

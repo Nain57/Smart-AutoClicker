@@ -25,6 +25,7 @@
     <string name="dialog_overlay_title_application_selection">Choisir une application</string>
     <string name="dialog_overlay_title_click">Clic</string>
     <string name="dialog_overlay_title_condition_config">Condition</string>
+    <string name="dialog_overlay_title_condition_selection">Choisir une condition</string>
     <string name="dialog_overlay_title_copy_from">Copier depuis</string>
     <string name="dialog_overlay_title_end_condition_config">Condition de fin</string>
     <string name="dialog_overlay_title_event_config">Évènement</string>
@@ -59,12 +60,16 @@
     <string name="item_desc_click">Cliquer sur l\'écran</string>
     <string name="item_desc_click_details">Pendant %1$s à [%2$d, %3$d]</string>
     <string name="item_desc_click_position_on_condition">Sur la condition</string>
+    <string name="item_desc_click_on_condition_and_operator">%1$s</string>
+    <string name="item_desc_click_on_condition_and_operator_not_found">Pas de condition sélectionnée</string>
+    <string name="item_desc_click_on_condition_or_operator">L\'évènement est défini sur "Une condition", vous ne pouvez pas en spécifier une</string>
     <string name="item_desc_click_on_position">Clic simple sur %1$d, %2$d</string>
     <string name="item_desc_intent">Intéragir avec une autre application</string>
     <string name="item_desc_intent_action">Envoyer %1$s</string>
     <string name="item_desc_intent_action_component">Envoyer %1$s à %2$s</string>
     <string name="item_desc_pause">Faire une pause pendant la détection</string>
     <string name="item_desc_pause_details">Pendant %1$s</string>
+    <string name="item_desc_position_select">Choisir une position</string>
     <string name="item_desc_swipe">Swiper d\'une position à une autre</string>
     <string name="item_desc_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
     <string name="item_desc_swipe_positions">Swiper de %1$d, %2$d à %3$d, %4$d</string>
@@ -73,6 +78,9 @@
     <string name="item_error_action_invalid_generic">Cette action est invalide</string>
     <string name="item_error_action_invalid_toggle_event_target">Évènement cible non trouvé</string>
     <string name="item_title_click">Clic</string>
+    <string name="item_title_click_on_condition_and_operator">Cliquer sur une condition</string>
+    <string name="item_title_click_on_condition_or_operator">Cliquer sur la première condition détectée</string>
+    <string name="item_title_click_position">Position du clic</string>
     <string name="item_title_debug_generate_report">Générer un rapport</string>
     <string name="item_title_debug_show_view">Overlay de débug</string>
     <string name="item_title_intent">Intent</string>
@@ -156,7 +164,6 @@
       - Should be short and concise.
       -->
     <string name="button_text_create_scenario">Créer un scénario</string>
-    <string name="button_text_click_position_select">Choisir une position</string>
     <string name="button_text_intent_extra_type_select">Choisir un type</string>
     <string name="button_text_quality_speed">Vitesse</string>
     <string name="button_text_quality_precision">Précision</string>

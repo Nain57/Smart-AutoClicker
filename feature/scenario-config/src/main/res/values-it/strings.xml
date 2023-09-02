@@ -25,6 +25,7 @@
     <string name="dialog_overlay_title_application_selection">Seleziona un\'applicazione</string>
     <string name="dialog_overlay_title_click">Clic</string>
     <string name="dialog_overlay_title_condition_config">Condizione</string>
+    <string name="dialog_overlay_title_condition_selection">Seleziona una condizione</string>
     <string name="dialog_overlay_title_copy_from">Copia da</string>
     <string name="dialog_overlay_title_end_condition_config">Condizione di Fine</string>
     <string name="dialog_overlay_title_event_config">Evento</string>
@@ -34,7 +35,6 @@
     <string name="dialog_overlay_title_scenario_config">Scenario</string>
     <string name="dialog_overlay_title_swipe">Scorri</string>
     <string name="dialog_overlay_title_toggle_event">Stato evento</string>
-    <string name="dialog_overlay_title_warning">Attenzione</string>
 
     <!--
       - Text for menu items.
@@ -58,12 +58,16 @@
     <string name="item_desc_click">Clicca un punto dello schermo</string>
     <string name="item_desc_click_details">Durante %1$s su [%2$d, %3$d]</string>
     <string name="item_desc_click_position_on_condition">Sulla condizione</string>
+    <string name="item_desc_click_on_condition_and_operator">%1$s</string>
+    <string name="item_desc_click_on_condition_and_operator_not_found">Nessuna condizione selezionata</string>
+    <string name="item_desc_click_on_condition_or_operator">L\'evento è impostato su Una condizione, non è possibile selezionarne uno specifico</string>
     <string name="item_desc_click_on_position">Clicca %1$d, %2$d</string>
     <string name="item_desc_intent">Interagisci con un\'altra applicazione</string>
     <string name="item_desc_intent_action">Invia %1$s</string>
     <string name="item_desc_intent_action_component">Invia %1$s a %2$s</string>
     <string name="item_desc_pause">Sospendi l\'esecuzione</string>
     <string name="item_desc_pause_details">Durante %1$s</string>
+    <string name="item_desc_position_select">Seleziona la posizione</string>
     <string name="item_desc_swipe">Scorri da una posizione sullo schermo all\'altra</string>
     <string name="item_desc_swipe_details">Durante %1$s da [%2$d, %3$d] a [%4$d, %5$d]</string>
     <string name="item_desc_swipe_positions">Scorri da %1$d, %2$d a %3$d, %4$d</string>
@@ -72,6 +76,9 @@
     <string name="item_error_action_invalid_generic">"Questa azione non è valida "</string>
     <string name="item_error_action_invalid_toggle_event_target">"Evento di destinazione non trovato "</string>
     <string name="item_title_click">Clic</string>
+    <string name="item_title_click_on_condition_and_operator">Clicca su</string>
+    <string name="item_title_click_on_condition_or_operator">Fare clic sulla prima condizione rilevata</string>
+    <string name="item_title_click_position">Fare clic sulla posizione</string>
     <string name="item_title_debug_generate_report">Genera un rapporto</string>
     <string name="item_title_debug_show_view">Mostra visualizzazione debug</string>
     <string name="item_title_intent">Intento</string>
@@ -153,7 +160,6 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="button_text_click_position_select">Seleziona la posizione</string>
     <string name="button_text_create_scenario">Crea uno scenario</string>
     <string name="button_text_intent_extra_type_select">Seleziona un tipo</string>
     <string name="button_text_quality_speed">Velocità</string>

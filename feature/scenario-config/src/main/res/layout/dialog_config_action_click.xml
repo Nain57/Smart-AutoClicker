@@ -17,6 +17,7 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,19 +52,89 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
-            <include layout="@layout/include_input_field_dropdown"
-                android:id="@+id/click_position_field"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/extras_card"
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_vertical_large"/>
+                android:layout_marginVertical="@dimen/margin_vertical_large">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/on_position_select_button"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/button_text_click_position_select"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default">
+
+                    <include layout="@layout/include_input_field_dropdown"
+                        android:id="@+id/click_position_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_vertical_large"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        style="@style/AppTheme.Widget.DividerSecondaryH"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_click_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/item_height_big">
+
+                        <ImageView
+                            android:id="@+id/click_selector_condition_icon"
+                            android:layout_width="@dimen/dialog_choice_item_icon_size"
+                            android:layout_height="@dimen/dialog_choice_item_icon_size"
+                            android:layout_marginStart="@dimen/margin_horizontal_small"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/click_selector_title"
+                            android:scaleType="fitCenter"
+                            tools:ignore="ContentDescription"
+                            tools:visibility="gone"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/click_selector_title"
+                            style="@style/AppTheme.List.ItemTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_vertical_mini"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/click_selector_subtext"
+                            app:layout_constraintStart_toEndOf="@id/click_selector_condition_icon"
+                            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
+                            tools:text="Click position"
+                            tools:textColor="@android:color/black"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/click_selector_subtext"
+                            style="@style/AppTheme.List.ItemSubText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/click_selector_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/click_selector_condition_icon"
+                            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
+                            tools:text="@string/item_desc_click_on_condition_or_operator"/>
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/click_selector_chevron"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/click_selector_title"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_chevron"
+                            tools:ignore="ContentDescription"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

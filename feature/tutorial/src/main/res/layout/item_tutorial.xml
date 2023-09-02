@@ -41,7 +41,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/choice_description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/choice_chevron"
+            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
             tools:text="@string/item_title_tutorial_5"
             tools:textColor="@android:color/black"/>
 
@@ -53,11 +53,11 @@
             app:layout_constraintTop_toBottomOf="@id/choice_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/choice_chevron"
+            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
             tools:text="@string/item_desc_tutorial_5"/>
 
         <ImageView
-            android:id="@+id/choice_chevron"
+            android:id="@+id/click_selector_chevron"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"

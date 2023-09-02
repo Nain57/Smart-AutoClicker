@@ -25,6 +25,7 @@
     <string name="dialog_overlay_title_application_selection">Select an application</string>
     <string name="dialog_overlay_title_click">Click</string>
     <string name="dialog_overlay_title_condition_config">Condition</string>
+    <string name="dialog_overlay_title_condition_selection">Select a condition</string>
     <string name="dialog_overlay_title_copy_from">Copy from</string>
     <string name="dialog_overlay_title_end_condition_config">End Condition</string>
     <string name="dialog_overlay_title_event_config">Event</string>
@@ -58,12 +59,16 @@
     <string name="item_desc_click">Click somewhere on the screen</string>
     <string name="item_desc_click_details">During %1$s at [%2$d, %3$d]</string>
     <string name="item_desc_click_position_on_condition">On condition</string>
+    <string name="item_desc_click_on_condition_and_operator">%1$s</string>
+    <string name="item_desc_click_on_condition_and_operator_not_found">No condition selected</string>
+    <string name="item_desc_click_on_condition_or_operator">Event is set to "One Condition", you can\'t select a specific one</string>
     <string name="item_desc_click_on_position">Click on %1$d, %2$d</string>
     <string name="item_desc_intent">Interact with another application</string>
     <string name="item_desc_intent_action">Send %1$s</string>
     <string name="item_desc_intent_action_component">Send %1$s to %2$s</string>
     <string name="item_desc_pause">Pause the detection execution</string>
     <string name="item_desc_pause_details">During %1$s</string>
+    <string name="item_desc_position_select">Select the position</string>
     <string name="item_desc_swipe">Swipe from a position on the screen to another</string>
     <string name="item_desc_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
     <string name="item_desc_swipe_positions">Swipe from %1$d, %2$d to %3$d, %4$d</string>
@@ -72,6 +77,9 @@
     <string name="item_error_action_invalid_generic">This action is invalid</string>
     <string name="item_error_action_invalid_toggle_event_target">Target event not found</string>
     <string name="item_title_click">Click</string>
+    <string name="item_title_click_on_condition_and_operator">Click on a condition</string>
+    <string name="item_title_click_on_condition_or_operator">Click on the first detected condition</string>
+    <string name="item_title_click_position">Click position</string>
     <string name="item_title_debug_generate_report">Generate a report</string>
     <string name="item_title_debug_show_view">Show debug view</string>
     <string name="item_title_intent">Intent</string>
@@ -153,7 +161,6 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="button_text_click_position_select">Select the position</string>
     <string name="button_text_create_scenario">Create a scenario</string>
     <string name="button_text_intent_extra_type_select">Select a type</string>
     <string name="button_text_quality_speed">Speed</string>

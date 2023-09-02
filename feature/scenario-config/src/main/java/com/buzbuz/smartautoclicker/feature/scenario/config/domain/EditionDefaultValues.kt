@@ -55,8 +55,8 @@ internal class EditionDefaultValues(context: Context) {
     fun clickPressDuration(context: Context): Long =
         if (isTutorialModeEnabled()) 1
         else context.getEventConfigPreferences().getClickPressDurationConfig(context)
-    fun clickOnCondition(): Boolean =
-        false
+    fun clickPositionType(): Action.Click.PositionType =
+        Action.Click.PositionType.USER_SELECTED
 
     fun swipeName(context: Context): String =
         context.getString(R.string.default_swipe_name)

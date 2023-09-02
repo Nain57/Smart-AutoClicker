@@ -98,7 +98,7 @@ class EditedItemsBuilder internal constructor(
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.clickName(context),
             pressDuration = defaultValues.clickPressDuration(context),
-            clickOnCondition = defaultValues.clickOnCondition(),
+            positionType = defaultValues.clickPositionType(),
         )
 
     fun createNewSwipe(context: Context): Action.Swipe =

@@ -19,10 +19,6 @@ package com.buzbuz.smartautoclicker.feature.scenario.debugging.domain
 import android.content.Context
 import android.content.SharedPreferences
 
-import com.buzbuz.smartautoclicker.core.detection.DetectionResult
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.data.DebugEngine
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
@@ -72,7 +68,7 @@ class DebuggingRepository private constructor(context: Context) {
 
     /** The DebugInfo for the last positive detection. */
     val lastPositiveInfo: Flow<DebugInfo?> = debugEngine.currentInfo
-        .filter { it?.detectionResult?.isDetected ?: false }
+        .filter { it?.isDetected ?: false }
 
     /** The listener upon scenario detection progress. Must be set at detection start in order to get debugging info. */
     val detectionProgressListener: ProgressListener = debugEngine

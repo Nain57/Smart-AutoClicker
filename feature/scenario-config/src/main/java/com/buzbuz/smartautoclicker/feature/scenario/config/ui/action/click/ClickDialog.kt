@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.click
 
-import android.graphics.Point
 import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
@@ -27,6 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
@@ -36,7 +36,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
@@ -44,6 +43,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.ClickSwipeSelectorMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.CoordinatesSelector
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -105,8 +105,6 @@ class ClickDialog(
                 onItemSelected = viewModel::setClickOnCondition,
                 onItemBound = ::onClickOnDropdownItemBound,
             )
-
-            onPositionSelectButton.setOnClickListener { showPositionSelector() }
         }
 
         return viewBinding.root
@@ -119,8 +117,7 @@ class ClickDialog(
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { viewModel.pressDuration.collect(::updateClickDuration) }
                 launch { viewModel.pressDurationError.collect(viewBinding.editPressDurationLayout::setError)}
-                launch { viewModel.clickOnCondition.collect(::updateClickType) }
-                launch { viewModel.position.collect(::updateClickOnPositionButtonText) }
+                launch { viewModel.positionStateUi.collect(::updateClickPositionUiState) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
@@ -130,7 +127,7 @@ class ClickDialog(
         super.onStart()
         viewModel.apply {
             monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-            monitorSelectPositionView(viewBinding.onPositionSelectButton)
+            monitorSelectPositionView(viewBinding.layoutClickSelector)
             monitorClickOnDropdownView(viewBinding.clickPositionField.root)
         }
     }
@@ -166,33 +163,39 @@ class ClickDialog(
         viewBinding.editPressDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
     }
 
-    private fun updateClickType(newType: DropdownItem) {
-        viewBinding.apply {
-            clickPositionField.setSelectedItem(newType)
+    private fun updateClickPositionUiState(state: ClickPositionUiState?) {
+        state ?: return
 
-            when (newType) {
-                viewModel.clickTypeItemOnCondition -> {
-                    onPositionSelectButton.isEnabled = false
-                }
-                viewModel.clickTypeItemOnPosition -> {
-                    onPositionSelectButton.isEnabled = true
-                    onPositionSelectButton.visibility = View.VISIBLE
+        viewBinding.apply {
+            clickPositionField.setSelectedItem(state.selectedChoice)
+            clickSelectorTitle.text = state.selectorTitle
+
+            if (state.selectorSubText != null) {
+                clickSelectorSubtext.text = state.selectorSubText
+                clickSelectorSubtext.visibility = View.VISIBLE
+            } else {
+                clickSelectorSubtext.text = null
+                clickSelectorSubtext.visibility = View.GONE
+            }
+
+            if (state.selectorIcon != null) {
+                clickSelectorConditionIcon.setImageBitmap(state.selectorIcon)
+                clickSelectorConditionIcon.visibility = View.VISIBLE
+            } else {
+                clickSelectorConditionIcon.setImageIcon(null)
+                clickSelectorConditionIcon.visibility = View.GONE
+            }
+
+            clickSelectorChevron.visibility = if (state.chevronIsVisible) View.VISIBLE else View.GONE
+
+            layoutClickSelector.setOnClickListener {
+                when (state.action) {
+                    ClickPositionSelectorAction.NONE -> Unit
+                    ClickPositionSelectorAction.SELECT_POSITION -> showPositionSelector()
+                    ClickPositionSelectorAction.SELECT_CONDITION -> showConditionSelector()
                 }
             }
         }
-    }
-
-    private fun updateClickOnPositionButtonText(position: Point?) {
-        if (position == null) {
-            viewBinding.onPositionSelectButton.setText(R.string.button_text_click_position_select)
-            return
-        }
-
-        viewBinding.onPositionSelectButton.text = context.getString(
-            R.string.item_desc_click_on_position,
-            position.x,
-            position.y
-        )
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
@@ -213,5 +216,16 @@ class ClickDialog(
                 },
             ),
             hideCurrent = true,
+        )
+
+    private fun showConditionSelector() =
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = ConditionSelectionDialog(
+                conditionList = viewModel.availableConditions.value,
+                bitmapProvider = viewModel::getConditionBitmap,
+                onConditionSelected = viewModel::setConditionToBeClicked,
+            ),
+            hideCurrent = false,
         )
 }

@@ -17,42 +17,61 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.click
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Point
 import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.AND
+import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putClickPressDurationConfig
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
+    /** Repository providing access to the database. */
+    private val repository = Repository.getRepository(application)
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
     /** Monitors views for the tutorial. */
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+    /** Event configuration shared preferences. */
+    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
     /** The action being configured by the user. */
     private val configuredClick = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Action.Click>()
-    /** Event configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
 
     /** The name of the click. */
     val name: Flow<String?> = configuredClick
@@ -68,32 +87,35 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     /** Tells if the press duration value is valid or not. */
     val pressDurationError: Flow<Boolean> = configuredClick.map { (it.pressDuration ?: -1) <= 0 }
 
-    /** The position of the click. */
-    val position: Flow<Point?> = configuredClick
-        .map { click ->
-            if (click.clickOnCondition || click.x == null || click.y == null) null
-            else Point(click.x!!, click.y!!)
-        }
+    val availableConditions: StateFlow<List<Condition>> = editionRepository.editionState.editedEventConditionsState
+        .map { editedConditions -> editedConditions.value?.filter { it.shouldBeDetected } ?: emptyList() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val positionStateUi: Flow<ClickPositionUiState?> =
+        combine(editionRepository.editionState.editedEventState, configuredClick) { event, click ->
+            val evt = event.value ?: return@combine null
+
+            when {
+                click.positionType == Action.Click.PositionType.USER_SELECTED ->
+                    application.getUserSelectedClickPositionState(click)
+                click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
+                    application.getOnConditionWithOrPositionState()
+                click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
+                    application.getOnConditionWithAndPositionState(evt, click)
+                else -> null
+            }
+        }.distinctUntilChanged()
 
     val clickTypeItemOnCondition = DropdownItem(
         title = R.string.dropdown_item_title_click_position_type_on_condition,
         helperText = R.string.dropdown_helper_text_click_position_type_on_condition,
     )
-    val clickTypeItemOnPosition = DropdownItem(
+    private val clickTypeItemOnPosition = DropdownItem(
         title= R.string.dropdown_item_title_click_position_type_on_position,
         helperText = R.string.dropdown_helper_text_click_position_type_on_position,
     )
     /** Items for the click type dropdown field. */
     val clickTypeItems = listOf(clickTypeItemOnCondition, clickTypeItemOnPosition)
-    /** If the click should be made on the detected condition. */
-    val clickOnCondition: Flow<DropdownItem> = configuredClick
-        .map { click ->
-            when (click.clickOnCondition) {
-                true -> clickTypeItemOnCondition
-                false -> clickTypeItemOnPosition
-            }
-        }
-        .filterNotNull()
 
     /** Tells if the configured click is valid and can be saved. */
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
@@ -112,13 +134,13 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     /** Set if this click should be made on the detected condition. */
     fun setClickOnCondition(newItem: DropdownItem) {
         editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
-            val clickOnCondition = when (newItem) {
-                clickTypeItemOnCondition -> true
-                clickTypeItemOnPosition -> false
+            val positionType = when (newItem) {
+                clickTypeItemOnCondition -> Action.Click.PositionType.ON_DETECTED_CONDITION
+                clickTypeItemOnPosition -> Action.Click.PositionType.USER_SELECTED
                 else -> return
             }
 
-            editionRepository.updateEditedAction(click.copy(clickOnCondition = clickOnCondition))
+            editionRepository.updateEditedAction(click.copy(positionType = positionType))
         }
     }
 
@@ -139,6 +161,42 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     fun setPressDuration(durationMs: Long?) {
         editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(pressDuration = durationMs))
+        }
+    }
+
+    /**
+     * Get the bitmap corresponding to a condition.
+     * Loading is async and the result notified via the onBitmapLoaded argument.
+     *
+     * @param condition the condition to load the bitmap of.
+     * @param onBitmapLoaded the callback notified upon completion.
+     */
+    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+        if (condition.bitmap != null) {
+            onBitmapLoaded.invoke(condition.bitmap)
+            return null
+        }
+
+        if (condition.path != null) {
+            return viewModelScope.launch(Dispatchers.IO) {
+                val bitmap = repository.getBitmap(condition.path!!, condition.area.width(), condition.area.height())
+
+                if (isActive) {
+                    withContext(Dispatchers.Main) {
+                        onBitmapLoaded.invoke(bitmap)
+                    }
+                }
+            }
+        }
+
+        onBitmapLoaded.invoke(null)
+        return null
+    }
+
+    /** Set the condition to click on when the events conditions are fulfilled. */
+    fun setConditionToBeClicked(condition: Condition) {
+        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+            editionRepository.updateEditedAction(click.copy(clickOnConditionId = condition.id))
         }
     }
 
@@ -179,4 +237,68 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION)
         monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON)
     }
+
+    private fun Context.getUserSelectedClickPositionState(click: Action.Click): ClickPositionUiState {
+        val positionText =
+            if (click.x == null || click.y == null) getString(R.string.item_desc_position_select)
+            else getString(R.string.item_desc_click_on_position, click.x!!, click.y!!)
+
+        return ClickPositionUiState(
+            selectedChoice = clickTypeItemOnPosition,
+            selectorTitle = getString(R.string.item_title_click_position),
+            selectorSubText = positionText,
+            selectorIcon = null,
+            chevronIsVisible = true,
+            action = ClickPositionSelectorAction.SELECT_POSITION,
+        )
+    }
+
+    private fun Context.getOnConditionWithOrPositionState(): ClickPositionUiState =
+        ClickPositionUiState(
+            selectedChoice = clickTypeItemOnCondition,
+            selectorTitle = getString(R.string.item_title_click_on_condition_or_operator),
+            selectorSubText = getString(R.string.item_desc_click_on_condition_or_operator),
+            selectorIcon = null,
+            chevronIsVisible = false,
+            action = ClickPositionSelectorAction.NONE,
+        )
+
+    private suspend fun Context.getOnConditionWithAndPositionState(event: Event, click: Action.Click): ClickPositionUiState {
+        val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
+        val conditionBitmap = conditionToClick?.let { condition ->
+            condition.bitmap ?: condition.path?.let { path ->
+                repository.getBitmap(path, condition.area.width(), condition.area.height())
+            }
+        }
+
+        val subText: String =
+            if (conditionToClick == null || conditionBitmap == null) getString(R.string.item_desc_click_on_condition_and_operator_not_found)
+            else getString(R.string.item_desc_click_on_condition_and_operator, conditionToClick.name)
+
+        val atLeastOneCondition = availableConditions.value.isNotEmpty()
+
+        return ClickPositionUiState(
+            selectedChoice = clickTypeItemOnCondition,
+            selectorTitle = getString(R.string.item_title_click_on_condition_and_operator),
+            selectorSubText = subText,
+            selectorIcon = conditionBitmap,
+            chevronIsVisible = atLeastOneCondition,
+            action = if (atLeastOneCondition) ClickPositionSelectorAction.SELECT_CONDITION else ClickPositionSelectorAction.NONE,
+        )
+    }
+}
+
+data class ClickPositionUiState(
+    val selectedChoice: DropdownItem,
+    val selectorTitle: String,
+    val selectorSubText: String?,
+    val selectorIcon: Bitmap?,
+    val chevronIsVisible: Boolean,
+    val action: ClickPositionSelectorAction,
+)
+
+enum class ClickPositionSelectorAction {
+    NONE,
+    SELECT_POSITION,
+    SELECT_CONDITION,
 }

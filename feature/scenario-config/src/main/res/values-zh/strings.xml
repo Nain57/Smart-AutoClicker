@@ -25,6 +25,7 @@
     <string name="dialog_overlay_title_application_selection">选择一个应用程序</string>
     <string name="dialog_overlay_title_click">单击</string>
     <string name="dialog_overlay_title_condition_config">条件</string>
+    <string name="dialog_overlay_title_condition_selection">选择条件</string>
     <string name="dialog_overlay_title_copy_from">复制自</string>
     <string name="dialog_overlay_title_end_condition_config">终止条件</string>
     <string name="dialog_overlay_title_event_config">场景</string>
@@ -58,13 +59,16 @@
     <string name="item_desc_click">单击屏幕某处</string>
     <string name="item_desc_click_details">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
     <string name="item_desc_click_position_on_condition">识别并点击已保存的图片</string>
+    <string name="item_desc_click_on_condition_and_operator">%1$s</string>
+    <string name="item_desc_click_on_condition_and_operator_not_found">未选择条件</string>
+    <string name="item_desc_click_on_condition_or_operator">事件设置为“一个条件”，您无法选择特定条件</string>
     <string name="item_desc_click_on_position">点击 (%1$d, %2$d)</string>
     <string name="item_desc_intent">调用其他的应用程序</string>
     <string name="item_desc_intent_action">发送广播： %1$s</string>
-    <string name="item_desc_intent_action_component">使用附加Action： %1$s 启动 %2$s 活动</string>
-
+    <string name="item_desc_intent_action_component">发送 %1$s 至 %2$s</string>
     <string name="item_desc_pause">延迟一段时间执行</string>
     <string name="item_desc_pause_details">延迟 %1$s</string>
+    <string name="item_desc_position_select">选择一个坐标</string>
     <string name="item_desc_swipe">从A点滑动到B点</string>
     <string name="item_desc_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
     <string name="item_desc_swipe_positions">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
@@ -73,6 +77,9 @@
     <string name="item_error_action_invalid_generic">"此操作无效 "</string>
     <string name="item_error_action_invalid_toggle_event_target">"未找到目标事件 "</string>
     <string name="item_title_click">单击</string>
+    <string name="item_title_click_on_condition_and_operator">单击一个条件</string>
+    <string name="item_title_click_on_condition_or_operator">单击第一个检测到的条件</string>
+    <string name="item_title_click_position">点击位置</string>
     <string name="item_title_debug_generate_report">生成调试报告</string>
     <string name="item_title_debug_show_view">显示调试窗口</string>
     <string name="item_title_intent">意图</string>
@@ -86,7 +93,7 @@
       -->
     <string name="message_empty_actions">未创建动作！</string>
     <string name="message_empty_conditions">未创建条件！</string>
-    <string name="message_empty_copy">Nothing to copy</string>
+    <string name="message_empty_copy">没有什么可复制的</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">没有在脚本中创建场景</string>
     <string name="message_empty_end_condition_config_event_no_selection">没有场景被选择</string>
     <string name="message_empty_event_list">未创建场景！</string>
@@ -154,7 +161,6 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="button_text_click_position_select">选择一个坐标</string>
     <string name="button_text_create_scenario">创建脚本</string>
     <string name="button_text_intent_extra_type_select">选择一个参数类型</string>
     <string name="button_text_quality_speed">速度</string>
@@ -246,10 +252,10 @@
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
-    <string name="content_desc_drag_and_drop">Drag and drop to reorder the elements</string>
-    <string name="content_desc_event_state">The state of the event</string>
-    <string name="content_desc_conditions_count">The number of conditions in this event</string>
-    <string name="content_desc_actions_count">The number of actions in this event</string>
+    <string name="content_desc_drag_and_drop">拖放以重新排序元素</string>
+    <string name="content_desc_event_state">事件的状态</string>
+    <string name="content_desc_conditions_count">本次事件的条件数</string>
+    <string name="content_desc_actions_count">此事件中的操作数</string>
     <string name="content_desc_image_condition">要被检测的图像</string>
     <string name="content_desc_play_pause_scenario">开始或者停止该脚本</string>
     <string name="content_desc_stop_clicker">停止自动点击器</string>
