@@ -79,11 +79,11 @@ sealed class Action {
         override fun isComplete(): Boolean =
             super.isComplete() && pressDuration != null && isPositionValid()
 
+
         override fun deepCopy(): Click = copy(name = "" + name)
 
         private fun isPositionValid(): Boolean =
-            if (positionType == PositionType.USER_SELECTED) x != null && y != null
-            else true
+            (positionType == PositionType.USER_SELECTED && x != null && y != null) || positionType == PositionType.ON_DETECTED_CONDITION
     }
 
     /**

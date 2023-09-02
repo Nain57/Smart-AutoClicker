@@ -31,7 +31,7 @@ class EventsEditor(private val onDeleteEvent: (Event) -> Unit): ListEditor<Event
         override fun isItemComplete(item: Condition): Boolean = item.isComplete()
     }
 
-    val actionsEditor = ActionsEditor(::onEditedEventActionsUpdated)
+    val actionsEditor = ActionsEditor(editedItem::value, ::onEditedEventActionsUpdated)
 
     override fun startItemEdition(item: Event) {
         super.startItemEdition(item)
