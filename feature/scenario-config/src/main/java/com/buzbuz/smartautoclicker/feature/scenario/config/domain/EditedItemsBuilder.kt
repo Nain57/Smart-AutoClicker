@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.IdentifierCreator
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
 
 class EditedItemsBuilder internal constructor(
     context: Context,
@@ -40,6 +41,12 @@ class EditedItemsBuilder internal constructor(
     private val actionsIdCreator = IdentifierCreator()
     private val intentExtrasIdCreator = IdentifierCreator()
     private val endConditionsIdCreator = IdentifierCreator()
+
+    /**
+     * Map of original condition list ids to copy condition ids.
+     * Will contain data only when creating an event from another one.
+     */
+    private val eventCopyConditionIdMap =  mutableMapOf<Identifier, Identifier>()
 
     internal fun resetGeneratedIdsCount() {
         eventsIdCreator.resetIdCount()
@@ -67,9 +74,13 @@ class EditedItemsBuilder internal constructor(
             id = eventId,
             scenarioId = scenarioId,
             name = "" + from.name,
-            conditions = from.conditions.map { createNewConditionFrom(it, eventId) },
+            conditions = from.conditions.map { conditionOrig ->
+                val conditionCopy = createNewConditionFrom(conditionOrig, eventId)
+                eventCopyConditionIdMap[conditionOrig.id] = conditionCopy.id
+                conditionCopy
+            },
             actions = from.actions.map { createNewActionFrom(it, eventId) }
-        )
+        ).also { eventCopyConditionIdMap.clear() }
     }
 
     fun createNewCondition(context: Context, area: Rect, bitmap: Bitmap): Condition =
@@ -141,12 +152,19 @@ class EditedItemsBuilder internal constructor(
         is Action.ToggleEvent -> createNewToggleEventFrom(from, eventId)
     }
 
-    private fun createNewClickFrom(from: Action.Click, eventId: Identifier): Action.Click =
-        from.copy(
+    private fun createNewClickFrom(from: Action.Click, eventId: Identifier): Action.Click {
+        val conditionId =
+            if (from.positionType == PositionType.ON_DETECTED_CONDITION && from.clickOnConditionId != null)
+                eventCopyConditionIdMap[from.clickOnConditionId]
+            else null
+
+        return from.copy(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + from.name,
+            clickOnConditionId = conditionId,
         )
+    }
 
     private fun createNewSwipeFrom(from: Action.Swipe, eventId: Identifier): Action.Swipe =
         from.copy(

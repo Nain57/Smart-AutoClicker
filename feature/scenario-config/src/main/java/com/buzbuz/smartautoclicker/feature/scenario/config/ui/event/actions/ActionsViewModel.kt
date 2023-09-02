@@ -24,17 +24,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.DialogChoice
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.mapList
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.toActionDetails
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
