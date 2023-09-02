@@ -16,6 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
+import android.content.Context
+
+import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -26,9 +29,13 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 
 @Suppress("UNCHECKED_CAST")
-class EditionState internal constructor(private val editor: ScenarioEditor) {
+class EditionState internal constructor(context: Context, private val editor: ScenarioEditor) {
+
+    /** The repository providing access to the database. */
+    private val repository: Repository = Repository.getRepository(context)
 
     val scenarioCompleteState: Flow<EditedElementState<ScenarioEditionState>> =
         combine(
@@ -134,4 +141,34 @@ class EditionState internal constructor(private val editor: ScenarioEditor) {
             action is Action.Click && action.clickOnConditionId == condition.id
         } != null
     }
+
+    val editedScenarioOtherActionsForCopy: Flow<List<Action>> =
+        editor.eventsEditor.editedList
+            .map { events ->
+                events ?: return@map emptyList()
+                val editedEvent = getEditedEvent() ?: return@map emptyList()
+
+                buildList {
+                    events
+                        .filter { item -> item.id != editedEvent.id }
+                        .forEach { event -> addAll(event.actions.filter { !it.isClickOnCondition() }) }
+                }
+            }
+
+    val allOtherScenarioActionsForCopy: Flow<List<Action>> =
+        combine(editor.eventsEditor.editedItem, editedScenarioOtherActionsForCopy, repository.getAllActions()) { editedEvt, scenarioOthers, allOthers ->
+            allOthers.filter { item ->
+                !item.isClickOnCondition()
+                        && item !is Action.ToggleEvent
+                        && editedEvt?.actions?.doesNotContainAction(item) ?: true
+                        && scenarioOthers.doesNotContainAction(item)
+            }
+        }
+
+    private fun Action.isClickOnCondition(): Boolean =
+        this is Action.Click && this.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION
+
+    /** Check if this list does not already contains the provided action */
+    private fun List<Action>.doesNotContainAction(action: Action): Boolean =
+        find { item -> item.id == action.id } == null
 }

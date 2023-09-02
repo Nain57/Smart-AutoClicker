@@ -46,8 +46,6 @@ import kotlinx.coroutines.flow.stateIn
 
 class ActionsViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The repository of the application. */
-    private val repository: Repository = Repository.getRepository(application)
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
@@ -67,17 +65,12 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
 
     /** Tells if there is at least one action to copy. */
     val canCopyAction: Flow<Boolean> = combine(
-        repository.getAllActions(),
-        configuredActions,
-        editionRepository.editionState.eventsState,
-    ) { dbActions, editedActions, scenarioEvents ->
-        if (dbActions.isNotEmpty()) return@combine true
-        if (editedActions.isNotEmpty()) return@combine true
-
-        scenarioEvents.value?.forEach { event ->
-            if (event.actions.isNotEmpty()) return@combine true
-        }
-        false
+        editionRepository.editionState.editedEventState,
+        editionRepository.editionState.editedScenarioOtherActionsForCopy,
+        editionRepository.editionState.allOtherScenarioActionsForCopy,
+    ) { eventState, scenarioActions, allActions ->
+        val event = eventState.value ?: return@combine false
+        event.actions.isNotEmpty() || scenarioActions.isNotEmpty() || allActions.isNotEmpty()
     }
 
     /** List of action details. */

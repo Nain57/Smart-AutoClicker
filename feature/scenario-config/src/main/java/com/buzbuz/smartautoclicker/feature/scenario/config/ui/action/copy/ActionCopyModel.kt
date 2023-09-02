@@ -22,8 +22,6 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
@@ -40,8 +38,6 @@ import kotlinx.coroutines.flow.combine
  */
 class ActionCopyModel(application: Application) : AndroidViewModel(application) {
 
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application)
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
 
@@ -50,43 +46,34 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
 
     /** List of all actions available for copy */
     private val allCopyItems: Flow<List<ActionCopyItem>> = combine(
-        editionRepository.editionState.eventsState,
         editionRepository.editionState.editedEventState,
-        repository.getAllActions(),
-    ) { editedEvents, editedEvent, dbActions ->
-        val event = editedEvent.value ?: return@combine emptyList()
-        val events = editedEvents.value ?: emptyList()
-
+        editionRepository.editionState.editedScenarioOtherActionsForCopy,
+        editionRepository.editionState.allOtherScenarioActionsForCopy,
+    ) { editedEvent, otherActionsFromEditedScenario, otherActionsFromOtherScenario ->
         buildList {
+            val editedEvt = editedEvent.value ?: return@combine emptyList()
+
             // First, add the actions from the current event
-            val eventItems = event.actions
-                .toCopyItemsFromEditedEvents()
-                .sortedBy { it.actionDetails.name }
-            if (eventItems.isNotEmpty()) {
+            if (editedEvt.actions.isNotEmpty()) {
                 add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
-                addAll(eventItems)
+                addAll(
+                    editedEvt.actions
+                        .toCopyItemsFromEditedEvents()
+                        .sortedBy { it.actionDetails.name }
+                )
             }
 
-            // Then, add all other actions. Remove the one already in this event.
-            // There should be no ToggleEvent action, as we can't reference an event from another scenario.
-            val allOtherActions = buildList {
-                val otherEventsActions = buildList {
-                    events
-                        .filter { otherEvent -> event.id != otherEvent.id }
-                        .forEach { otherEditedEvent -> addAll(otherEditedEvent.actions.toCopyItemsFromEditedEvents()) }
-                }
-
-                addAll(otherEventsActions)
-                addAll(dbActions.filter { action ->
-                    action !is Action.ToggleEvent
-                            && eventItems.doesNotContainAction(action.id)
-                            && otherEventsActions.doesNotContainAction(action.id)
-                }.toCopyItemsFromOtherScenarios())
-            }.sortedBy { it.actionDetails.name }
-
+            val allOtherActions = mutableListOf<Action>().apply {
+                addAll(otherActionsFromEditedScenario)
+                addAll(otherActionsFromOtherScenario)
+            }
             if (allOtherActions.isNotEmpty()) {
                 add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
-                addAll(allOtherActions)
+                addAll(
+                    allOtherActions
+                        .toCopyItemsFromOtherScenarios()
+                        .sortedBy { it.actionDetails.name }
+                )
             }
         }.distinctByUiDisplay()
     }
@@ -125,11 +112,6 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
             actionDetails = it.toActionDetails(getApplication()),
         )
     }
-
-    /** Check if this list does not already contains the provided action */
-    private fun List<ActionCopyItem.ActionItem>.doesNotContainAction(actionId: Identifier) = find { item ->
-        item.actionDetails.action.id == actionId
-    } == null
 
     /** Remove all identical items from the list. */
     private fun List<ActionCopyItem>.distinctByUiDisplay() =

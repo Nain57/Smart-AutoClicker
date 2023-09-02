@@ -64,7 +64,7 @@ class EditionRepository private constructor(context: Context) {
     /** Provides creators for all elements in an edited scenario. */
     val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(context, scenarioEditor)
     /** Provides the states of all elements in the edited scenario. */
-    val editionState: EditionState = EditionState(scenarioEditor)
+    val editionState: EditionState = EditionState(context, scenarioEditor)
     /** Tells if the editions made on the scenario are synchronized with the database values. */
     val isEditionSynchronized: Flow<Boolean> = scenarioEditor.editedScenario.map { it == null }
 
