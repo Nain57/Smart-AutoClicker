@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
+import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -37,6 +38,7 @@ class EventsEditor(private val onDeleteEvent: (Event) -> Unit): ListEditor<Event
         super.startItemEdition(item)
         conditionsEditor.startEdition(item.conditions)
         actionsEditor.startEdition(item.actions)
+        println("TOTO start ${item.actions}")
     }
 
     override fun deleteEditedItem() {
@@ -69,14 +71,21 @@ class EventsEditor(private val onDeleteEvent: (Event) -> Unit): ListEditor<Event
     }
 
     private fun onEditedEventConditionsUpdated(conditions: List<Condition>) {
-        editedItem.value?.let { event ->
-            val newActions = editedItem.value?.actions?.toMutableList() ?: return
-            event.actions.forEach { action ->
+        val editedEvent = editedItem.value ?: return
+
+        actionsEditor.editedList.value?.let { actions ->
+            val newActions = actions.toMutableList()
+            actions.forEach { action ->
                 if (action !is Action.Click) return@forEach // Skip all actions but clicks
-                if (conditions.find { action.clickOnConditionId == it.id } == null) newActions.remove(action)
+                if (action.positionType == Action.Click.PositionType.USER_SELECTED) return@forEach
+                if (editedEvent.conditionOperator == AND && conditions.find { action.clickOnConditionId == it.id } == null)
+                    newActions.remove(action)
             }
 
             actionsEditor.updateList(newActions)
+        }
+
+        editedItem.value?.let { event ->
             updateEditedItem(event.copy(conditions = conditions))
         }
     }
