@@ -70,6 +70,13 @@ class EventsEditor(private val onDeleteEvent: (Event) -> Unit): ListEditor<Event
 
     private fun onEditedEventConditionsUpdated(conditions: List<Condition>) {
         editedItem.value?.let { event ->
+            val newActions = editedItem.value?.actions?.toMutableList() ?: return
+            event.actions.forEach { action ->
+                if (action !is Action.Click) return@forEach // Skip all actions but clicks
+                if (conditions.find { action.clickOnConditionId == it.id } == null) newActions.remove(action)
+            }
+
+            actionsEditor.updateList(newActions)
             updateEditedItem(event.copy(conditions = conditions))
         }
     }

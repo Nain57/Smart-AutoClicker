@@ -158,6 +158,10 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    fun isConditionRelatedToClick(): Boolean =
+        editionRepository.editionState.isEditedConditionReferencedByClick()
+
+
     fun monitorSaveButtonView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE, view)
     }

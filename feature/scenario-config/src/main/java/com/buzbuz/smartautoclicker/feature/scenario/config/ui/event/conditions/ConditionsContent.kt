@@ -185,9 +185,9 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         OverlayManager.getInstance(context).navigateTo(
             context = context,
             newOverlay = ConditionDialog(
-                onConfirmClicked = viewModel::upsertEditedCondition,
-                onDeleteClicked = viewModel::removeEditedCondition,
-                onDismissClicked = viewModel::dismissEditedCondition
+                onConfirmClickedListener = viewModel::upsertEditedCondition,
+                onDeleteClickedListener = viewModel::removeEditedCondition,
+                onDismissClickedListener = viewModel::dismissEditedCondition
             ),
         )
     }

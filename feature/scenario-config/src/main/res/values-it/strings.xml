@@ -114,6 +114,7 @@
     <string name="message_event_copy_with_toggle_action_from_another_scenario">Questo evento ha una o più azioni evento di commutazione che fanno riferimento a un evento da un altro scenario.</string>
     <string name="message_event_delete_associated_end_condition">Questo evento ha una o più condizioni di fine che ne fanno riferimento. Cancellare questo evento eliminarà anche le condizioni di fine associate.\nSei sicuro ?</string>
     <string name="message_event_delete_associated_action">Questo evento ha una o più azioni che ne fanno riferimento. Cancellare questo evento eliminarà anche le azioni associate.\nSei sicuro ?</string>
+    <string name="message_condition_delete_associated_action">Questa condizione ha una o più azioni che fanno riferimento ad essa. L\'eliminazione di questa condizione eliminerà anche le azioni associate.\nSei sicuro?</string>
     <string name="message_tutorial_start">Scopri come utilizzare Smart AutoClicker</string>
 
     <!--

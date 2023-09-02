@@ -93,7 +93,7 @@ class EditionState internal constructor(private val editor: ScenarioEditor) {
     val editedEndConditionState: Flow<EditedElementState<EndCondition>> =
         editor.endConditionsEditor.editedItemState
     val eventsAvailableForNewEndCondition: Flow<List<Event>> =
-        combine(eventsState, endConditionsState) { events, endConditions,  ->
+        combine(eventsState, endConditionsState) { events, endConditions ->
             if (endConditions.value.isNullOrEmpty()) events.value ?: emptyList()
             else events.value?.filter { event ->
                 endConditions.value.find { endCondition ->
@@ -122,6 +122,16 @@ class EditionState internal constructor(private val editor: ScenarioEditor) {
             scenarioEvent.actions.find { action ->
                 action is Action.ToggleEvent && action.toggleEventId == event.id
             } != null
+        } != null
+    }
+
+    /** Check if the edited Condition is referenced by a Click Action in the edited event. */
+    fun isEditedConditionReferencedByClick(): Boolean {
+        val condition = editor.eventsEditor.conditionsEditor.editedItem.value ?: return false
+        val actions = editor.eventsEditor.actionsEditor.editedList.value ?: return false
+
+        return actions.find { action ->
+            action is Action.Click && action.clickOnConditionId == condition.id
         } != null
     }
 }

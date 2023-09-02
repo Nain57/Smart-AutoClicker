@@ -108,9 +108,9 @@ abstract class ListEditor<Item>(
     /** Delete a item from the scenario. */
     @CallSuper
     open fun deleteEditedItem() {
-        val newItem = _editedItem.value ?: return
+        val removedItem = _editedItem.value ?: return
         val newItems = _editedList.value?.toMutableList() ?: return
-        val index = newItems.indexOfItem(newItem)
+        val index = newItems.indexOfItem(removedItem)
 
         if (index == -1) {
             stopItemEdition()
