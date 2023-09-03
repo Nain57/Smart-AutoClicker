@@ -70,6 +70,8 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Your device does not provide the standard
+        Android screen capture permission dialog. Smart AutoClicker won\'t be able to run on it.</string>
 
     <!--
       - Toast messages.

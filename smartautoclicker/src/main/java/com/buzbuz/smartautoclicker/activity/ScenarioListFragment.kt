@@ -47,6 +47,7 @@ import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Compan
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
+import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
@@ -270,7 +271,14 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     /** Show the media projection start warning. */
     private fun showMediaProjectionWarning() {
         getSystemService(requireContext(), MediaProjectionManager::class.java)?.let { projectionManager ->
-            projectionActivityResult.launch(projectionManager.createScreenCaptureIntent())
+            // The component name defined in com.android.internal.R.string.config_mediaProjectionPermissionDialogComponent
+            // specifying the dialog to start to request the permission is invalid on some devices (Chinese Honor6X Android 10).
+            // There is nothing to do in those cases, the app can't be used.
+            try {
+                projectionActivityResult.launch(projectionManager.createScreenCaptureIntent())
+            } catch (npe: NullPointerException) {
+                showUnsupportedDeviceDialog()
+            }
         }
     }
 
@@ -324,11 +332,26 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
      */
     private fun showBackupDialog(isImport: Boolean, scenariosToBackup: Collection<Long>? = null) {
         activity?.let {
-            com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
+            BackupDialogFragment
                 .newInstance(isImport, scenariosToBackup)
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }
         scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SELECTION)
+    }
+
+    /**
+     * Some devices messes up too much with Android.
+     * Display a dialog in those cases and stop the application.
+     */
+    private fun showUnsupportedDeviceDialog() {
+        showDialog(MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.dialog_overlay_title_warning)
+            .setMessage(R.string.message_error_screen_capture_permission_dialog_not_found)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                activity?.finish()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create())
     }
 }
 
