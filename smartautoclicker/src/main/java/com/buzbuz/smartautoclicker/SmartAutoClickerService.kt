@@ -23,6 +23,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
+import android.util.AndroidRuntimeException
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 
@@ -256,6 +257,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             startActivity(intent)
         } catch (anfe: ActivityNotFoundException) {
             Log.w(TAG, "Can't start activity, it is not found.")
+        } catch (arex: AndroidRuntimeException) {
+            Log.w(TAG, "Can't start activity, Intent is invalid: $intent", arex)
         }
     }
 
@@ -263,7 +266,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         try {
             sendBroadcast(intent)
         } catch (iaex: IllegalArgumentException) {
-            Log.w(TAG, "Can't send broadcast, it is invalid.")
+            Log.w(TAG, "Can't send broadcast, Intent is invalid: $intent", iaex)
         }
     }
 
