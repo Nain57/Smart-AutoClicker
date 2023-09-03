@@ -35,6 +35,10 @@ internal open class DatabaseListUpdater<I, E>(
     private val entityPrimaryKeySupplier: (item: E) -> Long,
 ) {
 
+    /** The complete new list of items. */
+    private val updateItems = mutableListOf<I>()
+    /** The complete new list of entities. */
+    private val updateEntities = mutableListOf<E>()
     /** The list of items to be added. */
     val toBeAdded = mutableListOf<E>()
     /** The list of items to be updated. */
@@ -57,6 +61,10 @@ internal open class DatabaseListUpdater<I, E>(
             clear()
             addAll(currentEntities)
         }
+        updateItems.apply {
+            clear()
+            addAll(newItems)
+        }
 
         // New items with the default primary key should be added, others should be updated.
         // Updated items are removed from toBeRemoved list.
@@ -70,7 +78,23 @@ internal open class DatabaseListUpdater<I, E>(
                 toBeUpdated.add(newEntity)
                 toBeRemoved.removeIf { entityPrimaryKeySupplier(it) == newItemPrimaryKey }
             }
+            updateEntities.add(newEntity)
         }
+    }
+
+    /** Get the update item corresponding to the entity to add/update/remove. */
+    fun getItemFromEntity(entity: E): I? {
+        val index = updateEntities.indexOf(entity)
+        if (index == -1 || index > updateItems.lastIndex) return null
+
+        return updateItems[index]
+    }
+
+    fun clear() {
+        toBeAdded.clear()
+        toBeUpdated.clear()
+        toBeRemoved.clear()
+        updateItems.clear()
     }
 }
 

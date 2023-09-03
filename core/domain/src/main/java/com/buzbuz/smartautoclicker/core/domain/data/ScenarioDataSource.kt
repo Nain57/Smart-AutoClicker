@@ -194,7 +194,7 @@ internal class ScenarioDataSource(
 
             true
         } catch (ex: Exception) {
-            Log.e(TAG, "Error while updating scenario", ex)
+            Log.e(TAG, "Error while updating scenario\n* Scenario=$scenario\n* Events=$events\n* endCondition=$endConditions", ex)
             false
         }
     }
@@ -232,6 +232,10 @@ internal class ScenarioDataSource(
             currentDatabase.value.eventDao().deleteEvents(evtToBeRemoved)
             clearRemovedEventsBitmaps(evtToBeRemoved)
         }
+
+        conditionsUpdater.clear()
+        actionsUpdater.clear()
+        endConditionsUpdater.clear()
     }
 
     /** Add/Update all events entities. Removals will be done at the end. */
@@ -268,7 +272,7 @@ internal class ScenarioDataSource(
 
         currentDatabase.value.conditionDao().apply {
             addConditions(conditionsUpdater.toBeAdded).forEachIndexed { index, conditionDbId ->
-                conditions[index].id.domainId?.let { conditionDomainId ->
+                conditionsUpdater.getItemFromEntity(conditionsUpdater.toBeAdded[index])?.id?.domainId?.let { conditionDomainId ->
                     scenarioUpdateState.addConditionIdMapping(
                         domainId = conditionDomainId,
                         dbId = conditionDbId,
