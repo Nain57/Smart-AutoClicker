@@ -116,7 +116,14 @@ internal class ProModeBillingDialogFragment : DialogFragment() {
                     layoutNotPurchased.visibility = View.VISIBLE
                     layoutConnecting.visibility = View.GONE
 
-                    reasonText.text = state.billingReasonText
+                    if (state.billingReasonText.isNullOrEmpty()) {
+                        reasonText.text = null
+                        reasonText.visibility = View.GONE
+                    } else {
+                        reasonText.text = state.billingReasonText
+                        reasonText.visibility = View.VISIBLE
+                    }
+
                     buyButton.text = state.acceptButtonText
                 }
             }

@@ -55,10 +55,9 @@ class ProModeBillingActivity : AppCompatActivity() {
                 .putExtra(EXTRA_IS_LIMITATION, advantage is ProModeAdvantage.Limitation)
 
         /** Get the billing reason from the intent extra. */
-        private fun Intent.getBillingReasonExtra(): ProModeAdvantage {
+        private fun Intent.getBillingReasonExtra(): ProModeAdvantage? {
             val reasonString = getStringExtra(EXTRA_BILLING_REASON)
-            if (reasonString == null || !hasExtra(EXTRA_IS_LIMITATION))
-                throw IllegalStateException("ProModeBillingActivity started without a billing reason")
+            if (reasonString == null || !hasExtra(EXTRA_IS_LIMITATION)) return null
 
             return if (getBooleanExtra(EXTRA_IS_LIMITATION, false)) ProModeAdvantage.Limitation.valueOf(reasonString)
                 else ProModeAdvantage.Feature.valueOf(reasonString)

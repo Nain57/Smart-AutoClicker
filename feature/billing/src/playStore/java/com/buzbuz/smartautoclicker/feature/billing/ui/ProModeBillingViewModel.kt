@@ -65,7 +65,7 @@ internal class ProModeBillingViewModel(application: Application) : AndroidViewMo
         DialogState.Connecting,
     )
 
-    fun setBillingReason(reason: ProModeAdvantage) {
+    fun setBillingReason(reason: ProModeAdvantage?) {
         proModeFeature.value = reason
     }
 
@@ -80,7 +80,7 @@ internal class ProModeBillingViewModel(application: Application) : AndroidViewMo
 
 internal sealed class DialogState {
     internal data class NotPurchased(
-        val billingReasonText: String,
+        val billingReasonText: String?,
         val acceptButtonText: String,
     ): DialogState()
 
@@ -90,10 +90,11 @@ internal sealed class DialogState {
 }
 
 
-private fun ProModeAdvantage.toDisplayString(context: Context): String =
+private fun ProModeAdvantage?.toDisplayString(context: Context): String? =
     when (this) {
         is ProModeAdvantage.Feature -> this.toDisplayString(context)
         is ProModeAdvantage.Limitation -> this.toDisplayString(context)
+        null -> null
         else -> throw UnsupportedOperationException("Can't get the string res value for this ProModeAdvantage")
     }
 
