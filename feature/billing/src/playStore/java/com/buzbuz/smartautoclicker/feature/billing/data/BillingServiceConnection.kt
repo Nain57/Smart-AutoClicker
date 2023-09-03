@@ -40,7 +40,7 @@ internal class BillingServiceConnection(
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
 
-        Log.d(LOG_TAG, "onBillingSetupFinished: $responseCode $debugMessage")
+        Log.d(TAG, "onBillingSetupFinished: $responseCode $debugMessage")
 
         when (responseCode) {
             BillingClient.BillingResponseCode.OK -> {
@@ -63,14 +63,17 @@ internal class BillingServiceConnection(
      * specified by RECONNECT_TIMER_MAX_TIME_MILLISECONDS.
      */
     private fun retryBillingServiceConnectionWithExponentialBackoff() {
-        handler.postDelayed(
-            { billingClient.startConnection(this@BillingServiceConnection) },
-            reconnectMilliseconds,
-        )
+        handler.postDelayed({
+            try {
+                billingClient.startConnection(this@BillingServiceConnection)
+            } catch (isex: IllegalStateException) {
+                Log.e(TAG, "connectToBillingService", isex)
+            }
+        }, reconnectMilliseconds)
         reconnectMilliseconds = min(reconnectMilliseconds * 2, RECONNECT_TIMER_MAX_TIME_MILLISECONDS)
     }
 }
 
-private const val LOG_TAG = "BillingServiceConnection"
+private const val TAG = "BillingServiceConnection"
 private const val RECONNECT_TIMER_START_MILLISECONDS = 1000L
 private const val RECONNECT_TIMER_MAX_TIME_MILLISECONDS = 1000L * 60L * 15L // 15 minutes
