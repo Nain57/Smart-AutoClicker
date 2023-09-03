@@ -26,6 +26,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.doesNotContainAction
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isClickOnCondition
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -164,11 +166,4 @@ class EditionState internal constructor(context: Context, private val editor: Sc
                         && scenarioOthers.doesNotContainAction(item)
             }
         }
-
-    private fun Action.isClickOnCondition(): Boolean =
-        this is Action.Click && this.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION
-
-    /** Check if this list does not already contains the provided action */
-    private fun List<Action>.doesNotContainAction(action: Action): Boolean =
-        find { item -> item.id == action.id } == null
 }

@@ -21,24 +21,28 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isValidInEvent
+
+import kotlinx.coroutines.flow.StateFlow
 
 class ActionsEditor(
-    private val editedEvent: () -> Event?,
     onListUpdated: (List<Action>) -> Unit,
-): ListEditor<Action>(onListUpdated) {
+    parentItem: StateFlow<Event?>,
+): ListEditor<Action, Event>(onListUpdated, parentItem = parentItem) {
 
-    val intentExtraEditor = object : ListEditor<IntentExtra<out Any>>(::onEditedActionIntentExtraUpdated, true) {
+    val intentExtraEditor = object : ListEditor<IntentExtra<out Any>, Action>(
+        onListUpdated = ::onEditedActionIntentExtraUpdated,
+        canBeEmpty = true,
+        parentItem = editedItem,
+    ) {
         override fun areItemsTheSame(a: IntentExtra<out Any>, b: IntentExtra<out Any>): Boolean = a.id == b.id
-        override fun isItemComplete(item: IntentExtra<out Any>): Boolean = item.isComplete()
+        override fun isItemComplete(item: IntentExtra<out Any>, parent: Action?): Boolean = item.isComplete()
     }
 
     override fun areItemsTheSame(a: Action, b: Action): Boolean = a.id == b.id
-    override fun isItemComplete(item: Action): Boolean {
-        val event = editedEvent() ?: return false
-        return if (event.conditionOperator == AND && item is Action.Click && item.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION) {
-            item.clickOnConditionId != null && item.isComplete()
-        } else item.isComplete()
-    }
+
+    override fun isItemComplete(item: Action, parent: Event?): Boolean =
+        item.isValidInEvent(parent)
 
     override fun startItemEdition(item: Action) {
         super.startItemEdition(item)

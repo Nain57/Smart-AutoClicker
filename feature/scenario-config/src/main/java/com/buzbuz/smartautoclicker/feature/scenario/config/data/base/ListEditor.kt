@@ -25,15 +25,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 
-abstract class ListEditor<Item>(
+abstract class ListEditor<Item, Parent>(
     private val onListUpdated: ((List<Item>) -> Unit)? = null,
     canBeEmpty: Boolean = false,
+    parentItem: StateFlow<Parent?>,
 ) {
 
     private val referenceList: MutableStateFlow<List<Item>?> = MutableStateFlow(null)
     private val _editedList: MutableStateFlow<List<Item>?> = MutableStateFlow((null))
     val editedList: StateFlow<List<Item>?> = _editedList
-    val listState: Flow<EditedElementState<List<Item>>> = combine(referenceList, _editedList) { ref, edit ->
+    val listState: Flow<EditedElementState<List<Item>>> = combine(referenceList, _editedList, parentItem) { ref, edit, parent ->
         val hasChanged =
             if (ref == null || edit == null) false
             else ref != edit
@@ -41,7 +42,7 @@ abstract class ListEditor<Item>(
         val canBeSaved = when {
             edit == null -> false
             edit.isEmpty() -> canBeEmpty
-            else -> edit.find { !isItemComplete(it) } == null
+            else -> edit.find { !isItemComplete(it, parent) } == null
         }
 
         EditedElementState(edit, hasChanged, canBeSaved)
@@ -50,18 +51,18 @@ abstract class ListEditor<Item>(
     private val referenceEditedItem: MutableStateFlow<Item?> = MutableStateFlow(null)
     private val _editedItem: MutableStateFlow<Item?> = MutableStateFlow((null))
     val editedItem: StateFlow<Item?> = _editedItem
-    val editedItemState: Flow<EditedElementState<Item>> = combine(referenceEditedItem, _editedItem) { ref, edit ->
+    val editedItemState: Flow<EditedElementState<Item>> = combine(referenceEditedItem, _editedItem, parentItem) { ref, edit, parent ->
         val hasChanged =
             if (ref == null || edit == null) false
             else ref != edit
 
-        val canBeSaved = edit?.let { isItemComplete(it) } ?: false
+        val canBeSaved = edit?.let { isItemComplete(it, parent) } ?: false
 
         EditedElementState(edit, hasChanged, canBeSaved)
     }
 
     abstract fun areItemsTheSame(a: Item, b: Item): Boolean
-    abstract fun isItemComplete(item: Item): Boolean
+    abstract fun isItemComplete(item: Item, parent: Parent?): Boolean
 
     fun startEdition(referenceItems: List<Item>) {
         referenceList.value = referenceItems
