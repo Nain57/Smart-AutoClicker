@@ -50,17 +50,17 @@ interface ProgressListener {
     suspend fun onSessionEnded()
 
     suspend fun cancelCurrentProcessing()
+
+    suspend fun cancelCurrentConditionProcessing()
 }
 
 internal suspend fun ProgressListener.onEventProcessingCompleted(event: Event, result: ConditionProcessingResult?) {
-    if (result != null) {
-        onEventProcessingCompleted(
-            true,
-            event,
-            result.condition,
-            result.isDetected,
-            result.position,
-            result.confidenceRate
-        )
-    }
+    onEventProcessingCompleted(
+        true,
+        event,
+        result?.condition,
+        result?.isDetected,
+        result?.position,
+        result?.confidenceRate
+    )
 }

@@ -162,21 +162,25 @@ internal class ScenarioProcessor(
      */
     private suspend fun verifyConditions(event: Event) : Boolean {
         event.conditions.forEach { condition ->
-            progressListener?.onConditionProcessingStarted(condition)
-
             // Verify if the condition is fulfilled.
-            val result = checkCondition(condition) ?: return false
-            processingResults.addResult(condition, result.isDetected, result.position, result.confidenceRate)
+            progressListener?.onConditionProcessingStarted(condition)
+            checkCondition(condition)
+                ?.let { result ->
+                    processingResults.addResult(condition, result.isDetected, result.position, result.confidenceRate)
+                    progressListener?.onConditionProcessingCompleted(result)
 
-            progressListener?.onConditionProcessingCompleted(result)
-
-            if (condition.isNotFulfilled(result)) {
-                // One of the condition isn't fulfilled, it's a false for a AND operator.
-                if (event.conditionOperator == AND) return false
-            } else if (event.conditionOperator == OR) {
-                // One of the condition is fulfilled, it's a yes for a OR operator.
-                return true
-            }
+                    if (condition.isNotFulfilled(result)) {
+                        // One of the condition isn't fulfilled, it's a false for a AND operator.
+                        if (event.conditionOperator == AND) return false
+                    } else if (event.conditionOperator == OR) {
+                        // One of the condition is fulfilled, it's a yes for a OR operator.
+                        return true
+                    }
+                }
+                ?:let {
+                    progressListener?.cancelCurrentConditionProcessing()
+                    return false
+                }
 
             yield()
         }
