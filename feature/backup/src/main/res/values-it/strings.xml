@@ -48,6 +48,7 @@
     <string name="message_backup_import_completed_with_error">Importazione completata\n%1$d scenari importati\n%2$d errori</string>
     <string name="message_backup_import_error">È stato riscontrato un errore e l\'importazione del backup è stata annullata</string>
     <string name="message_backup_import_compatibility">Alcuni degli scenari importati sono stati generati da un dispositivo con uno schermo diverso e ciò potrebbe causare problemi con il rilevamento e le coordinate delle azioni.\n\nPer risolvere il problema, devi acquisire nuovi screenshot per le tue condizioni e aggiornare le posizioni di clic/scorrimento.</string>
+    <string name="message_backup_error_no_zip_app">Nessuna applicazione trovata sul dispositivo per gestire il salvataggio/caricamento di un file zip.</string>
 
 
     <!--

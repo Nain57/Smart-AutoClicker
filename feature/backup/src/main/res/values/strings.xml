@@ -49,6 +49,8 @@
     <string name="message_backup_import_completed_with_error">Import completed\n%1$d scenarios imported\n%2$d errors</string>
     <string name="message_backup_import_error">An error has occurred and the backup import has been cancelled</string>
     <string name="message_backup_import_compatibility">Some of the imported scenarios have been generated from a device with a different screen and this might cause issues with the detection and action coordinates.\n\nTo fix it, you need to take new screenshots for your conditions and update your click/swipe positions.</string>
+    <string name="message_backup_error_no_zip_app">No application found on the device to handle the save/load of a zip file.</string>
+
 
     <!--
       - Content description texts.

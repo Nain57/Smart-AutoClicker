@@ -48,6 +48,7 @@
     <string name="message_backup_import_completed_with_error">已完成导入 \n%1$d 个方案，错误 \n%2$d 个</string>
     <string name="message_backup_import_error">发生错误，备份导入已取消</string>
     <string name="message_backup_import_compatibility">某些导入的场景是从具有不同屏幕的设备生成的，这可能会导致检测和操作坐标出现问题。\n\n要修复它，您需要根据您的情况创建新的屏幕截图并更新您的点击/滑动位置。</string>
+    <string name="message_backup_error_no_zip_app">设备上未找到可处理 zip 文件保存/加载的应用程序</string>
 
 
     <!--

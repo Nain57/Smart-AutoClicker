@@ -17,8 +17,11 @@
 package com.buzbuz.smartautoclicker.feature.backup.ui
 
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -129,10 +132,9 @@ class BackupDialogFragment : DialogFragment() {
                 text = state.fileSelectionText
 
                 setOnClickListener {
-                    backupActivityResult.launch(
-                        if (isImport) backupViewModel.createBackupRestorationFileSelectionIntent()
-                        else backupViewModel.createBackupFileCreationIntent()
-                    )
+                    if (!launchDocumentPicker()) {
+                        Toast.makeText(context, R.string.message_backup_error_no_zip_app, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
 
@@ -171,4 +173,18 @@ class BackupDialogFragment : DialogFragment() {
             }
         }
     }
+
+    private fun launchDocumentPicker(): Boolean =
+        try {
+            backupActivityResult.launch(
+                if (isImport) backupViewModel.createBackupRestorationFileSelectionIntent()
+                else backupViewModel.createBackupFileCreationIntent()
+            )
+            true
+        } catch (anfex: ActivityNotFoundException) {
+            Log.e(TAG, "No application found to load/save a zip file.")
+            false
+        }
 }
+
+private const val TAG = "BackupDialogFragment"
