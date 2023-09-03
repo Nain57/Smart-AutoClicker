@@ -260,7 +260,11 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     }
 
     override fun executeSendBroadcast(intent: Intent) {
-        sendBroadcast(intent)
+        try {
+            sendBroadcast(intent)
+        } catch (iaex: IllegalArgumentException) {
+            Log.w(TAG, "Can't send broadcast, it is invalid.")
+        }
     }
 
     /**
