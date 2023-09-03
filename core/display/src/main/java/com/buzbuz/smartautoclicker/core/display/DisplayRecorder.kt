@@ -140,7 +140,7 @@ class ScreenRecorder internal constructor() {
      * @param context the Android context.
      * @param displaySize the size of the display, in pixels.
      */
-    suspend fun startScreenRecord(context: Context, displaySize: Point) = mutex.withLock {
+    suspend fun startScreenRecord(context: Context, displaySize: Point): Unit = mutex.withLock {
         if (projection == null || imageReader != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
@@ -150,10 +150,15 @@ class ScreenRecorder internal constructor() {
 
         @SuppressLint("WrongConstant")
         imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2)
-        virtualDisplay = projection!!.createVirtualDisplay(
-            VIRTUAL_DISPLAY_NAME, displaySize.x, displaySize.y, context.resources.configuration.densityDpi,
-            DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, imageReader!!.surface, null,
-            null)
+        try {
+            virtualDisplay = projection!!.createVirtualDisplay(
+                VIRTUAL_DISPLAY_NAME, displaySize.x, displaySize.y, context.resources.configuration.densityDpi,
+                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, imageReader!!.surface, null,
+                null)
+        } catch (sEx: SecurityException) {
+            Log.w(TAG, "Screencast permission is no longer valid, stopping Smart AutoClicker...")
+            stopListener?.invoke()
+        }
     }
 
     /** @return the last image of the screen, or null if they have been processed. */
