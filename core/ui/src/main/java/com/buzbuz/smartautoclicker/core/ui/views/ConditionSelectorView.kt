@@ -165,13 +165,9 @@ class ConditionSelectorView(
     fun getSelection(): Pair<Rect, Bitmap> {
         if (!isSelectorValid) throw IllegalStateException("Can't get a selection, selector is invalid.")
 
-        return capture.screenCapture?.let { screenCapture ->
-            val selectionArea = selector.getSelectionArea(capture.captureArea, capture.zoomLevel)
-            selectionArea to Bitmap.createBitmap(
-                screenCapture.bitmap, selectionArea.left,
-                selectionArea.top, selectionArea.width(), selectionArea.height()
-            )
-        } ?: throw IllegalStateException("Can't get a selection, there is no screen capture.")
+        return capture.screenCapture
+            ?.getSelection(selector.getSelectionArea(capture.captureArea, capture.zoomLevel))
+            ?: throw IllegalStateException("Can't get a selection, there is no screen capture.")
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -224,6 +220,13 @@ class ConditionSelectorView(
         capture.onDraw(canvas)
         selector.onDraw(canvas)
         hintsIcons.onDraw(canvas)
+    }
+
+    private fun BitmapDrawable.getSelection(area: Rect): Pair<Rect, Bitmap>? {
+        val captureArea = Rect(0, 0, bitmap.width, bitmap.height)
+        if (!captureArea.intersect(area)) return null
+
+        return captureArea to Bitmap.createBitmap(bitmap, captureArea.left, captureArea.top, captureArea.width(), captureArea.height())
     }
 }
 
