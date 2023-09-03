@@ -26,6 +26,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.ScenarioEditionState
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.doesNotContainAction
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isClickOnCondition
 
@@ -59,26 +62,26 @@ class EditionState internal constructor(context: Context, private val editor: Sc
         editor.editedScenarioState
     fun getScenario(): Scenario? = editor.editedScenario.value
 
-    val eventsState: Flow<EditedElementState<List<Event>>> =
+    val eventsState: Flow<EditedListState<Event>> =
         editor.eventsEditor.listState
     val editedEventState: Flow<EditedElementState<Event>> =
         editor.eventsEditor.editedItemState
     fun getEditedEvent(): Event? = editor.eventsEditor.editedItem.value
 
-    val editedEventConditionsState: Flow<EditedElementState<List<Condition>>> =
+    val editedEventConditionsState: Flow<EditedListState<Condition>> =
         editor.eventsEditor.conditionsEditor.listState
     val editedConditionState: Flow<EditedElementState<Condition>> =
         editor.eventsEditor.conditionsEditor.editedItemState
     fun getEditedCondition(): Condition? = editor.eventsEditor.conditionsEditor.editedItem.value
 
-    val editedEventActionsState: Flow<EditedElementState<List<Action>>> =
+    val editedEventActionsState: Flow<EditedListState<Action>> =
         editor.eventsEditor.actionsEditor.listState
     val editedActionState: Flow<EditedElementState<Action>> =
         editor.eventsEditor.actionsEditor.editedItemState
     fun <T : Action> getEditedAction(): T? =
         editor.eventsEditor.actionsEditor.editedItem.value?.let { it as T }
 
-    val editedActionIntentExtrasState: Flow<EditedElementState<List<IntentExtra<out Any>>>> =
+    val editedActionIntentExtrasState: Flow<EditedListState<IntentExtra<out Any>>> =
         editor.eventsEditor.actionsEditor.intentExtraEditor.listState
     val editedIntentExtraState: Flow<EditedElementState<IntentExtra<out Any>>> =
         editor.eventsEditor.actionsEditor.intentExtraEditor.editedItemState
@@ -97,7 +100,7 @@ class EditionState internal constructor(context: Context, private val editor: Sc
     fun getEditedIntentExtra(): IntentExtra<out Any>? =
         editor.eventsEditor.actionsEditor.intentExtraEditor.editedItem.value
 
-    val endConditionsState: Flow<EditedElementState<List<EndCondition>>> =
+    val endConditionsState: Flow<EditedListState<EndCondition>> =
         editor.endConditionsEditor.listState
     val editedEndConditionState: Flow<EditedElementState<EndCondition>> =
         editor.endConditionsEditor.editedItemState

@@ -41,7 +41,7 @@ fun ItemActionBinding.bind(
         text = details.details
 
         val typedValue = TypedValue()
-        val actionColorAttr = if (!details.action.isComplete()) R.attr.colorError else R.attr.colorOnSurfaceVariant
+        val actionColorAttr = if (details.haveError) R.attr.colorError else R.attr.colorOnSurfaceVariant
         root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
         setTextColor(typedValue.data)
     }
@@ -65,23 +65,21 @@ data class ActionDetails (
 )
 
 /** @return the [ActionDetails] corresponding to this action. */
-fun Action.toActionDetails(context: Context): ActionDetails = when (this) {
-    is Action.Click -> this.toClickDetails(context)
-    is Action.Swipe -> this.toSwipeDetails(context)
-    is Action.Pause -> this.toPauseDetails(context)
-    is Action.Intent -> this.toIntentDetails(context)
-    is Action.ToggleEvent -> this.toToggleEventDetails(context)
+fun Action.toActionDetails(context: Context, inError: Boolean = !isComplete()): ActionDetails = when (this) {
+    is Action.Click -> this.toClickDetails(context, inError)
+    is Action.Swipe -> this.toSwipeDetails(context, inError)
+    is Action.Pause -> this.toPauseDetails(context, inError)
+    is Action.Intent -> this.toIntentDetails(context, inError)
+    is Action.ToggleEvent -> this.toToggleEventDetails(context, inError)
     else -> throw IllegalArgumentException("Not yet supported")
 }
 
-private fun Action.Click.toClickDetails(context: Context): ActionDetails {
-    val error = !isComplete()
-
-    return ActionDetails(
+private fun Action.Click.toClickDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_click,
         name = name!!,
         details = when {
-            error -> context.getString(R.string.item_error_action_invalid_generic)
+            inError -> context.getString(R.string.item_error_action_invalid_generic)
             positionType == Action.Click.PositionType.ON_DETECTED_CONDITION ->
                 context.getString(R.string.item_desc_click_position_on_condition)
             else  -> context.getString(
@@ -90,75 +88,63 @@ private fun Action.Click.toClickDetails(context: Context): ActionDetails {
             )
         },
         action = this,
-        haveError = error,
+        haveError = inError,
     )
-}
 
-private fun Action.Swipe.toSwipeDetails(context: Context): ActionDetails {
-    val error = !isComplete()
-
-    return ActionDetails(
+private fun Action.Swipe.toSwipeDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_swipe,
         name = name!!,
         details = when {
-            error -> context.getString(R.string.item_error_action_invalid_generic)
+            inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
                 R.string.item_desc_swipe_details,
                 formatDuration(swipeDuration!!), fromX, fromY, toX, toY
             )
         },
         action = this,
-        haveError = error,
+        haveError = inError,
     )
-}
 
-private fun Action.Pause.toPauseDetails(context: Context): ActionDetails {
-    val error = !isComplete()
-
-    return ActionDetails(
+private fun Action.Pause.toPauseDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_wait,
         name = name!!,
         details = when {
-            error -> context.getString(R.string.item_error_action_invalid_generic)
+            inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
                 R.string.item_desc_pause_details,
                 formatDuration(pauseDuration!!)
             )
         },
         action = this,
-        haveError = error,
+        haveError = inError,
     )
-}
 
-private fun Action.Intent.toIntentDetails(context: Context): ActionDetails {
-    val error = !isComplete()
-
-    return ActionDetails(
+private fun Action.Intent.toIntentDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_intent,
         name = name!!,
         details = when {
-            error -> context.getString(R.string.item_error_action_invalid_generic)
+            inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> formatIntentDetails(this, context)
         },
         action = this,
-        haveError = error,
+        haveError = inError,
     )
-}
 
-private fun Action.ToggleEvent.toToggleEventDetails(context: Context): ActionDetails {
-    val error = !isComplete()
 
-    return ActionDetails(
+private fun Action.ToggleEvent.toToggleEventDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_toggle_event,
         name = name!!,
         details = when {
-            error -> context.getString(R.string.item_error_action_invalid_toggle_event_target)
+            inError -> context.getString(R.string.item_error_action_invalid_toggle_event_target)
             else -> formatToggleEventState(this, context)
         },
         action = this,
-        haveError = error,
+        haveError = inError,
     )
-}
 
 /**
  * Format a action intent into a human readable string.

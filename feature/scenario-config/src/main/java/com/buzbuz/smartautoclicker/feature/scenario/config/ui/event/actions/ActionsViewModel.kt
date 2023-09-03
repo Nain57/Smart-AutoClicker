@@ -25,7 +25,6 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.DialogChoice
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.mapList
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
@@ -40,7 +39,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 
 class ActionsViewModel(application: Application) : AndroidViewModel(application) {
@@ -54,12 +52,11 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
 
     /** Currently configured actions. */
     private val configuredActions = editionRepository.editionState.editedEventActionsState
-        .mapNotNull { it.value }
 
     /** Tells if the limitation in action count have been reached. */
     val isActionLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
         .combine(configuredActions) { isProModePurchased, actions ->
-            !isProModePurchased && (actions.size >= ProModeAdvantage.Limitation.ACTION_COUNT_LIMIT.limit)
+            !isProModePurchased && ((actions.value?.size ?: 0) >= ProModeAdvantage.Limitation.ACTION_COUNT_LIMIT.limit)
         }
 
     /** Tells if there is at least one action to copy. */
@@ -74,7 +71,11 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
 
     /** List of action details. */
     val actionDetails: Flow<List<Pair<Action, ActionDetails>>> = configuredActions
-        .mapList { action -> action to action.toActionDetails(application) }
+        .map { actions ->
+            actions.value?.mapIndexed { index, action ->
+                action to action.toActionDetails(application, !actions.itemValidity[index])
+            } ?: emptyList()
+        }
     /** Type of actions to be displayed in the new action creation dialog. */
     val actionCreationItems: StateFlow<List<ActionTypeChoice>> = billingRepository.isProModePurchased
         .map { isProModePurchased ->

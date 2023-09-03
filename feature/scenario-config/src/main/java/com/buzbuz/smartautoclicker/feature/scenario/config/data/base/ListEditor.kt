@@ -18,7 +18,8 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.data.base
 
 import androidx.annotation.CallSuper
 
-import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditedElementState
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,18 +35,29 @@ abstract class ListEditor<Item, Parent>(
     private val referenceList: MutableStateFlow<List<Item>?> = MutableStateFlow(null)
     private val _editedList: MutableStateFlow<List<Item>?> = MutableStateFlow((null))
     val editedList: StateFlow<List<Item>?> = _editedList
-    val listState: Flow<EditedElementState<List<Item>>> = combine(referenceList, _editedList, parentItem) { ref, edit, parent ->
+    val listState: Flow<EditedListState<Item>> = combine(referenceList, _editedList, parentItem) { ref, edit, parent ->
         val hasChanged =
             if (ref == null || edit == null) false
             else ref != edit
 
-        val canBeSaved = when {
-            edit == null -> false
-            edit.isEmpty() -> canBeEmpty
-            else -> edit.find { !isItemComplete(it, parent) } == null
+        var canBeSaved = true
+        val itemValidity: MutableList<Boolean> = ArrayList(edit?.size ?: 0)
+        when {
+            edit == null -> canBeSaved = false
+            edit.isEmpty() -> canBeSaved = canBeEmpty
+            else -> {
+                edit.forEach { item ->
+                    if (!isItemComplete(item, parent)) {
+                        canBeSaved = false
+                        itemValidity.add(false)
+                    } else {
+                        itemValidity.add(true)
+                    }
+                }
+            }
         }
 
-        EditedElementState(edit, hasChanged, canBeSaved)
+        EditedListState(edit, itemValidity, hasChanged, canBeSaved)
     }
 
     private val referenceEditedItem: MutableStateFlow<Item?> = MutableStateFlow(null)

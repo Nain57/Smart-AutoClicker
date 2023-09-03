@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.event
 
+import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
@@ -54,6 +55,10 @@ data class Event(
         if (actions.isEmpty()) return false
         actions.forEach { action ->
             if (!action.isComplete()) return false
+            if (conditionOperator == AND
+                && action is Action.Click
+                && action.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION
+                && action.clickOnConditionId == null) return false
         }
 
         return true

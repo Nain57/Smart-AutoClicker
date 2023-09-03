@@ -20,7 +20,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
-import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditedElementState
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
 import kotlinx.coroutines.flow.Flow
 
 import kotlinx.coroutines.flow.MutableStateFlow
