@@ -23,8 +23,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 
@@ -40,6 +38,14 @@ import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.floatingmenu.ui.MainMenu
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -93,6 +99,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         }
     }
 
+    private var serviceScope: CoroutineScope? = null
     /** The metrics of the device screen. */
     private var displayMetrics: DisplayMetrics? = null
     /** The engine for the detection. */
@@ -104,6 +111,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
     /** Local interface providing an API for the [SmartAutoClickerService]. */
     inner class LocalService {
+
+        /** Coroutine job for the delayed start of engine & ui. */
+        private var startJob: Job? = null
 
         /**
          * Start the overlay UI and instantiates the detection objects.
@@ -120,6 +130,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
          * @param scenario the identifier of the scenario of clicks to be used for detection.
          */
         fun start(resultCode: Int, data: Intent, scenario: Scenario) {
+            val coroutineScope = serviceScope ?: return
             if (isStarted) {
                 return
             }
@@ -131,55 +142,66 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 startMonitoring(this@SmartAutoClickerService)
             }
 
-            detectionRepository = DetectionRepository.getDetectionRepository(this@SmartAutoClickerService).apply {
-                setScenarioId(scenario.id)
-                startScreenRecord(
-                    context = this@SmartAutoClickerService,
-                    resultCode = resultCode,
-                    data = data,
-                    androidExecutor = this@SmartAutoClickerService,
-                )
-            }
+            startJob = coroutineScope.launch {
+                delay(500)
 
-            Handler(Looper.getMainLooper()).postDelayed({
+                detectionRepository = DetectionRepository.getDetectionRepository(this@SmartAutoClickerService).apply {
+                    setScenarioId(scenario.id)
+                    startScreenRecord(
+                        context = this@SmartAutoClickerService,
+                        resultCode = resultCode,
+                        data = data,
+                        androidExecutor = this@SmartAutoClickerService,
+                    )
+                }
+
                 overlayManager = OverlayManager.getInstance(this@SmartAutoClickerService).apply {
                     navigateTo(
                         context = this@SmartAutoClickerService,
                         newOverlay = MainMenu { stop() },
                     )
                 }
-            }, 350)
+            }
         }
 
         /** Stop the overlay UI and release all associated resources. */
         fun stop() {
+            val coroutineScope = serviceScope ?: return
             if (!isStarted) {
                 return
             }
 
             isStarted = false
 
-            overlayManager?.closeAll(this@SmartAutoClickerService)
-            overlayManager = null
+            coroutineScope.launch {
+                startJob?.join()
+                startJob = null
 
-            detectionRepository?.stopScreenRecord()
-            detectionRepository = null
+                overlayManager?.closeAll(this@SmartAutoClickerService)
+                overlayManager = null
 
-            displayMetrics?.stopMonitoring(this@SmartAutoClickerService)
-            displayMetrics = null
+                detectionRepository?.stopScreenRecord()
+                detectionRepository = null
 
-            stopForeground(Service.STOP_FOREGROUND_REMOVE)
+                displayMetrics?.stopMonitoring(this@SmartAutoClickerService)
+                displayMetrics = null
+
+                stopForeground(Service.STOP_FOREGROUND_REMOVE)
+            }
         }
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         LOCAL_SERVICE_INSTANCE = LocalService()
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
         LOCAL_SERVICE_INSTANCE?.stop()
         LOCAL_SERVICE_INSTANCE = null
+        serviceScope?.cancel()
+        serviceScope = null
         return super.onUnbind(intent)
     }
 
