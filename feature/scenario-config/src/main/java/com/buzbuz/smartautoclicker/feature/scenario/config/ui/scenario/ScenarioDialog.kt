@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 
@@ -66,6 +67,10 @@ class ScenarioDialog(
         super.onDialogCreated(dialog)
 
         lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingScenario.collect(::onScenarioEditingStateChanged) }
+            }
+
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
                 launch { viewModel.scenarioCanBeSaved.collect(::updateSaveButtonState) }
@@ -110,4 +115,13 @@ class ScenarioDialog(
     private fun updateSaveButtonState(isEnabled: Boolean) {
         topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, isEnabled)
     }
+
+    private fun onScenarioEditingStateChanged(isEditingScenario: Boolean) {
+        if (!isEditingScenario) {
+            Log.e(TAG, "Closing ScenarioDialog because there is no scenario edited")
+            finish()
+        }
+    }
 }
+
+private const val TAG = "ScenarioDialog"

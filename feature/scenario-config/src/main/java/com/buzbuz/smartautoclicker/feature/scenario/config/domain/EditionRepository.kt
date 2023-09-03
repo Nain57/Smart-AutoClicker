@@ -68,6 +68,13 @@ class EditionRepository private constructor(context: Context) {
     /** Tells if the editions made on the scenario are synchronized with the database values. */
     val isEditionSynchronized: Flow<Boolean> = scenarioEditor.editedScenario.map { it == null }
 
+    /** Tells if the user is currently editing a scenario. */
+    val isEditingScenario: Flow<Boolean> = scenarioEditor.editedScenario
+        .map { it?.id != null }
+    /**  Tells if the user is currently editing an event. */
+    val isEditingEvent: Flow<Boolean> = scenarioEditor.eventsEditor.editedItem
+        .map { it?.id != null }
+
     // --- SCENARIO - START ---
 
     /** Set the scenario to be configured. */

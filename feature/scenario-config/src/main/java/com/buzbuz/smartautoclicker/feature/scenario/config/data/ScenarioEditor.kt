@@ -21,8 +21,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
-import kotlinx.coroutines.flow.Flow
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.combine
 internal class ScenarioEditor {
 
     private val referenceScenario: MutableStateFlow<Scenario?> = MutableStateFlow(null)
-    private val _editedScenario: MutableStateFlow<Scenario?> = MutableStateFlow((null))
+    private val _editedScenario: MutableStateFlow<Scenario?> = MutableStateFlow(null)
 
     val editedScenario: StateFlow<Scenario?> = _editedScenario
     val editedScenarioState: Flow<EditedElementState<Scenario>> = combine(referenceScenario, _editedScenario) { ref, edit ->

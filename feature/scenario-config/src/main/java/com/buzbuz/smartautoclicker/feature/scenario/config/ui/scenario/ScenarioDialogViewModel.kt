@@ -24,13 +24,17 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /** ViewModel for the [ScenarioDialog] and its content. */
+@OptIn(FlowPreview::class)
 class ScenarioDialogViewModel(application: Application): AndroidViewModel(application) {
 
     private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
@@ -50,6 +54,11 @@ class ScenarioDialogViewModel(application: Application): AndroidViewModel(applic
             put(R.id.page_more, true)
         }
     }
+
+    /** Tells if the user is currently editing a scenario. If that's not the case, dialog should be closed. */
+    val isEditingScenario: Flow<Boolean> = editionRepository.isEditingScenario
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** Tells if the configured scenario is valid and can be saved in database. */
     val scenarioCanBeSaved: Flow<Boolean> = editionRepository.editionState.scenarioCompleteState

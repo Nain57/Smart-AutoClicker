@@ -33,7 +33,7 @@ abstract class ListEditor<Item, Parent>(
 ) {
 
     private val referenceList: MutableStateFlow<List<Item>?> = MutableStateFlow(null)
-    private val _editedList: MutableStateFlow<List<Item>?> = MutableStateFlow((null))
+    private val _editedList: MutableStateFlow<List<Item>?> = MutableStateFlow(null)
     val editedList: StateFlow<List<Item>?> = _editedList
     val listState: Flow<EditedListState<Item>> = combine(referenceList, _editedList, parentItem) { ref, edit, parent ->
         val hasChanged =
@@ -61,7 +61,7 @@ abstract class ListEditor<Item, Parent>(
     }
 
     private val referenceEditedItem: MutableStateFlow<Item?> = MutableStateFlow(null)
-    private val _editedItem: MutableStateFlow<Item?> = MutableStateFlow((null))
+    private val _editedItem: MutableStateFlow<Item?> = MutableStateFlow(null)
     val editedItem: StateFlow<Item?> = _editedItem
     val editedItemState: Flow<EditedElementState<Item>> = combine(referenceEditedItem, _editedItem, parentItem) { ref, edit, parent ->
         val hasChanged =
@@ -96,6 +96,7 @@ abstract class ListEditor<Item, Parent>(
     }
 
     fun stopEdition() {
+        stopItemEdition()
         referenceList.value = null
         _editedList.value = null
     }

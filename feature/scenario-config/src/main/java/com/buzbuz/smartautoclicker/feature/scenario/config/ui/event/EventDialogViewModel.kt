@@ -24,11 +24,15 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
+@OptIn(FlowPreview::class)
 class EventDialogViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository containing the user editions. */
@@ -55,6 +59,11 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
     /** Tells if the configured event is valid and can be saved. */
     val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState
         .map { it.canBeSaved }
+
+    /** Tells if the user is currently editing an event. If that's not the case, dialog should be closed. */
+    val isEditingEvent: Flow<Boolean> = editionRepository.isEditingEvent
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** Tells if this event have associated end conditions. */
     fun isEventHaveRelatedEndConditions(): Boolean =
