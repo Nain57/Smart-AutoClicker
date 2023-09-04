@@ -41,12 +41,13 @@ class ActionCopyDialog(
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */
-    private val viewModel: ActionCopyModel by lazy { ViewModelProvider(this).get(ActionCopyModel::class.java) }
+    private val viewModel: ActionCopyModel by lazy { ViewModelProvider(this)[ActionCopyModel::class.java] }
 
     /** Adapter displaying the list of events. */
     private lateinit var actionCopyAdapter: ActionCopyAdapter
 
     override val titleRes: Int = R.string.dialog_overlay_title_copy_from
+    override val searchHintRes: Int = R.string.search_view_hint_action_copy
     override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -59,8 +60,6 @@ class ActionCopyDialog(
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = actionCopyAdapter
         }
-
-        viewBinding.layoutTopBar.search.queryHint = context.getString(R.string.search_view_hint_action_copy)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

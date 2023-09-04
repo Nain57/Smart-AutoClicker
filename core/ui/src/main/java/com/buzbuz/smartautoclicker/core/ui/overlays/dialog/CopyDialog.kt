@@ -24,6 +24,9 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.widget.SearchView
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnDismissClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.databinding.DialogBaseCopyBinding
 
 abstract class CopyDialog(
@@ -34,33 +37,17 @@ abstract class CopyDialog(
     protected lateinit var viewBinding: DialogBaseCopyBinding
     /** The resource id for the dialog title. */
     protected abstract val titleRes: Int
+    /** The resource id for the search hint text. */
+    protected abstract val searchHintRes: Int
     /** The resource id for the text displayed when there is nothing to copy. */
     protected abstract val emptyRes: Int
 
     final override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseCopyBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(titleRes)
-                buttonDismiss.setOnClickListener { back() }
-
-                search.apply {
-                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                        override fun onQueryTextSubmit(query: String?) = false
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            onSearchQueryChanged(newText)
-                            return true
-                        }
-                    })
-                    setOnSearchClickListener {
-                        dialogTitle.visibility = View.GONE
-                        buttonDismiss.visibility = View.GONE
-                    }
-                    setOnCloseListener {
-                        dialogTitle.visibility = View.VISIBLE
-                        buttonDismiss.visibility = View.VISIBLE
-                        false
-                    }
-                }
+                setup(titleRes, searchHintRes)
+                setOnDismissClickedListener { back() }
+                setOnTextChangedListener(::onSearchQueryChanged)
             }
 
             layoutLoadableList.setEmptyText(emptyRes)

@@ -22,15 +22,6 @@
     android:id="@+id/layout_top_bar"
     style="@style/AppTheme.Dialog.TopBar">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/dialog_title"
-        style="@style/AppTheme.Dialog.TopBarTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/search"
-        app:layout_constraintStart_toEndOf="@id/button_dismiss"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Dialog title" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_dismiss"
         style="@style/Widget.Material3.Button.IconButton"
@@ -41,17 +32,43 @@
         app:icon="@drawable/ic_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:maxWidth="5000dp"
         app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/dialog_title"
+        style="@style/AppTheme.Dialog.TopBarTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_search_cancel"
+        app:layout_constraintStart_toEndOf="@id/button_dismiss"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Dialog title"
+        tools:visibility="gone"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/search_edit"
+        style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_search_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableStart="@drawable/abc_ic_search_api_material"
+        android:drawablePadding="@dimen/margin_horizontal_default"
+        tools:hint="Search by event name"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_search_cancel"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+        android:layout_marginVertical="@dimen/margin_vertical_default"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:iconifiedByDefault="true"
-        android:imeOptions="actionSearch"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:icon="@drawable/abc_ic_search_api_material" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

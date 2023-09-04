@@ -47,6 +47,7 @@ class ConditionCopyDialog(
     private lateinit var conditionAdapter: ConditionCopyAdapter
 
     override val titleRes: Int = R.string.dialog_overlay_title_copy_from
+    override val searchHintRes: Int = R.string.search_view_hint_condition_copy
     override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -70,8 +71,6 @@ class ConditionCopyDialog(
                 spanSizeLookup = conditionAdapter.spanSizeLookup
             }
         }
-
-        viewBinding.layoutTopBar.search.queryHint = context.getString(R.string.search_view_hint_condition_copy)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
