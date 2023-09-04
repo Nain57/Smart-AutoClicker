@@ -20,7 +20,6 @@ import android.graphics.Bitmap
 import android.media.Image
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.display.toBitmap
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -76,8 +75,6 @@ internal class ScenarioProcessor(
 
     /** Tells if the screen metrics have been invalidated and should be updated. */
     private var invalidateScreenMetrics = true
-    /** The bitmap of the currently processed image. Kept in order to avoid instantiating a new one everytime. */
-    private var processedScreenBitmap: Bitmap? = null
 
     /** Drop all current cache related to screen metrics. */
     fun invalidateScreenMetrics() {
@@ -87,11 +84,11 @@ internal class ScenarioProcessor(
     /**
      * Find an event with the conditions fulfilled on the current image.
      *
-     * @param screenImage the image containing the current screen display.
+     * @param screenFrame the bitmap containing the current screen display.
      *
      * @return the first Event with all conditions fulfilled, or null if none has been found.
      */
-    suspend fun process(screenImage: Image) {
+    suspend fun process(screenFrame: Bitmap) {
         // No more events enabled, there is nothing more to do. Stop the detection.
         if (scenarioState.areAllEventsDisabled()) {
             onStopRequested()
@@ -101,7 +98,7 @@ internal class ScenarioProcessor(
         progressListener?.onImageProcessingStarted()
 
         // Set the current screen image
-        processedScreenBitmap = initScreenImage(screenImage)
+        initScreenFrame(screenFrame)
 
         // Clear previous results
         processingResults.clearResults()
@@ -141,17 +138,14 @@ internal class ScenarioProcessor(
      * Initialize the detection algorithm with the current screen frame.
      * @return the image, as a Bitmap.
      */
-    private fun initScreenImage(screenImage: Image): Bitmap =
-        screenImage.toBitmap(processedScreenBitmap).let { screenBitmap ->
-            if (invalidateScreenMetrics) {
-                imageDetector.setScreenMetrics(screenBitmap, detectionQuality.toDouble())
-                invalidateScreenMetrics = false
-            }
-
-            imageDetector.setupDetection(screenBitmap)
-
-            screenBitmap
+    private fun initScreenFrame(screenFrame: Bitmap) {
+        if (invalidateScreenMetrics) {
+            imageDetector.setScreenMetrics(screenFrame, detectionQuality.toDouble())
+            invalidateScreenMetrics = false
         }
+
+        imageDetector.setupDetection(screenFrame)
+    }
 
     /**
      * Verifies if all conditions of an event are fulfilled.

@@ -61,7 +61,7 @@ internal class DetectorEngine(context: Context) {
     /** Listener upon orientation changes. */
     private val orientationListener = ::onOrientationChanged
 
-    /** Record the screen and provide images via [ScreenRecorder.acquireLatestImage]. */
+    /** Record the screen and provide images via [ScreenRecorder.acquireLatestBitmap]. */
     private val screenRecorder = ScreenRecorder.getInstance()
     /** Process the events conditions to detect them on the screen. */
     private var scenarioProcessor: ScenarioProcessor? = null
@@ -278,8 +278,8 @@ internal class DetectorEngine(context: Context) {
 
         scenarioProcessor?.invalidateScreenMetrics()
         while (processingJob?.isActive == true) {
-            screenRecorder.acquireLatestImage()?.use { image ->
-                scenarioProcessor?.process(image)
+            screenRecorder.acquireLatestBitmap()?.let { screenFrame ->
+                scenarioProcessor?.process(screenFrame)
             } ?: delay(NO_IMAGE_DELAY_MS)
         }
     }

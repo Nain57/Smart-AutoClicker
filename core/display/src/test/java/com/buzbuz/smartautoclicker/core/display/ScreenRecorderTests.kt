@@ -46,7 +46,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
-import org.mockito.Mockito.isNull
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -233,6 +232,6 @@ class ScreenRecorderTests {
             mockStoppedListener::onStopped)
         screenRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
 
-        assertEquals(mockScreenImage, screenRecorder.acquireLatestImage())
+        assertEquals(mockScreenImage, screenRecorder.acquireLatestBitmap())
     }
 }

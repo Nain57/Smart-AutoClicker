@@ -93,8 +93,10 @@ class ScreenRecorder internal constructor() {
     /** Listener to notify upon projection ends. */
     private var stopListener: (() -> Unit)? = null
     /** Allow access to [Image] rendered into the surface view of the [VirtualDisplay] */
-    var imageReader: ImageReader? = null
-        private set
+    private var imageReader: ImageReader? = null
+
+    /** Cache for the current frame. Interpreted from an [Image]. */
+    private var latestAcquiredFrameBitmap: Bitmap? = null
 
     /**
      * Start the media projection.
@@ -162,15 +164,20 @@ class ScreenRecorder internal constructor() {
     }
 
     /** @return the last image of the screen, or null if they have been processed. */
-    suspend fun acquireLatestImage(): Image? = mutex.withLock { imageReader?.acquireLatestImage() }
+    suspend fun acquireLatestBitmap(): Bitmap? = mutex.withLock {
+        imageReader?.acquireLatestImage()?.use { image ->
+            latestAcquiredFrameBitmap = image.toBitmap(latestAcquiredFrameBitmap)
+            latestAcquiredFrameBitmap
+        }
+    }
 
     suspend fun takeScreenshot(area: Rect, completion: suspend (Bitmap) -> Unit) {
-        var image: Image?
+        var screenFrame: Bitmap?
         do {
-            image = acquireLatestImage()
-            image?.use {
+            screenFrame = acquireLatestBitmap()
+            screenFrame?.let {
                 val bitmap = Bitmap.createBitmap(
-                    it.toBitmap(),
+                    it,
                     area.left,
                     area.top,
                     area.width(),
@@ -179,7 +186,7 @@ class ScreenRecorder internal constructor() {
 
                 completion(bitmap)
             }
-        } while (image == null)
+        } while (screenFrame == null)
     }
 
     /**
@@ -238,7 +245,7 @@ class ScreenRecorder internal constructor() {
  *                     created.
  * @return the bitmap corresponding to the image. If [resultBitmap] was provided, it will be the same object.
  */
-fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
+private fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
     var bitmap = resultBitmap
     val imageWidth = width + (planes[0].rowStride - planes[0].pixelStride * width) / planes[0].pixelStride
 
