@@ -154,7 +154,8 @@ internal class DetectorEngine(context: Context) {
         bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
         progressListener: ProgressListener? = null,
     ) {
-        if (_state.value != DetectorState.RECORDING) {
+        val executor = androidExecutor
+        if (_state.value != DetectorState.RECORDING || executor == null) {
             Log.w(TAG, "startDetection: Screen record is not started.")
             return
         }
@@ -163,18 +164,19 @@ internal class DetectorEngine(context: Context) {
         Log.i(TAG, "startDetection")
 
         processingScope?.launchProcessingJob {
-            imageDetector = NativeDetector()
+            val detector = NativeDetector()
+            imageDetector = detector
 
             detectionProgressListener = progressListener
             progressListener?.onSessionStarted(context, scenario, events)
 
             scenarioProcessor = ScenarioProcessor(
-                imageDetector = imageDetector!!,
+                imageDetector = detector,
                 detectionQuality = scenario.detectionQuality,
                 randomize = scenario.randomize,
                 events = events,
                 bitmapSupplier = bitmapSupplier,
-                androidExecutor = androidExecutor!!,
+                androidExecutor = executor,
                 endConditionOperator = scenario.endConditionOperator,
                 endConditions =  endConditions,
                 onStopRequested = { stopDetection() },
@@ -265,6 +267,7 @@ internal class DetectorEngine(context: Context) {
             processingShutdownJob?.join()
 
             screenRecorder.stopProjection()
+            androidExecutor = null
             _state.emit(DetectorState.CREATED)
 
             processingScope?.cancel()
@@ -292,7 +295,7 @@ internal class DetectorEngine(context: Context) {
         }
 
         Log.i(TAG, "clear")
-        androidExecutor = null
+
 
         _state.value != DetectorState.DESTROYED
     }
