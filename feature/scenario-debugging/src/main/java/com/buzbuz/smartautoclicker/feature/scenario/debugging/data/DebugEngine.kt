@@ -140,9 +140,11 @@ internal class DebugEngine : ProgressListener {
         position: Point?,
         confidenceRate: Double?,
     ) = mutex.withLock {
-        if (currProcEvtId == null) throw IllegalStateException("completed called before start")
-        if (generateReport) eventsRecorderMap[currProcEvtId]?.onProcessingEnd(isEventMatched)
-        currProcEvtId = null
+        if (generateReport) {
+            if (currProcEvtId == null) throw IllegalStateException("completed called before start")
+            eventsRecorderMap[currProcEvtId]?.onProcessingEnd(isEventMatched)
+            currProcEvtId = null
+        }
 
         // Notify current detection progress
         if (instantData && event != null && condition != null && isDetected != null && position != null && confidenceRate != null) {
