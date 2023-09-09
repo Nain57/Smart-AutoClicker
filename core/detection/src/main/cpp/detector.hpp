@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,8 +54,6 @@ namespace smartautoclicker {
 
         DetectionResult detectionResult;
 
-        static std::unique_ptr<cv::Mat> bitmapRGBA888ToRGB565Mat(JNIEnv *env, jobject bitmap);
-
         static std::unique_ptr<cv::Mat> matchTemplate(const cv::Mat& image, const cv::Mat& condition);
 
         static void locateMinMax(const cv::Mat& matchingResult, DetectionResult& results);
@@ -63,6 +61,10 @@ namespace smartautoclicker {
         static bool isValidMatching(const DetectionResult& results, const int threshold);
 
         static double getColorDiff(const cv::Mat& image, const cv::Mat& condition);
+
+        static bool isRoiOutOfBounds(const int x, const int y, const int width, const int height, const cv::Mat& image);
+
+        static void markRoiAsInvalidInResults(const cv::Mat& results, const cv::Rect& roi);
 
     public:
 

@@ -31,6 +31,8 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         main/cpp/smartautoclicker.cpp
+        main/cpp/androidBitmap.cpp
+        main/cpp/androidBitmap.h
         main/cpp/detector.cpp
         main/cpp/detector.hpp)
 
