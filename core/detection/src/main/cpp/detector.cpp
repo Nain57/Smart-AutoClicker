@@ -17,14 +17,17 @@
 #include <android/log.h>
 #include <android/bitmap.h>
 
+#include <memory>
+
 #include "detector.hpp"
+#include "opencv2/imgproc/imgproc_c.h"
 
 using namespace cv;
 using namespace smartautoclicker;
 
 void Detector::setScreenMetrics(JNIEnv *env, jobject screenImage, double detectionQuality) {
     // Get screen info from the android bitmap format
-    currentImage = bitmapRGBA888ToMat(env, screenImage);
+    currentImage = bitmapRGBA888ToRGB565Mat(env, screenImage);
 
     // Select the scale ratio depending on the screen size.
     // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
@@ -43,7 +46,7 @@ void Detector::setScreenMetrics(JNIEnv *env, jobject screenImage, double detecti
 
 void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
     // Get screen info from the android bitmap format
-    currentImage = bitmapRGBA888ToMat(env, screenImage);
+    currentImage = bitmapRGBA888ToRGB565Mat(env, screenImage);
     // Scale down the image and store it apart (the cache image is not resized)
     resize(*currentImage, *currentImageScaled, Size(), scaleRatio, scaleRatio, INTER_AREA);
 }
@@ -62,10 +65,10 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     }
 
     // Get the condition image information from the android bitmap format, and scale it to the processing size
-    auto condOrig = bitmapRGBA888ToMat(env, conditionImage);
+    auto condOrig = bitmapRGBA888ToRGB565Mat(env, conditionImage);
     auto currentCondition = Mat(max((int) (condOrig->rows * scaleRatio), 1),
                                 max((int) (condOrig->cols * scaleRatio), 1),
-                                CV_8UC4);
+                                CV_8UC3);
     resize(*condOrig, currentCondition, currentCondition.size(), 0, 0, INTER_AREA);
 
     // If the condition is bigger than the screen image, it can't match.
@@ -85,12 +88,13 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
         // If the maximum for the whole picture is below the threshold, we will never find.
         if (!isValidMatching(detectionResult, threshold)) break;
 
-        // Candidate region of interest
-        roi = Rect(detectionResult.maxLoc.x, detectionResult.maxLoc.y,
-                   detectionResult.maxLoc.x + currentCondition.cols <= matchingResults->cols ?
-                   currentCondition.cols : matchingResults->cols - detectionResult.maxLoc.x,
-                   detectionResult.maxLoc.y + currentCondition.rows <= matchingResults->rows ?
-                   currentCondition.rows : matchingResults->rows - detectionResult.maxLoc.y);
+        // Calculate the ROI based on the maximum location
+        roi = cv::Rect(detectionResult.maxLoc.x, detectionResult.maxLoc.y, currentCondition.cols, currentCondition.rows);
+        if (roi.x < 0 || roi.y < 0 || roi.x + roi.width > currentImageScaled->cols || roi.y + roi.height > currentImageScaled->rows) {
+            // Roi is out of bounds
+            cv::rectangle(*matchingResults, roi, cv::Scalar(0), CV_FILLED);
+            continue;
+        }
 
         // Check if the colors are matching in the candidate area.
         double colorDiff = getColorDiff(Mat(*currentImageScaled, roi), currentCondition);
@@ -98,7 +102,7 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
             detectionResult.isDetected = true;
         } else {
             // Colors are invalid, modify the matching result to indicate that.
-            matchingResults->operator()(roi).setTo(1 - colorDiff / 100);
+            cv::rectangle(*matchingResults, roi, cv::Scalar(0), CV_FILLED);
         }
     }
 
@@ -136,7 +140,7 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
     auto croppedImage = Mat(*currentImage, Rect(x, y , width, height));
     // Get the condition image information from the android bitmap format. This image as the same size than the
     // croppedImage one.
-    auto condition = bitmapRGBA888ToMat(env, conditionImage);
+    auto condition = bitmapRGBA888ToRGB565Mat(env, conditionImage);
     // Apply template matching of the condition on the cropped image and find the best match
     locateMinMax(*matchTemplate(croppedImage, *condition), detectionResult);
 
@@ -167,9 +171,10 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, i
 }
 
 std::unique_ptr<Mat> Detector::matchTemplate(const Mat& image, const Mat& condition) {
-    std::unique_ptr<Mat> resultMat(new Mat(image.rows - condition.rows + 1,image.cols - condition.cols + 1,CV_8UC4));
-    cv::matchTemplate(image, condition, *resultMat, TM_CCOEFF_NORMED);
-    return resultMat;
+    cv::Mat resultMat(image.rows - condition.rows + 1, image.cols - condition.cols + 1, CV_32F);
+    cv::matchTemplate(image, condition, resultMat, cv::TM_CCOEFF_NORMED);
+
+    return std::make_unique<cv::Mat>(resultMat);
 }
 
 void Detector::locateMinMax(const Mat& matchingResult, DetectionResult& results) {
@@ -191,7 +196,7 @@ double Detector::getColorDiff(const cv::Mat& image, const cv::Mat& condition) {
     return (diff * 100) / (255 * 3);
 }
 
-std::unique_ptr<Mat> Detector::bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap) {
+std::unique_ptr<Mat> Detector::bitmapRGBA888ToRGB565Mat(JNIEnv *env, jobject bitmap) {
     try {
         AndroidBitmapInfo info;
         void *pixels = nullptr;
@@ -200,9 +205,14 @@ std::unique_ptr<Mat> Detector::bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap) {
         CV_Assert(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
         CV_Assert(AndroidBitmap_lockPixels(env, bitmap, &pixels) >= 0);
         CV_Assert(pixels);
-        std::unique_ptr<Mat> dst(new Mat((int) info.height, (int) info.width, CV_8UC4, pixels));
+
+        cv::Mat rgbaMat((int) info.height, (int) info.width, CV_8UC4, pixels);
+        cv::Mat bgrMat;
+        cv::cvtColor(rgbaMat, bgrMat, cv::COLOR_RGBA2BGR);
+
         AndroidBitmap_unlockPixels(env, bitmap);
-        return dst;
+
+        return std::make_unique<Mat>(bgrMat);
     } catch (...) {
         AndroidBitmap_unlockPixels(env, bitmap);
         __android_log_print(ANDROID_LOG_ERROR, "native-lib",

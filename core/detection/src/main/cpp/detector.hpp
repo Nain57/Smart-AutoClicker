@@ -54,7 +54,7 @@ namespace smartautoclicker {
 
         DetectionResult detectionResult;
 
-        static std::unique_ptr<cv::Mat> bitmapRGBA888ToMat(JNIEnv *env, jobject bitmap);
+        static std::unique_ptr<cv::Mat> bitmapRGBA888ToRGB565Mat(JNIEnv *env, jobject bitmap);
 
         static std::unique_ptr<cv::Mat> matchTemplate(const cv::Mat& image, const cv::Mat& condition);
 

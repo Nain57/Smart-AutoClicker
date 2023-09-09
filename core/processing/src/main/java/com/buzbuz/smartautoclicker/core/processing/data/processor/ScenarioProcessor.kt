@@ -112,7 +112,7 @@ internal class ScenarioProcessor(
             // Event conditions verification
             progressListener?.onEventProcessingStarted(event)
             val conditionAreFulfilled = verifyConditions(event)
-            progressListener?.onEventProcessingCompleted(event, processingResults.getFirstMatchResult())
+            progressListener?.onEventProcessingCompleted(event, conditionAreFulfilled, processingResults.getFirstMatchResult())
 
             // If conditions are fulfilled, execute this event's actions !
             if (conditionAreFulfilled) {

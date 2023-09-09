@@ -54,9 +54,9 @@ interface ProgressListener {
     suspend fun cancelCurrentConditionProcessing()
 }
 
-internal suspend fun ProgressListener.onEventProcessingCompleted(event: Event, result: ConditionProcessingResult?) {
+internal suspend fun ProgressListener.onEventProcessingCompleted(event: Event, isMatched: Boolean, result: ConditionProcessingResult?) {
     onEventProcessingCompleted(
-        true,
+        isMatched,
         event,
         result?.condition,
         result?.isDetected,
