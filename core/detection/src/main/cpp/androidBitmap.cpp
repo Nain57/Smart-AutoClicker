@@ -21,61 +21,27 @@
 
 using namespace cv;
 
-std::unique_ptr<Mat> createRGB565MatFromARGB8888Bitmap(JNIEnv *env, jobject bitmap) {
+std::unique_ptr<Mat> createColorMatFromARGB8888BitmapData(JNIEnv *env, jobject bitmap) {
     try {
         AndroidBitmapInfo info;
-        CV_Assert(AndroidBitmap_getInfo(env, bitmap, &info) >= 0);
-        CV_Assert(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
-        return std::make_unique<cv::Mat>(info.height, info.width, CV_8UC3);
-    } catch (...) {
-        AndroidBitmap_unlockPixels(env, bitmap);
-        __android_log_print(ANDROID_LOG_ERROR, "androidBitmap",
-                            "createRGB565MatFromARGB8888Bitmap caught an exception");
-        jclass je = env->FindClass("java/lang/Exception");
-        env->ThrowNew(je, "Android Bitmap exception in JNI code {createRGB565MatFromARGB8888Bitmap}");
-        return nullptr;
-    }
-}
-
-std::unique_ptr<Mat> createAndFillRGB565MatFromARGB8888Bitmap(JNIEnv *env, jobject bitmap) {
-    auto rgb565Mat = createRGB565MatFromARGB8888Bitmap(env, bitmap);
-    fillRGB565MatFromARGB8888Bitmap(env, bitmap, *rgb565Mat);
-    return rgb565Mat;
-}
-
-void fillRGB565MatFromARGB8888Bitmap(JNIEnv *env, jobject bitmap, const Mat& rgb565Mat) {
-    try {
         void *pixels = nullptr;
 
+        CV_Assert(AndroidBitmap_getInfo(env, bitmap, &info) >= 0);
+        CV_Assert(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
         CV_Assert(AndroidBitmap_lockPixels(env, bitmap, &pixels) >= 0);
-        CV_Assert(pixels);
 
-        auto* srcPixels = static_cast<uint32_t*>(pixels);
-        auto* dstPixels = reinterpret_cast<uint8_t*>(rgb565Mat.data);
-
-        uint32_t width = rgb565Mat.cols;
-        uint32_t height = rgb565Mat.rows;
-        uint32_t argbPixel;
-        uint8_t blue, green, red;
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
-                argbPixel = srcPixels[y * width + x];
-                blue = (argbPixel & 0x000000F8) >> 3;
-                green = ((argbPixel & 0x0000FC00) >> 11) & 0x3F;
-                red = ((argbPixel & 0x00F80000) >> 19) & 0x1F;
-
-                dstPixels[y * width * 3 + x * 3] = red;
-                dstPixels[y * width * 3 + x * 3 + 1] = green;
-                dstPixels[y * width * 3 + x * 3 + 2] = blue;
-            }
-        }
-
+        auto argbMat = std::make_unique<cv::Mat>(info.height, info.width, CV_8UC4, pixels);
         AndroidBitmap_unlockPixels(env, bitmap);
+
+        return argbMat;
     } catch (...) {
         AndroidBitmap_unlockPixels(env, bitmap);
+
         __android_log_print(ANDROID_LOG_ERROR, "androidBitmap",
-                            "createAndFillRGB565MatFromARGB8888Bitmap caught an exception");
+                            "createColorMatFromARGB8888BitmapData caught an exception");
         jclass je = env->FindClass("java/lang/Exception");
-        env->ThrowNew(je, "Android Bitmap exception in JNI code {createAndFillRGB565MatFromARGB8888Bitmap}");
+        env->ThrowNew(je, "Android Bitmap exception in JNI code {createColorMatFromARGB8888BitmapData}");
+
+        return nullptr;
     }
 }

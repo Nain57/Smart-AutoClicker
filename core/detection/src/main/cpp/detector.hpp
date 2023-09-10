@@ -49,22 +49,25 @@ namespace smartautoclicker {
     private:
         double scaleRatio = 1;
 
-        std::unique_ptr<cv::Mat> currentImage = nullptr;
-        std::unique_ptr<cv::Mat> currentImageScaled = std::make_unique<cv::Mat>();
+        std::unique_ptr<cv::Mat> fullSizeColorCurrentImage = nullptr;
+        std::unique_ptr<cv::Mat> scaledGrayCurrentImage = std::make_unique<cv::Mat>();
 
         DetectionResult detectionResult;
 
+        std::unique_ptr<cv::Mat> scaleAndChangeToGray(const cv::Mat &fullSizeColored) const;
+
         static std::unique_ptr<cv::Mat> matchTemplate(const cv::Mat& image, const cv::Mat& condition);
-
         static void locateMinMax(const cv::Mat& matchingResult, DetectionResult& results);
-
         static bool isValidMatching(const DetectionResult& results, const int threshold);
-
         static double getColorDiff(const cv::Mat& image, const cv::Mat& condition);
 
-        static bool isRoiOutOfBounds(const int x, const int y, const int width, const int height, const cv::Mat& image);
-
+        cv::Rect getDetectionResultScaledCroppedRoi(int scaledWidth, int scaledHeight) const;
+        cv::Rect getDetectionResultFullSizeRoi(const cv::Rect& detectionRoi, int fullSizeWidth, int fullSizeHeight) const;
+        cv::Rect getScaledRoi(const int x, const int y, const int width, const int height) const;
+        static bool isRoiOutOfBounds(const cv::Rect &roi, const cv::Mat &image);
         static void markRoiAsInvalidInResults(const cv::Mat& results, const cv::Rect& roi);
+
+        DetectionResult detectCondition(JNIEnv *env, jobject conditionImage, cv::Rect fullSizeDetectionRoi, int threshold);
 
     public:
 
@@ -75,7 +78,6 @@ namespace smartautoclicker {
         void setScreenImage(JNIEnv *env, jobject screenImage);
 
         DetectionResult detectCondition(JNIEnv *env, jobject conditionImage, int threshold);
-
         DetectionResult detectCondition(JNIEnv *env, jobject conditionImage, int x, int y, int width, int height, int threshold);
     };
 }

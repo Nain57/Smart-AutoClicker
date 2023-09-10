@@ -18,9 +18,4 @@
 #include <jni.h>
 #include <opencv2/imgproc/imgproc.hpp>
 
-
-std::unique_ptr<cv::Mat> createRGB565MatFromARGB8888Bitmap(JNIEnv *env, jobject bitmap);
-
-std::unique_ptr<cv::Mat> createAndFillRGB565MatFromARGB8888Bitmap(JNIEnv *env, jobject bitmap);
-
-void fillRGB565MatFromARGB8888Bitmap(JNIEnv *env, jobject bitmap, const cv::Mat& rgb565Mat);
+std::unique_ptr<cv::Mat> createColorMatFromARGB8888BitmapData(JNIEnv *env, jobject bitmap);
