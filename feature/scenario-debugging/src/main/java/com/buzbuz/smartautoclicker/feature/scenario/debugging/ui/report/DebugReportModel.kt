@@ -50,15 +50,24 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
 
     /** The dialog is represented by a list. This is the items populating it. */
     val reportItems = debugReport.map { report ->
-            report ?: return@map emptyList()
+        report ?: return@map emptyList()
 
-            buildList {
-                add(newScenarioItem(report))
-                report.eventsProcessedInfo.forEach { (event, debugInfo) ->
-                    add(newEventItem(event.id.databaseId, event.name, debugInfo, createConditionReports(event.conditions, report)))
-                }
+        var totalEventProcessingTimeMs = 0L
+        var totalEventProcessingCount = 0L
+        val eventReports = buildList {
+            report.eventsProcessedInfo.forEach { (event, debugInfo) ->
+                totalEventProcessingTimeMs += debugInfo.totalProcessingTimeMs
+                totalEventProcessingCount += debugInfo.processingCount
+                add(newEventItem(event.id.databaseId, event.name, debugInfo, createConditionReports(event.conditions, report)))
             }
         }
+
+        buildList {
+            val avgProcTimeMs = if (eventReports.isEmpty()) 0L else totalEventProcessingTimeMs / totalEventProcessingCount
+            add(newScenarioItem(report, avgProcTimeMs))
+            addAll(eventReports)
+        }
+    }
 
     /**
      * Get the bitmap corresponding to a condition.
@@ -94,13 +103,13 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
         debuggingRepository.consumeDebugReport()
     }
 
-    private fun newScenarioItem(debugInfo: DebugReport) =
+    private fun newScenarioItem(debugInfo: DebugReport, averageImageProcessingTime: Long) =
         DebugReportItem.ScenarioReportItem(
             id = debugInfo.scenario.id.databaseId,
             name = debugInfo.scenario.name,
-            duration = debugInfo.sessionInfo.totalProcessingTimeMs.milliseconds.toString(),
+            duration = debugInfo.sessionInfo.totalProcessingTimeMs.formatDuration(),
             imageProcessed = debugInfo.imageProcessedInfo.processingCount.toString(),
-            averageImageProcessingTime = debugInfo.imageProcessedInfo.avgProcessingTimeMs.milliseconds.toString(),
+            averageImageProcessingTime = averageImageProcessingTime.formatDuration(),
             eventsTriggered = debugInfo.eventsTriggeredCount.toString(),
             conditionsDetected = debugInfo.conditionsDetectedCount.toString(),
         )
@@ -111,9 +120,9 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
             name = name,
             triggerCount = debugInfo.successCount.toString(),
             processingCount = debugInfo.processingCount.toString(),
-            avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
-            minProcessingDuration = debugInfo.minProcessingTimeMs.milliseconds.toString(),
-            maxProcessingDuration = debugInfo.maxProcessingTimeMs.milliseconds.toString(),
+            avgProcessingDuration = debugInfo.avgProcessingTimeMs.formatDuration(),
+            minProcessingDuration = debugInfo.minProcessingTimeMs.formatDuration(),
+            maxProcessingDuration = debugInfo.maxProcessingTimeMs.formatDuration(),
             conditionReports = conditionReports,
         )
 
@@ -131,9 +140,9 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
             condition = condition,
             matchCount = debugInfo.successCount.toString(),
             processingCount = debugInfo.processingCount.toString(),
-            avgProcessingDuration = debugInfo.avgProcessingTimeMs.milliseconds.toString(),
-            minProcessingDuration = debugInfo.minProcessingTimeMs.milliseconds.toString(),
-            maxProcessingDuration = debugInfo.maxProcessingTimeMs.milliseconds.toString(),
+            avgProcessingDuration = debugInfo.avgProcessingTimeMs.formatDuration(),
+            minProcessingDuration = debugInfo.minProcessingTimeMs.formatDuration(),
+            maxProcessingDuration = debugInfo.maxProcessingTimeMs.formatDuration(),
             avgConfidence = debugInfo.avgConfidenceRate.formatConfidenceRate(),
             minConfidence = debugInfo.minConfidenceRate.formatConfidenceRate(),
             maxConfidence = debugInfo.maxConfidenceRate.formatConfidenceRate(),
@@ -182,3 +191,7 @@ data class ConditionReport(
 
 /** Format this value as a displayable confidence rate. */
 fun Double.formatConfidenceRate(): String = "${String.format("%.2f", this * 100)} % "
+
+private fun Long.formatDuration(): String =
+    if (this < 1) "< 1ms"
+    else milliseconds.toString()

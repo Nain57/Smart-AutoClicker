@@ -81,9 +81,9 @@ internal class ConditionRecorder : Recorder() {
         avgProcessingTimeMs = if (count != 0L) processingTimingRecorder.totalTimeMs / count else 0L,
         minProcessingTimeMs = processingTimingRecorder.minTimeMs,
         maxProcessingTimeMs = processingTimingRecorder.maxTimeMs,
-        avgConfidenceRate = detectionResultsRecorder.total / count,
-        minConfidenceRate = detectionResultsRecorder.min,
-        maxConfidenceRate = detectionResultsRecorder.max,
+        avgConfidenceRate = (detectionResultsRecorder.total / count).coerceIn(0.0, 100.0),
+        minConfidenceRate = detectionResultsRecorder.min.coerceAtLeast(0.0),
+        maxConfidenceRate = detectionResultsRecorder.max.coerceAtMost(100.0),
     )
 
     override fun clear() {
