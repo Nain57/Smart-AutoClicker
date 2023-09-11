@@ -16,12 +16,11 @@
  */
 #include <android/log.h>
 #include <android/bitmap.h>
-
 #include <memory>
+#include <opencv2/imgproc/imgproc_c.h>
 
-#include "androidBitmap.h"
+#include "bitmap/androidBitmap.hpp"
 #include "detector.hpp"
-#include "opencv2/imgproc/imgproc_c.h"
 
 using namespace cv;
 using namespace smartautoclicker;
