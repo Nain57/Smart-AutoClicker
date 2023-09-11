@@ -120,11 +120,54 @@
                 android:id="@+id/debug_report"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_vertical_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/debug_overlay"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/separator_debug_report"
                 android:text="@string/item_title_debug_generate_report"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/separator_debug_report"
+                style="@style/AppTheme.Widget.DividerSecondaryH"
+                android:layout_marginBottom="@dimen/margin_vertical_default"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/debug_report"
+                app:layout_constraintBottom_toTopOf="@id/debug_report_state_text"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/debug_report_state_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                app:layout_constraintTop_toBottomOf="@id/separator_debug_report"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/debug_report_chevron"
+                android:textAppearance="@style/AppTheme.TextAppearance.ListItemSubText"
+                tools:text="@string/item_desc_click_on_condition_or_operator"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/debug_report_chevron"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/debug_report_state_text"
+                app:layout_constraintBottom_toBottomOf="@id/debug_report_state_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/debug_report_state_text"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_chevron"
+                tools:ignore="ContentDescription"/>
+
+            <View
+                android:id="@+id/debug_report_open_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/separator_debug_report"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -73,8 +73,6 @@ class DebuggingRepository private constructor(context: Context) {
     /** The listener upon scenario detection progress. Must be set at detection start in order to get debugging info. */
     val detectionProgressListener: ProgressListener = debugEngine
 
-    fun consumeDebugReport() = debugEngine.consumeDebugReport()
-
     fun isDebugViewEnabled(context: Context): Boolean =
         sharedPreferences.getIsDebugViewEnabled(context)
 

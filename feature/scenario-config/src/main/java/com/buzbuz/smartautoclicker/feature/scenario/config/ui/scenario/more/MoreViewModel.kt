@@ -17,25 +17,31 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.more
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
+import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 
 class MoreViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** Debug configuration shared preferences. */
-    private val repository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)
+    private val debuggingRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)
 
     /** Tells if the debug view is enabled or not. */
-    private val _isDebugViewEnabled = MutableStateFlow(repository.isDebugViewEnabled(application))
+    private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled(application))
     val isDebugViewEnabled: Flow<Boolean> = _isDebugViewEnabled
 
     /** Tells if the debug report is enabled or not. */
-    private val _isDebugReportEnabled = MutableStateFlow(repository.isDebugReportEnabled(application))
+    private val _isDebugReportEnabled = MutableStateFlow(debuggingRepository.isDebugReportEnabled(application))
     val isDebugReportEnabled: Flow<Boolean> = _isDebugReportEnabled
+
+    /** Tells if a debug report is available. */
+    val debugReportAvailability: Flow<Boolean> = debuggingRepository.debugReport
+        .map { it != null }
 
     fun toggleIsDebugViewEnabled() {
         _isDebugViewEnabled.value = !_isDebugViewEnabled.value
@@ -46,6 +52,6 @@ class MoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun saveConfig() {
-        repository.setDebuggingConfig(_isDebugViewEnabled.value, _isDebugReportEnabled.value)
+        debuggingRepository.setDebuggingConfig(_isDebugViewEnabled.value, _isDebugReportEnabled.value)
     }
 }

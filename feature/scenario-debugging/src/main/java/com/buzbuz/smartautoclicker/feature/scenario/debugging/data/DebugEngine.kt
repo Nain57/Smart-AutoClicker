@@ -234,10 +234,6 @@ internal class DebugEngine : ProgressListener {
     override suspend fun cancelCurrentConditionProcessing() = mutex.withLock {
         currProcCondId = null
     }
-
-    fun consumeDebugReport() {
-        _debugReport.value = null
-    }
 }
 
 /**

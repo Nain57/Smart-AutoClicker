@@ -73,14 +73,6 @@ class DebugModel(application: Application) : AndroidViewModel(application) {
                 emit(LastPositiveDebugInfo())
             }
         }
-
-    /** True when a debug report is available. */
-    val isDebugReportReady: Flow<Boolean> = repository.debugReport.map { report ->
-        if (report != null) {
-            delay(1000)
-            true
-        } else false
-    }
 }
 
 /**

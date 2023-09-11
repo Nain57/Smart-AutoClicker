@@ -76,11 +76,6 @@ class DebugReportDialog : OverlayDialog(R.style.AppTheme) {
         }
     }
 
-    override fun onDestroy() {
-        viewModel.consumeDebugReport()
-        super.onDestroy()
-    }
-
     private fun updateReport(reportItems: List<DebugReportItem>) {
         listBinding.updateState(reportItems)
         reportAdapter.submitList(reportItems)

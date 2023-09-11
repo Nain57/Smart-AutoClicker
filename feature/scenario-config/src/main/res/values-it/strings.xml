@@ -80,6 +80,8 @@
     <string name="item_title_click_on_condition_or_operator">Fare clic sulla prima condizione rilevata</string>
     <string name="item_title_click_position">Fare clic sulla posizione</string>
     <string name="item_title_debug_generate_report">Genera un rapporto</string>
+    <string name="item_title_debug_report_available">Il rapporto di debug è disponibile</string>
+    <string name="item_title_debug_report_not_available">Nessun rapporto di debug disponibile</string>
     <string name="item_title_debug_show_view">Mostra visualizzazione debug</string>
     <string name="item_title_intent">Intento</string>
     <string name="item_title_pause">Attendi</string>

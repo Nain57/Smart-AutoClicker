@@ -98,11 +98,6 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
         return null
     }
 
-    /** Consume the current debug report. */
-    fun consumeDebugReport() {
-        debuggingRepository.consumeDebugReport()
-    }
-
     private fun newScenarioItem(debugInfo: DebugReport, averageImageProcessingTime: Long) =
         DebugReportItem.ScenarioReportItem(
             id = debugInfo.scenario.id.databaseId,

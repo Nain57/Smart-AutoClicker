@@ -81,6 +81,8 @@
     <string name="item_title_click_on_condition_or_operator">Click on the first detected condition</string>
     <string name="item_title_click_position">Click position</string>
     <string name="item_title_debug_generate_report">Generate a report</string>
+    <string name="item_title_debug_report_available">Debug report is available</string>
+    <string name="item_title_debug_report_not_available">No debug report available</string>
     <string name="item_title_debug_show_view">Show debug view</string>
     <string name="item_title_intent">Intent</string>
     <string name="item_title_pause">Wait</string>

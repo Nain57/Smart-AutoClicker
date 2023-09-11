@@ -40,7 +40,6 @@ import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuB
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
-import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -120,7 +119,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 launch { viewModel.canStartScenario.collect(::updatePlayPauseButtonEnabledState) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
                 launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
-                launch { debuggingViewModel.isDebugReportReady.collect(::showDebugReportDialog) }
             }
         }
     }
@@ -275,15 +273,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 }
             }
         }
-    }
-
-    private fun showDebugReportDialog(reportReady: Boolean) {
-        if (!reportReady) return
-
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = DebugReportDialog(),
-        )
     }
 
     private fun showFirstTimeTutorialDialog() {
