@@ -24,13 +24,16 @@ import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 /**
  * Migration from database v10 to v11.
  *
- * Change the clickOnCondition boolean column into click_on_condition_id integer column. This will
+ * * change the clickOnCondition boolean column into click_on_condition_id integer column. This will
  * allow to reference a condition to click on.
+ * * detection algorithm have been updated, and the detection quality value must be updated as well.
  */
 object Migration10to11 : Migration(10, 11) {
 
     override fun migrate(database: SupportSQLiteDatabase) {
         database.apply {
+            migrateDetectionQuality()
+
             execSQL(createTempActionTable)
             execSQL(createClickOnConditionIdIndexTable)
             execSQL(copyAllExceptChangedParams)
@@ -42,6 +45,45 @@ object Migration10to11 : Migration(10, 11) {
         }
     }
 
+    // --- START Update detection quality migration --- //
+
+    private fun SupportSQLiteDatabase.migrateDetectionQuality() {
+        query(getAllScenario).use { cursor ->
+            // Nothing to do ?
+            if (cursor.count == 0) return
+            cursor.moveToFirst()
+
+            // Get all columns indexes
+            val idColumnIndex = cursor.getColumnIndex("id")
+            val qualityColumnIndex = cursor.getColumnIndex("detection_quality")
+            if (idColumnIndex < 0 || qualityColumnIndex < 0)
+                throw IllegalStateException("Can't find columns")
+
+            do {
+                val scenarioId = cursor.getLong(idColumnIndex)
+                val oldQuality = cursor.getInt(qualityColumnIndex)
+                val newQuality = (oldQuality + DETECTION_QUALITY_INCREASE).coerceAtMost(DETECTION_QUALITY_NEW_MAX)
+
+                execSQL(updateDetectionQuality(scenarioId, newQuality))
+            } while (cursor.moveToNext())
+        }
+    }
+
+    private val getAllScenario = """
+        SELECT `id`, `detection_quality`
+        FROM `scenario_table`
+    """.trimIndent()
+
+    /** Update the current detection quality to have at least the same quality (should overall be better). */
+    private fun updateDetectionQuality(id: Long, detectionQuality: Int) = """
+        UPDATE `scenario_table` 
+        SET `detection_quality` = $detectionQuality
+        WHERE `id` = $id
+    """.trimIndent()
+
+    // --- END Update detection quality migration --- //
+
+    // --- START Click on condition migration --- //
     private fun SupportSQLiteDatabase.migrateToClickOnCondition() {
         query(getAllClicks).use { cursor ->
             // Nothing to do ?
@@ -161,4 +203,9 @@ object Migration10to11 : Migration(10, 11) {
         ALTER TABLE `temp_action_table` 
         RENAME TO `action_table`
     """.trimIndent()
+
+    // --- END Click on condition migration --- //
 }
+
+private const val DETECTION_QUALITY_INCREASE = 600
+private const val DETECTION_QUALITY_NEW_MAX = 3216

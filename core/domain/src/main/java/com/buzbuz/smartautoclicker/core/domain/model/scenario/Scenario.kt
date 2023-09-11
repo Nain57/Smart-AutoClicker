@@ -40,8 +40,3 @@ data class Scenario(
     val randomize: Boolean = false,
     val eventCount: Int = 0,
 )
-
-/** The maximum detection quality for the algorithm. */
-const val DETECTION_QUALITY_MAX = 1200
-/** The minimum detection quality for the algorithm. */
-const val DETECTION_QUALITY_MIN = 400

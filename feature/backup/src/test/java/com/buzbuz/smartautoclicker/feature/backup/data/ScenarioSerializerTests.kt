@@ -137,7 +137,7 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertNull(jsonScenario.deserializeScenarioCompat())
+            assertNull(jsonScenario.deserializeScenarioCompat(10))
         }
     }
 
@@ -151,7 +151,7 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertNotNull(jsonScenario.deserializeScenarioCompat())
+            assertNotNull(jsonScenario.deserializeScenarioCompat(10))
         }
     }
 
@@ -177,9 +177,9 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertEquals(DETECTION_QUALITY_LOWER_BOUND, jsonScenarioLower.deserializeScenarioCompat()?.detectionQuality)
-            assertEquals(DETECTION_QUALITY_UPPER_BOUND, jsonScenarioUpper.deserializeScenarioCompat()?.detectionQuality)
-            assertEquals(DETECTION_QUALITY_DEFAULT_VALUE, jsonScenarioNull.deserializeScenarioCompat()?.detectionQuality)
+            assertEquals(DETECTION_QUALITY_LOWER_BOUND, jsonScenarioLower.deserializeScenarioCompat(11)?.detectionQuality)
+            assertEquals(DETECTION_QUALITY_UPPER_BOUND, jsonScenarioUpper.deserializeScenarioCompat(11)?.detectionQuality)
+            assertEquals(DETECTION_QUALITY_DEFAULT_VALUE, jsonScenarioNull.deserializeScenarioCompat(11)?.detectionQuality)
         }
     }
 
@@ -205,9 +205,9 @@ class ScenarioSerializerTests {
         ))
 
         ScenarioSerializer().apply {
-            assertEquals(OPERATOR_LOWER_BOUND, jsonScenarioLower.deserializeScenarioCompat()?.endConditionOperator)
-            assertEquals(OPERATOR_UPPER_BOUND, jsonScenarioUpper.deserializeScenarioCompat()?.endConditionOperator)
-            assertEquals(OPERATOR_DEFAULT_VALUE, jsonScenarioNull.deserializeScenarioCompat()?.endConditionOperator)
+            assertEquals(OPERATOR_LOWER_BOUND, jsonScenarioLower.deserializeScenarioCompat(10)?.endConditionOperator)
+            assertEquals(OPERATOR_UPPER_BOUND, jsonScenarioUpper.deserializeScenarioCompat(10)?.endConditionOperator)
+            assertEquals(OPERATOR_DEFAULT_VALUE, jsonScenarioNull.deserializeScenarioCompat(10)?.endConditionOperator)
         }
     }
 

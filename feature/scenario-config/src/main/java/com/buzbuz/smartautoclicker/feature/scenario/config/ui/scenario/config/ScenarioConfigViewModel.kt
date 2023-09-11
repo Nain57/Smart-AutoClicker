@@ -30,8 +30,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.DETECTION_QUALITY_MAX
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.DETECTION_QUALITY_MIN
+import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MAX
+import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import kotlinx.coroutines.flow.combine
@@ -170,7 +170,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(
                     scenario.copy(
-                        detectionQuality = max(scenario.detectionQuality - 1, DETECTION_QUALITY_MIN)
+                        detectionQuality = max(scenario.detectionQuality - 1, DETECTION_QUALITY_MIN.toInt())
                     )
                 )
             }
@@ -183,7 +183,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(
                     scenario.copy(
-                        detectionQuality = min(scenario.detectionQuality + 1, DETECTION_QUALITY_MAX)
+                        detectionQuality = min(scenario.detectionQuality + 1, DETECTION_QUALITY_MAX.toInt())
                     )
                 )
             }

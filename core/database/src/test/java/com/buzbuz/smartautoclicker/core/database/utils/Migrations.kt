@@ -180,6 +180,12 @@ fun getInsertV9EmptyAction(id: Long, eventId: Long, name: String, type: String, 
 
 // ----- Utils for Database V10 -----
 
+fun getInsertV10Scenario(id: Long, detectionQuality: Int) =
+    """
+        INSERT INTO scenario_table (id, name, detection_quality, end_condition_operator) 
+        VALUES ($id, "toto", $detectionQuality, 1)
+    """.trimIndent()
+
 fun getV10Actions() = "SELECT * FROM action_table"
 
 fun getInsertV10Swipe(id: Long, eventId: Long, name: String, fromX: Int, fromY: Int, toX: Int, toY: Int, swipeDuration: Long, priority: Int) =
@@ -222,4 +228,5 @@ fun getInsertV10Condition(id: Long, eventId: Long, name: String, path: String, l
 
 // ----- Utils for Database V11 -----
 
+fun getV11Scenarios() = "SELECT * FROM scenario_table"
 fun getV11Actions() = "SELECT * FROM action_table"

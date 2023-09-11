@@ -52,6 +52,30 @@ class Migration10to11Tests {
     )
 
     @Test
+    fun migrate_quality() {
+        val id = 1L
+        val quality = 1200
+
+        // Insert in V10 and close
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
+            execSQL(getInsertV10Scenario(id, quality))
+            close()
+        }
+
+        // Migrate
+        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+
+        // Verify
+        dbV11.query(getV11Scenarios()).use { cursor ->
+            cursor.assertCountEquals(1)
+            cursor.moveToFirst()
+
+            cursor.assertColumnEquals(id, "id")
+            cursor.assertColumnEquals(quality + 600, "detection_quality")
+        }
+    }
+
+    @Test
     fun migrate_swipe() {
         val id = 1L
         val evtId = 2L

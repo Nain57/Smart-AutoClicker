@@ -72,7 +72,7 @@ interface ImageDetector : AutoCloseable {
 }
 
 /** The maximum detection quality for the algorithm. */
-const val DETECTION_QUALITY_MAX = 1200L
+const val DETECTION_QUALITY_MAX = 3216L
 /** The minimum detection quality for the algorithm. */
 const val DETECTION_QUALITY_MIN = 400L
 

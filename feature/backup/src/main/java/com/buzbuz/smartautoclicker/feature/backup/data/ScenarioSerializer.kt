@@ -80,7 +80,7 @@ internal class ScenarioSerializer {
             }
             else -> {
                 Log.d(TAG, "Not the current version, use compat serialization.")
-                jsonBackup.deserializeCompleteScenarioCompat()
+                jsonBackup.deserializeCompleteScenarioCompat(version)
             }
         }
 
@@ -102,13 +102,16 @@ internal class ScenarioSerializer {
      * Tries to do a "best effort" deserialization of the provided json in order to keep as much backward
      * compatibility as possible.
      *
+     * @param version the version of the scenario to extract.
+     *
      * @return the complete scenario, if the deserialization is a success, or null if not.
      */
     @VisibleForTesting
-    internal fun JsonObject.deserializeCompleteScenarioCompat(): CompleteScenario? {
+    internal fun JsonObject.deserializeCompleteScenarioCompat(version: Int): CompleteScenario? {
         val jsonCompleteScenario = getJsonObject("scenario") ?: return null
 
-        val scenario: ScenarioEntity = jsonCompleteScenario.getJsonObject("scenario")?.deserializeScenarioCompat()
+        val scenario: ScenarioEntity = jsonCompleteScenario.getJsonObject("scenario")
+            ?.deserializeScenarioCompat(version)
             ?: return null
 
         return CompleteScenario(
@@ -122,15 +125,18 @@ internal class ScenarioSerializer {
 
     /** @return the deserialized scenario. */
     @VisibleForTesting
-    internal fun JsonObject.deserializeScenarioCompat(): ScenarioEntity? {
+    internal fun JsonObject.deserializeScenarioCompat(version: Int): ScenarioEntity? {
         val id = getLong("id", true) ?: return null
+
+        val detectionQuality = getInt("detectionQuality")?.let { quality ->
+            if (version < DETECTION_QUALITY_UPDATE_VERSION) quality + 600
+            else quality
+        } ?: DETECTION_QUALITY_DEFAULT_VALUE
 
         return ScenarioEntity(
             id = id,
             name = getString("name") ?: "",
-            detectionQuality = getInt("detectionQuality")
-                ?.coerceIn(DETECTION_QUALITY_LOWER_BOUND, DETECTION_QUALITY_UPPER_BOUND)
-                ?: DETECTION_QUALITY_DEFAULT_VALUE,
+            detectionQuality = detectionQuality.coerceIn(DETECTION_QUALITY_LOWER_BOUND, DETECTION_QUALITY_UPPER_BOUND),
             endConditionOperator = getInt("endConditionOperator")
                 ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
                 ?: OPERATOR_DEFAULT_VALUE,
@@ -400,12 +406,14 @@ internal class ScenarioSerializer {
     }
 }
 
+/** Scenario detection quality revision update version. */
+const val DETECTION_QUALITY_UPDATE_VERSION = 11
 /** Scenario detection quality lower bound on compat deserialization. */
 const val DETECTION_QUALITY_LOWER_BOUND = 400
 /** Scenario detection quality upper bound on compat deserialization. */
-const val DETECTION_QUALITY_UPPER_BOUND = 1200
+const val DETECTION_QUALITY_UPPER_BOUND = 3216
 /** Scenario detection quality default value on compat deserialization. */
-const val DETECTION_QUALITY_DEFAULT_VALUE = 600
+const val DETECTION_QUALITY_DEFAULT_VALUE = 1200
 
 /** Operators lower bound on compat deserialization. */
 const val OPERATOR_LOWER_BOUND = 1
