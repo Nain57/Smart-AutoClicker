@@ -34,12 +34,11 @@ void Detector::setScreenMetrics(JNIEnv *env, jobject screenImage, double detecti
     // Select the scale ratio depending on the screen size.
     // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
     // the performance of the detection.
-    if (fullSizeColorCurrentImage->rows > fullSizeColorCurrentImage->cols && fullSizeColorCurrentImage->rows > detectionQuality) {
-        scaleRatio = detectionQuality / fullSizeColorCurrentImage->rows;
-    } else if (fullSizeColorCurrentImage->cols > detectionQuality) {
-        scaleRatio = detectionQuality / fullSizeColorCurrentImage->cols;
-    } else {
+    auto maxImageDim = max(fullSizeColorCurrentImage->rows, fullSizeColorCurrentImage->cols);
+    if (maxImageDim <= detectionQuality) {
         scaleRatio = 1;
+    } else {
+        scaleRatio = detectionQuality / maxImageDim;
     }
 }
 
@@ -81,20 +80,31 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
         return detectionResult;
     }
 
-    // If the condition area isn't on the screen, no matching.
+    // Get and check the detection area in normal and scaled size
     if (isRoiOutOfBounds(fullSizeDetectionRoi, *fullSizeColorCurrentImage)) {
+        __android_log_print(ANDROID_LOG_ERROR, "Detector",
+                            "Full size ROI is invalid, %1d/%2d %3d/%4d in %5d/%6d",
+                            fullSizeDetectionRoi.x, fullSizeDetectionRoi.y, fullSizeDetectionRoi.width, fullSizeDetectionRoi.height,
+                            fullSizeColorCurrentImage->cols, fullSizeColorCurrentImage->rows);
         return detectionResult;
     }
+    auto scaledDetectionRoi = getScaledRoi(fullSizeDetectionRoi.x, fullSizeDetectionRoi.y, fullSizeDetectionRoi.width, fullSizeDetectionRoi.height);
+    if (isRoiOutOfBounds(scaledDetectionRoi, *scaledGrayCurrentImage)) {
+        __android_log_print(ANDROID_LOG_ERROR, "Detector",
+                            "Scaled ROI is invalid, %1d/%2d %3d/%4d in %5d/%6d",
+                            scaledDetectionRoi.x, scaledDetectionRoi.y, scaledDetectionRoi.width, scaledDetectionRoi.height,
+                            scaledGrayCurrentImage->cols, scaledGrayCurrentImage->rows);
+        return detectionResult;
+    }
+
+    // Crop the scaled gray current image to only get the detection area
+    auto croppedGrayCurrentImage = Mat(*scaledGrayCurrentImage, scaledDetectionRoi);
 
     // Get the condition image information from the android bitmap format.
     auto fullSizeColorCondition = createColorMatFromARGB8888BitmapData(env, conditionImage);
     auto scaledGrayCondition = scaleAndChangeToGray(*fullSizeColorCondition);
 
-    // Crop the current image at the condition position. This is like a screenshot at the same place than condition.
-    auto scaledDetectionRoi = getScaledRoi(fullSizeDetectionRoi.x, fullSizeDetectionRoi.y, fullSizeDetectionRoi.width, fullSizeDetectionRoi.height);
-    auto croppedGrayCurrentImage = Mat(*scaledGrayCurrentImage, scaledDetectionRoi);
-
-    // Get the matching results for the whole screen
+    // Get the matching results
     auto matchingResults = matchTemplate(croppedGrayCurrentImage, *scaledGrayCondition);
 
     // Until a condition is detected or none fits
@@ -199,10 +209,10 @@ cv::Rect Detector::getDetectionResultFullSizeRoi(const cv::Rect& fullSizeDetecti
 
 cv::Rect Detector::getScaledRoi(const int x, const int y, const int width, const int height) const {
     return {
-        cvFloor(x * scaleRatio),
-        cvFloor(y * scaleRatio),
-        cvCeil(width * scaleRatio),
-        cvCeil(height * scaleRatio)
+        cvRound(x * scaleRatio),
+        cvRound(y * scaleRatio),
+        cvRound(width * scaleRatio),
+        cvRound(height * scaleRatio)
     };
 }
 
