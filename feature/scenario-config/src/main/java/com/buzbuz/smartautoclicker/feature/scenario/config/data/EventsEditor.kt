@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.AND
+import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -81,10 +82,18 @@ class EventsEditor(
         actionsEditor.editedList.value?.let { actions ->
             val newActions = actions.toMutableList()
             actions.forEach { action ->
-                if (action !is Action.Click) return@forEach // Skip all actions but clicks
-                if (action.positionType == Action.Click.PositionType.USER_SELECTED) return@forEach
-                if (editedEvent.conditionOperator == AND && conditions.find { action.clickOnConditionId == it.id } == null)
-                    newActions.remove(action)
+                when {
+                    // Skip all actions but clicks
+                    action !is Action.Click -> return@forEach
+                    // Nothing to do on user selected position
+                    action.positionType == Action.Click.PositionType.USER_SELECTED -> return@forEach
+                    // Condition was referenced and used by an action, delete it
+                    editedEvent.conditionOperator == AND && conditions.find { action.clickOnConditionId == it.id } == null ->
+                        newActions.remove(action)
+                    // Condition was referenced but not used by an action, delete the reference
+                    editedEvent.conditionOperator == OR && action.clickOnConditionId != null ->
+                        newActions[newActions.indexOf(action)] = action.copy(clickOnConditionId = null)
+                }
             }
 
             actionsEditor.updateList(newActions)
