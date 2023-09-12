@@ -71,8 +71,20 @@ class EditionRepository private constructor(context: Context) {
     /** Tells if the user is currently editing a scenario. */
     val isEditingScenario: Flow<Boolean> = scenarioEditor.editedScenario
         .map { it?.id != null }
-    /**  Tells if the user is currently editing an event. */
+    /** Tells if the user is currently editing an event. */
     val isEditingEvent: Flow<Boolean> = scenarioEditor.eventsEditor.editedItem
+        .map { it?.id != null }
+    /** Tells if the user is currently editing a condition. */
+    val isEditingCondition: Flow<Boolean> = scenarioEditor.eventsEditor.conditionsEditor.editedItem
+        .map { it?.id != null }
+    /** Tells if the user is currently editing an action. */
+    val isEditingAction: Flow<Boolean> = scenarioEditor.eventsEditor.actionsEditor.editedItem
+        .map { it?.id != null }
+    /** Tells if the user is currently editing an end condition. */
+    val isEditingEndCondition: Flow<Boolean> = scenarioEditor.endConditionsEditor.editedItem
+        .map { it?.id != null }
+    /** Tells if the user is currently editing an Intent Extra. */
+    val isEditingIntentExtra: Flow<Boolean> = scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.editedItem
         .map { it?.id != null }
 
     // --- SCENARIO - START ---

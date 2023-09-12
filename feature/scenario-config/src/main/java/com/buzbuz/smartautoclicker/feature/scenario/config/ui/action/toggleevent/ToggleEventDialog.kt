@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.toggleevent
 
 import android.text.InputFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,6 +101,11 @@ class ToggleEventDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingAction.collect(::onActionEditingStateChanged) }
+            }
+        }
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateToggleEventName) }
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
@@ -145,4 +151,13 @@ class ToggleEventDialog(
                 onEventClicked = { event -> viewModel.setEvent(event) }
             )
         )
+
+    private fun onActionEditingStateChanged(isEditingAction: Boolean) {
+        if (!isEditingAction) {
+            Log.e(TAG, "Closing ToggleEventDialog because there is no action edited")
+            finish()
+        }
+    }
 }
+
+private const val TAG = "ToggleEventDialog"

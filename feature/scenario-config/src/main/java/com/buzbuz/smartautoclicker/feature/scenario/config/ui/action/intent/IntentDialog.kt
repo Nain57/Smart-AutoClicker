@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 
@@ -64,6 +65,12 @@ class IntentDialog(
         super.onDialogCreated(dialog)
 
         lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingAction.collect(::onActionEditingStateChanged) }
+            }
+        }
+
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
@@ -102,4 +109,13 @@ class IntentDialog(
     private fun updateSaveButton(isValidCondition: Boolean) {
         topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
+
+    private fun onActionEditingStateChanged(isEditingAction: Boolean) {
+        if (!isEditingAction) {
+            Log.e(TAG, "Closing IntentDialog because there is no action edited")
+            finish()
+        }
+    }
 }
+
+private const val TAG = "IntentDialog"

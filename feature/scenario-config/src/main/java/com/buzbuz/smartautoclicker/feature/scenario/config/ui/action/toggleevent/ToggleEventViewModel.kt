@@ -26,16 +26,20 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 
 /** ViewModel for the [ToggleEventDialog].  */
+@OptIn(FlowPreview::class)
 class ToggleEventViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the edited items. */
@@ -44,6 +48,11 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
     private val configuredToggleEvent = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Action.ToggleEvent>()
+
+    /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
+    val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** The name of the toggle event. */
     val name: Flow<String?> = configuredToggleEvent

@@ -42,6 +42,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigP
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putClickPressDurationConfig
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
@@ -49,6 +50,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
@@ -57,6 +59,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@OptIn(FlowPreview::class)
 class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the database. */
@@ -72,6 +75,11 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     private val configuredClick = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Action.Click>()
+
+    /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
+    val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** The name of the click. */
     val name: Flow<String?> = configuredClick

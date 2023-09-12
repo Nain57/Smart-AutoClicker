@@ -38,7 +38,9 @@ internal class ScenarioEditor {
             if (ref == null || edit == null) false
             else ref != edit
 
-        EditedElementState(edit, hasChanged, true)
+        val canBeSaved = edit != null && edit.name.isNotEmpty()
+
+        EditedElementState(edit, hasChanged, canBeSaved)
     }
 
     val eventsEditor = EventsEditor(::deleteAllReferencesToEvent, editedScenario)

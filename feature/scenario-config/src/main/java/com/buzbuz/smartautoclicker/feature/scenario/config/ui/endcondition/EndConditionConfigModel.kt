@@ -24,10 +24,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -37,6 +40,7 @@ import kotlinx.coroutines.flow.take
  *
  * @param application the Android application.
  */
+@OptIn(FlowPreview::class)
 class EndConditionConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** Maintains the currently configured scenario state. */
@@ -44,6 +48,11 @@ class EndConditionConfigModel(application: Application) : AndroidViewModel(appli
     /** Currently configured end conditions. */
     private val editedEndCondition: Flow<EndCondition> = editionRepository.editionState.editedEndConditionState
         .mapNotNull { it.value }
+
+    /** Tells if the user is currently editing a end condition. If that's not the case, dialog should be closed. */
+    val isEditingEndCondition: Flow<Boolean> = editionRepository.isEditingEndCondition
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** The number of executions before triggering the end condition. */
     val executions = editedEndCondition

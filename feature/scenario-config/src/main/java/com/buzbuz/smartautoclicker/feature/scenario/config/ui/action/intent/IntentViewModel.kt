@@ -34,9 +34,11 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putIntentIsAdvancedConfig
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.*
 
+@OptIn(FlowPreview::class)
 class IntentViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the edited items. */
@@ -50,6 +52,11 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
     /** The Android package manager. */
     private val packageManager: PackageManager = application.packageManager
+
+    /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
+    val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** The name of the pause. */
     val name: Flow<String?> = configuredIntent

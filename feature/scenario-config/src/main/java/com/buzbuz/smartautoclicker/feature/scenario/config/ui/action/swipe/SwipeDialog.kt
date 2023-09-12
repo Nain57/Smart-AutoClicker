@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.swipe
 import android.graphics.Point
 import android.text.InputFilter
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -104,6 +105,11 @@ class SwipeDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingAction.collect(::onActionEditingStateChanged) }
+            }
+        }
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
@@ -167,4 +173,13 @@ class SwipeDialog(
             hideCurrent = true,
         )
     }
+
+    private fun onActionEditingStateChanged(isEditingAction: Boolean) {
+        if (!isEditingAction) {
+            Log.e(TAG, "Closing ClickDialog because there is no action edited")
+            finish()
+        }
+    }
 }
+
+private const val TAG = "SwipeDialog"

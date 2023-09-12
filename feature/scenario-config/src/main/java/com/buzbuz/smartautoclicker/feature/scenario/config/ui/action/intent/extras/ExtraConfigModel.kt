@@ -28,8 +28,11 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getDisplayNameRes
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -40,6 +43,7 @@ import kotlin.reflect.KClass
  *
  * @param application the Android application.
  */
+@OptIn(FlowPreview::class)
 class ExtraConfigModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the edited items. */
@@ -47,6 +51,12 @@ class ExtraConfigModel(application: Application) : AndroidViewModel(application)
     /** The extra currently configured. */
     private val configuredExtra = editionRepository.editionState.editedIntentExtraState
         .mapNotNull { it.value }
+
+
+    /** Tells if the user is currently editing a Intent extra. If that's not the case, dialog should be closed. */
+    val isEditingExtra: Flow<Boolean> = editionRepository.isEditingIntentExtra
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** The key for the extra. */
     val key: Flow<String?> = configuredExtra

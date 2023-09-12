@@ -80,7 +80,8 @@ class EventDialog(
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch { viewModel.isEditingEvent.collect(::onEventEditingStateChanged) }
             }
-
+        }
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
                 launch { viewModel.eventCanBeSaved.collect(::updateSaveButton) }

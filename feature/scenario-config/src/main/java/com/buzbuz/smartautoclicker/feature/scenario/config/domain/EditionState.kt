@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -137,8 +138,14 @@ class EditionState internal constructor(context: Context, private val editor: Sc
         } != null
     }
 
-    /** Check if the edited Condition is referenced by a Click Action in the edited event. */
+    /**
+     * Check if the edited Condition is referenced by a Click Action in the edited event.
+     * If the edited event is set to OR, do not consider the reference as true.
+     */
     fun isEditedConditionReferencedByClick(): Boolean {
+        val event = editor.eventsEditor.editedItem.value ?: return false
+        if (event.conditionOperator == OR) return false
+
         val condition = editor.eventsEditor.conditionsEditor.editedItem.value ?: return false
         val actions = editor.eventsEditor.actionsEditor.editedList.value ?: return false
 

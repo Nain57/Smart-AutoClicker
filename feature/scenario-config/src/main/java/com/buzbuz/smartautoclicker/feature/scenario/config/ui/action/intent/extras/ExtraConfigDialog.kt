@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,6 +110,11 @@ class ExtraConfigDialog(
     @SuppressLint("ClickableViewAccessibility")
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingExtra.collect(::onExtraEditingStateChanged) }
+            }
+        }
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.key.collect(::updateExtraKey) }
                 launch { viewModel.keyError.collect(viewBinding.editKeyLayout::setError) }
@@ -178,6 +184,13 @@ class ExtraConfigDialog(
         viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidExtra)
     }
 
+    private fun onExtraEditingStateChanged(isEditingExtra: Boolean) {
+        if (!isEditingExtra) {
+            Log.e(TAG, "Closing ExtraConfigDialog because there is no intent extra edited")
+            finish()
+        }
+    }
+
     private fun TextInputEditText.clearInputClass() {
         tag = null
     }
@@ -195,3 +208,5 @@ class ExtraConfigDialog(
         }
     }
 }
+
+private const val TAG = "ExtraConfigDialog"

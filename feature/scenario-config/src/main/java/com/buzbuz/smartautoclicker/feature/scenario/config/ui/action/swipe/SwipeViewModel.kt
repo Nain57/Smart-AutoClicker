@@ -26,13 +26,17 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putSwipeDurationConfig
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
 
+@OptIn(FlowPreview::class)
 class SwipeViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the edited items. */
@@ -43,6 +47,11 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
         .filterIsInstance<Action.Swipe>()
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
+
+    /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
+    val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** The name of the swipe. */
     val name: Flow<String?> = configuredSwipe

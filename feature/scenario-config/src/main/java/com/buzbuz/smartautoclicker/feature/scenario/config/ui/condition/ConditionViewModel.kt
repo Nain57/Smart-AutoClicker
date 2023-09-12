@@ -31,9 +31,11 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.*
 
+@OptIn(FlowPreview::class)
 class ConditionViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the database. */
@@ -46,6 +48,11 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
     /** The condition being configured by the user. */
     private val configuredCondition = editionRepository.editionState.editedConditionState
         .mapNotNull { it.value }
+
+    /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
+    val isEditingCondition: Flow<Boolean> = editionRepository.isEditingCondition
+        .distinctUntilChanged()
+        .debounce(1000)
 
     /** The type of detection currently selected by the user. */
     val name: Flow<String?> = configuredCondition.map { it.name }.take(1)

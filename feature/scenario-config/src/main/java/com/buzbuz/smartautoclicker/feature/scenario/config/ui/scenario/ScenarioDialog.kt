@@ -70,7 +70,8 @@ class ScenarioDialog(
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch { viewModel.isEditingScenario.collect(::onScenarioEditingStateChanged) }
             }
-
+        }
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
                 launch { viewModel.scenarioCanBeSaved.collect(::updateSaveButtonState) }

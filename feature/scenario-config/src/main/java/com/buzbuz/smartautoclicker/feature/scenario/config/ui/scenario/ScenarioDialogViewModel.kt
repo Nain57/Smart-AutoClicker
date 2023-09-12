@@ -61,8 +61,10 @@ class ScenarioDialogViewModel(application: Application): AndroidViewModel(applic
         .debounce(1000)
 
     /** Tells if the configured scenario is valid and can be saved in database. */
-    val scenarioCanBeSaved: Flow<Boolean> = editionRepository.editionState.scenarioCompleteState
-        .map { it.canBeSaved }
+    val scenarioCanBeSaved: Flow<Boolean> =
+        combine(editionRepository.editionState.scenarioCompleteState, editionRepository.isEditingScenario) { state, isEditing ->
+            state.canBeSaved && isEditing
+        }
 
     fun monitorSaveButtonView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE, view)

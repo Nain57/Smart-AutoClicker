@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.endcondition
 
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,6 +98,11 @@ class EndConditionConfigDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingEndCondition.collect(::onEndConditionEditingStateChanged) }
+            }
+        }
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.eventViewState.collect(::updateEvent) }
                 launch { viewModel.executionCountError.collect(viewBinding.editExecutionCountLayout::setError) }
@@ -149,7 +155,15 @@ class EndConditionConfigDialog(
             ),
         )
     }
+
+    private fun onEndConditionEditingStateChanged(isEditingCondition: Boolean) {
+        if (!isEditingCondition) {
+            Log.e(TAG, "Closing EndConditionConfigDialog because there is no condition edited")
+            finish()
+        }
+    }
 }
 
 private const val MIN_EXECUTION_COUNT = 0
 private const val MAX_EXECUTION_COUNT = 9999
+private const val TAG = "EndConditionConfigDialog"

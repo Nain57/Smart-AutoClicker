@@ -20,6 +20,7 @@ import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.text.InputFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -119,6 +120,11 @@ class ConditionDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingCondition.collect(::onConditionEditingStateChanged) }
+            }
+        }
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateConditionName) }
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
@@ -213,4 +219,13 @@ class ConditionDialog(
         onDeleteClickedListener()
         back()
     }
+
+    private fun onConditionEditingStateChanged(isEditingCondition: Boolean) {
+        if (!isEditingCondition) {
+            Log.e(TAG, "Closing ConditionDialog because there is no condition edited")
+            finish()
+        }
+    }
 }
+
+private const val TAG = "ConditionDialog"
