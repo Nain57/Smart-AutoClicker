@@ -126,46 +126,55 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     override fun onCreateButtonClicked() {
-        val dialog = ActionTypeSelectionDialog(
-            choices = viewModel.actionCreationItems.value,
-            onChoiceSelectedListener = { choiceClicked ->
-                if (!choiceClicked.enabled) {
-                    actionTypeSelectionDialog?.show()
-                    viewModel.onProModeUnsubscribedActionClicked(context, choiceClicked)
-                } else {
-                    actionTypeSelectionDialog = null
-                    showActionConfigDialog(viewModel.createAction(context, choiceClicked))
-                }
-            },
-            onCancelledListener = { actionTypeSelectionDialog = null }
-        )
-        actionTypeSelectionDialog = dialog
+        debounceUserInteraction {
+            val dialog = ActionTypeSelectionDialog(
+                choices = viewModel.actionCreationItems.value,
+                onChoiceSelectedListener = { choiceClicked ->
+                    if (!choiceClicked.enabled) {
+                        actionTypeSelectionDialog?.show()
+                        viewModel.onProModeUnsubscribedActionClicked(context, choiceClicked)
+                    } else {
+                        actionTypeSelectionDialog = null
+                        showActionConfigDialog(viewModel.createAction(context, choiceClicked))
+                    }
+                },
+                onCancelledListener = { actionTypeSelectionDialog = null }
+            )
+            actionTypeSelectionDialog = dialog
 
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = dialog,
-        )
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = dialog,
+            )
+        }
     }
 
-    override fun onCopyButtonClicked() =
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ActionCopyDialog(
-                onActionSelected = { newCopyAction ->
-                    showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction))
-                }
-            ),
-        )
+    override fun onCopyButtonClicked() {
+        debounceUserInteraction {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = ActionCopyDialog(
+                    onActionSelected = { newCopyAction ->
+                        showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction))
+                    }
+                ),
+            )
+        }
+    }
 
     private fun onCreateCopyClickedWhileLimited() {
-        actionLimitReachedClick = true
+        debounceUserInteraction {
+            actionLimitReachedClick = true
 
-        dialogController.hide()
-        viewModel.onActionCountReachedAddCopyClicked(context)
+            dialogController.hide()
+            viewModel.onActionCountReachedAddCopyClicked(context)
+        }
     }
 
     private fun onActionClicked(action: Action) {
-        showActionConfigDialog(action)
+        debounceUserInteraction {
+            showActionConfigDialog(action)
+        }
     }
 
     private fun onActionItemBound(index: Int, itemView: View?) {

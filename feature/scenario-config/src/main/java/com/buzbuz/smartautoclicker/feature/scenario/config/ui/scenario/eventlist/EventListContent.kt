@@ -62,7 +62,7 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         eventAdapter = EventListAdapter(
-            itemClickedListener = ::showEventConfigDialog,
+            itemClickedListener = ::onEventItemClicked,
             itemReorderListener = viewModel::updateEventsPriority,
             itemViewBound = ::onEventItemBound,
         )
@@ -112,18 +112,30 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     override fun onCreateButtonClicked() {
-        showEventConfigDialog(viewModel.createNewEvent(context))
+        debounceUserInteraction {
+            showEventConfigDialog(viewModel.createNewEvent(context))
+        }
     }
 
     override fun onCopyButtonClicked() {
-        showEventCopyDialog()
+        debounceUserInteraction {
+            showEventCopyDialog()
+        }
     }
 
     private fun onCreateCopyClickedWhileLimited() {
-        eventLimitReachedClick = true
+        debounceUserInteraction {
+            eventLimitReachedClick = true
 
-        dialogController.hide()
-        viewModel.onEventCountReachedAddCopyClicked(context)
+            dialogController.hide()
+            viewModel.onEventCountReachedAddCopyClicked(context)
+        }
+    }
+
+    private fun onEventItemClicked(event: Event) {
+        debounceUserInteraction {
+            showEventConfigDialog(event)
+        }
     }
 
     private fun onEventItemBound(index: Int, eventItemView: View?) {

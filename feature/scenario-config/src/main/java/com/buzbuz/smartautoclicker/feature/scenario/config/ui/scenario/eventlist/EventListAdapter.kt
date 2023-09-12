@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceViewHolder
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 
@@ -43,7 +42,7 @@ class EventListAdapter(
     private val itemClickedListener: (Event) -> Unit,
     private val itemReorderListener: (List<Event>) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
-    ) : ListAdapter<Event, EventViewHolder>(EventDiffUtilCallback) {
+) : ListAdapter<Event, EventViewHolder>(EventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))

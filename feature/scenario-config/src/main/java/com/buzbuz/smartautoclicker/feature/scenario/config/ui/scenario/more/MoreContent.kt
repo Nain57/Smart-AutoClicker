@@ -71,11 +71,14 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun onTutorialClicked() {
-        dialogController.back()
-        val intent = Intent()
-            .setComponent(ComponentName("com.buzbuz.smartautoclicker", "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
-            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
+        debounceUserInteraction {
+            dialogController.back()
+
+            val intent = Intent()
+                .setComponent(ComponentName("com.buzbuz.smartautoclicker", "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
     }
 
     private fun updateDebugView(isEnabled: Boolean) {
@@ -90,7 +93,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
         if (isAvailable) {
             viewBinding.debugReportStateText.setText(R.string.item_title_debug_report_available)
             viewBinding.debugReportChevron.visibility = View.VISIBLE
-            viewBinding.debugReportOpenView.setOnClickListener { showDebugReport() }
+            viewBinding.debugReportOpenView.setOnClickListener { debounceUserInteraction { showDebugReport() } }
         } else {
             viewBinding.debugReportStateText.setText(R.string.item_title_debug_report_not_available)
             viewBinding.debugReportChevron.visibility = View.GONE

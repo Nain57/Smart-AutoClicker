@@ -67,8 +67,10 @@ class EndConditionConfigDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_end_condition_config)
                 buttonDismiss.setOnClickListener {
-                    onDismissClicked()
-                    back()
+                    debounceUserInteraction {
+                        onDismissClicked()
+                        back()
+                    }
                 }
 
                 buttonDelete.apply {
@@ -117,8 +119,10 @@ class EndConditionConfigDialog(
      * Propagate the configured event to the provided listener and dismiss the dialog.
      */
     private fun onSaveButtonClicked() {
-        onConfirmClicked()
-        back()
+        debounceUserInteraction {
+            onConfirmClicked()
+            back()
+        }
     }
 
     /**
@@ -126,8 +130,10 @@ class EndConditionConfigDialog(
      * Propagate the configured event to the provided listener and dismiss the dialog.
      */
     private fun onDeleteButtonClicked() {
-        onDeleteClicked()
-        back()
+        debounceUserInteraction {
+            onDeleteClicked()
+            back()
+        }
     }
 
     /** Update the enabled state of the save button. */

@@ -53,7 +53,7 @@ class EventSelectionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_event_selection)
                 buttonSave.visibility = View.GONE
-                buttonDismiss.setOnClickListener { back() }
+                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
         }
 
@@ -80,8 +80,10 @@ class EventSelectionDialog(
      * @param event the selected event.
      */
     private fun onEventSelected(event: Event) {
-        onEventClicked(event)
-        back()
+        debounceUserInteraction {
+            onEventClicked(event)
+            back()
+        }
     }
 }
 

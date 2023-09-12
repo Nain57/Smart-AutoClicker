@@ -67,8 +67,10 @@ class ToggleEventDialog(
                 dialogTitle.setText(R.string.dialog_overlay_title_toggle_event)
 
                 buttonDismiss.setOnClickListener {
-                    onDismissClicked()
-                    back()
+                    debounceUserInteraction {
+                        onDismissClicked()
+                        back()
+                    }
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
@@ -117,13 +119,17 @@ class ToggleEventDialog(
     }
 
     private fun onSaveButtonClicked() {
-        onConfirmClicked()
-        back()
+        debounceUserInteraction {
+            onConfirmClicked()
+            back()
+        }
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked()
-        back()
+        debounceUserInteraction {
+            onDeleteClicked()
+            back()
+        }
     }
 
     private fun updateToggleEventName(newName: String?) {

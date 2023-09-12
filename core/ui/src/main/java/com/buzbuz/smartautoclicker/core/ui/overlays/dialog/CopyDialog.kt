@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,9 @@
 package com.buzbuz.smartautoclicker.core.ui.overlays.dialog
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.StyleRes
-import androidx.appcompat.widget.SearchView
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnDismissClickedListener
@@ -46,7 +44,7 @@ abstract class CopyDialog(
         viewBinding = DialogBaseCopyBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 setup(titleRes, searchHintRes)
-                setOnDismissClickedListener { back() }
+                setOnDismissClickedListener { debounceUserInteraction { back() } }
                 setOnTextChangedListener(::onSearchQueryChanged)
             }
 

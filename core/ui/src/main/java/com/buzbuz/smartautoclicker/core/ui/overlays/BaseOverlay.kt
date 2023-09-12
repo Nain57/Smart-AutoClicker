@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
+import androidx.lifecycle.lifecycleScope
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
@@ -38,6 +39,7 @@ import com.google.android.material.color.DynamicColors
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -73,6 +75,9 @@ abstract class BaseOverlay internal constructor(
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
         ViewModelProvider.AndroidViewModelFactory.getInstance((context.applicationContext as Application))
     }
+
+    /** Job used for debouncing the user interactions. */
+    private var debounceUserInteractionJob: Job? = null
 
     /**
      * Listener called when the overlay shown by the controller is dismissed.
@@ -183,6 +188,9 @@ abstract class BaseOverlay internal constructor(
         onDestroy()
 
         if (!shouldBeRecreated) {
+            debounceUserInteractionJob?.cancel()
+            debounceUserInteractionJob = null
+
             onDestroyListener?.invoke()
             onDestroyListener = null
 
@@ -190,6 +198,16 @@ abstract class BaseOverlay internal constructor(
                 delay(5000)
                 modelStore.clear()
                 cancel()
+            }
+        }
+    }
+
+    protected fun debounceUserInteraction(userInteraction: () -> Unit) {
+        if (debounceUserInteractionJob == null && lifecycle.currentState == State.RESUMED) {
+            debounceUserInteractionJob = lifecycleScope.launch {
+                userInteraction()
+                delay(800)
+                debounceUserInteractionJob = null
             }
         }
     }

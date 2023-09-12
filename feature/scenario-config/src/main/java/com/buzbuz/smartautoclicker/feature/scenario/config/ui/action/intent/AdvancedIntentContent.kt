@@ -57,8 +57,8 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         extrasAdapter = ExtrasAdapter(
-            addExtraClickedListener = { showExtraDialog(dialogViewModel.createNewExtra()) },
-            extraClickedListener = { extra -> showExtraDialog(extra) },
+            addExtraClickedListener = { debounceUserInteraction { showExtraDialog(dialogViewModel.createNewExtra()) } },
+            extraClickedListener = { extra -> debounceUserInteraction { showExtraDialog(extra) } },
         )
 
         viewBinding = ContentIntentConfigAdvancedBinding.inflate(LayoutInflater.from(context)).apply {

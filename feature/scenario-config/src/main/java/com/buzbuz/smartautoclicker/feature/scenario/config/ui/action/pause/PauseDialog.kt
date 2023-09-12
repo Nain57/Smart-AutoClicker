@@ -60,8 +60,10 @@ class PauseDialog(
                 dialogTitle.setText(R.string.dialog_overlay_title_pause)
 
                 buttonDismiss.setOnClickListener {
-                    onDismissClicked()
-                    back()
+                    debounceUserInteraction {
+                        onDismissClicked()
+                        back()
+                    }
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
@@ -113,14 +115,18 @@ class PauseDialog(
     }
 
     private fun onSaveButtonClicked() {
-        viewModel.saveLastConfig()
-        onConfirmClicked()
-        back()
+        debounceUserInteraction {
+            viewModel.saveLastConfig()
+            onConfirmClicked()
+            back()
+        }
     }
 
     private fun onDeleteButtonClicked() {
-        onDeleteClicked()
-        back()
+        debounceUserInteraction {
+            onDeleteClicked()
+            back()
+        }
     }
 
     private fun updateClickName(newName: String?) {

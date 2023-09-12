@@ -69,19 +69,23 @@ class ConditionDialog(
                 dialogTitle.setText(R.string.dialog_overlay_title_condition_config)
 
                 buttonDismiss.setOnClickListener {
-                    onDismissClickedListener()
-                    back()
+                    debounceUserInteraction {
+                        onDismissClickedListener()
+                        back()
+                    }
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setOnClickListener {
-                        onConfirmClickedListener()
-                        back()
+                        debounceUserInteraction {
+                            onConfirmClickedListener()
+                            back()
+                        }
                     }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteClicked() }
+                    setOnClickListener { debounceUserInteraction { onDeleteClicked() } }
                 }
             }
 

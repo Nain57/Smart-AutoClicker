@@ -62,12 +62,14 @@ class ActivitySelectionDialog(
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_application_selection)
-                buttonDismiss.setOnClickListener { back() }
+                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
 
             activitiesAdapter = ApplicationAdapter { selectedComponentName ->
-                onApplicationSelected(selectedComponentName)
-                back()
+                debounceUserInteraction {
+                    onApplicationSelected(selectedComponentName)
+                    back()
+                }
             }
 
             layoutLoadableList.list.apply {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
 
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.databinding.DialogBaseNavBarBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeCreateCopyButtonsBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogNavigationTopBarBinding
@@ -55,16 +56,16 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     /** */
     abstract fun onCreateContent(navItemId: Int): NavBarDialogContent
     /** */
-    abstract fun onDialogButtonPressed(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton)
+    abstract fun onDialogButtonPressed(buttonType: DialogNavigationButton)
     /** */
     open fun onContentViewChanged(navItemId: Int) = Unit
 
     override fun onCreateView(): ViewGroup {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                buttonSave.setOnClickListener { handleButtonClick(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE) }
-                buttonDismiss.setOnClickListener { handleButtonClick(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DISMISS) }
-                buttonDelete.setOnClickListener { handleButtonClick(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DELETE) }
+                buttonSave.setOnClickListener { handleButtonClick(DialogNavigationButton.SAVE) }
+                buttonDismiss.setOnClickListener { handleButtonClick(DialogNavigationButton.DISMISS) }
+                buttonDelete.setOnClickListener { handleButtonClick(DialogNavigationButton.DELETE) }
             }
         }
         topBarBinding = baseViewBinding.layoutTopBar
@@ -191,13 +192,15 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) content.resume()
     }
 
-    private fun handleButtonClick(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) {
-        // First notify the contents.
-        contentMap.values.forEach { contentInfo ->
-            contentInfo.onDialogButtonClicked(buttonType)
-        }
+    private fun handleButtonClick(buttonType: DialogNavigationButton) {
+        debounceUserInteraction {
+            // First notify the contents.
+            contentMap.values.forEach { contentInfo ->
+                contentInfo.onDialogButtonClicked(buttonType)
+            }
 
-        // Then, notify the dialog
-        onDialogButtonPressed(buttonType)
+            // Then, notify the dialog
+            onDialogButtonPressed(buttonType)
+        }
     }
 }

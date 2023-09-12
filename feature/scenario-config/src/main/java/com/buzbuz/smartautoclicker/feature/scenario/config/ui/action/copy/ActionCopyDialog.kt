@@ -52,8 +52,10 @@ class ActionCopyDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->
-            back()
-            onActionSelected(selectedAction.actionDetails.action)
+            debounceUserInteraction {
+                back()
+                onActionSelected(selectedAction.actionDetails.action)
+            }
         }
 
         viewBinding.layoutLoadableList.list.apply {

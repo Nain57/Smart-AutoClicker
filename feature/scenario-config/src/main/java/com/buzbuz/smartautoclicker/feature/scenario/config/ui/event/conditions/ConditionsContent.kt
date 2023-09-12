@@ -115,36 +115,46 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         viewModel.stopAllViewMonitoring()
     }
 
-    override fun onCreateButtonClicked() =
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ConditionSelectorMenu(
-                onConditionSelected = { area, bitmap ->
-                    showConditionConfigDialog(viewModel.createCondition(context, area, bitmap))
-                }
-            ),
-            hideCurrent = true,
-        )
+    override fun onCreateButtonClicked() {
+        debounceUserInteraction {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = ConditionSelectorMenu(
+                    onConditionSelected = { area, bitmap ->
+                        showConditionConfigDialog(viewModel.createCondition(context, area, bitmap))
+                    }
+                ),
+                hideCurrent = true,
+            )
+        }
+    }
 
-    override fun onCopyButtonClicked() =
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ConditionCopyDialog(
-                onConditionSelected = { conditionSelected ->
-                    showConditionConfigDialog(viewModel.createNewConditionFromCopy(conditionSelected))
-                },
-            ),
-        )
+    override fun onCopyButtonClicked() {
+        debounceUserInteraction {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = ConditionCopyDialog(
+                    onConditionSelected = { conditionSelected ->
+                        showConditionConfigDialog(viewModel.createNewConditionFromCopy(conditionSelected))
+                    },
+                ),
+            )
+        }
+    }
 
     private fun onCreateCopyClickedWhileLimited() {
-        conditionLimitReachedClick = true
+        debounceUserInteraction {
+            conditionLimitReachedClick = true
 
-        dialogController.hide()
-        viewModel.onConditionCountReachedAddCopyClicked(context)
+            dialogController.hide()
+            viewModel.onConditionCountReachedAddCopyClicked(context)
+        }
     }
 
     private fun onConditionClicked(condition: Condition) {
-        showConditionConfigDialog(condition)
+        debounceUserInteraction {
+            showConditionConfigDialog(condition)
+        }
     }
 
     private fun onConditionItemBound(index: Int, itemView: View?) {

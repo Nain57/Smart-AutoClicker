@@ -59,7 +59,7 @@ class ConditionSelectionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_condition_selection)
                 buttonSave.visibility = View.GONE
-                buttonDismiss.setOnClickListener { back() }
+                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
         }
 

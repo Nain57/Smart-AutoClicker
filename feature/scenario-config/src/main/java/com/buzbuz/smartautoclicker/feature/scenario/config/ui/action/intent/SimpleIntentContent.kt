@@ -51,8 +51,8 @@ class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext)
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentIntentConfigSimpleBinding.inflate(LayoutInflater.from(context)).apply {
-            selectApplicationButton.setOnClickListener { showApplicationSelectionDialog() }
-            selectedApplicationLayout.root.setOnClickListener { showApplicationSelectionDialog() }
+            selectApplicationButton.setOnClickListener { debounceUserInteraction { showApplicationSelectionDialog() } }
+            selectedApplicationLayout.root.setOnClickListener { debounceUserInteraction { showApplicationSelectionDialog() } }
 
             editNameLayout.apply {
                 setLabel(R.string.input_field_label_name)

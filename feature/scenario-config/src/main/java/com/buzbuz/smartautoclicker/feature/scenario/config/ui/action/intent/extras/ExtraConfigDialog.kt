@@ -72,16 +72,18 @@ class ExtraConfigDialog(
                 dialogTitle.setText(R.string.dialog_overlay_title_extra_config)
 
                 buttonDismiss.setOnClickListener {
-                    onDismissClicked()
-                    back()
+                    debounceUserInteraction {
+                        onDismissClicked()
+                        back()
+                    }
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setOnClickListener { debounceUserInteraction { onSaveButtonClicked() } }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setOnClickListener { debounceUserInteraction { onDeleteButtonClicked() } }
                 }
             }
 

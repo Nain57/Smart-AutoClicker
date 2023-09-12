@@ -68,10 +68,12 @@ class EventCopyDialog(
     }
 
     private fun onEventClicked(event: Event) {
-        if (viewModel.eventCopyShouldWarnUser(event)) {
-            showToggleEventCopyWarning(event)
-        } else {
-            notifySelectionAndDestroy(event)
+        debounceUserInteraction {
+            if (viewModel.eventCopyShouldWarnUser(event)) {
+                showToggleEventCopyWarning(event)
+            } else {
+                notifySelectionAndDestroy(event)
+            }
         }
     }
 

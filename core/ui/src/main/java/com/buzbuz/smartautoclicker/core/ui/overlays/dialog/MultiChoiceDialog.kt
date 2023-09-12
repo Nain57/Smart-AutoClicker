@@ -60,16 +60,20 @@ open class MultiChoiceDialog<T : DialogChoice>(
             layoutTopBar.apply {
                 dialogTitle.setText(dialogTitleText)
                 buttonDismiss.setOnClickListener {
-                    onCanceled()
-                    back()
+                    debounceUserInteraction {
+                        onCanceled()
+                        back()
+                    }
                 }
             }
 
             adapter = ChoiceAdapter(
                 choices = choices,
                 onChoiceSelected = { choice ->
-                    back()
-                    onChoiceSelected(choice)
+                    debounceUserInteraction {
+                        back()
+                        onChoiceSelected(choice)
+                    }
                 },
                 onChoiceViewBound = ::onChoiceViewBound,
             )
