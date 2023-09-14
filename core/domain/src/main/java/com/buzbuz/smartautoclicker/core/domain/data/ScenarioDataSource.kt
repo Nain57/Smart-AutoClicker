@@ -159,7 +159,7 @@ internal class ScenarioDataSource(
                     completeEventEntity
                         .toEvent(asDomain = true)
                         .copy(scenarioId = Identifier(databaseId = scenarioDbId))
-                }
+                }.sortedBy { it.priority }
 
                 /* Same with the end conditions. */
                 val endConditions = completeScenario.endConditions.mapNotNull { endConditionEntity ->
