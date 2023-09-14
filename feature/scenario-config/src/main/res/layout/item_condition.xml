@@ -83,11 +83,10 @@
             android:id="@+id/condition_should_be_detected"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
+            android:layout_marginStart="@dimen/margin_horizontal_large"
             app:layout_constraintTop_toTopOf="@id/background_bottom"
             app:layout_constraintBottom_toBottomOf="@id/background_bottom"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/condition_detection_type"
-            app:layout_constraintHorizontal_chainStyle="spread"
             android:src="@drawable/ic_confirm"
             tools:ignore="ContentDescription" />
 
@@ -97,8 +96,8 @@
             android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
             app:layout_constraintTop_toTopOf="@id/background_bottom"
             app:layout_constraintBottom_toBottomOf="@id/background_bottom"
-            app:layout_constraintStart_toEndOf="@id/condition_should_be_detected"
-            app:layout_constraintEnd_toStartOf="@id/condition_threshold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_detect_exact"
             tools:ignore="ContentDescription" />
 
@@ -106,13 +105,13 @@
             android:id="@+id/condition_threshold"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+            android:layout_marginEnd="@dimen/margin_horizontal_large"
             app:layout_constraintTop_toTopOf="@id/background_bottom"
             app:layout_constraintBottom_toBottomOf="@id/background_bottom"
-            app:layout_constraintStart_toStartOf="@id/condition_detection_type"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
             android:textSize="@dimen/text_size_list_item_text_small"
+            android:textColor="@color/overlayMenuButtons"
             android:singleLine="true"
             android:ellipsize="marquee"
             tools:text="8 %"/>
