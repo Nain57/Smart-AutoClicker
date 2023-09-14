@@ -18,19 +18,19 @@ package com.buzbuz.smartautoclicker.core.ui.bindings
 
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogNavigationTopBarBinding
 
-fun IncludeDialogNavigationTopBarBinding.setButtonEnabledState(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton, enabled: Boolean) {
+fun IncludeDialogNavigationTopBarBinding.setButtonEnabledState(buttonType: DialogNavigationButton, enabled: Boolean) {
     when (buttonType) {
-        com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE -> buttonSave.isEnabled = enabled
-        com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DISMISS -> buttonDismiss.isEnabled = enabled
-        com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DELETE -> buttonDelete.isEnabled = enabled
+        DialogNavigationButton.SAVE -> buttonSave.isEnabled = enabled
+        DialogNavigationButton.DISMISS -> buttonDismiss.isEnabled = enabled
+        DialogNavigationButton.DELETE -> buttonDelete.isEnabled = enabled
     }
 }
 
-fun IncludeDialogNavigationTopBarBinding.setButtonVisibility(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton, visibility: Int) {
+fun IncludeDialogNavigationTopBarBinding.setButtonVisibility(buttonType: DialogNavigationButton, visibility: Int) {
     when (buttonType) {
-        com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE -> buttonSave.visibility = visibility
-        com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DISMISS -> buttonDismiss.visibility = visibility
-        com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.DELETE -> buttonDelete.visibility = visibility
+        DialogNavigationButton.SAVE -> buttonSave.visibility = visibility
+        DialogNavigationButton.DISMISS -> buttonDismiss.visibility = visibility
+        DialogNavigationButton.DELETE -> buttonDelete.visibility = visibility
     }
 }
 

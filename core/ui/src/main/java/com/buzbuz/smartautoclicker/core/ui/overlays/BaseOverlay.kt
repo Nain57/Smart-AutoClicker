@@ -66,7 +66,8 @@ abstract class BaseOverlay internal constructor(
 
     /** The lifecycle of the ui component controlled by this class */
     private var lifecycleRegistry = LifecycleRegistry(this)
-    override val lifecycle: Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle
+        get() = lifecycleRegistry
 
     /** The store for the view models of the [BaseOverlay] implementations. */
     private val modelStore: ViewModelStore by lazy { ViewModelStore() }
@@ -84,6 +85,7 @@ abstract class BaseOverlay internal constructor(
      * Null unless the overlay is shown.
      */
     private var onDestroyListener: (() -> Unit)? = null
+
     /** True if the overlay should be recreated on next [start] call, false if not. */
     private var shouldBeRecreated: Boolean = false
 
@@ -132,9 +134,10 @@ abstract class BaseOverlay internal constructor(
     override fun start() {
         if (lifecycleRegistry.currentState != State.CREATED) return
 
+        // During the orientation change, this overlay was hidden (in CREATED state). As it was not displayed, the
+        // recreation of the overlay was delayed to its next start request.
         if (shouldBeRecreated) {
-            recreate(true)
-            return
+            recreate()
         }
 
         Log.d(TAG, "show overlay ${hashCode()}")
@@ -203,7 +206,7 @@ abstract class BaseOverlay internal constructor(
     }
 
     protected fun debounceUserInteraction(userInteraction: () -> Unit) {
-        if (debounceUserInteractionJob == null && lifecycle.currentState == State.RESUMED) {
+        if (debounceUserInteractionJob == null && lifecycleRegistry.currentState == State.RESUMED) {
             debounceUserInteractionJob = lifecycleScope.launch {
                 userInteraction()
                 delay(800)
@@ -215,10 +218,8 @@ abstract class BaseOverlay internal constructor(
     /**
      * Destroy and create the overlay. once again.
      * The [onDestroyListener] will not be called during the process.
-     *
-     * @param resume true if the overlay should be immediately shown after recreation, false if not.
      */
-    private fun recreate(resume: Boolean) {
+    private fun recreate() {
         if (!lifecycleRegistry.currentState.isAtLeast(State.CREATED)) return
 
         Log.d(TAG, "recreating overlay ${hashCode()}")
@@ -228,10 +229,6 @@ abstract class BaseOverlay internal constructor(
 
         lifecycleRegistry = LifecycleRegistry(this)
         create(context)
-        if (resume) {
-            start()
-            resume()
-        }
     }
 
     /**
@@ -255,8 +252,11 @@ abstract class BaseOverlay internal constructor(
         if (!recreateOnRotation) return
 
         shouldBeRecreated = true
-        if (lifecycleRegistry.currentState.isAtLeast(State.STARTED)) {
-            recreate(true)
+        val preRotationLifecycleState = lifecycleRegistry.currentState
+        if (preRotationLifecycleState.isAtLeast(State.STARTED)) {
+            recreate()
+            start()
+            if (preRotationLifecycleState == State.RESUMED) resume()
         } else {
             Log.d(TAG, "not visible, delay recreation of overlay ${hashCode()}")
         }
