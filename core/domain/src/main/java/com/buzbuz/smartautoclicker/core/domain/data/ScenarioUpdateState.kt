@@ -50,8 +50,8 @@ internal class ScenarioUpdateState {
 
     fun getEventDbId(identifier: Identifier?): Long = when {
         identifier != null && identifier.domainId == null && identifier.databaseId != 0L -> identifier.databaseId
-        identifier != null -> eventsDomainToDbIdMap[identifier.domainId] ?: throw IllegalStateException("Identifier is not found in map for $identifier")
-        else -> throw IllegalStateException("Database id can't be found")
+        identifier != null -> eventsDomainToDbIdMap[identifier.domainId] ?: throw IllegalStateException("Identifier is not found in event map for $identifier")
+        else -> throw IllegalStateException("Event database id can't be found")
     }
 
     fun getToggleEventDatabaseId(action: Action): Long? =
@@ -72,7 +72,7 @@ internal class ScenarioUpdateState {
     private fun getConditionDbId(identifier: Identifier?): Long = when {
         identifier != null && identifier.domainId == null && identifier.databaseId != 0L -> identifier.databaseId
         identifier != null -> conditionsDomainToDbIdMap[identifier.domainId]
-            ?: throw IllegalStateException("Identifier is not found in map for $identifier")
-        else -> throw IllegalStateException("Database id can't be found for null identifier")
+            ?: throw IllegalStateException("Identifier is not found in condition map for $identifier")
+        else -> throw IllegalStateException("Database id can't be found for null condition identifier")
     }
 }

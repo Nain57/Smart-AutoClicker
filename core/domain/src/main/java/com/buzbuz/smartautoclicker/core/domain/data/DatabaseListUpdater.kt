@@ -65,6 +65,7 @@ internal open class DatabaseListUpdater<I, E>(
             clear()
             addAll(newItems)
         }
+        updateEntities.clear()
 
         // New items with the default primary key should be added, others should be updated.
         // Updated items are removed from toBeRemoved list.
@@ -96,6 +97,9 @@ internal open class DatabaseListUpdater<I, E>(
         toBeRemoved.clear()
         updateItems.clear()
     }
+
+    override fun toString(): String =
+        "DatabaseListUpdater[toBeAdded=${toBeAdded.size}; toBeUpdated=${toBeUpdated.size}; teBeRemoved=${toBeRemoved.size}]"
 }
 
 /** Default value for a [Long] primary key in a Room database. */

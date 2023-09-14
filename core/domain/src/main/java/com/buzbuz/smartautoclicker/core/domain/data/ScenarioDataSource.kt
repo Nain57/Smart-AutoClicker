@@ -200,6 +200,8 @@ internal class ScenarioDataSource(
     }
 
     private suspend fun updateScenarioContent(scenarioDbId: Long, events: List<Event>, endConditions: List<EndCondition>) {
+        Log.d(TAG, "Update scenario $scenarioDbId content in the database")
+
         // Check arguments
         if (events.find { !it.isComplete() } != null)
             throw IllegalArgumentException("Can't update scenario content, one of the event is not complete")
@@ -259,6 +261,7 @@ internal class ScenarioDataSource(
     }
 
     private suspend fun updateConditions(eventDbId: Long, conditions: List<Condition>) {
+        Log.d(TAG, "Updating conditions in the database for event $eventDbId")
         conditionsUpdater.refreshUpdateValues(
             currentEntities = currentDatabase.value.conditionDao().getConditions(eventDbId),
             newItems = conditions,
@@ -269,6 +272,7 @@ internal class ScenarioDataSource(
                 ).toEntity()
             }
         )
+        Log.d(TAG, "Conditions updater: $conditionsUpdater")
 
         currentDatabase.value.conditionDao().apply {
             addConditions(conditionsUpdater.toBeAdded).forEachIndexed { index, conditionDbId ->
@@ -289,6 +293,7 @@ internal class ScenarioDataSource(
     }
 
     private suspend fun updateActions(eventDbId: Long, actions: List<Action>) {
+        Log.d(TAG, "Updating actions in the database for event $eventDbId")
         actionsUpdater.refreshUpdateValues(
             currentEntities = currentDatabase.value.actionDao().getCompleteActions(eventDbId),
             newItems = actions,
@@ -301,6 +306,7 @@ internal class ScenarioDataSource(
                 }
             }
         )
+        Log.d(TAG, "Actions updater: $actionsUpdater")
 
         addCompleteActions(actionsUpdater.toBeAdded)
         updateCompleteActions(actionsUpdater.toBeUpdated)
