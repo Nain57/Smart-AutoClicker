@@ -23,7 +23,7 @@ import android.graphics.Rect
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.display.ScreenRecorder
+import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 
@@ -35,14 +35,14 @@ import kotlinx.coroutines.withContext
 class ConditionSelectorViewModel(application: Application) : AndroidViewModel(application)  {
 
     /** Provides screen images. */
-    private val screenRecorder: ScreenRecorder = ScreenRecorder.getInstance()
+    private val displayRecorder: DisplayRecorder = DisplayRecorder.getInstance()
     /** Monitors views for the tutorial. */
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     fun takeScreenshot(area: Rect, resultCallback: (Bitmap) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(200L)
-            screenRecorder.takeScreenshot(area) { screenshot ->
+            displayRecorder.takeScreenshot(area) { screenshot ->
                 withContext(Dispatchers.Main) {
                     resultCallback(screenshot)
                     monitoredViewsManager.notifyClick(MonitoredViewType.CONDITION_CAPTURE_BUTTON_CAPTURE)

@@ -53,7 +53,7 @@ import kotlinx.coroutines.sync.withLock
  * [stopProjection] in order to release all resources associated with this object.
  */
 @MainThread
-class ScreenRecorder internal constructor() {
+class DisplayRecorder internal constructor() {
 
     companion object {
         /** Tag for logs. */
@@ -63,17 +63,17 @@ class ScreenRecorder internal constructor() {
 
         /** Singleton preventing multiple instances of the ScreenRecorder at the same time. */
         @Volatile
-        private var INSTANCE: ScreenRecorder? = null
+        private var INSTANCE: DisplayRecorder? = null
 
         /**
          * Get the engine singleton, or instantiates it if it wasn't yet.
          *
          * @return the engine singleton.
          */
-        fun getInstance(): ScreenRecorder {
+        fun getInstance(): DisplayRecorder {
             return INSTANCE ?: synchronized(this) {
                 Log.i(TAG, "Instantiates new ScreenRecorder")
-                val instance = ScreenRecorder()
+                val instance = DisplayRecorder()
                 INSTANCE = instance
                 instance
             }

@@ -23,7 +23,7 @@ import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.display.ScreenRecorder
+import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
@@ -61,8 +61,8 @@ internal class DetectorEngine(context: Context) {
     /** Listener upon orientation changes. */
     private val orientationListener = ::onOrientationChanged
 
-    /** Record the screen and provide images via [ScreenRecorder.acquireLatestBitmap]. */
-    private val screenRecorder = ScreenRecorder.getInstance()
+    /** Record the screen and provide images via [DisplayRecorder.acquireLatestBitmap]. */
+    private val displayRecorder = DisplayRecorder.getInstance()
     /** Process the events conditions to detect them on the screen. */
     private var scenarioProcessor: ScenarioProcessor? = null
     /** Detect the condition images on the screen image. */
@@ -124,7 +124,7 @@ internal class DetectorEngine(context: Context) {
         displayMetrics.addOrientationListener(orientationListener)
 
         processingScope?.launch {
-            screenRecorder.apply {
+            displayRecorder.apply {
                 startProjection(context, resultCode, data) {
                     this@DetectorEngine.stopScreenRecord()
                 }
@@ -201,9 +201,9 @@ internal class DetectorEngine(context: Context) {
                 processingJob?.cancelAndJoin()
             }
 
-            screenRecorder.stopScreenRecord()
+            displayRecorder.stopScreenRecord()
             detectionProgressListener?.cancelCurrentProcessing()
-            screenRecorder.startScreenRecord(context, displayMetrics.screenSize)
+            displayRecorder.startScreenRecord(context, displayMetrics.screenSize)
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {
@@ -266,7 +266,7 @@ internal class DetectorEngine(context: Context) {
         processingScope?.launch {
             processingShutdownJob?.join()
 
-            screenRecorder.stopProjection()
+            displayRecorder.stopProjection()
             androidExecutor = null
             _state.emit(DetectorState.CREATED)
 
@@ -275,13 +275,13 @@ internal class DetectorEngine(context: Context) {
         }
     }
 
-    /** Process the latest images provided by the [ScreenRecorder]. */
+    /** Process the latest images provided by the [DisplayRecorder]. */
     private suspend fun processScreenImages() {
         _state.emit(DetectorState.DETECTING)
 
         scenarioProcessor?.invalidateScreenMetrics()
         while (processingJob?.isActive == true) {
-            screenRecorder.acquireLatestBitmap()?.let { screenFrame ->
+            displayRecorder.acquireLatestBitmap()?.let { screenFrame ->
                 scenarioProcessor?.process(screenFrame)
             } ?: delay(NO_IMAGE_DELAY_MS)
         }
