@@ -87,7 +87,7 @@ android {
             }
         }
 
-        debugFDroid {
+        debug {
             applicationIdSuffix '.debug'
         }
     }
