@@ -75,7 +75,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
             dialogController.back()
 
             val intent = Intent()
-                .setComponent(ComponentName("com.buzbuz.smartautoclicker", "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
+                .setComponent(ComponentName(context.packageName, "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }

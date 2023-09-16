@@ -284,7 +284,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 context.startActivity(
                     Intent()
-                        .setComponent(ComponentName("com.buzbuz.smartautoclicker", "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
+                        .setComponent(ComponentName(context.packageName, "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 )
             }
