@@ -75,6 +75,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
 
+    override fun animateOverlayView(): Boolean = false
+
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         playToPauseDrawable = AnimatedVectorDrawableCompat.create(context, R.drawable.anim_play_pause)!!
         pauseToPlayDrawable = AnimatedVectorDrawableCompat.create(context, R.drawable.anim_pause_play)!!
