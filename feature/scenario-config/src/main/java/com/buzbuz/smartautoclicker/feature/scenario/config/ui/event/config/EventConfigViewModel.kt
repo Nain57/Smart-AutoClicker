@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.config
 
 import android.app.Application
 import android.content.Context
+import android.view.View
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
@@ -29,6 +30,9 @@ import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import kotlinx.coroutines.flow.filterNotNull
@@ -44,6 +48,8 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
     private val billingRepository = IBillingRepository.getRepository(application)
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured event. */
     private val configuredEvent = editionRepository.editionState.editedEventState
@@ -76,7 +82,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
         }
         .filterNotNull()
 
-    private val conditionAndItem = DropdownItem(
+    val conditionAndItem = DropdownItem(
         title = R.string.dropdown_item_title_condition_and,
         helperText = R.string.dropdown_helper_text_condition_and,
     )
@@ -151,6 +157,29 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     fun onEventStateClickedWithoutProMode(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.EVENT_STATE)
+    }
+
+    fun monitorConditionOperatorView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR, view)
+    }
+
+    fun monitorDropdownItemAndView(view: View) {
+        monitoredViewsManager.attach(
+            MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND,
+            view,
+            ViewPositioningType.SCREEN,
+        )
+    }
+
+    fun stopDropdownItemConditionViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.apply {
+            detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR)
+            detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND)
+        }
     }
 }
 

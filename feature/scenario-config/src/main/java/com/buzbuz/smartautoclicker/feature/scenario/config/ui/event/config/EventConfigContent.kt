@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.config
 import android.content.Context
 import android.text.InputFilter
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -66,6 +67,7 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
                 label = context.getString(R.string.dropdown_label_condition_operator),
                 items = viewModel.conditionOperatorsItems,
                 onItemSelected = viewModel::setConditionOperator,
+                onItemBound = ::onConditionOperatorDropdownItemBound,
             )
         }
 
@@ -95,6 +97,23 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
                 launch { viewModel.eventStateDropdownState.collect(::updateEventStateDropdown) }
                 launch { viewModel.eventStateItem.collect(::updateEventState) }
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorConditionOperatorView(viewBinding.conditionsOperatorField.root)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
+    private fun onConditionOperatorDropdownItemBound(item: DropdownItem, view: View?) {
+        if (item == viewModel.conditionAndItem) {
+            if (view != null) viewModel.monitorDropdownItemAndView(view)
+            else viewModel.stopDropdownItemConditionViewMonitoring()
         }
     }
 

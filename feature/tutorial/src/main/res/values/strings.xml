@@ -205,8 +205,7 @@
         detection with the floating menu play button and then, start the game.</string>
 
     <string name="message_tutorial_2_step_20">Congratulations!\n\nYou now know how to track a still or moving single
-        target, but there is a lot more to learn.\nThat\'s all for now, but stay tuned for new tutorials in a future
-        update!.</string>
+        target, but there is a lot more to learn!.</string>
 
 
     <!-- Two still targets press when both are visible tutorial -->
@@ -238,7 +237,7 @@
         the Conditions list.</string>
 
     <string name="message_tutorial_3_step_8">The previous Condition of detecting the blue target is still correct, but we need
-        a new one for the red target.\n\n\n\nClick on the create Condition button to create a new Condition for it.</string>
+        a new one for the red target.\n\nClick on the create Condition button to create a new Condition for it.</string>
 
     <string name="message_tutorial_3_step_9">Just like for the blue target, start the game in order to show the red target.
         Once it is visible, take a screenshot of it!</string>
@@ -254,19 +253,20 @@
         configuration dialog.</string>
 
     <string name="message_tutorial_3_step_12">We now have two Conditions, one for each targets, and the Actions will be executed
-        only if both are detected.\nWe now need to update our Action to click on the correct target.\n\nClick on the Actions tab to display
-        the Action list.</string>
+        only if both are detected.\n\nClick on the Actions tab to display the Action list for our Event.</string>
 
-    <string name="message_tutorial_3_step_13">We still just need one click Action, so click on our previous Action to edit it.</string>
+    <string name="message_tutorial_3_step_13">The action is already set to click on the blue character, and it will only be
+        executed when the blue and the red characters are visible together.\n\nThis is exactly the behaviour we need to beat the
+        game, so no need to edit our click Action.\n\nClick on the save button to register your changes.</string>
 
-    <string name="message_tutorial_3_step_14">Currently, the Click Action \"Click on\" is set to \"Selected position\",
-        meaning you have to manually set the position to be clicked. Let\'s see what other options are available.\n\n
-        Click on the \"Click on\" drop down menu to display all options.</string>
+    <string name="message_tutorial_3_step_14">All changes must be saved in your scenario in order to be registered.\n\Click
+        on the save button to save your changes.</string>
 
-    <string name="message_tutorial_3_step_15">The other choice is \"Condition\", meaning the Action will click on the
-        detected Condition coordinates.\n\nThat`s exactly what we need to beat the game. Every time the blue character
-        will be detected, this Action will click on it.\n\nSelect it to use it in your Action.</string>
+    <string name="message_tutorial_3_step_15">We are ready to win this game!\n\nClick on the start button to start the
+        detection and then, start the game.</string>
 
+    <string name="message_tutorial_3_step_16">Congratulations!\n\nYou now know how to combine multiple Conditions for an Event,
+        but there is a lot more to learn!</string>
 
     <!-- Two still targets press when only one is visible tutorial -->
     <string name="item_title_tutorial_4">Negative conditions</string>
