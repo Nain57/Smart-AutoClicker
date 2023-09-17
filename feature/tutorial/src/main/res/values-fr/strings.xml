@@ -16,14 +16,14 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="activity_tutorial_name">Tutorial</string>
+    <string name="activity_tutorial_name">Tutoriel</string>
 
-    <string name="message_score">Player: %1$d</string>
-    <string name="message_high_score">Best: %1$d</string>
-    <string name="message_time_left">Time left: %1$d</string>
+    <string name="message_score">Joueur : %1$d</string>
+    <string name="message_high_score">Meilleur score : %1$d</string>
+    <string name="message_time_left">Temps restant : %1$d</string>
 
-    <string name="button_text_tutorial_start_game">Start game</string>
-    <string name="button_text_tutorial_next">Next</string>
+    <string name="button_text_tutorial_start_game">Démarrer le jeu</string>
+    <string name="button_text_tutorial_next">Suivant</string>
 
     <!--
       - Tutorials definition
@@ -42,239 +42,229 @@
     -->
 
     <!-- One still target tutorial -->
-    <string name="item_title_tutorial_1">Press a still target</string>
-    <string name="item_desc_tutorial_1">Learn how to create your first event in order to click on a still target</string>
-    <string name="message_tutorial_1_game_instructions">Click on the blue button as fast as possible</string>
+    <string name="item_title_tutorial_1">Appuyez sur une cible immobile</string>
+    <string name="item_desc_tutorial_1">Apprenez à créer votre premier événement afin de cliquer sur une cible immobile</string>
+    <string name="message_tutorial_1_game_instructions">Cliquez sur le bouton bleu le plus rapidement possible</string>
 
-    <string name="message_tutorial_1_step_1">Welcome to your first tutorial!\n\nHere, you will try to beat the high score
-        of a game with the help of Smart AutoClicker.\n\nFirst, start the game and try to win by yourself.</string>
+    <string name="message_tutorial_1_step_1">Bienvenue dans votre premier tutoriel !\n\nIci, vous allez essayer de battre le meilleur score
+        d\'un jeu avec l\'aide de Smart AutoClicker.\n\nD\'abord, lancez le jeu et essayez de gagner par vous-même.</string>
 
-    <string name="message_tutorial_1_step_3">Difficult, isn\'t it?\nLet\'s use Smart AutoClicker to beat it !\n\n
-        Click on the scenario configuration icon to start editing your new scenario.</string>
+    <string name="message_tutorial_1_step_3">Difficile, n\'est-ce pas ?\nUtilisons maintenant Smart AutoClicker pour y parvenir !\n\n
+        Cliquez sur l\'icône de configuration du scénario pour commencer à éditer votre nouveau scénario.</string>
 
-    <string name="message_tutorial_1_step_4">A Scenario is the root structure of Smart AutoClicker automation.\n\n
-        It contains the general detection settings and a list of Events describing what will be executed when running
-        your Scenario. \n\nClick on the create event button to create your first event.</string>
+    <string name="message_tutorial_1_step_4">Un scénario est la structure de base de l\'automatisation Smart AutoClicker.\n\n
+        Il contient les paramètres de détection généraux et une liste d\'événements décrivant ce qui sera exécuté lors de l\'exécution
+        de votre scénario.\n\nCliquez sur le bouton de création d\'événement pour créer votre premier événement.</string>
 
-    <string name="message_tutorial_1_step_5">An Event describe what Actions (click, swipe…) to execute when certain
-        Conditions are met.\n\nYou must create at least one Condition and one Action in order to create a valid Event
-        and use it in your scenario\n\nClick on the Conditions tab to display the Conditions list.</string>
+    <string name="message_tutorial_1_step_5">Un événement décrit les actions (clic, balayage…) à exécuter lorsque certaines
+        conditions sont remplies.\n\nVous devez créer au moins une condition et une action pour créer un événement valide
+        et l\'utiliser dans votre scénario.\n\nCliquez sur l\'onglet "Conditions" pour afficher la liste des conditions.</string>
 
-    <string name="message_tutorial_1_step_6">A Condition is a part of a screenshot that will be compared to each screen
-        frame of your device.\n\nTo beat the game, we want to click on the blue character when it\'s visible, so we need
-        a Condition that is fulfilled when the character is shown on your device screen.\n\nClick on the create
-        Condition button to create your first Condition.</string>
+    <string name="message_tutorial_1_step_6">Une condition est une partie d\'une capture d\'écran qui sera comparée à chaque image
+        de l\'écran de votre appareil.\n\nPour battre le jeu, nous voulons cliquer sur le personnage bleu lorsqu\'il est visible, donc nous avons
+        besoin d\'une condition qui sera remplie lorsque le personnage apparaît à l\'écran de votre appareil.\n\nCliquez sur le bouton
+        de création de condition pour créer votre première condition.</string>
 
-    <string name="message_tutorial_1_step_7">The first step of a Condition creation is to take a screenshot for it.\n\n
-        As we want to click when the blue character is visible, the screenshot must contains it. Start the game again in
-        order to display it, and then take the screenshot.</string>
-    <string name="message_tutorial_1_step_secondary_7">Use the capture button in the floating menu to take the screenshot.</string>
+    <string name="message_tutorial_1_step_7">La première étape de la création d\'une condition consiste à prendre une capture
+        d\'écran.\n\nComme nous voulons cliquer lorsque le personnage bleu est visible, la capture d\'écran doit le contenir.
+        Relancez le jeu pour l\'afficher, puis prenez la capture d\'écran.</string>
+    <string name="message_tutorial_1_step_secondary_7">Utilisez le bouton de capture dans le menu flottant pour prendre la capture d\'écran.</string>
 
-    <string name="message_tutorial_1_step_8">Once the screenshot is taken, you can crop it in order to only get the part
-        that is interesting for the detection.</string>
-    <string name="message_tutorial_1_step_secondary_8">If your screenshot does not contains the blue character, you can
-        press this button to take a new one.</string>
+    <string name="message_tutorial_1_step_8">Une fois la capture d\'écran prise, vous pouvez la recadrer pour obtenir uniquement
+        la partie intéressante pour la détection.</string>
+    <string name="message_tutorial_1_step_secondary_8">Si votre capture d\'écran ne contient pas le personnage bleu, vous pouvez
+        appuyer sur ce bouton pour en prendre une nouvelle.</string>
 
-    <string name="message_tutorial_1_step_9">For this game, the interesting part is the blue character, so crop your
-        screenshot to only get him.\n\nYou can pinch on the screenshot to zoom on it and get a better accuracy for the
-        crop selector.</string>
-    <string name="message_tutorial_1_step_secondary_9">Ensure the character is complete in the selector. Also try to
-        crop it as close as possible to him in order to ease the image detection.</string>
+    <string name="message_tutorial_1_step_9">Pour ce jeu, la partie intéressante est le personnage bleu, alors recadrez votre capture
+        d\'écran pour l\'obtenir uniquement.\n\nVous pouvez zoomer sur la capture d\'écran en écartant les doigts pour obtenir une meilleure
+        précision dans le choix du recadrage.</string>
+    <string name="message_tutorial_1_step_secondary_9">Assurez-vous que le personnage est bien visible dans le sélecteur. Essayez également
+        de le recadrer le plus près possible de lui pour faciliter la détection de l\'image.</string>
 
-    <string name="message_tutorial_1_step_10">Your Condition image is now recorded!\n\nThere is now several adjustments
-        that can be made to it, but the default settings suits our basic use case. As our target is not moving, it will
-        only detect at the capture position, which is faster than detecting on the whole screen.\n\nClick on the save
-        button to register it and return to the Event configuration dialog.</string>
+    <string name="message_tutorial_1_step_10">Votre image de condition est maintenant enregistrée !\n\nIl existe plusieurs ajustements
+        possibles, mais les paramètres par défaut conviennent à notre cas d\'utilisation de base. Comme notre cible ne bouge pas, elle ne
+        sera détectée qu\'à la position de capture, ce qui est plus rapide que la détection sur tout l\'écran.\n\nCliquez sur le bouton "Enregistrer"
+        pour l\'enregistrer et revenir à la boîte de dialogue de configuration de l\'événement.</string>
 
-    <string name="message_tutorial_1_step_11">With this Condition, the scenario knows when to trigger the Actions.\n\n
-        You now need to define what Actions to trigger, so for this game, a click on the blue character.\n\nClick on the
-        Actions tab to display the Actions list.</string>
+    <string name="message_tutorial_1_step_11">Avec cette condition, le scénario sait quand déclencher les actions.\n\n
+        Vous devez maintenant définir les actions à déclencher, donc pour ce jeu, un clic sur le personnage bleu.\n\nCliquez sur l\'onglet
+        "Actions" pour afficher la liste des actions.</string>
 
-    <string name="message_tutorial_1_step_12">An Action is something that is executed once the Conditions of its Event
-        are fulfilled.\n\nIt can be a click, a swipe, a pause, an Intent (an interaction with another application) or a
-        change in the Scenario execution, and multiple Actions can be defined for the same Event.\n\nClick on the create
-        Action button to create your first Action.</string>
+    <string name="message_tutorial_1_step_12">Une action est quelque chose qui est exécuté une fois que les conditions de son événement
+        sont remplies.\n\nIl peut s\'agir d\'un clic, d\'un balayage, d\'une pause, d\'une intention (une interaction avec une autre application) ou d\'un
+        changement dans l\'exécution du scénario, et plusieurs actions peuvent être définies pour le même événement.\n\nCliquez sur le bouton
+        de création d\'action pour créer votre première action.</string>
 
-    <string name="message_tutorial_1_step_13">First, we need to pick a type for your Action.\n\nFor this game, we simply
-        need to click on the blue character, so choose Click to create a new Click Action.</string>
+    <string name="message_tutorial_1_step_13">Tout d\'abord, nous devons choisir un type pour votre action.\n\nPour ce jeu, nous devons simplement
+        cliquer sur le personnage bleu, alors choisissez "Clic" pour créer une nouvelle action de clic.</string>
 
-    <string name="message_tutorial_1_step_14">A Click Action is defined by a position and a press duration.\n\nAs we
-        want to click as quickly as possible, we can keep the default press duration of 1ms, which is the lowest
-        possible value. So we only need to define a position.\n\nClick on the position picker button to select the Click
-        Action position.</string>
+    <string name="message_tutorial_1_step_14">Une action de clic est définie par une position et une durée d\'appui.\n\nComme nous
+        voulons cliquer le plus rapidement possible, nous pouvons laisser la durée d\'appui par défaut à 1 ms, ce qui est la valeur la plus
+        basse possible. Nous devons donc uniquement définir une position.\n\nCliquez sur le bouton de sélection de position pour choisir
+        la position du clic.</string>
 
-    <string name="message_tutorial_1_step_15">You need to select the exact position to be clicked, so you need to start
-        the game again to display the blue character, and then select its position.\n\nOnce the position is correct,
-        click on the validate button to save it.</string>
-    <string name="message_tutorial_1_step_secondary_15">You can\'t interact with the game while the position selector is
-        visible, but you can use this button to show and hide it, allowing you to remove that restriction at will.</string>
+    <string name="message_tutorial_1_step_15">Vous devez sélectionner la position exacte à cliquer, alors vous devez relancer le jeu pour afficher
+        le personnage bleu, puis sélectionner sa position.\n\nUne fois que la position est correcte, cliquez sur le bouton "Valider" pour la sauvegarder.</string>
+    <string name="message_tutorial_1_step_secondary_15">Vous ne pouvez pas interagir avec le jeu tant que le sélecteur de position est visible, mais
+        vous pouvez utiliser ce bouton pour le montrer et le masquer, vous permettant de supprimer cette restriction à volonté.</string>
 
-    <string name="message_tutorial_1_step_16">The click is now correctly configured!\n\nClick on the save button to
-        register it and return to the Event configuration dialog.</string>
+    <string name="message_tutorial_1_step_16">Le clic est maintenant correctement configuré !\n\nCliquez sur le bouton "Enregistrer" pour le
+        sauvegarder et revenir à la boîte de dialogue de configuration de l\'événement.</string>
 
-    <string name="message_tutorial_1_step_17">Your Event now have a Condition and an Action, which means it knows what
-        to execute and when to execute it.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
+    <string name="message_tutorial_1_step_17">Votre événement a désormais une condition et une action, ce qui signifie qu\'il sait quoi exécuter
+        et quand l\'exécuter.\n\nCliquez sur le bouton "Enregistrer" pour le sauvegarder et revenir à la boîte de dialogue du scénario.</string>
 
-    <string name="message_tutorial_1_step_18">The only requirement for a Scenario is to have at least one Event.\n
-        As our Event already cover how to win the game, we don\'t need anything else.\n\nClick on the save button the
-        save the Scenario in database and close the configuration dialogs.</string>
+    <string name="message_tutorial_1_step_18">La seule exigence pour un scénario est d\'avoir au moins un événement.\n
+        Comme notre événement couvre déjà la manière de gagner le jeu, nous n\'avons besoin de rien d\'autre.\n\nCliquez sur le bouton "Enregistrer"
+        pour sauvegarder le scénario dans la base de données et fermer les boîtes de dialogue de configuration.</string>
 
-    <string name="message_tutorial_1_step_19">As you can see, the play button is now available, meaning that your
-        Scenario is valid and can be used for detection\n\nClick on it to start the detection.</string>
+    <string name="message_tutorial_1_step_19">Comme vous pouvez le voir, le bouton de lecture est maintenant disponible, ce qui signifie que votre
+        scénario est valide et peut être utilisé pour la détection.\n\nCliquez dessus pour lancer la détection.</string>
 
-    <string name="message_tutorial_1_step_20">It\'s playing but nothing happens?\n\nThat\'s normal, it will click only
-        when the blue character is visible, remember? While keeping the scenario running, press the start game button
-        and just watch as Smart AutoClicker will beat it for you!</string>
+    <string name="message_tutorial_1_step_20">Il est en cours de lecture, mais rien ne se passe ?\n\nC\'est normal, il cliquera seulement
+        lorsque le personnage bleu sera visible, vous vous souvenez ? Tout en maintenant le scénario en cours d\'exécution, appuyez sur le bouton de
+        démarrage du jeu et regardez Smart AutoClicker le battre pour vous !</string>
 
-    <string name="message_tutorial_1_step_21">Congratulations!\n\nYou now know the basics of Smart AutoClicker, but not
-        all use cases will be as simple as this game.\nTake a look at the next tutorial to learn how to track a moving
-        target</string>
+    <string name="message_tutorial_1_step_21">Félicitations !\n\nVous connaissez maintenant les bases de Smart AutoClicker, mais tous les
+        cas d\'utilisation ne seront pas aussi simples que ce jeu.\nJetez un coup d\'œil au tutoriel suivant pour apprendre à suivre une cible en mouvement.</string>
 
 
     <!-- One moving target tutorial -->
-    <string name="item_title_tutorial_2">Press a moving target</string>
-    <string name="item_desc_tutorial_2">Change your event to click on a randomly moving target</string>
-    <string name="message_tutorial_2_game_instructions">Click on the moving blue button as fast as possible</string>
+    <string name="item_title_tutorial_2">Appuyez sur une cible mobile</string>
+    <string name="item_desc_tutorial_2">Modifiez votre événement pour cliquer sur une cible en mouvement aléatoire</string>
+    <string name="message_tutorial_2_game_instructions">Cliquez sur le bouton bleu en mouvement le plus rapidement possible</string>
 
-    <string name="message_tutorial_2_step_1">Let\'s complicate the game a little bit more. Now, the target is randomly
-        moving.\n\nFirst, start the game and check if you can win by yourself.</string>
+    <string name="message_tutorial_2_step_1">Commençons par compliquer un peu le jeu. Maintenant, la cible se déplace
+        aléatoirement.\n\nD\'abord, lancez le jeu et vérifiez si vous pouvez gagner par vous-même.</string>
 
-    <string name="message_tutorial_2_step_3">Once again, it seems impossible to win manually, so let\'s use Smart
-        AutoClicker.\n\nYour scenario for the previous tutorial have been kept and load for this tutorial, but we will
-        need to change a few parameters in order to win this new game.\n\nClick on the Scenario configuration icon to
-        start updating your new scenario.</string>
+    <string name="message_tutorial_2_step_3">Encore une fois, il semble impossible de gagner manuellement, alors utilisons Smart
+        AutoClicker.\n\nVotre scénario du tutoriel précédent a été conservé et chargé pour ce tutoriel, mais nous devrons
+        changer quelques paramètres pour gagner ce nouveau jeu.\n\nCliquez sur l\'icône de configuration du scénario pour
+        commencer à mettre à jour votre nouveau scénario.</string>
 
-    <string name="message_tutorial_2_step_4">We still want to click on the blue character, meaning that we still only
-        need one Condition and one Action, so only one Event.\n\nAs the use case is pretty similar to the previous game,
-        we will keep our Event and simply update it.\n\nClick on your previously created event to edit it.</string>
+    <string name="message_tutorial_2_step_4">Nous voulons toujours cliquer sur le personnage bleu, ce qui signifie que nous avons
+        toujours besoin d\'une seule Condition et d\'une seule Action, donc un seul Événement.\n\nComme le cas d\'utilisation est
+        assez similaire au jeu précédent, nous allons conserver notre Événement et simplement le mettre à jour.\n\nCliquez sur
+        l\'Événement que vous avez précédemment créé pour le modifier.</string>
 
-    <string name="message_tutorial_2_step_5">In a first time, we will update the Condition that detect the blue
-        character.\n\nClick on the Conditions tab to display the Conditions list.</string>
+    <string name="message_tutorial_2_step_5">Dans un premier temps, nous allons mettre à jour la Condition qui détecte le personnage bleu.\n\n
+        Cliquez sur l\'onglet "Conditions" pour afficher la liste des Conditions.</string>
 
-    <string name="message_tutorial_2_step_6">As in the previous tutorial, we need to detect the blue character, but now
-        it is moving.\n\nOur previous Condition is already detecting the blue character, but only at one position. So you
-        don\'t need to take a new screenshot, as your previous Condition already has it, we just need to change its
-        parameters.\n\nClick on your Condition to start editing it.</string>
+    <string name="message_tutorial_2_step_6">Comme dans le tutoriel précédent, nous devons détecter le personnage bleu, mais maintenant,
+        il se déplace.\n\nNotre Condition précédente détecte déjà le personnage bleu, mais seulement à une position. Vous n\'avez donc
+        pas besoin de prendre une nouvelle capture d\'écran, car votre Condition précédente la contient déjà, nous devons simplement
+        changer ses paramètres.\n\nCliquez sur votre Condition pour commencer à la modifier.</string>
 
-    <string name="message_tutorial_2_step_7">Currently, the Condition detection type is set to \"Exact\", meaning it
-        will only be verified at its capture position.\n\nTo win this game, we need verify the same Condition, but on
-        the whole screen.\n\nClick on the detection type drop down menu to display all detections types.</string>
+    <string name="message_tutorial_2_step_7">Actuellement, le type de détection de la Condition est réglé sur "Exact", ce qui signifie qu\'il
+        ne sera vérifié qu\'à sa position de capture.\n\nPour gagner ce jeu, nous devons vérifier la même Condition, mais sur l\'ensemble de
+        l\'écran.\n\nCliquez sur le menu déroulant du type de détection pour afficher tous les types de détection.</string>
 
-    <string name="message_tutorial_2_step_8">Select the \"Whole screen\" type to detect the blue character anywhere on
-        the screen.</string>
-    <string name="message_tutorial_2_step_secondary_8">Detecting on the whole screen takes more time that the exact
-        position, keep that in mind when your Scenario execution timing is important.</string>
+    <string name="message_tutorial_2_step_8">Sélectionnez le type "Tout l\'écran" pour détecter le personnage bleu n\'importe où à l\'écran.</string>
+    <string name="message_tutorial_2_step_secondary_8">La détection sur l\'ensemble de l\'écran prend plus de temps que la position exacte, gardez
+        cela à l\'esprit lorsque le timing de l\'exécution de votre scénario est important.</string>
 
-    <string name="message_tutorial_2_step_9">That\'s it!\nWe only needed to change the detection type in order for
-        your Condition to suits our needs.\n\nClick on the save button to register it and return to the Event
-        configuration dialog.</string>
+    <string name="message_tutorial_2_step_9">C\'est tout !\nNous n\'avions besoin que de changer le type de détection pour que votre Condition
+        corresponde à nos besoins.\n\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la boîte de dialogue de configuration de l\'Événement.</string>
 
-    <string name="message_tutorial_2_step_10">Your Condition image is now updated!\n\nIn this state, the scenario will
-        now execute a click every time the blue character is visible anywhere on the screen, but this click will be at
-        the same position, the one selected during the previous tutorial. So, we need to update our Action.\n\n
-        Click on the Actions tab to display the Actions list.</string>
+    <string name="message_tutorial_2_step_10">Votre image de Condition est désormais mise à jour !\n\nÀ ce stade, le scénario exécutera
+        désormais un clic chaque fois que le personnage bleu sera visible n\'importe où à l\'écran, mais ce clic sera à la même position, celle
+        sélectionnée lors du tutoriel précédent. Nous devons donc mettre à jour notre Action.\n\nCliquez sur l\'onglet "Actions" pour afficher la liste des Actions.</string>
 
-    <string name="message_tutorial_2_step_11">We still want to execute a single click, but this time, we want to click
-        on the Condition and not a fixed position.\n\nAs this is still one click, we still need only one Action, so
-        let\'s edit your previous click.\n\nClick on your Action to start editing it.</string>
+    <string name="message_tutorial_2_step_11">Nous voulons toujours exécuter un simple clic, mais cette fois, nous voulons cliquer sur la Condition
+        et non sur une position fixe.\n\nComme il s\'agit toujours d\'un clic, nous n\'avons toujours besoin que d\'une seule Action, alors
+        modifions votre clic précédent.\n\nCliquez sur votre Action pour commencer à la modifier.</string>
 
-    <string name="message_tutorial_2_step_12">Currently, the Click Action \"Click on\" is set to \"Selected position\",
-        meaning you have to manually set the position to be clicked. Let\'s see what other options are available.\n\n
-        Click on the \"Click on\" drop down menu to display all options.</string>
+    <string name="message_tutorial_2_step_12">Actuellement, l\'Action de clic "Clic sur" est réglée sur "Position sélectionnée", ce qui signifie
+        que vous devez définir manuellement la position à cliquer. Voyons quelles autres options sont disponibles.\n\nCliquez sur le menu
+        déroulant "Clic sur" pour afficher toutes les options.</string>
 
-    <string name="message_tutorial_2_step_13">The other choice is \"Condition\", meaning the Action will click on a
-        detected Condition coordinates.\n\nThat`s exactly what we need to beat the game. Every time the blue character
-        will be detected, this Action will click on it.\n\nSelect it to use it in your Action.</string>
+    <string name="message_tutorial_2_step_13">L\'autre choix est "Condition", ce qui signifie que l\'Action cliquera sur les coordonnées de la Condition
+        détectée.\n\nC\'est exactement ce dont nous avons besoin pour battre le jeu. Chaque fois que le personnage bleu sera détecté, cette
+        Action cliquera dessus.\n\nSélectionnez-le pour l\'utiliser dans votre Action.</string>
 
-    <string name="message_tutorial_2_step_14">Click on the Condition selector option to select which detected condition
-        to click on.\nWe need to specify it because we can have multiple Conditions in our Event.</string>
+    <string name="message_tutorial_2_step_14">Cliquez sur l\'option de sélection de la Condition pour choisir quelle Condition détectée cliquer.
+        Nous devons le spécifier car nous pouvons avoir plusieurs Conditions dans notre Événement.</string>
 
-    <string name="message_tutorial_2_step_15">For our use case it is easy, we only have one condition, the blue character.\n\n
-        Select it to click on this Condition when it is detected on your screen.</string>
+    <string name="message_tutorial_2_step_15">Pour notre cas d\'utilisation, c\'est facile, nous n\'avons qu\'une seule condition, le personnage bleu.\n\n
+        Sélectionnez-la pour cliquer sur cette Condition lorsqu\'elle est détectée sur votre écran.</string>
 
-    <string name="message_tutorial_2_step_16">That\'s it!\nYour Click Action is now correctly configured to beat the
-        game.\n\nClick on the save button to register it and return to the Event configuration dialog.</string>
+    <string name="message_tutorial_2_step_16">C\'est tout !\nVotre Action de clic est désormais correctement configurée pour battre le
+        jeu.\n\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la boîte de dialogue de configuration de l\'Événement.</string>
 
-    <string name="message_tutorial_2_step_17">You have updated the Condition and your Action, there is nothing more to
-        do.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
+    <string name="message_tutorial_2_step_17">Vous avez mis à jour la Condition et votre Action, il n\'y a rien d\'autre à faire.\n\nCliquez sur
+        le bouton "Enregistrer" pour l\'enregistrer et revenir à la boîte de dialogue du Scénario.</string>
 
-    <string name="message_tutorial_2_step_18">One last save to register your new changes in the database and close the
-        configuration dialogs.</string>
+    <string name="message_tutorial_2_step_18">Un dernier enregistrement pour enregistrer vos nouvelles modifications dans la base de données et fermer les boîtes de dialogue de configuration.</string>
 
-    <string name="message_tutorial_2_step_19">Your Scenario is now configured to beat this new tutorial.\n\nStart the
-        detection with the floating menu play button and then, start the game.</string>
+    <string name="message_tutorial_2_step_19">Votre scénario est maintenant configuré pour battre ce nouveau tutoriel.\n\nLancez la détection
+        avec le bouton de lecture du menu flottant, puis lancez le jeu.</string>
 
-    <string name="message_tutorial_2_step_20">Congratulations!\n\nYou now know how to track a still or moving single
-        target, but there is a lot more to learn!.</string>
+    <string name="message_tutorial_2_step_20">Félicitations !\n\nVous savez maintenant comment suivre une cible unique, qu\'elle soit immobile ou en mouvement, mais il y a encore beaucoup à apprendre !</string>
 
 
     <!-- Two still targets press when both are visible tutorial -->
-    <string name="item_title_tutorial_3">Combine multiple conditions</string>
-    <string name="item_desc_tutorial_3">Create and combine multiple conditions for your event</string>
-    <string name="message_tutorial_3_game_instructions">Click on the blue button only when the red button is visible</string>
+    <string name="item_title_tutorial_3">Combinez plusieurs conditions</string>
+    <string name="item_desc_tutorial_3">Créez et combinez plusieurs conditions pour votre événement</string>
+    <string name="message_tutorial_3_game_instructions">Cliquez sur le bouton bleu uniquement lorsque le bouton rouge est visible</string>
 
-    <string name="message_tutorial_3_step_1">Let\'s change the rules of the game again. The blue target has stopped moving,
-        but now it should only be clicked when the red target is visible.\n\nFirst, start the game and check if you can win
-        by yourself.</string>
+    <string name="message_tutorial_3_step_1">Changeons à nouveau les règles du jeu. La cible bleue a cessé de bouger, mais elle ne doit être cliquée
+        que lorsque la cible rouge est visible.\n\nTout d\'abord, lancez le jeu et vérifiez si vous pouvez gagner par vous-même.</string>
 
-    <string name="message_tutorial_3_step_3">Once again, it seems impossible to win manually, so let\'s use Smart
-        AutoClicker.\n\nYour scenario for the previous tutorial have been kept and load for this tutorial, but we will
-        need to change a few parameters in order to win this new game.\n\nClick on the Scenario configuration icon to
-        start updating your new scenario.</string>
+    <string name="message_tutorial_3_step_3">Encore une fois, il semble impossible de gagner manuellement, alors utilisons Smart
+        AutoClicker.\n\nVotre scénario du tutoriel précédent a été conservé et chargé pour ce tutoriel, mais nous devrons
+        changer quelques paramètres pour gagner ce nouveau jeu.\n\nCliquez sur l\'icône de configuration du scénario pour
+        commencer à mettre à jour votre nouveau scénario.</string>
 
-    <string name="message_tutorial_3_step_4">We still want to click on the blue target, but only when red on is visible.\n
-        So we need to add a condition for this red target in our Event.\n\nClick on your previously created event to edit it.</string>
+    <string name="message_tutorial_3_step_4">Nous voulons toujours cliquer sur la cible bleue, mais seulement lorsque la cible rouge est visible.\n
+        Nous devons donc ajouter une condition pour cette cible rouge dans notre Événement.\n\nCliquez sur l\'Événement que vous avez
+        précédemment créé pour le modifier.</string>
 
-    <string name="message_tutorial_3_step_5">We will combine several conditions, so we need to check the Condition operator
-        for this event.\n\nThe Condition operator indicates how multiples conditions will be interpreted together.\n
-        Click on the dropdown selector to see the options for this operator.</string>
+    <string name="message_tutorial_3_step_5">Nous allons combiner plusieurs conditions, nous devons donc vérifier l\'opérateur de Condition
+        pour cet événement.\n\nL\'opérateur de Condition indique comment plusieurs conditions seront interprétées ensemble.\n
+        Cliquez sur le sélecteur déroulant pour voir les options de cet opérateur.</string>
 
-    <string name="message_tutorial_3_step_6">\'One\' means only one of the Conditions for this Event must be fulfilled in order
-        to execute the Actions.\n\n\'All\' means all Conditions for this Event must be fulfilled in order to execute the Actions.
-        \n\nAs we want to detect if two things are displayed together, we will use \'All\'</string>
+    <string name="message_tutorial_3_step_6">\'Un\' signifie qu\'une seule des conditions de cet Événement doit être remplie pour exécuter les actions.\n\n
+        \'Toutes\' signifie que toutes les conditions de cet Événement doivent être remplies pour exécuter les actions.\n\n
+        Comme nous voulons détecter si deux choses sont affichées ensemble, nous utiliserons \'Toutes\'.</string>
 
-    <string name="message_tutorial_3_step_7">Now we need to update our Conditions.\n\nClick on the Conditions tab to display
-        the Conditions list.</string>
+    <string name="message_tutorial_3_step_7">Maintenant, nous devons mettre à jour nos Conditions.\n\nCliquez sur l\'onglet "Conditions" pour afficher
+        la liste des Conditions.</string>
 
-    <string name="message_tutorial_3_step_8">The previous Condition of detecting the blue target is still correct, but we need
-        a new one for the red target.\n\nClick on the create Condition button to create a new Condition for it.</string>
+    <string name="message_tutorial_3_step_8">La Condition précédente de détection de la cible bleue est toujours correcte, mais nous avons besoin
+        d\'une nouvelle pour la cible rouge.\n\nCliquez sur le bouton de création de Condition pour créer une nouvelle Condition pour celle-ci.</string>
 
-    <string name="message_tutorial_3_step_9">Just like for the blue target, start the game in order to show the red target.
-        Once it is visible, take a screenshot of it!</string>
-    <string name="message_tutorial_3_step_secondary_9">Use the capture button in the floating menu to take the screenshot.</string>
+    <string name="message_tutorial_3_step_9">Tout comme pour la cible bleue, commencez le jeu afin de montrer la cible rouge. Une fois qu\'elle est visible,
+        prenez une capture d\'écran !</string>
+    <string name="message_tutorial_3_step_secondary_9">Utilisez le bouton de capture dans le menu flottant pour prendre la capture d\'écran.</string>
 
-    <string name="message_tutorial_3_step_10">Is your screenshot containing the red target? You can crop it in order to only
-        get the part that is interesting for the detection, the red target.</string>
-    <string name="message_tutorial_3_step_secondary_10">If your screenshot does not contains the red target, you can
-        press this button to take a new one.</string>
+    <string name="message_tutorial_3_step_10">Votre capture d\'écran contient-elle la cible rouge ? Vous pouvez la recadrer pour obtenir uniquement la
+        partie intéressante pour la détection, la cible rouge.</string>
+    <string name="message_tutorial_3_step_secondary_10">Si votre capture d\'écran ne contient pas la cible rouge, vous pouvez appuyer sur ce bouton pour en prendre une nouvelle.</string>
 
-    <string name="message_tutorial_3_step_11">Your Condition image is now recorded!\n\nAs the red target isn\'t moving, we
-        can keep the default configuration.\nClick on the save button to register it and return to the Event
-        configuration dialog.</string>
+    <string name="message_tutorial_3_step_11">Votre image de Condition est maintenant enregistrée ! Comme la cible rouge ne bouge pas, nous pouvons
+        conserver la configuration par défaut.\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la boîte de dialogue de configuration de l\'Événement.</string>
 
-    <string name="message_tutorial_3_step_12">We now have two Conditions, one for each targets, and the Actions will be executed
-        only if both are detected.\n\nClick on the Actions tab to display the Action list for our Event.</string>
+    <string name="message_tutorial_3_step_12">Nous avons maintenant deux Conditions, une pour chaque cible, et les Actions ne seront exécutées que si les
+        deux sont détectées.\n\nCliquez sur l\'onglet "Actions" pour afficher la liste des Actions pour notre Événement.</string>
 
-    <string name="message_tutorial_3_step_13">The action is already set to click on the blue character, and it will only be
-        executed when the blue and the red characters are visible together.\n\nThis is exactly the behaviour we need to beat the
-        game, so no need to edit our click Action.\n\nClick on the save button to register your changes.</string>
+    <string name="message_tutorial_3_step_13">L\'action est déjà configurée pour cliquer sur le personnage bleu, et elle ne sera exécutée que lorsque les personnages bleu et rouge sont visibles ensemble.\n\nC\'est exactement le comportement dont nous avons besoin pour battre le
+        jeu, donc pas besoin de modifier notre Action de clic.\n\nCliquez sur le bouton "Enregistrer" pour enregistrer vos modifications.</string>
 
-    <string name="message_tutorial_3_step_14">All changes must be saved in your scenario in order to be registered.\n\Click
-        on the save button to save your changes.</string>
+    <string name="message_tutorial_3_step_14">Toutes les modifications doivent être enregistrées dans votre scénario pour être enregistrées.\n\cliquez
+        sur le bouton "Enregistrer" pour enregistrer vos modifications.</string>
 
-    <string name="message_tutorial_3_step_15">We are ready to win this game!\n\nClick on the start button to start the
-        detection and then, start the game.</string>
+    <string name="message_tutorial_3_step_15">Nous sommes prêts à gagner ce jeu !\n\nCliquez sur le bouton de démarrage pour lancer la
+        détection, puis démarrez le jeu.</string>
 
-    <string name="message_tutorial_3_step_16">Congratulations!\n\nYou now know how to combine multiple Conditions for an Event,
-        but there is a lot more to learn!</string>
+    <string name="message_tutorial_3_step_16">Félicitations !\n\nVous savez désormais comment combiner plusieurs conditions pour un Événement, mais il y a encore beaucoup à apprendre !</string>
 
     <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">Negative conditions</string>
-    <string name="item_desc_tutorial_4">Verify that something is not displayed before executing an action</string>
+    <string name="item_title_tutorial_4">Conditions négatives</string>
+    <string name="item_desc_tutorial_4">Vérifiez qu\'un élément n\'est pas affiché avant d\'exécuter une action</string>
 
 
     <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">Multiple events scenario</string>
-    <string name="item_desc_tutorial_5">Learn how to combine multiple events to achieve complex automation</string>
+    <string name="item_title_tutorial_5">Scénario avec plusieurs événements</string>
+    <string name="item_desc_tutorial_5">Apprenez à combiner plusieurs événements pour automatiser des tâches complexes</string>
 
 </resources>
