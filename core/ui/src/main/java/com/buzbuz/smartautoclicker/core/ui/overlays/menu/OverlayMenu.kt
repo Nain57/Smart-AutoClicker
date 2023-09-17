@@ -27,12 +27,15 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
+import androidx.core.view.children
 import androidx.core.view.forEach
+import androidx.core.view.size
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
@@ -91,6 +94,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     private lateinit var menuLayout: ViewGroup
     /** The view displaying the background of the overlay. */
     private lateinit var menuBackground: ViewGroup
+    /** The view containing the buttons as direct children. */
+    private lateinit var buttonsContainer: ViewGroup
     /** Handles the window size computing when animating a resize of the overlay. */
     private lateinit var resizeController: OverlayWindowResizeController
     /** Handles the position of the menu. */
@@ -162,7 +167,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
 
         // Set the clicks listener on the menu items
         menuBackground = menuLayout.findViewById<ViewGroup>(R.id.menu_background)
-        val buttonsContainer = menuLayout.findViewById<ViewGroup>(R.id.menu_items)
+        buttonsContainer = menuLayout.findViewById<ViewGroup>(R.id.menu_items)
         setupButtons(buttonsContainer)
 
         // Restore the last menu position, if any.
@@ -180,14 +185,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
             backgroundViewGroup = menuBackground,
             resizedContainer = buttonsContainer,
             maximumSize = getWindowMaximumSize(menuBackground),
-            windowSizeListener = { size ->
-                menuLayoutParams.width = size.width
-                menuLayoutParams.height = size.height
-
-                if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                    windowManager.updateViewLayout(menuLayout, menuLayoutParams)
-                }
-            }
+            windowSizeListener = { size -> onNewWindowSize(size.width, size.height) }
         )
 
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
@@ -253,6 +251,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
             resumeOnceShown = true
             return
         }
+
+        forceWindowResize()
 
         super.resume()
     }
@@ -337,7 +337,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
      * @param backgroundView the background view.
      */
     protected open fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
-        backgroundView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        backgroundView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
         return Size(backgroundView.measuredWidth, backgroundView.measuredHeight)
     }
 
@@ -372,6 +372,8 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
     protected fun setMenuItemVisibility(view: View, visible: Boolean) {
         Log.d(TAG, "setMenuItemVisibility for ${hashCode()}, $view to $visible")
         view.visibility = if (visible) View.VISIBLE else View.GONE
+
+        if (!resizeController.isAnimating) forceWindowResize()
     }
 
     /**
@@ -383,6 +385,30 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
      */
     protected fun animateLayoutChanges(layoutChanges: () -> Unit) {
         resizeController.animateLayoutChanges(layoutChanges)
+    }
+
+    private fun forceWindowResize() {
+        buttonsContainer.measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+
+        // Get the height of all children + the padding
+        val height = buttonsContainer.children.fold(0) { acc, child ->
+            acc + (if (child.visibility == View.GONE) 0 else child.height)
+        } + buttonsContainer.paddingTop + buttonsContainer.paddingBottom
+
+        onNewWindowSize(
+            width = menuLayout.width,
+            height = height,
+        )
+    }
+
+    private fun onNewWindowSize(width: Int, height: Int) {
+        menuLayoutParams.width = width
+        menuLayoutParams.height = height
+
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            Log.d(TAG, "Updating menu window size: $width/$height")
+            windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+        }
     }
 
     /**
@@ -441,6 +467,7 @@ abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
         menuLayoutParams.y = position.y
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            Log.d(TAG, "Updating menu window position: ${position.x}/${position.y}")
             windowManager.updateViewLayout(menuLayout, menuLayoutParams)
         }
     }

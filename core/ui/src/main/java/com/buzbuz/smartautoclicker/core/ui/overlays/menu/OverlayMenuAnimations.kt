@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.menu
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
@@ -52,13 +53,19 @@ internal class OverlayMenuAnimations {
         private set
 
     fun startShowAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
+        if (showAnimationIsRunning) return
+
+        Log.d(TAG, "start show animation")
+
         showAnimationIsRunning = true
         showOverlayMenuAnimation.setOnEndListener {
+            Log.d(TAG, "show animation ended")
             showAnimationIsRunning = false
             onAnimationEnded()
         }
 
         if (hideAnimationIsRunning) {
+            Log.d(TAG, "hide animation is running, stopping it first.")
             hideOverlayMenuAnimation.cancel()
             hideOverlayViewAnimation.cancel()
             hideAnimationIsRunning = false
@@ -71,13 +78,20 @@ internal class OverlayMenuAnimations {
     }
 
     fun startHideAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
+        if (hideAnimationIsRunning) return
+
+        Log.d(TAG, "start hide animation")
+
         hideAnimationIsRunning = true
         hideOverlayMenuAnimation.setOnEndListener {
+            Log.d(TAG, "hide animation ended")
             hideAnimationIsRunning = false
             onAnimationEnded()
         }
 
         if (showAnimationIsRunning) {
+            Log.d(TAG, "show animation is running, stopping it first.")
+
             showOverlayMenuAnimation.cancel()
             showOverlayViewAnimation.cancel()
             showAnimationIsRunning = false
@@ -102,3 +116,5 @@ internal class OverlayMenuAnimations {
 private const val SHOW_ANIMATION_DURATION_MS = 250L
 /** Duration of the dismiss overlay menu animation. */
 private const val DISMISS_ANIMATION_DURATION_MS = 150L
+/** Tag for logs */
+private const val TAG = "OverlayMenuAnimations"
