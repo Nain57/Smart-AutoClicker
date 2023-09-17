@@ -44,7 +44,7 @@
     <!-- One still target tutorial -->
     <string name="item_title_tutorial_1">Press a still target</string>
     <string name="item_desc_tutorial_1">Learn how to create your first event in order to click on a still target</string>
-    <string name="message_tutorial_1_game_instructions">Click on the blue button as fast as possible!</string>
+    <string name="message_tutorial_1_game_instructions">Click on the blue button as fast as possible</string>
 
     <string name="message_tutorial_1_step_1">Welcome to your first tutorial!\n\nHere, you will try to beat the high score
         of a game with the help of Smart AutoClicker.\n\nFirst, start the game and try to win by yourself.</string>
@@ -134,7 +134,7 @@
     <!-- One moving target tutorial -->
     <string name="item_title_tutorial_2">Press a moving target</string>
     <string name="item_desc_tutorial_2">Change your event to click on a randomly moving target</string>
-    <string name="message_tutorial_2_game_instructions">Click on the moving blue button as fast as possible!</string>
+    <string name="message_tutorial_2_game_instructions">Click on the moving blue button as fast as possible</string>
 
     <string name="message_tutorial_2_step_1">Let\'s complicate the game a little bit more. Now, the target is randomly
         moving.\n\nFirst, start the game and check if you can win by yourself.</string>
@@ -182,23 +182,29 @@
         meaning you have to manually set the position to be clicked. Let\'s see what other options are available.\n\n
         Click on the \"Click on\" drop down menu to display all options.</string>
 
-    <string name="message_tutorial_2_step_13">The other choice is \"Condition\", meaning the Action will click on the
+    <string name="message_tutorial_2_step_13">The other choice is \"Condition\", meaning the Action will click on a
         detected Condition coordinates.\n\nThat`s exactly what we need to beat the game. Every time the blue character
         will be detected, this Action will click on it.\n\nSelect it to use it in your Action.</string>
 
-    <string name="message_tutorial_2_step_14">That\'s it!\nYour Click Action is now correctly configured to beat the
+    <string name="message_tutorial_2_step_14">Click on the Condition selector option to select which detected condition
+        to click on.\nWe need to specify it because we can have multiple Conditions in our Event.</string>
+
+    <string name="message_tutorial_2_step_15">For our use case it is easy, we only have one condition, the blue character.\n\n
+        Select it to click on this Condition when it is detected on your screen.</string>
+
+    <string name="message_tutorial_2_step_16">That\'s it!\nYour Click Action is now correctly configured to beat the
         game.\n\nClick on the save button to register it and return to the Event configuration dialog.</string>
 
-    <string name="message_tutorial_2_step_15">You have updated the Condition and your Action, there is nothing more to
+    <string name="message_tutorial_2_step_17">You have updated the Condition and your Action, there is nothing more to
         do.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
 
-    <string name="message_tutorial_2_step_16">One last save to register your new changes in the database and close the
+    <string name="message_tutorial_2_step_18">One last save to register your new changes in the database and close the
         configuration dialogs.</string>
 
-    <string name="message_tutorial_2_step_17">Your Scenario is now configured to beat this new tutorial.\n\nStart the
+    <string name="message_tutorial_2_step_19">Your Scenario is now configured to beat this new tutorial.\n\nStart the
         detection with the floating menu play button and then, start the game.</string>
 
-    <string name="message_tutorial_2_step_18">Congratulations!\n\nYou now know how to track a still or moving single
+    <string name="message_tutorial_2_step_20">Congratulations!\n\nYou now know how to track a still or moving single
         target, but there is a lot more to learn.\nThat\'s all for now, but stay tuned for new tutorials in a future
         update!.</string>
 
@@ -206,6 +212,60 @@
     <!-- Two still targets press when both are visible tutorial -->
     <string name="item_title_tutorial_3">Combine multiple conditions</string>
     <string name="item_desc_tutorial_3">Create and combine multiple conditions for your event</string>
+    <string name="message_tutorial_3_game_instructions">Click on the blue button only when the red button is visible</string>
+
+    <string name="message_tutorial_3_step_1">Let\'s change the rules of the game again. The blue target has stopped moving,
+        but now it should only be clicked when the red target is visible.\n\nFirst, start the game and check if you can win
+        by yourself.</string>
+
+    <string name="message_tutorial_3_step_3">Once again, it seems impossible to win manually, so let\'s use Smart
+        AutoClicker.\n\nYour scenario for the previous tutorial have been kept and load for this tutorial, but we will
+        need to change a few parameters in order to win this new game.\n\nClick on the Scenario configuration icon to
+        start updating your new scenario.</string>
+
+    <string name="message_tutorial_3_step_4">We still want to click on the blue target, but only when red on is visible.\n
+        So we need to add a condition for this red target in our Event.\n\nClick on your previously created event to edit it.</string>
+
+    <string name="message_tutorial_3_step_5">We will combine several conditions, so we need to check the Condition operator
+        for this event.\n\nThe Condition operator indicates how multiples conditions will be interpreted together.\n
+        Click on the dropdown selector to see the options for this operator.</string>
+
+    <string name="message_tutorial_3_step_6">\'One\' means only one of the Conditions for this Event must be fulfilled in order
+        to execute the Actions.\n\n\'All\' means all Conditions for this Event must be fulfilled in order to execute the Actions.
+        \n\nAs we want to detect if two things are displayed together, we will use \'All\'</string>
+
+    <string name="message_tutorial_3_step_7">Now we need to update our Conditions.\n\nClick on the Conditions tab to display
+        the Conditions list.</string>
+
+    <string name="message_tutorial_3_step_8">The previous Condition of detecting the blue target is still correct, but we need
+        a new one for the red target.\n\n\n\nClick on the create Condition button to create a new Condition for it.</string>
+
+    <string name="message_tutorial_3_step_9">Just like for the blue target, start the game in order to show the red target.
+        Once it is visible, take a screenshot of it!</string>
+    <string name="message_tutorial_3_step_secondary_9">Use the capture button in the floating menu to take the screenshot.</string>
+
+    <string name="message_tutorial_3_step_10">Is your screenshot containing the red target? You can crop it in order to only
+        get the part that is interesting for the detection, the red target.</string>
+    <string name="message_tutorial_3_step_secondary_10">If your screenshot does not contains the red target, you can
+        press this button to take a new one.</string>
+
+    <string name="message_tutorial_3_step_11">Your Condition image is now recorded!\n\nAs the red target isn\'t moving, we
+        can keep the default configuration.\nClick on the save button to register it and return to the Event
+        configuration dialog.</string>
+
+    <string name="message_tutorial_3_step_12">We now have two Conditions, one for each targets, and the Actions will be executed
+        only if both are detected.\nWe now need to update our Action to click on the correct target.\n\nClick on the Actions tab to display
+        the Action list.</string>
+
+    <string name="message_tutorial_3_step_13">We still just need one click Action, so click on our previous Action to edit it.</string>
+
+    <string name="message_tutorial_3_step_14">Currently, the Click Action \"Click on\" is set to \"Selected position\",
+        meaning you have to manually set the position to be clicked. Let\'s see what other options are available.\n\n
+        Click on the \"Click on\" drop down menu to display all options.</string>
+
+    <string name="message_tutorial_3_step_15">The other choice is \"Condition\", meaning the Action will click on the
+        detected Condition coordinates.\n\nThat`s exactly what we need to beat the game. Every time the blue character
+        will be detected, this Action will click on it.\n\nSelect it to use it in your Action.</string>
 
 
     <!-- Two still targets press when only one is visible tutorial -->

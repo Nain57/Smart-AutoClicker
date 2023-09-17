@@ -220,7 +220,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun monitorSelectPositionView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION, view)
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION, view)
     }
 
     fun monitorClickOnDropdownView(view: View) {
@@ -240,10 +240,12 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE)
-        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION)
-        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION)
-        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON)
+        monitoredViewsManager.apply {
+            detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE)
+            detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION)
+            detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION)
+            detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON)
+        }
     }
 
     private fun Context.getUserSelectedClickPositionState(click: Action.Click): ClickPositionUiState {

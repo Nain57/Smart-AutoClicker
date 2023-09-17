@@ -149,12 +149,28 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_2_step_14,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION,
+                ),
+            ),
+            // Pick blue character
+            TutorialStepData.TutorialOverlay(
+                contentTextResId = R.string.message_tutorial_2_step_15,
+                stepStartCondition = StepStartCondition.NextOverlay,
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.CONDITION_SELECTOR_DIALOG_ITEM_FIRST,
+                ),
+            ),
+            // Save Click
+            TutorialStepData.TutorialOverlay(
+                contentTextResId = R.string.message_tutorial_2_step_16,
+                stepStartCondition = StepStartCondition.NextOverlay,
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE,
                 ),
             ),
             // Save Event
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_15,
+                contentTextResId = R.string.message_tutorial_2_step_17,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE,
@@ -162,21 +178,21 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Save Scenario
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_16,
+                contentTextResId = R.string.message_tutorial_2_step_18,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
                 ),
             ),
-            // Execute scenario and game
+            // Start detection and game
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_17,
+                contentTextResId = R.string.message_tutorial_2_step_19,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.NextButton,
             ),
             // Game won
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_18,
+                contentTextResId = R.string.message_tutorial_2_step_20,
                 stepStartCondition = StepStartCondition.GameWon,
                 stepEndCondition = StepEndCondition.NextButton,
             ),

@@ -29,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
@@ -45,6 +47,8 @@ class ConditionSelectionDialog(
     private val onConditionSelected: (Condition) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
+    /** Monitors views for the tutorial. */
+    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseSelectionBinding
 
@@ -52,6 +56,7 @@ class ConditionSelectionDialog(
     private val conditionsAdapter = ConditionsAdapter(
         bitmapProvider = bitmapProvider,
         onConditionSelected = ::onConditionClicked,
+        itemViewBound = ::onConditionItemBound,
     )
 
     override fun onCreateView(): ViewGroup {
@@ -86,6 +91,16 @@ class ConditionSelectionDialog(
         onConditionSelected(condition)
         back()
     }
+
+    private fun onConditionItemBound(index: Int, itemView: View?) {
+        if (index != 0) return
+
+        if (itemView != null) {
+            monitoredViewsManager.attach(MonitoredViewType.CONDITION_SELECTOR_DIALOG_ITEM_FIRST, itemView)
+        } else {
+            monitoredViewsManager.detach(MonitoredViewType.CONDITION_SELECTOR_DIALOG_ITEM_FIRST)
+        }
+    }
 }
 
 /**
@@ -95,6 +110,7 @@ class ConditionSelectionDialog(
 private class ConditionsAdapter(
     private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (Condition) -> Unit,
+    private val itemViewBound: ((Int, View?) -> Unit),
 ) : ListAdapter<Condition, ConditionViewHolder>(ConditionsDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConditionViewHolder =
@@ -104,11 +120,14 @@ private class ConditionsAdapter(
             onConditionSelected,
         )
 
-    override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) {
         holder.onBind(getItem(position))
+        itemViewBound(position, holder.itemView)
+    }
 
     override fun onViewRecycled(holder: ConditionViewHolder) {
         holder.onUnbind()
+        itemViewBound(holder.bindingAdapterPosition, null)
         super.onViewRecycled(holder)
     }
 }

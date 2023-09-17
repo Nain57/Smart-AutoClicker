@@ -153,7 +153,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_1_step_14,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION,
+                    MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION,
                 ),
             ),
             // Pick location
