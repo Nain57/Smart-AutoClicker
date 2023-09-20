@@ -43,7 +43,7 @@ android {
         debug {
             externalNativeBuild {
                 cmake {
-                    cppFlags ""
+                    cppFlags "-Wl,--build-id"
                     arguments "-DCMAKE_BUILD_TYPE=Debug"
                 }
             }
@@ -51,7 +51,7 @@ android {
         release {
             externalNativeBuild {
                 cmake {
-                    cppFlags ""
+                    cppFlags "-Wl,--build-id"
                     arguments "-DANDROID_SDK_ROOT=${project.android.sdkDirectory}",
                             "-DCMAKE_BUILD_TYPE=Release",
                             "-DOPENCV_ENABLE_NONFREE=OFF",
