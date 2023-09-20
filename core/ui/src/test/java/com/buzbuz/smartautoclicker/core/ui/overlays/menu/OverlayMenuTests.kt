@@ -153,7 +153,7 @@ class OverlayMenuTests {
         mockWhen(mockContext.getSystemService(DisplayManager::class.java)).thenReturn(mockDisplayManager)
         mockWhen(mockContext.getSystemService(LayoutInflater::class.java)).thenReturn(mockLayoutInflater)
         mockWhen(mockContext.getSystemService(WindowManager::class.java)).thenReturn(mockWindowManager)
-        mockWhen(mockContext.getSharedPreferences(OverlayMenuPositionController.PREFERENCE_NAME, Context.MODE_PRIVATE))
+        mockWhen(mockContext.getSharedPreferences(OverlayMenuPositionDataSource.PREFERENCE_NAME, Context.MODE_PRIVATE))
             .thenReturn(mockSharedPrefs)
 
         // Mock config

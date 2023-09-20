@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.overlays.menu
 
 import android.util.Log
 import android.view.View
+import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -55,22 +56,23 @@ internal class OverlayMenuAnimations {
     fun startShowAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
         if (showAnimationIsRunning) return
 
-        Log.d(TAG, "start show animation")
+        Log.d(TAG, "Start show animation on view ${view} with visibility ${view.visibility}")
 
         showAnimationIsRunning = true
         showOverlayMenuAnimation.setOnEndListener {
-            Log.d(TAG, "show animation ended")
+            Log.d(TAG, "Show animation ended")
             showAnimationIsRunning = false
             onAnimationEnded()
         }
 
         if (hideAnimationIsRunning) {
-            Log.d(TAG, "hide animation is running, stopping it first.")
+            Log.d(TAG, "Hide animation is running, stopping it first.")
             hideOverlayMenuAnimation.cancel()
             hideOverlayViewAnimation.cancel()
             hideAnimationIsRunning = false
         }
 
+        view.measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
         view.startAnimation(showOverlayMenuAnimation)
         if (overlayView is ViewGroup && overlayView.childCount == 1) {
             overlayView.children.first().startAnimation(showOverlayViewAnimation)
@@ -80,17 +82,17 @@ internal class OverlayMenuAnimations {
     fun startHideAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
         if (hideAnimationIsRunning) return
 
-        Log.d(TAG, "start hide animation")
+        Log.d(TAG, "Start hide animation")
 
         hideAnimationIsRunning = true
         hideOverlayMenuAnimation.setOnEndListener {
-            Log.d(TAG, "hide animation ended")
+            Log.d(TAG, "Hide animation ended")
             hideAnimationIsRunning = false
             onAnimationEnded()
         }
 
         if (showAnimationIsRunning) {
-            Log.d(TAG, "show animation is running, stopping it first.")
+            Log.d(TAG, "Show animation is running, stopping it first.")
 
             showOverlayMenuAnimation.cancel()
             showOverlayViewAnimation.cancel()

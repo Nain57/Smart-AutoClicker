@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
 
 import kotlinx.coroutines.flow.Flow
@@ -67,6 +67,8 @@ class OverlayManager internal constructor(context: Context) {
 
     /** The metrics of the device screen. */
     private val displayMetrics = DisplayMetrics.getInstance(context)
+    /** Save/load and lock the position of the overlay menus. */
+    private val menuPositionDataSource = OverlayMenuPositionDataSource.getInstance(context)
     /** The listener upon screen rotation. */
     private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
 
@@ -86,11 +88,6 @@ class OverlayManager internal constructor(context: Context) {
     private var closingChildren: Boolean = false
     /** The overlay at the top of the stack (the top visible one). Null if the stack is empty. */
     private var topOverlay: Overlay? = null
-    /**
-     * When defined with [lockMenuPosition], all [OverlayMenu] will be displayed at this position with the move button
-     * removed. Use [unlockMenuPosition] to restore the user position and allow menu moving.
-     */
-    private var menuLockedPosition: Point? = null
     /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
     private var navigateUpToRootCompletionListener: (() -> Unit)? = null
 
@@ -230,20 +227,12 @@ class OverlayManager internal constructor(context: Context) {
 
     fun lockMenuPosition(position: Point) {
         Log.d(TAG, "Locking menu position to $position")
-        menuLockedPosition = position
-
-        overlayBackStack.forEach { overlay ->
-            if (overlay is OverlayMenu) overlay.lockPosition(position)
-        }
+        menuPositionDataSource.lockPosition(position)
     }
 
     fun unlockMenuPosition() {
         Log.d(TAG, "Unlocking menu position")
-        menuLockedPosition = null
-
-        overlayBackStack.forEach { overlay ->
-            if (overlay is OverlayMenu) overlay.unlockPosition()
-        }
+        menuPositionDataSource.unlockPosition()
     }
 
     private fun executeNextNavigationRequest(context: Context) {
@@ -292,17 +281,6 @@ class OverlayManager internal constructor(context: Context) {
             appContext = context,
             dismissListener = ::onOverlayDismissed,
         )
-        // Lock this new overlay position if its a menu and if the lock has been requested
-        menuLockedPosition?.let { position ->
-            if (request.overlay is OverlayMenu) {
-                // We do not save the position because it has already been done if we reach this, and the position is
-                // shared among all OverlayMenu
-                request.overlay.lockPosition(
-                    position = position,
-                    savePosition = false,
-                )
-            }
-        }
 
         // Update current lifecycle
         currentOverlay?.apply {

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.ui.overlays.manager
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.view.Display
@@ -42,6 +43,8 @@ import org.robolectric.annotation.Config
 class OverlayManagerTests {
 
     @Mock private lateinit var mockContext: Context
+    @Mock private lateinit var mockSharedPreferences: SharedPreferences
+    @Mock private lateinit var mockSharedPrefsEditor: SharedPreferences.Editor
     @Mock private lateinit var mockDisplayManager: DisplayManager
     @Mock private lateinit var mockDisplay: Display
     @Mock private lateinit var mockOverlay1: Overlay
@@ -65,6 +68,9 @@ class OverlayManagerTests {
         MockitoAnnotations.openMocks(this)
 
         Mockito.`when`(mockContext.getSystemService(DisplayManager::class.java)).thenReturn(mockDisplayManager)
+        Mockito.`when`(mockContext.getSharedPreferences(anyNotNull(), Mockito.anyInt())).thenReturn(mockSharedPreferences)
+        Mockito.`when`(mockSharedPreferences.edit()).thenReturn(mockSharedPrefsEditor)
+        Mockito.`when`(mockSharedPrefsEditor.putInt(Mockito.anyString(), Mockito.anyInt())).thenReturn(mockSharedPrefsEditor)
         Mockito.`when`(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
 
         overlayManager = OverlayManager(mockContext)

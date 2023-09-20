@@ -38,7 +38,7 @@ import android.view.ViewGroup
  * @param maximumSize the maximum width and height the window can have between all its states.
  * @param windowSizeListener called when the window needs to be resized.
  */
-internal class OverlayWindowResizeController(
+internal class OverlayMenuResizeController(
     private val backgroundViewGroup: ViewGroup,
     private val resizedContainer: ViewGroup,
     private val maximumSize: Size,
