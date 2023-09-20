@@ -36,7 +36,7 @@ interface ProModeAdvantage {
     enum class Limitation(val limit: Int) : ProModeAdvantage {
         ACTION_COUNT_LIMIT(5),
         CONDITION_COUNT_LIMIT(2),
-        DETECTION_DURATION_MINUTES_LIMIT(10),
+        DETECTION_DURATION_MINUTES_LIMIT(20),
         EVENT_COUNT_LIMIT(10),
         SCENARIO_COUNT_LIMIT(2),
     }
