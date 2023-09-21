@@ -35,12 +35,15 @@ object Migration10to11 : Migration(10, 11) {
             migrateDetectionQuality()
 
             execSQL(createTempActionTable)
-            execSQL(createClickOnConditionIdIndexTable)
             execSQL(copyAllExceptChangedParams)
-
             migrateToClickOnCondition()
 
             execSQL(deleteOldActionTable)
+
+            execSQL(createEventIdIndexTable)
+            execSQL(createToggleEventIdIndexTable)
+            execSQL(createClickOnConditionIdIndexTable)
+
             execSQL(renameTempActionTable)
         }
     }
@@ -154,8 +157,16 @@ object Migration10to11 : Migration(10, 11) {
         )
     """.trimIndent()
 
+    private val createEventIdIndexTable = """
+        CREATE INDEX IF NOT EXISTS `index_action_table_eventId` ON `temp_action_table` (`eventId`)
+    """.trimIndent()
+
     private val createClickOnConditionIdIndexTable = """
         CREATE INDEX IF NOT EXISTS `index_action_table_clickOnConditionId` ON `temp_action_table` (`clickOnConditionId`)
+    """.trimIndent()
+
+    private val createToggleEventIdIndexTable = """
+        CREATE INDEX IF NOT EXISTS `index_action_table_toggle_event_id` ON `temp_action_table` (`toggle_event_id`)
     """.trimIndent()
 
     private val copyAllExceptChangedParams = """
