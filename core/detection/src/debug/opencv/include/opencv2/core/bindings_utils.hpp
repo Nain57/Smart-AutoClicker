@@ -36,6 +36,14 @@ String dumpInt(int argument)
 }
 
 CV_WRAP static inline
+String dumpInt64(int64 argument)
+{
+    std::ostringstream oss("Int64: ", std::ios::ate);
+    oss << argument;
+    return oss.str();
+}
+
+CV_WRAP static inline
 String dumpSizeT(size_t argument)
 {
     std::ostringstream oss("size_t: ", std::ios::ate);
@@ -218,6 +226,102 @@ AsyncArray testAsyncException()
     }
     return p.getArrayResult();
 }
+
+CV_WRAP static inline
+String dumpVec2i(const cv::Vec2i value = cv::Vec2i(42, 24)) {
+    return format("Vec2i(%d, %d)", value[0], value[1]);
+}
+
+struct CV_EXPORTS_W_SIMPLE ClassWithKeywordProperties {
+    CV_PROP_RW int lambda;
+    CV_PROP int except;
+
+    CV_WRAP explicit ClassWithKeywordProperties(int lambda_arg = 24, int except_arg = 42)
+    {
+        lambda = lambda_arg;
+        except = except_arg;
+    }
+};
+
+struct CV_EXPORTS_W_PARAMS FunctionParams
+{
+    CV_PROP_RW int lambda = -1;
+    CV_PROP_RW float sigma = 0.0f;
+
+    FunctionParams& setLambda(int value) CV_NOEXCEPT
+    {
+        lambda = value;
+        return *this;
+    }
+
+    FunctionParams& setSigma(float value) CV_NOEXCEPT
+    {
+        sigma = value;
+        return *this;
+    }
+};
+
+CV_WRAP static inline String
+copyMatAndDumpNamedArguments(InputArray src, OutputArray dst,
+                             const FunctionParams& params = FunctionParams())
+{
+    src.copyTo(dst);
+    return format("lambda=%d, sigma=%.1f", params.lambda,
+                  params.sigma);
+}
+
+namespace nested {
+CV_WRAP static inline bool testEchoBooleanFunction(bool flag) {
+    return flag;
+}
+
+class CV_EXPORTS_W CV_WRAP_AS(ExportClassName) OriginalClassName
+{
+public:
+    struct CV_EXPORTS_W_SIMPLE Params
+    {
+        CV_PROP_RW int int_value;
+        CV_PROP_RW float float_value;
+
+        CV_WRAP explicit Params(int int_param = 123, float float_param = 3.5f)
+        {
+            int_value = int_param;
+            float_value = float_param;
+        }
+    };
+
+    explicit OriginalClassName(const OriginalClassName::Params& params = OriginalClassName::Params())
+    {
+        params_ = params;
+    }
+
+    CV_WRAP int getIntParam() const
+    {
+        return params_.int_value;
+    }
+
+    CV_WRAP float getFloatParam() const
+    {
+        return params_.float_value;
+    }
+
+    CV_WRAP static std::string originalName()
+    {
+        return "OriginalClassName";
+    }
+
+    CV_WRAP static Ptr<OriginalClassName>
+    create(const OriginalClassName::Params& params = OriginalClassName::Params())
+    {
+        return makePtr<OriginalClassName>(params);
+    }
+
+private:
+    OriginalClassName::Params params_;
+};
+
+typedef OriginalClassName::Params OriginalClassName_Params;
+} // namespace nested
 
 namespace fs {
     CV_EXPORTS_W cv::String getCacheDirectoryForDownloads();

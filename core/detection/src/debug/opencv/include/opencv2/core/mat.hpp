@@ -449,7 +449,16 @@ CV_EXPORTS InputOutputArray noArray();
 
 /////////////////////////////////// MatAllocator //////////////////////////////////////
 
-//! Usage flags for allocator
+/** @brief  Usage flags for allocator
+
+ @warning  All flags except `USAGE_DEFAULT` are experimental.
+
+ @warning  For the OpenCL allocator, `USAGE_ALLOCATE_SHARED_MEMORY` depends on
+ OpenCV's optional, experimental integration with OpenCL SVM. To enable this
+ integration, build OpenCV using the `WITH_OPENCL_SVM=ON` CMake option and, at
+ runtime, call `cv::ocl::Context::getDefault().setUseSVM(true);` or similar
+ code. Note that SVM is incompatible with OpenCL 1.x.
+*/
 enum UMatUsageFlags
 {
     USAGE_DEFAULT = 0,
@@ -1009,7 +1018,7 @@ public:
     @param copyData Flag to specify whether the underlying data of the STL vector should be copied
     to (true) or shared with (false) the newly constructed matrix. When the data is copied, the
     allocated buffer is managed using Mat reference counting mechanism. While the data is shared,
-    the reference counter is NULL, and you should not deallocate the data until the matrix is not
+    the reference counter is NULL, and you should not deallocate the data until the matrix is
     destructed.
     */
     template<typename _Tp> explicit Mat(const std::vector<_Tp>& vec, bool copyData=false);
@@ -1280,15 +1289,36 @@ public:
                              t(); // finally, transpose the Nx3 matrix.
                                   // This involves copying all the elements
     @endcode
+    3-channel 2x2 matrix reshaped to 1-channel 4x3 matrix, each column has values from one of original channels:
+    @code
+    Mat m(Size(2, 2), CV_8UC3, Scalar(1, 2, 3));
+    vector<int> new_shape {4, 3};
+    m = m.reshape(1, new_shape);
+    @endcode
+    or:
+    @code
+    Mat m(Size(2, 2), CV_8UC3, Scalar(1, 2, 3));
+    const int new_shape[] = {4, 3};
+    m = m.reshape(1, 2, new_shape);
+    @endcode
     @param cn New number of channels. If the parameter is 0, the number of channels remains the same.
     @param rows New number of rows. If the parameter is 0, the number of rows remains the same.
      */
     Mat reshape(int cn, int rows=0) const;
 
-    /** @overload */
+    /** @overload
+     * @param cn New number of channels. If the parameter is 0, the number of channels remains the same.
+     * @param newndims New number of dimentions.
+     * @param newsz Array with new matrix size by all dimentions. If some sizes are zero,
+     * the original sizes in those dimensions are presumed.
+     */
     Mat reshape(int cn, int newndims, const int* newsz) const;
 
-    /** @overload */
+    /** @overload
+     * @param cn New number of channels. If the parameter is 0, the number of channels remains the same.
+     * @param newshape Vector with new matrix size by all dimentions. If some sizes are zero,
+     * the original sizes in those dimensions are presumed.
+     */
     Mat reshape(int cn, const std::vector<int>& newshape) const;
 
     /** @brief Transposes a matrix.
@@ -2077,7 +2107,7 @@ public:
 
         Mat_<Pixel> image = Mat::zeros(3, sizes, CV_8UC3);
 
-        image.forEach<Pixel>([&](Pixel& pixel, const int position[]) -> void {
+        image.forEach<Pixel>([](Pixel& pixel, const int position[]) -> void {
             pixel.x = position[0];
             pixel.y = position[1];
             pixel.z = position[2];
@@ -2267,7 +2297,7 @@ public:
     std::reverse_iterator<const_iterator> rbegin() const;
     std::reverse_iterator<const_iterator> rend() const;
 
-    //! template methods for for operation over all matrix elements.
+    //! template methods for operation over all matrix elements.
     // the operations take care of skipping gaps in the end of rows (if any)
     template<typename Functor> void forEach(const Functor& operation);
     template<typename Functor> void forEach(const Functor& operation) const;
