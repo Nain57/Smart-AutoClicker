@@ -16,8 +16,8 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 // Only apply gms/firebase plugins if we are building for the play store
 def isPlayStoreBuild = getGradle().getStartParameter().getTaskRequests().toString().contains("PlayStore")

@@ -17,7 +17,7 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.8.10'
+    ext.kotlin_version = '1.9.0'
     ext.kotlinx_version = '1.7.3'
     ext.navigation_plugin_version = '2.6.0'
 
@@ -36,6 +36,10 @@ buildscript {
         classpath 'com.google.gms:google-services:4.4.0'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
     }
+}
+
+plugins {
+    id("com.google.devtools.ksp") version "$kotlin_version-1.0.13" apply false
 }
 
 allprojects {

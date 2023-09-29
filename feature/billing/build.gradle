@@ -16,7 +16,7 @@
  */
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")

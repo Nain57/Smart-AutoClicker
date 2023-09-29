@@ -16,8 +16,8 @@
  */
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
     namespace 'com.buzbuz.smartautoclicker.core.database'
@@ -30,10 +30,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -70,7 +68,7 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
-    kapt "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
+    ksp "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
 
     implementation project(path: ':core:extensions')
 
