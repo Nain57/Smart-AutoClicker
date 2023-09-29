@@ -25,7 +25,7 @@ def sourceCodePath = "${project.projectDir}/src/release/opencv"
 def sourceCodeVersionPath = "${sourceCodePath}/version.txt"
 
 /** Download the OpenCV zipped source code from github. */
-task downloadZip {
+tasks.register('downloadZip') {
     def zipFile = file(zipFilePath)
     outputs.file(zipFile)
 
@@ -46,8 +46,8 @@ task downloadZip {
 }
 
 /** Extract the OpenCV source code. */
-task extractZip(type: Sync) {
-    dependsOn tasks.getByPath("downloadZip")
+tasks.register('extractZip', Sync) {
+    from downloadZip
 
     def sourceCodeVersionFile = file(sourceCodeVersionPath)
     if (sourceCodeVersionFile.exists()) {
@@ -56,7 +56,7 @@ task extractZip(type: Sync) {
         }
     }
 
-    from (zipTree(zipFilePath)) {
+    from(zipTree(zipFilePath)) {
         include "**"
         includeEmptyDirs = false
         eachFile { fcd ->
