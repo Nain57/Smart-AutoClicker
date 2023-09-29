@@ -27,7 +27,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.1'
+        classpath 'com.android.tools.build:gradle:8.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_plugin_version"
@@ -46,27 +46,27 @@ allprojects {
 }
 
 ext {
-    compileSdkVersion = 33
+    compileSdkVersion = 34
     minSdkVersion = 24
 
     // AndroidX dependencies
     androidxAppCompatVersion = '1.6.1'
-    androidxAnnotationVersion = '1.6.0'
+    androidxAnnotationVersion = '1.7.0'
     androidxCardViewVersion = '1.0.0'
     androidxConstraintLayoutVersion = '2.1.4'
-    androidxCoreVersion = '1.10.1'
+    androidxCoreVersion = '1.12.0'
     androidxFragmentVersion = '1.6.1'
-    androidxLifecycleVersion = '2.6.1'
+    androidxLifecycleVersion = '2.6.2'
     androidxLifecycleExtensionVersion = '2.2.0'
-    androidxNavigationVersion = '2.6.0'
+    androidxNavigationVersion = '2.7.3'
     androidxRecyclerViewVersion = '1.3.1'
     androidxRoomVersion = '2.5.2'
     androidxVectorDrawableVersion = '1.1.0'
 
     // Other dependencies
     googleMaterialVersion = '1.9.0'
-    kotlinSerializationVersion = '1.3.2'
-    lottieVersion = '5.2.0'
+    kotlinSerializationVersion = '1.6.0'
+    lottieVersion = '6.1.0'
 
     // Native dependencies
     openCvVersion = '4.5.5'
@@ -81,7 +81,7 @@ ext {
     robolectricVersion = '4.8.1'
 
     // Google PlayStore version dependencies
-    firebaseBomVersion = '32.2.2'
+    firebaseBomVersion = '32.3.1'
     billingVersion = '6.0.1'
 }
 

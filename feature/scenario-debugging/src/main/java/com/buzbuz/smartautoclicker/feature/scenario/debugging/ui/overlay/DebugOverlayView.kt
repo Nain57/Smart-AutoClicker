@@ -85,8 +85,13 @@ class DebugOverlayView(context: Context) : View(context) {
         }
     }
 
+    // SDK 34 defines MotionEvents as NonNull. But previous bad experiences with the same case on
+    // SDK 33 gave me trust issues
+    @Suppress("NOTHING_TO_OVERRIDE", "ACCIDENTAL_OVERRIDE")
     override fun onDraw(canvas: Canvas?) {
+        canvas ?: return
         super.onDraw(canvas)
-        canvas?.drawRect(conditionBorders, conditionBordersPaint)
+
+        canvas.drawRect(conditionBorders, conditionBordersPaint)
     }
 }

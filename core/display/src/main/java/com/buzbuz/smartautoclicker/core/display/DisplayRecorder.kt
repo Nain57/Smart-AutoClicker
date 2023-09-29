@@ -259,6 +259,6 @@ private fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
         }
     }
 
-    bitmap?.copyPixelsFromBuffer(planes[0].buffer)
-    return bitmap!!
+    bitmap.copyPixelsFromBuffer(planes[0].buffer)
+    return bitmap
 }
