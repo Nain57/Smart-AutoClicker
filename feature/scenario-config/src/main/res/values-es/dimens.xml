@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <dimen name="dialog_condition_max_height">600dp</dimen>
+    <dimen name="dialog_condition_max_width">400dp</dimen>
+    <dimen name="dialog_item_condition_height">100dp</dimen>
+    <dimen name="dialog_item_condition_width">100dp</dimen>
+    <dimen name="dialog_item_condition_copy_icons_height">30dp</dimen>
+    <dimen name="dialog_item_condition_copy_condition_size">100dp</dimen>
+
+    <dimen name="overlay_click_selector_thickness">6dp</dimen>
+    <dimen name="overlay_click_selector_radius">28dp</dimen>
+    <dimen name="overlay_click_selector_inner_radius">3dp</dimen>
+
+    <dimen name="overlay_condition_selector_width">230dp</dimen>
+    <dimen name="overlay_condition_selector_height">130dp</dimen>
+    <dimen name="overlay_condition_selector_resize_handle_size">50dp</dimen>
+    <dimen name="overlay_condition_selector_resize_hints_icon_size">30dp</dimen>
+    <dimen name="overlay_condition_selector_resize_hints_icon_margin">5dp</dimen>
+    <dimen name="overlay_condition_selector_resize_hints_pinch_icon_margin">100dp</dimen>
+    <dimen name="overlay_condition_selector_thickness">4dp</dimen>
+    <dimen name="overlay_condition_selector_corner_radius">2dp</dimen>
+</resources>

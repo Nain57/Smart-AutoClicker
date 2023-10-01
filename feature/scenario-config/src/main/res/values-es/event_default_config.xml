@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <integer name="default_detection_quality">1200</integer>
+
+    <string name="default_event_name">Default event</string>
+
+    <string name="default_click_name">Click</string>
+    <integer name="default_click_press_duration">1</integer>
+
+    <string name="default_swipe_name">Swipe</string>
+    <integer name="default_swipe_duration">500</integer>
+
+    <string name="default_pause_name">Wait</string>
+    <integer name="default_pause_duration">50</integer>
+
+    <string name="default_intent_name">Intent</string>
+    <bool name="default_intent_isAdvanced">false</bool>
+
+    <string name="default_toggle_event_name">Toggle event</string>
+
+    <string name="default_condition_name">Condition</string>
+    <integer name="default_condition_threshold">4</integer>
+</resources>

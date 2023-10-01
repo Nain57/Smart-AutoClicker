@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2022 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Base style for the base views. -->
+    <style name="AppTheme.Dialog" />
+    <!-- Style for the dialog top bar root layout. -->
+    <style name="AppTheme.Dialog.TopBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">65dp</item>
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:elevation">3dp</item>
+    </style>
+    <!-- Style for the dialog top bar title. -->
+    <style name="AppTheme.Dialog.TopBarTitle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_small</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_default</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_default</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.TopBarTitle</item>
+    </style>
+
+    <!-- Base style for the widgets. -->
+    <style name="AppTheme.Widget" />
+    <!-- Style for the app bar layout. -->
+    <style name="AppTheme.Widget.AppBarLayout" parent="@style/Widget.Material3.AppBarLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+    <!-- Style for the toolbar. -->
+    <style name="AppTheme.Widget.Toolbar" parent="@style/Widget.Material3.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+    <!-- Style for the dividers. -->
+    <style name="AppTheme.Widget.Divider" parent="@style/Widget.Material3.MaterialDivider"/>
+    <!-- Style for the secondary horizontal dividers. -->
+    <style name="AppTheme.Widget.DividerSecondaryH" parent="@style/Widget.Material3.MaterialDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="dividerInsetStart">@dimen/margin_horizontal_default</item>
+        <item name="dividerInsetEnd">@dimen/margin_horizontal_default</item>
+    </style>
+    <!-- Style for the card views. -->
+    <style name="AppTheme.Widget.Card" parent="@style/Widget.Material3.CardView.Elevated" />
+    <!-- Style for the outlined card views. -->
+    <style name="AppTheme.Widget.CardOutlined" parent="@style/Widget.Material3.CardView.Outlined" />
+    <!-- Style for the input text fields. -->
+    <style name="AppTheme.Widget.InputText" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox"/>
+    <!-- Style for the filled input text fields. -->
+    <style name="AppTheme.Widget.InputTextFilled" parent="@style/Widget.Material3.TextInputLayout.FilledBox"/>
+    <!-- Style for the input dropdown fields.-->
+    <style name="AppTheme.Widget.InputDropdown" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"/>
+    <!-- Style for an text button -->
+    <style name="AppTheme.Widget.TextButton" parent="Widget.Material3.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for an text button -->
+    <style name="AppTheme.Widget.TextButtonOutlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for an icon button -->
+    <style name="AppTheme.Widget.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for a filled icon button -->
+    <style name="AppTheme.Widget.IconButtonFilled" parent="Widget.Material3.Button.IconButton.Filled">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for a radio button without text -->
+    <style name="AppTheme.Widget.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+    <!-- Style for the main floating action button. -->
+    <style name="AppTheme.Widget.Fab" parent="@style/Widget.Material3.FloatingActionButton.Primary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginBottom">@dimen/margin_horizontal_default</item>
+    </style>
+    <!-- Style for the secondaries floating action buttons. -->
+    <style name="AppTheme.Widget.FabSecondary" parent="@style/Widget.Material3.FloatingActionButton.Small.Secondary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/margin_fab_secondary_bottom</item>
+    </style>
+    <!-- Style for the collapsible search view. -->
+    <style name="AppTheme.Widget.SearchView" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Base overlays theme. -->
+    <style name="AppTheme.Overlay" />
+
+    <!-- Base floating menu overlays theme. -->
+    <style name="AppTheme.Overlay.FloatingMenu" />
+    <!-- Style for the background card view of the floating menu. -->
+    <style name="AppTheme.Overlay.FloatingMenu.CardView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardBackgroundColor">@color/overlayMenuBackground</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">10dp</item>
+    </style>
+    <!-- Style for the layout of the buttons for the floating menu. -->
+    <style name="AppTheme.Overlay.FloatingMenu.LayoutButtons">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_mini</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_mini</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_small</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_small</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+    <!-- Style for the buttons of the floating menu. -->
+    <style name="AppTheme.Overlay.FloatingMenu.Buttons">
+        <item name="android:layout_width">@dimen/overlay_menu_btn_size</item>
+        <item name="android:layout_height">@dimen/overlay_menu_btn_size</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:tint">@color/overlayMenuButtons</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <!-- Base style for the list elements. -->
+    <style name="AppTheme.List"/>
+    <!-- Style for the list headers text. -->
+    <style name="AppTheme.List.HeaderText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_vertical_large</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListItemTitle</item>
+    </style>
+    <!-- Style for the list item main text. -->
+    <style name="AppTheme.List.ItemTitle">
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_default</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_vertical_large</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListItemTitle</item>
+    </style>
+    <!-- Style for the list item secondary text.-->
+    <style name="AppTheme.List.ItemSubText">
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_vertical_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_vertical_large</item>
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListItemSubText</item>
+    </style>
+
+    <!-- Base text appearance. -->
+    <style name="AppTheme.TextAppearance" />
+    <!-- Text appearance for the dialog top bar title. -->
+    <style name="AppTheme.TextAppearance.TopBarTitle" parent="@style/TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <!-- Text appearance for the card view title. -->
+    <style name="AppTheme.TextAppearance.CardTitle" parent="@style/TextAppearance.Material3.TitleMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_large</item>
+    </style>
+    <!-- Text appearance for the list items title. -->
+    <style name="AppTheme.TextAppearance.ListItemTitle" parent="@style/TextAppearance.Material3.TitleMedium"/>
+    <!-- Text appearance for the list sub text. -->
+    <style name="AppTheme.TextAppearance.ListItemSubText" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for a card horizontal item text. -->
+    <style name="AppTheme.TextAppearance.CardItemHText" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for the body text. -->
+    <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for the large body text. -->
+    <style name="AppTheme.TextAppearance.BodyLarge" parent="@style/TextAppearance.Material3.BodyLarge"/>
+    <!-- Text appearance for the empty lists text. -->
+    <style name="AppTheme.TextAppearance.EmptyText" parent="@style/TextAppearance.Material3.HeadlineSmall"/>
+    <!-- Text appearance for the secondary empty lists text. -->
+    <style name="AppTheme.TextAppearance.EmptyTextSecondary" parent="@style/TextAppearance.Material3.BodyMedium">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+</resources>
