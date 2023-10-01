@@ -22,7 +22,7 @@ import android.text.InputType
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.R

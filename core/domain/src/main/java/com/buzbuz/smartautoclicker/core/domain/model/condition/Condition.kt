@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
+import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.Identifier
 
 /**
@@ -33,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.Identifier
  * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
  * @param detectionType the type of detection for this condition. Must be one of [DetectionType].
  * @param bitmap the bitmap for the condition. Not set when fetched from the repository.
+ * @param detectionArea the area to detect the condition in if [detectionType] is IN_AREA.
  */
 data class Condition(
     val id: Identifier,
@@ -44,6 +46,7 @@ data class Condition(
     @DetectionType val detectionType: Int,
     val shouldBeDetected: Boolean,
     val bitmap: Bitmap? = null,
+    val detectionArea: Rect? = null,
 ) {
 
     /** @return creates a deep copy of this condition. */
@@ -53,5 +56,8 @@ data class Condition(
     )
 
     /** Tells if this condition is complete and valid to be saved. */
-    fun isComplete(): Boolean = name.isNotEmpty() && (path != null || bitmap != null)
+    fun isComplete(): Boolean =
+        name.isNotEmpty()
+                && (path != null || bitmap != null)
+                && (detectionType == IN_AREA && detectionArea != null || detectionType != IN_AREA)
 }

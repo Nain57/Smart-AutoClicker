@@ -34,6 +34,10 @@ internal fun Condition.toEntity() = ConditionEntity(
     threshold = threshold,
     detectionType = detectionType,
     shouldBeDetected = shouldBeDetected,
+    detectionAreaLeft = detectionArea?.left,
+    detectionAreaTop = detectionArea?.top,
+    detectionAreaRight = detectionArea?.right,
+    detectionAreaBottom = detectionArea?.bottom,
 )
 
 /** @return the condition for this entity. */
@@ -45,5 +49,12 @@ internal fun ConditionEntity.toCondition(asDomain: Boolean = false) = Condition(
     area = Rect(areaLeft, areaTop, areaRight, areaBottom),
     threshold = threshold,
     detectionType = detectionType,
+    detectionArea = getDetectionArea(),
     shouldBeDetected = shouldBeDetected,
 )
+
+private fun ConditionEntity.getDetectionArea(): Rect? =
+    if (detectionAreaLeft != null && detectionAreaTop != null && detectionAreaRight != null && detectionAreaBottom != null)
+        Rect(detectionAreaLeft!!, detectionAreaTop!!, detectionAreaRight!!, detectionAreaBottom!!)
+    else
+        null

@@ -29,17 +29,19 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.DropdownItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectorState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionBinding
@@ -103,6 +105,7 @@ class ConditionDialog(
                 items = viewModel.detectionTypeItems,
                 onItemSelected = viewModel::setDetectionType,
                 onItemBound = ::onDetectionTypeDropdownItemBound,
+                onSelectorClicked = ::showDetectionAreaSelector,
             )
 
             conditionShouldAppear.setItems(
@@ -184,8 +187,11 @@ class ConditionDialog(
         viewBinding.conditionShouldAppear.setSelectedItem(newValue)
     }
 
-    private fun updateConditionType(newValue: DropdownItem) {
-        viewBinding.conditionDetectionType.setSelectedItem(newValue)
+    private fun updateConditionType(newState: DetectionTypeState) {
+        viewBinding.conditionDetectionType.apply {
+            setSelectedItem(newState.dropdownItem)
+            setSelectorState(newState.selectorState)
+        }
     }
 
     private fun updateThreshold(newThreshold: Int) {
@@ -217,6 +223,18 @@ class ConditionDialog(
                 window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
             }
             .show()
+    }
+
+    private fun showDetectionAreaSelector() {
+        debounceUserInteraction {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = ConditionAreaSelectorMenu(
+                    onAreaSelected = viewModel::setDetectionArea,
+                ),
+                hideCurrent = true,
+            )
+        }
     }
 
     private fun confirmDelete() {

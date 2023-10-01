@@ -27,7 +27,7 @@ import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.views.ConditionSelectorView
+import com.buzbuz.smartautoclicker.core.ui.views.conditionselector.ConditionSelectorView
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayValidationMenuBinding
 

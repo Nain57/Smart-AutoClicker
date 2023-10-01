@@ -45,6 +45,10 @@ import kotlinx.serialization.Serializable
  * @param detectionType the type of detection. Can be any of the values defined in
  *                      [com.buzbuz.smartautoclicker.domain.DetectionType].
  * @param shouldBeDetected true if this condition should be detected to be true, false if it should not be found.
+ * @param detectionAreaLeft
+ * @param detectionAreaTop
+ * @param detectionAreaRight
+ * @param detectionAreaBottom
  */
 @Entity(
     tableName = "condition_table",
@@ -69,4 +73,8 @@ data class ConditionEntity(
     @ColumnInfo(name = "threshold", defaultValue = "1") val threshold: Int,
     @ColumnInfo(name = "detection_type") val detectionType: Int,
     @ColumnInfo(name = "shouldBeDetected") val shouldBeDetected: Boolean,
+    @ColumnInfo(name = "detection_area_left") val detectionAreaLeft: Int? = null,
+    @ColumnInfo(name = "detection_area_top") val detectionAreaTop: Int? = null,
+    @ColumnInfo(name = "detection_area_right") val detectionAreaRight: Int? = null,
+    @ColumnInfo(name = "detection_area_bottom") val detectionAreaBottom: Int? = null,
 )

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views
+package com.buzbuz.smartautoclicker.core.ui.views.conditionselector
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -31,10 +31,9 @@ import androidx.core.content.res.use
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.R
-import com.buzbuz.smartautoclicker.core.ui.views.condition.Animations
-import com.buzbuz.smartautoclicker.core.ui.views.condition.CaptureComponent
-import com.buzbuz.smartautoclicker.core.ui.views.condition.Selector
-import com.buzbuz.smartautoclicker.core.ui.views.condition.hints.HintsComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.CaptureComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsComponent
 
 /**
  * Overlay view used as screenOverlayView showing the area to capture the content as an event condition.
@@ -55,11 +54,11 @@ class ConditionSelectorView(
     /** Controls the display of the bitmap captured. */
     private lateinit var capture: CaptureComponent
     /** Controls the display of the selector. */
-    private lateinit var selector: Selector
+    private lateinit var selector: SelectorComponent
     /** Controls the display of the user hints around the selector. */
     private lateinit var hintsIcons: HintsComponent
     /** Controls the animations. */
-    private lateinit var animations: Animations
+    private lateinit var animations: ConditionSelectorAnimations
 
     /** Tells if the view have ignored a touch event due to a animation running or being hidden. */
     private var haveTouchEventIgnored = false
@@ -70,13 +69,11 @@ class ConditionSelectorView(
 
     /** Get the attributes from the style file and initialize all components. */
     init {
-        context.obtainStyledAttributes(null,
-            R.styleable.ConditionSelectorView,
-            R.attr.conditionSelectorStyle, 0).use { ta ->
-            animations = Animations(ta)
-            capture = CaptureComponent(context, ta, displayMetrics, ::invalidate)
-            selector = Selector(context, ta, displayMetrics, ::invalidate)
-            hintsIcons = HintsComponent(context, ta, displayMetrics, ::invalidate)
+        context.obtainStyledAttributes(null, R.styleable.ConditionSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
+            animations = ConditionSelectorAnimations(ta.getAnimationsStyle())
+            capture = CaptureComponent(context, ta.getCaptureComponentStyle(displayMetrics), ::invalidate)
+            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayMetrics), ::invalidate)
+            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayMetrics), ::invalidate)
         }
     }
 
@@ -213,9 +210,7 @@ class ConditionSelectorView(
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (hide) {
-            return
-        }
+        if (hide) return
 
         capture.onDraw(canvas)
         selector.onDraw(canvas)

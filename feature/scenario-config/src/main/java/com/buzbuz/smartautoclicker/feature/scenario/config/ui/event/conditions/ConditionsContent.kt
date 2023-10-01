@@ -199,6 +199,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
                 onDeleteClickedListener = viewModel::removeEditedCondition,
                 onDismissClickedListener = viewModel::dismissEditedCondition
             ),
+            hideCurrent = true,
         )
     }
 }

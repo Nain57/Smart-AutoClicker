@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,53 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.condition
+package com.buzbuz.smartautoclicker.core.ui.views.conditionselector
 
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
-import android.content.res.TypedArray
-import android.graphics.Color
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 
 import androidx.core.animation.doOnEnd
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
-import com.buzbuz.smartautoclicker.core.ui.R
-
 /**
  * Handles the animation for the [ConditionSelectorView].
  *
- * @param styledAttrs the styled attributes of the [ConditionSelectorView]
+ * @param style the style for the animations
  */
-internal class Animations(styledAttrs: TypedArray) {
+internal class ConditionSelectorAnimations(style: AnimationsStyle) {
 
     /** The transparency of the background color of the selector. */
-    private val selectorBackgroundAlpha: Int = styledAttrs.getColor(
-        R.styleable.ConditionSelectorView_colorBackground,
-        Color.TRANSPARENT
-    ).shr(24)
+    private val selectorBackgroundAlpha: Int = style.selectorBackgroundAlpha
     /** The duration of the hints fading animation in milliseconds. */
-    private val hintFadeDuration = styledAttrs.getInteger(
-        R.styleable.ConditionSelectorView_hintsFadeDuration,
-        DEFAULT_FADE_DURATION
-    ).toLong()
+    private val hintFadeDuration = style.hintFadeDuration
     /** The duration of the all hints fading animation in milliseconds. */
-    private val hintAllFadeDelay = styledAttrs.getInteger(
-        R.styleable.ConditionSelectorView_hintsAllFadeDelay,
-        DEFAULT_FADE_ALL_HINTS_DURATION
-    ).toLong()
+    private val hintAllFadeDelay = style.hintAllFadeDelay
     /** The duration of the show selector animation in milliseconds. */
-    private val showSelectorAnimationDuration = styledAttrs.getInteger(
-        R.styleable.ConditionSelectorView_showSelectorAnimationDuration,
-        DEFAULT_SELECTOR_ANIMATION_DURATION
-    ).toLong()
+    private val showSelectorAnimationDuration = style.showSelectorAnimationDuration
     /** The duration of the show capture animation in milliseconds. */
-    private val showCaptureAnimationDuration = styledAttrs.getInteger(
-        R.styleable.ConditionSelectorView_showCaptureAnimationDuration,
-        DEFAULT_CAPTURE_ANIMATION_DURATION
-    ).toLong()
+    private val showCaptureAnimationDuration = style.showCaptureAnimationDuration
 
     /** Listener notified for capture zoom level changes due to animations. */
     var onCaptureZoomLevelChanged: ((Float) -> Unit)? = null
@@ -124,7 +105,10 @@ internal class Animations(styledAttrs: TypedArray) {
         }
     }
     /** Animator for the selector background showing. */
-    private val showSelectorBackgroundAnimator: Animator = ValueAnimator.ofInt(0, selectorBackgroundAlpha).apply {
+    private val showSelectorBackgroundAnimator: Animator = ValueAnimator.ofInt(
+        0,
+        selectorBackgroundAlpha
+    ).apply {
         duration = showSelectorAnimationDuration
         interpolator = LinearInterpolator()
         addUpdateListener {
@@ -154,11 +138,28 @@ internal class Animations(styledAttrs: TypedArray) {
     }
 }
 
+/**
+ * Style for the [ConditionSelectorAnimations].
+ *
+ * @param selectorBackgroundAlpha the transparency of the background color of the selector.
+ * @param hintFadeDuration the duration of the hints fading animation in milliseconds.
+ * @param hintAllFadeDelay the duration of the all hints fading animation in milliseconds.
+ * @param showSelectorAnimationDuration the duration of the show selector animation in milliseconds.
+ * @param showCaptureAnimationDuration the duration of the show capture animation in milliseconds.
+ */
+internal class AnimationsStyle(
+    val selectorBackgroundAlpha: Int,
+    val hintFadeDuration: Long,
+    val hintAllFadeDelay: Long,
+    val showSelectorAnimationDuration: Long,
+    val showCaptureAnimationDuration: Long,
+)
+
 /** The default duration of the hints fade out animation in milliseconds. */
-private const val DEFAULT_FADE_DURATION = 500
+internal const val DEFAULT_FADE_DURATION = 500
 /** The default duration of the all hints fade out animation in milliseconds. */
-private const val DEFAULT_FADE_ALL_HINTS_DURATION = 1000
+internal const val DEFAULT_FADE_ALL_HINTS_DURATION = 1000
 /** The default duration of the capture display animation in milliseconds. */
-private const val DEFAULT_SELECTOR_ANIMATION_DURATION = 500
+internal const val DEFAULT_SELECTOR_ANIMATION_DURATION = 500
 /** The default duration of the capture display animation in milliseconds. */
-private const val DEFAULT_CAPTURE_ANIMATION_DURATION = 750
+internal const val DEFAULT_CAPTURE_ANIMATION_DURATION = 750

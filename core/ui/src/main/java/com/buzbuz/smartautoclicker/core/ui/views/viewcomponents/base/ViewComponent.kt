@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.condition
+package com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base
 
 import android.graphics.Canvas
 import android.graphics.RectF
@@ -22,22 +22,20 @@ import android.view.MotionEvent
 
 import androidx.annotation.CallSuper
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-
 /**
  * Base class for all view components displayed in the [ConditionSelectorView].
  *
- * @param displayMetrics provides information about current display.
+ * @param viewComponentStyle provides information about the style to apply to the component.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal abstract class ViewComponent(
-    private val displayMetrics: DisplayMetrics,
+    private val viewComponentStyle: ViewStyle,
     private val viewInvalidator: () -> Unit,
 ) {
 
     /** The maximum size of the selector. */
     protected val maxArea: RectF = RectF().apply {
-        val screenSize = displayMetrics.screenSize
+        val screenSize = viewComponentStyle.displayMetrics.screenSize
         right = screenSize.x.toFloat()
         bottom = screenSize.y.toFloat()
     }
@@ -51,7 +49,7 @@ internal abstract class ViewComponent(
      */
     @CallSuper
     open fun onViewSizeChanged(w: Int, h: Int) {
-        val screenSize = displayMetrics.screenSize
+        val screenSize = viewComponentStyle.displayMetrics.screenSize
         maxArea.apply {
             right = screenSize.x.toFloat()
             bottom = screenSize.y.toFloat()

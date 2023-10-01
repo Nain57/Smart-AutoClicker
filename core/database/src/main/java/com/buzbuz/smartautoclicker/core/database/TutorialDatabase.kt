@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.database
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.TypeConverters
@@ -33,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraTypeStringCon
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventTypeStringConverter
 import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
+import com.buzbuz.smartautoclicker.core.database.migrations.AutoMigration8to9
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration10to11
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration1to2
 
@@ -48,6 +50,9 @@ import com.buzbuz.smartautoclicker.core.database.migrations.Migration1to2
     ],
     version = TUTORIAL_DATABASE_VERSION,
     exportSchema = true,
+    autoMigrations = [
+        AutoMigration (from = 11, to = 12),
+    ]
 )
 @TypeConverters(
     ActionTypeStringConverter::class,

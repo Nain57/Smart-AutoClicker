@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.condition
+package com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base
 
 import android.graphics.RectF
 
-/** Types of gesture for the [Selector]. */
+/** Types of gestures. */
 internal sealed class GestureType {
     /**
      * Get the touch area for this gesture.
@@ -42,7 +42,7 @@ internal sealed class GestureType {
 
 }
 
-internal object ResizeLeft: GestureType() {
+internal data object ResizeLeft: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float) =
         RectF(
             viewArea.left - handleSize,
@@ -52,7 +52,7 @@ internal object ResizeLeft: GestureType() {
         )
 }
 
-internal object ResizeTop: GestureType() {
+internal data object ResizeTop: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
         RectF(
             viewArea.left,
@@ -62,7 +62,7 @@ internal object ResizeTop: GestureType() {
         )
 }
 
-internal object ResizeRight: GestureType() {
+internal data object ResizeRight: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
         RectF(
             if(isEnoughInnerSpace(viewArea, handleSize)) viewArea.right - innerHandleSize else viewArea.right,
@@ -72,7 +72,7 @@ internal object ResizeRight: GestureType() {
         )
 }
 
-internal object ResizeBottom: GestureType() {
+internal data object ResizeBottom: GestureType() {
     override fun getGestureArea(viewArea: RectF, handleSize: Float, innerHandleSize: Float): RectF =
         RectF(
             viewArea.left,
@@ -82,6 +82,6 @@ internal object ResizeBottom: GestureType() {
         )
 }
 
-internal object MoveSelector: GestureType()
+internal data object MoveSelector: GestureType()
 
-internal object ZoomCapture: GestureType()
+internal data object ZoomCapture: GestureType()

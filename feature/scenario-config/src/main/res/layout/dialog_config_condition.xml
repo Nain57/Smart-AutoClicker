@@ -85,13 +85,13 @@
                         tools:src="@drawable/ic_click"/>
 
                     <include layout="@layout/include_input_field_dropdown"
-                        android:id="@+id/condition_detection_type"
+                        android:id="@+id/condition_should_appear"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
-                    <include layout="@layout/include_input_field_dropdown"
-                        android:id="@+id/condition_should_appear"
+                    <include layout="@layout/include_dropdown_with_selector"
+                        android:id="@+id/condition_detection_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_vertical_default"/>

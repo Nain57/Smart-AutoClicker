@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.processing.data.ActionExecutor
@@ -216,10 +217,13 @@ internal class ScenarioProcessor(
      */
     private fun detect(condition: Condition, conditionBitmap: Bitmap): DetectionResult =
          when (condition.detectionType) {
-            EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
-            WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
-            else -> throw IllegalArgumentException("Unexpected detection type")
-        }
+             EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
+             WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
+             IN_AREA -> condition.detectionArea?.let { area ->
+                 imageDetector.detectCondition(conditionBitmap, area, condition.threshold)
+             } ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
+             else -> throw IllegalArgumentException("Unexpected detection type")
+         }
 }
 
 /** Tag for logs. */

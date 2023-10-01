@@ -63,6 +63,8 @@
     <string name="item_desc_click_on_condition_and_operator_not_found">未选择条件</string>
     <string name="item_desc_click_on_condition_or_operator">事件设置为“一个条件”，您无法选择特定条件</string>
     <string name="item_desc_click_on_position">点击 (%1$d, %2$d)</string>
+    <string name="item_desc_detection_type_exact">在[%1$d，%2$d] [%3$d，%4$d]</string>
+    <string name="item_desc_detection_type_in_area">在[%1$d，%2$d] [%3$d，%4$d]中</string>
     <string name="item_desc_intent">调用其他的应用程序</string>
     <string name="item_desc_intent_action">发送广播： %1$s</string>
     <string name="item_desc_intent_action_component">发送 %1$s 至 %2$s</string>
@@ -84,6 +86,9 @@
     <string name="item_title_debug_report_available">调试报告可用</string>
     <string name="item_title_debug_report_not_available">没有可用的调试报告</string>
     <string name="item_title_debug_show_view">显示调试窗口</string>
+    <string name="item_title_detection_type_exact">在捕获位置进行检测</string>
+    <string name="item_title_detection_type_in_area">检测屏幕的一部分</string>
+    <string name="item_title_detection_type_screen">全屏检测</string>
     <string name="item_title_intent">意图</string>
     <string name="item_title_pause">等待</string>
     <string name="item_title_swipe">滑动</string>
@@ -230,9 +235,8 @@
     <!-- Dropdown field for selecting the condition detection type. -->
     <string name="dropdown_label_condition_detection_type">检测类型</string>
     <string name="dropdown_item_title_detection_type_exact">精确位置</string>
+    <string name="dropdown_item_title_detection_type_in_area">区域</string>
     <string name="dropdown_item_title_detection_type_screen">全屏幕</string>
-    <string name="dropdown_helper_text_detection_type_exact">在截图选择的位置进行条件检测匹配</string>
-    <string name="dropdown_helper_text_detection_type_screen">在全屏幕进行条件检测匹配</string>
 
     <!-- Dropdown field for selecting the condition visibility. -->
     <string name="dropdown_label_condition_visibility">存在与否</string>

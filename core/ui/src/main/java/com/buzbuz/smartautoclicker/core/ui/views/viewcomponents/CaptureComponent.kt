@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.condition
+package com.buzbuz.smartautoclicker.core.ui.views.viewcomponents
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PointF
@@ -30,7 +29,8 @@ import android.view.ScaleGestureDetector
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.scale
 import com.buzbuz.smartautoclicker.core.translate
-import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 
 import kotlin.math.max
 import kotlin.math.min
@@ -39,16 +39,14 @@ import kotlin.math.min
  * Displays a bitmap and handles moving/zooming on it.
  *
  * @param context the Android context.
- * @param styledAttrs the styled attributes of the [ConditionSelectorView]
- * @param displayMetrics provides information about current display.
+ * @param captureStyle the style for this component.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal class CaptureComponent(
     context: Context,
-    styledAttrs: TypedArray,
-    displayMetrics: DisplayMetrics,
+    captureStyle: CaptureComponentStyle,
     viewInvalidator: () -> Unit,
-): ViewComponent(displayMetrics, viewInvalidator) {
+): ViewComponent(captureStyle, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move gesture. */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
@@ -84,15 +82,9 @@ internal class CaptureComponent(
     private val scaleGestureDetector = ScaleGestureDetector(context, scaleGestureListener)
 
     /** The minimum zoom value. */
-    private val zoomMin: Float = styledAttrs.getFloat(
-        R.styleable.ConditionSelectorView_minimumZoomValue,
-        DEFAULT_ZOOM_MINIMUM
-    )
+    private val zoomMin: Float = captureStyle.zoomMin
     /** The maximum zoom value. */
-    private val zoomMax: Float = styledAttrs.getFloat(
-        R.styleable.ConditionSelectorView_maximumZoomValue,
-        DEFAULT_ZOOM_MAXIMUM
-    )
+    private val zoomMax: Float = captureStyle.zoomMax
     /** The current zoom level*/
     var zoomLevel = 1f
         private set
@@ -206,7 +198,20 @@ internal class CaptureComponent(
     }
 }
 
+/**
+ * Style for [CaptureComponent].
+ *
+ * @param displayMetrics metrics for the device display.
+ * @param zoomMin the minimum zoom value.
+ * @param zoomMax the maximum zoom value.
+ */
+internal class CaptureComponentStyle(
+    displayMetrics: DisplayMetrics,
+    val zoomMin: Float,
+    val zoomMax: Float,
+) : ViewStyle(displayMetrics)
+
 /** The default minimum zoom value. */
-private const val DEFAULT_ZOOM_MINIMUM = 0.8f
+internal const val DEFAULT_ZOOM_MINIMUM = 0.8f
 /** The default maximum zoom value. */
-private const val DEFAULT_ZOOM_MAXIMUM = 3f
+internal const val DEFAULT_ZOOM_MAXIMUM = 3f

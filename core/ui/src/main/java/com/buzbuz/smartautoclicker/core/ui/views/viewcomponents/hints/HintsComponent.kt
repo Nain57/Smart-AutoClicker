@@ -14,58 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.condition.hints
+package com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.MotionEvent
 
+import androidx.annotation.DrawableRes
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.ui.views.ConditionSelectorView
-import com.buzbuz.smartautoclicker.core.ui.views.condition.ViewComponent
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-import com.buzbuz.smartautoclicker.core.ui.views.condition.GestureType
-import com.buzbuz.smartautoclicker.core.ui.views.condition.MoveSelector
-import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeBottom
-import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeLeft
-import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeRight
-import com.buzbuz.smartautoclicker.core.ui.views.condition.ResizeTop
-import com.buzbuz.smartautoclicker.core.ui.views.condition.ZoomCapture
-import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.GestureType
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.MoveSelector
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeBottom
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeLeft
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeRight
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeTop
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ZoomCapture
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 
 /**
  * Controls the hints and their animations state.
  *
  * @param context the Android Context.
- * @param styledAttrs the styled attributes of the [ConditionSelectorView]
- * @param displayMetrics object providing the current screen size.
+ * @param hintsStyle the style for the hints.
  * @param viewInvalidator calls invalidate on the view hosting this component.
  */
 internal class HintsComponent(
     context: Context,
-    styledAttrs: TypedArray,
-    displayMetrics: DisplayMetrics,
+    hintsStyle: HintsComponentStyle,
     viewInvalidator: () -> Unit,
-): ViewComponent(displayMetrics, viewInvalidator) {
+): ViewComponent(hintsStyle, viewInvalidator) {
 
     /** The distance between the hint and the selector border. */
-    private val iconsMargin: Int = styledAttrs.getDimensionPixelSize(
-        R.styleable.ConditionSelectorView_hintsIconsMargin,
-        DEFAULT_HINTS_ICON_MARGIN
-    )
+    private val iconsMargin: Int = hintsStyle.iconsMargin
     /** The size of the icons for the hints. */
-    private val iconsSize: Int = styledAttrs.getDimensionPixelSize(
-        R.styleable.ConditionSelectorView_hintsIconsSize,
-        DEFAULT_HINTS_ICON_SIZE
-    )
+    private val iconsSize: Int = hintsStyle.iconsSize
     /** The margin between the top of the selector and the pinch hint. */
-    private val pinchIconMargin: Int = styledAttrs.getDimensionPixelSize(
-        R.styleable.ConditionSelectorView_hintsPinchIconMargin,
-        DEFAULT_HINTS_PINCH_ICON_MARGIN
-    )
+    private val pinchIconMargin: Int = hintsStyle.pinchIconMargin ?: 0
 
     /** Map between a gesture type and its hint. */
     private val hintsIcons: Map<GestureType, Hint>
@@ -74,66 +62,61 @@ internal class HintsComponent(
 
     /** Initialize the list of hints. */
     init {
-        val moveIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintMoveIcon, 0)
-        val pinchIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintPinchIcon, 0)
-        val upIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeUpIcon, 0)
-        val downIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeDownIcon, 0)
-        val leftIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeLeftIcon, 0)
-        val rightIcon = styledAttrs.getResourceId(R.styleable.ConditionSelectorView_hintResizeRightIcon, 0)
         maxRect.set(maxArea.toRect())
-
-        hintsIcons = mapOf(
-            MoveSelector to SingleHint(
+        hintsIcons = buildMap {
+            put(MoveSelector, SingleHint(
                 context,
                 iconsSize,
                 maxRect,
-                moveIcon,
+                hintsStyle.moveIcon,
                 booleanArrayOf(true)
-            ),
-            ZoomCapture to SingleHint(
-                context,
-                iconsSize,
-                maxRect,
-                pinchIcon,
-                booleanArrayOf(false)
-            ),
-            ResizeBottom to DoubleHint(
+            ))
+            if (hintsStyle.pinchIcon != null) {
+                put(ZoomCapture, SingleHint(
+                    context,
+                    iconsSize,
+                    maxRect,
+                    hintsStyle.pinchIcon,
+                    booleanArrayOf(false)
+                ))
+            }
+            put(ResizeBottom, DoubleHint(
                 context,
                 iconsSize,
                 maxRect,
                 iconsMargin,
-                intArrayOf(upIcon, downIcon),
+                intArrayOf(hintsStyle.upIcon, hintsStyle.downIcon),
                 booleanArrayOf(true, false),
                 true
-            ),
-            ResizeTop to DoubleHint(
+            ))
+            put(ResizeTop, DoubleHint(
                 context,
                 iconsSize,
                 maxRect,
                 iconsMargin,
-                intArrayOf(upIcon, downIcon),
+                intArrayOf(hintsStyle.upIcon, hintsStyle.downIcon),
                 booleanArrayOf(false, true),
                 true
-            ),
-            ResizeRight to DoubleHint(
+            ))
+            put(ResizeRight, DoubleHint(
                 context,
                 iconsSize,
                 maxRect,
                 iconsMargin,
-                intArrayOf(leftIcon, rightIcon),
+                intArrayOf(hintsStyle.leftIcon, hintsStyle.rightIcon),
                 booleanArrayOf(true, false),
                 false
-            ),
-            ResizeLeft to DoubleHint(
+            ))
+            put(ResizeLeft, DoubleHint(
                 context,
                 iconsSize,
                 maxRect,
                 iconsMargin,
-                intArrayOf(leftIcon, rightIcon),
+                intArrayOf(hintsStyle.leftIcon, hintsStyle.rightIcon),
                 booleanArrayOf(false, true),
                 false
-            )
-        )
+            ))
+        }
     }
 
     /** The set of icons currently shown. */
@@ -216,9 +199,37 @@ internal class HintsComponent(
     }
 }
 
+/**
+ * Style for [HintsComponent].
+ *
+ * @param displayMetrics metrics for the device display.
+ * @param iconsMargin the distance between the hint and the selector border.
+ * @param iconsSize the size of the icons for the hints.
+ * @param moveIcon icon res for the moving hint.
+ * @param upIcon icon res for the resize up hint.
+ * @param downIcon icon res for the resize down hint.
+ * @param leftIcon icon res for the resize left hint.
+ * @param rightIcon icon res for the resize right hint.
+ * @param pinchIcon icon res for the resize pinch hint.
+ * @param pinchIconMargin the margin between the top of the selector and the pinch hint.
+ *
+ */
+internal class HintsComponentStyle(
+    displayMetrics: DisplayMetrics,
+    val iconsMargin: Int,
+    val iconsSize: Int,
+    @DrawableRes val moveIcon: Int,
+    @DrawableRes val upIcon: Int,
+    @DrawableRes val downIcon: Int,
+    @DrawableRes val leftIcon: Int,
+    @DrawableRes val rightIcon: Int,
+    @DrawableRes val pinchIcon: Int? = null,
+    val pinchIconMargin: Int? = null,
+) : ViewStyle(displayMetrics)
+
 /** The default distance between the hint and the selector border. */
-private const val DEFAULT_HINTS_ICON_MARGIN = 5
+internal const val DEFAULT_HINTS_ICON_MARGIN = 5
 /** The default size of the icons for the hints. */
-private const val DEFAULT_HINTS_ICON_SIZE = 10
+internal const val DEFAULT_HINTS_ICON_SIZE = 10
 /** The default margin between the top of the selector and the pinch hint. */
-private const val DEFAULT_HINTS_PINCH_ICON_MARGIN = 100
+internal const val DEFAULT_HINTS_PINCH_ICON_MARGIN = 100

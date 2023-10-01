@@ -62,6 +62,8 @@
     <string name="item_desc_click_on_condition_and_operator_not_found">Nessuna condizione selezionata</string>
     <string name="item_desc_click_on_condition_or_operator">L\'evento è impostato su Una condizione, non è possibile selezionarne uno specifico</string>
     <string name="item_desc_click_on_position">Clicca %1$d, %2$d</string>
+    <string name="item_desc_detection_type_exact">Alle [%1$d, %2$d] [%3$d, %4$d]</string>
+    <string name="item_desc_detection_type_in_area">Tra [%1$d, %2$d] [%3$d, %4$d]</string>
     <string name="item_desc_intent">Interagisci con un\'altra applicazione</string>
     <string name="item_desc_intent_action">Invia %1$s</string>
     <string name="item_desc_intent_action_component">Invia %1$s a %2$s</string>
@@ -83,6 +85,9 @@
     <string name="item_title_debug_report_available">Il rapporto di debug è disponibile</string>
     <string name="item_title_debug_report_not_available">Nessun rapporto di debug disponibile</string>
     <string name="item_title_debug_show_view">Mostra visualizzazione debug</string>
+    <string name="item_title_detection_type_exact">Rilevamento nella posizione catturata</string>
+    <string name="item_title_detection_type_in_area">Rilevamento su una parte dello schermo</string>
+    <string name="item_title_detection_type_screen">Rilevamento su tutto lo schermo</string>
     <string name="item_title_intent">Intento</string>
     <string name="item_title_pause">Attendi</string>
     <string name="item_title_swipe">Scorri</string>
@@ -228,9 +233,8 @@
     <!-- Dropdown field for selecting the condition detection type. -->
     <string name="dropdown_label_condition_detection_type">Tipo rilevamento</string>
     <string name="dropdown_item_title_detection_type_exact">Esatto</string>
+    <string name="dropdown_item_title_detection_type_in_area">Zona</string>
     <string name="dropdown_item_title_detection_type_screen">Schermo</string>
-    <string name="dropdown_helper_text_detection_type_exact">Il rilevamento della condizione si applica sulla posizione inserita</string>
-    <string name="dropdown_helper_text_detection_type_screen">Il rilevamento della condizione si applica su una qualsiasi parte dello schermo</string>
 
     <!-- Dropdown field for selecting the condition visibility. -->
     <string name="dropdown_label_condition_visibility">Visibilità</string>

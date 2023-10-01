@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginVertical="@dimen/margin_vertical_default"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_layout"
+        style="@style/AppTheme.Widget.InputDropdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
+        tools:helperText="Very long helper in order to take two lines just to check how it renders">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/text_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            tools:text="Option"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        style="@style/AppTheme.Widget.DividerSecondaryH"
+        android:layout_marginBottom="@dimen/margin_vertical_default"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_selector_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_big">
+
+        <ImageView
+            android:id="@+id/selector_icon"
+            android:layout_width="@dimen/dialog_choice_item_icon_size"
+            android:layout_height="@dimen/dialog_choice_item_icon_size"
+            android:layout_marginStart="@dimen/margin_horizontal_small"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/selector_title"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription"
+            tools:visibility="gone"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/selector_title"
+            style="@style/AppTheme.List.ItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/selector_subtext"
+            app:layout_constraintStart_toEndOf="@id/selector_icon"
+            app:layout_constraintEnd_toStartOf="@id/selector_chevron"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Click position"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/selector_subtext"
+            style="@style/AppTheme.List.ItemSubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintTop_toBottomOf="@id/selector_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/selector_icon"
+            app:layout_constraintEnd_toStartOf="@id/selector_chevron"
+            tools:text="Subtext for the selector"
+            tools:visibility="visible"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/selector_chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/selector_title"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chevron"
+            tools:ignore="ContentDescription"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

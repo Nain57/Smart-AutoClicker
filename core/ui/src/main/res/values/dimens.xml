@@ -42,6 +42,7 @@
     <dimen name="image_button_size">48dp</dimen>
     <dimen name="item_height">48dp</dimen>
     <dimen name="item_height_big">62dp</dimen>
+    <dimen name="item_selector">70dp</dimen>
 
     <dimen name="card_view_width_horizontal_list">100dp</dimen>
     <dimen name="card_view_height_horizontal_list">100dp</dimen>
