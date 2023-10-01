@@ -230,6 +230,10 @@ internal class ScenarioSerializer {
                 threshold = getInt("threshold")
                     ?.coerceIn(CONDITION_THRESHOLD_LOWER_BOUND, CONDITION_THRESHOLD_UPPER_BOUND)
                     ?: CONDITION_THRESHOLD_DEFAULT_VALUE,
+                detectionAreaLeft = getInt("detectionAreaLeft"),
+                detectionAreaTop = getInt("detectionAreaTop"),
+                detectionAreaRight = getInt("detectionAreaRight"),
+                detectionAreaBottom = getInt("detectionAreaBottom"),
             )
         }
     }
