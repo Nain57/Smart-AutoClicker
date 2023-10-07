@@ -16,9 +16,5 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="message_scenario_saving_error">Il tuo scenario non può essere salvato a causa di un errore interno. \nVuoi modificarlo o annullare tutte le tue modifiche?</string>
-    <string name="button_dialog_modify">Modificare</string>
-    <string name="dialog_title_tutorial_first_time">Tutorial</string>
-    <string name="message_tutorial_first_time">Congratulazioni, Smart AutoClicker è ora funzionante sul tuo dispositivo! \nVuoi seguire un tutorial che ti insegnerà le basi dell\'applicazione?</string>
-
+    <integer name="duration_morph_play_pause_ms">175</integer>
 </resources>

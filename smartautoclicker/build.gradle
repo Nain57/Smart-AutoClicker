@@ -145,6 +145,7 @@ dependencies {
     implementation project(path: ':feature:billing')
     implementation project(path: ':feature:floating-menu')
     implementation project(path: ':feature:scenario-config')
+    implementation project(path: ':feature:scenario-config-dumb')
     implementation project(path: ':feature:scenario-debugging')
     implementation project(path: ':feature:tutorial')
 }

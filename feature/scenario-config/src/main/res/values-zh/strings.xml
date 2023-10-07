@@ -264,10 +264,7 @@
     <string name="content_desc_conditions_count">本次事件的条件数</string>
     <string name="content_desc_actions_count">此事件中的操作数</string>
     <string name="content_desc_image_condition">要被检测的图像</string>
-    <string name="content_desc_play_pause_scenario">开始或者停止该脚本</string>
-    <string name="content_desc_stop_clicker">停止自动点击器</string>
     <string name="content_desc_open_event_list">打开脚本列表</string>
-    <string name="content_desc_move_menu">移动悬浮窗菜单</string>
     <string name="content_desc_confirm">确认</string>
     <string name="content_desc_go_back">返回到对话框</string>
     <string name="content_desc_action_icon">这个图标标注动作类型</string>

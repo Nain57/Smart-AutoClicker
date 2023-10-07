@@ -270,10 +270,7 @@
     <string name="content_desc_conditions_count">The number of conditions in this event</string>
     <string name="content_desc_actions_count">The number of actions in this event</string>
     <string name="content_desc_image_condition">The image to be detected</string>
-    <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
-    <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
     <string name="content_desc_open_event_list">Open the event list</string>
-    <string name="content_desc_move_menu">Move the floating menu</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_go_back">Back to dialog</string>
     <string name="content_desc_action_icon">The icon showing the type of action</string>
