@@ -29,12 +29,12 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.floatingmenu.R
 import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialog
@@ -66,10 +66,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayMenuBinding
-    /** Animation from play to pause. */
-    private lateinit var playToPauseDrawable: AnimatedVectorDrawableCompat
-    /** Animation from pause to play. */
-    private lateinit var pauseToPlayDrawable: AnimatedVectorDrawableCompat
+    /** Controls the animations of the play/pause button. */
+    private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
 
     private var billingFlowTriggeredByDetectionLimitation: Boolean = false
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
@@ -78,10 +76,17 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun animateOverlayView(): Boolean = false
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        playToPauseDrawable = AnimatedVectorDrawableCompat.create(context, R.drawable.anim_play_pause)!!
-        pauseToPlayDrawable = AnimatedVectorDrawableCompat.create(context, R.drawable.anim_pause_play)!!
+        playPauseButtonController = AnimatedStatesImageButtonController(
+            context = context,
+            state1StaticRes = R.drawable.ic_play_arrow,
+            state2StaticRes = R.drawable.ic_pause,
+            state1to2AnimationRes = R.drawable.anim_play_pause,
+            state2to1AnimationRes = R.drawable.anim_pause_play,
+        )
 
         viewBinding = OverlayMenuBinding.inflate(layoutInflater)
+        playPauseButtonController.attachView(viewBinding.btnPlay)
+
         return viewBinding.root
     }
 
@@ -141,6 +146,11 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         viewModel.stopViewMonitoring()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        playPauseButtonController.detachView()
+    }
+
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> {
@@ -179,26 +189,24 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         when (newState) {
             UiState.Idle -> {
                 if (currentState == null) {
-                    viewBinding.btnPlay.setImageResource(R.drawable.ic_play_arrow)
+                    playPauseButtonController.toState1(false)
                 } else {
                     animateLayoutChanges {
                         setMenuItemVisibility(viewBinding.btnStop, true)
                         setMenuItemVisibility(viewBinding.btnClickList, true)
-                        viewBinding.btnPlay.setImageDrawable(pauseToPlayDrawable)
-                        pauseToPlayDrawable.start()
+                        playPauseButtonController.toState1(true)
                     }
                 }
             }
 
             UiState.Detecting -> {
                 if (currentState == null) {
-                    viewBinding.btnPlay.setImageResource(R.drawable.ic_pause)
+                    playPauseButtonController.toState2(false)
                 } else {
                     animateLayoutChanges {
                         setMenuItemVisibility(viewBinding.btnStop, false)
                         setMenuItemVisibility(viewBinding.btnClickList, false)
-                        viewBinding.btnPlay.setImageDrawable(playToPauseDrawable)
-                        playToPauseDrawable.start()
+                        playPauseButtonController.toState2(true)
                     }
                 }
             }

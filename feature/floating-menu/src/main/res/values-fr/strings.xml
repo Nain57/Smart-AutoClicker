@@ -20,4 +20,5 @@
     <string name="button_dialog_modify">Modifier</string>
     <string name="dialog_title_tutorial_first_time">Tutoriel</string>
     <string name="message_tutorial_first_time">Félicitations, Smart AutoClicker est maintenant fonctionnel ! \nVoulez vous suivre le tutorial pour apprendre les bases de l\'application ?</string>
+
 </resources>

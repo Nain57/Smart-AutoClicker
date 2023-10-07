@@ -30,4 +30,7 @@
 
     <string name="content_desc_add_button">The button to create an element</string>
     <string name="content_desc_copy_button">The button to create a copy from an existing element</string>
+    <string name="content_desc_move_menu">Move the floating menu</string>
+    <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
+    <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
 </resources>

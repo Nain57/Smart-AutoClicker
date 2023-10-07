@@ -269,10 +269,7 @@
     <string name="content_desc_conditions_count">Il numero di condizioni in questo evento</string>
     <string name="content_desc_actions_count">Il numero di azioni in questo evento</string>
     <string name="content_desc_image_condition">L\'immagine da rilevare</string>
-    <string name="content_desc_play_pause_scenario">Avvia o ferma lo scenario</string>
-    <string name="content_desc_stop_clicker">Ferma Smart AutoClicker</string>
     <string name="content_desc_open_event_list">Apri la lista eventi</string>
-    <string name="content_desc_move_menu">Sposta il menù fluttuante</string>
     <string name="content_desc_confirm">Conferma</string>
     <string name="content_desc_go_back">Torna al dialogo</string>
     <string name="content_desc_action_icon">L\'icona che mostra il tipo di azione</string>
