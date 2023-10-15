@@ -1,0 +1,103 @@
+/*
+ * Copyright (C) 2023 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain
+
+import android.content.Context
+import android.util.Log
+
+import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
+internal class DumbEditionRepository private constructor(context: Context) {
+
+    companion object {
+
+        /** Tag for logs */
+        private const val TAG = "DumbEditionRepository"
+
+        /** Singleton preventing multiple instances of the DumbEditionRepository at the same time. */
+        @Volatile
+        private var INSTANCE: DumbEditionRepository? = null
+
+        /**
+         * Get the DumbEditionRepository singleton, or instantiates it if it wasn't yet.
+         * @param context the Android context.
+         * @return the DumbEditionRepository singleton.
+         */
+        fun getInstance(context: Context): DumbEditionRepository {
+            return INSTANCE ?: synchronized(this) {
+                val instance = DumbEditionRepository(context)
+                INSTANCE = instance
+                instance
+
+            }
+        }
+    }
+
+    /** The repository providing access to the database. */
+    private val dumbRepository: DumbRepository = DumbRepository.getRepository(context)
+
+    private val _editedDumbScenario: MutableStateFlow<DumbScenario?> = MutableStateFlow(null)
+    val editedDumbScenario: StateFlow<DumbScenario?> = _editedDumbScenario
+
+    val dumbActionBuilder: EditedDumbActionsBuilder = EditedDumbActionsBuilder()
+
+    /** Set the scenario to be configured. */
+    suspend fun startEdition(scenarioId: Long): Boolean {
+        val scenario = dumbRepository.getDumbScenario(scenarioId) ?: run {
+            Log.e(TAG, "Can't start edition, dumb scenario $scenarioId not found")
+            return false
+        }
+
+        Log.d(TAG, "Start edition of dumb scenario $scenarioId")
+
+        _editedDumbScenario.value = scenario
+        dumbActionBuilder.startEdition(scenario.id)
+
+        return true
+    }
+
+    /** Save editions changes in the database. */
+    suspend fun saveEditions() {
+        val scenarioToSave = _editedDumbScenario.value ?: return
+        Log.d(TAG, "Save editions")
+
+        dumbRepository.updateDumbScenario(scenarioToSave)
+    }
+
+    fun addNewDumbAction(dumbAction: DumbAction) {
+        val editedScenario = _editedDumbScenario.value ?: return
+        _editedDumbScenario.value = editedScenario.copy(
+            dumbActions = editedScenario.dumbActions.toMutableList().apply {
+                add(dumbAction)
+            }
+        )
+    }
+
+    fun updateDumbScenario(dumbScenario: DumbScenario) {
+        _editedDumbScenario.value = dumbScenario
+    }
+
+    fun stopEdition() {
+        _editedDumbScenario.value = null
+        dumbActionBuilder.clearState()
+    }
+}
