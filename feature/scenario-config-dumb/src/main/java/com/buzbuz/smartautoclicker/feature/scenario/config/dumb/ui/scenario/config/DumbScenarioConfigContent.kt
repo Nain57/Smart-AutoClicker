@@ -27,6 +27,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_ACTION_MAX_REPEAT_COUNT
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_SCENARIO_MAX_DURATION_MINUTES
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
@@ -44,6 +45,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setO
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setRepeatCount
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioViewModel
+import kotlinx.coroutines.flow.collect
 
 import kotlinx.coroutines.launch
 
@@ -103,6 +105,7 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
                 launch { dialogViewModel.maxDurationMin.collect(viewBinding.maxDurationInputField::setRepeatCount) }
                 launch { dialogViewModel.maxDurationMinError.collect(viewBinding.maxDurationInputField::setError) }
                 launch { dialogViewModel.maxDurationMinInfiniteState.collect(viewBinding.maxDurationInputField::setInfiniteState) }
+                launch { dialogViewModel.randomization.collect(viewBinding.scenarioRandomization::setSelectedItem) }
             }
         }
     }

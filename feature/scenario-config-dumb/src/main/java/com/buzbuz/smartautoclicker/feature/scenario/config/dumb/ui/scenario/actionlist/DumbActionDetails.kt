@@ -60,7 +60,7 @@ private fun DumbAction.DumbClick.toClickDetails(context: Context, inError: Boole
                 formatDuration(pressDurationMs), position.x, position.y,
             )
         },
-        repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count),
+        repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count, repeatCount),
         haveError = inError,
         action = this,
     )
@@ -76,7 +76,7 @@ private fun DumbAction.DumbSwipe.toSwipeDetails(context: Context, inError: Boole
                 formatDuration(swipeDurationMs), fromPosition.x, fromPosition.y, toPosition.x, toPosition.y
             )
         },
-        repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count),
+        repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count, repeatCount),
         haveError = inError,
         action = this,
     )
