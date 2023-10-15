@@ -53,6 +53,7 @@ internal class DumbEngine {
 
     fun startDumbScenario(dumbScenario: DumbScenario) {
         if (_isRunning.value) return
+        if (dumbScenario.dumbActions.isEmpty()) return
         _isRunning.value = true
 
         Log.d(TAG, "startDumbScenario ${dumbScenario.id} with ${dumbScenario.dumbActions.size} actions")

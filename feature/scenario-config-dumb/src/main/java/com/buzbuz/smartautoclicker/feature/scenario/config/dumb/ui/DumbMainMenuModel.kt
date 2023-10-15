@@ -23,15 +23,21 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
+import kotlinx.coroutines.Dispatchers
 
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class DumbMainMenuModel(application: Application) : AndroidViewModel(application) {
 
+    private val dumbRepository: DumbRepository = DumbRepository.getRepository(application)
     private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
+
+    val isPlaying: StateFlow<Boolean> = dumbRepository.isEngineRunning
 
     fun startEdition(dumbScenarioId: Identifier) {
         viewModelScope.launch {
@@ -53,7 +59,7 @@ class DumbMainMenuModel(application: Application) : AndroidViewModel(application
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
 
     fun addNewDumbAction(dumbAction: DumbAction) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.apply {
                 addNewDumbAction(dumbAction)
                 saveEditions()
@@ -62,10 +68,19 @@ class DumbMainMenuModel(application: Application) : AndroidViewModel(application
     }
 
     fun updateDumbScenario(dumbScenario: DumbScenario) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.apply {
                 updateDumbScenario(dumbScenario)
                 saveEditions()
+            }
+        }
+    }
+
+    fun toggleScenarioPlay() {
+        dumbEditionRepository.editedDumbScenario.value?.let { dumbScenario ->
+            viewModelScope.launch {
+                if (isPlaying.value) dumbRepository.stopDumbScenarioExecution()
+                else dumbRepository.startDumbScenarioExecution(dumbScenario)
             }
         }
     }

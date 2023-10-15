@@ -46,8 +46,7 @@ class DumbScenarioDialog(
     /** View model for this dialog. */
     private val viewModel: DumbScenarioViewModel by viewModels()
 
-    override val navigationMenuId: Int =
-        R.menu.menu_scenario_config
+    override val navigationMenuId: Int = R.menu.menu_dumb_scenario_config
 
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
