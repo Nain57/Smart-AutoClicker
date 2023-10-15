@@ -61,7 +61,7 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
         .mapNotNull { it.value }
 
     /** The event name value currently edited by the user. */
-    val scenarioName: Flow<String> =  configuredScenario
+    val scenarioName: Flow<String> = configuredScenario
         .map { it.name }
         .filterNotNull()
         .take(1)

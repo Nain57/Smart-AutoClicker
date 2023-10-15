@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 import android.graphics.Bitmap
 import android.media.Image
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
@@ -32,7 +33,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.processing.data.ActionExecutor
-import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.processing.data.EndConditionVerifier
 import com.buzbuz.smartautoclicker.core.processing.data.ScenarioState
 

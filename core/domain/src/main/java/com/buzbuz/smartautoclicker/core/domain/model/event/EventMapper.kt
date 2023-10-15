@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.event
 
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.toAction
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toCondition
 

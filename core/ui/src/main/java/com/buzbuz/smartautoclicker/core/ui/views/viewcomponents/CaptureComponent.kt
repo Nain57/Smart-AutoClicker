@@ -25,10 +25,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import com.buzbuz.smartautoclicker.core.base.extensions.scale
+import com.buzbuz.smartautoclicker.core.base.extensions.translate
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-import com.buzbuz.smartautoclicker.core.scale
-import com.buzbuz.smartautoclicker.core.translate
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 

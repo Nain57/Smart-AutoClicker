@@ -19,4 +19,17 @@
     <string name="content_desc_add_action">Add a new action to the scenario</string>
     <string name="content_desc_show_actions">Show or hide the actions created</string>
     <string name="content_desc_open_action_list">Open the list of actions</string>
+    <string name="item_desc_dumb_click_on_position">Click at %1$d, %2$d</string>
+    <string name="item_desc_dumb_swipe_positions">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
+    <string name="item_desc_dumb_click_details">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
+    <string name="item_desc_dumb_pause_details">延迟 %1$s</string>
+    <string name="item_desc_dumb_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
+    <string name="menu_item_title_dumb_actions">Actions</string>
+    <string name="menu_item_title_dumb_config">Config</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">Scenario</string>
+    <string name="input_field_label_maximum_duration">Maximum duration (minutes)</string>
+    <string name="message_empty_dumb_action_list">No actions created !</string>
+    <string name="message_empty_secondary_dumb_action_list">You need at least one action to run the scenario</string>
+    <string name="item_desc_dumb_repeat_count">Repeat %1$d times</string>
+    <string name="input_field_label_repeat_delay">Repeat delay (ms)</string>
 </resources>

@@ -20,7 +20,7 @@ import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.RectF
 
-import com.buzbuz.smartautoclicker.core.extensions.nextFloat
+import com.buzbuz.smartautoclicker.core.base.extensions.nextFloat
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlin.random.Random

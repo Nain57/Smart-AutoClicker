@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 /** @return the entity equivalent of this intent extra. */
 internal fun <T> IntentExtra<T>.toEntity(): IntentExtraEntity {

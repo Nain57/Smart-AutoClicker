@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.data
 
 import android.util.Log
 import androidx.room.withTransaction
+import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
@@ -38,7 +39,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEndConditions
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition

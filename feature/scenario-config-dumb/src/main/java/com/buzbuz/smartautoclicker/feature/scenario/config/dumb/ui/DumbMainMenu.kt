@@ -16,16 +16,31 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 
+import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.CoordinatesSelector
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbMainMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionTypeChoice
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.allDumbActionChoices
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click.DumbClickDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.pause.DumbPauseDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe.DumbSwipeDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
 
-class DumbMainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
+class DumbMainMenu(
+    private val dumbScenarioId: Identifier,
+    private val onStopClicked: () -> Unit,
+) : OverlayMenu() {
 
     /** The view model for this menu. */
     private val viewModel: DumbMainMenuModel by viewModels()
@@ -36,6 +51,8 @@ class DumbMainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
+        viewModel.startEdition(dumbScenarioId)
+
         playPauseButtonController = AnimatedStatesImageButtonController(
             context = context,
             state1StaticRes = R.drawable.ic_play_arrow,
@@ -44,8 +61,11 @@ class DumbMainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             state2to1AnimationRes = R.drawable.anim_pause_play,
         )
 
-        viewBinding = OverlayDumbMainMenuBinding.inflate(layoutInflater)
-        playPauseButtonController.attachView(viewBinding.btnPlay)
+        viewBinding = OverlayDumbMainMenuBinding.inflate(layoutInflater).apply {
+            playPauseButtonController.attachView(btnPlay)
+            btnAdd.setOnClickListener { onAddButtonClicked() }
+            btnActionList.setOnClickListener { onDumbScenarioConfigClicked() }
+        }
 
         return viewBinding.root
     }
@@ -53,5 +73,106 @@ class DumbMainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onDestroy() {
         super.onDestroy()
         playPauseButtonController.detachView()
+        viewModel.stopEdition()
+    }
+
+    private fun onAddButtonClicked() {
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = MultiChoiceDialog(
+                theme = R.style.AppTheme,
+                dialogTitleText = R.string.dialog_overlay_title_dumb_action_type,
+                choices = allDumbActionChoices(),
+                onChoiceSelected = { choice ->
+                    when (choice) {
+                        DumbActionTypeChoice.Click -> onDumbClickCreationSelected()
+                        DumbActionTypeChoice.Swipe -> onDumbSwipeCreationSelected()
+                        DumbActionTypeChoice.Pause -> onDumbPauseCreationSelected()
+                    }
+                }
+            )
+        )
+    }
+
+    private fun onDumbClickCreationSelected() {
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = ClickSwipeSelectorMenu(
+                selector = CoordinatesSelector.One(),
+                onCoordinatesSelected = { selector ->
+                    onDumbClickPositionSelected((selector as CoordinatesSelector.One).coordinates)
+                }
+            ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun onDumbClickPositionSelected(position: Point?) {
+        position ?: return
+
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = DumbClickDialog(
+                dumbClick = viewModel.createNewDumbClick(position),
+                onConfirmClicked = viewModel::addNewDumbAction,
+                onDeleteClicked = {},
+                onDismissClicked = {},
+            ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun onDumbSwipeCreationSelected() {
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = ClickSwipeSelectorMenu(
+                selector = CoordinatesSelector.One(),
+                onCoordinatesSelected = { selector ->
+                    (selector as CoordinatesSelector.Two).let { two ->
+                        onDumbSwipePositionSelected(two.coordinates1, two.coordinates2)
+                    }
+                }
+            ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun onDumbSwipePositionSelected(from: Point?, to: Point?) {
+        if (from == null || to == null) return
+
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = DumbSwipeDialog(
+                dumbSwipe = viewModel.createNewDumbSwipe(from, to),
+                onConfirmClicked = viewModel::addNewDumbAction,
+                onDeleteClicked = {},
+                onDismissClicked = {},
+            ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun onDumbPauseCreationSelected() {
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = DumbPauseDialog(
+                dumbPause = viewModel.createNewDumbPause(),
+                onConfirmClicked = viewModel::addNewDumbAction,
+                onDeleteClicked = {},
+                onDismissClicked = {},
+            ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun onDumbScenarioConfigClicked() {
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = DumbScenarioDialog(
+                onNewConfig = viewModel::updateDumbScenario,
+                onConfigDiscarded = {},
+            ),
+            hideCurrent = true,
+        )
     }
 }

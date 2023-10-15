@@ -26,12 +26,54 @@
       - Text input fields labels and error messages.
       - Should be short and concise.
       -->
+    <string name="input_field_label_anti_detection">Anti détection</string>
+    <string name="input_field_label_click_press_duration">Durée d\'appui (ms)</string>
     <string name="input_field_label_name">Nom</string>
+    <string name="input_field_label_pause_duration">Durée de la pause (ms)</string>
+    <string name="input_field_label_scenario_name">Nom du scénario</string>
+    <string name="input_field_label_swipe_duration">Durée du swipe (ms)</string>
+    <string name="input_field_error_required">Requis</string>
 
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_error_action_invalid_generic">Cette action est invalide</string>
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
+    <!-- Dropdown field for selecting anti bot state -->
+    <string name="dropdown_item_title_anti_detection_enabled">Activé</string>
+    <string name="dropdown_item_title_anti_detection_disabled">Désactivé</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">Ajoute une petite part de hasard dans les positions et durées des clics, swipes et pauses</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">Exécute les actions comme elles sont déclarées</string>
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_configure_single_click">Appuyez sur la position à cliquer</string>
+    <string name="toast_configure_swipe_from">Appuyez sur la position de départ</string>
+    <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
     <string name="content_desc_add_button">Le button pour créer un élément</string>
     <string name="content_desc_copy_button">Le button pour créer une copie à partir d\'un élément existant</string>
     <string name="content_desc_move_menu">Déplacer le menu flottant</string>
     <string name="content_desc_play_pause_scenario">Jouer ou arrêter le scenario</string>
     <string name="content_desc_stop_clicker">Quitter Smart AutoClicker</string>
-
+    <string name="content_desc_confirm">Confirmer</string>
+    <string name="content_desc_go_back">Retour au dialog</string>
 </resources>

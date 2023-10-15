@@ -76,7 +76,6 @@
     <string name="item_desc_swipe_positions">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
     <string name="item_desc_toggle_event">启用或禁用某场景</string>
     <string name="item_desc_toggle_event_details">将场景状态设置为： %1$s</string>
-    <string name="item_error_action_invalid_generic">"此操作无效 "</string>
     <string name="item_error_action_invalid_toggle_event_target">"未找到目标事件 "</string>
     <string name="item_title_click">单击</string>
     <string name="item_title_click_on_condition_and_operator">单击一个条件</string>
@@ -126,14 +125,6 @@
     <string name="message_tutorial_start">了解如何使用 Smart AutoClicker</string>
 
     <!--
-      - Toast messages.
-      - Can be pretty long (2 lines).
-      -->
-    <string name="toast_configure_single_click">触摸要点击的位置。</string>
-    <string name="toast_configure_swipe_from">请点击滑动开始的位置。</string>
-    <string name="toast_configure_swipe_to">请点击滑动结束的位置。</string>
-
-    <!--
       - Section titles.
       - Should be short and concise.
       -->
@@ -180,15 +171,9 @@
       - Should be short and concise.
       -->
     <string name="input_field_label_name">名称</string>
-    <string name="input_field_label_click_press_duration">单击持续时间 (ms)</string>
     <string name="input_field_label_execution_count">执行次数</string>
     <string name="input_field_label_intent_extra_key">参数名</string>
-    <string name="input_field_label_pause_duration">延迟 (ms)</string>
-    <string name="input_field_label_scenario_name">脚本名</string>
-    <string name="input_field_label_swipe_duration">滑动持续时间 (ms)</string>
-    <string name="input_field_label_anti_detection">反作弊</string>
     <string name="input_field_label_event_state">状态</string>
-    <string name="input_field_error_required">不能为空</string>
     <string name="input_field_toggle_event_type">场景新状态</string>
 
     <!--
@@ -199,12 +184,6 @@
       -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
       -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
       -->
-
-    <!-- Dropdown field for selecting anti bot state -->
-    <string name="dropdown_item_title_anti_detection_enabled">启用</string>
-    <string name="dropdown_item_title_anti_detection_disabled">禁用</string>
-    <string name="dropdown_helper_text_anti_detection_enabled">在单击、滑动和等待中，增加一个很小的随机值，使点击、滑动的坐标以及延迟时间有一定的差异。</string>
-    <string name="dropdown_helper_text_anti_detection_disabled">不启用防作弊，按照设置的值执行</string>
 
     <!-- Dropdown field for selecting the event state -->
     <string name="dropdown_item_title_event_state_enabled">启用</string>
@@ -265,8 +244,6 @@
     <string name="content_desc_actions_count">此事件中的操作数</string>
     <string name="content_desc_image_condition">要被检测的图像</string>
     <string name="content_desc_open_event_list">打开脚本列表</string>
-    <string name="content_desc_confirm">确认</string>
-    <string name="content_desc_go_back">返回到对话框</string>
     <string name="content_desc_action_icon">这个图标标注动作类型</string>
     <string name="content_desc_application_icon">应用图标</string>
 </resources>

@@ -23,6 +23,7 @@ import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
@@ -109,7 +110,7 @@ internal class DetectorEngine(context: Context) {
         context: Context,
         resultCode: Int,
         data: Intent,
-        androidExecutor: AndroidExecutor
+        androidExecutor: AndroidExecutor,
     ) {
         if (_state.value != DetectorState.CREATED) {
             Log.w(TAG, "startScreenRecord: Screen record is already started")

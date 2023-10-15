@@ -21,6 +21,7 @@ import android.text.InputType
 import android.view.inputmethod.EditorInfo
 
 import androidx.annotation.StringRes
+import com.buzbuz.smartautoclicker.core.ui.R
 
 import com.buzbuz.smartautoclicker.core.ui.utils.OnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldTextBinding
@@ -35,6 +36,10 @@ fun IncludeInputFieldTextBinding.setText(text: String?, type: Int = InputType.TY
         imeOptions = EditorInfo.IME_ACTION_DONE
         textField.setText(text)
     }
+}
+
+fun IncludeInputFieldTextBinding.setError(isError: Boolean) {
+    setError(R.string.input_field_error_required, isError)
 }
 
 fun IncludeInputFieldTextBinding.setError(@StringRes messageId: Int, isError: Boolean) {

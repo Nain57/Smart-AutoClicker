@@ -26,11 +26,54 @@
       - Text input fields labels and error messages.
       - Should be short and concise.
       -->
+    <string name="input_field_label_anti_detection">反作弊</string>
+    <string name="input_field_label_click_press_duration">单击持续时间 (ms)</string>
     <string name="input_field_label_name">名称</string>
+    <string name="input_field_label_pause_duration">延迟 (ms)</string>
+    <string name="input_field_label_scenario_name">脚本名</string>
+    <string name="input_field_label_swipe_duration">滑动持续时间 (ms)</string>
+    <string name="input_field_error_required">不能为空</string>
 
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_error_action_invalid_generic">"此操作无效 "</string>
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
+    <!-- Dropdown field for selecting anti bot state -->
+    <string name="dropdown_item_title_anti_detection_enabled">启用</string>
+    <string name="dropdown_item_title_anti_detection_disabled">禁用</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">在单击、滑动和等待中，增加一个很小的随机值，使点击、滑动的坐标以及延迟时间有一定的差异。</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">不启用防作弊，按照设置的值执行</string>
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_configure_single_click">触摸要点击的位置。</string>
+    <string name="toast_configure_swipe_from">请点击滑动开始的位置。</string>
+    <string name="toast_configure_swipe_to">请点击滑动结束的位置。</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
     <string name="content_desc_add_button">The button to create an element</string>
     <string name="content_desc_copy_button">The button to create a copy from an existing element</string>
     <string name="content_desc_move_menu">移动悬浮窗菜单</string>
     <string name="content_desc_play_pause_scenario">开始或者停止该脚本</string>
     <string name="content_desc_stop_clicker">停止自动点击器</string>
+    <string name="content_desc_confirm">确认</string>
+    <string name="content_desc_go_back">返回到对话框</string>
 </resources>

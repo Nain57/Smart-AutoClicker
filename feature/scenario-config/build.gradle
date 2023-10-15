@@ -55,7 +55,7 @@ dependencies {
 
     implementation project(path: ':core:display')
     implementation project(path: ':core:domain')
-    implementation project(path: ':core:extensions')
+    implementation project(path: ':core:base')
     implementation project(path: ':core:processing')
     implementation project(path: ':core:ui')
     implementation project(path: ':feature:billing')

@@ -17,8 +17,56 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 
 import android.app.Application
+import android.graphics.Point
+
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
+
+import kotlinx.coroutines.launch
 
 class DumbMainMenuModel(application: Application) : AndroidViewModel(application) {
 
+    private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
+
+    fun startEdition(dumbScenarioId: Identifier) {
+        viewModelScope.launch {
+            dumbEditionRepository.startEdition(dumbScenarioId.databaseId)
+        }
+    }
+
+    fun stopEdition() {
+        dumbEditionRepository.stopEdition()
+    }
+
+    fun createNewDumbClick(position: Point): DumbAction.DumbClick =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbClick(getApplication(), position)
+
+    fun createNewDumbSwipe(from: Point, to: Point): DumbAction.DumbSwipe =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbSwipe(getApplication(), from, to)
+
+    fun createNewDumbPause(): DumbAction.DumbPause =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
+
+    fun addNewDumbAction(dumbAction: DumbAction) {
+        viewModelScope.launch {
+            dumbEditionRepository.apply {
+                addNewDumbAction(dumbAction)
+                saveEditions()
+            }
+        }
+    }
+
+    fun updateDumbScenario(dumbScenario: DumbScenario) {
+        viewModelScope.launch {
+            dumbEditionRepository.apply {
+                updateDumbScenario(dumbScenario)
+                saveEditions()
+            }
+        }
+    }
 }

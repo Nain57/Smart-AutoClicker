@@ -91,10 +91,22 @@
     <string name="button_request_permission">Requête de permission</string>
     <string name="button_deny">Refuser</string>
 
+    <string name="default_scenario_name">Default name</string>
+
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
     <string name="content_desc_add_scenario">Créer un nouveau scénario</string>
+    <string name="section_title_scenario_type_title">Scenario type</string>
+    <string name="item_title_dumb_scenario">Simple</string>
+    <string name="item_title_smart_scenario">Smart</string>
+    <string name="item_desc_dumb_scenario">The regular auto clicker experience.\nSimply place clicks and swipes on the screen.</string>
+    <string name="item_desc_smart_scenario">Use image detection to create complex use cases.\nContains paid limitations.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Use image detection to create complex use cases.</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">Infinite repeat</string>
+    <string name="item_desc_dumb_scenario_repeat_count">Repeat %1$d times</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">No max duration</string>
+    <string name="item_desc_dumb_scenario_max_duration">Stop after %1$s</string>
 
 </resources>

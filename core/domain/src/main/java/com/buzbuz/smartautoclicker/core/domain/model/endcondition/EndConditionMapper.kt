@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.endcondition
 
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionWithEvent
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 /** @return the entity equivalent of this end condition. */
 internal fun EndCondition.toEntity(): EndConditionEntity {

@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.Intent
 
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 /**
  * Extras for a Intent action.

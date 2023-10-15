@@ -21,7 +21,6 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.processing.data.ScenarioState
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData
 
 import org.junit.Assert

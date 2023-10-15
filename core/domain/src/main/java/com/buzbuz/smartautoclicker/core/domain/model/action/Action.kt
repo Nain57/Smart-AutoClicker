@@ -20,7 +20,7 @@ import android.content.ComponentName
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 
 import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 /** Base for for all possible actions for an Event. */
 sealed class Action {
@@ -210,6 +210,3 @@ sealed class Action {
         override fun deepCopy(): ToggleEvent = copy(name = "" + name)
     }
 }
-
-/** The maximum supported duration for a gesture. This limitation comes from Android GestureStroke API.  */
-const val GESTURE_DURATION_MAX_VALUE = 59_999L

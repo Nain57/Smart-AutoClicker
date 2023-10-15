@@ -21,13 +21,17 @@ import android.content.Intent
 import android.graphics.Path
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.extensions.getRandomizedDuration
+import com.buzbuz.smartautoclicker.core.base.extensions.getRandomizedGestureDuration
+import com.buzbuz.smartautoclicker.core.base.extensions.lineTo
+import com.buzbuz.smartautoclicker.core.base.extensions.moveTo
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.domain.model.action.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ProcessingResults
@@ -35,8 +39,6 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.ProcessingResu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -49,10 +51,10 @@ import kotlin.random.Random
 internal class ActionExecutor(
     private val androidExecutor: AndroidExecutor,
     private val scenarioEditor: ScenarioEditor,
-    private val randomize: Boolean,
+    randomize: Boolean,
 ) {
 
-    private val random = Random(System.currentTimeMillis())
+    private val random: Random? = if (randomize) Random(System.currentTimeMillis()) else null
 
     /**
      * Execute the provided actions.
@@ -81,7 +83,7 @@ internal class ActionExecutor(
 
         when (click.positionType) {
             Click.PositionType.USER_SELECTED ->
-                clickPath.moveTo(click.x!!, click.y!!, randomize)
+                clickPath.moveTo(click.x!!, click.y!!, random)
 
             Click.PositionType.ON_DETECTED_CONDITION -> {
                 val result = when {
@@ -97,7 +99,7 @@ internal class ActionExecutor(
                     return
                 }
 
-                clickPath.moveTo(result.position.x, result.position.y, randomize)
+                clickPath.moveTo(result.position.x, result.position.y, random)
             }
         }
 
@@ -105,7 +107,7 @@ internal class ActionExecutor(
             GestureDescription.StrokeDescription(
                 clickPath,
                 0,
-                if (randomize) random.getRandomizedGestureDuration(click.pressDuration!!) else click.pressDuration!!,
+                random?.getRandomizedGestureDuration(click.pressDuration!!) ?: click.pressDuration!!,
             )
         )
 
@@ -122,13 +124,13 @@ internal class ActionExecutor(
         val swipePath = Path()
         val swipeBuilder = GestureDescription.Builder()
 
-        swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, randomize)
-        swipePath.lineTo(swipe.toX!!, swipe.toY!!, randomize)
+        swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, random)
+        swipePath.lineTo(swipe.toX!!, swipe.toY!!, random)
         swipeBuilder.addStroke(
             GestureDescription.StrokeDescription(
                 swipePath,
                 0,
-                if (randomize) random.getRandomizedGestureDuration(swipe.swipeDuration!!) else swipe.swipeDuration!!,
+                random?.getRandomizedGestureDuration(swipe.swipeDuration!!) ?: swipe.swipeDuration!!,
             )
         )
 
@@ -142,7 +144,7 @@ internal class ActionExecutor(
      * @param pause the pause to be executed.
      */
     private suspend fun executePause(pause: Pause) {
-        delay(if (randomize) random.getRandomizedDuration(pause.pauseDuration!!) else pause.pauseDuration!!)
+        delay(random?.getRandomizedDuration(pause.pauseDuration!!) ?: pause.pauseDuration!!)
     }
 
     /**
@@ -181,44 +183,6 @@ internal class ActionExecutor(
     private fun executeToggleEvent(toggleEvent: ToggleEvent) {
         scenarioEditor.changeEventState(toggleEvent.toggleEventId!!.databaseId, toggleEvent.toggleEventType!!)
     }
-
-    private fun Path.moveTo(x: Int, y: Int, randomize: Boolean) {
-        if (!randomize) moveTo(x.toFloat(), y.toFloat())
-        else moveTo(random.getRandomizedPosition(x), random.getRandomizedPosition(y))
-    }
-
-    private fun Path.lineTo(x: Int, y: Int, randomize: Boolean) {
-        if (!randomize) lineTo(x.toFloat(), y.toFloat())
-        else lineTo(random.getRandomizedPosition(x), random.getRandomizedPosition(y))
-    }
-
-    private fun Random.getRandomizedPosition(position: Int): Float = nextInt(
-        from = max(position - RANDOMIZATION_POSITION_MAX_OFFSET_PX, 0),
-        until = position + RANDOMIZATION_POSITION_MAX_OFFSET_PX + 1,
-    ).toFloat()
-
-    private fun Random.getRandomizedDuration(duration: Long): Long = nextLong(
-        from = max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
-        until = duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1,
-    )
-
-    private fun Random.getRandomizedGestureDuration(duration: Long): Long = nextLong(
-        from = max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
-        until = min(duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1, GESTURE_DURATION_MAX_VALUE),
-    )
-}
-
-/** Execute the actions related to Android. */
-interface AndroidExecutor {
-
-    /** Execute the provided gesture. */
-    suspend fun executeGesture(gestureDescription: GestureDescription)
-
-    /** Start the activity defined by the provided intent. */
-    fun executeStartActivity(intent: Intent)
-
-    /** Send a broadcast defined by the provided intent. */
-    fun executeSendBroadcast(intent: Intent)
 }
 
 /** Execute the actions related to the scenario processing modifications. */
@@ -234,7 +198,3 @@ private const val TAG = "ActionExecutor"
 private const val INTENT_START_ACTIVITY_DELAY = 1000L
 /** Waiting delay after a broadcast to avoid overflowing the system. */
 private const val INTENT_BROADCAST_DELAY = 100L
-/** */
-private const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
-/** */
-private const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5

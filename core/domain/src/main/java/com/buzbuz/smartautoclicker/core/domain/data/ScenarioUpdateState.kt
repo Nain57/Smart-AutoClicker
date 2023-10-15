@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain.data
 
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
 internal class ScenarioUpdateState {
