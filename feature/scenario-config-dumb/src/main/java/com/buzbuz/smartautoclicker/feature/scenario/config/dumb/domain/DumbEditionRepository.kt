@@ -90,6 +90,8 @@ internal class DumbEditionRepository private constructor(context: Context) {
     }
 
     fun stopEdition() {
+        Log.d(TAG, "Stop editions")
+
         _editedDumbScenario.value = null
         dumbActionBuilder.clearState()
     }

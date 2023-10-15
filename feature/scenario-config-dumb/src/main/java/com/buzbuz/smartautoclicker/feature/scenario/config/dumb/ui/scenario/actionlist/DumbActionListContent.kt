@@ -31,32 +31,41 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.dialogViewModels
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click.DumbClickDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.pause.DumbPauseDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe.DumbSwipeDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioViewModel
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionUiFlowListener
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCreationUiFlow
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbClickEditionUiFlow
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbPauseEditionFlow
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbSwipeEditionFlow
 
 import kotlinx.coroutines.launch
 
 class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
-    private val dialogViewModel: DumbScenarioViewModel by dialogViewModels()
+    private val viewModel: DumbActionListViewModel by viewModels()
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of actions. */
     private lateinit var dumbActionsAdapter: DumbActionListAdapter
+
+    private lateinit var createActionUiFlowListener: DumbActionUiFlowListener
+    private lateinit var updateActionUiFlowListener: DumbActionUiFlowListener
+
+
     /** TouchHelper applied to [dumbActionsAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(DumbActionReorderTouchHelper())
+
+    override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         dumbActionsAdapter = DumbActionListAdapter(
             actionClickedListener = ::onDumbActionClicked,
-            actionReorderListener = dialogViewModel::updateDumbActionOrder,
+            actionReorderListener = viewModel::updateDumbActionOrder,
         )
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
@@ -75,10 +84,37 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     override fun onViewCreated() {
+        dialogController.createCopyButtons.buttonCopy.hide()
+
+        createActionUiFlowListener = DumbActionUiFlowListener(
+            onDumbActionSaved = viewModel::addNewDumbAction,
+            onDumbActionDeleted = {},
+            onDumbActionCreationCancelled = {},
+        )
+        updateActionUiFlowListener = DumbActionUiFlowListener(
+            onDumbActionSaved = viewModel::updateDumbAction,
+            onDumbActionDeleted = viewModel::deleteDumbAction,
+            onDumbActionCreationCancelled = {},
+        )
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { dialogViewModel.dumbActionsDetails.collect(::updateDumbActionList) }
+                launch { viewModel.dumbActionsDetails.collect(::updateDumbActionList) }
             }
+        }
+    }
+
+    override fun onCreateButtonClicked() {
+        debounceUserInteraction {
+            OverlayManager.getInstance(context).startDumbActionCreationUiFlow(
+                context = context,
+                creator = DumbActionCreator(
+                    createNewDumbClick = viewModel::createNewDumbClick,
+                    createNewDumbSwipe = viewModel::createNewDumbSwipe,
+                    createNewDumbPause = viewModel::createNewDumbPause,
+                ),
+                listener = createActionUiFlowListener,
+            )
         }
     }
 
@@ -91,41 +127,26 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun onDumbClickClicked(dumbClick: DumbAction.DumbClick) {
-        OverlayManager.getInstance(context).navigateTo(
+        OverlayManager.getInstance(context).startDumbClickEditionUiFlow(
             context = context,
-            newOverlay = DumbClickDialog(
-                dumbClick = dumbClick,
-                onConfirmClicked = dialogViewModel::updateDumbAction,
-                onDeleteClicked = { dialogViewModel.deleteDumbAction(dumbClick) },
-                onDismissClicked = {},
-            ),
-            hideCurrent = true,
+            dumbClick = dumbClick,
+            listener = updateActionUiFlowListener,
         )
     }
 
     private fun onDumbSwipeClicked(dumbSwipe: DumbAction.DumbSwipe) {
-        OverlayManager.getInstance(context).navigateTo(
+        OverlayManager.getInstance(context).startDumbSwipeEditionFlow(
             context = context,
-            newOverlay = DumbSwipeDialog(
-                dumbSwipe = dumbSwipe,
-                onConfirmClicked = dialogViewModel::updateDumbAction,
-                onDeleteClicked = { dialogViewModel.deleteDumbAction(dumbSwipe) },
-                onDismissClicked = {},
-            ),
-            hideCurrent = true,
+            dumbSwipe = dumbSwipe,
+            listener = updateActionUiFlowListener,
         )
     }
 
     private fun onDumbPauseClicked(dumbPause: DumbAction.DumbPause) {
-        OverlayManager.getInstance(context).navigateTo(
+        OverlayManager.getInstance(context).startDumbPauseEditionFlow(
             context = context,
-            newOverlay = DumbPauseDialog(
-                dumbPause = dumbPause,
-                onConfirmClicked = dialogViewModel::updateDumbAction,
-                onDeleteClicked = { dialogViewModel.deleteDumbAction(dumbPause) },
-                onDismissClicked = {},
-            ),
-            hideCurrent = true,
+            dumbPause = dumbPause,
+            listener = updateActionUiFlowListener,
         )
     }
 
