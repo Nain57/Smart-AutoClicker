@@ -21,7 +21,6 @@ import android.accessibilityservice.GestureDescription
 import android.app.*
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.AndroidRuntimeException
 import android.util.Log
@@ -31,24 +30,12 @@ import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
-import com.buzbuz.smartautoclicker.SmartAutoClickerService.LocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.extensions.startForegroundMediaProjectionServiceCompat
-import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.floatingmenu.ui.MainMenu
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -77,14 +64,14 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         private const val NOTIFICATION_ID = 42
         /** The channel identifier for the foreground notification of this service. */
         private const val NOTIFICATION_CHANNEL_ID = "SmartAutoClickerService"
-        /** The instance of the [LocalService], providing access for this service to the Activity. */
-        private var LOCAL_SERVICE_INSTANCE: LocalService? = null
+        /** The instance of the [ILocalService], providing access for this service to the Activity. */
+        private var LOCAL_SERVICE_INSTANCE: ILocalService? = null
             set(value) {
                 field = value
                 LOCAL_SERVICE_CALLBACK?.invoke(field)
             }
         /** Callback upon the availability of the [LOCAL_SERVICE_INSTANCE]. */
-        private var LOCAL_SERVICE_CALLBACK: ((LocalService?) -> Unit)? = null
+        private var LOCAL_SERVICE_CALLBACK: ((ILocalService?) -> Unit)? = null
             set(value) {
                 field = value
                 value?.invoke(LOCAL_SERVICE_INSTANCE)
@@ -92,124 +79,42 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
         /**
          * Static method allowing an activity to register a callback in order to monitor the availability of the
-         * [LocalService]. If the service is already available upon registration, the callback will be immediately
+         * [ILocalService]. If the service is already available upon registration, the callback will be immediately
          * called.
          *
          * @param stateCallback the object to be notified upon service availability.
          */
-        fun getLocalService(stateCallback: ((LocalService?) -> Unit)?) {
+        fun getLocalService(stateCallback: ((ILocalService?) -> Unit)?) {
             LOCAL_SERVICE_CALLBACK = stateCallback
         }
 
         fun isServiceStarted(): Boolean = LOCAL_SERVICE_INSTANCE != null
     }
 
-    private var serviceScope: CoroutineScope? = null
-    /** The metrics of the device screen. */
-    private var displayMetrics: DisplayMetrics? = null
-    /** The engine for the detection. */
-    private var detectionRepository: DetectionRepository? = null
-    /** Manages the overlays for the application. */
-    private var overlayManager: OverlayManager? = null
-    /** True if the overlay is started, false if not. */
-    private var isStarted: Boolean = false
+    interface ILocalService {
 
-    /** Local interface providing an API for the [SmartAutoClickerService]. */
-    inner class LocalService {
-
-        /** Coroutine job for the delayed start of engine & ui. */
-        private var startJob: Job? = null
-
-        /**
-         * Start the overlay UI and instantiates the detection objects.
-         *
-         * This requires the media projection permission code and its data intent, they both can be retrieved using the
-         * results of the activity intent provided by [MediaProjectionManager.createScreenCaptureIntent] (this Intent
-         * shows the dialog warning about screen recording privacy). Any attempt to call this method without the
-         * correct screen capture intent result will leads to a crash.
-         *
-         * @param resultCode the result code provided by the screen capture intent activity result callback
-         * [android.app.Activity.onActivityResult]
-         * @param data the data intent provided by the screen capture intent activity result callback
-         * [android.app.Activity.onActivityResult]
-         * @param scenario the identifier of the scenario of clicks to be used for detection.
-         */
-        fun start(resultCode: Int, data: Intent, scenario: Scenario) {
-            val coroutineScope = serviceScope ?: return
-            if (isStarted) {
-                return
-            }
-
-            isStarted = true
-            startForegroundMediaProjectionServiceCompat(
-                notificationId = NOTIFICATION_ID,
-                notification = createNotification(scenario.name),
-            )
-
-            displayMetrics = DisplayMetrics.getInstance(this@SmartAutoClickerService).apply {
-                startMonitoring(this@SmartAutoClickerService)
-            }
-
-            startJob = coroutineScope.launch {
-                delay(500)
-
-                detectionRepository = DetectionRepository.getDetectionRepository(this@SmartAutoClickerService).apply {
-                    setScenarioId(scenario.id)
-                    startScreenRecord(
-                        context = this@SmartAutoClickerService,
-                        resultCode = resultCode,
-                        data = data,
-                        androidExecutor = this@SmartAutoClickerService,
-                    )
-                }
-
-                overlayManager = OverlayManager.getInstance(this@SmartAutoClickerService).apply {
-                    navigateTo(
-                        context = this@SmartAutoClickerService,
-                        newOverlay = MainMenu { stop() },
-                    )
-                }
-            }
-        }
-
-        /** Stop the overlay UI and release all associated resources. */
-        fun stop() {
-            val coroutineScope = serviceScope ?: return
-            if (!isStarted) {
-                return
-            }
-
-            isStarted = false
-
-            coroutineScope.launch {
-                startJob?.join()
-                startJob = null
-
-                overlayManager?.closeAll(this@SmartAutoClickerService)
-                overlayManager = null
-
-                detectionRepository?.stopScreenRecord()
-                detectionRepository = null
-
-                displayMetrics?.stopMonitoring(this@SmartAutoClickerService)
-                displayMetrics = null
-
-                stopForeground(Service.STOP_FOREGROUND_REMOVE)
-            }
-        }
+        fun startDumbScenario(dumbScenario: DumbScenario)
+        fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
+        fun stop()
+        fun release()
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-        LOCAL_SERVICE_INSTANCE = LocalService()
+
+        LOCAL_SERVICE_INSTANCE = LocalService(
+            context = this,
+            androidExecutor = this,
+            onStart = { startForeground(NOTIFICATION_ID, createNotification(it)) },
+            onStop = { stopForeground(Service.STOP_FOREGROUND_REMOVE) },
+        )
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
         LOCAL_SERVICE_INSTANCE?.stop()
+        LOCAL_SERVICE_INSTANCE?.release()
         LOCAL_SERVICE_INSTANCE = null
-        serviceScope?.cancel()
-        serviceScope = null
+
         return super.onUnbind(intent)
     }
 
@@ -286,10 +191,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
         if (writer == null) return
 
-        writer.println("* UI:")
-        val prefix = "\t"
-
-        overlayManager?.dump(writer, prefix) ?: writer.println("$prefix None")
+        (LOCAL_SERVICE_INSTANCE as? LocalService)
+            ?.dump(writer) ?: writer.println("None")
     }
 
     override fun onInterrupt() { /* Unused */ }

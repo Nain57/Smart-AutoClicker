@@ -21,6 +21,7 @@ import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,10 +64,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, Per
                 Toast.makeText(this, R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
             } else {
                 (requestedItem as? ScenarioListUiState.Item.Valid.Smart)?.let { item ->
-                    val started = scenarioViewModel.loadScenario(this, result.resultCode, result.data!!, item.scenario)
-
-                    if (started) finish()
-                    else Toast.makeText(this, R.string.toast_denied_foreground_permission, Toast.LENGTH_SHORT).show()
+                    startSmartScenario(result, item.scenario)
                 }
             }
         }
@@ -81,7 +79,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, Per
         }
 
         when (val scenario = item.scenario) {
-            is DumbScenario -> scenarioViewModel.loadDumbScenario(scenario)
+            is DumbScenario -> startDumbScenario(scenario)
             is Scenario -> showMediaProjectionWarning()
         }
     }
@@ -89,7 +87,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, Per
     override fun onPermissionsGranted() {
         requestedItem?.let { item ->
             when (val scenario = item.scenario) {
-                is DumbScenario -> scenarioViewModel.loadDumbScenario(scenario)
+                is DumbScenario -> startDumbScenario(scenario)
                 is Scenario -> showMediaProjectionWarning()
                 else -> Unit
             }
@@ -132,5 +130,26 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, Per
             .setNegativeButton(android.R.string.cancel, null)
             .create()
             .show()
+    }
+
+    private fun startDumbScenario(scenario: DumbScenario) {
+        handleScenarioStartResult(scenarioViewModel.loadDumbScenario(
+            context = this,
+            scenario = scenario,
+        ))
+    }
+
+    private fun startSmartScenario(result: ActivityResult, scenario: Scenario) {
+        handleScenarioStartResult(scenarioViewModel.loadSmartScenario(
+            context = this,
+            resultCode = result.resultCode,
+            data = result.data!!,
+            scenario = scenario,
+        ))
+    }
+
+    private fun handleScenarioStartResult(result: Boolean) {
+        if (result) finish()
+        else Toast.makeText(this, R.string.toast_denied_foreground_permission, Toast.LENGTH_SHORT).show()
     }
 }
