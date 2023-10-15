@@ -86,8 +86,7 @@
                         app:layout_constraintBottom_toTopOf="@id/click_selector_subtext"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
-                        tools:text="Click position"
-                        tools:textColor="@android:color/black"/>
+                        android:text="@string/item_title_click_position"/>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/click_selector_subtext"

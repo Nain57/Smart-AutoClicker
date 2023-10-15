@@ -174,7 +174,7 @@ class DumbSwipeDialog(
         OverlayManager.getInstance(context).navigateTo(
             context = context,
             newOverlay = ClickSwipeSelectorMenu(
-                selector = CoordinatesSelector.One(),
+                selector = CoordinatesSelector.Two(),
                 onCoordinatesSelected = { selector ->
                     (selector as CoordinatesSelector.Two).let { two ->
                         viewModel.setPositions(two.coordinates1, two.coordinates2)

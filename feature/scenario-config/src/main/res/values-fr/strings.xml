@@ -81,7 +81,6 @@
     <string name="item_title_click">Clic</string>
     <string name="item_title_click_on_condition_and_operator">Cliquer sur une condition</string>
     <string name="item_title_click_on_condition_or_operator">Cliquer sur la première condition détectée</string>
-    <string name="item_title_click_position">Position du clic</string>
     <string name="item_title_debug_generate_report">Générer un rapport</string>
     <string name="item_title_debug_report_available">Un rapport est disponible</string>
     <string name="item_title_debug_report_not_available">Aucun rapport de debug disponible</string>

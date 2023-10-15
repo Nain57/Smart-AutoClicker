@@ -80,7 +80,6 @@
     <string name="item_title_click">单击</string>
     <string name="item_title_click_on_condition_and_operator">单击一个条件</string>
     <string name="item_title_click_on_condition_or_operator">单击第一个检测到的条件</string>
-    <string name="item_title_click_position">点击位置</string>
     <string name="item_title_debug_generate_report">生成调试报告</string>
     <string name="item_title_debug_report_available">调试报告可用</string>
     <string name="item_title_debug_report_not_available">没有可用的调试报告</string>

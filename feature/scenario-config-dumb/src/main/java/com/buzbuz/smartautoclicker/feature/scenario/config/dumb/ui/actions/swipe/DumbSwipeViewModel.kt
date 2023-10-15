@@ -71,7 +71,7 @@ class DumbSwipeViewModel(application: Application) : AndroidViewModel(applicatio
         .take(1)
     /** Tells if the delay is valid or not. */
     val repeatDelayError: Flow<Boolean> = editedDumbSwipe
-        .map { it.isRepeatDelayValid() }
+        .map { !it.isRepeatDelayValid() }
 
     /** Subtext for the position selector. */
     val swipePositionText: Flow<String> = editedDumbSwipe
