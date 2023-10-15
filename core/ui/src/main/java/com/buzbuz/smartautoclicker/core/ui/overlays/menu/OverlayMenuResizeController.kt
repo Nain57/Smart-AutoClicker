@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.ui.overlays.menu
 
 import android.animation.LayoutTransition
+import android.util.Log
 import android.util.Size
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,8 @@ internal class OverlayMenuResizeController(
     var isAnimating: Boolean = false
         private set
 
+    private val runningTransitions: MutableSet<OverlayTransition> = mutableSetOf()
+
     /** Monitor the transitions triggered by animateLayoutChanges on the [resizedContainer]. */
     private val transitionListener = object : LayoutTransition.TransitionListener {
 
@@ -57,7 +60,11 @@ internal class OverlayMenuResizeController(
             container: ViewGroup?,
             view: View?,
             transitionType: Int
-        ) {}
+        ) {
+            if (view == null) return
+
+            runningTransitions.add(OverlayTransition(view.id, transitionType))
+        }
 
         override fun endTransition(
             transition: LayoutTransition?,
@@ -65,7 +72,12 @@ internal class OverlayMenuResizeController(
             view: View?,
             transitionType: Int
         ) {
-            if (isAnimating && view != null && view.id == backgroundViewGroup.id && isChangeTransition(transitionType)) {
+            if (view == null) return
+
+            runningTransitions.remove(OverlayTransition(view.id, transitionType))
+            if (runningTransitions.isEmpty()) {
+                Log.d(TAG, "Layout changes animations completed")
+
                 // The view resize animation is over, restore the window size to wrap the content.
                 windowSizeListener(Size(backgroundViewGroup.measuredWidth, backgroundViewGroup.measuredHeight))
                 isAnimating = false
@@ -82,8 +94,14 @@ internal class OverlayMenuResizeController(
      * Setup the window size and execute the changes.
      */
     fun animateLayoutChanges(layoutChanges: () -> Unit) {
-        if (isAnimating) return
+        if (isAnimating) {
+            Log.d(TAG, "Starting layout changes animations, was already animating...")
+            layoutChanges()
+            return
+        }
         isAnimating = true
+
+        Log.d(TAG, "Starting layout changes animations")
 
         // Freeze window size to expanded size
         windowSizeListener(maximumSize)
@@ -96,10 +114,11 @@ internal class OverlayMenuResizeController(
     fun release() {
         resizedContainer.layoutTransition?.removeTransitionListener(transitionListener)
     }
-
-    /** True if the transition [transitionType] is a resize transition. */
-    private fun isChangeTransition(transitionType: Int): Boolean =
-        transitionType == LayoutTransition.CHANGING ||
-                transitionType == LayoutTransition.CHANGE_APPEARING ||
-                transitionType == LayoutTransition.CHANGE_DISAPPEARING
 }
+
+private data class OverlayTransition(
+    val viewId: Int,
+    val transitionType: Int,
+)
+
+private const val TAG = "OverlayMenuResizeController"
