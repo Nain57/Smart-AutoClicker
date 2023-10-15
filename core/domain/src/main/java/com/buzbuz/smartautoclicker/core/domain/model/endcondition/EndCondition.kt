@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.endcondition
 
 import androidx.annotation.IntRange
 
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 /**
  * End condition for a scenario.

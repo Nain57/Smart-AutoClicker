@@ -81,7 +81,7 @@
             app:layout_constraintHorizontal_chainStyle="spread"
             android:src="@drawable/ic_confirm"
             android:gravity="center"
-            app:drawableEndCompat="@drawable/ic_click"
+            app:drawableEndCompat="@drawable/ic_click_small"
             android:drawablePadding="@dimen/drawable_padding_small"
             tools:text="4" />
 

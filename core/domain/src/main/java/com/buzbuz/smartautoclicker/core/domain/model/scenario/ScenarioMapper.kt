@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.scenario
 
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 /** @return the entity equivalent of this scenario. */
 internal fun Scenario.toEntity() = ScenarioEntity(

@@ -135,10 +135,11 @@ dependencies {
     playStoreImplementation 'com.google.firebase:firebase-crashlytics-ktx'
     playStoreImplementation 'com.google.firebase:firebase-crashlytics-ndk'
 
+    implementation project(path: ':core:base')
     implementation project(path: ':core:detection')
     implementation project(path: ':core:display')
     implementation project(path: ':core:domain')
-    implementation project(path: ':core:extensions')
+    implementation project(path: ':core:dumb')
     implementation project(path: ':core:processing')
     implementation project(path: ':core:ui')
     implementation project(path: ':feature:backup')

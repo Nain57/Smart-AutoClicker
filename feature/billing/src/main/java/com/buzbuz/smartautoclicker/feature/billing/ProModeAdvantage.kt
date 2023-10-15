@@ -37,6 +37,6 @@ interface ProModeAdvantage {
         CONDITION_COUNT_LIMIT(2),
         DETECTION_DURATION_MINUTES_LIMIT(20),
         EVENT_COUNT_LIMIT(10),
-        SCENARIO_COUNT_LIMIT(2),
+        SMART_SCENARIO_COUNT_LIMIT(2),
     }
 }

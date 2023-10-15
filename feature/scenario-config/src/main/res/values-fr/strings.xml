@@ -77,7 +77,6 @@
     <string name="item_desc_swipe_positions">Swiper de %1$d, %2$d à %3$d, %4$d</string>
     <string name="item_desc_toggle_event">Changer l\'état d\'activation d\'un évènement</string>
     <string name="item_desc_toggle_event_details">Changer l\'état avec le type %1$s</string>
-    <string name="item_error_action_invalid_generic">Cette action est invalide</string>
     <string name="item_error_action_invalid_toggle_event_target">Évènement cible non trouvé</string>
     <string name="item_title_click">Clic</string>
     <string name="item_title_click_on_condition_and_operator">Cliquer sur une condition</string>
@@ -128,14 +127,6 @@
     <string name="message_tutorial_start">Apprenez à utiliser Smart AutoClicker</string>
 
     <!--
-      - Toast messages.
-      - Can be pretty long (2 lines).
-      -->
-    <string name="toast_configure_single_click">Appuyez sur la position à cliquer</string>
-    <string name="toast_configure_swipe_from">Appuyez sur la position de départ</string>
-    <string name="toast_configure_swipe_to">Appuyez sur la position d\'arrivée</string>
-
-    <!--
       - Section titles.
       - Should be short and concise.
       -->
@@ -182,15 +173,9 @@
       - Should be short and concise.
       -->
     <string name="input_field_label_name">Nom</string>
-    <string name="input_field_label_click_press_duration">Durée d\'appui (ms)</string>
     <string name="input_field_label_execution_count">Exécutions</string>
     <string name="input_field_label_intent_extra_key">Clé</string>
-    <string name="input_field_label_pause_duration">Durée de la pause (ms)</string>
-    <string name="input_field_label_scenario_name">Nom du scénario</string>
-    <string name="input_field_label_swipe_duration">Durée du swipe (ms)</string>
-    <string name="input_field_label_anti_detection">Anti détection</string>
     <string name="input_field_label_event_state">État</string>
-    <string name="input_field_error_required">Requis</string>
     <string name="input_field_toggle_event_type">Nouvel état d\'évènement</string>
 
     <!--
@@ -201,12 +186,6 @@
       -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
       -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
       -->
-
-    <!-- Dropdown field for selecting anti bot state -->
-    <string name="dropdown_item_title_anti_detection_enabled">Activé</string>
-    <string name="dropdown_item_title_anti_detection_disabled">Désactivé</string>
-    <string name="dropdown_helper_text_anti_detection_enabled">Ajoute une petite part de hasard dans les positions et durées des clics, swipes et pauses</string>
-    <string name="dropdown_helper_text_anti_detection_disabled">Exécute les actions comme elles sont déclarées</string>
 
     <!-- Dropdown field for selecting the event state -->
     <string name="dropdown_item_title_event_state_enabled">Activé</string>
@@ -266,8 +245,6 @@
     <string name="content_desc_actions_count">Le nombre d\'actions dans cet évènement</string>
     <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
-    <string name="content_desc_confirm">Confirmer</string>
-    <string name="content_desc_go_back">Retour au dialog</string>
     <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
 </resources>

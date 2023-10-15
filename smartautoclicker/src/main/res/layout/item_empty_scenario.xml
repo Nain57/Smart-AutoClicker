@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppTheme.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_horizontal_default"
+    android:layout_marginEnd="@dimen/margin_horizontal_default"
+    android:layout_marginTop="@dimen/margin_vertical_default"
+    android:layout_marginBottom="@dimen/margin_vertical_small">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_default">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/scenario_name"
+            style="@style/AppTheme.TextAppearance.CardTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_delete"
+            app:layout_constraintTop_toTopOf="@id/button_delete"
+            app:layout_constraintBottom_toBottomOf="@id/button_delete"
+            android:drawablePadding="@dimen/margin_horizontal_small"
+            tools:drawableStart="@drawable/ic_smart"
+            tools:text="My cool scenario " />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_delete"
+            style="@style/AppTheme.Widget.IconButton"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@id/scenario_name"
+            app:layout_constraintEnd_toStartOf="@id/button_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:icon="@drawable/ic_delete"
+            tools:visibility="visible"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_start"
+            style="@style/AppTheme.Widget.IconButtonFilled"
+            app:layout_constraintStart_toEndOf="@id/button_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:elevation="@dimen/elevation_level_3"
+            app:icon="@drawable/ic_play_arrow"
+            tools:visibility="visible"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

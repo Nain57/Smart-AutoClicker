@@ -28,6 +28,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
@@ -35,13 +36,12 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.action.GESTURE_DURATION_MAX_VALUE
+import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionSwipeBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.ClickSwipeSelectorMenu
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.CoordinatesSelector
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.CoordinatesSelector
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch

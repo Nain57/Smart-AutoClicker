@@ -27,9 +27,9 @@ import android.view.MotionEvent
 import android.view.View
 
 import androidx.core.graphics.toRectF
+import com.buzbuz.smartautoclicker.core.base.extensions.center
+import com.buzbuz.smartautoclicker.core.base.extensions.scale
 
-import com.buzbuz.smartautoclicker.core.center
-import com.buzbuz.smartautoclicker.core.scale
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 
 class TutorialFullscreenView @JvmOverloads constructor(

@@ -57,7 +57,7 @@ dependencies {
 
     implementation project(path: ':core:bitmaps')
     implementation project(path: ':core:database')
-    implementation project(path: ':core:extensions')
+    implementation project(path: ':core:base')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"

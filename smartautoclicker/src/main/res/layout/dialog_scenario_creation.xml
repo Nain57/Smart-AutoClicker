@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_dialog_navigation_top_bar"
+        android:id="@+id/layout_top_bar" />
+
+    <include layout="@layout/include_input_field_text"
+        android:id="@+id/scenario_name_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_vertical_default">
+        <requestFocus />
+    </include>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_type_selection"
+        style="@style/AppTheme.Widget.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_vertical_large">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_scenario_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_large">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/scenario_type_title"
+                style="@style/AppTheme.TextAppearance.CardTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/scenario_type_dumb"
+                android:text="@string/section_title_scenario_type_title" />
+
+            <include layout="@layout/include_scenario_type_view"
+                android:id="@+id/scenario_type_dumb"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_small"
+                android:layout_marginBottom="@dimen/margin_vertical_large"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                app:layout_constraintTop_toBottomOf="@id/scenario_type_title"
+                app:layout_constraintBottom_toTopOf="@id/scenario_type_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/scenario_type_smart"/>
+
+            <include layout="@layout/include_scenario_type_view"
+                android:id="@+id/scenario_type_smart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                app:layout_constraintTop_toTopOf="@id/scenario_type_dumb"
+                app:layout_constraintBottom_toBottomOf="@id/scenario_type_dumb"
+                app:layout_constraintStart_toEndOf="@id/scenario_type_dumb"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/scenario_type_description"
+                style="@style/AppTheme.TextAppearance.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lines="2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scenario_type_dumb"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/item_desc_smart_scenario_pro_mode"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
+

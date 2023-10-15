@@ -22,7 +22,7 @@ import android.graphics.Rect
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain
 
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
@@ -25,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.data.ScenarioDataSource
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.toAction
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toCondition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
@@ -34,7 +35,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.toEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toScenario
-import com.buzbuz.smartautoclicker.core.mapList
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull

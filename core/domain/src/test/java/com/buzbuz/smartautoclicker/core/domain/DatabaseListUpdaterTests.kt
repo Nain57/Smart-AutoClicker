@@ -17,8 +17,8 @@
 package com.buzbuz.smartautoclicker.core.domain
 
 import android.os.Build
-import com.buzbuz.smartautoclicker.core.domain.data.DatabaseListUpdater
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
+import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

@@ -69,8 +69,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
     implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
     ksp "androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}"
+    implementation project(path: ':core:base')
 
-    implementation project(path: ':core:extensions')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.arch.core:core-testing:${rootProject.ext.androidxArchCoreTestingVersion}"

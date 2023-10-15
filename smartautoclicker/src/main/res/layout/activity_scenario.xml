@@ -19,7 +19,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment"
-    android:name="com.buzbuz.smartautoclicker.activity.ScenarioListFragment"
+    android:name="com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment"
     android:tag="ScenarioList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

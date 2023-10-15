@@ -91,7 +91,7 @@
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_scenario"
+        tools:listitem="@layout/item_smart_scenario"
         tools:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

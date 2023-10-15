@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
@@ -36,7 +37,6 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigSimpleBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.activities.ActivitySelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setError
 
 
 import kotlinx.coroutines.launch

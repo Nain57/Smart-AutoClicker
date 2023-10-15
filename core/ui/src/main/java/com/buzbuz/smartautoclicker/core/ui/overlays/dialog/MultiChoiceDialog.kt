@@ -47,7 +47,7 @@ open class MultiChoiceDialog<T : DialogChoice>(
     @StringRes private val dialogTitleText: Int,
     private val choices: List<T>,
     private val onChoiceSelected: (T) -> Unit,
-    private val onCanceled: () -> Unit,
+    private val onCanceled: (() -> Unit)? = null,
 ) : OverlayDialog(theme) {
 
     /** ViewBinding containing the views for this dialog. */
@@ -61,7 +61,7 @@ open class MultiChoiceDialog<T : DialogChoice>(
                 dialogTitle.setText(dialogTitleText)
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
-                        onCanceled()
+                        onCanceled?.invoke()
                         back()
                     }
                 }

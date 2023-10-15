@@ -16,8 +16,6 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <!-- The maximum size for all names (clicks and scenarios) -->
-    <integer name="name_max_length">60</integer>
     <!-- The minimum zoom value for the capture overlay view -->
     <item name="capture_minimum_zoom" format="float" type="integer">0.8</item>
     <!-- The maximum zoom value for the capture overlay view -->

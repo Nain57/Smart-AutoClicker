@@ -18,10 +18,10 @@ package com.buzbuz.smartautoclicker.core.processing.domain
 
 import android.content.Context
 import android.content.Intent
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.domain.model.Identifier
-import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
