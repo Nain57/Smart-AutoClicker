@@ -16,22 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.dumb.data.DumbScenarioDataSource
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
-import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
-class DumbRepositoryImpl internal constructor(database: DumbDatabase) : DumbRepository {
+class DumbRepositoryImpl internal constructor(
+    database: DumbDatabase,
+) : DumbRepository {
 
     private val dumbScenarioDataSource: DumbScenarioDataSource = DumbScenarioDataSource(database)
-    private val dumbEngine: DumbEngine = DumbEngine()
-
-    override val isEngineRunning: StateFlow<Boolean> =
-        dumbEngine.isRunning
 
     override val dumbScenarios: Flow<List<DumbScenario>> =
         dumbScenarioDataSource.getAllDumbScenarios
@@ -51,21 +46,5 @@ class DumbRepositoryImpl internal constructor(database: DumbDatabase) : DumbRepo
 
     override suspend fun deleteDumbScenario(scenario: DumbScenario) {
         dumbScenarioDataSource.deleteDumbScenario(scenario)
-    }
-
-    override fun initEngine(androidExecutor: AndroidExecutor) {
-        dumbEngine.init(androidExecutor)
-    }
-
-    override fun startDumbScenarioExecution(dumbScenario: DumbScenario) {
-        dumbEngine.startDumbScenario(dumbScenario)
-    }
-
-    override fun stopDumbScenarioExecution() {
-        dumbEngine.stopDumbScenario()
-    }
-
-    override fun releaseEngine(androidExecutor: AndroidExecutor) {
-        dumbEngine.release()
     }
 }

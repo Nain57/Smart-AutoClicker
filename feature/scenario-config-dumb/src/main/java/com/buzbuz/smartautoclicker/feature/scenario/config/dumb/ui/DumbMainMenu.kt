@@ -19,11 +19,12 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.ViewGroup
+
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
@@ -39,6 +40,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.pause.DumbPauseDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe.DumbSwipeDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
+
 import kotlinx.coroutines.launch
 
 class DumbMainMenu(
@@ -60,13 +62,12 @@ class DumbMainMenu(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isPlaying.collect(::updateMenuPlayingState) }
+                launch { viewModel.canPlay.collect(::updatePlayPauseButtonEnabledState) }
             }
         }
     }
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        viewModel.startEdition(dumbScenarioId)
-
         playPauseButtonController = AnimatedStatesImageButtonController(
             context = context,
             state1StaticRes = R.drawable.ic_play_arrow,
@@ -77,8 +78,8 @@ class DumbMainMenu(
 
         viewBinding = OverlayDumbMainMenuBinding.inflate(layoutInflater).apply {
             playPauseButtonController.attachView(btnPlay)
-            btnAdd.setOnClickListener { onAddButtonClicked() }
-            btnActionList.setOnClickListener { onDumbScenarioConfigClicked() }
+            btnAdd.setOnClickListener { debounceUserInteraction { onAddButtonClicked() } }
+            btnActionList.setOnClickListener { debounceUserInteraction { onDumbScenarioConfigClicked() } }
         }
 
         return viewBinding.root
@@ -89,6 +90,10 @@ class DumbMainMenu(
         playPauseButtonController.detachView()
         viewModel.stopEdition()
     }
+
+    /** Refresh the play menu item according to the scenario state. */
+    private fun updatePlayPauseButtonEnabledState(canStartDetection: Boolean) =
+        setMenuItemViewEnabled(viewBinding.btnPlay, canStartDetection)
 
     private fun updateMenuPlayingState(isPlaying: Boolean) {
         val currentState = viewBinding.btnPlay.tag
@@ -123,12 +128,14 @@ class DumbMainMenu(
     }
 
     override fun onMenuItemClicked(viewId: Int) {
-        when (viewId) {
-            R.id.btn_play -> viewModel.toggleScenarioPlay()
-            R.id.btn_stop -> onStopClicked()
-            R.id.btn_add -> onAddButtonClicked()
-            R.id.btn_show_actions -> Unit
-            R.id.btn_action_list -> onDumbScenarioConfigClicked()
+        debounceUserInteraction {
+            when (viewId) {
+                R.id.btn_play -> viewModel.toggleScenarioPlay()
+                R.id.btn_stop -> onStopClicked()
+                R.id.btn_add -> onAddButtonClicked()
+                R.id.btn_show_actions -> Unit
+                R.id.btn_action_list -> onDumbScenarioConfigClicked()
+            }
         }
     }
 
@@ -166,16 +173,18 @@ class DumbMainMenu(
     private fun onDumbClickPositionSelected(position: Point?) {
         position ?: return
 
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = DumbClickDialog(
-                dumbClick = viewModel.createNewDumbClick(position),
-                onConfirmClicked = viewModel::addNewDumbAction,
-                onDeleteClicked = {},
-                onDismissClicked = {},
-            ),
-            hideCurrent = true,
-        )
+        viewModel.startEdition(dumbScenarioId) {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = DumbClickDialog(
+                    dumbClick = viewModel.createNewDumbClick(position),
+                    onConfirmClicked = { viewModel.addNewDumbAction(it, true) },
+                    onDeleteClicked = { viewModel.deleteDumbAction(it, true) },
+                    onDismissClicked = viewModel::stopEdition,
+                ),
+                hideCurrent = true,
+            )
+        }
     }
 
     private fun onDumbSwipeCreationSelected() {
@@ -196,39 +205,45 @@ class DumbMainMenu(
     private fun onDumbSwipePositionSelected(from: Point?, to: Point?) {
         if (from == null || to == null) return
 
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = DumbSwipeDialog(
-                dumbSwipe = viewModel.createNewDumbSwipe(from, to),
-                onConfirmClicked = viewModel::addNewDumbAction,
-                onDeleteClicked = {},
-                onDismissClicked = {},
-            ),
-            hideCurrent = true,
-        )
+        viewModel.startEdition(dumbScenarioId) {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = DumbSwipeDialog(
+                    dumbSwipe = viewModel.createNewDumbSwipe(from, to),
+                    onConfirmClicked = { viewModel.addNewDumbAction(it, true) },
+                    onDeleteClicked = { viewModel.deleteDumbAction(it, true) },
+                    onDismissClicked = viewModel::stopEdition,
+                ),
+                hideCurrent = true,
+            )
+        }
     }
 
     private fun onDumbPauseCreationSelected() {
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = DumbPauseDialog(
-                dumbPause = viewModel.createNewDumbPause(),
-                onConfirmClicked = viewModel::addNewDumbAction,
-                onDeleteClicked = {},
-                onDismissClicked = {},
-            ),
-            hideCurrent = true,
-        )
+        viewModel.startEdition(dumbScenarioId) {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = DumbPauseDialog(
+                    dumbPause = viewModel.createNewDumbPause(),
+                    onConfirmClicked = { viewModel.addNewDumbAction(it, true) },
+                    onDeleteClicked = { viewModel.deleteDumbAction(it, true) },
+                    onDismissClicked = viewModel::stopEdition,
+                ),
+                hideCurrent = true,
+            )
+        }
     }
 
     private fun onDumbScenarioConfigClicked() {
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = DumbScenarioDialog(
-                onNewConfig = viewModel::updateDumbScenario,
-                onConfigDiscarded = {},
-            ),
-            hideCurrent = true,
-        )
+        viewModel.startEdition(dumbScenarioId) {
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = DumbScenarioDialog(
+                    onConfigSaved = viewModel::saveEditions,
+                    onConfigDiscarded = viewModel::stopEdition,
+                ),
+                hideCurrent = true,
+            )
+        }
     }
 }

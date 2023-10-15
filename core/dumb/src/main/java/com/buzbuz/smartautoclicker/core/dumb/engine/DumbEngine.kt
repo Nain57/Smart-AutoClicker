@@ -16,22 +16,53 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.engine
 
+import android.content.Context
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
 
-internal class DumbEngine {
+@OptIn(ExperimentalCoroutinesApi::class)
+class DumbEngine(context: Context) {
+
+    companion object {
+
+        /** Singleton preventing multiple instances of the repository at the same time. */
+        @Volatile
+        private var INSTANCE: DumbEngine? = null
+
+        /**
+         * Get the repository singleton, or instantiates it if it wasn't yet.
+         *
+         * @param context the Android context.
+         *
+         * @return the repository singleton.
+         */
+        fun getInstance(context: Context): DumbEngine {
+            return INSTANCE ?: synchronized(this) {
+                val instance = DumbEngine(context)
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
+
+    private val dumbRepository = DumbRepository.getRepository(context)
 
     /** Execute the dumb actions. */
     private var dumbActionExecutor: DumbActionExecutor? = null
@@ -43,23 +74,40 @@ internal class DumbEngine {
     /** Job for the scenario execution. */
     private var executionJob: Job? = null
 
+    private val dumbScenarioDbId: MutableStateFlow<Long?> = MutableStateFlow(null)
+    val dumbScenario: Flow<DumbScenario?> =
+        dumbScenarioDbId.flatMapLatest { dbId ->
+            if (dbId == null) return@flatMapLatest flowOf(null)
+            dumbRepository.getDumbScenarioFlow(dbId)
+        }
+
     private val _isRunning: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isRunning: StateFlow<Boolean> = _isRunning
 
-    fun init(androidExecutor: AndroidExecutor) {
+    fun init(androidExecutor: AndroidExecutor, dumbScenario: DumbScenario) {
         dumbActionExecutor = DumbActionExecutor(androidExecutor)
+        dumbScenarioDbId.value = dumbScenario.id.databaseId
+
         processingScope = CoroutineScope(Dispatchers.IO)
     }
 
-    fun startDumbScenario(dumbScenario: DumbScenario) {
+    fun startDumbScenario() {
         if (_isRunning.value) return
-        if (dumbScenario.dumbActions.isEmpty()) return
-        _isRunning.value = true
 
-        Log.d(TAG, "startDumbScenario ${dumbScenario.id} with ${dumbScenario.dumbActions.size} actions")
+        processingScope?.launch {
+            dumbScenarioDbId.value?.let { dbId ->
+                dumbRepository.getDumbScenario(dbId)?.let { scenario ->
+                    if (scenario.dumbActions.isEmpty()) return@launch
 
-        if (!dumbScenario.isDurationInfinite) timeoutJob = startTimeoutJob(dumbScenario.maxDurationMin)
-        executionJob = startScenarioExecutionJob(dumbScenario)
+                    _isRunning.value = true
+
+                    Log.d(TAG, "startDumbScenario ${scenario.id} with ${scenario.dumbActions.size} actions")
+
+                    if (!scenario.isDurationInfinite) timeoutJob = startTimeoutJob(scenario.maxDurationMin)
+                    executionJob = startScenarioExecutionJob(scenario)
+                }
+            }
+        }
     }
 
     fun stopDumbScenario() {
@@ -77,6 +125,7 @@ internal class DumbEngine {
     fun release() {
         if (isRunning.value) stopDumbScenario()
 
+        dumbScenarioDbId.value = null
         processingScope?.cancel()
         processingScope = null
 

@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 class DumbClickDialog(
     private val dumbClick: DumbAction.DumbClick,
     private val onConfirmClicked: (DumbAction.DumbClick) -> Unit,
-    private val onDeleteClicked: () -> Unit,
+    private val onDeleteClicked: (DumbAction.DumbClick) -> Unit,
     private val onDismissClicked: () -> Unit,
 ) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
 
@@ -158,9 +158,11 @@ class DumbClickDialog(
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            onDeleteClicked()
-            back()
+        viewModel.getEditedDumbClick()?.let { editedAction ->
+            debounceUserInteraction {
+                onDeleteClicked(editedAction)
+                back()
+            }
         }
     }
 

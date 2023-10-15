@@ -25,8 +25,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
 
+import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
@@ -40,14 +41,13 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.DialogConfigDumbActionPauseBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
 import kotlinx.coroutines.launch
 
 class DumbPauseDialog(
     private val dumbPause: DumbAction.DumbPause,
     private val onConfirmClicked: (DumbAction.DumbPause) -> Unit,
-    private val onDeleteClicked: () -> Unit,
+    private val onDeleteClicked: (DumbAction.DumbPause) -> Unit,
     private val onDismissClicked: () -> Unit,
 ) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
 
@@ -118,9 +118,11 @@ class DumbPauseDialog(
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            onDeleteClicked()
-            back()
+        viewModel.getEditedDumbPause()?.let { editedAction ->
+            debounceUserInteraction {
+                onDeleteClicked(editedAction)
+                back()
+            }
         }
     }
 

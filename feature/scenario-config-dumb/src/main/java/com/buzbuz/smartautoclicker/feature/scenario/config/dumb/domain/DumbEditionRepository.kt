@@ -22,9 +22,11 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import kotlinx.coroutines.flow.Flow
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 
 internal class DumbEditionRepository private constructor(context: Context) {
 
@@ -58,6 +60,9 @@ internal class DumbEditionRepository private constructor(context: Context) {
     private val _editedDumbScenario: MutableStateFlow<DumbScenario?> = MutableStateFlow(null)
     val editedDumbScenario: StateFlow<DumbScenario?> = _editedDumbScenario
 
+    /** Tells if the editions made on the scenario are synchronized with the database values. */
+    val isEditionSynchronized: Flow<Boolean> = editedDumbScenario.map { it == null }
+
     val dumbActionBuilder: EditedDumbActionsBuilder = EditedDumbActionsBuilder()
 
     /** Set the scenario to be configured. */
@@ -81,10 +86,18 @@ internal class DumbEditionRepository private constructor(context: Context) {
         Log.d(TAG, "Save editions")
 
         dumbRepository.updateDumbScenario(scenarioToSave)
+        stopEdition()
+    }
+
+    fun stopEdition() {
+        _editedDumbScenario.value = null
+        dumbActionBuilder.clearState()
     }
 
     fun addNewDumbAction(dumbAction: DumbAction) {
         val editedScenario = _editedDumbScenario.value ?: return
+
+        Log.d(TAG, "Add dumb action to edited scenario $dumbAction")
         _editedDumbScenario.value = editedScenario.copy(
             dumbActions = editedScenario.dumbActions.toMutableList().apply {
                 add(dumbAction)
@@ -92,12 +105,20 @@ internal class DumbEditionRepository private constructor(context: Context) {
         )
     }
 
-    fun updateDumbScenario(dumbScenario: DumbScenario) {
-        _editedDumbScenario.value = dumbScenario
+    fun deleteDumbAction(dumbAction: DumbAction) {
+        val editedScenario = _editedDumbScenario.value ?: return
+        val deleteIndex = editedScenario.dumbActions.indexOfFirst { it.id == dumbAction.id }
+
+        Log.d(TAG, "Delete dumb action from edited scenario $dumbAction")
+        _editedDumbScenario.value = editedScenario.copy(
+            dumbActions = editedScenario.dumbActions.toMutableList().apply {
+                removeAt(deleteIndex)
+            }
+        )
     }
 
-    fun stopEdition() {
-        _editedDumbScenario.value = null
-        dumbActionBuilder.clearState()
+    fun updateDumbScenario(dumbScenario: DumbScenario) {
+        Log.d(TAG, "Updating dumb scenario with $dumbScenario")
+        _editedDumbScenario.value = dumbScenario
     }
 }

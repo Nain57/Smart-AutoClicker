@@ -25,23 +25,43 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
-import kotlinx.coroutines.Dispatchers
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DumbMainMenuModel(application: Application) : AndroidViewModel(application) {
 
-    private val dumbRepository: DumbRepository = DumbRepository.getRepository(application)
     private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
+    private val dumbEngine = DumbEngine.getInstance(application)
 
-    val isPlaying: StateFlow<Boolean> = dumbRepository.isEngineRunning
+    val canPlay: Flow<Boolean> =
+        combine(dumbEditionRepository.isEditionSynchronized, dumbEngine.dumbScenario) { isSync, scenario ->
+            isSync && scenario?.isValid() ?: false
+        }
+    val isPlaying: StateFlow<Boolean> =
+        dumbEngine.isRunning
 
-    fun startEdition(dumbScenarioId: Identifier) {
-        viewModelScope.launch {
-            dumbEditionRepository.startEdition(dumbScenarioId.databaseId)
+    fun startEdition(dumbScenarioId: Identifier, onStarted: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (dumbEditionRepository.startEdition(dumbScenarioId.databaseId)) {
+                withContext(Dispatchers.Main) {
+                    onStarted()
+                }
+            }
+        }
+    }
+
+    fun saveEditions() {
+        viewModelScope.launch(Dispatchers.IO) {
+            dumbEditionRepository.apply {
+                saveEditions()
+            }
         }
     }
 
@@ -58,30 +78,28 @@ class DumbMainMenuModel(application: Application) : AndroidViewModel(application
     fun createNewDumbPause(): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
 
-    fun addNewDumbAction(dumbAction: DumbAction) {
+    fun addNewDumbAction(dumbAction: DumbAction, save: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.apply {
                 addNewDumbAction(dumbAction)
-                saveEditions()
+                if (save) saveEditions()
             }
         }
     }
 
-    fun updateDumbScenario(dumbScenario: DumbScenario) {
+    fun deleteDumbAction(dumbAction: DumbAction, save: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.apply {
-                updateDumbScenario(dumbScenario)
-                saveEditions()
+                deleteDumbAction(dumbAction)
+                if (save) saveEditions()
             }
         }
     }
 
     fun toggleScenarioPlay() {
-        dumbEditionRepository.editedDumbScenario.value?.let { dumbScenario ->
-            viewModelScope.launch {
-                if (isPlaying.value) dumbRepository.stopDumbScenarioExecution()
-                else dumbRepository.startDumbScenarioExecution(dumbScenario)
-            }
+        viewModelScope.launch {
+            if (isPlaying.value) dumbEngine.stopDumbScenario()
+            else dumbEngine.startDumbScenario()
         }
     }
 }

@@ -23,8 +23,8 @@ import android.media.projection.MediaProjectionManager
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
@@ -58,7 +58,7 @@ class LocalService(
     private var displayMetrics: DisplayMetrics? = null
 
     /** The dumb repository controlling the dumb engine. */
-    private var dumbRepository: DumbRepository? = null
+    private var dumbEngine: DumbEngine? = null
     /** The smart engine for the detection. */
     private var detectionRepository: DetectionRepository? = null
 
@@ -74,8 +74,8 @@ class LocalService(
         startJob = serviceScope.launch {
             delay(500)
 
-            dumbRepository = DumbRepository.getRepository(context).apply {
-                initEngine(androidExecutor)
+            dumbEngine = DumbEngine.getInstance(context).apply {
+                init(androidExecutor, dumbScenario)
             }
 
             initOverlayManager(
@@ -150,14 +150,6 @@ class LocalService(
         serviceScope.cancel()
     }
 
-    fun dump(writer: PrintWriter) {
-        writer.apply {
-            writer.println("* UI:")
-            val prefix = "\t"
-            overlayManager?.dump(writer, prefix) ?: writer.println("$prefix None")
-        }
-    }
-
     private fun initDisplayMetrics(context: Context) {
         displayMetrics = DisplayMetrics.getInstance(context).apply {
             startMonitoring(context)
@@ -170,6 +162,14 @@ class LocalService(
                 context = context,
                 newOverlay = rootOverlay,
             )
+        }
+    }
+
+    fun dump(writer: PrintWriter) {
+        writer.apply {
+            writer.println("* UI:")
+            val prefix = "\t"
+            overlayManager?.dump(writer, prefix) ?: writer.println("$prefix None")
         }
     }
 }
