@@ -19,6 +19,9 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
@@ -36,6 +39,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.pause.DumbPauseDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe.DumbSwipeDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
+import kotlinx.coroutines.launch
 
 class DumbMainMenu(
     private val dumbScenarioId: Identifier,
@@ -49,6 +53,16 @@ class DumbMainMenu(
     private lateinit var viewBinding: OverlayDumbMainMenuBinding
     /** Controls the animations of the play/pause button. */
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
+
+    override fun onCreate() {
+        super.onCreate()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.isPlaying.collect(::updateMenuPlayingState) }
+            }
+        }
+    }
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewModel.startEdition(dumbScenarioId)
@@ -74,6 +88,48 @@ class DumbMainMenu(
         super.onDestroy()
         playPauseButtonController.detachView()
         viewModel.stopEdition()
+    }
+
+    private fun updateMenuPlayingState(isPlaying: Boolean) {
+        val currentState = viewBinding.btnPlay.tag
+        if (currentState == isPlaying) return
+
+        viewBinding.btnPlay.tag = isPlaying
+        if (isPlaying) {
+            if (currentState == null) {
+                playPauseButtonController.toState2(false)
+            } else {
+                animateLayoutChanges {
+                    setMenuItemVisibility(viewBinding.btnStop, false)
+                    setMenuItemVisibility(viewBinding.btnAdd, false)
+                    setMenuItemVisibility(viewBinding.btnShowActions, false)
+                    setMenuItemVisibility(viewBinding.btnActionList, false)
+                    playPauseButtonController.toState2(true)
+                }
+            }
+        } else {
+            if (currentState == null) {
+                playPauseButtonController.toState1(false)
+            } else {
+                animateLayoutChanges {
+                    setMenuItemVisibility(viewBinding.btnStop, true)
+                    setMenuItemVisibility(viewBinding.btnAdd, true)
+                    setMenuItemVisibility(viewBinding.btnShowActions, true)
+                    setMenuItemVisibility(viewBinding.btnActionList, true)
+                    playPauseButtonController.toState1(true)
+                }
+            }
+        }
+    }
+
+    override fun onMenuItemClicked(viewId: Int) {
+        when (viewId) {
+            R.id.btn_play -> viewModel.toggleScenarioPlay()
+            R.id.btn_stop -> onStopClicked()
+            R.id.btn_add -> onAddButtonClicked()
+            R.id.btn_show_actions -> Unit
+            R.id.btn_action_list -> onDumbScenarioConfigClicked()
+        }
     }
 
     private fun onAddButtonClicked() {

@@ -190,6 +190,6 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
 }
 
 sealed class UiState {
-    object Detecting: UiState()
-    object Idle: UiState()
+    data object Detecting: UiState()
+    data object Idle: UiState()
 }
