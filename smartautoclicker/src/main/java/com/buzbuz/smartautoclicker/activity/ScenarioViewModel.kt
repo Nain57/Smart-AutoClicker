@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class ScenarioViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Callback upon the availability of the [SmartAutoClickerService]. */
-    private val serviceConnection: (SmartAutoClickerService.LocalService?) -> Unit = { localService ->
+    private val serviceConnection: (SmartAutoClickerService.ILocalService?) -> Unit = { localService ->
         clickerService = localService
     }
 
@@ -45,7 +45,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * Reference on the [SmartAutoClickerService].
      * Will be not null only if the Accessibility Service is enabled.
      */
-    private var clickerService: SmartAutoClickerService.LocalService? = null
+    private var clickerService: SmartAutoClickerService.ILocalService? = null
 
     /** Set of scenario identifier selected for a backup. */
     private val selectedForBackup = MutableStateFlow(emptySet<Long>())
@@ -106,18 +106,24 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * [android.app.Activity.onActivityResult]
      * @param scenario the identifier of the scenario of clicks to be used for detection.
      */
-    fun loadScenario(context: Context, resultCode: Int, data: Intent, scenario: Scenario): Boolean {
+    fun loadSmartScenario(context: Context, resultCode: Int, data: Intent, scenario: Scenario): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val foregroundPermission = PermissionChecker.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE)
             if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
         }
 
-        clickerService?.start(resultCode, data, scenario)
+        clickerService?.startSmartScenario(resultCode, data, scenario)
         return true
     }
 
-    fun loadDumbScenario(scenario: DumbScenario): Boolean {
-        return false
+    fun loadDumbScenario(context: Context, scenario: DumbScenario): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val foregroundPermission = PermissionChecker.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE)
+            if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
+        }
+
+        clickerService?.startDumbScenario(scenario)
+        return true
     }
 
     /** Stop the overlay UI and release all associated resources. */
