@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.dumb.data.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -105,7 +106,7 @@ interface DumbScenarioDao {
      *
      * @param dumbActions the dumb actions to be deleted.
      */
-    @Update
+    @Delete
     suspend fun deleteDumbActions(dumbActions: List<DumbActionEntity>)
 
 }
