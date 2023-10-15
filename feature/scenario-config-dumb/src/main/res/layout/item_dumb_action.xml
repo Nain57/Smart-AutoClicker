@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_dumb_action_height"
+    android:layout_marginEnd="@dimen/margin_horizontal_large">
+
+    <ImageView
+        android:id="@+id/btn_reorder"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/action_name"
+        android:scaleType="center"
+        android:src="@drawable/ic_reorder"
+        android:contentDescription="@string/content_desc_drag_and_drop"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
+        android:layout_marginTop="@dimen/margin_vertical_small"
+        android:layout_marginBottom="@dimen/margin_vertical_mini"
+        app:layout_constraintStart_toEndOf="@id/btn_reorder"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/action_type_icon"
+        app:layout_constraintBottom_toTopOf="@id/action_duration"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_size_list_item_text_big"
+        android:textStyle="bold"
+        android:singleLine="true"
+        tools:text="Click on button"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action_duration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_vertical_mini"
+        app:layout_constraintStart_toStartOf="@id/action_name"
+        app:layout_constraintTop_toBottomOf="@id/action_name"
+        app:layout_constraintEnd_toStartOf="@id/action_type_icon"
+        app:layout_constraintBottom_toTopOf="@id/action_repeat"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_size_list_item_text_small"
+        android:textStyle="italic"
+        tools:text="During 10 ms"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action_repeat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_vertical_small"
+        app:layout_constraintStart_toStartOf="@id/action_name"
+        app:layout_constraintTop_toBottomOf="@id/action_duration"
+        app:layout_constraintEnd_toStartOf="@id/action_type_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_size_list_item_text_small"
+        android:textStyle="italic"
+        tools:text="Repeat 2000 times"
+        tools:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/action_type_icon"
+        android:layout_width="@dimen/dialog_choice_item_icon_size"
+        android:layout_height="@dimen/dialog_choice_item_icon_size"
+        app:layout_constraintStart_toEndOf="@id/action_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/content_desc_action_icon"
+        tools:src="@drawable/ic_wait"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
