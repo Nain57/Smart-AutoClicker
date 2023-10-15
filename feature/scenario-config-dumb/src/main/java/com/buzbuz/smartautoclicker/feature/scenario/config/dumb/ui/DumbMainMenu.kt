@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 
-import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -25,20 +24,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.CoordinatesSelector
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbMainMenuBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionTypeChoice
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.allDumbActionChoices
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click.DumbClickDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.pause.DumbPauseDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe.DumbSwipeDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionUiFlowListener
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCreationUiFlow
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
 
 import kotlinx.coroutines.launch
@@ -140,96 +134,19 @@ class DumbMainMenu(
     }
 
     private fun onAddButtonClicked() {
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = MultiChoiceDialog(
-                theme = R.style.AppTheme,
-                dialogTitleText = R.string.dialog_overlay_title_dumb_action_type,
-                choices = allDumbActionChoices(),
-                onChoiceSelected = { choice ->
-                    when (choice) {
-                        DumbActionTypeChoice.Click -> onDumbClickCreationSelected()
-                        DumbActionTypeChoice.Swipe -> onDumbSwipeCreationSelected()
-                        DumbActionTypeChoice.Pause -> onDumbPauseCreationSelected()
-                    }
-                }
-            )
-        )
-    }
-
-    private fun onDumbClickCreationSelected() {
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ClickSwipeSelectorMenu(
-                selector = CoordinatesSelector.One(),
-                onCoordinatesSelected = { selector ->
-                    onDumbClickPositionSelected((selector as CoordinatesSelector.One).coordinates)
-                }
-            ),
-            hideCurrent = true,
-        )
-    }
-
-    private fun onDumbClickPositionSelected(position: Point?) {
-        position ?: return
-
         viewModel.startEdition(dumbScenarioId) {
-            OverlayManager.getInstance(context).navigateTo(
+            OverlayManager.getInstance(context).startDumbActionCreationUiFlow(
                 context = context,
-                newOverlay = DumbClickDialog(
-                    dumbClick = viewModel.createNewDumbClick(position),
-                    onConfirmClicked = { viewModel.addNewDumbAction(it, true) },
-                    onDeleteClicked = { viewModel.deleteDumbAction(it, true) },
-                    onDismissClicked = viewModel::stopEdition,
+                creator = DumbActionCreator(
+                    createNewDumbClick = viewModel::createNewDumbClick,
+                    createNewDumbSwipe = viewModel::createNewDumbSwipe,
+                    createNewDumbPause = viewModel::createNewDumbPause,
                 ),
-                hideCurrent = true,
-            )
-        }
-    }
-
-    private fun onDumbSwipeCreationSelected() {
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ClickSwipeSelectorMenu(
-                selector = CoordinatesSelector.Two(),
-                onCoordinatesSelected = { selector ->
-                    (selector as CoordinatesSelector.Two).let { two ->
-                        onDumbSwipePositionSelected(two.coordinates1, two.coordinates2)
-                    }
-                }
-            ),
-            hideCurrent = true,
-        )
-    }
-
-    private fun onDumbSwipePositionSelected(from: Point?, to: Point?) {
-        if (from == null || to == null) return
-
-        viewModel.startEdition(dumbScenarioId) {
-            OverlayManager.getInstance(context).navigateTo(
-                context = context,
-                newOverlay = DumbSwipeDialog(
-                    dumbSwipe = viewModel.createNewDumbSwipe(from, to),
-                    onConfirmClicked = { viewModel.addNewDumbAction(it, true) },
-                    onDeleteClicked = { viewModel.deleteDumbAction(it, true) },
-                    onDismissClicked = viewModel::stopEdition,
-                ),
-                hideCurrent = true,
-            )
-        }
-    }
-
-    private fun onDumbPauseCreationSelected() {
-        viewModel.startEdition(dumbScenarioId) {
-            OverlayManager.getInstance(context).navigateTo(
-                context = context,
-                newOverlay = DumbPauseDialog(
-                    dumbPause = viewModel.createNewDumbPause(),
-                    onConfirmClicked = { viewModel.addNewDumbAction(it, true) },
-                    onDeleteClicked = { viewModel.deleteDumbAction(it, true) },
-                    onDismissClicked = viewModel::stopEdition,
-                ),
-                hideCurrent = true,
+                listener = DumbActionUiFlowListener(
+                    onDumbActionSaved = viewModel::addNewDumbAction,
+                    onDumbActionDeleted = viewModel::deleteDumbAction,
+                    onDumbActionCreationCancelled = viewModel::stopEdition,
+                )
             )
         }
     }

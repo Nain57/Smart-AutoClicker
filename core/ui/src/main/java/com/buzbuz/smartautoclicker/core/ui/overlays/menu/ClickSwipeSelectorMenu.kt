@@ -42,7 +42,8 @@ import com.buzbuz.smartautoclicker.core.ui.views.SelectionIndex
  */
 class ClickSwipeSelectorMenu(
     private val selector: CoordinatesSelector,
-    private val onCoordinatesSelected: (CoordinatesSelector) -> Unit
+    private val onCoordinatesSelected: (CoordinatesSelector) -> Unit,
+    private val onDismiss: (() -> Unit)? = null,
 ) : OverlayMenu() {
 
     /** The view binding for the overlay menu. */
@@ -131,7 +132,10 @@ class ClickSwipeSelectorMenu(
      */
     private fun onCancel() {
         when (selectorViewBinding.positionSelector.selectionStep) {
-            FIRST -> back()
+            FIRST -> {
+                back()
+                onDismiss?.invoke()
+            }
             SECOND -> toSelectionStep(FIRST)
         }
     }

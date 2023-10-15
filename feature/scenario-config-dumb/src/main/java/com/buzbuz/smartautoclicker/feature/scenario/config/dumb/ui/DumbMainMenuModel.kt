@@ -23,7 +23,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
@@ -78,20 +77,20 @@ class DumbMainMenuModel(application: Application) : AndroidViewModel(application
     fun createNewDumbPause(): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
 
-    fun addNewDumbAction(dumbAction: DumbAction, save: Boolean) {
+    fun addNewDumbAction(dumbAction: DumbAction) {
         viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.apply {
                 addNewDumbAction(dumbAction)
-                if (save) saveEditions()
+                saveEditions()
             }
         }
     }
 
-    fun deleteDumbAction(dumbAction: DumbAction, save: Boolean) {
+    fun deleteDumbAction(dumbAction: DumbAction) {
         viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.apply {
                 deleteDumbAction(dumbAction)
-                if (save) saveEditions()
+                saveEditions()
             }
         }
     }
