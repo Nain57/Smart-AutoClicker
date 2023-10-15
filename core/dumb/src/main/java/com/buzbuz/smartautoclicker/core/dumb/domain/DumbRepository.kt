@@ -40,24 +40,16 @@ interface DumbRepository {
          */
         fun getRepository(context: Context): DumbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DumbRepositoryImpl(DumbDatabase.getDatabase(context))
+                val instance = DumbRepositoryImpl(
+                    DumbDatabase.getDatabase(context),
+                )
                 INSTANCE = instance
                 instance
             }
         }
     }
 
-    val isEngineRunning: StateFlow<Boolean>
-
     val dumbScenarios: Flow<List<DumbScenario>>
-
-    fun initEngine(androidExecutor: AndroidExecutor)
-
-    fun startDumbScenarioExecution(dumbScenario: DumbScenario)
-
-    fun stopDumbScenarioExecution()
-
-    fun releaseEngine(androidExecutor: AndroidExecutor)
 
     suspend fun getDumbScenario(dbId: Long): DumbScenario?
 

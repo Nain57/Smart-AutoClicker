@@ -23,7 +23,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
@@ -39,7 +38,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 class DumbScenarioDialog(
-    private val onNewConfig: (DumbScenario) -> Unit,
+    private val onConfigSaved: () -> Unit,
     private val onConfigDiscarded: () -> Unit,
 ) : NavBarDialog(R.style.DumbScenarioConfigTheme) {
 
@@ -50,7 +49,6 @@ class DumbScenarioDialog(
 
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
-            viewModel.startUserModifications()
             topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
             topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_dumb_scenario_config)
         }
@@ -74,9 +72,8 @@ class DumbScenarioDialog(
     }
 
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
-        val modifications = viewModel.endUserModifications()
-        if (buttonType == DialogNavigationButton.SAVE && modifications != null) {
-            onNewConfig(modifications)
+        if (buttonType == DialogNavigationButton.SAVE) {
+            onConfigSaved()
             super.back()
             return
         }

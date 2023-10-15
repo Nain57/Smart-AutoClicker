@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.acti
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
@@ -38,7 +39,8 @@ class DumbScenarioViewModel(application: Application) : AndroidViewModel(applica
 
     private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
 
-    private val userModifications: MutableStateFlow<DumbScenario?> = MutableStateFlow(null)
+    private val userModifications: StateFlow<DumbScenario?> =
+        dumbEditionRepository.editedDumbScenario
 
     /**
      * Tells if all content have their field correctly configured.
@@ -115,36 +117,36 @@ class DumbScenarioViewModel(application: Application) : AndroidViewModel(applica
         }
         .filterNotNull()
 
-    fun startUserModifications() {
-        userModifications.value = dumbEditionRepository.editedDumbScenario.value?.copy()
-    }
-
-    fun endUserModifications(): DumbScenario? {
-        val dumbScenario = userModifications.value
-        userModifications.value = null
-        return dumbScenario
-    }
-
     fun setDumbScenarioName(name: String) {
-        userModifications.value = userModifications.value?.copy(name = name)
+        userModifications.value?.copy(name = name)?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 
     fun setRepeatCount(repeatCount: Int) {
-        userModifications.value = userModifications.value?.copy(repeatCount = repeatCount)
+        userModifications.value?.copy(repeatCount = repeatCount)?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 
     fun toggleInfiniteRepeat() {
         val currentValue = userModifications.value?.isRepeatInfinite ?: return
-        userModifications.value = userModifications.value?.copy(isRepeatInfinite = !currentValue)
+        userModifications.value?.copy(isRepeatInfinite = !currentValue)?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 
     fun setMaxDurationMinutes(durationMinutes: Int) {
-        userModifications.value = userModifications.value?.copy(maxDurationMin = durationMinutes)
+        userModifications.value?.copy(maxDurationMin = durationMinutes)?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 
     fun toggleInfiniteMaxDuration() {
         val currentValue = userModifications.value?.isDurationInfinite ?: return
-        userModifications.value = userModifications.value?.copy(isDurationInfinite = !currentValue)
+        userModifications.value?.copy(isDurationInfinite = !currentValue)?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 
     fun setRandomization(randomizationItem: DropdownItem) {
@@ -155,7 +157,7 @@ class DumbScenarioViewModel(application: Application) : AndroidViewModel(applica
                 else -> return
             }
 
-            userModifications.value = scenario.copy(randomize = value)
+            dumbEditionRepository.updateDumbScenario(scenario.copy(randomize = value))
         }
     }
 
@@ -165,17 +167,19 @@ class DumbScenarioViewModel(application: Application) : AndroidViewModel(applica
         val actionIndex = actionList.indexOfFirst { it.id == dumbAction.id }
         if (actionIndex == -1) return
 
-        userModifications.value = userModifications.value?.copy(
+        userModifications.value?.copy(
             dumbActions = actionList.toMutableList().apply {
                 set(actionIndex, dumbAction)
             }
-        )
+        )?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 
     fun updateDumbActionOrder(actions: List<DumbActionDetails>) {
-        userModifications.value = userModifications.value?.copy(
-            dumbActions = actions.map { it.action }
-        )
+        userModifications.value?.copy(dumbActions = actions.map { it.action })?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 
     fun deleteDumbAction(dumbAction: DumbAction) {
@@ -184,11 +188,13 @@ class DumbScenarioViewModel(application: Application) : AndroidViewModel(applica
         val actionIndex = actionList.indexOfFirst { it.id == dumbAction.id }
         if (actionIndex == -1) return
 
-        userModifications.value = userModifications.value?.copy(
+        userModifications.value?.copy(
             dumbActions = actionList.toMutableList().apply {
                 removeAt(actionIndex)
             }
-        )
+        )?.let {
+            dumbEditionRepository.updateDumbScenario(it)
+        }
     }
 }
 

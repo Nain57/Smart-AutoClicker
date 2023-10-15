@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 class DumbSwipeDialog(
     private val dumbSwipe: DumbAction.DumbSwipe,
     private val onConfirmClicked: (DumbAction.DumbSwipe) -> Unit,
-    private val onDeleteClicked: () -> Unit,
+    private val onDeleteClicked: (DumbAction.DumbSwipe) -> Unit,
     private val onDismissClicked: () -> Unit,
 ) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
 
@@ -157,9 +157,11 @@ class DumbSwipeDialog(
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            onDeleteClicked()
-            back()
+        viewModel.getEditedDumbSwipe()?.let { editedAction ->
+            debounceUserInteraction {
+                onDeleteClicked(editedAction)
+                back()
+            }
         }
     }
 
