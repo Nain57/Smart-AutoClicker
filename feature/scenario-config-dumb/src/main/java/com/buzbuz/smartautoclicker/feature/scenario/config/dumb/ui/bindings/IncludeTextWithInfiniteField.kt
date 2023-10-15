@@ -43,13 +43,13 @@ fun IncludeTextWithInfiniteFieldBinding.setInfiniteState(isInfinite: Boolean) {
             isEnabled = false
             alpha = DISABLED_ITEM_ALPHA
         }
-        buttonInfinite.isEnabled = true
+        buttonInfinite.isChecked = true
     } else {
         editTextFieldLayout.apply {
             isEnabled = true
             alpha = ENABLED_ITEM_ALPHA
         }
-        buttonInfinite.isEnabled = false
+        buttonInfinite.isChecked = false
     }
 }
 

@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_horizontal_default"
         android:layout_marginTop="@dimen/margin_vertical_mini"
+        android:checkable="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/edit_text_field_layout"
