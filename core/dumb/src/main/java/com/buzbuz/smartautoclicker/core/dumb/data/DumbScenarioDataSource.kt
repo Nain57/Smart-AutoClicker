@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.data
 
+import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionEntity
@@ -52,6 +53,8 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
             .map { it?.toDomain() }
 
     suspend fun addDumbScenario(scenario: DumbScenario) {
+        Log.d(TAG, "Add dumb scenario $scenario")
+
         updateDumbScenarioActions(
             scenarioDbId = dumbScenarioDao.addDumbScenario(scenario.toEntity()),
             actions = scenario.dumbActions,
@@ -59,6 +62,7 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
     }
 
     suspend fun updateDumbScenario(scenario: DumbScenario) {
+        Log.d(TAG, "Update dumb scenario $scenario")
         val scenarioEntity = scenario.toEntity()
 
         dumbScenarioDao.updateDumbScenario(scenarioEntity)
@@ -77,6 +81,8 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
             }
         )
 
+        Log.d(TAG, "Dumb actions updater: $dumbActionsUpdater")
+
         dumbScenarioDao.apply {
             addDumbActions(dumbActionsUpdater.toBeAdded)
             updateDumbActions(dumbActionsUpdater.toBeUpdated)
@@ -85,6 +91,10 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
     }
 
     suspend fun deleteDumbScenario(scenario: DumbScenario) {
+        Log.d(TAG, "Delete dumb scenario $scenario")
+
         dumbScenarioDao.deleteDumbScenario(scenario.id.databaseId)
     }
 }
+
+private const val TAG = "DumbScenarioDataSource"
