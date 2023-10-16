@@ -60,5 +60,8 @@
     <string name="message_empty_secondary_dumb_action_list">You need at least one action to run the scenario</string>
     <string name="item_desc_dumb_repeat_count">Repeat %1$d times</string>
     <string name="input_field_label_repeat_delay">Repeat delay (ms)</string>
+    <string name="list_header_copy_dumb_action_this">Actions from this scenario</string>
+    <string name="list_header_copy_dumb_action_all">Actions from all scenario</string>
+    <string name="search_view_hint_dumb_action_copy">Search by action name</string>
 
 </resources>

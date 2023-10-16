@@ -24,6 +24,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,8 +40,11 @@ class DumbActionListViewModel(application: Application) : AndroidViewModel(appli
     /** The list of dumb actions for the scenario. */
     val dumbActionsDetails: Flow<List<DumbActionDetails>> = userModifications
         .map { dumbScenario ->
-            dumbScenario?.dumbActions?.map { it.toActionDetails(application) } ?: emptyList()
+            dumbScenario?.dumbActions?.map { it.toDumbActionDetails(application) } ?: emptyList()
         }
+
+    val canCopyAction: Flow<Boolean> = dumbEditionRepository.actionsToCopy
+        .map { it.isNotEmpty() }
 
     fun createNewDumbClick(position: Point): DumbAction.DumbClick =
         dumbEditionRepository.dumbActionBuilder.createNewDumbClick(getApplication(), position)
@@ -50,6 +54,9 @@ class DumbActionListViewModel(application: Application) : AndroidViewModel(appli
 
     fun createNewDumbPause(): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
+
+    fun createDumbActionCopy(actionToCopy: DumbAction): DumbAction =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbActionFrom(actionToCopy)
 
     fun addNewDumbAction(dumbAction: DumbAction) {
         val actionList = userModifications.value?.dumbActions ?: return

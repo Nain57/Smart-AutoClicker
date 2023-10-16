@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.dumb.domain
 
 import com.buzbuz.smartautoclicker.core.dumb.data.DumbScenarioDataSource
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 import kotlinx.coroutines.flow.Flow
@@ -35,6 +36,9 @@ class DumbRepositoryImpl internal constructor(
 
     override fun getDumbScenarioFlow(dbId: Long): Flow<DumbScenario?> =
         dumbScenarioDataSource.getDumbScenarioFlow(dbId)
+
+    override fun getAllDumbActionsFlowExcept(scenarioDbId: Long): Flow<List<DumbAction>> =
+        dumbScenarioDataSource.getAllDumbActionsExcept(scenarioDbId)
 
     override suspend fun addDumbScenario(scenario: DumbScenario) {
         dumbScenarioDataSource.addDumbScenario(scenario)

@@ -26,7 +26,6 @@
     <string name="dialog_overlay_title_click">单击</string>
     <string name="dialog_overlay_title_condition_config">条件</string>
     <string name="dialog_overlay_title_condition_selection">选择条件</string>
-    <string name="dialog_overlay_title_copy_from">复制自</string>
     <string name="dialog_overlay_title_end_condition_config">终止条件</string>
     <string name="dialog_overlay_title_event_config">场景</string>
     <string name="dialog_overlay_title_event_selection">选择一个场景</string>
@@ -98,7 +97,6 @@
       -->
     <string name="message_empty_actions">未创建动作！</string>
     <string name="message_empty_conditions">未创建条件！</string>
-    <string name="message_empty_copy">没有什么可复制的</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">没有在脚本中创建场景</string>
     <string name="message_empty_end_condition_config_event_no_selection">没有场景被选择</string>
     <string name="message_empty_event_list">未创建场景！</string>

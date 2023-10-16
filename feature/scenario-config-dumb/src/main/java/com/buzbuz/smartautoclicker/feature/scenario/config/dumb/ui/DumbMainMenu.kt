@@ -50,8 +50,16 @@ class DumbMainMenu(
     /** Controls the animations of the play/pause button. */
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
 
+    private lateinit var dumbActionCreator: DumbActionCreator
+
     override fun onCreate() {
         super.onCreate()
+
+        dumbActionCreator = DumbActionCreator(
+            createNewDumbClick = viewModel::createNewDumbClick,
+            createNewDumbSwipe = viewModel::createNewDumbSwipe,
+            createNewDumbPause = viewModel::createNewDumbPause,
+        )
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -137,11 +145,7 @@ class DumbMainMenu(
         viewModel.startEdition(dumbScenarioId) {
             OverlayManager.getInstance(context).startDumbActionCreationUiFlow(
                 context = context,
-                creator = DumbActionCreator(
-                    createNewDumbClick = viewModel::createNewDumbClick,
-                    createNewDumbSwipe = viewModel::createNewDumbSwipe,
-                    createNewDumbPause = viewModel::createNewDumbPause,
-                ),
+                creator = dumbActionCreator,
                 listener = DumbActionUiFlowListener(
                     onDumbActionSaved = viewModel::addNewDumbAction,
                     onDumbActionDeleted = viewModel::deleteDumbAction,

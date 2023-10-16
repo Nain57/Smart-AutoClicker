@@ -78,6 +78,22 @@ class EditedDumbActionsBuilder {
             pauseDurationMs = context.getDefaultDumbPauseDurationMs(),
         )
 
+    fun createNewDumbActionFrom(from: DumbAction): DumbAction =
+        when (from) {
+            is DumbAction.DumbClick -> from.copy(
+                id = dumbActionsIdCreator.generateNewIdentifier(),
+                scenarioId = getEditedScenarioIdOrThrow(),
+            )
+            is DumbAction.DumbSwipe -> from.copy(
+                id = dumbActionsIdCreator.generateNewIdentifier(),
+                scenarioId = getEditedScenarioIdOrThrow(),
+            )
+            is DumbAction.DumbPause -> from.copy(
+                id = dumbActionsIdCreator.generateNewIdentifier(),
+                scenarioId = getEditedScenarioIdOrThrow(),
+            )
+        }
+
     private fun getEditedScenarioIdOrThrow(): Identifier = dumbScenarioId
         ?: throw IllegalStateException("Can't create items without an edited dumb scenario")
 }

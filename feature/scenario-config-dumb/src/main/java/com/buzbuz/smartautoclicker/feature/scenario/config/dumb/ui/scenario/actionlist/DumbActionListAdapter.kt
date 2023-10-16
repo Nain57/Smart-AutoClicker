@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist
 
-import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.recyclerview.widget.DiffUtil
@@ -26,8 +24,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.ItemDumbActionBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.onBind
 
 import java.util.Collections
 
@@ -88,30 +86,7 @@ class DumbActionViewHolder(private val viewBinding: ItemDumbActionBinding) : Rec
      * @param actionClickedListener listener notified upon user click on this item.
      */
     fun onBind(details: DumbActionDetails, actionClickedListener: (DumbActionDetails) -> Unit) {
-        viewBinding.apply {
-            root.setOnClickListener { actionClickedListener(details) }
-
-            actionName.visibility = View.VISIBLE
-            actionTypeIcon.setImageResource(details.icon)
-            actionName.text = details.name
-            actionDuration.apply {
-                text = details.detailsText
-
-                val typedValue = TypedValue()
-                val actionColorAttr = if (details.haveError) R.attr.colorError else R.attr.colorOnSurfaceVariant
-                root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
-                setTextColor(typedValue.data)
-            }
-
-            actionRepeat.apply {
-                if (details.repeatCountText != null) {
-                    text = details.repeatCountText
-                    visibility = View.VISIBLE
-                } else {
-                    visibility = View.GONE
-                }
-            }
-        }
+        viewBinding.onBind(details, actionClickedListener)
     }
 }
 

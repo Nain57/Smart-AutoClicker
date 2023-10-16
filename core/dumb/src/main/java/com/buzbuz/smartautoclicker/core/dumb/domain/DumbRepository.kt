@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.dumb.domain
 import android.content.Context
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,6 +55,8 @@ interface DumbRepository {
     suspend fun getDumbScenario(dbId: Long): DumbScenario?
 
     fun getDumbScenarioFlow(dbId: Long): Flow<DumbScenario?>
+
+    fun getAllDumbActionsFlowExcept(scenarioDbId: Long): Flow<List<DumbAction>>
 
     suspend fun addDumbScenario(scenario: DumbScenario)
 
