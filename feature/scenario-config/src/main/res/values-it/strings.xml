@@ -26,7 +26,6 @@
     <string name="dialog_overlay_title_click">Clic</string>
     <string name="dialog_overlay_title_condition_config">Condizione</string>
     <string name="dialog_overlay_title_condition_selection">Seleziona una condizione</string>
-    <string name="dialog_overlay_title_copy_from">Copia da</string>
     <string name="dialog_overlay_title_end_condition_config">Condizione di Fine</string>
     <string name="dialog_overlay_title_event_config">Evento</string>
     <string name="dialog_overlay_title_event_selection">Seleziona un evento</string>
@@ -97,7 +96,6 @@
       -->
     <string name="message_empty_actions">Nessuna azione !</string>
     <string name="message_empty_conditions">Nessuna condizione !</string>
-    <string name="message_empty_copy">Nulla da copiare</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">Nessun evento creato nello scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">Nessun evento selezionato</string>
     <string name="message_empty_event_list">Nessun evento !</string>

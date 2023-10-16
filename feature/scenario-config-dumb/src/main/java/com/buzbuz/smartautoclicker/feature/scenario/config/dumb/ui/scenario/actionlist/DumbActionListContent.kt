@@ -25,7 +25,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
@@ -36,10 +35,9 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionUiFlowListener
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCopyUiFlow
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCreationUiFlow
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbClickEditionUiFlow
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbPauseEditionFlow
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbSwipeEditionFlow
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionEditionUiFlow
 
 import kotlinx.coroutines.launch
 
@@ -53,9 +51,9 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
     /** Adapter for the list of actions. */
     private lateinit var dumbActionsAdapter: DumbActionListAdapter
 
-    private lateinit var createActionUiFlowListener: DumbActionUiFlowListener
+    private lateinit var createCopyActionUiFlowListener: DumbActionUiFlowListener
     private lateinit var updateActionUiFlowListener: DumbActionUiFlowListener
-
+    private lateinit var dumbActionCreator: DumbActionCreator
 
     /** TouchHelper applied to [dumbActionsAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(DumbActionReorderTouchHelper())
@@ -84,9 +82,13 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     override fun onViewCreated() {
-        dialogController.createCopyButtons.buttonCopy.hide()
-
-        createActionUiFlowListener = DumbActionUiFlowListener(
+        dumbActionCreator = DumbActionCreator(
+            createNewDumbClick = viewModel::createNewDumbClick,
+            createNewDumbSwipe = viewModel::createNewDumbSwipe,
+            createNewDumbPause = viewModel::createNewDumbPause,
+            createDumbActionCopy = viewModel::createDumbActionCopy,
+        )
+        createCopyActionUiFlowListener = DumbActionUiFlowListener(
             onDumbActionSaved = viewModel::addNewDumbAction,
             onDumbActionDeleted = {},
             onDumbActionCreationCancelled = {},
@@ -100,6 +102,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.dumbActionsDetails.collect(::updateDumbActionList) }
+                launch { viewModel.canCopyAction.collect(::updateCopyButtonState) }
             }
         }
     }
@@ -108,50 +111,40 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
         debounceUserInteraction {
             OverlayManager.getInstance(context).startDumbActionCreationUiFlow(
                 context = context,
-                creator = DumbActionCreator(
-                    createNewDumbClick = viewModel::createNewDumbClick,
-                    createNewDumbSwipe = viewModel::createNewDumbSwipe,
-                    createNewDumbPause = viewModel::createNewDumbPause,
-                ),
-                listener = createActionUiFlowListener,
+                creator = dumbActionCreator,
+                listener = createCopyActionUiFlowListener,
+            )
+        }
+    }
+
+    override fun onCopyButtonClicked() {
+        debounceUserInteraction {
+            OverlayManager.getInstance(context).startDumbActionCopyUiFlow(
+                context = context,
+                creator = dumbActionCreator,
+                listener = createCopyActionUiFlowListener
             )
         }
     }
 
     private fun onDumbActionClicked(dumbActionDetails: DumbActionDetails) {
-        when (dumbActionDetails.action) {
-            is DumbAction.DumbClick -> onDumbClickClicked(dumbActionDetails.action)
-            is DumbAction.DumbSwipe -> onDumbSwipeClicked(dumbActionDetails.action)
-            is DumbAction.DumbPause -> onDumbPauseClicked(dumbActionDetails.action)
+        debounceUserInteraction {
+            OverlayManager.getInstance(context).startDumbActionEditionUiFlow(
+                context = context,
+                dumbAction = dumbActionDetails.action,
+                listener = updateActionUiFlowListener,
+            )
         }
-    }
-
-    private fun onDumbClickClicked(dumbClick: DumbAction.DumbClick) {
-        OverlayManager.getInstance(context).startDumbClickEditionUiFlow(
-            context = context,
-            dumbClick = dumbClick,
-            listener = updateActionUiFlowListener,
-        )
-    }
-
-    private fun onDumbSwipeClicked(dumbSwipe: DumbAction.DumbSwipe) {
-        OverlayManager.getInstance(context).startDumbSwipeEditionFlow(
-            context = context,
-            dumbSwipe = dumbSwipe,
-            listener = updateActionUiFlowListener,
-        )
-    }
-
-    private fun onDumbPauseClicked(dumbPause: DumbAction.DumbPause) {
-        OverlayManager.getInstance(context).startDumbPauseEditionFlow(
-            context = context,
-            dumbPause = dumbPause,
-            listener = updateActionUiFlowListener,
-        )
     }
 
     private fun updateDumbActionList(newList: List<DumbActionDetails>) {
         viewBinding.updateState(newList)
         dumbActionsAdapter.submitList(newList)
+    }
+
+    private fun updateCopyButtonState(enabled: Boolean) {
+        dialogController.createCopyButtons.buttonCopy.apply {
+            if (enabled) show() else hide()
+        }
     }
 }

@@ -52,6 +52,10 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
         dumbScenarioDao.getDumbScenariosWithActionFlow(dbId)
             .map { it?.toDomain() }
 
+    fun getAllDumbActionsExcept(scenarioDbId: Long): Flow<List<DumbAction>> =
+        dumbScenarioDao.getAllDumbActionsExcept(scenarioDbId)
+            .mapList { it.toDomain() }
+
     suspend fun addDumbScenario(scenario: DumbScenario) {
         Log.d(TAG, "Add dumb scenario $scenario")
 

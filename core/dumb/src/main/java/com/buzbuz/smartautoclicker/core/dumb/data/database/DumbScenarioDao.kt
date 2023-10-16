@@ -58,6 +58,10 @@ interface DumbScenarioDao {
     fun getDumbScenariosWithActionFlow(dbId: Long): Flow<DumbScenarioWithActions?>
 
     /** Get the dumb actions for a scenario, ordered by their priority. */
+    @Query("SELECT * FROM dumb_action_table WHERE dumb_scenario_id!=:dumbScenarioId")
+    fun getAllDumbActionsExcept(dumbScenarioId: Long): Flow<List<DumbActionEntity>>
+
+    /** Get the dumb actions for a scenario, ordered by their priority. */
     @Query("SELECT * FROM dumb_action_table WHERE dumb_scenario_id=:dumbScenarioId ORDER BY priority ASC")
     fun getDumbActions(dumbScenarioId: Long): List<DumbActionEntity>
 

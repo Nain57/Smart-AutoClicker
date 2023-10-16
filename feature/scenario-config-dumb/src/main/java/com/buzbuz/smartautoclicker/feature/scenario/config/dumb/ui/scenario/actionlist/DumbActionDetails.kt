@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.act
 import android.content.Context
 
 import androidx.annotation.DrawableRes
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 
@@ -41,7 +41,7 @@ data class DumbActionDetails (
 )
 
 /** @return the [DumbActionDetails] corresponding to this action. */
-fun DumbAction.toActionDetails(context: Context, inError: Boolean = !isValid()): DumbActionDetails =
+fun DumbAction.toDumbActionDetails(context: Context, inError: Boolean = !isValid()): DumbActionDetails =
     when (this) {
         is DumbAction.DumbClick -> toClickDetails(context, inError)
         is DumbAction.DumbSwipe -> toSwipeDetails(context, inError)

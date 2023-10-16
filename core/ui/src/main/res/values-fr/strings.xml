@@ -20,7 +20,10 @@
       - Titles for the dialogs displayed as overlay.
       - Allowed characters can be small due to save/delete/close buttons.
       -->
+    <string name="dialog_overlay_title_copy_from">Copier depuis</string>
     <string name="dialog_overlay_title_warning">Avertissement</string>
+
+    <string name="message_empty_copy">Rien à copier</string>
 
     <!--
       - Text input fields labels and error messages.

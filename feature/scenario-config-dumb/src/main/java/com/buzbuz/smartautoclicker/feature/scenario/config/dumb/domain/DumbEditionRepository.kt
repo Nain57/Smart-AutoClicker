@@ -22,12 +22,17 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class DumbEditionRepository private constructor(context: Context) {
 
     companion object {
@@ -59,6 +64,20 @@ internal class DumbEditionRepository private constructor(context: Context) {
 
     private val _editedDumbScenario: MutableStateFlow<DumbScenario?> = MutableStateFlow(null)
     val editedDumbScenario: StateFlow<DumbScenario?> = _editedDumbScenario
+
+    private val otherActions: Flow<List<DumbAction>> = _editedDumbScenario
+        .filterNotNull()
+        .flatMapLatest { dumbScenario ->
+            dumbRepository.getAllDumbActionsFlowExcept(dumbScenario.id.databaseId)
+        }
+    val actionsToCopy: Flow<List<DumbAction>> = _editedDumbScenario
+        .filterNotNull()
+        .combine(otherActions) { dumbScenario, otherActions ->
+            mutableListOf<DumbAction>().apply {
+                addAll(dumbScenario.dumbActions)
+                addAll(otherActions)
+            }
+        }
 
     /** Tells if the editions made on the scenario are synchronized with the database values. */
     val isEditionSynchronized: Flow<Boolean> = editedDumbScenario.map { it == null }
