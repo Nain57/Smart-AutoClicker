@@ -22,6 +22,8 @@ import android.net.Uri
 
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
+import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupProgress
 
@@ -50,9 +52,11 @@ internal class BackupRepository private constructor(context: Context) {
         }
     }
 
-    private val database: ClickDatabase = ClickDatabase.getDatabase(context)
+    private val dumbDatabase: DumbDatabase = DumbDatabase.getDatabase(context)
+    private val smartDatabase: ClickDatabase = ClickDatabase.getDatabase(context)
 
-    private val localDataRepository: Repository = Repository.getRepository(context)
+    private val dumbRepository: DumbRepository = DumbRepository.getRepository(context)
+    private val smartRepository: Repository = Repository.getRepository(context)
 
     private val backupEngine: BackupEngine = BackupEngine(
         appDataDir = context.filesDir,
@@ -63,24 +67,37 @@ internal class BackupRepository private constructor(context: Context) {
      * Create a backup of the provided scenario into the provided file.
      *
      * @param zipFileUri the uri of the file to write the backup into. Must be retrieved using the DocumentProvider.
-     * @param scenarios the scenarios to backup.
+     * @param dumbScenarios the dumb scenarios to backup.
+     * @param smartScenarios the smart scenarios to backup.
      * @param screenSize the size of this device screen.
      *
      * @return a flow on the backup creation progress.
      */
-    fun createScenarioBackup(zipFileUri: Uri, scenarios: List<Long>, screenSize: Point) = channelFlow  {
+    fun createScenarioBackup(
+        zipFileUri: Uri,
+        dumbScenarios: List<Long>,
+        smartScenarios: List<Long>,
+        screenSize: Point,
+    ) = channelFlow {
         launch {
             backupEngine.createBackup(
-                zipFileUri,
-                scenarios.mapNotNull {
-                    database.scenarioDao().getCompleteScenario(it)
+                zipFileUri = zipFileUri,
+                dumbScenarios = dumbScenarios.mapNotNull {
+                    dumbDatabase.dumbScenarioDao().getDumbScenariosWithAction(it)
                 },
-                screenSize,
-                BackupProgress(
+                smartScenarios = smartScenarios.mapNotNull {
+                    smartDatabase.scenarioDao().getCompleteScenario(it)
+                },
+                screenSize = screenSize,
+                progress = BackupProgress(
                     onError = { send(Backup.Error) },
                     onProgressChanged = { current, max -> send(Backup.Loading(current, max)) },
-                    onCompleted = { success, failureCount, compatWarning ->
-                        send(Backup.Completed(success.size, failureCount, compatWarning))
+                    onCompleted = { dumbs, smarts, failureCount, compatWarning ->
+                        send(Backup.Completed(
+                            successCount = dumbs.size + smarts.size,
+                            failureCount = failureCount,
+                            compatWarning = compatWarning,
+                        ))
                     }
                 )
             )
@@ -104,18 +121,30 @@ internal class BackupRepository private constructor(context: Context) {
                     onError = { send(Backup.Error) },
                     onProgressChanged = { current, max -> send(Backup.Loading(current, max)) },
                     onVerification = { send(Backup.Verification) },
-                    onCompleted = { success, failureCount, compatWarning ->
-
+                    onCompleted = { dumbs, smarts, failureCount, compatWarning ->
                         var totalFailures = failureCount
-                        val actualSuccess = success.toMutableList()
-                        success.forEach { completeScenario ->
-                            if (localDataRepository.addScenarioCopy(completeScenario) == null) {
-                                actualSuccess.remove(completeScenario)
+
+                        val dumbsSuccess = dumbs.toMutableList()
+                        dumbs.forEach { completeScenario ->
+                            if (dumbRepository.addDumbScenarioCopy(completeScenario) == null) {
+                                dumbsSuccess.remove(completeScenario)
                                 totalFailures++
                             }
                         }
 
-                        send(Backup.Completed(actualSuccess.size, totalFailures, compatWarning))
+                        val smartsSuccess = smarts.toMutableList()
+                        smarts.forEach { completeScenario ->
+                            if (smartRepository.addScenarioCopy(completeScenario) == null) {
+                                smartsSuccess.remove(completeScenario)
+                                totalFailures++
+                            }
+                        }
+
+                        send(Backup.Completed(
+                            successCount = dumbsSuccess.size + smartsSuccess.size,
+                            failureCount = totalFailures,
+                            compatWarning = compatWarning,
+                        ))
                     }
                 )
             )

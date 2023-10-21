@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.dumb.domain
 
 import com.buzbuz.smartautoclicker.core.dumb.data.DumbScenarioDataSource
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
@@ -43,6 +44,9 @@ class DumbRepositoryImpl internal constructor(
     override suspend fun addDumbScenario(scenario: DumbScenario) {
         dumbScenarioDataSource.addDumbScenario(scenario)
     }
+
+    override suspend fun addDumbScenarioCopy(scenario: DumbScenarioWithActions): Long? =
+        dumbScenarioDataSource.addDumbScenarioCopy(scenario)
 
     override suspend fun updateDumbScenario(scenario: DumbScenario) {
         dumbScenarioDataSource.updateDumbScenario(scenario)

@@ -79,6 +79,7 @@ dependencies {
     implementation project(path: ':core:database')
     implementation project(path: ':core:display')
     implementation project(path: ':core:domain')
+    implementation project(path: ':core:dumb')
     implementation project(path: ':core:ui')
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"

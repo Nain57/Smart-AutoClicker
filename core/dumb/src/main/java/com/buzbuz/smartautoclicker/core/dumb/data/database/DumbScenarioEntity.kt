@@ -57,6 +57,7 @@ data class DumbScenarioEntity(
  * @param scenario the dumb scenario entity.
  * @param dumbActions the list of dumb actions entity for this scenario.
  */
+@Serializable
 data class DumbScenarioWithActions(
     @Embedded val scenario: DumbScenarioEntity,
     @Relation(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.backup.data
+package com.buzbuz.smartautoclicker.feature.backup.data.smart
 
-import android.graphics.Point
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 
@@ -29,6 +28,7 @@ import com.buzbuz.smartautoclicker.feature.backup.data.ext.getLong
 import com.buzbuz.smartautoclicker.feature.backup.data.ext.getString
 import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.*
+import com.buzbuz.smartautoclicker.feature.backup.data.base.ScenarioBackupSerializer
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -46,17 +46,16 @@ import java.io.OutputStream
  * It (tries to) handles the compatibility by deserializing manually if the version isn't the same.
  */
 @OptIn(ExperimentalSerializationApi::class)
-internal class ScenarioSerializer {
+internal class ScenarioSerializer : ScenarioBackupSerializer<ScenarioBackup> {
 
     /**
      * Serialize a scenario.
      *
-     * @param scenario the scenario to serialize.
-     * @param screenSize this device screen size.
+     * @param scenarioBackup the scenario to serialize.
      * @param outputStream the stream to serialize into.
      */
-    fun serialize(scenario: CompleteScenario, screenSize: Point, outputStream: OutputStream) =
-        Json.encodeToStream(ScenarioBackup(CLICK_DATABASE_VERSION, screenSize.x, screenSize.y, scenario), outputStream)
+    override fun serialize(scenarioBackup: ScenarioBackup, outputStream: OutputStream) =
+        Json.encodeToStream(scenarioBackup, outputStream)
 
     /**
      * Deserialize a scenario.
@@ -66,7 +65,9 @@ internal class ScenarioSerializer {
      *
      * @return the scenario backup deserialized from the json.
      */
-    fun deserialize(json: InputStream): ScenarioBackup? {
+    override fun deserialize(json: InputStream): ScenarioBackup? {
+        Log.d(TAG, "Deserializing smart scenario")
+
         val jsonBackup = Json.parseToJsonElement(json.readBytes().toString(Charsets.UTF_8)).jsonObject
         val version = jsonBackup.getInt("version", true) ?: -1
         val scenario = when {
@@ -79,7 +80,7 @@ internal class ScenarioSerializer {
                 Json.decodeFromJsonElement<ScenarioBackup>(jsonBackup).scenario
             }
             else -> {
-                Log.d(TAG, "Not the current version, use compat serialization.")
+                Log.d(TAG, "$version is not the current, use compat serialization.")
                 jsonBackup.deserializeCompleteScenarioCompat(version)
             }
         }

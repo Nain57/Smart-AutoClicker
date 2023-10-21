@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import android.util.Log
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -28,6 +29,19 @@ import kotlinx.serialization.json.int
 import kotlinx.serialization.json.long
 
 // This file contains a set of safe getter for the JsonObject class.
+
+/**
+ * Safely get the [JsonObject] of this JsonElement.
+ * @param shouldLogError true if any error should be logged, false if not.
+ * @return the JsonObject value or null if not found.
+ */
+internal fun JsonElement.getJsonObject(shouldLogError: Boolean = false): JsonObject? =
+    try {
+        jsonObject
+    } catch (iaEx: IllegalArgumentException) {
+        if (shouldLogError) Log.w(TAG, "No JsonObject for this JsonElement")
+        null
+    }
 
 /**
  * Safely get the [JsonObject] child value

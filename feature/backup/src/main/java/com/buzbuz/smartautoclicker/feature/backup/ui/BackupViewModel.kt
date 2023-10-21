@@ -26,9 +26,9 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.feature.backup.R
-
 import com.buzbuz.smartautoclicker.feature.backup.domain.Backup
 import com.buzbuz.smartautoclicker.feature.backup.domain.BackupRepository
 
@@ -84,16 +84,21 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
      * @param uri the uri of the file provided by [createBackupFileCreationIntent] or
      * [createBackupRestorationFileSelectionIntent] intent data result.
      * @param isImport true for an import, false for an export.
-     * @param scenarios the list of scenario to be exported. Ignored for an import.
+     * @param smartScenarios the list of scenario to be exported. Ignored for an import.
      */
-    fun startBackup(uri: Uri, isImport: Boolean, scenarios: List<Long> = emptyList()) {
+    fun startBackup(
+        uri: Uri,
+        isImport: Boolean,
+        dumbScenarios: List<Long> = emptyList(),
+        smartScenarios: List<Long> = emptyList(),
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (isImport) {
                 repository.restoreScenarioBackup(uri, displayMetrics.screenSize).collect { backup ->
                     updateBackupState(backup, true)
                 }
             } else {
-                repository.createScenarioBackup(uri, scenarios, displayMetrics.screenSize).collect { backup ->
+                repository.createScenarioBackup(uri, dumbScenarios, smartScenarios, displayMetrics.screenSize).collect { backup ->
                     updateBackupState(backup, false)
                 }
             }

@@ -27,9 +27,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_ACTION_MAX_REPEAT_COUNT
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MAX_VALUE
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MIN_VALUE
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_DELAY_MAX_MS
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_DELAY_MIN_MS
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
@@ -104,8 +106,9 @@ class DumbClickDialog(
             hideSoftInputOnFocusLoss(editPressDurationLayout.textField)
 
             editRepeatLayout.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(1,
-                    DUMB_ACTION_MAX_REPEAT_COUNT
+                textField.filters = arrayOf(MinMaxInputFilter(
+                    REPEAT_COUNT_MIN_VALUE,
+                    REPEAT_COUNT_MAX_VALUE
                 ))
                 setLabel(R.string.input_field_label_repeat_count)
                 setOnTextChangedListener {
@@ -116,7 +119,10 @@ class DumbClickDialog(
             hideSoftInputOnFocusLoss(editRepeatLayout.textField)
 
             editRepeatDelay.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(0, REPEAT_DELAY_MAX_MS.toInt()))
+                textField.filters = arrayOf(MinMaxInputFilter(
+                    REPEAT_DELAY_MIN_MS.toInt(),
+                    REPEAT_DELAY_MAX_MS.toInt(),
+                ))
                 setLabel(R.string.input_field_label_repeat_delay)
                 setOnTextChangedListener {
                     viewModel.setRepeatDelay(if (it.isNotEmpty()) it.toString().toLong() else 0)

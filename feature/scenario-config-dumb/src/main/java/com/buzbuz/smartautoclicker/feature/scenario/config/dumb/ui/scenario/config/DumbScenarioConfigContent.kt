@@ -26,7 +26,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_SCENARIO_MAX_DURATION_MINUTES
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_SCENARIO_MAX_REPEAT_COUNT
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MAX_VALUE
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MIN_VALUE
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
@@ -65,7 +66,10 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
             dialogController.hideSoftInputOnFocusLoss(scenarioNameInputLayout.textField)
 
             repeatCountInputField.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(1, DUMB_SCENARIO_MAX_REPEAT_COUNT))
+                textField.filters = arrayOf(MinMaxInputFilter(
+                    REPEAT_COUNT_MIN_VALUE,
+                    REPEAT_COUNT_MAX_VALUE,
+                ))
                 setLabel(R.string.input_field_label_repeat_count)
                 setOnTextChangedListener {
                     dialogViewModel.setRepeatCount(if (it.isNotEmpty()) it.toString().toInt() else 0)

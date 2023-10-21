@@ -115,7 +115,8 @@ class ScenarioListFragment : Fragment() {
                 !uiState.isProModePurchased -> scenarioListViewModel.onExportClickedWithoutProMode(requireContext())
                 uiState.type == ScenarioListUiState.Type.EXPORT -> showBackupDialog(
                     isImport = false,
-                    scenariosToBackup = scenarioListViewModel.getScenariosSelectedForBackup(),
+                    smartScenariosToBackup = scenarioListViewModel.getSmartScenariosSelectedForBackup(),
+                    dumbScenariosToBackup = scenarioListViewModel.getDumbScenariosSelectedForBackup(),
                 )
                 else -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.EXPORT)
             }
@@ -273,12 +274,18 @@ class ScenarioListFragment : Fragment() {
      * Shows the backup dialog fragment.
      *
      * @param isImport true to display in import mode, false for export.
-     * @param scenariosToBackup the list of identifiers for the scenarios to export. Null if isImport = true.
+     * @param smartScenariosToBackup the list of identifiers for the smart scenarios to export. Null if isImport = true.
+     * @param dumbScenariosToBackup the list of identifiers for the dumb scenarios to export. Null if isImport = true.
+     *
      */
-    private fun showBackupDialog(isImport: Boolean, scenariosToBackup: Collection<Long>? = null) {
+    private fun showBackupDialog(
+        isImport: Boolean,
+        smartScenariosToBackup: Collection<Long>? = null,
+        dumbScenariosToBackup: Collection<Long>? = null,
+    ) {
         activity?.let {
             BackupDialogFragment
-                .newInstance(isImport, scenariosToBackup)
+                .newInstance(isImport, smartScenariosToBackup, dumbScenariosToBackup)
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }
         scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)

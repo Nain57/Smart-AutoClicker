@@ -33,5 +33,5 @@ data class DumbScenario(
     fun isValid(): Boolean = name.isNotEmpty() && dumbActions.isNotEmpty()
 }
 
-const val DUMB_SCENARIO_MAX_REPEAT_COUNT = 99999
-val DUMB_SCENARIO_MAX_DURATION_MINUTES = 24.hours.inWholeMinutes.toInt()
+const val DUMB_SCENARIO_MIN_DURATION_MINUTES = 1
+const val DUMB_SCENARIO_MAX_DURATION_MINUTES = 1440
