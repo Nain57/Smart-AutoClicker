@@ -27,7 +27,7 @@ internal sealed class Backup {
     data class Loading(val progress: Int? = null, val maxProgress: Int? = null) : Backup()
 
     /** The backup is verifying the imported data. */
-    object Verification : Backup()
+    data object Verification : Backup()
 
     /**
      * The backup is completed.
@@ -38,5 +38,5 @@ internal sealed class Backup {
     data class Completed(val successCount: Int, val failureCount: Int, val compatWarning: Boolean) : Backup()
 
     /** The backup has encountered an error and has stopped. */
-    object Error : Backup()
+    data object Error : Backup()
 }

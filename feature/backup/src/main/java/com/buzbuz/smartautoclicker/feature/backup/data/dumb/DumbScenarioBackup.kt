@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.backup.data
+package com.buzbuz.smartautoclicker.feature.backup.data.dumb
 
-import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
-
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import kotlinx.serialization.Serializable
 
 /**
@@ -28,12 +27,12 @@ import kotlinx.serialization.Serializable
  * @param version the version of the backup.
  * @param screenWidth the width of the screen of the device that have generated this backup.
  * @param screenHeight the height of the screen of the device that have generated this backup.
- * @param scenario the scenario being exported/imported.
+ * @param dumbScenario the dumb scenario being exported/imported.
  */
 @Serializable
-internal data class ScenarioBackup(
+internal data class DumbScenarioBackup(
     val version: Int,
     val screenWidth: Int,
     val screenHeight: Int,
-    val scenario: CompleteScenario,
+    val dumbScenario: DumbScenarioWithActions,
 )

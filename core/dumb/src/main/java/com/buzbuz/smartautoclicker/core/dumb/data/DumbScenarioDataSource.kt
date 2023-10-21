@@ -17,11 +17,14 @@
 package com.buzbuz.smartautoclicker.core.dumb.data
 
 import android.util.Log
+
 import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
+import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioDao
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.toDomain
@@ -29,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.toEntity
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.lang.Exception
 
 internal class DumbScenarioDataSource(database: DumbDatabase,) {
 
@@ -63,6 +67,30 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
             scenarioDbId = dumbScenarioDao.addDumbScenario(scenario.toEntity()),
             actions = scenario.dumbActions,
         )
+    }
+
+    suspend fun addDumbScenarioCopy(scenarioWithActions: DumbScenarioWithActions): Long? {
+        Log.d(TAG, "Add dumb scenario to copy ${scenarioWithActions.scenario}")
+
+        return try {
+            val scenarioId = dumbScenarioDao.addDumbScenario(
+                scenarioWithActions.scenario.copy(id = DATABASE_ID_INSERTION)
+            )
+
+            dumbScenarioDao.addDumbActions(
+                scenarioWithActions.dumbActions.map { dumbAction ->
+                    dumbAction.copy(
+                        id = DATABASE_ID_INSERTION,
+                        dumbScenarioId = scenarioId,
+                    )
+                }
+            )
+
+            scenarioId
+        } catch (ex: Exception) {
+            Log.e(TAG, "Error while inserting scenario copy", ex)
+            null
+        }
     }
 
     suspend fun updateDumbScenario(scenario: DumbScenario) {

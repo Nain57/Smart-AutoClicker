@@ -31,4 +31,8 @@ interface RepeatableWithDelay : Repeatable {
         repeatDelayMs >= 0
 }
 
+const val REPEAT_COUNT_MIN_VALUE: Int = 1
+const val REPEAT_COUNT_MAX_VALUE: Int = 99999
+
+const val REPEAT_DELAY_MIN_MS: Long = 0
 const val REPEAT_DELAY_MAX_MS: Long = 3_600_000

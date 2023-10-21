@@ -21,137 +21,74 @@ import android.graphics.Point
 import android.net.Uri
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.readEntryFile
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.writeEntryFile
-import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
+import com.buzbuz.smartautoclicker.feature.backup.data.dumb.DumbBackupDataSource
+import com.buzbuz.smartautoclicker.feature.backup.data.smart.SmartBackupDataSource
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 import java.io.File
 import java.io.IOException
-import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 /** [BackupEngine] internal implementation. */
-internal class BackupEngine(private val appDataDir: File, private val contentResolver: ContentResolver) {
+internal class BackupEngine(appDataDir: File, private val contentResolver: ContentResolver) {
 
-    /**
-     * Regex matching a condition file into its folder in a backup archive.
-     * Will match any file like "scenarioId/Condition_randomNumber".
-     *
-     * You can try it out here: https://regex101.com
-     */
-    private val conditionUnzipMatchRegex = """[0-9]+/${CONDITION_FILE_PREFIX}-?[0-9]+"""
-        .toRegex()
-
-    /** Serializer/Deserializer for database scenarios. */
-    private val scenarioSerializer = ScenarioSerializer()
+    private val dumbBackupDataSource: DumbBackupDataSource = DumbBackupDataSource(appDataDir)
+    private val smartBackupDataSource: SmartBackupDataSource = SmartBackupDataSource(appDataDir)
 
     /**
      * Creates a new backup file.
      *
      * @param zipFileUri the uri of the file to write the backup into. Must be retrieved using the DocumentProvider.
-     * @param scenarios the scenarios to backup.
+     * @param smartScenarios the scenarios to backup.
      * @param screenSize the size of this device screen.
      * @param progress the object notified about the backup progress.
      */
     suspend fun createBackup(
         zipFileUri: Uri,
-        scenarios: List<CompleteScenario>,
+        smartScenarios: List<CompleteScenario>,
+        dumbScenarios: List<DumbScenarioWithActions>,
         screenSize: Point,
         progress: BackupProgress,
     ) {
-        Log.d(TAG, "Create backup: $zipFileUri for scenarios: $scenarios")
+        Log.d(TAG, "Create backup: $zipFileUri for scenarios: $smartScenarios")
+        dumbBackupDataSource.reset()
+        smartBackupDataSource.reset()
 
         var currentProgress = 0
-        progress.onProgressChanged(currentProgress, scenarios.size)
+        progress.onProgressChanged(currentProgress, smartScenarios.size)
 
+        // Create the zip file containing the scenarios and their events conditions.
         withContext(Dispatchers.IO) {
-
-            // Create the zip file containing the scenarios and their events conditions.
             try {
                 ZipOutputStream(contentResolver.openOutputStream(zipFileUri)).use { zipStream ->
-                    scenarios.forEach { completeScenario ->
-                        Log.d(TAG, "Backup scenario ${completeScenario.scenario.id}")
+                    dumbScenarios.forEach { dumbScenario ->
+                        Log.d(TAG, "Backup dumb scenario ${dumbScenario.scenario.id}")
 
-                        // Create json file from the data of the scenario
-                        val jsonFile = createJsonBackupFile(completeScenario, screenSize)
+                        dumbBackupDataSource.addScenarioToZipFile(zipStream, dumbScenario, screenSize)
 
-                        // Add the json and all scenario conditions file to the archive
-                        addScenarioToZip(zipStream, completeScenario.scenario.id, jsonFile, completeScenario.getConditionsPath())
-
-                        // Delete the json file from the app data folder
-                        jsonFile.delete()
-
-                        // Increment the progress and notify
                         currentProgress++
-                        progress.onProgressChanged(currentProgress, scenarios.size)
+                        progress.onProgressChanged(currentProgress, smartScenarios.size)
                     }
 
-                    progress.onCompleted(scenarios, 0, false)
+                    smartScenarios.forEach { completeScenario ->
+                        Log.d(TAG, "Backup smart scenario ${completeScenario.scenario.id}")
+
+                        smartBackupDataSource.addScenarioToZipFile(zipStream, completeScenario, screenSize)
+
+                        currentProgress++
+                        progress.onProgressChanged(currentProgress, smartScenarios.size)
+                    }
+
+                    progress.onCompleted(dumbScenarios, smartScenarios, 0, false)
                 }
             } catch (ioEx: IOException) {
                 Log.e(TAG, "Error while creating backup archive.")
                 progress.onError()
-            }
-        }
-    }
-
-    /**
-     * Creates the json file for a scenario.
-     *
-     * @param completeScenario the scenario to create the json from.
-     * @param screenSize this device screen size.
-     *
-     * @return the json backup file.
-     */
-    private fun createJsonBackupFile(completeScenario: CompleteScenario, screenSize: Point): File =
-        File(appDataDir, "${completeScenario.scenario.id}$FILE_EXTENSION_JSON").apply {
-            if (exists()) {
-                Log.w(TAG, "Backup file already exists, deleting previous one")
-                delete()
-                createNewFile()
-            }
-
-            outputStream().use { jsonOutStream ->
-                scenarioSerializer.serialize(completeScenario, screenSize, jsonOutStream)
-            }
-        }
-
-    /**
-     * Add a scenario to a zip file.
-     *
-     * @param zipStream the output stream on the zip file.
-     * @param scenarioId the identifier of the scenario to be zipped.
-     * @param jsonScenario the scenario to be added.
-     * @param conditions the set of conditions path used by the scenario.
-     */
-    private fun addScenarioToZip(
-        zipStream: ZipOutputStream,
-        scenarioId: Long,
-        jsonScenario: File,
-        conditions: Set<String>,
-    ) {
-        val entryPrefix = "$scenarioId/"
-        Log.d(TAG, "Compress in folder $entryPrefix")
-
-        zipStream.apply {
-            // Create folder for the current scenario
-            putNextEntry(ZipEntry(entryPrefix))
-
-            // Put json file in the archive
-            putNextEntry(
-                ZipEntry("$entryPrefix${jsonScenario.name}")
-            )
-            writeEntryFile(jsonScenario)
-
-            // Put all conditions in the scenario folder in the archive
-            conditions.forEach { conditionPath ->
-                putNextEntry(ZipEntry("$entryPrefix$conditionPath"))
-                writeEntryFile(File(appDataDir, conditionPath))
             }
         }
     }
@@ -165,133 +102,59 @@ internal class BackupEngine(private val appDataDir: File, private val contentRes
      */
     suspend fun loadBackup(zipFileUri: Uri, screenSize: Point, progress: BackupProgress) {
         Log.d(TAG, "Load backup: $zipFileUri")
+        dumbBackupDataSource.reset()
+        smartBackupDataSource.reset()
 
-        var screenCompatWarning = false
         var currentProgress = 0
-        var failureCount = 0
-        progress.onProgressChanged(0, null)
+        progress.onProgressChanged(currentProgress, null)
 
-        val scenarioList = mutableListOf<CompleteScenario>()
         withContext(Dispatchers.IO) {
             try {
                 ZipInputStream(contentResolver.openInputStream(zipFileUri)).use { zipStream ->
                     generateSequence { zipStream.nextEntry }
                         .forEach { zipEntry ->
+                            if (zipEntry.isDirectory) return@forEach
+
+                            Log.d(TAG, "Extracting file ${zipEntry.name}")
                             when {
-                                zipEntry.name.endsWith(FILE_EXTENSION_JSON) -> {
-                                    Log.d(TAG, "Extract scenario file ${zipEntry.name}.")
+                                dumbBackupDataSource.extractFromZip(zipStream, zipEntry.name) -> {
+                                    Log.d(TAG, "Dumb scenario file ${zipEntry.name} extracted.")
 
-                                    scenarioSerializer.deserialize(zipStream)?.let { backup ->
-                                        scenarioList.add(backup.scenario)
+                                    currentProgress++
+                                    progress.onProgressChanged(currentProgress, null)
+                                }
 
-                                        if (!screenCompatWarning) {
-                                            screenCompatWarning =
-                                                screenSize != Point(backup.screenWidth, backup.screenHeight)
-                                        }
+                                smartBackupDataSource.extractFromZip(zipStream, zipEntry.name) -> {
+                                    if (smartBackupDataSource.isScenarioBackupFileZipEntry(zipEntry.name)) {
+                                        Log.d(TAG, "Smart scenario file ${zipEntry.name} extracted")
 
                                         currentProgress++
                                         progress.onProgressChanged(currentProgress, null)
-                                    } ?:let {
-                                        Log.w(TAG, "Can't deserialize ${zipEntry.name}.")
-                                        failureCount++
                                     }
                                 }
 
-                                zipEntry.name.matches(conditionUnzipMatchRegex) -> {
-                                    Log.d(TAG, "Extract condition file ${zipEntry.name}.")
-                                    extractConditionFromZip(zipStream, zipEntry)
-                                }
-
-                                else -> { /* Ignore other files */ }
+                                else -> Log.i(TAG, "Nothing found to handle zip entry ${zipEntry.name}.")
                             }
                         }
                 }
 
                 progress.onVerification?.invoke()
-                val validScenarios = scenarioList.mapNotNull { scenario ->
-                    if (verifyExtractedScenario(scenario)) {
-                        scenario
-                    } else {
-                        failureCount++
-                        Log.w(TAG, "Scenario ${scenario.scenario.id} is invalid.")
-                        null
-                    }
-                }
+                dumbBackupDataSource.verifyExtractedScenarios(screenSize)
+                smartBackupDataSource.verifyExtractedScenarios(screenSize)
 
-                progress.onCompleted(validScenarios, failureCount, screenCompatWarning)
+                progress.onCompleted(
+                    dumbBackupDataSource.validBackups,
+                    smartBackupDataSource.validBackups,
+                    dumbBackupDataSource.failureCount + smartBackupDataSource.failureCount,
+                    smartBackupDataSource.screenCompatWarning,
+                )
             } catch (ioEx: IOException) {
                 Log.e(TAG, "Error while reading backup archive.")
                 progress.onError()
             }
         }
     }
-
-    /**
-     * Extract a condition file from a zip file.
-     *
-     * @param zipStream the input stream the get the file from.
-     * @param zipEntry the entry corresponding to the file.
-     */
-    private fun extractConditionFromZip(zipStream: ZipInputStream, zipEntry: ZipEntry) {
-        val conditionFile = File(
-            appDataDir,
-            zipEntry.name.let { name ->
-                val startIndex = name.lastIndexOf('/') + 1
-                if (startIndex > 0) {
-                    name.substring(startIndex)
-                } else {
-                    Log.w(TAG, "Invalid condition path.")
-                    return
-                }
-            }
-        )
-
-        if (!conditionFile.exists()) {
-            zipStream.readEntryFile(conditionFile)
-        } else {
-            Log.d(TAG, "Condition already exist, skip it.")
-        }
-    }
-
-    /**
-     * Verifies if the scenario extracted is correctly formed.
-     * @param completeScenario the scenario to verify.
-     * @return true if the scenario is correct, false if not.
-     */
-    private fun verifyExtractedScenario(completeScenario: CompleteScenario) : Boolean {
-        Log.d(TAG, "Verifying scenario ${completeScenario.scenario.id}")
-
-        completeScenario.events.forEach { completeEvent ->
-            if (completeEvent.actions.isEmpty()) {
-                Log.w(TAG, "Invalid scenario, action list is empty.")
-                return false
-            } else if (completeEvent.conditions.isEmpty()) {
-                Log.w(TAG, "Invalid scenario, condition list is empty.")
-                return false
-            }
-
-            completeEvent.conditions.forEach { condition ->
-                if (!File(appDataDir, condition.path).exists()) {
-                    Log.w(TAG, "Invalid condition, ${condition.path} file does not exist.")
-                    return false
-                }
-            }
-        }
-
-        return true
-    }
-
-    /** @return the set of path in the app data directory for all conditions in this scenario. */
-    private fun CompleteScenario.getConditionsPath() = buildSet {
-        events.forEach { completeEvent ->
-            completeEvent.conditions.forEach { condition ->
-                add(condition.path)
-            }
-        }
-    }
 }
 
-/** json file extension. */
-private const val FILE_EXTENSION_JSON = ".json"
 /** Tag for logs. */
 private const val TAG = "BackupEngine"

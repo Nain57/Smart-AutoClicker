@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.backup.data
 
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 
 /**
  * Notifies for a backup progress and state.
@@ -28,7 +29,12 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
  */
 class BackupProgress(
     val onProgressChanged: suspend (current: Int?, max: Int?) -> Unit,
-    val onCompleted: suspend (success: List<CompleteScenario>, failureCount: Int, compatWarning: Boolean) -> Unit,
+    val onCompleted: suspend (
+        dumbScenario: List<DumbScenarioWithActions>,
+        smartScenario: List<CompleteScenario>,
+        failureCount: Int,
+        compatWarning: Boolean,
+    ) -> Unit,
     val onError: suspend () -> Unit,
     val onVerification: (suspend () -> Unit)? = null,
 )

@@ -34,7 +34,7 @@ internal fun ZipOutputStream.writeEntryFile(entry: File) {
  * Read a file into from this zip stream.
  * @param output the file to put the content into.
  */
-internal fun ZipInputStream.readEntryFile(output: File) =
+internal fun ZipInputStream.readAndCopyEntryFile(output: File) =
     output.apply {
         outputStream().use { output ->
             copyTo(output)

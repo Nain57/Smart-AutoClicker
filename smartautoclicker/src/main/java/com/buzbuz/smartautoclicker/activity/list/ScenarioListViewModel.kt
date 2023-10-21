@@ -119,9 +119,13 @@ class ScenarioListViewModel(application: Application) : AndroidViewModel(applica
         searchQuery.value = query
     }
 
-    /** @return the list of selected scenario identifiers. */
-    fun getScenariosSelectedForBackup(): Collection<Long> =
-        emptyList() // TODO
+    /** @return the list of selected dumb scenario identifiers. */
+    fun getDumbScenariosSelectedForBackup(): Collection<Long> =
+        selectedForBackup.value.dumbSelection.toList()
+
+    /** @return the list of selected smart scenario identifiers. */
+    fun getSmartScenariosSelectedForBackup(): Collection<Long> =
+        selectedForBackup.value.smartSelection.toList()
 
     /**
      * Toggle the selected for backup state of a scenario.

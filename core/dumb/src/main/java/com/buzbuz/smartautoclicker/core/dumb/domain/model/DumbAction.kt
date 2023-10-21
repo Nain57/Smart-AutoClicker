@@ -70,5 +70,3 @@ sealed class DumbAction {
         override fun isValid(): Boolean = name.isNotEmpty()
     }
 }
-
-const val DUMB_ACTION_MAX_REPEAT_COUNT = 99999
