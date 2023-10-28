@@ -216,31 +216,31 @@ class Migration9to10Tests {
 
                 moveToFirst() // Click with duration over
                 assertColumnEquals(Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS, PRESS_DURATION_COLUMN)
-                assertColumnEquals(0, SWIPE_DURATION_COLUMN)
+                assertColumnEquals(0L, SWIPE_DURATION_COLUMN)
 
                 moveToNext() // Click with duration below
                 assertColumnEquals(durationBelow, PRESS_DURATION_COLUMN)
-                assertColumnEquals(0, SWIPE_DURATION_COLUMN)
+                assertColumnEquals(0L, SWIPE_DURATION_COLUMN)
 
                 moveToNext() // Swipe with duration over
                 assertColumnEquals(Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS, SWIPE_DURATION_COLUMN)
-                assertColumnEquals(0, PRESS_DURATION_COLUMN)
+                assertColumnEquals(0L, PRESS_DURATION_COLUMN)
 
                 moveToNext() // Swipe with duration below
                 assertColumnEquals(durationBelow, SWIPE_DURATION_COLUMN)
-                assertColumnEquals(0, PRESS_DURATION_COLUMN)
+                assertColumnEquals(0L, PRESS_DURATION_COLUMN)
 
                 moveToNext() // Pause
-                assertColumnEquals(0, PRESS_DURATION_COLUMN)
-                assertColumnEquals(0, SWIPE_DURATION_COLUMN)
+                assertColumnEquals(0L, PRESS_DURATION_COLUMN)
+                assertColumnEquals(0L, SWIPE_DURATION_COLUMN)
 
                 moveToNext() // Intent
-                assertColumnEquals(0, PRESS_DURATION_COLUMN)
-                assertColumnEquals(0, SWIPE_DURATION_COLUMN)
+                assertColumnEquals(0L, PRESS_DURATION_COLUMN)
+                assertColumnEquals(0L, SWIPE_DURATION_COLUMN)
 
                 moveToNext() // Toggle
-                assertColumnEquals(0, PRESS_DURATION_COLUMN)
-                assertColumnEquals(0, SWIPE_DURATION_COLUMN)
+                assertColumnEquals(0L, PRESS_DURATION_COLUMN)
+                assertColumnEquals(0L, SWIPE_DURATION_COLUMN)
             }
         }
 

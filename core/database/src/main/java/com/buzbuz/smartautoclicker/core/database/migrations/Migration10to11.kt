@@ -117,13 +117,24 @@ object Migration10to11 : Migration(10, 11) {
 
     private fun SupportSQLiteDatabase.getEventFirstValidConditionId(eventId: Long): Long? =
         query(getEventConditions(eventId)).use { conditionsCursor ->
-            val conditionIdColumnIndex = conditionsCursor.getColumnIndex("id")
+            // Nothing to do ?
+            if (conditionsCursor.count == 0) return null
+            conditionsCursor.moveToFirst()
 
-            if (conditionIdColumnIndex < 0 || conditionsCursor.count == 0) null
-            else {
-                conditionsCursor.moveToFirst()
-                conditionsCursor.getLong(conditionIdColumnIndex)
-            }
+            // Get all columns indexes
+            val conditionIdColumnIndex = conditionsCursor.getColumnIndex("id")
+            val shouldBeDetectedColumnIndex = conditionsCursor.getColumnIndex("shouldBeDetected")
+
+            if (conditionIdColumnIndex < 0 || shouldBeDetectedColumnIndex < 0)
+                throw IllegalStateException("Can't find columns")
+
+            do {
+                if (conditionsCursor.getInt(shouldBeDetectedColumnIndex) == 1)
+                    return conditionsCursor.getLong(conditionIdColumnIndex)
+            } while (conditionsCursor.moveToNext())
+
+            // No valid condition found
+            return null
         }
 
     private val createTempActionTable = """

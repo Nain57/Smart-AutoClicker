@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.database.migrations
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
@@ -43,6 +44,71 @@ class Migration10to11Tests {
 
         private const val OLD_DB_VERSION = 10
         private const val NEW_DB_VERSION = 11
+
+        private const val TEST_EVENT_ID = 2L
+
+        private val TEST_CLICK_ON_POSITION = V10Click(
+            id = 1L,
+            evtId = TEST_EVENT_ID,
+            name = "TOTO",
+            x = 1,
+            y = 2,
+            pressDuration = 500L,
+            clickOnCondition = false,
+            priority = 1,
+        )
+
+        private val TEST_CLICK_ON_CONDITION = V10Click(
+            id = 2L,
+            evtId = TEST_EVENT_ID,
+            name = "TOTO",
+            x = null,
+            y = null,
+            pressDuration = 500L,
+            clickOnCondition = true,
+            priority = 1,
+        )
+
+        private val TEST_SWIPE = ExpectedV10ToV11Swipe(
+            id = 3L,
+            evtId = TEST_EVENT_ID,
+            name = "TOTO",
+            fromX = 0,
+            fromY = 1,
+            toX = 10,
+            toY = 11,
+            swipeDuration = 500L,
+            priority = 1,
+        )
+
+        private val TEST_PAUSE = ExpectedV10ToV11Pause(
+            id = 4L,
+            evtId = TEST_EVENT_ID,
+            name = "TOTO",
+            pauseDuration = 500L,
+            priority = 1,
+        )
+
+        private val TEST_INTENT = ExpectedV10ToV11Intent(
+            id = 5L,
+            evtId = TEST_EVENT_ID,
+            name = "TOTO",
+            isAdvanced = true,
+            isBroadcast = false,
+            action = "com.toto",
+            componentName = "com.toto/TOTO",
+            flags = 17,
+            priority = 1,
+        )
+
+        private val TEST_TOGGLE_EVENT = ExpectedV10ToV11ToggleEvent(
+            id = 6L,
+            evtId = TEST_EVENT_ID,
+            name = "TOTO",
+            toggleEventId = 12L,
+            toggleType = ToggleEventType.TOGGLE,
+            priority = 1,
+        )
     }
 
     @get:Rule
@@ -51,313 +117,279 @@ class Migration10to11Tests {
         ClickDatabase::class.java,
     )
 
+    private fun SupportSQLiteDatabase.insertTestCondition(id: Long, shouldBeDetected: Boolean) {
+        execSQL(
+            getInsertV10Condition(
+                id = id,
+                eventId = TEST_EVENT_ID,
+                name = "TOTO",
+                path = "/toto",
+                left = 0, top = 1, right = 2, bottom = 3,
+                threshold = 10,
+                detectionType = 0,
+                shouldBeDetected = shouldBeDetected,
+            )
+        )
+    }
+
     @Test
     fun migrate_quality() {
+        // Given
         val id = 1L
         val quality = 1200
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Scenario(id, quality))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.execSQL(getInsertV10Scenario(id, quality))
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Scenarios()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Scenarios()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(quality + 600, "detection_quality")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertColumnEquals(id, "id")
+                cursor.assertColumnEquals(quality + 600, "detection_quality")
+            }
         }
     }
 
     @Test
     fun migrate_swipe() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val fromX = 0
-        val fromY = 1
-        val toX = 10
-        val toY = 11
-        val duration = 500L
-        val priority = 1
+        // Given
+        val expectedSwipe = TEST_SWIPE
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Swipe(id, evtId, name, fromX, fromY, toX,toY, duration, priority))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Swipe(expectedSwipe)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnEquals(fromX, "fromX")
-            cursor.assertColumnEquals(fromY, "fromY")
-            cursor.assertColumnEquals(toX, "toX")
-            cursor.assertColumnEquals(toY, "toY")
-            cursor.assertColumnEquals(duration, "swipeDuration")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsSwipe(expectedSwipe)
+            }
         }
-        dbV11.close()
     }
 
     @Test
     fun migrate_pause() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val duration = 500L
-        val priority = 1
+        // Given
+        val expectedPause = TEST_PAUSE
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Pause(id, evtId, name, duration, priority))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Pause(expectedPause)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnEquals(duration, "pauseDuration")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsPause(expectedPause)
+            }
         }
-        dbV11.close()
     }
 
     @Test
     fun migrate_intent() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val isAdvanced = true
-        val isBroadcast = false
-        val action = "com.toto"
-        val comp = "com.toto/TOTO"
-        val flags = 17
-        val priority = 1
+        // Given
+        val expectedIntent = TEST_INTENT
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Intent(id, evtId, name, isAdvanced, isBroadcast, action, comp, flags, priority))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Intent(expectedIntent)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnEquals(isAdvanced, "isAdvanced")
-            cursor.assertColumnEquals(isBroadcast, "isBroadcast")
-            cursor.assertColumnEquals(action, "intent_action")
-            cursor.assertColumnEquals(comp, "component_name")
-            cursor.assertColumnEquals(flags, "flags")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsIntent(expectedIntent)
+            }
         }
-        dbV11.close()
     }
 
     @Test
     fun migrate_toggle_event() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val toggleEventId = 12L
-        val toggleType = ToggleEventType.TOGGLE
-        val priority = 1
+        // Given
+        val expectedToggleEvent = TEST_TOGGLE_EVENT
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10ToggleEvent(id, evtId, name, toggleEventId, toggleType, priority))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10ToggleEvent(expectedToggleEvent)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnEquals(toggleEventId, "toggle_event_id")
-            cursor.assertColumnEquals(toggleType, "toggle_type")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsToggleEvent(expectedToggleEvent)
+            }
         }
-        dbV11.close()
     }
 
     @Test
     fun migrate_click_on_position() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val x = 0
-        val y = 1
-        val clickOnCondition = false
-        val duration = 500L
-        val priority = 1
+        // Given
+        val v10Click = TEST_CLICK_ON_POSITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Click(id, evtId, name, x, y, clickOnCondition, duration, priority))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Click(v10Click)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnEquals(x, "x")
-            cursor.assertColumnEquals(y, "y")
-            cursor.assertColumnEquals(ClickPositionType.USER_SELECTED, "clickPositionType")
-            cursor.assertColumnNull("clickOnConditionId")
-            cursor.assertColumnEquals(duration, "pressDuration")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsV11Click(v10Click.toExpectedV11Click(
+                    clickPositionType = ClickPositionType.USER_SELECTED,
+                    clickOnConditionId = null,
+                ))
+            }
         }
-        dbV11.close()
     }
 
     @Test
     fun migrate_click_on_condition_no_conditions() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val clickOnCondition = true
-        val duration = 500L
-        val priority = 1
+        // Given
+        val v10Click = TEST_CLICK_ON_CONDITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Click(id, evtId, name, null, null, clickOnCondition, duration, priority))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Click(v10Click)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnNull("x")
-            cursor.assertColumnNull("y")
-            cursor.assertColumnEquals(ClickPositionType.ON_DETECTED_CONDITION, "clickPositionType")
-            cursor.assertColumnNull("clickOnConditionId")
-            cursor.assertColumnEquals(duration, "pressDuration")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsV11Click(v10Click.toExpectedV11Click(
+                    clickPositionType = ClickPositionType.ON_DETECTED_CONDITION,
+                    clickOnConditionId = null,
+                ))
+            }
         }
-        dbV11.close()
     }
 
     @Test
     fun migrate_click_on_condition_invalid_condition() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val clickOnCondition = true
-        val duration = 500L
-        val priority = 1
+        // Given
         val conditionId = 25L
         val shouldBeDetected = false
+        val v10Click = TEST_CLICK_ON_CONDITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Click(id, evtId, name, null, null, clickOnCondition, duration, priority))
-            execSQL(getInsertV10Condition(conditionId, evtId, "TOTO", "/toto", 0, 1, 2, 3, 10, 0, shouldBeDetected))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Click(v10Click)
+            dbV10.insertTestCondition(conditionId, shouldBeDetected)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnNull("x")
-            cursor.assertColumnNull("y")
-            cursor.assertColumnEquals(ClickPositionType.ON_DETECTED_CONDITION, "clickPositionType")
-            cursor.assertColumnNull("clickOnConditionId")
-            cursor.assertColumnEquals(duration, "pressDuration")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsV11Click(v10Click.toExpectedV11Click(
+                    clickPositionType = ClickPositionType.ON_DETECTED_CONDITION,
+                    clickOnConditionId = null,
+                ))
+            }
         }
-        dbV11.close()
     }
 
     @Test
     fun migrate_click_on_condition_valid_condition() {
-        val id = 1L
-        val evtId = 2L
-        val name = "TOTO"
-        val clickOnCondition = true
-        val duration = 500L
-        val priority = 1
+        // Given
         val conditionId = 25L
         val shouldBeDetected = true
+        val v10Click = TEST_CLICK_ON_CONDITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
-            execSQL(getInsertV10Click(id, evtId, name, null, null, clickOnCondition, duration, priority))
-            execSQL(getInsertV10Condition(conditionId, evtId, "TOTO", "/toto", 0, 1, 2, 3, 10, 0, shouldBeDetected))
-            close()
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Click(v10Click)
+            dbV10.insertTestCondition(conditionId, shouldBeDetected)
         }
 
         // Migrate
-        val dbV11 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11)
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
 
-        // Verify
-        dbV11.query(getV11Actions()).use { cursor ->
-            cursor.assertCountEquals(1)
-            cursor.moveToFirst()
-            cursor.assertColumnEquals(id, "id")
-            cursor.assertColumnEquals(evtId, "eventId")
-            cursor.assertColumnEquals(name, "name")
-            cursor.assertColumnEquals(priority, "priority")
-            cursor.assertColumnNull("x")
-            cursor.assertColumnNull("y")
-            cursor.assertColumnEquals(ClickPositionType.ON_DETECTED_CONDITION, "clickPositionType")
-            cursor.assertColumnEquals(conditionId, "clickOnConditionId")
-            cursor.assertColumnEquals(duration, "pressDuration")
+                // Verify
+                cursor.assertCountEquals(1)
+                cursor.moveToFirst()
+                cursor.assertRowIsV11Click(v10Click.toExpectedV11Click(
+                    clickPositionType = ClickPositionType.ON_DETECTED_CONDITION,
+                    clickOnConditionId = conditionId,
+                ))
+            }
         }
-        dbV11.close()
+    }
+
+    @Test
+    fun migrate_click_mixed_use_cases() {
+        // Given
+        val condition1Id = 25L
+        val condition1ShouldBeDetected = false
+        val condition2Id = 31L
+        val condition2ShouldBeDetected = true
+        val condition3Id = 42L
+        val condition3ShouldBeDetected = true
+        val v10ClickOnPosition = TEST_CLICK_ON_POSITION
+        val v10ClickOnCondition = TEST_CLICK_ON_CONDITION
+
+        // Insert in V10 and close
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+            dbV10.insertV10Click(v10ClickOnPosition)
+            dbV10.insertV10Click(v10ClickOnCondition)
+            dbV10.insertTestCondition(condition1Id, condition1ShouldBeDetected)
+            dbV10.insertTestCondition(condition2Id, condition2ShouldBeDetected)
+            dbV10.insertTestCondition(condition3Id, condition3ShouldBeDetected)
+        }
+
+        // Migrate
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+            dbV11.query(getV11Actions()).use { cursor ->
+
+                // Verify
+                cursor.assertCountEquals(2)
+
+                cursor.moveToFirst()
+                cursor.assertRowIsV11Click(v10ClickOnPosition.toExpectedV11Click(
+                    clickPositionType = ClickPositionType.USER_SELECTED,
+                    clickOnConditionId = null,
+                ))
+
+                cursor.moveToNext()
+                cursor.assertRowIsV11Click(v10ClickOnCondition.toExpectedV11Click(
+                    clickPositionType = ClickPositionType.ON_DETECTED_CONDITION,
+                    clickOnConditionId = condition2Id,
+                ))
+            }
+        }
     }
 }
