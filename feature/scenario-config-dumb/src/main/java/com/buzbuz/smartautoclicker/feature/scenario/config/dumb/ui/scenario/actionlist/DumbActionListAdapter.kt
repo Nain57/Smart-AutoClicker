@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.act
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -57,20 +56,6 @@ class DumbActionListAdapter(
     fun notifyMoveFinished() {
         actionReorderListener(currentList)
     }
-}
-
-/** DiffUtil Callback comparing two ActionItem when updating the [DumbActionListAdapter] list. */
-object DumbActionDiffUtilCallback: DiffUtil.ItemCallback<DumbActionDetails>() {
-
-    override fun areItemsTheSame(
-        oldItem: DumbActionDetails,
-        newItem: DumbActionDetails,
-    ): Boolean = oldItem.action.id == newItem.action.id
-
-    override fun areContentsTheSame(
-        oldItem: DumbActionDetails,
-        newItem: DumbActionDetails,
-    ): Boolean = oldItem == newItem
 }
 
 /**

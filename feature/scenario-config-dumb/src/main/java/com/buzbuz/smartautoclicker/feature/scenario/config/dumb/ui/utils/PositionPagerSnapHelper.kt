@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 2023 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils
+
+import android.util.Log
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+
+class PositionPagerSnapHelper : PagerSnapHelper() {
+
+    private var attachedRecyclerView: RecyclerView? = null
+
+    private val onScrollListener: OnScrollListener = object : OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            onRecyclerViewScrolled()
+        }
+    }
+
+    var onSnapPositionChangeListener: ((position: Int) -> Unit)? = null
+    var snapPosition: Int = 0
+        private set
+
+    override fun attachToRecyclerView(recyclerView: RecyclerView?) {
+        if (attachedRecyclerView == recyclerView) return
+
+        attachedRecyclerView?.removeOnScrollListener(onScrollListener)
+        attachedRecyclerView = recyclerView
+        attachedRecyclerView?.addOnScrollListener(onScrollListener)
+
+        super.attachToRecyclerView(recyclerView)
+    }
+
+    fun snapTo(position: Int) {
+        attachedRecyclerView?.scrollToPosition(position)
+    }
+
+    fun snapToNext() {
+        val itemCount = attachedRecyclerView?.adapter?.itemCount ?: return
+        if (snapPosition == itemCount - 1) return
+
+        attachedRecyclerView?.smoothScrollToPosition(snapPosition + 1)
+    }
+
+    fun snapToPrevious() {
+        if (snapPosition == 0) return
+
+        attachedRecyclerView?.smoothScrollToPosition(snapPosition - 1)
+    }
+
+    private fun findSnapPosition(): Int {
+        val layoutManager = attachedRecyclerView?.layoutManager ?: return RecyclerView.NO_POSITION
+        val snapView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
+
+        return layoutManager.getPosition(snapView)
+    }
+
+    private fun onRecyclerViewScrolled() {
+        val newSnapPosition = findSnapPosition()
+        if (newSnapPosition != snapPosition) {
+            snapPosition = newSnapPosition
+            onSnapPositionChangeListener?.invoke(snapPosition)
+        }
+    }
+}

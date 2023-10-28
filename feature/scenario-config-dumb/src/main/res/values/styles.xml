@@ -31,6 +31,17 @@
         <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
     </style>
 
+    <!-- Style for the dumb action brief. -->
+    <style name="AppTheme.DumbScenarioConfig.DumbActionBrief">
+        <item name="colorBackground">@color/overlayClickSelectorBackground</item>
+        <item name="radius">@dimen/overlay_dumb_position_selector_radius</item>
+        <item name="innerRadius">@dimen/overlay_dumb_position_selector_inner_radius</item>
+        <item name="thickness">@dimen/overlay_dumb_position_selector_thickness</item>
+        <item name="colorInner">@color/overlayViewPrimary</item>
+        <item name="colorOutlinePrimary">@color/overlayViewAccentPrimary</item>
+        <item name="colorOutlineSecondary">@color/overlayViewAccentSecondary</item>
+    </style>
+
     <!-- Style for an outlined icon button -->
     <style name="AppTheme.Widget.InfiniteButton" parent="Widget.Material3.Button.IconButton.Outlined">
         <item name="android:layout_width">wrap_content</item>

@@ -1,0 +1,20 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal">
+
+  <group
+      android:pivotX="12"
+      android:pivotY="12"
+      android:scaleX="0.75"
+      android:scaleY="0.75">
+
+    <path
+        android:fillColor="@color/overlayMenuButtons"
+        android:pathData="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/>
+
+  </group>
+</vector>
