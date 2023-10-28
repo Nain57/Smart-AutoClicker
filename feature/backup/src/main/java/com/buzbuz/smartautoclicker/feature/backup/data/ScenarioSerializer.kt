@@ -292,9 +292,24 @@ internal class ScenarioSerializer {
             }
         } else {
             clickPositionType = getEnum<ClickPositionType>("clickPositionType", true) ?: return null
-            clickOnConditionId = getLong("clickOnConditionId")
-            x = getInt("x")
-            y = getInt("y")
+
+            when (clickPositionType) {
+                ClickPositionType.ON_DETECTED_CONDITION -> {
+                    x = null
+                    y = null
+                    clickOnConditionId = getLong("clickOnConditionId", true) ?: return null
+                    if (conditions.find { it.id == clickOnConditionId } == null) {
+                        Log.w(TAG, "Can't deserialize action, clickOnConditionId is not valid.")
+                        return null
+                    }
+                }
+
+                ClickPositionType.USER_SELECTED -> {
+                    x = getInt("x", true) ?: return null
+                    y = getInt("y", true) ?: return null
+                    clickOnConditionId = null
+                }
+            }
         }
 
         return ActionEntity(

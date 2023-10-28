@@ -461,7 +461,7 @@ class ScenarioSerializerTests {
                     jsonConditionNullTop,
                     jsonConditionNullRight,
                     jsonConditionNullBottom
-                )).deserializeEndConditionsCompat()
+                )).deserializeConditionsCompat()
             )
         }
     }
@@ -627,7 +627,7 @@ class ScenarioSerializerTests {
             "name" to JsonPrimitive("TOTO"),
             "priority" to JsonPrimitive(1),
             "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(false),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.USER_SELECTED.name),
             "x" to JsonPrimitive(5),
             "y" to JsonPrimitive(5),
             "pressDuration" to JsonPrimitive(1),
@@ -638,7 +638,7 @@ class ScenarioSerializerTests {
             "name" to JsonPrimitive("TOTO"),
             "priority" to JsonPrimitive(1),
             "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(false),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.USER_SELECTED.name),
             "x" to JsonPrimitive(5),
             "y" to JsonPrimitive(5),
             "pressDuration" to JsonPrimitive(1),
@@ -661,7 +661,7 @@ class ScenarioSerializerTests {
             "name" to JsonPrimitive("TOTO"),
             "priority" to JsonPrimitive(1),
             "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(false),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.USER_SELECTED.name),
             "x" to JsonPrimitive(5),
             "y" to JsonPrimitive(5),
             "pressDuration" to JsonPrimitive(pressDurationOver),
@@ -672,7 +672,7 @@ class ScenarioSerializerTests {
             "name" to JsonPrimitive("TOTO"),
             "priority" to JsonPrimitive(1),
             "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(false),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.USER_SELECTED.name),
             "x" to JsonPrimitive(5),
             "y" to JsonPrimitive(5),
             "pressDuration" to JsonPrimitive(pressDurationBelow),
@@ -685,7 +685,32 @@ class ScenarioSerializerTests {
     }
 
     @Test
-    fun deserialization_action_click_mandatory_coordinates() {
+    fun deserialization_action_click_legacy_dbV10_user_selected() {
+        val x = 10
+        val y = 5
+        val jsonV10Click = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(false),
+            "x" to JsonPrimitive(x),
+            "y" to JsonPrimitive(y),
+            "pressDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            val v11Click = jsonV10Click.deserializeClickActionCompat(emptyList())
+            assertNotNull(v11Click)
+            assertEquals(ClickPositionType.USER_SELECTED, v11Click?.clickPositionType)
+            assertEquals(x, v11Click?.x)
+            assertEquals(y, v11Click?.y)
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_legacy_dbV10_user_selected_error_missing_coordinates() {
         val clickOnCondition = false
         val jsonClickNullX = JsonObject(mapOf(
             "id" to JsonPrimitive(1),
@@ -717,34 +742,221 @@ class ScenarioSerializerTests {
     }
 
     @Test
-    fun deserialization_action_click_optional_coordinates() {
-        val clickOnCondition = true
-        val jsonClickNullX = JsonObject(mapOf(
+    fun deserialization_action_click_legacy_dbV10_on_condition() {
+        val jsonV10ClickOnCondition = JsonObject(mapOf(
             "id" to JsonPrimitive(1),
             "eventId" to JsonPrimitive(1),
             "name" to JsonPrimitive("TOTO"),
             "priority" to JsonPrimitive(1),
             "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(clickOnCondition),
+            "clickOnCondition" to JsonPrimitive(true),
             "x" to NULL_NUMBER_JSON_PRIMITIVE,
-            "y" to JsonPrimitive(5),
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
             "pressDuration" to JsonPrimitive(1),
         ))
-        val jsonClickNullY = JsonObject(mapOf(
+        val invalidCondition = ConditionEntity(
+            id = 1, eventId = 1, name = "Condition", path = "/toto/tutu",
+            areaLeft = 1, areaTop = 2, areaRight = 3, areaBottom = 4,
+            threshold = 5, detectionType = 1,
+            shouldBeDetected = false,
+        )
+        val validConditionId = 4578L
+        val validCondition = ConditionEntity(
+            id = validConditionId, eventId = 1, name = "Condition", path = "/toto/tutu",
+            areaLeft = 1, areaTop = 2, areaRight = 3, areaBottom = 4,
+            threshold = 5, detectionType = 1,
+            shouldBeDetected = true,
+        )
+
+        ScenarioSerializer().apply {
+            val v11Click = jsonV10ClickOnCondition.deserializeClickActionCompat(
+                listOf(invalidCondition, validCondition)
+            )
+
+            assertNotNull(v11Click)
+            assertEquals(ClickPositionType.ON_DETECTED_CONDITION, v11Click?.clickPositionType)
+            assertEquals(validConditionId, v11Click?.clickOnConditionId)
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_legacy_dbV10_on_condition_empty_conditions() {
+        val jsonV10ClickOnCondition = JsonObject(mapOf(
             "id" to JsonPrimitive(1),
             "eventId" to JsonPrimitive(1),
             "name" to JsonPrimitive("TOTO"),
             "priority" to JsonPrimitive(1),
             "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(clickOnCondition),
-            "x" to JsonPrimitive(5),
+            "clickOnCondition" to JsonPrimitive(true),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
             "y" to NULL_NUMBER_JSON_PRIMITIVE,
             "pressDuration" to JsonPrimitive(1),
         ))
 
         ScenarioSerializer().apply {
-            assertNotNull(jsonClickNullX.deserializeClickActionCompat(emptyList()))
-            assertNotNull(jsonClickNullY.deserializeClickActionCompat(emptyList()))
+            val v11Click = jsonV10ClickOnCondition.deserializeClickActionCompat(emptyList())
+            assertNotNull(v11Click)
+            assertEquals(ClickPositionType.ON_DETECTED_CONDITION, v11Click?.clickPositionType)
+            assertNull(v11Click?.clickOnConditionId)
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_legacy_dbV10_on_condition_invalid_conditions() {
+        val jsonV10ClickOnCondition = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickOnCondition" to JsonPrimitive(true),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
+            "pressDuration" to JsonPrimitive(1),
+        ))
+        val invalidCondition = ConditionEntity(
+            id = 1, eventId = 1, name = "Condition", path = "/toto/tutu",
+            areaLeft = 1, areaTop = 2, areaRight = 3, areaBottom = 4,
+            threshold = 5, detectionType = 1,
+            shouldBeDetected = false,
+        )
+
+        ScenarioSerializer().apply {
+            val v11Click = jsonV10ClickOnCondition.deserializeClickActionCompat(listOf(invalidCondition))
+            assertNotNull(v11Click)
+            assertEquals(ClickPositionType.ON_DETECTED_CONDITION, v11Click?.clickPositionType)
+            assertNull(v11Click?.clickOnConditionId)
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_user_selected() {
+        val x = 10
+        val y = 5
+        val jsonClick = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.USER_SELECTED.name),
+            "x" to JsonPrimitive(x),
+            "y" to JsonPrimitive(y),
+            "pressDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            val click = jsonClick.deserializeClickActionCompat(emptyList())
+
+            assertNotNull(click)
+            assertEquals(ClickPositionType.USER_SELECTED, click?.clickPositionType)
+            assertEquals(x, click?.x)
+            assertEquals(y, click?.y)
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_user_selected_error_missing_coordinates() {
+        val jsonClick = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.USER_SELECTED.name),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
+            "pressDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonClick.deserializeClickActionCompat(emptyList()))
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_on_condition() {
+        val conditionId = 22L
+        val jsonV10ClickOnCondition = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.ON_DETECTED_CONDITION.name),
+            "clickOnConditionId" to JsonPrimitive(conditionId),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
+            "pressDuration" to JsonPrimitive(1),
+        ))
+        val invalidCondition = ConditionEntity(
+            id = 1, eventId = 1, name = "Condition", path = "/toto/tutu",
+            areaLeft = 1, areaTop = 2, areaRight = 3, areaBottom = 4,
+            threshold = 5, detectionType = 1,
+            shouldBeDetected = false,
+        )
+        val validCondition = ConditionEntity(
+            id = conditionId, eventId = 1, name = "Condition", path = "/toto/tutu",
+            areaLeft = 1, areaTop = 2, areaRight = 3, areaBottom = 4,
+            threshold = 5, detectionType = 1,
+            shouldBeDetected = true,
+        )
+
+        ScenarioSerializer().apply {
+            val v11Click = jsonV10ClickOnCondition.deserializeClickActionCompat(
+                listOf(invalidCondition, validCondition)
+            )
+
+            assertNotNull(v11Click)
+            assertEquals(ClickPositionType.ON_DETECTED_CONDITION, v11Click?.clickPositionType)
+            assertEquals(conditionId, v11Click?.clickOnConditionId)
+        }
+    }
+
+    fun deserialization_action_click_on_condition_empty_conditions() {
+        val conditionId = 22L
+        val jsonV10ClickOnCondition = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.ON_DETECTED_CONDITION.name),
+            "clickOnConditionId" to JsonPrimitive(conditionId),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
+            "pressDuration" to JsonPrimitive(1),
+        ))
+
+        ScenarioSerializer().apply {
+            assertNull(jsonV10ClickOnCondition.deserializeClickActionCompat(emptyList()))
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_on_condition_invalid_conditions() {
+        val conditionId = 22L
+        val jsonV10ClickOnCondition = JsonObject(mapOf(
+            "id" to JsonPrimitive(1),
+            "eventId" to JsonPrimitive(1),
+            "name" to JsonPrimitive("TOTO"),
+            "priority" to JsonPrimitive(1),
+            "type" to JsonPrimitive(ActionType.CLICK.name),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.ON_DETECTED_CONDITION.name),
+            "clickOnConditionId" to JsonPrimitive(conditionId),
+            "x" to NULL_NUMBER_JSON_PRIMITIVE,
+            "y" to NULL_NUMBER_JSON_PRIMITIVE,
+            "pressDuration" to JsonPrimitive(1),
+        ))
+        val invalidCondition = ConditionEntity(
+            id = 1, eventId = 1, name = "Condition", path = "/toto/tutu",
+            areaLeft = 1, areaTop = 2, areaRight = 3, areaBottom = 4,
+            threshold = 5, detectionType = 1,
+            shouldBeDetected = false,
+        )
+
+        ScenarioSerializer().apply {
+            assertNull(jsonV10ClickOnCondition.deserializeClickActionCompat(listOf(invalidCondition)))
         }
     }
 
@@ -756,7 +968,7 @@ class ScenarioSerializerTests {
             "name" to NULL_STRING_JSON_PRIMITIVE,
             "priority" to NULL_NUMBER_JSON_PRIMITIVE,
             "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(false),
+            "clickPositionType" to JsonPrimitive(ClickPositionType.USER_SELECTED.name),
             "x" to JsonPrimitive(5),
             "y" to JsonPrimitive(5),
             "pressDuration" to NULL_NUMBER_JSON_PRIMITIVE,
