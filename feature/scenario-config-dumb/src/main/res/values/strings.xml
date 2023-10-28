@@ -64,4 +64,5 @@
     <string name="list_header_copy_dumb_action_all">Actions from all scenario</string>
     <string name="search_view_hint_dumb_action_copy">Search by action name</string>
 
+    <string name="title_action_count" translatable="false">%1$d/%2$d</string>
 </resources>

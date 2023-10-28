@@ -24,7 +24,6 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow

@@ -32,6 +32,7 @@ import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
+import androidx.annotation.StyleRes
 import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
@@ -65,7 +66,9 @@ import com.buzbuz.smartautoclicker.core.ui.R
  *
  * The position of the menu is saved in the [android.content.SharedPreferences] for each orientation.
  */
-abstract class OverlayMenu : BaseOverlay(recreateOnRotation = false) {
+abstract class OverlayMenu(
+    @StyleRes theme: Int? = null,
+) : BaseOverlay(theme = theme, recreateOnRotation = false) {
 
     /** The layout parameters of the menu layout. */
     private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(

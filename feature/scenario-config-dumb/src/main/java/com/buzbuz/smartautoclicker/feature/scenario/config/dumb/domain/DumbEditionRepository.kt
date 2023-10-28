@@ -115,13 +115,32 @@ internal class DumbEditionRepository private constructor(context: Context) {
         dumbActionBuilder.clearState()
     }
 
-    fun addNewDumbAction(dumbAction: DumbAction) {
+    fun addNewDumbAction(dumbAction: DumbAction, insertionIndex: Int? = null) {
         val editedScenario = _editedDumbScenario.value ?: return
 
-        Log.d(TAG, "Add dumb action to edited scenario $dumbAction")
+        Log.d(TAG, "Add dumb action to edited scenario $dumbAction at position $insertionIndex")
         _editedDumbScenario.value = editedScenario.copy(
             dumbActions = editedScenario.dumbActions.toMutableList().apply {
-                add(dumbAction)
+                if (insertionIndex != null && insertionIndex in editedScenario.dumbActions.indices) {
+                    add(insertionIndex, dumbAction)
+                } else {
+                    add(dumbAction)
+                }
+            }
+        )
+    }
+
+    fun updateDumbAction(dumbAction: DumbAction) {
+        val editedScenario = _editedDumbScenario.value ?: return
+        val actionIndex = editedScenario.dumbActions.indexOfFirst { it.id == dumbAction.id }
+        if (actionIndex == -1) {
+            Log.w(TAG, "Can't update action, it is not in the edited scenario.")
+            return
+        }
+
+        _editedDumbScenario.value = editedScenario.copy(
+            dumbActions = editedScenario.dumbActions.toMutableList().apply {
+                set(actionIndex, dumbAction)
             }
         )
     }

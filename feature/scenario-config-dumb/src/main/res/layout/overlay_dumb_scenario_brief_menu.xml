@@ -44,28 +44,22 @@
                 android:animateLayoutChanges="true">
 
                 <ImageButton
-                    android:id="@+id/btn_play"
+                    android:id="@+id/btn_back"
                     style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                    android:src="@drawable/ic_play_arrow"
+                    android:src="@drawable/ic_back"
                     android:contentDescription="@string/content_desc_play_pause_scenario" />
 
                 <ImageButton
-                    android:id="@+id/btn_stop"
+                    android:id="@+id/btn_add"
                     style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                    android:src="@drawable/ic_stop"
-                    android:contentDescription="@string/content_desc_stop_clicker" />
+                    android:src="@drawable/ic_add"
+                    android:contentDescription="@string/content_desc_add_action" />
 
                 <ImageButton
-                    android:id="@+id/btn_show_actions"
+                    android:id="@+id/btn_copy"
                     style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                    android:src="@drawable/ic_show_path"
-                    android:contentDescription="@string/content_desc_show_actions" />
-
-                <ImageButton
-                    android:id="@+id/btn_action_list"
-                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                    android:src="@drawable/ic_settings_filled"
-                    android:contentDescription="@string/content_desc_open_action_list" />
+                    android:src="@drawable/ic_copy_small"
+                    android:contentDescription="@string/content_desc_add_action" />
 
                 <ImageButton
                     android:id="@+id/btn_move"

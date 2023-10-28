@@ -31,8 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonContro
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbMainMenuBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionUiFlowListener
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCreationUiFlow
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbScenarioBriefMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
 
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ import kotlinx.coroutines.launch
 class DumbMainMenu(
     private val dumbScenarioId: Identifier,
     private val onStopClicked: () -> Unit,
-) : OverlayMenu() {
+) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme) {
 
     /** The view model for this menu. */
     private val viewModel: DumbMainMenuModel by viewModels()
@@ -50,16 +49,8 @@ class DumbMainMenu(
     /** Controls the animations of the play/pause button. */
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
 
-    private lateinit var dumbActionCreator: DumbActionCreator
-
     override fun onCreate() {
         super.onCreate()
-
-        dumbActionCreator = DumbActionCreator(
-            createNewDumbClick = viewModel::createNewDumbClick,
-            createNewDumbSwipe = viewModel::createNewDumbSwipe,
-            createNewDumbPause = viewModel::createNewDumbPause,
-        )
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -80,8 +71,6 @@ class DumbMainMenu(
 
         viewBinding = OverlayDumbMainMenuBinding.inflate(layoutInflater).apply {
             playPauseButtonController.attachView(btnPlay)
-            btnAdd.setOnClickListener { debounceUserInteraction { onAddButtonClicked() } }
-            btnActionList.setOnClickListener { debounceUserInteraction { onDumbScenarioConfigClicked() } }
         }
 
         return viewBinding.root
@@ -108,7 +97,6 @@ class DumbMainMenu(
             } else {
                 animateLayoutChanges {
                     setMenuItemVisibility(viewBinding.btnStop, false)
-                    setMenuItemVisibility(viewBinding.btnAdd, false)
                     setMenuItemVisibility(viewBinding.btnShowActions, false)
                     setMenuItemVisibility(viewBinding.btnActionList, false)
                     playPauseButtonController.toState2(true)
@@ -120,7 +108,6 @@ class DumbMainMenu(
             } else {
                 animateLayoutChanges {
                     setMenuItemVisibility(viewBinding.btnStop, true)
-                    setMenuItemVisibility(viewBinding.btnAdd, true)
                     setMenuItemVisibility(viewBinding.btnShowActions, true)
                     setMenuItemVisibility(viewBinding.btnActionList, true)
                     playPauseButtonController.toState1(true)
@@ -134,23 +121,20 @@ class DumbMainMenu(
             when (viewId) {
                 R.id.btn_play -> viewModel.toggleScenarioPlay()
                 R.id.btn_stop -> onStopClicked()
-                R.id.btn_add -> onAddButtonClicked()
-                R.id.btn_show_actions -> Unit
+                R.id.btn_show_actions -> onShowBriefClicked()
                 R.id.btn_action_list -> onDumbScenarioConfigClicked()
             }
         }
     }
 
-    private fun onAddButtonClicked() {
+    private fun onShowBriefClicked() {
         viewModel.startEdition(dumbScenarioId) {
-            OverlayManager.getInstance(context).startDumbActionCreationUiFlow(
+            OverlayManager.getInstance(context).navigateTo(
                 context = context,
-                creator = dumbActionCreator,
-                listener = DumbActionUiFlowListener(
-                    onDumbActionSaved = viewModel::addNewDumbAction,
-                    onDumbActionDeleted = viewModel::deleteDumbAction,
-                    onDumbActionCreationCancelled = viewModel::stopEdition,
-                )
+                newOverlay = DumbScenarioBriefMenu(
+                    onConfigSaved = viewModel::saveEditions
+                ),
+                hideCurrent = true,
             )
         }
     }
