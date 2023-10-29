@@ -208,16 +208,14 @@ class DumbScenarioBriefMenu(
         visualisationViewBinding.apply {
             if (details.isEmpty) {
                 textDumbActionIndex.setText(R.string.item_title_no_dumb_actions)
-                viewDumbBrief.setState(null, null)
             } else {
                 textDumbActionIndex.text = context.getString(
                     R.string.title_action_count,
                     details.actionIndex + 1,
                     details.actionCount,
                 )
-
-                viewDumbBrief.setState(details.position1, details.position2)
             }
+            viewDumbBrief.setDescription(details.actionDescription)
         }
     }
 }
