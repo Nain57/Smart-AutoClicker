@@ -105,7 +105,6 @@ private fun ProModeAdvantage.Feature.toDisplayString(context: Context): String =
             ProModeAdvantage.Feature.ACTION_TYPE_TOGGLE_EVENT -> R.string.billing_reason_action_type_toggle_event
             ProModeAdvantage.Feature.BACKUP_EXPORT -> R.string.billing_reason_backup_export
             ProModeAdvantage.Feature.BACKUP_IMPORT -> R.string.billing_reason_backup_import
-            ProModeAdvantage.Feature.CONDITION_THRESHOLD -> R.string.billing_reason_condition_threshold
             ProModeAdvantage.Feature.EVENT_STATE -> R.string.billing_reason_event_state
             ProModeAdvantage.Feature.SCENARIO_ANTI_DETECTION -> R.string.billing_reason_scenario_anti_detection
             ProModeAdvantage.Feature.SCENARIO_DETECTION_QUALITY -> R.string.billing_reason_scenario_detection_quality

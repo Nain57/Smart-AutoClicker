@@ -25,7 +25,6 @@
     <string name="billing_reason_backup_export">Acquista Smart AutoClicker Pro per salvare uno scenario come file zip</string>
     <string name="billing_reason_backup_import">Acquista Smart AutoClicker Pro per importare uno scenario da un file zip</string>
     <string name="billing_reason_condition_count">Acquista Smart AutoClicker Pro per creare più di %1$d condizioni</string>
-    <string name="billing_reason_condition_threshold">Acquista Smart AutoClicker Pro per modificare la differenza di condizione tollerata</string>
     <string name="billing_reason_detection_duration_limit">Acquista Smart AutoClicker Pro per eseguire sessioni di rilevamento che durano più di %1$d minuti</string>
     <string name="billing_reason_event_count">Acquista Smart AutoClicker Pro per creare più di %1$d eventi</string>
     <string name="billing_reason_event_state">Acquista Smart AutoClicker Pro per modificare lo stato di un evento</string>
