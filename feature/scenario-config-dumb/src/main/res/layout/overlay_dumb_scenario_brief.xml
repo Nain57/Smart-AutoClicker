@@ -50,10 +50,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/list_dumb_actions"/>
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/empty_scenario_card"
+        style="@style/AppTheme.Widget.Card"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_dumb_action_height"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+        app:layout_constraintBottom_toTopOf="@id/button_previous"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone">
+
+       <com.google.android.material.textview.MaterialTextView
+           android:id="@+id/text_empty_scenario"
+           style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+           android:layout_marginVertical="@dimen/margin_vertical_default"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:text="@string/message_dumb_brief_empty_action_list"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_dumb_actions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/item_dumb_action_height"
         android:layout_marginBottom="@dimen/margin_vertical_large"
         app:layout_constraintBottom_toTopOf="@id/button_previous"
         app:layout_constraintStart_toStartOf="parent"

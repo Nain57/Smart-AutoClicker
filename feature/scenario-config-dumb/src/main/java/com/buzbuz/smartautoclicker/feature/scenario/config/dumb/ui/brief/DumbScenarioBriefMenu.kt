@@ -23,8 +23,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
@@ -176,24 +176,49 @@ class DumbScenarioBriefMenu(
     private fun onDumbActionListUpdated(actions: List<DumbActionDetails>) {
         dumbActionsAdapter.submitList(actions)
 
-        addedActionIndexes?.let { (requestedIndex, requestedCount) ->
-            if (requestedCount == actions.size) {
-                addedActionIndexes = null
-                lifecycleScope.launch {
-                    actionListSnapHelper.snapTo(requestedIndex)
+        visualisationViewBinding.apply {
+            if (actions.size > 1) {
+                buttonPrevious.visibility = View.VISIBLE
+                buttonNext.visibility = View.VISIBLE
+            } else {
+                buttonPrevious.visibility = View.INVISIBLE
+                buttonNext.visibility = View.INVISIBLE
+            }
+
+            if (actions.isEmpty()) {
+                listDumbActions.visibility = View.GONE
+                emptyScenarioCard.visibility = View.VISIBLE
+            } else {
+                listDumbActions.visibility = View.VISIBLE
+                emptyScenarioCard.visibility = View.GONE
+
+                addedActionIndexes?.let { (requestedIndex, requestedCount) ->
+                    if (requestedCount == actions.size) {
+                        addedActionIndexes = null
+                        lifecycleScope.launch {
+                            actionListSnapHelper.snapTo(requestedIndex)
+                        }
+                    }
                 }
             }
         }
     }
 
     private fun onFocusedActionDetailsUpdated(details: FocusedActionDetails) {
-        visualisationViewBinding.textDumbActionIndex.text = context.getString(
-            R.string.title_action_count,
-            details.actionIndex + 1,
-            details.actionCount,
-        )
+        visualisationViewBinding.apply {
+            if (details.isEmpty) {
+                textDumbActionIndex.setText(R.string.item_title_no_dumb_actions)
+                viewDumbBrief.setState(null, null)
+            } else {
+                textDumbActionIndex.text = context.getString(
+                    R.string.title_action_count,
+                    details.actionIndex + 1,
+                    details.actionCount,
+                )
 
-        visualisationViewBinding.viewDumbBrief.setState(details.position1, details.position2)
+                viewDumbBrief.setState(details.position1, details.position2)
+            }
+        }
     }
 }
 

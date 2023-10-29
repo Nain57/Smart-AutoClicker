@@ -43,16 +43,24 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
     private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
 
     val visualizedActions: Flow<List<DumbActionDetails>> = dumbEditionRepository.editedDumbScenario
-        .map { scenario -> scenario?.dumbActions?.map { it.toDumbActionDetails(application) } }
+        .map { scenario ->
+            scenario?.dumbActions?.map { dumbAction ->
+                dumbAction.toDumbActionDetails(
+                    context = application,
+                    withPositions = false,
+                )
+            }
+        }
         .filterNotNull()
 
     private val actionListSnapIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     val focusedActionDetails: Flow<FocusedActionDetails> = dumbEditionRepository.editedDumbScenario
         .combine(actionListSnapIndex) { dumbScenario, index ->
-            if (dumbScenario == null || index < 0 || index >= dumbScenario.dumbActions.size)
+            if (dumbScenario == null || index < 0)
                 return@combine null
 
-            dumbScenario.toFocusedActionDetails(index)
+            if (index >= dumbScenario.dumbActions.size) FocusedActionDetails(isEmpty = true)
+            else dumbScenario.toFocusedActionDetails(index)
         }.filterNotNull()
 
     fun onNewActionListSnapIndex(index: Int) {
@@ -114,8 +122,9 @@ private fun DumbScenario.toFocusedActionDetails(focusIndex: Int): FocusedActionD
 }
 
 data class FocusedActionDetails(
-    val actionIndex: Int,
-    val actionCount: Int,
-    val position1: PointF?,
-    val position2: PointF?,
+    val actionIndex: Int = 0,
+    val actionCount: Int = 0,
+    val position1: PointF? = null,
+    val position2: PointF? = null,
+    val isEmpty: Boolean = false,
 )

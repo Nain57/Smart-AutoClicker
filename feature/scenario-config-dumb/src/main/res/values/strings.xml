@@ -65,4 +65,7 @@
     <string name="search_view_hint_dumb_action_copy">Search by action name</string>
 
     <string name="title_action_count" translatable="false">%1$d/%2$d</string>
+    <string name="message_dumb_brief_empty_action_list">You need at least one action to execute a scenario</string>
+    <string name="item_title_no_dumb_actions">No Actions</string>
+    <string name="item_desc_dumb_action_duration">During %1$s</string>
 </resources>
