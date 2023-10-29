@@ -147,7 +147,7 @@ class ConditionDialog(
     override fun onStart() {
         super.onStart()
         viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-        viewModel.monitorDetectionTypeDropdownView(viewBinding.conditionDetectionType.root)
+        viewModel.monitorDetectionTypeDropdownView(viewBinding.conditionDetectionType.textLayout)
     }
 
     override fun onStop() {
