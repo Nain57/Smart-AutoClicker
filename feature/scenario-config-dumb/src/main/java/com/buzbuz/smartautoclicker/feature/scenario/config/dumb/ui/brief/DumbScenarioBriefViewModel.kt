@@ -43,7 +43,7 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
     private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
 
     val visualizedActions: Flow<List<DumbActionDetails>> = dumbEditionRepository.editedDumbScenario
-        .map { it?.dumbActions?.map { it.toDumbActionDetails(application) } }
+        .map { scenario -> scenario?.dumbActions?.map { it.toDumbActionDetails(application) } }
         .filterNotNull()
 
     private val actionListSnapIndex: MutableStateFlow<Int> = MutableStateFlow(0)
@@ -68,11 +68,11 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
     fun createNewDumbPause(): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
 
-    fun addNewDumbAction(dumbAction: DumbAction) {
+    fun addNewDumbAction(dumbAction: DumbAction, index: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.addNewDumbAction(
                 dumbAction = dumbAction,
-                insertionIndex = actionListSnapIndex.value + 1,
+                insertionIndex = index,
             )
         }
     }

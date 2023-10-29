@@ -27,7 +27,8 @@ class PositionPagerSnapHelper : PagerSnapHelper() {
 
     private val onScrollListener: OnScrollListener = object : OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            onRecyclerViewScrolled()
+            val newSnapPosition = findSnapPosition()
+            if (newSnapPosition != snapPosition) onSnapPositionUpdated(newSnapPosition)
         }
     }
 
@@ -46,20 +47,28 @@ class PositionPagerSnapHelper : PagerSnapHelper() {
     }
 
     fun snapTo(position: Int) {
-        attachedRecyclerView?.scrollToPosition(position)
+        val itemCount = getListItemCount() ?: return
+        if (position < 0 || position >= itemCount) return
+
+        Log.d(TAG, "snapTo: $position")
+        attachedRecyclerView?.smoothScrollToPosition(position)
     }
 
     fun snapToNext() {
-        val itemCount = attachedRecyclerView?.adapter?.itemCount ?: return
+        val itemCount = getListItemCount() ?: return
         if (snapPosition == itemCount - 1) return
 
-        attachedRecyclerView?.smoothScrollToPosition(snapPosition + 1)
+        val newPosition = snapPosition + 1
+        Log.d(TAG, "snapToNext: $newPosition")
+        attachedRecyclerView?.smoothScrollToPosition(newPosition)
     }
 
     fun snapToPrevious() {
         if (snapPosition == 0) return
 
-        attachedRecyclerView?.smoothScrollToPosition(snapPosition - 1)
+        val newPosition = snapPosition - 1
+        Log.d(TAG, "snapToPrevious: $newPosition")
+        attachedRecyclerView?.smoothScrollToPosition(newPosition)
     }
 
     private fun findSnapPosition(): Int {
@@ -69,11 +78,15 @@ class PositionPagerSnapHelper : PagerSnapHelper() {
         return layoutManager.getPosition(snapView)
     }
 
-    private fun onRecyclerViewScrolled() {
-        val newSnapPosition = findSnapPosition()
-        if (newSnapPosition != snapPosition) {
-            snapPosition = newSnapPosition
-            onSnapPositionChangeListener?.invoke(snapPosition)
-        }
+    private fun onSnapPositionUpdated(newPosition: Int) {
+        Log.d(TAG, "onSnapPositionUpdated: $newPosition")
+
+        snapPosition = newPosition
+        onSnapPositionChangeListener?.invoke(newPosition)
     }
+
+    private fun getListItemCount(): Int? =
+        attachedRecyclerView?.adapter?.itemCount
 }
+
+private const val TAG = "PositionPagerSnapHelper"

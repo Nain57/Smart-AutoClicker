@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
@@ -60,12 +61,19 @@ class DumbScenarioBriefMenu(
     private lateinit var createCopyActionUiFlowListener: DumbActionUiFlowListener
     private lateinit var updateActionUiFlowListener: DumbActionUiFlowListener
 
+    /**
+     * When adding a dumb action, we need to focus its new item once it is added to the list.
+     * To do that, we keep the expected new item index and list size, and snap to this item once
+     * a list with the correct values is received.
+     */
+    private var addedActionIndexes: Pair<Int, Int>? = null
+
     override fun onCreate() {
         super.onCreate()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.visualizedActions.collect(dumbActionsAdapter::submitList) }
+                launch { viewModel.visualizedActions.collect(::onDumbActionListUpdated) }
                 launch { viewModel.focusedActionDetails.collect(::onFocusedActionDetailsUpdated) }
             }
         }
@@ -81,7 +89,7 @@ class DumbScenarioBriefMenu(
             createDumbActionCopy = null,
         )
         createCopyActionUiFlowListener = DumbActionUiFlowListener(
-            onDumbActionSaved = viewModel::addNewDumbAction,
+            onDumbActionSaved = ::onNewDumbActionCreated,
             onDumbActionDeleted = {},
             onDumbActionCreationCancelled = {},
         )
@@ -155,6 +163,26 @@ class DumbScenarioBriefMenu(
                 dumbAction = dumbAction.action,
                 listener = updateActionUiFlowListener,
             )
+        }
+    }
+
+    private fun onNewDumbActionCreated(action: DumbAction) {
+        val index = actionListSnapHelper.snapPosition + 1
+
+        addedActionIndexes = index to dumbActionsAdapter.itemCount + 1
+        viewModel.addNewDumbAction(action, index)
+    }
+
+    private fun onDumbActionListUpdated(actions: List<DumbActionDetails>) {
+        dumbActionsAdapter.submitList(actions)
+
+        addedActionIndexes?.let { (requestedIndex, requestedCount) ->
+            if (requestedCount == actions.size) {
+                addedActionIndexes = null
+                lifecycleScope.launch {
+                    actionListSnapHelper.snapTo(requestedIndex)
+                }
+            }
         }
     }
 
