@@ -39,8 +39,8 @@ object Migration4to5 : Migration(4, 5) {
     @VisibleForTesting
     internal const val THRESHOLD_MAX_VALUE = 20
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.apply {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.apply {
             execSQL(addConditionNameColumn)
             execSQL(addConditionDetectionTypeColumn)
             updateAllThreshold()

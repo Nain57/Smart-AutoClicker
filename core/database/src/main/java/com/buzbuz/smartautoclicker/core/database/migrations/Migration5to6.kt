@@ -29,8 +29,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.ActionType
  */
 object Migration5to6 : Migration(5, 6) {
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.apply {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.apply {
             execSQL(addConditionShouldBeDetectedColumn)
             execSQL(addActionClickOnConditionColumn)
             updateAllActions()

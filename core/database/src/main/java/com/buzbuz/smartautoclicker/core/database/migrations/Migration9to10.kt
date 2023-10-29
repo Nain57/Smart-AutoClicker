@@ -43,8 +43,8 @@ object Migration9to10 : Migration(9, 10) {
     @VisibleForTesting
     internal const val NEW_GESTURE_DURATION_LIMIT_MS = 59999L
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.updateGesturesValues()
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.updateGesturesValues()
     }
 
     private fun SupportSQLiteDatabase.updateGesturesValues() {

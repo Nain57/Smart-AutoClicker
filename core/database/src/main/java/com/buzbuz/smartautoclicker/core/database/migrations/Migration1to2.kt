@@ -25,7 +25,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  */
 object Migration1to2 : Migration(1, 2) {
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE condition_table ADD COLUMN threshold INTEGER DEFAULT 1 NOT NULL")
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE condition_table ADD COLUMN threshold INTEGER DEFAULT 1 NOT NULL")
     }
 }

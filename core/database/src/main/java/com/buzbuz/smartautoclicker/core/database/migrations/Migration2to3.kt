@@ -25,7 +25,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  */
 object Migration2to3 : Migration(2, 3) {
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE click_table ADD COLUMN stop_after INTEGER DEFAULT NULL")
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE click_table ADD COLUMN stop_after INTEGER DEFAULT NULL")
     }
 }

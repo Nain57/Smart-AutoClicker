@@ -29,8 +29,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  */
 object Migration6to7 : Migration(6, 7) {
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.apply {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.apply {
             execSQL(createEndConditionTable)
             execSQL(endConditionToScenarioIndex)
             execSQL(endConditionToEventIndex)

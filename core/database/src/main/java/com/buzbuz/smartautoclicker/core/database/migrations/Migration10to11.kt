@@ -30,8 +30,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
  */
 object Migration10to11 : Migration(10, 11) {
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.apply {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.apply {
             migrateDetectionQuality()
 
             execSQL(createTempActionTable)

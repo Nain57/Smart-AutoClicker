@@ -32,8 +32,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  */
 object Migration3to4 : Migration(3, 4) {
 
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.apply {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.apply {
             // Creates the new tables.
             execSQL(createEventTable)
             execSQL(createActionTable)
