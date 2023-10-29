@@ -56,23 +56,31 @@ object DumbActionDiffUtilCallback: DiffUtil.ItemCallback<DumbActionDetails>() {
 }
 
 /** @return the [DumbActionDetails] corresponding to this action. */
-fun DumbAction.toDumbActionDetails(context: Context, inError: Boolean = !isValid()): DumbActionDetails =
+fun DumbAction.toDumbActionDetails(
+    context: Context,
+    withPositions: Boolean = true,
+    inError: Boolean = !isValid(),
+): DumbActionDetails =
     when (this) {
-        is DumbAction.DumbClick -> toClickDetails(context, inError)
-        is DumbAction.DumbSwipe -> toSwipeDetails(context, inError)
-        is DumbAction.DumbPause -> toPauseDetails(context, inError)
+        is DumbAction.DumbClick -> toClickDetails(context, withPositions, inError)
+        is DumbAction.DumbSwipe -> toSwipeDetails(context, withPositions, inError)
+        is DumbAction.DumbPause -> toPauseDetails(context, withPositions, inError)
         else -> throw IllegalArgumentException("Not yet supported")
     }
 
-private fun DumbAction.DumbClick.toClickDetails(context: Context, inError: Boolean): DumbActionDetails =
+private fun DumbAction.DumbClick.toClickDetails(context: Context, withPositions: Boolean, inError: Boolean): DumbActionDetails =
     DumbActionDetails(
         icon = R.drawable.ic_click,
         name = name,
         detailsText = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
-            else -> context.getString(
+            withPositions -> context.getString(
                 R.string.item_desc_dumb_click_details,
                 formatDuration(pressDurationMs), position.x, position.y,
+            )
+            else -> context.getString(
+                R.string.item_desc_dumb_action_duration,
+                formatDuration(pressDurationMs),
             )
         },
         repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count, repeatCount),
@@ -80,15 +88,19 @@ private fun DumbAction.DumbClick.toClickDetails(context: Context, inError: Boole
         action = this,
     )
 
-private fun DumbAction.DumbSwipe.toSwipeDetails(context: Context, inError: Boolean): DumbActionDetails =
+private fun DumbAction.DumbSwipe.toSwipeDetails(context: Context, withPositions: Boolean, inError: Boolean): DumbActionDetails =
     DumbActionDetails(
         icon = R.drawable.ic_swipe,
         name = name,
         detailsText = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
-            else -> context.getString(
+            withPositions -> context.getString(
                 R.string.item_desc_dumb_swipe_details,
                 formatDuration(swipeDurationMs), fromPosition.x, fromPosition.y, toPosition.x, toPosition.y
+            )
+            else -> context.getString(
+                R.string.item_desc_dumb_action_duration,
+                formatDuration(swipeDurationMs),
             )
         },
         repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count, repeatCount),
@@ -96,15 +108,19 @@ private fun DumbAction.DumbSwipe.toSwipeDetails(context: Context, inError: Boole
         action = this,
     )
 
-private fun DumbAction.DumbPause.toPauseDetails(context: Context, inError: Boolean): DumbActionDetails =
+private fun DumbAction.DumbPause.toPauseDetails(context: Context, withPositions: Boolean, inError: Boolean): DumbActionDetails =
     DumbActionDetails(
         icon = R.drawable.ic_wait,
         name = name,
         detailsText = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
-            else -> context.getString(
+            withPositions -> context.getString(
                 R.string.item_desc_dumb_pause_details,
                 formatDuration(pauseDurationMs)
+            )
+            else -> context.getString(
+                R.string.item_desc_dumb_action_duration,
+                formatDuration(pauseDurationMs),
             )
         },
         repeatCountText = null,

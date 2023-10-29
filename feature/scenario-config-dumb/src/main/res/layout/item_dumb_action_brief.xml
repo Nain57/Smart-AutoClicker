@@ -20,13 +20,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/item_dumb_action_height">
 
     <com.google.android.material.card.MaterialCardView
         style="@style/AppTheme.Widget.Card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
         app:layout_constraintBottom_toTopOf="@id/button_previous"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,8 +35,9 @@
             android:id="@+id/layout_card_dumb_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="@dimen/margin_horizontal_small"
-            android:layout_marginVertical="@dimen/margin_vertical_large">
+            android:layout_marginVertical="@dimen/margin_vertical_default">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/action_name"
@@ -65,7 +65,7 @@
                 android:layout_marginBottom="@dimen/margin_vertical_mini"
                 app:layout_constraintStart_toStartOf="@id/action_name"
                 app:layout_constraintTop_toBottomOf="@id/action_name"
-                app:layout_constraintEnd_toStartOf="@id/action_type_icon"
+                app:layout_constraintEnd_toEndOf="@+id/action_name"
                 app:layout_constraintBottom_toTopOf="@id/action_repeat"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/text_size_list_item_text_small"
@@ -79,7 +79,7 @@
                 android:layout_marginBottom="@dimen/margin_vertical_small"
                 app:layout_constraintStart_toStartOf="@id/action_name"
                 app:layout_constraintTop_toBottomOf="@id/action_duration"
-                app:layout_constraintEnd_toStartOf="@id/action_type_icon"
+                app:layout_constraintEnd_toEndOf="@+id/action_name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/text_size_list_item_text_small"
@@ -95,6 +95,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/margin_horizontal_default"
                 android:scaleType="fitCenter"
                 tools:src="@drawable/ic_wait"/>
 
