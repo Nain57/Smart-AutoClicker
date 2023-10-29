@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 
+@Suppress("UNUSED_PARAMETER") // Required by other build variants
 class BillingRepository(applicationContext: Context): IBillingRepository {
 
     override val newPurchases: Flow<List<String>> = flowOf(emptyList())

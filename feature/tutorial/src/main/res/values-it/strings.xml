@@ -95,14 +95,19 @@
     <string name="message_tutorial_1_step_17">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nClicca sul pulsante Salva
     per registrarla e tornare alla finestra di dialogo dello Scenario.</string>
 
-    <string name="message_tutorial_1_step_18">Un ultimo salvataggio per registrare le tue nuove modifiche nel database e chiudere le finestre di
-    configurazione.</string>
+    <string name="message_tutorial_1_step_18">L\'unico requisito per uno scenario è avere almeno un evento.\nPoiché il nostro evento spiega già come
+        vincere la partita, non abbiamo bisogno di nient\'altro.\n\nFai clic sul pulsante Salva persalvare lo scenario nel database e chiudere
+        le finestre di dialogo di configurazione.</string>
 
-    <string name="message_tutorial_1_step_19">Il tuo Scenario è ora configurato per battere questo nuovo tutorial.\n\nAvvia la rilevazione con il
-    pulsante di riproduzione del menu fluttuante e quindi inizia il gioco.</string>
+    <string name="message_tutorial_1_step_19">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il tuo
+        Lo scenario è valido e può essere utilizzato per il rilevamento\n\nFare clic su di esso per avviare il rilevamento.</string>
 
-    <string name="message_tutorial_1_step_20">Congratulazioni!\n\nOra conosci le basi di Smart AutoClicker, ma non tutti i casi d\'uso saranno
-    semplici come questo gioco.\nGuarda il tutorial successivo per imparare come tracciare un bersaglio in movimento.</string>
+    <string name="message_tutorial_1_step_20">Sta giocando ma non succede nulla?\n\nÈ normale, si limita a fare clic
+        quando è visibile il carattere blu, ricordi? Mentre mantieni lo scenario in esecuzione, premi il pulsante di avvio del gioco
+        e guarda come Smart AutoClicker batterà per te!</string>
+
+    <string name="message_tutorial_1_step_21">Congratulazioni!\n\nOra conosci le basi di Smart AutoClicker, ma non tutti i casi d\'uso saranno
+        semplici come questo gioco.\nGuarda il tutorial successivo per imparare come tracciare un bersaglio in movimento.</string>
 
     <!-- One moving target tutorial -->
     <string name="item_title_tutorial_2">Clicca su un bersaglio in movimento</string>
