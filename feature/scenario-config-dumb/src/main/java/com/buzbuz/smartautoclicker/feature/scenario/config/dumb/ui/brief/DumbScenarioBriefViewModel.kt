@@ -99,32 +99,46 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
 }
 
 private fun DumbScenario.toFocusedActionDetails(focusIndex: Int): FocusedActionDetails {
-    val dumbAction = dumbActions[focusIndex]
-    val position1: PointF?
-    val position2: PointF?
+    val description = when (val dumbAction = dumbActions[focusIndex]) {
+        is DumbAction.DumbClick -> DumbActionDescription.Click(
+            position = dumbAction.position.toPointF(),
+            pressDurationMs = dumbAction.pressDurationMs,
+        )
 
-    when (dumbAction) {
-        is DumbAction.DumbClick -> {
-            position1 = dumbAction.position.toPointF()
-            position2 = null
-        }
-        is DumbAction.DumbSwipe -> {
-            position1 = dumbAction.fromPosition.toPointF()
-            position2 = dumbAction.toPosition.toPointF()
-        }
-        is DumbAction.DumbPause -> {
-            position1 = null
-            position2 = null
-        }
+        is DumbAction.DumbSwipe -> DumbActionDescription.Swipe(
+            from = dumbAction.fromPosition.toPointF(),
+            to = dumbAction.toPosition.toPointF(),
+            swipeDurationMs = dumbAction.swipeDurationMs,
+        )
+
+        is DumbAction.DumbPause -> DumbActionDescription.Pause(
+            pauseDurationMs = dumbAction.pauseDurationMs,
+        )
     }
 
-    return FocusedActionDetails(focusIndex, dumbActions.size, position1, position2)
+    return FocusedActionDetails(focusIndex, dumbActions.size, description)
 }
 
 data class FocusedActionDetails(
     val actionIndex: Int = 0,
     val actionCount: Int = 0,
-    val position1: PointF? = null,
-    val position2: PointF? = null,
+    val actionDescription: DumbActionDescription? = null,
     val isEmpty: Boolean = false,
 )
+
+sealed class DumbActionDescription {
+    data class Click(
+        val position: PointF,
+        val pressDurationMs: Long,
+    ) : DumbActionDescription()
+
+    data class Swipe(
+        val from: PointF,
+        val to: PointF,
+        val swipeDurationMs: Long,
+    ) : DumbActionDescription()
+
+    data class Pause(
+        val pauseDurationMs: Long,
+    ) : DumbActionDescription()
+}

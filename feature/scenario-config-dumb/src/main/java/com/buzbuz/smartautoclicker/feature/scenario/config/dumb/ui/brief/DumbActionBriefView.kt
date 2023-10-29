@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -23,22 +25,20 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.LinearInterpolator
+
 import androidx.core.content.res.use
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.ExtendedValueAnimator
+import kotlin.math.sqrt
 
 class DumbActionBriefView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : View(context, attrs, defStyleAttr) {
-
-    /** Position of the first point selected. */
-    var position1: PointF? = null
-        private set
-    /** Position of the second point selected. */
-    var position2: PointF? = null
-        private set
 
     /** Paint drawing the outer circle of the position 1. */
     private val outerFromPaint = Paint()
@@ -50,7 +50,11 @@ class DumbActionBriefView @JvmOverloads constructor(
     private val innerToPaint = Paint()
     /** Paint for the background of the circles. */
     private val backgroundPaint = Paint()
+    /** */
+    private val linePaint = Paint()
 
+    /** The thickness of the outer circle. */
+    private var thickness: Float = 0f
     /** The circle radius. */
     private var outerRadius: Float = 0f
     /** The inner small circle radius. */
@@ -61,7 +65,7 @@ class DumbActionBriefView @JvmOverloads constructor(
     init {
         attrs?.let {
             context.obtainStyledAttributes(it, R.styleable.DumbActionBriefView, R.attr.dumbActionBriefStyle, defStyleAttr).use { ta ->
-                val thickness = ta.getDimensionPixelSize(R.styleable.DumbActionBriefView_thickness, 4).toFloat()
+                thickness = ta.getDimensionPixelSize(R.styleable.DumbActionBriefView_thickness, 4).toFloat()
                 outerRadius = ta.getDimensionPixelSize(R.styleable.DumbActionBriefView_radius, 30).toFloat()
                 innerCircleRadius = ta.getDimensionPixelSize(R.styleable.DumbActionBriefView_innerRadius, 4)
                     .toFloat()
@@ -94,21 +98,73 @@ class DumbActionBriefView @JvmOverloads constructor(
                     color = innerFromPaint.color
                 }
 
+                linePaint.apply {
+                    isAntiAlias = true
+                    style = Paint.Style.FILL
+                    color = innerFromPaint.color
+                    strokeWidth = innerCircleRadius / 2f
+                }
+
                 backgroundPaint.apply {
                     isAntiAlias = true
-                    style = Paint.Style.STROKE
+                    style = Paint.Style.FILL
                     color = ta.getColor(R.styleable.DumbActionBriefView_colorBackground, Color.TRANSPARENT)
-                    strokeWidth = backgroundCircleStroke
                 }
             }
         }
     }
 
-    fun setState(pos1: PointF?, pos2: PointF? = null) {
-        if (pos1 == position1 && pos2 == position2) return
+    private var animatedOuterRadius: Float = outerRadius
+    private val outerRadiusAnimator: Animator = ValueAnimator.ofFloat(outerRadius * 0.75f, outerRadius).apply {
+        duration = 750
+        interpolator = AccelerateDecelerateInterpolator()
+        repeatMode = ValueAnimator.REVERSE
+        repeatCount = ValueAnimator.INFINITE
+        addUpdateListener {
+            (it.animatedValue as Float).let { radius ->
+                animatedOuterRadius = radius
+                postInvalidate()
+            }
+        }
+    }
 
-        position1 = pos1
-        position2 = pos2
+    private var animatedSwipeProgressPosition: PointF = PointF()
+    private val swipeProgressAnimator: Animator = ExtendedValueAnimator.ofFloat(0f, 1f).apply {
+        startDelay = 500
+        repeatCount = ValueAnimator.INFINITE
+        repeatMode = ValueAnimator.RESTART
+        interpolator = LinearInterpolator()
+        addUpdateListener { (it.animatedValue as Float).let { ratio -> updateSwipePosition(ratio) } }
+    }
+
+    private var dumbAction: DumbActionDescription? = null
+
+    fun setDescription(dumbActionDescription: DumbActionDescription?) {
+        dumbAction = dumbActionDescription
+
+        when (dumbActionDescription) {
+            is DumbActionDescription.Click -> {
+                if (!outerRadiusAnimator.isStarted) outerRadiusAnimator.start()
+                if (swipeProgressAnimator.isStarted) swipeProgressAnimator.end()
+            }
+
+            is DumbActionDescription.Swipe -> {
+                if (!outerRadiusAnimator.isStarted) outerRadiusAnimator.start()
+                swipeProgressAnimator.apply {
+                    if (isStarted) cancel()
+                    duration = dumbActionDescription.swipeDurationMs
+                    start()
+                }
+            }
+
+            is DumbActionDescription.Pause -> {
+                if (outerRadiusAnimator.isStarted) outerRadiusAnimator.end()
+                if (swipeProgressAnimator.isStarted) swipeProgressAnimator.end()
+            }
+
+            else -> Unit
+        }
+
         invalidate()
     }
 
@@ -120,21 +176,53 @@ class DumbActionBriefView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        position1?.let { drawSelectorCircle(canvas, it, outerFromPaint, innerFromPaint) }
-        position2?.let { drawSelectorCircle(canvas, it, outerToPaint, innerToPaint) }
+        when (val action = dumbAction) {
+            is DumbActionDescription.Click -> {
+                canvas.drawSelectorCircle(action.position, outerFromPaint, innerFromPaint)
+            }
+
+            is DumbActionDescription.Swipe -> {
+                canvas.drawSelectorCircle(action.from, outerFromPaint, innerFromPaint)
+                canvas.drawSelectorCircle(action.to, outerToPaint, innerToPaint)
+                canvas.drawLine(action.from.x, action.from.y, action.to.x, action.to.y, linePaint)
+                canvas.drawCircle(
+                    animatedSwipeProgressPosition.x,
+                    animatedSwipeProgressPosition.y,
+                    innerCircleRadius * 2,
+                    linePaint,
+                )
+            }
+
+            else -> Unit
+        }
     }
 
     /**
      * Draw the selector circle at the specified position.
      *
-     * @param canvas the canvas to draw the circles on.
      * @param position the position of the circle selector.
      * @param outerPaint the paint used to draw the big circle.
      * @param innerPaint the paint used to draw the small inner circle.
      */
-    private fun drawSelectorCircle(canvas: Canvas, position: PointF, outerPaint: Paint, innerPaint: Paint) {
-        canvas.drawCircle(position.x, position.y, outerRadius, outerPaint)
-        canvas.drawCircle(position.x, position.y, innerCircleRadius, innerPaint)
-        canvas.drawCircle(position.x, position.y, backgroundCircleRadius, backgroundPaint)
+    private fun Canvas.drawSelectorCircle(position: PointF, outerPaint: Paint, innerPaint: Paint) {
+        drawCircle(position.x, position.y, animatedOuterRadius, backgroundPaint)
+        drawCircle(position.x, position.y, animatedOuterRadius, outerPaint)
+        drawCircle(position.x, position.y, innerCircleRadius, innerPaint)
+    }
+
+    private fun updateSwipePosition(completionRatio: Float) {
+        val dumbSwipe = (dumbAction as? DumbActionDescription.Swipe) ?: return
+
+        var vx = dumbSwipe.to.x - dumbSwipe.from.x
+        var vy = dumbSwipe.to.y - dumbSwipe.from.y
+        val mag = sqrt(vx * vx + vy * vy)
+
+        vx /= mag
+        vy /= mag
+
+        animatedSwipeProgressPosition.x = dumbSwipe.from.x + vx * (mag * completionRatio)
+        animatedSwipeProgressPosition.y = dumbSwipe.from.y + vy * (mag * completionRatio)
+
+        postInvalidate()
     }
 }
