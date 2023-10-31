@@ -43,7 +43,7 @@ import java.io.PrintWriter
 class LocalService(
     private val context: Context,
     private val androidExecutor: AndroidExecutor,
-    private val onStart: (String) -> Unit,
+    private val onStart: (isSmart: Boolean, name: String) -> Unit,
     private val onStop: () -> Unit,
 ) : SmartAutoClickerService.ILocalService {
 
@@ -68,7 +68,7 @@ class LocalService(
     override fun startDumbScenario(dumbScenario: DumbScenario) {
         if (isStarted) return
         isStarted = true
-        onStart(dumbScenario.name)
+        onStart(false, dumbScenario.name)
 
         initDisplayMetrics(context)
         startJob = serviceScope.launch {
@@ -102,7 +102,7 @@ class LocalService(
     override fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
         if (isStarted) return
         isStarted = true
-        onStart(scenario.name)
+        onStart(true, scenario.name)
 
         initDisplayMetrics(context)
         startJob = serviceScope.launch {
