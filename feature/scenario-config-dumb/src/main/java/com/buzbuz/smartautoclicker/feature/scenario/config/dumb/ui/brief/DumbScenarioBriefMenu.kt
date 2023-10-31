@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.start
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCreationUiFlow
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionEditionUiFlow
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.PositionPagerSnapHelper
 
 import kotlinx.coroutines.launch
@@ -56,6 +57,8 @@ class DumbScenarioBriefMenu(
     private lateinit var visualisationViewBinding: OverlayDumbScenarioBriefBinding
     /** The adapter for the list of dumb actions. */
     private lateinit var dumbActionsAdapter: DumbActionBriefAdapter
+    /** Controls the action brief panel in and out animations. */
+    private lateinit var actionBriefPanelAnimationController: AutoHideAnimationController
 
     private lateinit var dumbActionCreator: DumbActionCreator
     private lateinit var createCopyActionUiFlowListener: DumbActionUiFlowListener
@@ -100,16 +103,27 @@ class DumbScenarioBriefMenu(
         )
 
         visualisationViewBinding = OverlayDumbScenarioBriefBinding.inflate(layoutInflater).apply {
+            actionBriefPanelAnimationController = AutoHideAnimationController()
+            actionBriefPanelAnimationController.attachToView(layoutActionList)
+
             listDumbActions.adapter = dumbActionsAdapter
             actionListSnapHelper.apply {
-                onSnapPositionChangeListener = viewModel::onNewActionListSnapIndex
+                onSnapPositionChangeListener = { snapIndex ->
+                    viewModel.onNewActionListSnapIndex(snapIndex)
+                    actionBriefPanelAnimationController.showOrResetTimer()
+                }
                 attachToRecyclerView(listDumbActions)
             }
 
+            root.setOnClickListener {
+                actionBriefPanelAnimationController.showOrResetTimer()
+            }
             buttonPrevious.setOnClickListener {
+                actionBriefPanelAnimationController.showOrResetTimer()
                 actionListSnapHelper.snapToPrevious()
             }
             buttonNext.setOnClickListener {
+                actionBriefPanelAnimationController.showOrResetTimer()
                 actionListSnapHelper.snapToNext()
             }
         }
@@ -120,6 +134,11 @@ class DumbScenarioBriefMenu(
 
     override fun onCreateOverlayView(): View =
         visualisationViewBinding.root
+
+    override fun onDestroy() {
+        actionBriefPanelAnimationController.detachFromView()
+        super.onDestroy()
+    }
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {

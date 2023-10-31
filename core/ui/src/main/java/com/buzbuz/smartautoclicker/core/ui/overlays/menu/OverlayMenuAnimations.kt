@@ -23,7 +23,10 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
+
 import androidx.core.view.children
+
+import com.buzbuz.smartautoclicker.core.base.extensions.setListener
 
 internal class OverlayMenuAnimations {
 
@@ -59,11 +62,13 @@ internal class OverlayMenuAnimations {
         Log.d(TAG, "Start show animation on view ${view} with visibility ${view.visibility}")
 
         showAnimationIsRunning = true
-        showOverlayMenuAnimation.setOnEndListener {
-            Log.d(TAG, "Show animation ended")
-            showAnimationIsRunning = false
-            onAnimationEnded()
-        }
+        showOverlayMenuAnimation.setListener(
+            end = {
+                Log.d(TAG, "Show animation ended")
+                showAnimationIsRunning = false
+                onAnimationEnded()
+            }
+        )
 
         if (hideAnimationIsRunning) {
             Log.d(TAG, "Hide animation is running, stopping it first.")
@@ -85,11 +90,13 @@ internal class OverlayMenuAnimations {
         Log.d(TAG, "Start hide animation")
 
         hideAnimationIsRunning = true
-        hideOverlayMenuAnimation.setOnEndListener {
-            Log.d(TAG, "Hide animation ended")
-            hideAnimationIsRunning = false
-            onAnimationEnded()
-        }
+        hideOverlayMenuAnimation.setListener(
+            end = {
+                Log.d(TAG, "Hide animation ended")
+                hideAnimationIsRunning = false
+                onAnimationEnded()
+            }
+        )
 
         if (showAnimationIsRunning) {
             Log.d(TAG, "Show animation is running, stopping it first.")
@@ -103,14 +110,6 @@ internal class OverlayMenuAnimations {
         if (overlayView is ViewGroup && overlayView.childCount == 1) {
             overlayView.children.first().startAnimation(hideOverlayViewAnimation)
         }
-    }
-
-    private fun Animation.setOnEndListener(end: () -> Unit) {
-        setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation?) = Unit
-            override fun onAnimationRepeat(animation: Animation?) = Unit
-            override fun onAnimationEnd(animation: Animation?) { end() }
-        })
     }
 }
 
