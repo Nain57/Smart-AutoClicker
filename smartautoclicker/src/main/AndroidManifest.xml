@@ -20,6 +20,8 @@
 
     <!-- Needed to start the SmartAutoClickerService as a foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Needed to use the media projection with SmartAutoClickerService. Starting with SDK 34 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"/>
     <!-- Needed to display the overlay_menu over other apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <!-- Needed to prompt the permission request at the right time -->

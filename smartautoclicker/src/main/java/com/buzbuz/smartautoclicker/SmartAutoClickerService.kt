@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.LocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.extensions.startForegroundMediaProjectionServiceCompat
 import com.buzbuz.smartautoclicker.core.processing.data.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
@@ -137,7 +138,10 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             }
 
             isStarted = true
-            startForeground(NOTIFICATION_ID, createNotification(scenario.name))
+            startForegroundMediaProjectionServiceCompat(
+                notificationId = NOTIFICATION_ID,
+                notification = createNotification(scenario.name),
+            )
 
             displayMetrics = DisplayMetrics.getInstance(this@SmartAutoClickerService).apply {
                 startMonitoring(this@SmartAutoClickerService)
