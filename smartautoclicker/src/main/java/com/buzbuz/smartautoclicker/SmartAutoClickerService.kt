@@ -32,10 +32,9 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVI
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.core.extensions.startForegroundMediaProjectionServiceCompat
-import com.buzbuz.smartautoclicker.feature.floatingmenu.ui.MainMenu
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -105,7 +104,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         LOCAL_SERVICE_INSTANCE = LocalService(
             context = this,
             androidExecutor = this,
-            onStart = { startForeground(NOTIFICATION_ID, createNotification(it)) },
+            onStart = { isSmart, name ->
+                if (isSmart) startForegroundMediaProjectionServiceCompat(NOTIFICATION_ID, createNotification(name))
+            },
             onStop = { stopForeground(Service.STOP_FOREGROUND_REMOVE) },
         )
     }
