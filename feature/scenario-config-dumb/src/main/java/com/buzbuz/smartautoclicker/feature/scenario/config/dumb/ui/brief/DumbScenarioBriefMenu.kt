@@ -135,6 +135,11 @@ class DumbScenarioBriefMenu(
     override fun onCreateOverlayView(): View =
         visualisationViewBinding.root
 
+    override fun onResume() {
+        super.onResume()
+        actionBriefPanelAnimationController.showOrResetTimer()
+    }
+
     override fun onDestroy() {
         actionBriefPanelAnimationController.detachFromView()
         super.onDestroy()

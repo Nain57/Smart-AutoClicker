@@ -17,50 +17,81 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils
 
 import android.animation.ValueAnimator
+import android.os.Handler
+import android.os.Looper
 import androidx.core.animation.doOnEnd
 
 class ExtendedValueAnimator private constructor(): ValueAnimator() {
 
-    private var maxRepeatCount: Int = 0
-    private var currentRepeatCount: Int = 0
+    private val handler: Handler = Handler(Looper.getMainLooper())
 
+    private var currentRepeatCount: Int = 0
     private var endRequested: Boolean = false
 
-    init {
-        doOnEnd {
-            if (endRequested) {
-                endRequested = false
-                return@doOnEnd
-            }
+    private var repeatMode: Int = 0
+    override fun getRepeatMode(): Int = repeatMode
+    override fun setRepeatMode(value: Int) { repeatMode = value }
 
-            if (maxRepeatCount == INFINITE) start()
-            else if (currentRepeatCount < maxRepeatCount) {
-                currentRepeatCount++
-                start()
-            }
-        }
-    }
+    private var repeatCount: Int = 0
+    override fun getRepeatCount(): Int = repeatCount
+    override fun setRepeatCount(value: Int) { repeatCount = value }
 
-    override fun getRepeatCount(): Int = maxRepeatCount
+    private var startDelay: Long = 0L
+    override fun getStartDelay(): Long = startDelay
+    override fun setStartDelay(value: Long) { startDelay = value }
 
-    override fun setRepeatCount(value: Int) {
-        maxRepeatCount = value
-    }
+    var repeatDelay: Long = 0L
+    var reverseDelay: Long = 0L
+
+    init { doOnEnd { onAnimationEnded() } }
 
     override fun start() {
-        currentRepeatCount = 1
-        super.start()
+        endRequested = false
+        currentRepeatCount = 0
+        startAnimation(startDelay)
     }
 
     override fun cancel() {
-        endRequested = true
+        stop()
         super.cancel()
     }
 
     override fun end() {
-        endRequested = true
+        stop()
         super.end()
     }
+
+    private fun stop() {
+        endRequested = true
+    }
+
+    private fun onAnimationEnded() {
+        if (endRequested) return
+
+        currentRepeatCount++
+        if (currentRepeatCount >= repeatCount && repeatCount != INFINITE) return
+
+        when (repeatMode) {
+            REVERSE ->
+                if (isCurrentRepeatAReverse()) reverseAnimation()
+                else startAnimation(repeatDelay)
+
+            RESTART -> startAnimation(repeatDelay)
+        }
+    }
+
+    private fun startAnimation(delay: Long) {
+        if (delay > 0) handler.postDelayed({ super.start() }, delay)
+        else super.start()
+    }
+
+    private fun reverseAnimation() {
+        if (reverseDelay > 0) handler.postDelayed({ reverse() }, reverseDelay)
+        else reverse()
+    }
+
+    private fun isCurrentRepeatAReverse(): Boolean =
+        currentRepeatCount % 2 == 1
 
     companion object {
 

@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
-import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -32,6 +31,7 @@ import androidx.core.content.res.use
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.ExtendedValueAnimator
+
 import kotlin.math.sqrt
 
 class DumbActionBriefView @JvmOverloads constructor(
@@ -115,11 +115,13 @@ class DumbActionBriefView @JvmOverloads constructor(
     }
 
     private var animatedOuterRadius: Float = outerRadius
-    private val outerRadiusAnimator: Animator = ValueAnimator.ofFloat(outerRadius * 0.75f, outerRadius).apply {
-        duration = 750
+    private val outerRadiusAnimator: ExtendedValueAnimator = ExtendedValueAnimator.ofFloat(outerRadius, outerRadius * 0.75f).apply {
+        startDelay = 250
+        duration = 250
         interpolator = AccelerateDecelerateInterpolator()
-        repeatMode = ValueAnimator.REVERSE
         repeatCount = ValueAnimator.INFINITE
+        repeatMode = ValueAnimator.REVERSE
+        repeatDelay = 500
         addUpdateListener {
             (it.animatedValue as Float).let { radius ->
                 animatedOuterRadius = radius
@@ -129,8 +131,9 @@ class DumbActionBriefView @JvmOverloads constructor(
     }
 
     private var animatedSwipeProgressPosition: PointF = PointF()
-    private val swipeProgressAnimator: Animator = ExtendedValueAnimator.ofFloat(0f, 1f).apply {
-        startDelay = 500
+    private val swipeProgressAnimator: ExtendedValueAnimator = ExtendedValueAnimator.ofFloat(0f, 1f).apply {
+        startDelay = 250
+        repeatDelay = 500
         repeatCount = ValueAnimator.INFINITE
         repeatMode = ValueAnimator.RESTART
         interpolator = LinearInterpolator()
@@ -144,14 +147,26 @@ class DumbActionBriefView @JvmOverloads constructor(
 
         when (dumbActionDescription) {
             is DumbActionDescription.Click -> {
-                if (!outerRadiusAnimator.isStarted) outerRadiusAnimator.start()
-                if (swipeProgressAnimator.isStarted) swipeProgressAnimator.end()
+                swipeProgressAnimator.cancel()
+                animatedSwipeProgressPosition = PointF()
+
+                outerRadiusAnimator.apply {
+                    if (isStarted) cancel()
+
+                    animatedOuterRadius = outerRadius
+                    reverseDelay = dumbActionDescription.pressDurationMs
+                    start()
+                }
             }
 
             is DumbActionDescription.Swipe -> {
-                if (!outerRadiusAnimator.isStarted) outerRadiusAnimator.start()
+                outerRadiusAnimator.cancel()
+                animatedOuterRadius = outerRadius
+
                 swipeProgressAnimator.apply {
                     if (isStarted) cancel()
+
+                    animatedSwipeProgressPosition = PointF()
                     duration = dumbActionDescription.swipeDurationMs
                     start()
                 }
@@ -178,12 +193,12 @@ class DumbActionBriefView @JvmOverloads constructor(
 
         when (val action = dumbAction) {
             is DumbActionDescription.Click -> {
-                canvas.drawSelectorCircle(action.position, outerFromPaint, innerFromPaint)
+                canvas.drawSelectorCircle(action.position, animatedOuterRadius, outerFromPaint, innerFromPaint)
             }
 
             is DumbActionDescription.Swipe -> {
-                canvas.drawSelectorCircle(action.from, outerFromPaint, innerFromPaint)
-                canvas.drawSelectorCircle(action.to, outerToPaint, innerToPaint)
+                canvas.drawSelectorCircle(action.from, outerRadius, outerFromPaint, innerFromPaint)
+                canvas.drawSelectorCircle(action.to, outerRadius, outerToPaint, innerToPaint)
                 canvas.drawLine(action.from.x, action.from.y, action.to.x, action.to.y, linePaint)
                 canvas.drawCircle(
                     animatedSwipeProgressPosition.x,
@@ -204,9 +219,9 @@ class DumbActionBriefView @JvmOverloads constructor(
      * @param outerPaint the paint used to draw the big circle.
      * @param innerPaint the paint used to draw the small inner circle.
      */
-    private fun Canvas.drawSelectorCircle(position: PointF, outerPaint: Paint, innerPaint: Paint) {
-        drawCircle(position.x, position.y, animatedOuterRadius, backgroundPaint)
-        drawCircle(position.x, position.y, animatedOuterRadius, outerPaint)
+    private fun Canvas.drawSelectorCircle(position: PointF, outerRadius: Float, outerPaint: Paint, innerPaint: Paint) {
+        drawCircle(position.x, position.y, outerRadius, backgroundPaint)
+        drawCircle(position.x, position.y, outerRadius, outerPaint)
         drawCircle(position.x, position.y, innerCircleRadius, innerPaint)
     }
 
