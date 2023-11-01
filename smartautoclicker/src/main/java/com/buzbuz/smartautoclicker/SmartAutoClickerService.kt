@@ -99,6 +99,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         fun getLocalService(stateCallback: ((LocalService?) -> Unit)?) {
             LOCAL_SERVICE_CALLBACK = stateCallback
         }
+
+        fun isServiceStarted(): Boolean = LOCAL_SERVICE_INSTANCE != null
     }
 
     private var serviceScope: CoroutineScope? = null

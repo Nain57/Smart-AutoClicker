@@ -42,7 +42,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.activity.PermissionsDialogFragment.Companion.FRAGMENT_TAG_PERMISSION_DIALOG
+import com.buzbuz.smartautoclicker.activity.permissions.arePermissionsGranted
+import com.buzbuz.smartautoclicker.activity.permissions.startPermissionFlow
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.databinding.DialogEditBinding
@@ -60,7 +61,7 @@ import kotlinx.coroutines.launch
  * Fragment displaying the list of click scenario and the creation dialog.
  * If the list is empty, it will hide the list and displays the empty list view.
  */
-class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDialogListener {
+class ScenarioListFragment : Fragment() {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by activityViewModels()
@@ -124,10 +125,6 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
                 launch { scenarioViewModel.uiState.collect(::updateUiState) }
             }
         }
-    }
-
-    override fun onPermissionsGranted() {
-        showMediaProjectionWarning()
     }
 
     private fun onMenuItemSelected(item: MenuItem): Boolean {
@@ -258,9 +255,9 @@ class ScenarioListFragment : Fragment(), PermissionsDialogFragment.PermissionDia
     private fun onStartClicked(scenario: Scenario) {
         requestedScenario = scenario
 
-        if (!scenarioViewModel.arePermissionsGranted()) {
-            activity?.let {
-                PermissionsDialogFragment.newInstance().show(it.supportFragmentManager, FRAGMENT_TAG_PERMISSION_DIALOG)
+        if (!arePermissionsGranted(requireContext())) {
+            startPermissionFlow(requireActivity().supportFragmentManager) {
+                showMediaProjectionWarning()
             }
             return
         }
@@ -363,7 +360,5 @@ private fun MenuItem.bind(state: ScenarioListFragmentUiState.Menu.Item) {
     }
 }
 
-/** Tag for scenario list fragment. */
-const val FRAGMENT_TAG_SCENARIO_LIST = "ScenarioList"
 /** Tag for logs. */
 private const val TAG = "ScenarioListFragment"

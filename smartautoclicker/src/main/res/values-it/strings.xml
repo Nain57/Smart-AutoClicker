@@ -30,7 +30,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">Nuovo scenario</string>
-    <string name="dialog_title_permissions">Autorizzazioni richieste</string>
 
     <!--
       - Text for menu items.
@@ -45,15 +44,9 @@
       -  * Title should be short and concise.
       -  * Desc can have more space to describe the title
       -->
-    <string name="item_desc_permissions">Le seguenti autorizzazioni sono necessarie per utilizzare Smart AutoClicker:</string>
-    <string name="item_desc_permission_overlay">L\'autorizzazione di sovrapposizione consente a questa applicazione
-                                                   di visualizzare un menu sulle ad altre app.</string>
-    <string name="item_desc_permission_accessibility">Il servizio di accessibilità consente a questa applicazione di fare clic
-                                                         sulle altre app per te.</string>
-    <string name="item_desc_permission_notification">Opzionale: Mostra la notifica mentre l\'applicazione è in esecuzione.</string>
-    <string name="item_title_permission_accessibility">Servizio di accessibilità</string>
-    <string name="item_title_permission_notification">Notifica</string>
-    <string name="item_title_permission_overlay">Sovrapposizione</string>
+    <string name="dialog_title_permission_accessibility">Servizio di accessibilità</string>
+    <string name="dialog_title_permission_notification">Notifica</string>
+    <string name="dialog_title_permission_overlay">Sovrapposizione</string>
 
     <!--
       - Empty list messages.
@@ -68,6 +61,15 @@
     <string name="message_delete_scenario">Questo cancellerà %1$s. Sei sicuro ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Il tuo dispositivo non fornisce la finestra
         di dialogo standard per l\'autorizzazione all\'acquisizione dello schermo Android. Smart AutoClicker non potrà essere eseguito su di esso.</string>
+    <string name="message_permission_desc_overlay">Per visualizzare Smart AutoClicker è necessaria l\'autorizzazione di sovrapposizione
+        interfaccia sulle applicazioni che desideri automatizzare, permettendoti di configurare il tuo scenario senza fermarti
+        l\'altra applicazione.</string>
+    <string name="message_permission_desc_accessibility">L\'autorizzazione del servizio di accessibilità consente Smart AutoClicker
+        per eseguire gesti sullo schermo del tuo dispositivo. Questa autorizzazione è necessaria per eseguire i clic e i passaggi
+        creerai nei tuoi scenari di automazione.\n\nNessun dato viene raccolto da Smart AutoClicker\n\nPer garantire l\'accessibilità
+        autorizzazione al servizio, fare clic sul pulsante qui sotto.</string>
+    <string name="message_permission_desc_notification">Facoltativo: mostra la notifica mentre l\'applicazione viene eseguita in ordine
+        per tornare facilmente alla schermata di selezione dello scenario.</string>
 
     <!--
       - Toast messages.
@@ -81,13 +83,12 @@
       - Should be short and concise.
       -->
     <string name="button_text_create_scenario">Crea uno scenario</string>
+    <string name="button_request_permission">Richiesta di permesso</string>
 
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
     <string name="content_desc_add_scenario">Crea un nuovo scenario</string>
-    <string name="content_desc_overlay_state">Stato del permesso di sovrapposizione</string>
-    <string name="content_desc_accessibility_state">Stato del permesso del servizio di accessibilità</string>
 
 </resources>

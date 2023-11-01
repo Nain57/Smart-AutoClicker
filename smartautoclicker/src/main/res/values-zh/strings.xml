@@ -29,7 +29,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">新建脚本</string>
-    <string name="dialog_title_permissions">需要以下权限</string>
 
     <!--
       - Text for menu items.
@@ -44,13 +43,9 @@
       -  * Title should be short and concise.
       -  * Desc can have more space to describe the title
       -->
-    <string name="item_desc_permissions">Smart AutoClicker 将使用以下权限</string>
-    <string name="item_desc_permission_overlay">允许该应用显示在其他应用的上层以得知您点按的位置</string>
-    <string name="item_desc_permission_accessibility">通过”无障碍“服务模拟点击某个位置。</string>
-    <string name="item_desc_permission_notification">可选：在应用程序运行时显示通知。</string>
-    <string name="item_title_permission_accessibility">无障碍服务</string>
-    <string name="item_title_permission_notification">通知</string>
-    <string name="item_title_permission_overlay">显示在其他应用的上层</string>
+    <string name="dialog_title_permission_accessibility">无障碍服务</string>
+    <string name="dialog_title_permission_notification">通知</string>
+    <string name="dialog_title_permission_overlay">显示在其他应用的上层</string>
 
     <!--
       - Empty list messages.
@@ -64,6 +59,10 @@
       -->
     <string name="message_delete_scenario">是否删除场景： %1$s ？</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">您的设备不提供标准的 Android 屏幕捕获权限对话框。 Smart AutoClicker 将无法在其上运行。</string>
+    <string name="message_permission_desc_overlay">需要覆盖权限才能显示智能自动点击器您想要自动化的应用程序的界面，允许您无需停止即可配置您的场景另一个应用程序。</string>
+    <string name="message_permission_desc_accessibility">辅助功能服务权限允许智能自动点击器在设备屏幕上执行手势。需要此权限才能执行点击和滑动
+        您将在自动化场景中创建。\n\n智能自动点击器不会收集任何数据\n\n要授予辅助功能服务权限，单击下面的按钮。</string>
+    <string name="message_permission_desc_notification">可选：在应用程序按顺序运行时显示通知轻松返回场景选择屏幕。</string>
 
     <!--
       - Toast messages.
@@ -77,13 +76,12 @@
       - Should be short and concise.
       -->
     <string name="button_text_create_scenario">创建脚本</string>
+    <string name="button_request_permission">请求许可</string>
 
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
     <string name="content_desc_add_scenario">创建一个新脚本</string>
-    <string name="content_desc_overlay_state">悬浮窗权限状态</string>
-    <string name="content_desc_accessibility_state">无障碍服务权限状态</string>
 
 </resources>
