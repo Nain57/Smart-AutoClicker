@@ -136,16 +136,6 @@ sealed class Permission {
     private interface Optional
 }
 
-fun arePermissionsGranted(context: Context): Boolean {
-    Permission.Type.values().forEach { permissionType ->
-        permissionType.permission.let { permission ->
-            if (!permission.isOptional() && !permission.isGranted(context) ) return false
-        }
-
-    }
-    return true
-}
-
 /** Get the shared preferences file for the permissions*/
 private fun Context.getPermissionSharedPrefs() =
     getSharedPreferences("permissions", Context.MODE_PRIVATE)
