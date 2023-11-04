@@ -76,6 +76,14 @@ class AutoHideAnimationController {
 
         resetHideCountdown()
     }
+
+    fun hide() {
+        hideJob?.cancel()
+        hideJob = null
+
+        viewToAnimate?.startAnimation(hideAnimation)
+    }
+
     private fun resetHideCountdown() {
         Log.d(TAG, "reset hide countdown")
 

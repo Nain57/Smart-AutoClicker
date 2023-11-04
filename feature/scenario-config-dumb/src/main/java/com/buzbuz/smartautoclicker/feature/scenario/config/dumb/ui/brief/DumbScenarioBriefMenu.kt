@@ -163,6 +163,8 @@ class DumbScenarioBriefMenu(
 
     private fun onCreateDumbActionClicked() {
         debounceUserInteraction {
+            actionBriefPanelAnimationController.hide()
+
             OverlayManager.getInstance(context).startDumbActionCreationUiFlow(
                 context = context,
                 creator = dumbActionCreator,
@@ -173,6 +175,8 @@ class DumbScenarioBriefMenu(
 
     private fun onCopyDumbActionClicked() {
         debounceUserInteraction {
+            actionBriefPanelAnimationController.hide()
+
             OverlayManager.getInstance(context).startDumbActionCopyUiFlow(
                 context = context,
                 creator = dumbActionCreator,
