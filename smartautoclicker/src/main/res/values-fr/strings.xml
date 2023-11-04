@@ -46,7 +46,9 @@
       -->
     <string name="dialog_title_permission_accessibility">Service d\'accessibilité</string>
     <string name="dialog_title_permission_notification">Notification</string>
+    <string name="dialog_title_permission_mandatory_denied">Permission refusée</string>
     <string name="dialog_title_permission_overlay">Superposition</string>
+
 
     <!--
       - Empty list messages.
@@ -70,6 +72,9 @@
     <string name="message_permission_desc_overlay">La permission de superposition est requise afin de pouvoir afficher l\'interface de
         Smart AutoClicker par dessus les applications que vous voulez automatiser, vous permettant de configurer vos scenarios sans
         stopper ces autres applications.</string>
+    <string name="message_permission_mandatory_denied">Cette permission est obligatoire pour Smart AutoClicker.
+        L\'application ne pourra pas fonctionner sans elle.</string>
+
 
     <!--
       - Toast messages.
@@ -84,6 +89,7 @@
       -->
     <string name="button_text_create_scenario">Créer un scénario</string>
     <string name="button_request_permission">Requête de permission</string>
+    <string name="button_deny">Refuser</string>
 
     <!--
       - Content description texts.

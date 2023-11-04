@@ -46,6 +46,7 @@
       -->
     <string name="dialog_title_permission_accessibility">Servizio di accessibilità</string>
     <string name="dialog_title_permission_notification">Notifica</string>
+    <string name="dialog_title_permission_mandatory_denied">Permesso negato</string>
     <string name="dialog_title_permission_overlay">Sovrapposizione</string>
 
     <!--
@@ -70,6 +71,8 @@
         autorizzazione al servizio, fare clic sul pulsante qui sotto.</string>
     <string name="message_permission_desc_notification">Facoltativo: mostra la notifica mentre l\'applicazione viene eseguita in ordine
         per tornare facilmente alla schermata di selezione dello scenario.</string>
+    <string name="message_permission_mandatory_denied">Questa autorizzazione è obbligatoria per Smart AutoClicker.
+        Non sarà in grado di funzionare correttamente senza di esso.</string>
 
     <!--
       - Toast messages.
@@ -84,6 +87,7 @@
       -->
     <string name="button_text_create_scenario">Crea uno scenario</string>
     <string name="button_request_permission">Richiesta di permesso</string>
+    <string name="button_deny">Negare</string>
 
     <!--
       - Content description texts.

@@ -20,20 +20,25 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
-fun Fragment.startPermissionFlow(fragmentManager: FragmentManager, onAllGranted: () -> Unit) {
+fun Fragment.startPermissionFlow(
+    fragmentManager: FragmentManager,
+    onAllGranted: () -> Unit,
+    onMandatoryDenied: () -> Unit,
+) {
     val permissionsLeft = buildSet {
         Permission.Type.values().forEach { permissionType ->
             if (!permissionType.permission.isGranted(requireContext())) add(permissionType)
         }
     }.toMutableSet()
 
-    showNextPermissionDialog(fragmentManager, permissionsLeft, onAllGranted)
+    showNextPermissionDialog(fragmentManager, permissionsLeft, onAllGranted, onMandatoryDenied)
 }
 
 private fun Fragment.showNextPermissionDialog(
     fragmentManager: FragmentManager,
     permissionsLeft: MutableSet<Permission.Type>,
     onAllGranted: () -> Unit,
+    onMandatoryDenied: () -> Unit,
 ) {
     // All granted ? We are good
     if (permissionsLeft.isEmpty()) {
@@ -52,7 +57,7 @@ private fun Fragment.showNextPermissionDialog(
 
         Log.d(TAG, "Skipping already requested permission ${nextPermissionType.name}")
         permissionsLeft.remove(nextPermissionType)
-        showNextPermissionDialog(fragmentManager, permissionsLeft, onAllGranted)
+        showNextPermissionDialog(fragmentManager, permissionsLeft, onAllGranted, onMandatoryDenied)
         return
     }
 
@@ -62,7 +67,9 @@ private fun Fragment.showNextPermissionDialog(
 
         if (isGranted || nextPermissionType.permission.isOptional()) {
             permissionsLeft.remove(nextPermissionType)
-            showNextPermissionDialog(fragmentManager, permissionsLeft, onAllGranted)
+            showNextPermissionDialog(fragmentManager, permissionsLeft, onAllGranted, onMandatoryDenied)
+        } else {
+            onMandatoryDenied()
         }
     }
 

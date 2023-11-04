@@ -81,6 +81,10 @@ class PermissionDialogFragment : DialogFragment() {
             buttonRequestPermission.setOnClickListener {
                 permissionArgument.startRequestFlow(requireContext())
             }
+
+            buttonDenyPermission.setOnClickListener {
+                dismiss()
+            }
         }
 
         return MaterialAlertDialogBuilder(requireContext())

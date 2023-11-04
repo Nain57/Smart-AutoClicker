@@ -256,9 +256,11 @@ class ScenarioListFragment : Fragment() {
         requestedScenario = scenario
 
         if (!arePermissionsGranted(requireContext())) {
-            startPermissionFlow(requireActivity().supportFragmentManager) {
-                showMediaProjectionWarning()
-            }
+            startPermissionFlow(
+                fragmentManager = requireActivity().supportFragmentManager,
+                onAllGranted = ::showMediaProjectionWarning,
+                onMandatoryDenied = ::showMandatoryPermissionDeniedDialog,
+            )
             return
         }
 
@@ -334,6 +336,14 @@ class ScenarioListFragment : Fragment() {
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }
         scenarioViewModel.setUiState(ScenarioListFragmentUiState.Type.SELECTION)
+    }
+
+    private fun showMandatoryPermissionDeniedDialog() {
+        showDialog(MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.dialog_title_permission_mandatory_denied)
+            .setMessage(R.string.message_permission_mandatory_denied)
+            .setPositiveButton(android.R.string.ok, null)
+            .create())
     }
 
     /**

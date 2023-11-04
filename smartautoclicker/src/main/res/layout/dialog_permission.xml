@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_default"
-        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,11 +69,24 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
         android:layout_marginTop="@dimen/margin_vertical_extra_large"
-        android:layout_marginBottom="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_default"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/desc_permission"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_deny_permission"
         android:text="@string/button_request_permission"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_deny_permission"
+        style="@style/AppTheme.Widget.TextButtonOutlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_request_permission"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/button_deny"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
