@@ -76,6 +76,7 @@ class DumbScenarioBriefMenu(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.canCopyAction.collect(::onCopyMenuButtonStateUpdated) }
                 launch { viewModel.visualizedActions.collect(::onDumbActionListUpdated) }
                 launch { viewModel.focusedActionDetails.collect(::onFocusedActionDetailsUpdated) }
             }
@@ -195,6 +196,14 @@ class DumbScenarioBriefMenu(
 
         addedActionIndexes = index to dumbActionsAdapter.itemCount + 1
         viewModel.addNewDumbAction(action, index)
+    }
+
+    private fun onCopyMenuButtonStateUpdated(isEnabled: Boolean) {
+        setMenuItemViewEnabled(
+            view = menuViewBinding.btnCopy,
+            enabled = isEnabled,
+            clickable = isEnabled,
+        )
     }
 
     private fun onDumbActionListUpdated(actions: List<DumbActionDetails>) {
