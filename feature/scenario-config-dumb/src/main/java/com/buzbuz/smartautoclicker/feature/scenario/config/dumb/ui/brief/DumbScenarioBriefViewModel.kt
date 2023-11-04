@@ -42,6 +42,9 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
 
     private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
 
+    val canCopyAction: Flow<Boolean> = dumbEditionRepository.actionsToCopy
+        .map { it.isNotEmpty() }
+
     val visualizedActions: Flow<List<DumbActionDetails>> = dumbEditionRepository.editedDumbScenario
         .map { scenario ->
             scenario?.dumbActions?.map { dumbAction ->
