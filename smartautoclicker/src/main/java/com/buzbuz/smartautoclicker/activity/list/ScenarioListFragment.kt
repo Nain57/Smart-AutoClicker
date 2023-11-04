@@ -35,8 +35,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.activity.permissions.arePermissionsGranted
-import com.buzbuz.smartautoclicker.activity.permissions.startPermissionFlow
+import com.buzbuz.smartautoclicker.activity.creation.ScenarioCreationDialog
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
@@ -53,7 +52,6 @@ import kotlinx.coroutines.launch
 class ScenarioListFragment : Fragment() {
 
     interface Listener {
-
         fun startScenario(item: ScenarioListUiState.Item)
     }
 
@@ -218,21 +216,10 @@ class ScenarioListFragment : Fragment() {
 
     /**
      * Called when the user clicks on a scenario.
-     * @param item the scenario clicked.
+     * @param scenario the scenario clicked.
      */
-    private fun onStartClicked(scenario: Scenario) {
-        requestedScenario = scenario
-
-        if (!arePermissionsGranted(requireContext())) {
-            startPermissionFlow(
-                fragmentManager = requireActivity().supportFragmentManager,
-                onAllGranted = ::showMediaProjectionWarning,
-                onMandatoryDenied = ::showMandatoryPermissionDeniedDialog,
-            )
-            return
-        }
-
-        showMediaProjectionWarning()
+    private fun onStartClicked(scenario: ScenarioListUiState.Item) {
+        (requireActivity() as? Listener)?.startScenario(scenario)
     }
 
     /**
@@ -289,29 +276,6 @@ class ScenarioListFragment : Fragment() {
                 .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         }
         scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)
-    }
-
-    private fun showMandatoryPermissionDeniedDialog() {
-        showDialog(MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.dialog_title_permission_mandatory_denied)
-            .setMessage(R.string.message_permission_mandatory_denied)
-            .setPositiveButton(android.R.string.ok, null)
-            .create())
-    }
-
-    /**
-     * Some devices messes up too much with Android.
-     * Display a dialog in those cases and stop the application.
-     */
-    private fun showUnsupportedDeviceDialog() {
-        showDialog(MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_error_screen_capture_permission_dialog_not_found)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                activity?.finish()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create())
     }
 }
 

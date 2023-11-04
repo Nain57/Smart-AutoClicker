@@ -21,8 +21,8 @@ import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListUiState
+import com.buzbuz.smartautoclicker.activity.permissions.startPermissionFlow
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
@@ -42,7 +43,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
  * Shown when the user clicks on the launcher icon for the application, this activity will displays the list of
  * available scenarios, if any.
  */
-class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, PermissionsDialogFragment.Listener {
+class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by viewModels()
@@ -63,8 +64,8 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, Per
             if (result.resultCode != RESULT_OK) {
                 Toast.makeText(this, R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
             } else {
-                (requestedItem as? ScenarioListUiState.Item.Valid.Smart)?.let { item ->
-                    startSmartScenario(result, item.scenario)
+                (requestedItem?.scenario as? Scenario)?.let { scenario ->
+                    startSmartScenario(result, scenario)
                 }
             }
         }
@@ -73,32 +74,18 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, Per
     override fun startScenario(item: ScenarioListUiState.Item) {
         requestedItem = item
 
-        if (!scenarioViewModel.arePermissionsGranted()) {
-            showPermissionsDialog()
-            return
-        }
+        startPermissionFlow(
+            fragmentManager = supportFragmentManager,
+            onAllGranted = ::onMandatoryPermissionsGranted,
+            onMandatoryDenied = ::showMandatoryPermissionDeniedDialog,
+        )
+    }
 
-        when (val scenario = item.scenario) {
+    private fun onMandatoryPermissionsGranted() {
+        when (val scenario = requestedItem?.scenario) {
             is DumbScenario -> startDumbScenario(scenario)
             is Scenario -> showMediaProjectionWarning()
         }
-    }
-
-    override fun onPermissionsGranted() {
-        requestedItem?.let { item ->
-            when (val scenario = item.scenario) {
-                is DumbScenario -> startDumbScenario(scenario)
-                is Scenario -> showMediaProjectionWarning()
-                else -> Unit
-            }
-        }
-    }
-
-    private fun showPermissionsDialog() {
-        PermissionsDialogFragment.newInstance().show(
-            supportFragmentManager,
-            PermissionsDialogFragment.FRAGMENT_TAG_PERMISSION_DIALOG,
-        )
     }
 
     /** Show the media projection start warning. */
@@ -114,6 +101,15 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener, Per
                 showUnsupportedDeviceDialog()
             }
         }
+    }
+
+    private fun showMandatoryPermissionDeniedDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.dialog_title_permission_mandatory_denied)
+            .setMessage(R.string.message_permission_mandatory_denied)
+            .setPositiveButton(android.R.string.ok, null)
+            .create()
+            .show()
     }
 
     /**

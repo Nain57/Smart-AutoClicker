@@ -17,24 +17,25 @@
 package com.buzbuz.smartautoclicker.activity.permissions
 
 import android.util.Log
-import androidx.fragment.app.Fragment
+
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 
-fun Fragment.startPermissionFlow(
+fun AppCompatActivity.startPermissionFlow(
     fragmentManager: FragmentManager,
     onAllGranted: () -> Unit,
     onMandatoryDenied: () -> Unit,
 ) {
     val permissionsLeft = buildSet {
         Permission.Type.values().forEach { permissionType ->
-            if (!permissionType.permission.isGranted(requireContext())) add(permissionType)
+            if (!permissionType.permission.isGranted(this@startPermissionFlow)) add(permissionType)
         }
     }.toMutableSet()
 
     showNextPermissionDialog(fragmentManager, permissionsLeft, onAllGranted, onMandatoryDenied)
 }
 
-private fun Fragment.showNextPermissionDialog(
+private fun AppCompatActivity.showNextPermissionDialog(
     fragmentManager: FragmentManager,
     permissionsLeft: MutableSet<Permission.Type>,
     onAllGranted: () -> Unit,
@@ -53,7 +54,7 @@ private fun Fragment.showNextPermissionDialog(
 
     // This permission is optional and has already been requested, skip it
     if (nextPermission is Permission.Dangerous && nextPermission.isOptional() &&
-            nextPermission.hasBeenRequestedBefore(requireContext())) {
+            nextPermission.hasBeenRequestedBefore(this)) {
 
         Log.d(TAG, "Skipping already requested permission ${nextPermissionType.name}")
         permissionsLeft.remove(nextPermissionType)
@@ -81,11 +82,10 @@ private fun Fragment.showNextPermissionDialog(
     )
 }
 
-private fun Fragment.setPermissionDialogResultListener(
+private fun AppCompatActivity.setPermissionDialogResultListener(
     fragmentManager: FragmentManager,
     resultListener: (isGranted: Boolean) -> Unit
 ) {
-
     fragmentManager.setFragmentResultListener(
         PermissionDialogFragment.FRAGMENT_RESULT_KEY_PERMISSION_STATE,
         this)
