@@ -105,7 +105,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         // Ensure the debug view state is correct
         viewBinding.layoutDebug.visibility = View.GONE
-        setOverlayViewVisibility(View.GONE)
+        setOverlayViewVisibility(false)
 
         // When the billing flow is not longer displayed, restore the dialogs states
         lifecycleScope.launch {
@@ -247,7 +247,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private fun updateDebugOverlayViewVisibility(isVisible: Boolean) {
         if (isVisible && debugObservableJob == null) {
             viewBinding.layoutDebug.visibility = View.VISIBLE
-            setOverlayViewVisibility(View.VISIBLE)
+            setOverlayViewVisibility(true)
             debugObservableJob = observeDebugValues()
 
         } else if (!isVisible && debugObservableJob != null) {
@@ -258,7 +258,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             viewBinding.debugConditionName.text = null
             viewBinding.debugConfidenceRate.text = null
             viewBinding.layoutDebug.visibility = View.GONE
-            setOverlayViewVisibility(View.GONE)
+            setOverlayViewVisibility(false)
             (screenOverlayView as DebugOverlayView).clear()
         }
     }
