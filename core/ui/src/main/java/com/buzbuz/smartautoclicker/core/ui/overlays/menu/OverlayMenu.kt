@@ -29,6 +29,7 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageButton
 
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
@@ -108,7 +109,7 @@ abstract class OverlayMenu(
     private var disabledItemAlpha: Float = 1f
 
     /** The hide overlay button, if provided. */
-    private var hideOverlayButton: View? = null
+    private var hideOverlayButton: ImageButton? = null
     /** The move button, if provided. */
     private var moveButton: View? = null
 
@@ -213,8 +214,8 @@ abstract class OverlayMenu(
                     view.setOnTouchListener { _: View, event: MotionEvent -> onMoveTouched(event) }
                 }
                 R.id.btn_hide_overlay -> {
-                    hideOverlayButton = view
-                    setOverlayViewVisibility(View.VISIBLE)
+                    hideOverlayButton = (view as ImageButton)
+                    setOverlayViewVisibility(true)
                     view.setOnClickListener { onHideOverlayClicked() }
                 }
                 else -> view.setOnClickListener { v ->
@@ -338,6 +339,12 @@ abstract class OverlayMenu(
     protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit? = null
 
     /**
+     * Called when the visibility of the screen overlay have changed.
+     * @param isVisible true if it has became visible, false if it became invisible.
+     */
+    protected open fun onScreenOverlayVisibilityChanged(isVisible: Boolean): Unit? = null
+
+    /**
      * Get the maximum size the window can take.
      * @param backgroundView the background view.
      */
@@ -424,11 +431,7 @@ abstract class OverlayMenu(
         if (resizeController.isAnimating) return
 
         screenOverlayView?.let { view ->
-            if (view.visibility == View.VISIBLE) {
-                setOverlayViewVisibility(View.GONE)
-            } else {
-                setOverlayViewVisibility(View.VISIBLE)
-            }
+            setOverlayViewVisibility(view.visibility != View.VISIBLE)
         }
     }
 
@@ -436,16 +439,22 @@ abstract class OverlayMenu(
      * Change the overlay view visibility, allowing the user the click on the Activity bellow the overlays.
      * Updates the hide button state, if any.
      *
-     * @param newVisibility the new visibility to apply.
+     * @param isOverlayVisible the new visibility to apply.
      */
-    protected fun setOverlayViewVisibility(newVisibility: Int) {
+    protected fun setOverlayViewVisibility(isOverlayVisible: Boolean) {
         screenOverlayView?.apply {
 
-            Log.d(TAG, "setOverlayViewVisibility for ${this@OverlayMenu.hashCode()} with visibility $newVisibility")
-            visibility = newVisibility
-            hideOverlayButton?.let {
-                setMenuItemViewEnabled(it, visibility == View.GONE , true)
+            Log.d(TAG, "setOverlayViewVisibility for ${this@OverlayMenu.hashCode()} with visibility $isOverlayVisible")
+
+            if (isOverlayVisible) {
+                visibility = View.VISIBLE
+                hideOverlayButton?.setImageResource(R.drawable.ic_visible_on)
+            } else {
+                visibility = View.GONE
+                hideOverlayButton?.setImageResource(R.drawable.ic_visible_off)
             }
+
+            onScreenOverlayVisibilityChanged(isOverlayVisible)
         }
     }
 

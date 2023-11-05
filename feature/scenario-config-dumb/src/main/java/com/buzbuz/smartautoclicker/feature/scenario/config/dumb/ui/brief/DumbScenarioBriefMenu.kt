@@ -146,6 +146,10 @@ class DumbScenarioBriefMenu(
         super.onDestroy()
     }
 
+    override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {
+        if (isVisible) actionBriefPanelAnimationController.showOrResetTimer()
+    }
+
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_back -> onBackClicked()

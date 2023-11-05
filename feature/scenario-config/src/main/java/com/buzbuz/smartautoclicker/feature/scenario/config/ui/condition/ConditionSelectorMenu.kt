@@ -77,12 +77,12 @@ class ConditionSelectorMenu(
                 SELECTION -> {
                     viewBinding.btnConfirm.setImageResource(R.drawable.ic_screenshot)
                     setMenuVisibility(View.VISIBLE)
-                    setOverlayViewVisibility(View.GONE)
+                    setOverlayViewVisibility(false)
                     selectorView.hide = true
                 }
                 CAPTURE -> {
                     setMenuVisibility(View.GONE)
-                    setOverlayViewVisibility(View.VISIBLE)
+                    setOverlayViewVisibility(true)
                     selectorView.hide = true
                 }
                 ADJUST -> {

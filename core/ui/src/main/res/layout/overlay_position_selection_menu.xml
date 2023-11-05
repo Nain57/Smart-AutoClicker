@@ -46,7 +46,7 @@
             <ImageButton
                 android:id="@+id/btn_hide_overlay"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                android:src="@drawable/ic_overlay_click"
+                android:src="@drawable/ic_visible_on"
                 android:contentDescription="@string/content_desc_go_back" />
 
             <ImageButton
