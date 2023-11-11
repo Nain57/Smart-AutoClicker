@@ -163,7 +163,9 @@ std::unique_ptr<Mat> Detector::scaleAndChangeToGray(const cv::Mat& fullSizeColor
 }
 
 std::unique_ptr<Mat> Detector::matchTemplate(const Mat& image, const Mat& condition) {
-    cv::Mat resultMat(image.rows - condition.rows + 1, image.cols - condition.cols + 1, CV_32F);
+    cv::Mat resultMat(max(image.rows - condition.rows + 1, 0),
+                      max(image.cols - condition.cols + 1, 0),
+                      CV_32F);
     cv::matchTemplate(image, condition, resultMat, cv::TM_CCOEFF_NORMED);
 
     return std::make_unique<cv::Mat>(resultMat);
