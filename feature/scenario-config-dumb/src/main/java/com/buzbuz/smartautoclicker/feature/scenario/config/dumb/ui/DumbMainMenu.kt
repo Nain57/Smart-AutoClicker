@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -30,7 +31,6 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbMainMenuBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbScenarioBriefMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
 
@@ -48,6 +48,12 @@ class DumbMainMenu(
     private lateinit var viewBinding: OverlayDumbMainMenuBinding
     /** Controls the animations of the play/pause button. */
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
+
+    /**
+     * Tells if this service has handled onKeyEvent with ACTION_DOWN for a key in order to return
+     * the correct value when ACTION_UP is received.
+     */
+    private var keyDownHandled: Boolean = false
 
     override fun onCreate() {
         super.onCreate()
@@ -80,6 +86,28 @@ class DumbMainMenu(
         super.onDestroy()
         playPauseButtonController.detachView()
         viewModel.stopEdition()
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
+        if (keyEvent.keyCode != KeyEvent.KEYCODE_VOLUME_DOWN) return false
+
+        when (keyEvent.action) {
+            KeyEvent.ACTION_DOWN -> {
+                if (viewModel.stopScenarioPlay()) {
+                    keyDownHandled = true
+                    return true
+                }
+            }
+
+            KeyEvent.ACTION_UP -> {
+                if (keyDownHandled) {
+                    keyDownHandled = false
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     /** Refresh the play menu item according to the scenario state. */

@@ -68,37 +68,19 @@ class DumbMainMenuModel(application: Application) : AndroidViewModel(application
         dumbEditionRepository.stopEdition()
     }
 
-    fun createNewDumbClick(position: Point): DumbAction.DumbClick =
-        dumbEditionRepository.dumbActionBuilder.createNewDumbClick(getApplication(), position)
-
-    fun createNewDumbSwipe(from: Point, to: Point): DumbAction.DumbSwipe =
-        dumbEditionRepository.dumbActionBuilder.createNewDumbSwipe(getApplication(), from, to)
-
-    fun createNewDumbPause(): DumbAction.DumbPause =
-        dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
-
-    fun addNewDumbAction(dumbAction: DumbAction) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dumbEditionRepository.apply {
-                addNewDumbAction(dumbAction)
-                saveEditions()
-            }
-        }
-    }
-
-    fun deleteDumbAction(dumbAction: DumbAction) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dumbEditionRepository.apply {
-                deleteDumbAction(dumbAction)
-                saveEditions()
-            }
-        }
-    }
-
     fun toggleScenarioPlay() {
         viewModelScope.launch {
             if (isPlaying.value) dumbEngine.stopDumbScenario()
             else dumbEngine.startDumbScenario()
         }
+    }
+
+    fun stopScenarioPlay(): Boolean {
+        if (!isPlaying.value) return false
+
+        viewModelScope.launch {
+            dumbEngine.stopDumbScenario()
+        }
+        return true
     }
 }

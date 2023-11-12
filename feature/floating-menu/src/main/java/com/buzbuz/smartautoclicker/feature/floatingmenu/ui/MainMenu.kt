@@ -20,6 +20,7 @@ import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.Intent
 import android.util.Size
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
@@ -72,6 +73,12 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private var billingFlowTriggeredByDetectionLimitation: Boolean = false
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
+
+    /**
+     * Tells if this service has handled onKeyEvent with ACTION_DOWN for a key in order to return
+     * the correct value when ACTION_UP is received.
+     */
+    private var keyDownHandled: Boolean = false
 
     override fun animateOverlayView(): Boolean = false
 
@@ -149,6 +156,28 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onDestroy() {
         super.onDestroy()
         playPauseButtonController.detachView()
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
+        if (keyEvent.keyCode != KeyEvent.KEYCODE_VOLUME_DOWN) return false
+
+        when (keyEvent.action) {
+            KeyEvent.ACTION_DOWN -> {
+                if (viewModel.stopDetection()) {
+                    keyDownHandled = true
+                    return true
+                }
+            }
+
+            KeyEvent.ACTION_UP -> {
+                if (keyDownHandled) {
+                    keyDownHandled = false
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     override fun onMenuItemClicked(viewId: Int) {
