@@ -182,12 +182,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_play -> {
-                viewModel.toggleDetection(context) {
-                    billingFlowTriggeredByDetectionLimitation = true
-                    hide()
-                }
-            }
+            R.id.btn_play -> onPlayPauseClicked()
             R.id.btn_click_list -> {
                 viewModel.startScenarioEdition {
                     showScenarioConfigDialog()
@@ -203,6 +198,18 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_panel_width),
             bgSize.height,
         )
+    }
+
+    private fun onPlayPauseClicked() {
+        if (viewModel.shouldShowStopVolumeDownTutorialDialog()) {
+            showStopVolumeDownTutorialDialog()
+            return
+        }
+
+        viewModel.toggleDetection(context) {
+            billingFlowTriggeredByDetectionLimitation = true
+            hide()
+        }
     }
 
     /** Refresh the play menu item according to the scenario state. */
@@ -316,7 +323,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     private fun showFirstTimeTutorialDialog() {
         MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
-            .setTitle(R.string.dialog_title_tutorial_first_time)
+            .setTitle(R.string.dialog_title_tutorial)
             .setMessage(R.string.message_tutorial_first_time)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 context.startActivity(
@@ -327,11 +334,23 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .create()
-            .apply {
-                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
-            }
+            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
             .show()
 
         viewModel.onFirstTimeTutorialDialogShown()
+    }
+
+    private fun showStopVolumeDownTutorialDialog() {
+        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+            .setTitle(R.string.dialog_title_tutorial)
+            .setMessage(R.string.message_tutorial_volume_down_stop)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                onPlayPauseClicked()
+            }
+            .create()
+            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
+            .show()
+
+        viewModel.onStopVolumeDownTutorialDialogShown()
     }
 }
