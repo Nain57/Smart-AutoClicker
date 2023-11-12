@@ -24,6 +24,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.AndroidRuntimeException
 import android.util.Log
+import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 
 import androidx.core.app.NotificationCompat
@@ -32,6 +33,7 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVI
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -94,6 +96,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
         fun startDumbScenario(dumbScenario: DumbScenario)
         fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
+        fun onKeyEvent(event: KeyEvent?): Boolean
         fun stop()
         fun release()
     }
@@ -106,8 +109,12 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             androidExecutor = this,
             onStart = { isSmart, name ->
                 if (isSmart) startForegroundMediaProjectionServiceCompat(NOTIFICATION_ID, createNotification(name))
+                requestFilterKeyEvents(true)
             },
-            onStop = { stopForeground(Service.STOP_FOREGROUND_REMOVE) },
+            onStop = {
+                requestFilterKeyEvents(false)
+                stopForeground(Service.STOP_FOREGROUND_REMOVE)
+            },
         )
     }
 
@@ -118,6 +125,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
         return super.onUnbind(intent)
     }
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean =
+        LOCAL_SERVICE_INSTANCE?.onKeyEvent(event) ?: super.onKeyEvent(event)
 
     /**
      * Create the notification for this service allowing it to be set as foreground service.
