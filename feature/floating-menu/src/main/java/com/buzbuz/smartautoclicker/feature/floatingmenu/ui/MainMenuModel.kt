@@ -106,13 +106,21 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
 
     /** Start/Stop the detection. */
     fun toggleDetection(context: Context, onStoppedByLimitation: () -> Unit) {
+        when (detectionState.value) {
+            UiState.Detecting -> stopDetection()
+            UiState.Idle -> startDetection(context, onStoppedByLimitation)
+        }
+    }
+
+    /** Stop the detection. Returns true if it was started, false if not. */
+    fun stopDetection(): Boolean {
+        if (detectionState.value !is UiState.Detecting) return false
+
         autoStopJob?.cancel()
         autoStopJob = null
 
-        when (detectionState.value) {
-            UiState.Detecting -> detectionRepository.stopDetection()
-            UiState.Idle -> startDetection(context, onStoppedByLimitation)
-        }
+        detectionRepository.stopDetection()
+        return true
     }
 
     private fun startDetection(context: Context, onStoppedByLimitation: () -> Unit) {
