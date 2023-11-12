@@ -29,7 +29,9 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialStateDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.getTutorialPreferences
 import com.buzbuz.smartautoclicker.feature.tutorial.data.isFirstTimePopupAlreadyShown
+import com.buzbuz.smartautoclicker.feature.tutorial.data.isStopVolumeDownPopupAlreadyShown
 import com.buzbuz.smartautoclicker.feature.tutorial.data.putFirstTimePopupAlreadyShown
+import com.buzbuz.smartautoclicker.feature.tutorial.data.putStopVolumeDownPopupAlreadyShown
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
@@ -136,6 +138,12 @@ class TutorialRepository private constructor(
 
     fun setIsTutorialFirstTimePopupShown() =
         sharedPrefs.edit().putFirstTimePopupAlreadyShown(true).apply()
+
+    fun isTutorialStopVolumeDownPopupShown(): Boolean =
+        sharedPrefs.isStopVolumeDownPopupAlreadyShown()
+
+    fun setIsTutorialStopVolumeDownPopupShown() =
+        sharedPrefs.edit().putStopVolumeDownPopupAlreadyShown(true).apply()
 
     fun setupTutorialMode() {
         if (scenarioId != null) return

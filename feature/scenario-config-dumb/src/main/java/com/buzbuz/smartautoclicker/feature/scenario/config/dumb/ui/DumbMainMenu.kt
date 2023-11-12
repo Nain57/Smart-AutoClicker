@@ -16,15 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 
+import android.content.DialogInterface
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.view.ContextThemeWrapper
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
@@ -33,6 +36,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbMainMenuBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbScenarioBriefMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
+import com.google.android.material.color.DynamicColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
@@ -147,12 +152,21 @@ class DumbMainMenu(
     override fun onMenuItemClicked(viewId: Int) {
         debounceUserInteraction {
             when (viewId) {
-                R.id.btn_play -> viewModel.toggleScenarioPlay()
+                R.id.btn_play -> onPlayPauseClicked()
                 R.id.btn_stop -> onStopClicked()
                 R.id.btn_show_actions -> onShowBriefClicked()
                 R.id.btn_action_list -> onDumbScenarioConfigClicked()
             }
         }
+    }
+
+    private fun onPlayPauseClicked() {
+        if (viewModel.shouldShowStopVolumeDownTutorialDialog()) {
+            showStopVolumeDownTutorialDialog()
+            return
+        }
+
+        viewModel.toggleScenarioPlay()
     }
 
     private fun onShowBriefClicked() {
@@ -178,5 +192,19 @@ class DumbMainMenu(
                 hideCurrent = true,
             )
         }
+    }
+
+    private fun showStopVolumeDownTutorialDialog() {
+        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+            .setTitle(R.string.dialog_title_tutorial)
+            .setMessage(R.string.message_tutorial_volume_down_stop)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                onPlayPauseClicked()
+            }
+            .create()
+            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
+            .show()
+
+        viewModel.onStopVolumeDownTutorialDialogShown()
     }
 }

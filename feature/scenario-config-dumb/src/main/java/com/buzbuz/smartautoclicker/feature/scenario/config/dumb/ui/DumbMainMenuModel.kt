@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,9 @@ class DumbMainMenuModel(application: Application) : AndroidViewModel(application
 
     private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
     private val dumbEngine = DumbEngine.getInstance(application)
+
+    /** The repository for the tutorials data. */
+    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
 
     val canPlay: Flow<Boolean> =
         combine(dumbEditionRepository.isEditionSynchronized, dumbEngine.dumbScenario) { isSync, scenario ->
@@ -83,4 +87,10 @@ class DumbMainMenuModel(application: Application) : AndroidViewModel(application
         }
         return true
     }
+
+    fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
+        !tutorialRepository.isTutorialStopVolumeDownPopupShown()
+
+    fun onStopVolumeDownTutorialDialogShown(): Unit =
+        tutorialRepository.setIsTutorialStopVolumeDownPopupShown()
 }

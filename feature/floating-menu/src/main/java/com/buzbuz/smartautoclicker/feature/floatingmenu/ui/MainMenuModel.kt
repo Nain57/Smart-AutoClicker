@@ -191,6 +191,12 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
     fun onFirstTimeTutorialDialogShown(): Unit =
         tutorialRepository.setIsTutorialFirstTimePopupShown()
 
+    fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
+        !tutorialRepository.isTutorialStopVolumeDownPopupShown()
+
+    fun onStopVolumeDownTutorialDialogShown(): Unit =
+        tutorialRepository.setIsTutorialStopVolumeDownPopupShown()
+
     override fun onCleared() {
         super.onCleared()
         repository.cleanCache()
