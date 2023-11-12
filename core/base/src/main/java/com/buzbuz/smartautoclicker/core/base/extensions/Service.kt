@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.base.extensions
 
+import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.Notification
 import android.app.Service
 import android.content.pm.ServiceInfo
@@ -34,5 +36,13 @@ fun Service.startForegroundMediaProjectionServiceCompat(notificationId : Int, no
             )
 
         else -> startForeground(notificationId, notification)
+    }
+}
+
+fun AccessibilityService.requestFilterKeyEvents(enabled: Boolean) {
+    serviceInfo = serviceInfo.apply {
+        flags =
+            if (enabled) flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
+            else flags and AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS.inv()
     }
 }

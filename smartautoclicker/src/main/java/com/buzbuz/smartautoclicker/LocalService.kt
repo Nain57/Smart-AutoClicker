@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
+import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
@@ -123,6 +124,11 @@ class LocalService(
                 rootOverlay = MainMenu { stop() }
             )
         }
+    }
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean {
+        event ?: return false
+        return overlayManager?.propagateKeyEvent(event) ?: false
     }
 
     override fun stop() {

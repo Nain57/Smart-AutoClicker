@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.ui.overlays.manager
 import android.content.Context
 import android.graphics.Point
 import android.util.Log
+import android.view.KeyEvent
 
 import androidx.lifecycle.Lifecycle
 
@@ -146,6 +147,14 @@ class OverlayManager internal constructor(context: Context) {
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.CloseAll)
         if (!isNavigating.value) executeNextNavigationRequest(context)
+    }
+
+    fun propagateKeyEvent(event: KeyEvent): Boolean {
+        Log.d(TAG, "Propagating key event $event")
+
+        return topOverlay?.handleKeyEvent(event)
+            ?: overlayBackStack.top?.handleKeyEvent(event)
+            ?: false
     }
 
     /**
@@ -347,7 +356,7 @@ class OverlayManager internal constructor(context: Context) {
     }
 
     private fun onOrientationChanged() {
-        overlayBackStack.forEachReversed { (it as BaseOverlay).changeOrientation() }
+        overlayBackStack.forEachReversed { it.changeOrientation() }
     }
 
     fun dump(writer: PrintWriter, prefix: String) {

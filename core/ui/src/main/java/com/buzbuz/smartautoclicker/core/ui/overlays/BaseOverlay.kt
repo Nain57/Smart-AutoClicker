@@ -20,6 +20,7 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
+import android.view.KeyEvent
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.view.ContextThemeWrapper
@@ -244,7 +245,7 @@ abstract class BaseOverlay internal constructor(
      * In all cases, [onOrientationChanged] will be called to notify this [BaseOverlay] implementation for
      * rotation.
      */
-    internal fun changeOrientation() {
+    override fun changeOrientation() {
         Log.d(TAG, "onOrientationChanged for overlay ${hashCode()}")
 
         onOrientationChanged()
@@ -261,6 +262,9 @@ abstract class BaseOverlay internal constructor(
             Log.d(TAG, "not visible, delay recreation of overlay ${hashCode()}")
         }
     }
+
+    override fun handleKeyEvent(keyEvent: KeyEvent): Boolean =
+        onKeyEvent(keyEvent)
 
     /**
      * Get a new context wrapper from the provided theme. If the theme is null, the application theme is used.
