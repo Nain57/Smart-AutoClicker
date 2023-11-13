@@ -14,24 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.view
+package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
 
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RadialGradient
 import android.graphics.Shader
 import android.view.View
-import androidx.annotation.ColorInt
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbActionDescription
 
-internal abstract class DumbActionBriefRenderer(
+import androidx.annotation.ColorInt
+
+internal abstract class ActionBriefRenderer(
     protected val briefView: View,
-    protected val style: DumbActionBriefViewStyle,
+    protected val style: ActionBriefViewStyle,
     private val viewInvalidator: () -> Unit,
 ) {
-    abstract fun onNewDescription(description: DumbActionDescription)
+    abstract fun onNewDescription(description: ActionDescription)
     open fun onSizeChanged(w: Int, h: Int) = Unit
     abstract fun onDraw(canvas: Canvas)
     abstract fun onStop()

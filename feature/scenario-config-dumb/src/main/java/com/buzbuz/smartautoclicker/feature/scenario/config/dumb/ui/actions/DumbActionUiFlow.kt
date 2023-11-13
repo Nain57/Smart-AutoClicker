@@ -19,11 +19,14 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions
 import android.content.Context
 import android.graphics.Point
 
+import androidx.core.graphics.toPoint
+
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.CoordinatesSelector
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click.DumbClickDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.copy.DumbActionCopyDialog
@@ -108,15 +111,15 @@ private fun OverlayManager.onDumbClickCreationSelected(
 ): Unit = navigateTo(
     context = context,
     newOverlay = ClickSwipeSelectorMenu(
-        selector = CoordinatesSelector.One(),
-        onCoordinatesSelected = { selector ->
-            (selector as? CoordinatesSelector.One)?.coordinates?.let { position ->
+        actionDescription = ClickDescription(),
+        onConfirm = { description ->
+            (description as? ClickDescription)?.position?.let { position ->
                 startDumbClickEditionUiFlow(
                     context = context,
-                    dumbClick = creator.createNewDumbClick(position),
+                    dumbClick = creator.createNewDumbClick(position.toPoint()),
                     listener = listener,
                 )
-            }
+            } ?: listener.onDumbActionCreationCancelled()
         },
         onDismiss = listener.onDumbActionCreationCancelled,
     ),
@@ -164,13 +167,20 @@ private fun OverlayManager.onDumbSwipeCreationSelected(
 ): Unit = navigateTo(
     context = context,
     newOverlay = ClickSwipeSelectorMenu(
-        selector = CoordinatesSelector.Two(),
-        onCoordinatesSelected = { selector ->
-            (selector as? CoordinatesSelector.Two)?.let { two ->
-                if (two.coordinates1 == null || two.coordinates2 == null) return@let
+        actionDescription = SwipeDescription(),
+        onConfirm = { description ->
+            (description as? SwipeDescription)?.let { swipeDesc ->
+                if (swipeDesc.from == null || swipeDesc.to == null) {
+                    listener.onDumbActionCreationCancelled()
+                    return@let
+                }
+
                 startDumbSwipeEditionFlow(
                     context = context,
-                    dumbSwipe = creator.createNewDumbSwipe(two.coordinates1!!, two.coordinates2!!),
+                    dumbSwipe = creator.createNewDumbSwipe(
+                        swipeDesc.from?.toPoint()!!,
+                        swipeDesc.to?.toPoint()!!,
+                    ),
                     listener = listener,
                 )
             }

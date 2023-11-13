@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <attr format="reference" name="clickSelectorStyle"/>
+    <attr format="reference" name="actionBriefStyle"/>
 
     <attr format="reference" name="conditionSelectorStyle"/>
 
@@ -63,13 +63,13 @@
     <!-- The duration of the show selector animation, in milliseconds . -->
     <attr name="showSelectorAnimationDuration" format="integer" />
 
-    <!-- Styleable attributes for the ClickSelectorView. -->
-    <declare-styleable name="ClickSelectorView" >
-        <attr name="colorInner" />
-        <attr name="colorOutlinePrimary" />
-        <attr name="colorOutlineSecondary" />
-        <attr name="colorBackground" />
-        <attr name="thickness" />
+    <!-- Styleable attributes for the ActionBriefView. -->
+    <declare-styleable name="ActionBriefView" >
+        <attr name="colorInner"/>
+        <attr name="colorOutlinePrimary"/>
+        <attr name="colorOutlineSecondary"/>
+        <attr name="colorBackground"/>
+        <attr name="thickness"/>
         <!-- The radius of the selector circle, in dp. -->
         <attr name="radius" format="dimension" />
         <!-- The radius of the small circle at the center of the selector, in dp. -->

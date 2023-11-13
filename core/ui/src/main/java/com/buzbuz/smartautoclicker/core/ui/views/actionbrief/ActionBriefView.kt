@@ -14,47 +14,60 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.view
+package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.PointF
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbActionDescription
-
-class DumbActionBriefView @JvmOverloads constructor(
+class ActionBriefView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : View(context, attrs, defStyleAttr) {
 
     /** Paint drawing the outer circle of the position 1. */
-    private val style: DumbActionBriefViewStyle
+    private val style: ActionBriefViewStyle
 
     init {
         if (attrs == null) throw IllegalArgumentException("AttributeSet is null")
-        style = context.getDumbActionBriefStyle(attrs, defStyleAttr)
+        style = context.getActionBriefStyle(attrs, defStyleAttr)
     }
 
-    private var renderer: DumbActionBriefRenderer? = null
+    private var renderer: ActionBriefRenderer? = null
 
-    fun setDescription(dumbActionDescription: DumbActionDescription?) {
+    /** Listener upon touch events */
+    var onTouchListener: ((position: PointF) -> Unit)? = null
+
+    fun setDescription(description: ActionDescription?) {
         renderer?.onStop()
 
-        if (dumbActionDescription == null) {
+        if (description == null) {
             invalidate()
             return
         }
 
-        renderer = when (dumbActionDescription) {
-            is DumbActionDescription.Click -> DumbClickBriefRenderer(this, style, ::invalidate)
-            is DumbActionDescription.Swipe -> DumbSwipeBriefRenderer(this, style, ::invalidate)
-            is DumbActionDescription.Pause -> DumbPauseBriefRenderer(this, style, ::invalidate)
+        renderer = when (description) {
+            is ClickDescription -> ClickBriefRenderer(this, style, ::invalidate)
+            is SwipeDescription -> SwipeBriefRenderer(this, style, ::invalidate)
+            is PauseDescription -> PauseBriefRenderer(this, style, ::invalidate)
+            else -> return
         }
 
-        renderer?.onNewDescription(dumbActionDescription)
+        renderer?.onNewDescription(description)
         invalidate()
+    }
+
+    @SuppressLint("ClickableViewAccessibility") // You can't click on this view
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        event ?: return false
+        onTouchListener?.invoke(event.getValidPosition()) ?: return false
+
+        return true
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -67,4 +80,13 @@ class DumbActionBriefView @JvmOverloads constructor(
         super.onDraw(canvas)
         renderer?.onDraw(canvas)
     }
+
+    /** Get the position of the motion event and ensure it is within screen bounds. */
+    private fun MotionEvent.getValidPosition(): PointF =
+        PointF(
+            x.coerceIn(0f, width.toFloat()),
+            y.coerceIn(0f, height.toFloat()),
+        )
 }
+
+interface ActionDescription

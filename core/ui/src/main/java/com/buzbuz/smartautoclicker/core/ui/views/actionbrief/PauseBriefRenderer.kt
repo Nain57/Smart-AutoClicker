@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.view
+package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
@@ -24,15 +24,15 @@ import android.graphics.RectF
 import android.view.View
 import android.view.animation.LinearInterpolator
 
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbActionDescription
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.ExtendedValueAnimator
+import com.buzbuz.smartautoclicker.core.ui.utils.ExtendedValueAnimator
+
 import kotlin.math.max
 
-internal class DumbPauseBriefRenderer(
+internal class PauseBriefRenderer(
     briefView: View,
-    style: DumbActionBriefViewStyle,
+    style: ActionBriefViewStyle,
     viewInvalidator: () -> Unit,
-) : DumbActionBriefRenderer(briefView, style, viewInvalidator) {
+) : ActionBriefRenderer(briefView, style, viewInvalidator) {
 
     private val rotationAnimator: ExtendedValueAnimator =
         ExtendedValueAnimator.ofFloat(0f, 360f).apply {
@@ -53,8 +53,8 @@ internal class DumbPauseBriefRenderer(
     private var baseHandPosition: RectF? = null
     private var animatedRotationAngleDegree: Float? = null
 
-    override fun onNewDescription(description: DumbActionDescription) {
-        if (description !is DumbActionDescription.Pause) return
+    override fun onNewDescription(description: ActionDescription) {
+        if (description !is PauseDescription) return
 
         updateDisplayValues(briefView.width, briefView.height)
         rotationAnimator.apply {
@@ -112,6 +112,10 @@ internal class DumbPauseBriefRenderer(
         }
     }
 }
+
+data class PauseDescription(
+    val pauseDurationMs: Long = MINIMAL_ANIMATION_DURATION_MS,
+) : ActionDescription
 
 private const val MINIMAL_ANIMATION_DURATION_MS = 500L
 private const val TIMER_HAND_HALF_WIDTH_PX = 5f

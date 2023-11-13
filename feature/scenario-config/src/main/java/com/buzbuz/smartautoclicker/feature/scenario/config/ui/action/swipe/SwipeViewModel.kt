@@ -81,6 +81,9 @@ class SwipeViewModel(application: Application) : AndroidViewModel(application) {
     val isValidAction: Flow<Boolean> =  editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
 
+    fun getEditedSwipe(): Action.Swipe? =
+        editionRepository.editionState.getEditedAction()
+
     /**
      * Set the name of the swipe.
      * @param name the new name.

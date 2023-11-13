@@ -16,11 +16,15 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click
 
+import android.graphics.Point
+import android.graphics.PointF
 import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toPoint
+import androidx.core.graphics.toPointF
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -41,9 +45,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.CoordinatesSelector
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.DialogConfigDumbActionClickBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setError
@@ -180,16 +184,21 @@ class DumbClickDialog(
     }
 
     private fun onPositionCardClicked() {
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ClickSwipeSelectorMenu(
-                selector = CoordinatesSelector.One(),
-                onCoordinatesSelected = { selector ->
-                    viewModel.setPosition((selector as CoordinatesSelector.One).coordinates)
-                }
-            ),
-            hideCurrent = true,
-        )
+        viewModel.getEditedDumbClick()?.let { dumbClick ->
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = ClickSwipeSelectorMenu(
+                    actionDescription = ClickDescription(
+                        position = dumbClick.position.toEditionPosition(),
+                        pressDurationMs = dumbClick.pressDurationMs,
+                    ),
+                    onConfirm = { description ->
+                        viewModel.setPosition((description as? ClickDescription)?.position?.toPoint())
+                    }
+                ),
+                hideCurrent = true,
+            )
+        }
     }
 
     private fun updateDumbClickPressDuration(duration: String) {
@@ -203,4 +212,9 @@ class DumbClickDialog(
     private fun updateSaveButton(isValidCondition: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
+
+    private fun Point.toEditionPosition(): PointF? =
+        if (x == 0 && y == 0) null
+        else toPointF()
+
 }

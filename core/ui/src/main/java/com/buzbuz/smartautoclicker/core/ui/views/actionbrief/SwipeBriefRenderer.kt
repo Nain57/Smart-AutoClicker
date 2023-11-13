@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.view
+package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
@@ -23,17 +23,16 @@ import android.graphics.PointF
 import android.view.View
 import android.view.animation.LinearInterpolator
 
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbActionDescription
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.ExtendedValueAnimator
-import kotlin.math.max
+import com.buzbuz.smartautoclicker.core.ui.utils.ExtendedValueAnimator
 
+import kotlin.math.max
 import kotlin.math.sqrt
 
-internal class DumbSwipeBriefRenderer(
+internal class SwipeBriefRenderer(
     briefView: View,
-    style: DumbActionBriefViewStyle,
+    style: ActionBriefViewStyle,
     viewInvalidator: () -> Unit,
-) : DumbActionBriefRenderer(briefView, style, viewInvalidator) {
+) : ActionBriefRenderer(briefView, style, viewInvalidator) {
 
     private val swipeProgressAnimator: ExtendedValueAnimator = ExtendedValueAnimator.ofFloat(0f, 1f).apply {
         startDelay = 250
@@ -54,10 +53,10 @@ internal class DumbSwipeBriefRenderer(
     private val gradientBackgroundPaintTo: Paint = Paint()
 
     private var animatedSwipeProgressPosition: PointF = PointF()
-    private var positions: Pair<PointF, PointF>? = null
+    private var positions: Pair<PointF?, PointF?> = Pair(null, null)
 
-    override fun onNewDescription(description: DumbActionDescription) {
-        if (description !is DumbActionDescription.Swipe) return
+    override fun onNewDescription(description: ActionDescription) {
+        if (description !is SwipeDescription) return
 
         swipeProgressAnimator.apply {
             if (isStarted) cancel()
@@ -65,24 +64,33 @@ internal class DumbSwipeBriefRenderer(
             animatedSwipeProgressPosition = PointF()
             positions = description.from to description.to
 
-            gradientBackgroundPaintFrom.shader = createRadialGradientShader(
-                position = description.from,
-                radius = style.outerRadius * 1.75f,
-                color = style.backgroundColor,
-            )
-            gradientBackgroundPaintTo.shader = createRadialGradientShader(
-                position = description.to,
-                radius = style.outerRadius * 1.75f,
-                color = style.backgroundColor,
-            )
+            description.from?.let { from ->
+                gradientBackgroundPaintFrom.shader = createRadialGradientShader(
+                    position = from,
+                    radius = style.outerRadius * 1.75f,
+                    color = style.backgroundColor,
+                )
+            }
 
-            duration = max(description.swipeDurationMs, MINIMAL_ANIMATION_DURATION_MS)
-            start()
+            description.to?.let { to ->
+                gradientBackgroundPaintTo.shader = createRadialGradientShader(
+                    position = to,
+                    radius = style.outerRadius * 1.75f,
+                    color = style.backgroundColor,
+                )
+            }
+
+            if (description.from != null && description.to != null) {
+                duration = max(description.swipeDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+                start()
+            }
         }
     }
 
     private fun updateSwipePosition(completionRatio: Float) {
-        val (from, to) = positions ?: return
+        val (from, to) = positions
+        from ?: return
+        to ?: return
 
         var vx = to.x - from.x
         var vy = to.y - from.y
@@ -100,13 +108,34 @@ internal class DumbSwipeBriefRenderer(
     override fun onStop() {
         swipeProgressAnimator.cancel()
         animatedSwipeProgressPosition = PointF()
-        positions = null
+        positions = Pair(null, null)
     }
 
     override fun onDraw(canvas: Canvas) {
-        positions?.let { (from, to) ->
-            canvas.drawSelectorCircle(from, style.outerRadius, style.outerFromPaint, style.innerFromPaint, gradientBackgroundPaintFrom)
-            canvas.drawSelectorCircle(to, style.outerRadius, style.outerToPaint, style.innerToPaint, gradientBackgroundPaintTo)
+        val (from, to) = positions
+        if (from == null && to == null) return
+
+        from?.let {
+            canvas.drawSelectorCircle(
+                from,
+                style.outerRadius,
+                style.outerFromPaint,
+                style.innerFromPaint,
+                gradientBackgroundPaintFrom,
+            )
+        }
+
+        to?.let {
+            canvas.drawSelectorCircle(
+                to,
+                style.outerRadius,
+                style.outerToPaint,
+                style.innerToPaint,
+                gradientBackgroundPaintTo,
+            )
+        }
+
+        if (from != null && to != null) {
             canvas.drawLine(from.x, from.y, to.x, to.y, style.linePaint)
 
             canvas.drawCircle(
@@ -136,5 +165,11 @@ internal class DumbSwipeBriefRenderer(
         drawCircle(position.x, position.y, style.innerRadius, innerPaint)
     }
 }
+
+data class SwipeDescription(
+    val swipeDurationMs: Long = MINIMAL_ANIMATION_DURATION_MS,
+    val from: PointF? = null,
+    val to: PointF? = null,
+) : ActionDescription
 
 private const val MINIMAL_ANIMATION_DURATION_MS = 250L

@@ -129,6 +129,9 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
 
+    fun getEditedClick(): Action.Click? =
+        editionRepository.editionState.getEditedAction()
+
     /**
      * Set the name of the click.
      * @param name the new name.

@@ -16,18 +16,21 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.click
 
+import android.graphics.PointF
 import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toPoint
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
@@ -44,7 +47,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.CoordinatesSelector
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -216,21 +219,25 @@ class ClickDialog(
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
-    private fun showPositionSelector() =
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ClickSwipeSelectorMenu(
-                selector = CoordinatesSelector.One(),
-                onCoordinatesSelected = { selector ->
-                    (selector as CoordinatesSelector.One).coordinates?.let {
-                        viewModel.setPosition(
-                            it
-                        )
-                    }
-                },
-            ),
-            hideCurrent = true,
-        )
+    private fun showPositionSelector() {
+        viewModel.getEditedClick()?.let { click ->
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = ClickSwipeSelectorMenu(
+                    actionDescription = ClickDescription(
+                        position = click.getEditionPosition(),
+                        pressDurationMs = click.pressDuration ?: 1L,
+                    ),
+                    onConfirm = { description ->
+                        (description as ClickDescription).position?.let {
+                            viewModel.setPosition(it.toPoint())
+                        }
+                    },
+                ),
+                hideCurrent = true,
+            )
+        }
+    }
 
     private fun showConditionSelector() =
         OverlayManager.getInstance(context).navigateTo(
@@ -249,6 +256,10 @@ class ClickDialog(
             finish()
         }
     }
+
+    private fun Action.Click.getEditionPosition(): PointF? =
+        if (x == null || y == null) null
+        else PointF(x!!.toFloat(), y!!.toFloat())
 }
 
 private const val TAG = "ClickDialog"
