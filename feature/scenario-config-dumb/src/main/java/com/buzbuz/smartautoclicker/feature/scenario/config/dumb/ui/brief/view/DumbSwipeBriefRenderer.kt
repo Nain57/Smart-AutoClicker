@@ -25,6 +25,7 @@ import android.view.animation.LinearInterpolator
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbActionDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.ExtendedValueAnimator
+import kotlin.math.max
 
 import kotlin.math.sqrt
 
@@ -75,7 +76,7 @@ internal class DumbSwipeBriefRenderer(
                 color = style.backgroundColor,
             )
 
-            duration = description.swipeDurationMs
+            duration = max(description.swipeDurationMs, MINIMAL_ANIMATION_DURATION_MS)
             start()
         }
     }
@@ -135,3 +136,5 @@ internal class DumbSwipeBriefRenderer(
         drawCircle(position.x, position.y, style.innerRadius, innerPaint)
     }
 }
+
+private const val MINIMAL_ANIMATION_DURATION_MS = 250L

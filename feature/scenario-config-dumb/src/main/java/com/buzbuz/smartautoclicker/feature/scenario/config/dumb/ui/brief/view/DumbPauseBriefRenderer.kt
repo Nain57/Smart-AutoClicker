@@ -26,6 +26,7 @@ import android.view.animation.LinearInterpolator
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbActionDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.ExtendedValueAnimator
+import kotlin.math.max
 
 internal class DumbPauseBriefRenderer(
     briefView: View,
@@ -60,7 +61,7 @@ internal class DumbPauseBriefRenderer(
             if (isStarted) cancel()
 
             animatedRotationAngleDegree = 0f
-            duration = description.pauseDurationMs
+            duration = max(description.pauseDurationMs, MINIMAL_ANIMATION_DURATION_MS)
             start()
         }
     }
@@ -86,7 +87,7 @@ internal class DumbPauseBriefRenderer(
             viewCenter.x - TIMER_HAND_HALF_WIDTH_PX,
             viewCenter.y - (style.outerRadius - (style.thickness * 1.5f)),
             viewCenter.x + TIMER_HAND_HALF_WIDTH_PX,
-            viewCenter.y + TIMER_HAND_ROTATION_CENTER_BOTTOM_OFFSET,
+            viewCenter.y + TIMER_HAND_ROTATION_CENTER_BOTTOM_OFFSET_PX,
         )
 
         gradientBackgroundPaint.shader = createRadialGradientShader(
@@ -112,5 +113,6 @@ internal class DumbPauseBriefRenderer(
     }
 }
 
+private const val MINIMAL_ANIMATION_DURATION_MS = 500L
 private const val TIMER_HAND_HALF_WIDTH_PX = 5f
-private const val TIMER_HAND_ROTATION_CENTER_BOTTOM_OFFSET = 5f
+private const val TIMER_HAND_ROTATION_CENTER_BOTTOM_OFFSET_PX = 5f
