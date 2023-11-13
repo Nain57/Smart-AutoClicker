@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.view
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.PointF
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -45,6 +46,8 @@ internal class DumbClickBriefRenderer(
             }
         }
 
+    private val gradientBackgroundPaint: Paint = Paint()
+
     private var animatedOuterRadius: Float = style.outerRadius
     private var position: PointF? = null
 
@@ -56,6 +59,12 @@ internal class DumbClickBriefRenderer(
 
             animatedOuterRadius = style.outerRadius
             position = description.position
+            gradientBackgroundPaint.shader = createRadialGradientShader(
+                position = description.position,
+                radius = style.outerRadius * 1.75f,
+                color = style.backgroundColor,
+            )
+
             reverseDelay = description.pressDurationMs
             start()
         }
@@ -69,7 +78,7 @@ internal class DumbClickBriefRenderer(
 
     override fun onDraw(canvas: Canvas) {
         position?.let { pos ->
-            canvas.drawCircle(pos.x, pos.y, animatedOuterRadius, style.backgroundPaint)
+            canvas.drawCircle(pos.x, pos.y, animatedOuterRadius * 2f, gradientBackgroundPaint)
             canvas.drawCircle(pos.x, pos.y, animatedOuterRadius, style.outerFromPaint)
             canvas.drawCircle(pos.x, pos.y, style.innerRadius, style.innerFromPaint)
         }

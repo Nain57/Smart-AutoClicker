@@ -43,6 +43,15 @@ internal class DumbSwipeBriefRenderer(
         addUpdateListener { updateSwipePosition((it.animatedValue as Float)) }
     }
 
+    private val progressBorderPaint: Paint = Paint().apply {
+        isAntiAlias = true
+        this.style = Paint.Style.STROKE
+        color = style.backgroundColor
+        strokeWidth = style.innerRadius * 0.75f
+    }
+    private val gradientBackgroundPaintFrom: Paint = Paint()
+    private val gradientBackgroundPaintTo: Paint = Paint()
+
     private var animatedSwipeProgressPosition: PointF = PointF()
     private var positions: Pair<PointF, PointF>? = null
 
@@ -54,6 +63,18 @@ internal class DumbSwipeBriefRenderer(
 
             animatedSwipeProgressPosition = PointF()
             positions = description.from to description.to
+
+            gradientBackgroundPaintFrom.shader = createRadialGradientShader(
+                position = description.from,
+                radius = style.outerRadius * 1.75f,
+                color = style.backgroundColor,
+            )
+            gradientBackgroundPaintTo.shader = createRadialGradientShader(
+                position = description.to,
+                radius = style.outerRadius * 1.75f,
+                color = style.backgroundColor,
+            )
+
             duration = description.swipeDurationMs
             start()
         }
@@ -83,28 +104,33 @@ internal class DumbSwipeBriefRenderer(
 
     override fun onDraw(canvas: Canvas) {
         positions?.let { (from, to) ->
-            canvas.drawSelectorCircle(from, style.outerRadius, style.outerFromPaint, style.innerFromPaint)
-            canvas.drawSelectorCircle(to, style.outerRadius, style.outerToPaint, style.innerToPaint)
+            canvas.drawSelectorCircle(from, style.outerRadius, style.outerFromPaint, style.innerFromPaint, gradientBackgroundPaintFrom)
+            canvas.drawSelectorCircle(to, style.outerRadius, style.outerToPaint, style.innerToPaint, gradientBackgroundPaintTo)
             canvas.drawLine(from.x, from.y, to.x, to.y, style.linePaint)
+
             canvas.drawCircle(
                 animatedSwipeProgressPosition.x,
                 animatedSwipeProgressPosition.y,
                 style.innerRadius * 2,
                 style.linePaint,
             )
+            canvas.drawCircle(
+                animatedSwipeProgressPosition.x,
+                animatedSwipeProgressPosition.y,
+                style.innerRadius * 2,
+                progressBorderPaint,
+            )
         }
-
     }
 
-    /**
-     * Draw the selector circle at the specified position.
-     *
-     * @param position the position of the circle selector.
-     * @param outerPaint the paint used to draw the big circle.
-     * @param innerPaint the paint used to draw the small inner circle.
-     */
-    private fun Canvas.drawSelectorCircle(position: PointF, outerRadius: Float, outerPaint: Paint, innerPaint: Paint) {
-        drawCircle(position.x, position.y, outerRadius, style.backgroundPaint)
+    private fun Canvas.drawSelectorCircle(
+        position: PointF,
+        outerRadius: Float,
+        outerPaint: Paint,
+        innerPaint: Paint,
+        backgroundPaint: Paint,
+    ) {
+        drawCircle(position.x, position.y, outerRadius * 2f, backgroundPaint)
         drawCircle(position.x, position.y, outerRadius, outerPaint)
         drawCircle(position.x, position.y, style.innerRadius, innerPaint)
     }
