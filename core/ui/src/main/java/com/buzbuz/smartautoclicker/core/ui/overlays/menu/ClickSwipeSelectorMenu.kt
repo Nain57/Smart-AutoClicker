@@ -16,20 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.menu
 
-import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import androidx.constraintlayout.widget.ConstraintLayout
 
-import androidx.core.graphics.toPoint
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.OverlayPositionSelectionMenuBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.OverlayPositionSelectionViewBinding
-
-import com.buzbuz.smartautoclicker.core.ui.views.FIRST
-import com.buzbuz.smartautoclicker.core.ui.views.SECOND
-import com.buzbuz.smartautoclicker.core.ui.views.SelectionIndex
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 
 /**
  * [OverlayMenu] implementation for displaying the click area selection menu and its overlay view.
@@ -37,12 +35,13 @@ import com.buzbuz.smartautoclicker.core.ui.views.SelectionIndex
  * This class will display the overlay menu for selecting the positions for an action. The overlay view
  * displayed between the menu and the activity shows those positions.
  *
- * @param selector the count of coordinates this overlay offers to select.
- * @param onCoordinatesSelected listener on the type of click and area(s) to user have selected.
+ * @param actionDescription the description of the action positions to edit.
+ * @param onConfirm listener on the validation of the actions positions.
+ * @param onDismiss listener on the dismiss of the position selection.
  */
 class ClickSwipeSelectorMenu(
-    private val selector: CoordinatesSelector,
-    private val onCoordinatesSelected: (CoordinatesSelector) -> Unit,
+    private val actionDescription: ActionDescription,
+    private val onConfirm: (ActionDescription) -> Unit,
     private val onDismiss: (() -> Unit)? = null,
 ) : OverlayMenu() {
 
@@ -51,6 +50,9 @@ class ClickSwipeSelectorMenu(
     /** The view binding for the position selector. */
     private lateinit var selectorViewBinding: OverlayPositionSelectionViewBinding
 
+    private var confirmListener: (() -> Unit)? = null
+    private var cancelListener: (() -> Unit)? = null
+
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayPositionSelectionMenuBinding.inflate(layoutInflater)
         selectorViewBinding = OverlayPositionSelectionViewBinding.inflate(layoutInflater)
@@ -58,12 +60,6 @@ class ClickSwipeSelectorMenu(
     }
 
     override fun onCreateOverlayView(): View {
-        selectorViewBinding.positionSelector.apply {
-            onTouchListener = {
-                setMenuItemViewEnabled(viewBinding.btnConfirm, true, true)
-            }
-        }
-
         selectorViewBinding.textInstructions.layoutParams =
             (selectorViewBinding.textInstructions.layoutParams as ConstraintLayout.LayoutParams).apply {
                 setMargins(leftMargin, topMargin + displayMetrics.safeInsetTop, rightMargin, bottomMargin)
@@ -74,87 +70,98 @@ class ClickSwipeSelectorMenu(
 
     override fun onStart() {
         super.onStart()
-        toSelectionStep(FIRST)
+        setActionDescription(actionDescription)
     }
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_confirm -> onConfirm()
-            R.id.btn_cancel -> onCancel()
+            R.id.btn_confirm -> confirmListener?.invoke()
+            R.id.btn_cancel -> cancelListener?.invoke()
         }
     }
 
-    /**
-     * Move to the provided selection step.
-     * @param step the selection step.
-     */
-    private fun toSelectionStep(@SelectionIndex step: Int) {
-        selectorViewBinding.positionSelector.toSelectionStep(step)
-        setMenuItemViewEnabled(viewBinding.btnConfirm, false)
-
-        val instructionsStringId = when {
-            step == FIRST && selector is CoordinatesSelector.One -> R.string.toast_configure_single_click
-            step == FIRST && selector is CoordinatesSelector.Two -> R.string.toast_configure_swipe_from
-            step == SECOND -> R.string.toast_configure_swipe_to
-            else -> -1
-        }
-        if (instructionsStringId != -1) {
-            selectorViewBinding.textInstructions.setText(instructionsStringId)
+    private fun setActionDescription(description: ActionDescription) {
+        when (description) {
+            is ClickDescription -> setClickDescription(description)
+            is SwipeDescription -> setSwipeDescription(description)
         }
     }
 
-    /**
-     * Confirm the position selected by the user and goes to the next selection step.
-     * If this is the final step, notify the listener for the selection and dismiss the overlay.
-     */
-    private fun onConfirm() {
-        when {
-            selectorViewBinding.positionSelector.selectionStep == FIRST && selector is CoordinatesSelector.One -> {
-                selector.coordinates = selectorViewBinding.positionSelector.position1!!.toPoint()
-                back()
-                onCoordinatesSelected(selector)
-            }
-            selectorViewBinding.positionSelector.selectionStep == FIRST && selector is CoordinatesSelector.Two -> {
-                toSelectionStep(SECOND)
-            }
-            selectorViewBinding.positionSelector.selectionStep == SECOND && selector is CoordinatesSelector.Two -> {
-                selector.coordinates1 = selectorViewBinding.positionSelector.position1!!.toPoint()
-                selector.coordinates2 = selectorViewBinding.positionSelector.position2!!.toPoint()
-                back()
-                onCoordinatesSelected(selector)
+    private fun setClickDescription(description: ClickDescription) {
+        selectorViewBinding.textInstructions.setText(R.string.toast_configure_single_click)
+        selectorViewBinding.positionSelector.apply {
+            setDescription(description)
+            onTouchListener = { position ->
+                setClickDescription(description.copy(position = position))
             }
         }
-    }
 
-    /**
-     * Cancel the position selected by the user and goes to the previous selection step.
-     * If this is the initial step, dismiss the overlay without notifying the listener.
-     */
-    private fun onCancel() {
-        when (selectorViewBinding.positionSelector.selectionStep) {
-            FIRST -> {
-                back()
-                onDismiss?.invoke()
-            }
-            SECOND -> toSelectionStep(FIRST)
+        setConfirmEnabledState(description.position != null) {
+            onPositionSelectionCompleted(description)
+        }
+        setCancelListener {
+            dismiss()
         }
     }
-}
 
-/** Indicates the type of coordinates to be selected. */
-sealed class CoordinatesSelector {
-
-    /** The user will pick one coordinate. */
-    class One : CoordinatesSelector() {
-        /** Selected coordinates. Null until the user select it. */
-        var coordinates: Point? = null
+    private fun setSwipeDescription(description: SwipeDescription) {
+        if (description.from == null) {
+            toSelectSwipeFromState(description)
+        } else {
+            toSelectSwipeToState(description)
+        }
     }
 
-    /** The user will pick two coordinates. */
-    class Two : CoordinatesSelector() {
-        /** First selected coordinates. Null until the user select it. */
-        var coordinates1: Point? = null
-        /** Second selected coordinates. Null until the user select it. */
-        var coordinates2: Point? = null
+    private fun toSelectSwipeFromState(description: SwipeDescription) {
+        selectorViewBinding.textInstructions.setText(R.string.toast_configure_swipe_from)
+        selectorViewBinding.positionSelector.apply {
+            setDescription(description)
+            onTouchListener = { position ->
+                toSelectSwipeFromState(description.copy(from = position))
+            }
+        }
+
+        setConfirmEnabledState(description.from != null) {
+            toSelectSwipeToState(description)
+        }
+        setCancelListener {
+            dismiss()
+        }
+    }
+
+    private fun toSelectSwipeToState(description: SwipeDescription) {
+        selectorViewBinding.textInstructions.setText(R.string.toast_configure_swipe_to)
+        selectorViewBinding.positionSelector.apply {
+            setDescription(description)
+            onTouchListener = { position ->
+                toSelectSwipeToState(description.copy(to = position))
+            }
+        }
+
+        setConfirmEnabledState(description.to != null) {
+            onPositionSelectionCompleted(description)
+        }
+        setCancelListener {
+            toSelectSwipeFromState(description.copy(to = null))
+        }
+    }
+
+    private fun onPositionSelectionCompleted(description: ActionDescription) {
+        onConfirm(description)
+        back()
+    }
+
+    private fun dismiss() {
+        onDismiss?.invoke()
+        back()
+    }
+
+    private fun setConfirmEnabledState(isEnabled: Boolean, action: (() -> Unit)? = null) {
+        confirmListener = action
+        setMenuItemViewEnabled(viewBinding.btnConfirm, enabled = isEnabled, clickable = isEnabled)
+    }
+
+    private fun setCancelListener(action: (() -> Unit)) {
+        cancelListener = action
     }
 }

@@ -19,7 +19,7 @@
 
     <style name="ScenarioConfigTheme" parent="AppTheme">
         <item name="areaSelectorStyle">@style/AppTheme.ScenarioConfig.Selector.Condition</item>
-        <item name="clickSelectorStyle">@style/AppTheme.ScenarioConfig.Selector.Click</item>
+        <item name="actionBriefStyle">@style/AppTheme.ScenarioConfig.Selector.Position</item>
         <item name="conditionSelectorStyle">@style/AppTheme.ScenarioConfig.Selector.Condition</item>
     </style>
 

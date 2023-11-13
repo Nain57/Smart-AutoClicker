@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.buzbuz.smartautoclicker.core.ui.views.ClickSelectorView
+        <com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionBriefView
             android:id="@+id/position_selector"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

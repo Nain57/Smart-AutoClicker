@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
 import android.app.Application
 import android.graphics.Point
-import android.graphics.PointF
 
 import androidx.core.graphics.toPointF
 import androidx.lifecycle.AndroidViewModel
@@ -27,6 +26,10 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.PauseDescription
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.toDumbActionDetails
 
@@ -103,18 +106,18 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
 
 private fun DumbScenario.toFocusedActionDetails(focusIndex: Int): FocusedActionDetails {
     val description = when (val dumbAction = dumbActions[focusIndex]) {
-        is DumbAction.DumbClick -> DumbActionDescription.Click(
+        is DumbAction.DumbClick -> ClickDescription(
             position = dumbAction.position.toPointF(),
             pressDurationMs = dumbAction.pressDurationMs,
         )
 
-        is DumbAction.DumbSwipe -> DumbActionDescription.Swipe(
+        is DumbAction.DumbSwipe -> SwipeDescription(
             from = dumbAction.fromPosition.toPointF(),
             to = dumbAction.toPosition.toPointF(),
             swipeDurationMs = dumbAction.swipeDurationMs,
         )
 
-        is DumbAction.DumbPause -> DumbActionDescription.Pause(
+        is DumbAction.DumbPause -> PauseDescription(
             pauseDurationMs = dumbAction.pauseDurationMs,
         )
     }
@@ -125,23 +128,6 @@ private fun DumbScenario.toFocusedActionDetails(focusIndex: Int): FocusedActionD
 data class FocusedActionDetails(
     val actionIndex: Int = 0,
     val actionCount: Int = 0,
-    val actionDescription: DumbActionDescription? = null,
+    val actionDescription: ActionDescription? = null,
     val isEmpty: Boolean = false,
 )
-
-sealed class DumbActionDescription {
-    data class Click(
-        val position: PointF,
-        val pressDurationMs: Long,
-    ) : DumbActionDescription()
-
-    data class Swipe(
-        val from: PointF,
-        val to: PointF,
-        val swipeDurationMs: Long,
-    ) : DumbActionDescription()
-
-    data class Pause(
-        val pauseDurationMs: Long,
-    ) : DumbActionDescription()
-}

@@ -16,11 +16,15 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe
 
+import android.graphics.Point
+import android.graphics.PointF
 import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toPoint
+import androidx.core.graphics.toPointF
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -41,9 +45,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.CoordinatesSelector
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.DialogConfigDumbActionSwipeBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setError
@@ -179,18 +183,25 @@ class DumbSwipeDialog(
     }
 
     private fun onPositionCardClicked() {
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = ClickSwipeSelectorMenu(
-                selector = CoordinatesSelector.Two(),
-                onCoordinatesSelected = { selector ->
-                    (selector as CoordinatesSelector.Two).let { two ->
-                        viewModel.setPositions(two.coordinates1, two.coordinates2)
+        viewModel.getEditedDumbSwipe()?.let { swipe ->
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = ClickSwipeSelectorMenu(
+                    actionDescription = SwipeDescription(
+                        from = swipe.fromPosition.toEditionPosition(),
+                        to = swipe.toPosition.toEditionPosition(),
+                        swipeDurationMs = swipe.swipeDurationMs,
+                    ),
+                    onConfirm = { swipeDesc ->
+                        (swipeDesc as? SwipeDescription)?.let {
+                            viewModel.setPositions(it.from?.toPoint(), it.to?.toPoint())
+                        }
                     }
-                }
-            ),
-            hideCurrent = true,
-        )
+                ),
+                hideCurrent = true,
+            )
+        }
+
     }
 
     private fun updateDumbSwipePressDuration(duration: String) {
@@ -204,4 +215,8 @@ class DumbSwipeDialog(
     private fun updateSaveButton(isValidCondition: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
+
+    private fun Point.toEditionPosition(): PointF? =
+        if (x == 0 && y == 0) null
+        else toPointF()
 }

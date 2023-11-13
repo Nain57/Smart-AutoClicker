@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils
+package com.buzbuz.smartautoclicker.core.ui.utils
 
 import android.animation.ValueAnimator
 import android.os.Handler

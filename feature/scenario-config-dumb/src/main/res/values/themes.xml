@@ -18,8 +18,7 @@
 <resources>
 
     <style name="DumbScenarioConfigTheme" parent="AppTheme">
-        <item name="clickSelectorStyle">@style/AppTheme.DumbScenarioConfig.PositionSelector</item>
-        <item name="dumbActionBriefStyle">@style/AppTheme.DumbScenarioConfig.DumbActionBrief</item>
+        <item name="actionBriefStyle">@style/AppTheme.DumbScenarioConfig.PositionSelector</item>
     </style>
 
 </resources>

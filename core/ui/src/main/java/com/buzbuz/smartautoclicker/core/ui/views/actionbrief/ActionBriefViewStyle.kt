@@ -14,20 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.view
+package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+
 import androidx.annotation.ColorInt
-
 import androidx.core.content.res.use
-
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
+import com.buzbuz.smartautoclicker.core.ui.R
 
 /**
- * Defines the style for the [DumbActionBriefView].
+ * Defines the style for the [ActionBriefView].
  *
  * @param outerFromPaint the paint drawing the outer circle of the position 1.
  * @param innerFromPaint the paint drawing the inner circle of the position 1.
@@ -40,7 +39,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
  * @param backgroundCircleRadius the radius of the transparent background between the inner and outer circle.
  * @param backgroundColor the color of the faded background.
  */
-internal data class DumbActionBriefViewStyle(
+internal data class ActionBriefViewStyle(
     val outerFromPaint: Paint,
     val innerFromPaint: Paint,
     val outerToPaint: Paint,
@@ -53,21 +52,21 @@ internal data class DumbActionBriefViewStyle(
     @ColorInt val backgroundColor: Int,
 )
 
-internal fun Context.getDumbActionBriefStyle(attrs: AttributeSet, defStyleAttr: Int): DumbActionBriefViewStyle =
-    obtainStyledAttributes(attrs, R.styleable.DumbActionBriefView, R.attr.dumbActionBriefStyle, defStyleAttr).use { ta ->
+internal fun Context.getActionBriefStyle(attrs: AttributeSet, defStyleAttr: Int): ActionBriefViewStyle =
+    obtainStyledAttributes(attrs, R.styleable.ActionBriefView, R.attr.actionBriefStyle, defStyleAttr).use { ta ->
 
-        val thickness = ta.getDimensionPixelSize(R.styleable.DumbActionBriefView_thickness, 4).toFloat()
-        val outerRadius = ta.getDimensionPixelSize(R.styleable.DumbActionBriefView_radius, 30).toFloat()
-        val innerRadius = ta.getDimensionPixelSize(R.styleable.DumbActionBriefView_innerRadius, 4)
+        val thickness = ta.getDimensionPixelSize(R.styleable.ActionBriefView_thickness, 4).toFloat()
+        val outerRadius = ta.getDimensionPixelSize(R.styleable.ActionBriefView_radius, 30).toFloat()
+        val innerRadius = ta.getDimensionPixelSize(R.styleable.ActionBriefView_innerRadius, 4)
             .toFloat()
-        val innerColor = ta.getColor(R.styleable.DumbActionBriefView_colorInner, Color.WHITE)
+        val innerColor = ta.getColor(R.styleable.ActionBriefView_colorInner, Color.WHITE)
         val backgroundCircleStroke = outerRadius - (thickness / 2 + innerRadius)
 
-        DumbActionBriefViewStyle(
+        ActionBriefViewStyle(
             outerFromPaint = Paint().apply {
                 isAntiAlias = true
                 style = Paint.Style.STROKE
-                color = ta.getColor(R.styleable.DumbActionBriefView_colorOutlinePrimary, Color.RED)
+                color = ta.getColor(R.styleable.ActionBriefView_colorOutlinePrimary, Color.RED)
                 strokeWidth = thickness
             },
             innerFromPaint = Paint().apply {
@@ -78,7 +77,7 @@ internal fun Context.getDumbActionBriefStyle(attrs: AttributeSet, defStyleAttr: 
             outerToPaint = Paint().apply {
                 isAntiAlias = true
                 style = Paint.Style.STROKE
-                color = ta.getColor(R.styleable.DumbActionBriefView_colorOutlineSecondary, Color.GREEN)
+                color = ta.getColor(R.styleable.ActionBriefView_colorOutlineSecondary, Color.GREEN)
                 strokeWidth = thickness
             },
             innerToPaint = Paint().apply {
@@ -96,6 +95,6 @@ internal fun Context.getDumbActionBriefStyle(attrs: AttributeSet, defStyleAttr: 
             innerRadius = innerRadius,
             thickness = thickness,
             backgroundCircleRadius = outerRadius - thickness / 2 - backgroundCircleStroke / 2,
-            backgroundColor = ta.getColor(R.styleable.DumbActionBriefView_colorBackground, Color.TRANSPARENT),
+            backgroundColor = ta.getColor(R.styleable.ActionBriefView_colorBackground, Color.TRANSPARENT),
         )
     }
