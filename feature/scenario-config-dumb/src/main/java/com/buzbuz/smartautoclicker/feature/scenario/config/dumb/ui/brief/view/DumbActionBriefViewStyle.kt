@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
 
 import androidx.core.content.res.use
 
@@ -32,24 +33,24 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
  * @param innerFromPaint the paint drawing the inner circle of the position 1.
  * @param outerToPaint the paint drawing the outer circle of the position 2.
  * @param innerToPaint the point drawing the inner circle of the position 2.
- * @param backgroundPaint the paint for the background of the circles.
  * @param linePaint the paint for drawing the swipe lane.
  * @param thickness the thickness of the outer circle.
  * @param outerRadius the circles radius.
  * @param innerRadius the inner small circle radius.
  * @param backgroundCircleRadius the radius of the transparent background between the inner and outer circle.
+ * @param backgroundColor the color of the faded background.
  */
 internal data class DumbActionBriefViewStyle(
     val outerFromPaint: Paint,
     val innerFromPaint: Paint,
     val outerToPaint: Paint,
     val innerToPaint: Paint,
-    val backgroundPaint: Paint,
     val linePaint: Paint,
     val thickness: Float,
     val outerRadius: Float,
     val innerRadius: Float,
     val backgroundCircleRadius: Float,
+    @ColorInt val backgroundColor: Int,
 )
 
 internal fun Context.getDumbActionBriefStyle(attrs: AttributeSet, defStyleAttr: Int): DumbActionBriefViewStyle =
@@ -85,11 +86,6 @@ internal fun Context.getDumbActionBriefStyle(attrs: AttributeSet, defStyleAttr: 
                 style = Paint.Style.FILL
                 color = innerColor
             },
-            backgroundPaint = Paint().apply {
-                isAntiAlias = true
-                style = Paint.Style.FILL
-                color = ta.getColor(R.styleable.DumbActionBriefView_colorBackground, Color.TRANSPARENT)
-            },
             linePaint = Paint().apply {
                 isAntiAlias = true
                 style = Paint.Style.FILL
@@ -100,5 +96,6 @@ internal fun Context.getDumbActionBriefStyle(attrs: AttributeSet, defStyleAttr: 
             innerRadius = innerRadius,
             thickness = thickness,
             backgroundCircleRadius = outerRadius - thickness / 2 - backgroundCircleStroke / 2,
+            backgroundColor = ta.getColor(R.styleable.DumbActionBriefView_colorBackground, Color.TRANSPARENT),
         )
     }

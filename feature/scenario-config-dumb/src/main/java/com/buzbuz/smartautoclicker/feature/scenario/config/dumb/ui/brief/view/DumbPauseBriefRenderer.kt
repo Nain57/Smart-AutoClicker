@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.view
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import android.view.View
@@ -44,6 +45,8 @@ internal class DumbPauseBriefRenderer(
                 invalidate()
             }
         }
+
+    private val gradientBackgroundPaint: Paint = Paint()
 
     private var viewCenter: PointF = PointF()
     private var baseHandPosition: RectF? = null
@@ -85,6 +88,12 @@ internal class DumbPauseBriefRenderer(
             viewCenter.x + TIMER_HAND_HALF_WIDTH_PX,
             viewCenter.y + TIMER_HAND_ROTATION_CENTER_BOTTOM_OFFSET,
         )
+
+        gradientBackgroundPaint.shader = createRadialGradientShader(
+            position = viewCenter,
+            radius = style.outerRadius * 1.75f,
+            color = style.backgroundColor,
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -92,7 +101,7 @@ internal class DumbPauseBriefRenderer(
         val handRotation = animatedRotationAngleDegree ?: return
 
         canvas.apply {
-            drawCircle(viewCenter.x, viewCenter.y, style.outerRadius, style.backgroundPaint)
+            drawCircle(viewCenter.x, viewCenter.y, style.outerRadius * 2f, gradientBackgroundPaint)
             drawCircle(viewCenter.x, viewCenter.y, style.outerRadius, style.outerFromPaint)
 
             save()

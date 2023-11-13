@@ -68,15 +68,3 @@ class DumbActionBriefView @JvmOverloads constructor(
         renderer?.onDraw(canvas)
     }
 }
-
-internal abstract class DumbActionBriefRenderer(
-    protected val briefView: View,
-    protected val style: DumbActionBriefViewStyle,
-    private val viewInvalidator: () -> Unit,
-) {
-    abstract fun onNewDescription(description: DumbActionDescription)
-    open fun onSizeChanged(w: Int, h: Int) = Unit
-    abstract fun onDraw(canvas: Canvas)
-    abstract fun onStop()
-    protected fun invalidate() { viewInvalidator() }
-}
