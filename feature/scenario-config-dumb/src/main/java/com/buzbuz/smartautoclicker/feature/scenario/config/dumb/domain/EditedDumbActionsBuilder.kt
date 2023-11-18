@@ -22,12 +22,6 @@ import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDefaultDumbClickDurationMs
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDefaultDumbClickName
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDefaultDumbPauseDurationMs
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDefaultDumbPauseName
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDefaultDumbSwipeDurationMs
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDefaultDumbSwipeName
 
 class EditedDumbActionsBuilder {
 
@@ -52,9 +46,9 @@ class EditedDumbActionsBuilder {
             name = context.getDefaultDumbClickName(),
             position = position,
             pressDurationMs = context.getDefaultDumbClickDurationMs(),
-            repeatCount = 1,
+            repeatCount = context.getDefaultDumbClickRepeatCount(),
             isRepeatInfinite = false,
-            repeatDelayMs = 0,
+            repeatDelayMs = context.getDefaultDumbClickRepeatDelay(),
         )
 
     fun createNewDumbSwipe(context: Context, from: Point, to: Point): DumbAction.DumbSwipe =
@@ -65,9 +59,9 @@ class EditedDumbActionsBuilder {
             fromPosition = from,
             toPosition = to,
             swipeDurationMs = context.getDefaultDumbSwipeDurationMs(),
-            repeatCount = 1,
+            repeatCount = context.getDefaultDumbSwipeRepeatCount(),
             isRepeatInfinite = false,
-            repeatDelayMs = 0,
+            repeatDelayMs = context.getDefaultDumbSwipeRepeatDelay(),
         )
 
     fun createNewDumbPause(context: Context): DumbAction.DumbPause =

@@ -17,10 +17,16 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.pause
 
 import android.app.Application
+import android.content.Context
 
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDumbConfigPreferences
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putPauseDurationConfig
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeDurationConfig
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatCountConfig
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatDelayConfig
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,5 +72,14 @@ class DumbPauseViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun setPauseDurationMs(durationMs: Long) {
         _editedDumbPause.value = _editedDumbPause.value?.copy(pauseDurationMs = durationMs)
+    }
+
+    fun saveLastConfig(context: Context) {
+        _editedDumbPause.value?.let { pause ->
+            context.getDumbConfigPreferences()
+                .edit()
+                .putPauseDurationConfig(pause.pauseDurationMs)
+                .apply()
+        }
     }
 }

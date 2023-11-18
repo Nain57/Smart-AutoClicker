@@ -17,12 +17,17 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Point
 
 import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDumbConfigPreferences
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeDurationConfig
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatCountConfig
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatDelayConfig
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -116,5 +121,16 @@ class DumbSwipeViewModel(application: Application) : AndroidViewModel(applicatio
     fun setPositions(from: Point?, to: Point?) {
         if (from == null || to == null) return
         _editedDumbSwipe.value = _editedDumbSwipe.value?.copy(fromPosition = from, toPosition = to)
+    }
+
+    fun saveLastConfig(context: Context) {
+        _editedDumbSwipe.value?.let { swipe ->
+            context.getDumbConfigPreferences()
+                .edit()
+                .putSwipeDurationConfig(swipe.swipeDurationMs)
+                .putSwipeRepeatCountConfig(swipe.repeatCount)
+                .putSwipeRepeatDelayConfig(swipe.repeatDelayMs)
+                .apply()
+        }
     }
 }
