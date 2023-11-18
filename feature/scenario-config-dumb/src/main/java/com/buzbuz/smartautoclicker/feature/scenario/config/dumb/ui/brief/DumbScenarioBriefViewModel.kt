@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.acti
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -59,9 +60,11 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
         }
         .filterNotNull()
 
-    private val actionListSnapIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _actionListSnapIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+    val actionListSnapIndex: StateFlow<Int> = _actionListSnapIndex
+
     val focusedActionDetails: Flow<FocusedActionDetails> = dumbEditionRepository.editedDumbScenario
-        .combine(actionListSnapIndex) { dumbScenario, index ->
+        .combine(_actionListSnapIndex) { dumbScenario, index ->
             if (dumbScenario == null || index < 0)
                 return@combine null
 
@@ -70,7 +73,7 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
         }.filterNotNull()
 
     fun onNewActionListSnapIndex(index: Int) {
-        actionListSnapIndex.value = index
+        _actionListSnapIndex.value = index
     }
 
     fun createNewDumbClick(position: Point): DumbAction.DumbClick =
