@@ -127,7 +127,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/click_selector_title"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_chevron"
+                            android:src="@drawable/ic_chevron_right"
                             tools:ignore="ContentDescription"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,5 +4,5 @@
     android:toDegrees="270"
     android:pivotX="50%"
     android:pivotY="50%"
-    android:drawable="@drawable/ic_chevron">
+    android:drawable="@drawable/ic_chevron_right">
 </rotate>
