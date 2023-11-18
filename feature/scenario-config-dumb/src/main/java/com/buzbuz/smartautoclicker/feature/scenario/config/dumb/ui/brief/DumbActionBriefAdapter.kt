@@ -24,8 +24,8 @@ import android.view.ViewGroup
 
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDiffUtilCallback
@@ -56,14 +56,6 @@ class DumbActionBriefAdapter(
         }
 
         super.submitList(list)
-    }
-
-    @SuppressLint("NotifyDataSetChanged") // We refresh the whole list when changing orientation
-    fun changeOrientation(newOrientation: Int) {
-        if (orientation == newOrientation) return
-
-        orientation = newOrientation
-        notifyDataSetChanged()
     }
 }
 

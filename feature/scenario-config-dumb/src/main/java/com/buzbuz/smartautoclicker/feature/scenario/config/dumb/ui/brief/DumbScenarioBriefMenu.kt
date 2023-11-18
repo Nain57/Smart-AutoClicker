@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
+import android.content.Context
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
@@ -63,13 +66,7 @@ class DumbScenarioBriefMenu(
     private lateinit var dumbActionCreator: DumbActionCreator
     private lateinit var createCopyActionUiFlowListener: DumbActionUiFlowListener
     private lateinit var updateActionUiFlowListener: DumbActionUiFlowListener
-
-    /**
-     * When adding a dumb action, we need to focus its new item once it is added to the list.
-     * To do that, we keep the expected new item index and list size, and snap to this item once
-     * a list with the correct values is received.
-     */
-    private var addedActionIndexes: Pair<Int, Int>? = null
+    private lateinit var recyclerViewLayoutManager: LinearLayoutManagerExt
 
     override fun onCreate() {
         super.onCreate()
@@ -128,6 +125,13 @@ class DumbScenarioBriefMenu(
                 }
 
                 listDumbActions.adapter = dumbActionsAdapter
+                recyclerViewLayoutManager = LinearLayoutManagerExt(context, displayMetrics.orientation).apply {
+                    setNextLayoutCompletionListener {
+                        actionListSnapHelper.snapTo(viewModel.actionListSnapIndex.value)
+                    }
+                }
+                listDumbActions.layoutManager = recyclerViewLayoutManager
+
                 actionListSnapHelper.apply {
                     onSnapPositionChangeListener = { snapIndex ->
                         viewModel.onNewActionListSnapIndex(snapIndex)
@@ -217,8 +221,10 @@ class DumbScenarioBriefMenu(
 
     private fun onNewDumbActionCreated(action: DumbAction) {
         val index = actionListSnapHelper.snapPosition + 1
+        recyclerViewLayoutManager.setNextLayoutCompletionListener {
+            actionListSnapHelper.snapTo(index)
+        }
 
-        addedActionIndexes = index to dumbActionsAdapter.itemCount + 1
         viewModel.addNewDumbAction(action, index)
     }
 
@@ -248,15 +254,6 @@ class DumbScenarioBriefMenu(
             } else {
                 listDumbActions.visibility = View.VISIBLE
                 emptyScenarioCard.visibility = View.GONE
-
-                addedActionIndexes?.let { (requestedIndex, requestedCount) ->
-                    if (requestedCount == actions.size) {
-                        addedActionIndexes = null
-                        lifecycleScope.launch {
-                            actionListSnapHelper.snapTo(requestedIndex)
-                        }
-                    }
-                }
             }
         }
     }
@@ -277,3 +274,23 @@ class DumbScenarioBriefMenu(
     }
 }
 
+private class LinearLayoutManagerExt(context: Context, screenOrientation: Int) : LinearLayoutManager(
+    /* context */ context,
+    /* orientation */ if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) HORIZONTAL else VERTICAL,
+    /* reverseLayout */false,
+) {
+
+    private var nextLayoutCompletionListener: (() -> Unit)? = null
+
+    fun setNextLayoutCompletionListener(listener: () -> Unit) {
+        nextLayoutCompletionListener = listener
+    }
+
+    override fun onLayoutCompleted(state: RecyclerView.State?) {
+        super.onLayoutCompleted(state)
+        if (nextLayoutCompletionListener != null) {
+            nextLayoutCompletionListener?.invoke()
+            nextLayoutCompletionListener = null
+        }
+    }
+}

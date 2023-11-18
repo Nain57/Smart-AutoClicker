@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils
 
 import android.util.Log
+
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -41,6 +42,7 @@ class PositionPagerSnapHelper : PagerSnapHelper() {
 
         attachedRecyclerView?.removeOnScrollListener(onScrollListener)
         attachedRecyclerView = recyclerView
+        snapPosition = findSnapPosition()
         attachedRecyclerView?.addOnScrollListener(onScrollListener)
 
         super.attachToRecyclerView(recyclerView)
