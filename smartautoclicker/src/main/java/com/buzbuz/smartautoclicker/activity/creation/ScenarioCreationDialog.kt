@@ -140,11 +140,7 @@ class ScenarioCreationDialog : DialogFragment() {
     }
 
     private fun setInitialScenarioName(name: String?) {
-        viewBinding.scenarioNameInputLayout.apply {
-            setText(name)
-            textField.selectAll()
-            textField.requestFocus()
-        }
+        viewBinding.scenarioNameInputLayout.setText(name)
     }
 
     private fun updateTypeSelection(state: ScenarioTypeSelectionState) {
