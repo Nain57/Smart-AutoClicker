@@ -73,7 +73,7 @@
             android:id="@+id/dumb_actions_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_vertical_default"
+            android:layout_marginVertical="@dimen/margin_vertical_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/scenario_name"
@@ -124,11 +124,12 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/repeat_limit"
             style="@style/AppTheme.TextAppearance.BodyLarge"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_vertical_mini"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_start"
             app:layout_constraintTop_toBottomOf="@id/dumb_actions_layout"
             app:layout_constraintBottom_toTopOf="@id/duration_limit"
             tools:text="Repeat 10 times" />
@@ -136,10 +137,10 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/duration_limit"
             style="@style/AppTheme.TextAppearance.BodyLarge"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/repeat_limit"
             app:layout_constraintTop_toBottomOf="@id/repeat_limit"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Stop after 10min" />

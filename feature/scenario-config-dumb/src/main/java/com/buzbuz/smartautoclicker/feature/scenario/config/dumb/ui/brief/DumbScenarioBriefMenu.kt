@@ -240,14 +240,6 @@ class DumbScenarioBriefMenu(
         dumbActionsAdapter.submitList(actions)
 
         visualisationViewBinding.apply {
-            if (actions.size > 1) {
-                buttonPrevious.visibility = View.VISIBLE
-                buttonNext.visibility = View.VISIBLE
-            } else {
-                buttonPrevious.visibility = View.INVISIBLE
-                buttonNext.visibility = View.INVISIBLE
-            }
-
             if (actions.isEmpty()) {
                 listDumbActions.visibility = View.GONE
                 emptyScenarioCard.visibility = View.VISIBLE
@@ -262,12 +254,17 @@ class DumbScenarioBriefMenu(
         visualisationViewBinding.apply {
             if (details.isEmpty) {
                 textDumbActionIndex.setText(R.string.item_title_no_dumb_actions)
+                buttonPrevious.isEnabled = false
+                buttonNext.isEnabled = false
             } else {
                 textDumbActionIndex.text = context.getString(
                     R.string.title_action_count,
                     details.actionIndex + 1,
                     details.actionCount,
                 )
+
+                buttonPrevious.isEnabled = details.actionIndex != 0
+                buttonNext.isEnabled = details.actionIndex != details.actionCount - 1
             }
             viewDumbBrief.setDescription(details.actionDescription)
         }
