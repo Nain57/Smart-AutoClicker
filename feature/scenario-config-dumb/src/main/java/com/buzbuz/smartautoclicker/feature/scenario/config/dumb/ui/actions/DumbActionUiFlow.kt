@@ -25,7 +25,7 @@ import androidx.core.graphics.toPoint
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
@@ -129,7 +129,7 @@ private fun OverlayManager.onDumbClickCreationSelected(
 
     navigateTo(
         context = context,
-        newOverlay = ClickSwipeSelectorMenu(
+        newOverlay = PositionSelectorMenu(
             actionDescription = ClickDescription(),
             onConfirm = { description ->
                 (description as? ClickDescription)?.position?.let { position ->
@@ -179,7 +179,7 @@ private fun OverlayManager.onDumbSwipeCreationSelected(
 
     navigateTo(
         context = context,
-        newOverlay = ClickSwipeSelectorMenu(
+        newOverlay = PositionSelectorMenu(
             actionDescription = SwipeDescription(),
             onConfirm = { description ->
                 (description as? SwipeDescription)?.let { swipeDesc ->

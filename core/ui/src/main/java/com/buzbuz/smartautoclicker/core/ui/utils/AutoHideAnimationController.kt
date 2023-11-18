@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils
+package com.buzbuz.smartautoclicker.core.ui.utils
 
 import android.util.Log
 import android.view.View
@@ -22,9 +22,11 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+
 import androidx.annotation.AnimRes
 
 import com.buzbuz.smartautoclicker.core.base.extensions.setListener
+import com.buzbuz.smartautoclicker.core.ui.R
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +37,12 @@ import kotlinx.coroutines.launch
 
 class AutoHideAnimationController {
 
+    enum class ScreenSide(@AnimRes internal val inAnim: Int, @AnimRes internal val outAnim: Int) {
+        LEFT(R.anim.slide_in_left, R.anim.slide_out_left),
+        TOP(R.anim.slide_in_top, R.anim.slide_out_top),
+        BOTTOM(R.anim.slide_in_bottom, R.anim.slide_out_bottom),
+    }
+
     private lateinit var showAnimation: Animation
     private lateinit var hideAnimation: Animation
 
@@ -42,18 +50,18 @@ class AutoHideAnimationController {
     private var hideJob: Job? = null
     private var viewToAnimate: View? = null
 
-    fun attachToView(view: View, @AnimRes inAnim: Int, @AnimRes outAnim: Int) {
+    fun attachToView(view: View, screenSide: ScreenSide) {
         if (viewToAnimate != null) {
             detachFromView()
         }
 
         animationScope = CoroutineScope(Dispatchers.Main)
 
-        showAnimation = AnimationUtils.loadAnimation(view.context, inAnim).apply {
+        showAnimation = AnimationUtils.loadAnimation(view.context, screenSide.inAnim).apply {
             setListener(start = { viewToAnimate?.visibility = View.VISIBLE })
             interpolator = AccelerateDecelerateInterpolator()
         }
-        hideAnimation = AnimationUtils.loadAnimation(view.context, outAnim).apply {
+        hideAnimation = AnimationUtils.loadAnimation(view.context, screenSide.outAnim).apply {
             setListener(end = { viewToAnimate?.visibility = View.GONE })
             interpolator = AccelerateInterpolator()
         }

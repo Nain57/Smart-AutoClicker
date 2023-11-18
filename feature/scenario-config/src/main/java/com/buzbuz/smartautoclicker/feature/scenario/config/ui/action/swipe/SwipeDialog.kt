@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionSwipeBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -172,7 +172,7 @@ class SwipeDialog(
         viewModel.getEditedSwipe()?.let { swipe ->
             OverlayManager.getInstance(context).navigateTo(
                 context = context,
-                newOverlay = ClickSwipeSelectorMenu(
+                newOverlay = PositionSelectorMenu(
                     actionDescription = SwipeDescription(
                         from = swipe.getEditionFromPosition(),
                         to = swipe.getEditionToPosition(),

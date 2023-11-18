@@ -14,19 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils
+package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
 import android.util.Log
 
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 
 class PositionPagerSnapHelper : PagerSnapHelper() {
 
     private var attachedRecyclerView: RecyclerView? = null
 
-    private val onScrollListener: OnScrollListener = object : OnScrollListener() {
+    private val onScrollListener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             val newSnapPosition = findSnapPosition()
             if (newSnapPosition != snapPosition) onSnapPositionUpdated(newSnapPosition)

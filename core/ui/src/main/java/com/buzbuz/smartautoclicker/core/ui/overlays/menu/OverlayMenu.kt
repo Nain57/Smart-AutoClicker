@@ -375,13 +375,13 @@ abstract class OverlayMenu(
      * Called when an item (other than move/hide) in the menu have been pressed.
      * @param viewId the pressed view identifier.
      */
-    protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit? = null
+    protected open fun onMenuItemClicked(@IdRes viewId: Int): Unit = Unit
 
     /**
      * Called when the visibility of the screen overlay have changed.
      * @param isVisible true if it has became visible, false if it became invisible.
      */
-    protected open fun onScreenOverlayVisibilityChanged(isVisible: Boolean): Unit? = null
+    protected open fun onScreenOverlayVisibilityChanged(isVisible: Boolean): Unit = Unit
 
     /**
      * Get the maximum size the window can take.

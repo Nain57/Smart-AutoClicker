@@ -44,7 +44,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
@@ -186,7 +186,7 @@ class DumbSwipeDialog(
         viewModel.getEditedDumbSwipe()?.let { swipe ->
             OverlayManager.getInstance(context).navigateTo(
                 context = context,
-                newOverlay = ClickSwipeSelectorMenu(
+                newOverlay = PositionSelectorMenu(
                     actionDescription = SwipeDescription(
                         from = swipe.fromPosition.toEditionPosition(),
                         to = swipe.toPosition.toEditionPosition(),
