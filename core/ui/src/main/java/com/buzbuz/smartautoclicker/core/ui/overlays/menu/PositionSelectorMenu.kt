@@ -25,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.OverlayPositionSelectionMenuBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.OverlayPositionSelectionViewBinding
+import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
@@ -39,7 +40,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
  * @param onConfirm listener on the validation of the actions positions.
  * @param onDismiss listener on the dismiss of the position selection.
  */
-class ClickSwipeSelectorMenu(
+class PositionSelectorMenu(
     private val actionDescription: ActionDescription,
     private val onConfirm: (ActionDescription) -> Unit,
     private val onDismiss: (() -> Unit)? = null,
@@ -50,12 +51,23 @@ class ClickSwipeSelectorMenu(
     /** The view binding for the position selector. */
     private lateinit var selectorViewBinding: OverlayPositionSelectionViewBinding
 
+    /** Controls the instructions in and out animations. */
+    private lateinit var instructionsAnimationController: AutoHideAnimationController
+
     private var confirmListener: (() -> Unit)? = null
     private var cancelListener: (() -> Unit)? = null
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayPositionSelectionMenuBinding.inflate(layoutInflater)
         selectorViewBinding = OverlayPositionSelectionViewBinding.inflate(layoutInflater)
+
+        instructionsAnimationController = AutoHideAnimationController().apply {
+            attachToView(
+                selectorViewBinding.layoutInstructions,
+                AutoHideAnimationController.ScreenSide.TOP,
+            )
+        }
+
         return viewBinding.root
     }
 
@@ -73,6 +85,10 @@ class ClickSwipeSelectorMenu(
         setActionDescription(actionDescription)
     }
 
+    override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {
+        if (isVisible) instructionsAnimationController.showOrResetTimer()
+    }
+
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_confirm -> confirmListener?.invoke()
@@ -85,6 +101,8 @@ class ClickSwipeSelectorMenu(
             is ClickDescription -> setClickDescription(description)
             is SwipeDescription -> setSwipeDescription(description)
         }
+
+        instructionsAnimationController.showOrResetTimer()
     }
 
     private fun setClickDescription(description: ClickDescription) {
@@ -123,6 +141,7 @@ class ClickSwipeSelectorMenu(
 
         setConfirmEnabledState(description.from != null) {
             toSelectSwipeToState(description)
+            instructionsAnimationController.showOrResetTimer()
         }
         setCancelListener {
             dismiss()
@@ -143,6 +162,7 @@ class ClickSwipeSelectorMenu(
         }
         setCancelListener {
             toSelectSwipeFromState(description.copy(to = null))
+            instructionsAnimationController.showOrResetTimer()
         }
     }
 

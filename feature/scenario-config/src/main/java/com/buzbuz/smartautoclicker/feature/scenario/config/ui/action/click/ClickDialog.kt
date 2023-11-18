@@ -46,7 +46,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionClickBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.ClickSwipeSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionSelectionDialog
 
@@ -223,7 +223,7 @@ class ClickDialog(
         viewModel.getEditedClick()?.let { click ->
             OverlayManager.getInstance(context).navigateTo(
                 context = context,
-                newOverlay = ClickSwipeSelectorMenu(
+                newOverlay = PositionSelectorMenu(
                     actionDescription = ClickDescription(
                         position = click.getEditionPosition(),
                         pressDurationMs = click.pressDuration ?: 1L,

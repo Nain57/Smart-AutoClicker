@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbScenarioBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
@@ -40,8 +41,6 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.start
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCreationUiFlow
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionEditionUiFlow
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.AutoHideAnimationController
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.utils.PositionPagerSnapHelper
 
 import kotlinx.coroutines.launch
 
@@ -110,19 +109,13 @@ class DumbScenarioBriefMenu(
             .inflateDumbScenarioBriefViewBinding(displayMetrics.orientation)
             .apply {
 
-                if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    actionBriefPanelAnimationController.attachToView(
-                        layoutActionList,
-                        R.anim.slide_in_bottom,
-                        R.anim.slide_out_bottom,
-                    )
-                } else {
-                    actionBriefPanelAnimationController.attachToView(
-                        layoutActionList,
-                        R.anim.slide_in_left,
-                        R.anim.slide_out_left,
-                    )
-                }
+                actionBriefPanelAnimationController.attachToView(
+                    layoutActionList,
+                    if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT)
+                        AutoHideAnimationController.ScreenSide.BOTTOM
+                    else
+                        AutoHideAnimationController.ScreenSide.LEFT
+                )
 
                 listDumbActions.adapter = dumbActionsAdapter
                 recyclerViewLayoutManager = LinearLayoutManagerExt(context, displayMetrics.orientation).apply {

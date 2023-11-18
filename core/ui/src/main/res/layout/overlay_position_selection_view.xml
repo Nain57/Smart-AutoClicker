@@ -22,18 +22,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionBriefView
+        android:id="@+id/position_selector"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-        <com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionBriefView
-            android:id="@+id/position_selector"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <View
             android:id="@+id/background_instructions"
@@ -49,7 +46,7 @@
             android:id="@+id/text_instructions"
             style="@style/AppTheme.TextAppearance.EmptyText"
             android:textColor="@color/md_theme_light_onPrimary"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_vertical_small"
             android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
@@ -58,6 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/toast_configure_swipe_from" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
