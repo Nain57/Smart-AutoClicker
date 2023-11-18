@@ -60,13 +60,13 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/empty_scenario_card"
             style="@style/AppTheme.Widget.Card"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_dumb_action_height"
-            android:layout_marginBottom="@dimen/margin_vertical_large"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-            app:layout_constraintBottom_toTopOf="@id/button_previous"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            app:layout_constraintStart_toStartOf="@id/card_dumb_action_index"
+            app:layout_constraintBottom_toTopOf="@id/card_dumb_action_index"
+            app:layout_constraintEnd_toEndOf="@id/card_dumb_action_index"
+            app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone">
 
             <com.google.android.material.textview.MaterialTextView
@@ -91,7 +91,6 @@
             app:layout_constraintBottom_toTopOf="@id/card_dumb_action_index"
             app:layout_constraintEnd_toEndOf="@id/card_dumb_action_index"
             app:layout_constraintTop_toTopOf="parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             android:scrollbars="none"
             tools:listitem="@layout/item_dumb_action_brief_land"
@@ -102,11 +101,10 @@
             style="@style/AppTheme.Widget.Card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_default"
             app:layout_constraintStart_toStartOf="@id/button_previous"
             app:layout_constraintBottom_toTopOf="@id/button_previous"
-            app:layout_constraintEnd_toEndOf="@id/button_next"
-            app:layout_constraintTop_toBottomOf="@id/list_dumb_actions">
+            app:layout_constraintEnd_toEndOf="@id/button_next">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_dumb_action_index"

@@ -90,7 +90,6 @@
             app:layout_constraintBottom_toTopOf="@id/button_previous"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
             android:scrollbars="none"
             tools:listitem="@layout/item_dumb_action_brief"
