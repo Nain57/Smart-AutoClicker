@@ -24,8 +24,26 @@
     <string name="dialog_overlay_title_copy_from">Copy from</string>
     <string name="dialog_title_tutorial">Tutorial</string>
 
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_click_position">Click position</string>
+    <string name="item_title_swipe_positions">Swipe positions</string>
+    <string name="item_error_action_invalid_generic">This action is invalid</string>
 
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
     <string name="message_empty_copy">Nothing to copy</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
     <string name="message_tutorial_volume_down_stop">If your scenario is clicking too quickly, it can
         block you from using Smart AutoClicker menu to stop it.\n\nIn that case, you can press the
         physical \"Volume Down\" button of your device to stop the running scenario.</string>
@@ -43,15 +61,6 @@
     <string name="input_field_label_swipe_duration">Swipe duration (ms)</string>
     <string name="input_field_error_required">Required</string>
 
-    <!--
-      - Text for items in a list or vertical layout.
-      -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
-      -  * Error have the same space as desc
-      -->
-    <string name="item_title_click_position">Click position</string>
-    <string name="item_title_swipe_positions">Swipe positions</string>
-    <string name="item_error_action_invalid_generic">This action is invalid</string>
 
     <!--
       - Dropdown input fields texts.
@@ -61,7 +70,6 @@
       -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
       -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
       -->
-
     <!-- Dropdown field for selecting anti bot state -->
     <string name="dropdown_item_title_anti_detection_enabled">Enabled</string>
     <string name="dropdown_item_title_anti_detection_disabled">Disabled</string>

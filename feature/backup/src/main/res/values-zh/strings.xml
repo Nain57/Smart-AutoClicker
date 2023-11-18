@@ -55,5 +55,5 @@
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
-    <string name="content_desc_backup_state">The state of the backup</string>
+    <string name="content_desc_backup_state">备份状态</string>
 </resources>

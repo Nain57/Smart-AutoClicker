@@ -39,6 +39,23 @@
     <string name="menu_item_title_import">Importer</string>
     <string name="menu_item_title_select_all">Tout sélectionner</string>
 
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_scenario">L\'expérience commune des auto-clickers.\nPlacez simplement des clic et des swipe sur l\'écran.</string>
+    <string name="item_desc_dumb_scenario_max_duration">Arrêter après %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">Pas de durée maximum</string>
+    <string name="item_desc_dumb_scenario_repeat_count">Répéter %1$d fois</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">Répéter à l\'infini</string>
+    <string name="item_desc_smart_scenario">Utilise la détéction d\'image pour créer des scnérios complexes.\nContient des limitations payantes.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Utilise la détéction d\'image pour créer des scnérios complexes.</string>
+    <string name="item_title_dumb_scenario">Simple</string>
+    <string name="item_title_smart_scenario">Intelligente</string>
+
     <!--
       - Text for items in a list or vertical layout.
       -  * Title should be short and concise.
@@ -75,6 +92,11 @@
     <string name="message_permission_mandatory_denied">Cette permission est obligatoire pour Smart AutoClicker.
         L\'application ne pourra pas fonctionner sans elle.</string>
 
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_scenario_type_title">Type de scénario</string>
 
     <!--
       - Toast messages.
@@ -91,22 +113,13 @@
     <string name="button_request_permission">Requête de permission</string>
     <string name="button_deny">Refuser</string>
 
-    <string name="default_scenario_name">Default name</string>
-
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
     <string name="content_desc_add_scenario">Créer un nouveau scénario</string>
-    <string name="section_title_scenario_type_title">Scenario type</string>
-    <string name="item_title_dumb_scenario">Simple</string>
-    <string name="item_title_smart_scenario">Smart</string>
-    <string name="item_desc_dumb_scenario">The regular auto clicker experience.\nSimply place clicks and swipes on the screen.</string>
-    <string name="item_desc_smart_scenario">Use image detection to create complex use cases.\nContains paid limitations.</string>
-    <string name="item_desc_smart_scenario_pro_mode">Use image detection to create complex use cases.</string>
-    <string name="item_desc_dumb_scenario_repeat_infinite">Infinite repeat</string>
-    <string name="item_desc_dumb_scenario_repeat_count">Repeat %1$d times</string>
-    <string name="item_desc_dumb_scenario_max_duration_infinite">No max duration</string>
-    <string name="item_desc_dumb_scenario_max_duration">Stop after %1$s</string>
+
+    <!-- Default name when creating a new scenario -->
+    <string name="default_scenario_name">Nom par défaut</string>
 
 </resources>
