@@ -237,6 +237,7 @@ abstract class OverlayMenu(
         if (animations.showAnimationIsRunning) return
 
         super.start()
+        loadMenuPosition(displayMetrics.orientation)
 
         // Start the show animation for the menu
         Log.d(TAG, "Start show overlay ${hashCode()} animation...")
@@ -273,6 +274,8 @@ abstract class OverlayMenu(
         if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
         if (animations.hideAnimationIsRunning) return
         if (lifecycle.currentState == Lifecycle.State.RESUMED) pause()
+
+        saveMenuPosition(displayMetrics.orientation)
 
         // Start the hide animation for the menu
         Log.d(TAG, "Start overlay ${hashCode()} hide animation...")
