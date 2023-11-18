@@ -30,13 +30,13 @@ fun formatDuration(msDuration: Long): String {
         value += "${duration.inWholeHours}h "
     }
     if (duration.inWholeMinutes % 60 > 0) {
-        value += "${duration.inWholeMinutes % 60}m"
+        value += "${duration.inWholeMinutes % 60}m "
     }
     if (duration.inWholeSeconds % 60 > 0) {
-        value += "${duration.inWholeSeconds % 60}s"
+        value += "${duration.inWholeSeconds % 60}s "
     }
     if (duration.inWholeMilliseconds % 1000 > 0) {
-        value += "${duration.inWholeMilliseconds % 1000}ms"
+        value += "${duration.inWholeMilliseconds % 1000}ms "
     }
 
     return value.trim()
