@@ -147,13 +147,13 @@ class ClickSwipeSelectorMenu(
     }
 
     private fun onPositionSelectionCompleted(description: ActionDescription) {
-        onConfirm(description)
         back()
+        onConfirm(description)
     }
 
     private fun dismiss() {
-        onDismiss?.invoke()
         back()
+        onDismiss?.invoke()
     }
 
     private fun setConfirmEnabledState(isEnabled: Boolean, action: (() -> Unit)? = null) {

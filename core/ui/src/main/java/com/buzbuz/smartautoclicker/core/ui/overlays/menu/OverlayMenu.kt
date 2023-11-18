@@ -69,10 +69,11 @@ import com.buzbuz.smartautoclicker.core.ui.R
  */
 abstract class OverlayMenu(
     @StyleRes theme: Int? = null,
+    private val recreateOverlayViewOnRotation: Boolean = false,
 ) : BaseOverlay(theme = theme, recreateOnRotation = false) {
 
-    /** The layout parameters of the menu layout. */
-    private val menuLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
+    /** The base layout parameters of the menu layout & overlay view. */
+    private val baseLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
         DisplayMetrics.TYPE_COMPAT_OVERLAY,
@@ -80,7 +81,12 @@ abstract class OverlayMenu(
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-        PixelFormat.TRANSLUCENT)
+        PixelFormat.TRANSLUCENT,
+    )
+
+    /** The layout parameters of the menu layout. */
+    private val menuLayoutParams: WindowManager.LayoutParams =
+        WindowManager.LayoutParams().apply { copyFrom(baseLayoutParams) }
 
     private val animations: OverlayMenuAnimations = OverlayMenuAnimations()
 
@@ -153,7 +159,7 @@ abstract class OverlayMenu(
      * @return the layout parameters to apply to the overlay view.
      */
     protected open fun onCreateOverlayViewLayoutParams(): WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
-        copyFrom(menuLayoutParams)
+        copyFrom(baseLayoutParams)
         displayMetrics.screenSize.let { size ->
             width = size.x
             height = size.y
@@ -322,14 +328,42 @@ abstract class OverlayMenu(
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             windowManager.updateViewLayout(menuLayout, menuLayoutParams)
-            screenOverlayView?.let { overlayView ->
-                displayMetrics.screenSize.let { size ->
-                    overlayLayoutParams?.width = size.x
-                    overlayLayoutParams?.height = size.y
-                }
-                windowManager.updateViewLayout(overlayView, overlayLayoutParams)
+
+            val overlayView = screenOverlayView ?: return
+            if (recreateOverlayViewOnRotation) {
+                recreateOverlayViewForRotation(overlayView)
+                return
             }
+
+            displayMetrics.screenSize.let { size ->
+                overlayLayoutParams?.width = size.x
+                overlayLayoutParams?.height = size.y
+            }
+            windowManager.updateViewLayout(overlayView, overlayLayoutParams)
         }
+    }
+
+    /**
+     * Recreates the overlay view after a screen rotation.
+     * As the Z order is dependant to the addition index in the WindowManager, we need to remove
+     * the menu and add it AFTER the new overlay view.
+     *
+     * @param oldOverlayView the overlay view before the rotation.
+     */
+    private fun recreateOverlayViewForRotation(oldOverlayView: View) {
+        screenOverlayView = onCreateOverlayView()
+        overlayLayoutParams = onCreateOverlayViewLayoutParams().apply {
+            gravity = Gravity.TOP or Gravity.START
+        }
+
+        windowManager.apply {
+            removeView(oldOverlayView)
+            removeView(menuLayout)
+            addView(screenOverlayView, overlayLayoutParams)
+            addView(menuLayout, menuLayoutParams)
+        }
+
+        setOverlayViewVisibility(oldOverlayView.visibility == View.VISIBLE)
     }
 
     /**
@@ -510,5 +544,6 @@ abstract class OverlayMenu(
         }
     }
 }
+
 /** Tag for logs */
 private const val TAG = "OverlayMenu"
