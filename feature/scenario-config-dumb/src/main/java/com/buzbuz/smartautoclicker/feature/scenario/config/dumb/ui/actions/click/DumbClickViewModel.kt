@@ -17,12 +17,17 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Point
 
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDumbConfigPreferences
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putClickPressDurationConfig
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putClickRepeatCountConfig
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putClickRepeatDelayConfig
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -114,5 +119,16 @@ class DumbClickViewModel(application: Application) : AndroidViewModel(applicatio
     fun setPosition(position: Point?) {
         position ?: return
         _editedDumbClick.value = _editedDumbClick.value?.copy(position = position)
+    }
+
+    fun saveLastConfig(context: Context) {
+        _editedDumbClick.value?.let { click ->
+            context.getDumbConfigPreferences()
+                .edit()
+                .putClickPressDurationConfig(click.pressDurationMs)
+                .putClickRepeatCountConfig(click.repeatCount)
+                .putClickRepeatDelayConfig(click.repeatDelayMs)
+                .apply()
+        }
     }
 }

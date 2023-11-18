@@ -160,6 +160,7 @@ class DumbSwipeDialog(
     private fun onSaveButtonClicked() {
         viewModel.getEditedDumbSwipe()?.let { editedDumbSwipe ->
             debounceUserInteraction {
+                viewModel.saveLastConfig(context)
                 onConfirmClicked(editedDumbSwipe)
                 back()
             }

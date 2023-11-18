@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
 import android.content.Context
+
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator

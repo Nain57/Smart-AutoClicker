@@ -111,6 +111,7 @@ class DumbPauseDialog(
     private fun onSaveButtonClicked() {
         viewModel.getEditedDumbPause()?.let { editedDumbClick ->
             debounceUserInteraction {
+                viewModel.saveLastConfig(context)
                 onConfirmClicked(editedDumbClick)
                 back()
             }
