@@ -106,7 +106,7 @@
             android:layout_marginBottom="@dimen/margin_vertical_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:icon="@drawable/ic_chevron_inverted"/>
+            app:icon="@drawable/ic_chevron_left"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_dumb_action_index"
@@ -141,7 +141,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/button_previous"
             app:layout_constraintBottom_toBottomOf="@+id/button_previous"
-            app:icon="@drawable/ic_chevron"/>
+            app:icon="@drawable/ic_chevron_right"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

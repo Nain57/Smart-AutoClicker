@@ -184,7 +184,7 @@ private class ChoiceViewHolder<T : DialogChoice>(
                 choiceTitle.alpha = ENABLED_ITEM_ALPHA
                 choiceDescription.alpha = ENABLED_ITEM_ALPHA
                 choiceIcon.alpha = ENABLED_ITEM_ALPHA
-                choiceChevron.setImageResource(R.drawable.ic_chevron)
+                choiceChevron.setImageResource(R.drawable.ic_chevron_right)
             } else {
                 choiceTitle.alpha = DISABLED_ITEM_ALPHA
                 choiceDescription.alpha = DISABLED_ITEM_ALPHA

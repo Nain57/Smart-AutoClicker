@@ -71,7 +71,7 @@
                 app:layout_constraintStart_toEndOf="@id/tutorial_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_chevron"
+                android:src="@drawable/ic_chevron_right"
                 tools:ignore="ContentDescription"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -157,7 +157,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/debug_report_state_text"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_chevron"
+                android:src="@drawable/ic_chevron_right"
                 tools:ignore="ContentDescription"/>
 
             <View
