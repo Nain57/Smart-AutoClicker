@@ -84,7 +84,7 @@ class DumbPauseDialog(
             hideSoftInputOnFocusLoss(editNameLayout.textField)
 
             editPauseDurationLayout.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
+                textField.filters = arrayOf(MinMaxInputFilter(min = 1))
                 setLabel(R.string.input_field_label_pause_duration)
                 setOnTextChangedListener {
                     viewModel.setPauseDurationMs(if (it.isNotEmpty()) it.toString().toLong() else 0)
