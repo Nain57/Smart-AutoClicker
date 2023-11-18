@@ -30,7 +30,6 @@
     <string name="dialog_overlay_title_event_config">Évènement</string>
     <string name="dialog_overlay_title_event_selection">Choisir un évènement</string>
     <string name="dialog_overlay_title_intent">Intent</string>
-    <string name="dropdown_label_intent_extra_value_type">Type de la valeur</string>
     <string name="dialog_overlay_title_pause">Pause</string>
     <string name="dialog_overlay_title_scenario_config">Scénario</string>
     <string name="dialog_overlay_title_swipe">Swipe</string>
@@ -231,6 +230,12 @@
 
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_label_intent_sending_type">Type</string>
+
+    <!--
+      - Dropdown field for selecting the intent extra type.
+      - All items for this field are not translatable.
+      -->
+    <string name="dropdown_label_intent_extra_value_type">Type de la valeur</string>
 
     <!--
       - Content description texts.

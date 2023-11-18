@@ -24,11 +24,30 @@
     <string name="dialog_overlay_title_warning">Attenzione</string>
     <string name="dialog_title_tutorial">Tutorial</string>
 
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_click_position">Fare clic sulla posizione</string>
+    <string name="item_title_swipe_positions">Posizioni di scorrimento</string>
+    <string name="item_error_action_invalid_generic">Questa azione non è valida</string>
 
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
     <string name="message_empty_copy">Nulla da copiare</string>
-    <string name="message_tutorial_volume_down_stop">If your scenario is clicking too quickly, it can
-        block you from using Smart AutoClicker menu to stop it.\n\nIn that case, you can press the
-        physical \"Volume Down\" button of your device to stop the running scenario.</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_tutorial_volume_down_stop">Se lo scenario fa clic troppo rapidamente, può
+        bloccare l\'utilizzo del menu Smart AutoClicker per interromperlo.\n\nIn questo caso, è
+        possibile premere il pulsante fisico \"Volume giù\" del dispositivo per interrompere lo
+        scenario in corso.</string>
 
     <!--
       - Text input fields labels and error messages.
@@ -41,16 +60,6 @@
     <string name="input_field_label_scenario_name">Nome scenario</string>
     <string name="input_field_label_swipe_duration">Durata scorrimento (ms)</string>
     <string name="input_field_error_required">Richiesto</string>
-
-    <!--
-      - Text for items in a list or vertical layout.
-      -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
-      -  * Error have the same space as desc
-      -->
-    <string name="item_title_click_position">Fare clic sulla posizione</string>
-    <string name="item_title_swipe_positions">Swipe positions</string>
-    <string name="item_error_action_invalid_generic">"Questa azione non è valida "</string>
 
     <!--
       - Dropdown input fields texts.

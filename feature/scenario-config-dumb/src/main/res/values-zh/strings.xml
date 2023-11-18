@@ -16,26 +16,82 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="content_desc_add_action">Add a new action to the scenario</string>
-    <string name="content_desc_show_actions">Show or hide the actions created</string>
-    <string name="content_desc_open_action_list">Open the list of actions</string>
-    <string name="item_desc_dumb_click_on_position">Click at %1$d, %2$d</string>
-    <string name="item_desc_dumb_swipe_positions">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
-    <string name="item_desc_dumb_click_details">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
-    <string name="item_desc_dumb_pause_details">延迟 %1$s</string>
-    <string name="item_desc_dumb_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
-    <string name="menu_item_title_dumb_actions">Actions</string>
-    <string name="menu_item_title_dumb_config">Config</string>
-    <string name="dialog_overlay_title_dumb_scenario_config">Scenario</string>
-    <string name="input_field_label_maximum_duration">Maximum duration (minutes)</string>
-    <string name="message_empty_dumb_action_list">No actions created !</string>
-    <string name="message_empty_secondary_dumb_action_list">You need at least one action to run the scenario</string>
-    <string name="item_desc_dumb_repeat_count">Repeat %1$d times</string>
-    <string name="input_field_label_repeat_delay">Repeat delay (ms)</string>
-    <string name="list_header_copy_dumb_action_this">Actions from this scenario</string>
-    <string name="list_header_copy_dumb_action_all">Actions from all scenario</string>
-    <string name="search_view_hint_dumb_action_copy">Search by action name</string>
-    <string name="message_dumb_brief_empty_action_list">You need at least one action to execute a scenario</string>
-    <string name="item_title_no_dumb_actions">No Actions</string>
-    <string name="item_desc_dumb_action_duration">During %1$s</string>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_dumb_action_type">行动类型</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">场景</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_dumb_actions">行动</string>
+    <string name="menu_item_title_dumb_config">配置</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_action_duration">在 %1$s 期间</string>
+    <string name="item_desc_dumb_click">点击屏幕上的某处</string>
+    <string name="item_desc_dumb_click_details">在 %1$s 期间 [%2$d, %3$d]</string>
+    <string name="item_desc_dumb_click_on_position">点击 %1$d, %2$d 处</string>
+    <string name="item_desc_dumb_pause">暂停执行</string>
+    <string name="item_desc_dumb_pause_details">在 %1$s 期间</string>
+    <string name="item_desc_dumb_repeat_count">重复 %1$d 次</string>
+    <string name="item_desc_dumb_swipe">从屏幕上的一个位置轻扫到另一个位置</string>
+    <string name="item_desc_dumb_swipe_details">从 [%2$d, %3$d] 到 [%4$d, %5$d] 的 %1$s 期间</string>
+    <string name="item_desc_dumb_swipe_positions">从 %1$d, %2$d 扫到 %3$d, %4$d</string>
+    <string name="item_title_dumb_click">点击</string>
+    <string name="item_title_dumb_pause">等待</string>
+    <string name="item_title_dumb_swipe">刷卡</string>
+    <string name="item_title_no_dumb_actions">无行动</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_dumb_action_list">未创建任何行动 ！</string>
+    <string name="message_empty_secondary_dumb_action_list">您需要至少一个行动来运行该场景</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_dumb_brief_empty_action_list">执行情景至少需要一个动作</string>
+
+    <!--
+      - List header.
+      - Displayed on one line.
+      -->
+    <string name="list_header_copy_dumb_action_this">本情景中的行动</string>
+    <string name="list_header_copy_dumb_action_all">所有方案的行动</string>
+
+    <!--
+      - SearchView hint
+      - Displayed on one line.
+      -->
+    <string name="search_view_hint_dumb_action_copy">按行动名称搜索</string>
+
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_maximum_duration">最长持续时间（分钟）</string>
+    <string name="input_field_label_repeat_count">重复计数</string>
+    <string name="input_field_label_repeat_delay">重复延迟（ms）</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_action">在场景中添加新操作</string>
+    <string name="content_desc_show_actions">显示或隐藏创建的操作</string>
+    <string name="content_desc_open_action_list">打开操作列表</string>
 </resources>
