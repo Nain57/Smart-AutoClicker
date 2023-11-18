@@ -356,12 +356,17 @@ abstract class OverlayMenu(
             gravity = Gravity.TOP or Gravity.START
         }
 
+        val previousState = lifecycle.currentState
+        lifecycleRegistry.currentState = Lifecycle.State.CREATED
+
         windowManager.apply {
             removeView(oldOverlayView)
             removeView(menuLayout)
             addView(screenOverlayView, overlayLayoutParams)
             addView(menuLayout, menuLayoutParams)
         }
+
+        lifecycleRegistry.currentState = previousState
 
         setOverlayViewVisibility(oldOverlayView.visibility == View.VISIBLE)
     }

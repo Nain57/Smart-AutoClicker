@@ -66,7 +66,7 @@ abstract class BaseOverlay internal constructor(
     }
 
     /** The lifecycle of the ui component controlled by this class */
-    private var lifecycleRegistry = LifecycleRegistry(this)
+    internal var lifecycleRegistry = LifecycleRegistry(this)
     override val lifecycle: Lifecycle
         get() = lifecycleRegistry
 

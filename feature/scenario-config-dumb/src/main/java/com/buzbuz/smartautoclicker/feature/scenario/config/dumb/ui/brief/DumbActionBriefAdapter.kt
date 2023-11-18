@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
+import android.annotation.SuppressLint
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -23,21 +24,46 @@ import android.view.ViewGroup
 
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.ItemDumbActionBriefBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDiffUtilCallback
 
 class DumbActionBriefAdapter(
+    private val displayMetrics: DisplayMetrics,
     private val actionClickedListener: (DumbActionDetails) -> Unit,
 ) : ListAdapter<DumbActionDetails, DumbActionBriefViewHolder>(DumbActionDiffUtilCallback) {
 
+    private var orientation: Int = displayMetrics.orientation
+
+    override fun getItemViewType(position: Int): Int = orientation
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DumbActionBriefViewHolder =
-        DumbActionBriefViewHolder(ItemDumbActionBriefBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        DumbActionBriefViewHolder(LayoutInflater.from(parent.context)
+            .inflateDumbActionBriefItemViewBinding(orientation, parent))
 
     override fun onBindViewHolder(holder: DumbActionBriefViewHolder, position: Int) {
         holder.onBind(getItem(position), actionClickedListener)
+    }
+
+    @SuppressLint("NotifyDataSetChanged") // Reload the whole list when the orientation is different
+    override fun submitList(list: List<DumbActionDetails>?) {
+        if (orientation != displayMetrics.orientation) {
+            orientation = displayMetrics.orientation
+            notifyDataSetChanged()
+            return
+        }
+
+        super.submitList(list)
+    }
+
+    @SuppressLint("NotifyDataSetChanged") // We refresh the whole list when changing orientation
+    fun changeOrientation(newOrientation: Int) {
+        if (orientation == newOrientation) return
+
+        orientation = newOrientation
+        notifyDataSetChanged()
     }
 }
 
@@ -46,7 +72,7 @@ class DumbActionBriefAdapter(
  * @param viewBinding the view binding for this item.
  */
 class DumbActionBriefViewHolder(
-    private val viewBinding: ItemDumbActionBriefBinding,
+    private val viewBinding: DumbActionBriefItemBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /**
@@ -84,3 +110,4 @@ class DumbActionBriefViewHolder(
         }
     }
 }
+
