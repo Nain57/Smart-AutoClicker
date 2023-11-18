@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,6 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbScenarioBriefBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbScenarioBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionUiFlowListener
@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 
 class DumbScenarioBriefMenu(
     private val onConfigSaved: () -> Unit,
-) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme) {
+) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme, recreateOverlayViewOnRotation = true) {
 
     /** The view model for this menu. */
     private val viewModel: DumbScenarioBriefViewModel by viewModels()
@@ -54,7 +54,7 @@ class DumbScenarioBriefMenu(
     /** The view binding for the overlay menu. */
     private lateinit var menuViewBinding: OverlayDumbScenarioBriefMenuBinding
     /** The view binding for the position selector. */
-    private lateinit var visualisationViewBinding: OverlayDumbScenarioBriefBinding
+    private lateinit var visualisationViewBinding: DumbScenarioBriefViewBinding
     /** The adapter for the list of dumb actions. */
     private lateinit var dumbActionsAdapter: DumbActionBriefAdapter
     /** Controls the action brief panel in and out animations. */
@@ -84,7 +84,8 @@ class DumbScenarioBriefMenu(
     }
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        dumbActionsAdapter = DumbActionBriefAdapter(::onDumbActionCardClicked)
+        actionBriefPanelAnimationController = AutoHideAnimationController()
+        dumbActionsAdapter = DumbActionBriefAdapter(displayMetrics, ::onDumbActionCardClicked)
 
         dumbActionCreator = DumbActionCreator(
             createNewDumbClick = viewModel::createNewDumbClick,
@@ -103,38 +104,53 @@ class DumbScenarioBriefMenu(
             onDumbActionCreationCancelled = {},
         )
 
-        visualisationViewBinding = OverlayDumbScenarioBriefBinding.inflate(layoutInflater).apply {
-            actionBriefPanelAnimationController = AutoHideAnimationController()
-            actionBriefPanelAnimationController.attachToView(layoutActionList)
-
-            listDumbActions.adapter = dumbActionsAdapter
-            actionListSnapHelper.apply {
-                onSnapPositionChangeListener = { snapIndex ->
-                    viewModel.onNewActionListSnapIndex(snapIndex)
-                    actionBriefPanelAnimationController.showOrResetTimer()
-                }
-                attachToRecyclerView(listDumbActions)
-            }
-
-            root.setOnClickListener {
-                actionBriefPanelAnimationController.showOrResetTimer()
-            }
-            buttonPrevious.setOnClickListener {
-                actionBriefPanelAnimationController.showOrResetTimer()
-                actionListSnapHelper.snapToPrevious()
-            }
-            buttonNext.setOnClickListener {
-                actionBriefPanelAnimationController.showOrResetTimer()
-                actionListSnapHelper.snapToNext()
-            }
-        }
-
         menuViewBinding = OverlayDumbScenarioBriefMenuBinding.inflate(layoutInflater)
         return menuViewBinding.root
     }
 
-    override fun onCreateOverlayView(): View =
-        visualisationViewBinding.root
+    override fun onCreateOverlayView(): View {
+        visualisationViewBinding = context.getSystemService(LayoutInflater::class.java)
+            .inflateDumbScenarioBriefViewBinding(displayMetrics.orientation)
+            .apply {
+
+                if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    actionBriefPanelAnimationController.attachToView(
+                        layoutActionList,
+                        R.anim.slide_in_bottom,
+                        R.anim.slide_out_bottom,
+                    )
+                } else {
+                    actionBriefPanelAnimationController.attachToView(
+                        layoutActionList,
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_left,
+                    )
+                }
+
+                listDumbActions.adapter = dumbActionsAdapter
+                actionListSnapHelper.apply {
+                    onSnapPositionChangeListener = { snapIndex ->
+                        viewModel.onNewActionListSnapIndex(snapIndex)
+                        actionBriefPanelAnimationController.showOrResetTimer()
+                    }
+                    attachToRecyclerView(listDumbActions)
+                }
+
+                root.setOnClickListener {
+                    actionBriefPanelAnimationController.showOrResetTimer()
+                }
+                buttonPrevious.setOnClickListener {
+                    actionBriefPanelAnimationController.showOrResetTimer()
+                    actionListSnapHelper.snapToPrevious()
+                }
+                buttonNext.setOnClickListener {
+                    actionBriefPanelAnimationController.showOrResetTimer()
+                    actionListSnapHelper.snapToNext()
+                }
+            }
+
+        return visualisationViewBinding.root
+    }
 
     override fun onResume() {
         super.onResume()

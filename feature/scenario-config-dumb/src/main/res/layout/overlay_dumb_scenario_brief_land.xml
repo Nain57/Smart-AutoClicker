@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom">
+
+    <com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionBriefView
+        android:id="@+id/view_dumb_brief"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_action_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom">
+
+        <View
+            android:id="@+id/background_instructions"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/space_background_end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/background_fade_left"/>
+
+        <Space
+            android:id="@+id/space_background_end"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/overlay_dumb_brief_background_top_padding"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/list_dumb_actions"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/empty_scenario_card"
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_dumb_action_height"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+            app:layout_constraintBottom_toTopOf="@id/button_previous"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_empty_scenario"
+                style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/message_dumb_brief_empty_action_list"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_dumb_actions"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="@id/card_dumb_action_index"
+            app:layout_constraintBottom_toTopOf="@id/card_dumb_action_index"
+            app:layout_constraintEnd_toEndOf="@id/card_dumb_action_index"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            android:scrollbars="none"
+            tools:listitem="@layout/item_dumb_action_brief_land"
+            tools:itemCount="12"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_dumb_action_index"
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="@id/button_previous"
+            app:layout_constraintBottom_toTopOf="@id/button_previous"
+            app:layout_constraintEnd_toEndOf="@id/button_next"
+            app:layout_constraintTop_toBottomOf="@id/list_dumb_actions">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_dumb_action_index"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_list_item_text_big"
+                android:textStyle="bold"
+                android:singleLine="true"
+                tools:text="1/12"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_previous"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_chevron_up"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_next"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/button_previous"
+            app:layout_constraintStart_toEndOf="@id/button_previous"
+            app:layout_constraintBottom_toBottomOf="@id/button_previous"
+            app:icon="@drawable/ic_chevron_down"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

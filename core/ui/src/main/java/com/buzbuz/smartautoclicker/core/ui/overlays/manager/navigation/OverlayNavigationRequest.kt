@@ -20,8 +20,8 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 
 internal sealed class OverlayNavigationRequest {
 
-    object CloseAll : OverlayNavigationRequest()
-    object NavigateUp : OverlayNavigationRequest()
+    data object CloseAll : OverlayNavigationRequest()
+    data object NavigateUp : OverlayNavigationRequest()
 
     data class NavigateTo(
         val overlay: Overlay,
