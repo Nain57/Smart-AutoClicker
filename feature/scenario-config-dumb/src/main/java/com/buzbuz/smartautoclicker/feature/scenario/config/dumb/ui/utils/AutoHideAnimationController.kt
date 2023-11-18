@@ -22,9 +22,9 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.AnimRes
 
 import com.buzbuz.smartautoclicker.core.base.extensions.setListener
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,16 +42,18 @@ class AutoHideAnimationController {
     private var hideJob: Job? = null
     private var viewToAnimate: View? = null
 
-    fun attachToView(view: View) {
-        if (viewToAnimate != null) return
+    fun attachToView(view: View, @AnimRes inAnim: Int, @AnimRes outAnim: Int) {
+        if (viewToAnimate != null) {
+            detachFromView()
+        }
 
         animationScope = CoroutineScope(Dispatchers.Main)
 
-        showAnimation = AnimationUtils.loadAnimation(view.context, R.anim.slide_in).apply {
+        showAnimation = AnimationUtils.loadAnimation(view.context, inAnim).apply {
             setListener(start = { viewToAnimate?.visibility = View.VISIBLE })
             interpolator = AccelerateDecelerateInterpolator()
         }
-        hideAnimation = AnimationUtils.loadAnimation(view.context, R.anim.slide_out).apply {
+        hideAnimation = AnimationUtils.loadAnimation(view.context, outAnim).apply {
             setListener(end = { viewToAnimate?.visibility = View.GONE })
             interpolator = AccelerateInterpolator()
         }
