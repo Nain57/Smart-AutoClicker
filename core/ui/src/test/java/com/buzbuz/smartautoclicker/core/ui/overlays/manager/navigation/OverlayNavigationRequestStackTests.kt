@@ -76,36 +76,6 @@ class OverlayNavigationRequestStackTests {
     }
 
     @Test
-    fun pushCloseAll_once() {
-        testedStack.push(OverlayNavigationRequest.CloseAll)
-
-        Assert.assertEquals(OverlayNavigationRequest.CloseAll, testedStack.top)
-    }
-
-    @Test
-    fun pushCloseAll_twice() {
-        testedStack.apply {
-            push(OverlayNavigationRequest.CloseAll)
-            push(OverlayNavigationRequest.CloseAll)
-        }
-
-        Assert.assertEquals(OverlayNavigationRequest.CloseAll, testedStack.top)
-        Assert.assertEquals(1, testedStack.size)
-    }
-
-    @Test
-    fun pushCloseAll_replaceAllRequests() {
-        testedStack.apply {
-            push(OverlayNavigationRequest.NavigateUp)
-            push(OverlayNavigationRequest.NavigateTo(mockOverlay1))
-            push(OverlayNavigationRequest.CloseAll)
-        }
-
-        Assert.assertEquals(OverlayNavigationRequest.CloseAll, testedStack.top)
-        Assert.assertEquals(1, testedStack.size)
-    }
-
-    @Test
     fun pushNavigateTo_once() {
         val navigateToRequest = OverlayNavigationRequest.NavigateTo(mockOverlay1)
 
