@@ -39,11 +39,7 @@ namespace smartautoclicker {
         static bool isValidMatching(const DetectionResult& results, const int threshold);
         static double getColorDiff(const cv::Mat& image, const cv::Mat& condition);
 
-        cv::Rect getDetectionResultScaledCroppedRoi(int scaledWidth, int scaledHeight) const;
         cv::Rect getDetectionResultFullSizeRoi(const cv::Rect& detectionRoi, int fullSizeWidth, int fullSizeHeight) const;
-        cv::Rect getScaledRoi(const int x, const int y, const int width, const int height) const;
-        static bool isRoiOutOfBounds(const cv::Rect &roi, const cv::Mat &image);
-        static void markRoiAsInvalidInResults(const cv::Mat& results, const cv::Rect& roi);
 
         DetectionResult detectCondition(JNIEnv *env, jobject conditionImage, cv::Rect fullSizeDetectionRoi, int threshold);
 

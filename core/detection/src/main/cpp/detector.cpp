@@ -19,7 +19,8 @@
 #include <memory>
 #include <opencv2/imgproc/imgproc_c.h>
 
-#include "bitmap/androidBitmap.hpp"
+#include "utils/androidBitmap.hpp"
+#include "utils/roi.hpp"
 #include "detector.hpp"
 
 using namespace cv;
@@ -87,7 +88,7 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
                             fullSizeColorCurrentImage->cols, fullSizeColorCurrentImage->rows);
         return detectionResult;
     }
-    auto scaledDetectionRoi = getScaledRoi(fullSizeDetectionRoi.x, fullSizeDetectionRoi.y, fullSizeDetectionRoi.width, fullSizeDetectionRoi.height);
+    auto scaledDetectionRoi = getScaledRoi(fullSizeDetectionRoi, scaleRatio);
     if (isRoiOutOfBounds(scaledDetectionRoi, *scaledGrayCurrentImage)) {
         __android_log_print(ANDROID_LOG_ERROR, "Detector",
                             "Scaled ROI is invalid, %1d/%2d %3d/%4d in %5d/%6d",
@@ -117,11 +118,11 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
         if (!isValidMatching(detectionResult, threshold)) break;
 
         // Calculate the ROI based on the maximum location
-        scaledMatchingRoi = getDetectionResultScaledCroppedRoi(scaledGrayCondition->cols, scaledGrayCondition->rows);
+        scaledMatchingRoi = getRoiForResult(detectionResult.maxLoc, *scaledGrayCondition);
         fullSizeMatchingRoi = getDetectionResultFullSizeRoi(fullSizeDetectionRoi, fullSizeColorCondition->cols, fullSizeColorCondition->rows);
         if (isRoiOutOfBounds(scaledMatchingRoi, *scaledGrayCurrentImage) || isRoiOutOfBounds(fullSizeMatchingRoi, *fullSizeColorCurrentImage)) {
             // Roi is out of bounds, invalid match
-            markRoiAsInvalidInResults(*matchingResults,scaledMatchingRoi);
+            markRoiAsInvalidInResults(scaledMatchingRoi, *matchingResults);
             continue;
         }
 
@@ -132,7 +133,7 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
             detectionResult.isDetected = true;
         } else {
             // Colors are invalid, modify the matching result to indicate that.
-            markRoiAsInvalidInResults(*matchingResults,scaledMatchingRoi);
+            markRoiAsInvalidInResults(scaledMatchingRoi, *matchingResults);
         }
     }
 
@@ -190,15 +191,6 @@ double Detector::getColorDiff(const cv::Mat& image, const cv::Mat& condition) {
     return (diff * 100) / (255 * 3);
 }
 
-cv::Rect Detector::getDetectionResultScaledCroppedRoi(int scaledWidth, int scaledHeight) const {
-    return {
-        detectionResult.maxLoc.x,
-        detectionResult.maxLoc.y,
-        scaledWidth,
-        scaledHeight
-    };
-}
-
 cv::Rect Detector::getDetectionResultFullSizeRoi(const cv::Rect& fullSizeDetectionRoi, int fullSizeWidth, int fullSizeHeight) const {
     return {
             fullSizeDetectionRoi.x + cvRound(detectionResult.maxLoc.x / scaleRatio),
@@ -206,21 +198,4 @@ cv::Rect Detector::getDetectionResultFullSizeRoi(const cv::Rect& fullSizeDetecti
             fullSizeWidth,
             fullSizeHeight
     };
-}
-
-cv::Rect Detector::getScaledRoi(const int x, const int y, const int width, const int height) const {
-    return {
-        cvRound(x * scaleRatio),
-        cvRound(y * scaleRatio),
-        cvRound(width * scaleRatio),
-        cvRound(height * scaleRatio)
-    };
-}
-
-bool Detector::isRoiOutOfBounds(const cv::Rect& roi, const cv::Mat& image) {
-    return 0 > roi.x || 0 > roi.width || roi.x + roi.width > image.cols || 0 > roi.y || 0 > roi.height || roi.y + roi.height > image.rows;
-}
-
-void Detector::markRoiAsInvalidInResults(const cv::Mat& results, const Rect& roi) {
-    cv::rectangle(results, roi, cv::Scalar(0), CV_FILLED);
 }
