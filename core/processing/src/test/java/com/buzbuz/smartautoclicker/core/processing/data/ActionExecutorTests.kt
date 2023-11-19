@@ -22,10 +22,11 @@ import android.graphics.Rect
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -59,7 +60,7 @@ import org.robolectric.annotation.Config
 class ActionExecutorTests {
 
     private companion object {
-        private val TEST_EVENT_ID = Identifier(42L)
+        private val TEST_EVENT_ID = Identifier(databaseId = 42L)
         private const val TEST_NAME = "Action name"
         private const val TEST_DURATION = 25L
         private const val TEST_X1 = 12
@@ -68,19 +69,19 @@ class ActionExecutorTests {
         private const val TEST_Y2 = 76
 
         fun getNewDefaultEvent(operator: Int = OR, conditions: List<Condition> = emptyList(), actions: List<Action> = emptyList()) =
-            Event(TEST_EVENT_ID, Identifier(12L), "Name", operator, 0, actions, conditions, true)
+            Event(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, 0, actions, conditions, true)
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
-            Action.Click(Identifier(id), TEST_EVENT_ID, TEST_NAME, duration, Action.Click.PositionType.USER_SELECTED, TEST_X1, TEST_Y1, null)
+            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, duration, Action.Click.PositionType.USER_SELECTED, TEST_X1, TEST_Y1, null)
         fun getNewDefaultClickCondition(id: Long, conditionId: Long? = null) =
-            Action.Click(Identifier(id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION, Action.Click.PositionType.ON_DETECTED_CONDITION, null, null, conditionId?.let { Identifier(conditionId) })
+            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION, Action.Click.PositionType.ON_DETECTED_CONDITION, null, null, conditionId?.let { Identifier(databaseId = conditionId) })
         fun getNewDefaultSwipe(id: Long) =
-            Action.Swipe(Identifier(id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
+            Action.Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
         fun getNewDefaultPause(id: Long) =
-            Action.Pause(Identifier(id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
+            Action.Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
 
         fun getNewDefaultCondition(id: Long) =
-            Condition(Identifier(id), TEST_EVENT_ID, TEST_NAME, "path", Rect(), 10, EXACT, true, null)
+            Condition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, "path", Rect(), 10, EXACT, true, null)
     }
 
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor

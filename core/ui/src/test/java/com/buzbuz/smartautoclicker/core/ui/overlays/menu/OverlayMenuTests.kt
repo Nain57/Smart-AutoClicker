@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageButton
 import android.widget.ImageView
 
 import androidx.annotation.IdRes
@@ -68,7 +69,9 @@ class OverlayMenuTests {
     class OverlayMenuTestImpl(private val impl: OverlayMenuControllerImpl) : OverlayMenu() {
         override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup = impl.onCreateMenu(layoutInflater)
         override fun onCreateOverlayView(): View? = impl.onCreateOverlayView()
-        override fun onMenuItemClicked(viewId: Int): Unit? = impl.onMenuItemClicked(viewId)
+        override fun onMenuItemClicked(viewId: Int) {
+            impl.onMenuItemClicked(viewId)
+        }
         override fun onStart() {
             super.onStart()
             impl.onShow()
@@ -126,7 +129,7 @@ class OverlayMenuTests {
      *
      * @param viewId the view identifier for the menu item.
      */
-    private fun createMockMenuItemView(@IdRes viewId: Int = 0): ImageView = mock(ImageView::class.java).also {
+    private fun createMockMenuItemView(@IdRes viewId: Int = 0): ImageButton = mock(ImageButton::class.java).also {
         mockWhen(it.id).thenReturn(viewId)
     }
 

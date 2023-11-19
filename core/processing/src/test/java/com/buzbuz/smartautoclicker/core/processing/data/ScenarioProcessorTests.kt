@@ -20,8 +20,11 @@ import android.accessibilityservice.GestureDescription
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Build
+
 import androidx.test.ext.junit.runners.AndroidJUnit4
+
 import com.buzbuz.smartautoclicker.core.*
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
@@ -38,12 +41,14 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProces
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newCondition
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newEvent
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -89,8 +94,8 @@ class ScenarioProcessorTests {
 
         private fun newDefaultClickAction(duration: Long = 1) =
             Action.Click(
-                id = Identifier(1),
-                eventId = Identifier(1),
+                id = Identifier(databaseId = 1),
+                eventId = Identifier(databaseId = 1),
                 pressDuration = duration,
                 positionType = Action.Click.PositionType.USER_SELECTED,
                 x = 10, y = 10,
@@ -1176,7 +1181,7 @@ class ScenarioProcessorTests {
             listOf(event1),
             listOf(
                 EndCondition(
-                    id = Identifier(1),
+                    id = Identifier(databaseId = 1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
@@ -1212,7 +1217,7 @@ class ScenarioProcessorTests {
             listOf(event1),
             listOf(
                 EndCondition(
-                    id = Identifier(1),
+                    id = Identifier(databaseId = 1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
@@ -1267,14 +1272,14 @@ class ScenarioProcessorTests {
             listOf(event1, event2),
             listOf(
                 EndCondition(
-                    id = Identifier(1),
+                    id = Identifier(databaseId = 1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
                     executions = 1
                 ),
                 EndCondition(
-                    id = Identifier(2),
+                    id = Identifier(databaseId = 2),
                     scenarioId = event2.scenarioId,
                     eventId = event2.id,
                     eventName = event2.name,
@@ -1309,7 +1314,7 @@ class ScenarioProcessorTests {
             listOf(event1),
             listOf(
                 EndCondition(
-                    id = Identifier(1),
+                    id = Identifier(databaseId = 1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
@@ -1345,7 +1350,7 @@ class ScenarioProcessorTests {
             listOf(event1),
             listOf(
                 EndCondition(
-                    id = Identifier(1),
+                    id = Identifier(databaseId = 1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
@@ -1399,14 +1404,14 @@ class ScenarioProcessorTests {
             listOf(event1, event2),
             listOf(
                 EndCondition(
-                    id = Identifier(1),
+                    id = Identifier(databaseId = 1),
                     scenarioId = event1.scenarioId,
                     eventId = event1.id,
                     eventName = event1.name,
                     executions = 1
                 ),
                 EndCondition(
-                    id = Identifier(2),
+                    id = Identifier(databaseId = 2),
                     scenarioId = event2.scenarioId,
                     eventId = event2.id,
                     eventName = event2.name,
