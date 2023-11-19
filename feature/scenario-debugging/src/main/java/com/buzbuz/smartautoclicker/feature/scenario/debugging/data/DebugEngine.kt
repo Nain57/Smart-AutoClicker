@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.debugging.data
 import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -101,9 +102,10 @@ internal class DebugEngine : ProgressListener {
     override suspend fun onEventProcessingStarted(event: Event) = mutex.withLock {
         if (!generateReport) return
 
-        if (currProcEvtId != null) throw IllegalStateException("start called without a complete")
-        currProcEvtId = event.id.databaseId
+        if (currProcEvtId != null)
+            Log.w(TAG, "onEventProcessingStarted called without a complete")
 
+        currProcEvtId = event.id.databaseId
         eventsRecorderMap
             .getOrDefaultWithPut(event.id.databaseId) { Recorder() }
             .onProcessingStart()
@@ -112,9 +114,10 @@ internal class DebugEngine : ProgressListener {
     override suspend fun onConditionProcessingStarted(condition: Condition) = mutex.withLock {
         if (!generateReport) return
 
-        if (currProcCondId != null) throw IllegalStateException("start called without a complete")
-        currProcCondId = condition.id.databaseId
+        if (currProcCondId != null)
+            Log.w(TAG, "onConditionProcessingStarted called without a complete")
 
+        currProcCondId = condition.id.databaseId
         conditionsRecorderMap
             .getOrDefaultWithPut(condition.id.databaseId) { ConditionRecorder() }
             .onProcessingStart()
@@ -123,7 +126,10 @@ internal class DebugEngine : ProgressListener {
     override suspend fun onConditionProcessingCompleted(detectionResult: DetectionResult) = mutex.withLock {
         if (!generateReport) return
 
-        if (currProcCondId == null) throw IllegalStateException("completed called before start")
+        if (currProcCondId == null) {
+            Log.w(TAG, "onConditionProcessingCompleted called before start")
+            return
+        }
 
         conditionsRecorderMap[currProcCondId]?.onProcessingEnd(
             detectionResult.isDetected,
@@ -141,7 +147,11 @@ internal class DebugEngine : ProgressListener {
         confidenceRate: Double?,
     ) = mutex.withLock {
         if (generateReport) {
-            if (currProcEvtId == null) throw IllegalStateException("completed called before start")
+            if (currProcEvtId == null) {
+                Log.w(TAG, "onEventProcessingCompleted called before start")
+                return
+            }
+
             eventsRecorderMap[currProcEvtId]?.onProcessingEnd(isEventMatched)
             currProcEvtId = null
         }
@@ -179,7 +189,10 @@ internal class DebugEngine : ProgressListener {
 
         sessionRecorder.onProcessingEnd()
 
-        val scenario = currentScenario ?: throw IllegalStateException("Scenario is not defined")
+        val scenario = currentScenario ?:let {
+            Log.w(TAG, "onSessionEnded scenario is not defined")
+            return
+        }
 
         var eventsTriggeredCount = 0L
         var conditionsDetectedCount = 0L
@@ -247,3 +260,5 @@ private fun <K, V> MutableMap<K, V>.getOrDefaultWithPut(key: K, newValue: () -> 
             it
         }
     }
+
+private const val TAG = "DebugEngine"
