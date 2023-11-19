@@ -37,8 +37,8 @@ internal object ProcessingData {
         conditions: List<Condition> = emptyList(),
         enableOnStart: Boolean = true,
     ) = Event(
-        id = Identifier(id),
-        scenarioId = Identifier(1L),
+        id = Identifier(databaseId = id),
+        scenarioId = Identifier(databaseId = 1L),
         name = "TOTO",
         conditionOperator = operator,
         priority = 0,
@@ -55,8 +55,8 @@ internal object ProcessingData {
         @DetectionType detectionType: Int,
         shouldBeDetected: Boolean = true,
     ) = Condition(
-        Identifier(1L),
-        Identifier(1L),
+        Identifier(databaseId = 1L),
+        Identifier(databaseId = 1L),
         "TOTO",
         path,
         area,
