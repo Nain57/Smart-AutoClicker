@@ -192,6 +192,10 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) content.resume()
     }
 
+    internal fun debounceInteraction(interaction: () -> Unit) {
+        debounceUserInteraction(interaction)
+    }
+
     private fun handleButtonClick(buttonType: DialogNavigationButton) {
         debounceUserInteraction {
             // First notify the contents.

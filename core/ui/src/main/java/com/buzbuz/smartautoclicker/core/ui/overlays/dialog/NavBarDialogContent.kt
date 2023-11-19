@@ -29,10 +29,8 @@ import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 
 abstract class NavBarDialogContent(
     appContext: Context,
@@ -55,9 +53,6 @@ abstract class NavBarDialogContent(
     private lateinit var rootContainer: ViewGroup
     /** The root view of the content. Provided by the implementation via [onCreateView]. */
     private lateinit var root: ViewGroup
-
-    /** Job used for debouncing the navigation requests. */
-    private var debounceUserInteractionJob: Job? = null
 
     /** The owner of the dialog. */
     lateinit var dialogController: NavBarDialog
@@ -144,18 +139,12 @@ abstract class NavBarDialogContent(
         stop()
 
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        debounceUserInteractionJob?.cancel()
-        debounceUserInteractionJob = null
         viewModelStore.clear()
     }
 
     protected fun debounceUserInteraction(userInteraction: () -> Unit) {
-        if (debounceUserInteractionJob == null && lifecycle.currentState == Lifecycle.State.RESUMED) {
-            debounceUserInteractionJob = lifecycleScope.launch {
-                userInteraction()
-                delay(800)
-                debounceUserInteractionJob = null
-            }
+        if (lifecycleRegistry.currentState == Lifecycle.State.RESUMED) {
+            dialogController.debounceInteraction(userInteraction)
         }
     }
 
@@ -167,7 +156,7 @@ abstract class NavBarDialogContent(
 
     protected open fun onStop() = Unit
 
-    open fun onDialogButtonClicked(buttonType: com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton) = Unit
+    open fun onDialogButtonClicked(buttonType: DialogNavigationButton) = Unit
 
     protected open fun onCreateButtonClicked() = Unit
 
