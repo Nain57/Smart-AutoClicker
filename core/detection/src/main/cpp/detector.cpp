@@ -81,28 +81,29 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
     }
 
     // Get and check the detection area in normal and scaled size
-    if (isRoiOutOfBounds(fullSizeDetectionRoi, *fullSizeColorCurrentImage)) {
-        __android_log_print(ANDROID_LOG_ERROR, "Detector",
-                            "Full size ROI is invalid, %1d/%2d %3d/%4d in %5d/%6d",
-                            fullSizeDetectionRoi.x, fullSizeDetectionRoi.y, fullSizeDetectionRoi.width, fullSizeDetectionRoi.height,
-                            fullSizeColorCurrentImage->cols, fullSizeColorCurrentImage->rows);
+    if (isRoiContainedInImage(fullSizeDetectionRoi, *fullSizeColorCurrentImage)) {
+        logInvalidRoiInImage(fullSizeDetectionRoi, *fullSizeColorCurrentImage);
         return detectionResult;
     }
     auto scaledDetectionRoi = getScaledRoi(fullSizeDetectionRoi, scaleRatio);
-    if (isRoiOutOfBounds(scaledDetectionRoi, *scaledGrayCurrentImage)) {
-        __android_log_print(ANDROID_LOG_ERROR, "Detector",
-                            "Scaled ROI is invalid, %1d/%2d %3d/%4d in %5d/%6d",
-                            scaledDetectionRoi.x, scaledDetectionRoi.y, scaledDetectionRoi.width, scaledDetectionRoi.height,
-                            scaledGrayCurrentImage->cols, scaledGrayCurrentImage->rows);
+    if (isRoiContainedInImage(scaledDetectionRoi, *scaledGrayCurrentImage)) {
+        logInvalidRoiInImage(scaledDetectionRoi, *scaledGrayCurrentImage);
         return detectionResult;
     }
 
-    // Crop the scaled gray current image to only get the detection area
-    auto croppedGrayCurrentImage = Mat(*scaledGrayCurrentImage, scaledDetectionRoi);
-
     // Get the condition image information from the android bitmap format.
     auto fullSizeColorCondition = createColorMatFromARGB8888BitmapData(env, conditionImage);
+    if (isRoiContainsImage(fullSizeDetectionRoi, *fullSizeColorCondition)) {
+        logInvalidRoiInImage(fullSizeDetectionRoi, *fullSizeColorCondition);
+        return detectionResult;
+    }
     auto scaledGrayCondition = scaleAndChangeToGray(*fullSizeColorCondition);
+    if (isRoiContainsImage(scaledDetectionRoi, *scaledGrayCondition)) {
+        logInvalidRoiInImage(scaledDetectionRoi, *scaledGrayCondition);
+        return detectionResult;
+    }
+    // Crop the scaled gray current image to only get the detection area
+    auto croppedGrayCurrentImage = Mat(*scaledGrayCurrentImage, scaledDetectionRoi);
 
     // Get the matching results
     auto matchingResults = matchTemplate(croppedGrayCurrentImage, *scaledGrayCondition);
@@ -120,7 +121,8 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
         // Calculate the ROI based on the maximum location
         scaledMatchingRoi = getRoiForResult(detectionResult.maxLoc, *scaledGrayCondition);
         fullSizeMatchingRoi = getDetectionResultFullSizeRoi(fullSizeDetectionRoi, fullSizeColorCondition->cols, fullSizeColorCondition->rows);
-        if (isRoiOutOfBounds(scaledMatchingRoi, *scaledGrayCurrentImage) || isRoiOutOfBounds(fullSizeMatchingRoi, *fullSizeColorCurrentImage)) {
+        if (isRoiContainedInImage(scaledMatchingRoi, *scaledGrayCurrentImage) ||
+            isRoiContainedInImage(fullSizeMatchingRoi, *fullSizeColorCurrentImage)) {
             // Roi is out of bounds, invalid match
             markRoiAsInvalidInResults(scaledMatchingRoi, *matchingResults);
             continue;

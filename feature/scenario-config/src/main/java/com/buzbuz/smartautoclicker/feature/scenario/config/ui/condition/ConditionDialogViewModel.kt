@@ -44,6 +44,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
+import kotlin.math.max
+import kotlin.math.min
 
 @OptIn(FlowPreview::class)
 class ConditionViewModel(application: Application) : AndroidViewModel(application) {
@@ -179,7 +181,9 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
     /** Set the area to detect in. */
     fun setDetectionArea(area: Rect) {
         editionRepository.editionState.getEditedCondition()?.let { condition ->
-            editionRepository.updateEditedCondition(condition.copy(detectionArea = area))
+            editionRepository.updateEditedCondition(
+                condition.copy(detectionArea = sanitizeAreaForCondition(area, condition.area))
+            )
         }
     }
 
@@ -221,6 +225,20 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE)
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE)
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN)
+    }
+
+    private fun sanitizeAreaForCondition(area: Rect, conditionArea: Rect): Rect {
+        val left = max(area.left, 0)
+        val top = max(area.top, 0)
+        val width = max(area.right - left, conditionArea.width())
+        val height = max(area.bottom - top, conditionArea.height())
+
+        return Rect(
+            left,
+            top,
+            left + width,
+            top + height,
+        )
     }
 
     private fun Context.getExactDetectionTypeState(area: Rect) = DetectionTypeState(
