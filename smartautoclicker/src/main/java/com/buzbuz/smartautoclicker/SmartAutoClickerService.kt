@@ -148,11 +148,15 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         }
 
         val intent = Intent(this, ScenarioActivity::class.java)
+        val icon =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) R.drawable.ic_notification_vector
+            else R.drawable.ic_notification
+
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title, scenarioName))
             .setContentText(getString(R.string.notification_message))
             .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(icon)
             .setCategory(Notification.CATEGORY_SERVICE)
             .setOngoing(true)
             .setLocalOnly(true)
