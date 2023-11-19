@@ -39,7 +39,7 @@ import com.buzbuz.smartautoclicker.core.ui.R
  * @param backgroundCircleRadius the radius of the transparent background between the inner and outer circle.
  * @param backgroundColor the color of the faded background.
  */
-internal data class ActionBriefViewStyle(
+internal class ActionBriefViewStyle(
     val outerFromPaint: Paint,
     val innerFromPaint: Paint,
     val outerToPaint: Paint,
