@@ -25,7 +25,6 @@ internal class OverlayNavigationRequestStack : LifoStack<OverlayNavigationReques
         when(element) {
             is OverlayNavigationRequest.NavigateUp -> pushNavigateUp(element)
             is OverlayNavigationRequest.NavigateTo -> pushNavigateTo(element)
-            is OverlayNavigationRequest.CloseAll -> pushCloseAll(element)
         }
 
     private fun pushNavigateUp(request: OverlayNavigationRequest.NavigateUp) {
@@ -37,11 +36,6 @@ internal class OverlayNavigationRequestStack : LifoStack<OverlayNavigationReques
 
     private fun pushNavigateTo(request: OverlayNavigationRequest.NavigateTo) {
         if (!contains(request)) super.push(request)
-    }
-
-    private fun pushCloseAll(request: OverlayNavigationRequest.CloseAll) {
-        clear()
-        super.push(request)
     }
 
     fun dump(writer: PrintWriter, prefix: String) {

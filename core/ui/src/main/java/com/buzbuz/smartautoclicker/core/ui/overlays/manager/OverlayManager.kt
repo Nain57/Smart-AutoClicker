@@ -85,8 +85,6 @@ class OverlayManager internal constructor(context: Context) {
 
     /** Tells if we are currently executing navigation requests. */
     private var isNavigating: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    /** Tells if we are currently closing the children a of dismissed overlay. */
-    private var closingChildren: Boolean = false
     /** The overlay at the top of the stack (the top visible one). Null if the stack is empty. */
     private var topOverlay: Overlay? = null
     /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
@@ -143,12 +141,19 @@ class OverlayManager internal constructor(context: Context) {
 
     /** Destroys all overlays on the back stack. */
     fun closeAll(context: Context) {
-        Log.d(TAG, "Pushing CloseAll request, currently navigating: ${isNavigating.value}")
+        if (topOverlay == null && overlayBackStack.isEmpty()) return
 
-        overlayNavigationRequestStack.push(OverlayNavigationRequest.CloseAll)
+        Log.d(TAG, "Close all overlays (${overlayBackStack.size}, currently navigating: ${isNavigating.value}")
+
+        overlayNavigationRequestStack.clear()
+        topOverlay?.destroy()
+        repeat(overlayBackStack.size) {
+            overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
+        }
         if (!isNavigating.value) executeNextNavigationRequest(context)
     }
 
+    /** Propagate the provided touch event to the focused overlay, if any. */
     fun propagateKeyEvent(event: KeyEvent): Boolean {
         Log.d(TAG, "Propagating key event $event")
 
@@ -253,24 +258,7 @@ class OverlayManager internal constructor(context: Context) {
         when (request) {
             is OverlayNavigationRequest.NavigateTo -> executeNavigateTo(context, request)
             OverlayNavigationRequest.NavigateUp -> executeNavigateUp()
-            OverlayNavigationRequest.CloseAll -> executeCloseAll()
-            else -> {
-                // If there is no more navigation requests, resume the top overlay
-                if (overlayBackStack.isNotEmpty()) {
-                    // If the overlay stack was requested hidden, do nothing
-                    if (!isStackHidden()) {
-                        Log.d(TAG, "No more pending request, resume stack top overlay")
-                        overlayBackStack.peek().resume()
-                    } else {
-                        Log.d(TAG, "No more pending request, but stack is hidden, delaying resume...")
-                    }
-
-                    navigateUpToRootCompletionListener?.invoke()
-                    navigateUpToRootCompletionListener = null
-                }
-
-                isNavigating.value = false
-            }
+            null -> onNavigationCompleted()
         }
     }
 
@@ -313,39 +301,13 @@ class OverlayManager internal constructor(context: Context) {
         }
     }
 
-    private fun executeCloseAll() {
-        topOverlay?.destroy()
-
-        if (overlayBackStack.isEmpty()) {
-            isNavigating.value = false
-            return
-        }
-        overlayBackStack.bottom?.destroy()
-    }
-
     private fun onOverlayDismissed(context: Context, overlay: Overlay) {
         Log.d(TAG, "Overlay dismissed ${overlay.hashCode()}")
 
         isNavigating.value = true
 
-        val dismissedIndex = overlayBackStack.indexOf(overlay)
-
-        // First, close all overlays over the dismissed one, from top to bottom.
-        if (dismissedIndex != overlayBackStack.size - 1) {
-            Log.d(TAG, "Overlay dismissed isn't at the top of stack, dismissing all children...")
-
-            closingChildren = true
-            while (dismissedIndex != overlayBackStack.size - 1) executeNavigateUp()
-            closingChildren = false
-
-            Log.d(TAG, "Children all dismissed.")
-        }
-
-        // Remove the dismissed overlay from the stack now that we are sure that all children are also destroyed.
+        // Remove the dismissed overlay from the stack now that we are sure it is destroyed.
         overlayBackStack.pop()
-
-        // Skip if we are currently in the children close loop
-        if (closingChildren) return
 
         // If there is no more overlays, no need to keep track of the orientation
         if (overlayBackStack.isEmpty()) {
@@ -353,6 +315,24 @@ class OverlayManager internal constructor(context: Context) {
         }
 
         executeNextNavigationRequest(context)
+    }
+
+    private fun onNavigationCompleted() {
+        // If there is no more navigation requests, resume the top overlay
+        if (overlayBackStack.isNotEmpty()) {
+            // If the overlay stack was requested hidden, do nothing
+            if (!isStackHidden()) {
+                Log.d(TAG, "No more pending request, resume stack top overlay")
+                overlayBackStack.peek().resume()
+            } else {
+                Log.d(TAG, "No more pending request, but stack is hidden, delaying resume...")
+            }
+
+            navigateUpToRootCompletionListener?.invoke()
+            navigateUpToRootCompletionListener = null
+        }
+
+        isNavigating.value = false
     }
 
     private fun onOrientationChanged() {

@@ -58,10 +58,9 @@ internal open class LifoStack<E> {
     inline fun forEach(action: (E) -> Unit): Unit =
         backingArray.forEach(action)
 
-    inline fun forEachReversed(action: (E) -> Unit): Unit {
-        backingArray.toMutableList().apply {
-            reverse()
-            forEach(action)
+    inline fun forEachReversed(action: (E) -> Unit) {
+        for (i in backingArray.lastIndex downTo 0) {
+            action(backingArray[i])
         }
     }
 
