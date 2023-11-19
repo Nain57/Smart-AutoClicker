@@ -104,6 +104,11 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
             canStartDetection && isSynchronized
         }
 
+    /** Tells if the . */
+    val nativeLibError: Flow<Boolean> = detectionRepository.detectionState
+        .map { it == DetectionState.ERROR_NO_NATIVE_LIB }
+        .distinctUntilChanged()
+
     /** Start/Stop the detection. */
     fun toggleDetection(context: Context, onStoppedByLimitation: () -> Unit) {
         when (detectionState.value) {

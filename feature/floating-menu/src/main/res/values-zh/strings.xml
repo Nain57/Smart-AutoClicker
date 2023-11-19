@@ -19,5 +19,6 @@
     <string name="message_scenario_saving_error">由于内部错误，您的方案无法保存。您要修改还是取消所有修改？</string>
     <string name="button_dialog_modify">调整</string>
     <string name="message_tutorial_first_time">恭喜，Smart AutoClicker 现已在您的设备上正常运行！\n您想按照教程学习该应用程序的基础知识吗？</string>
+    <string name="message_error_native_lib">Smart AutoClicker 安装错误，无法启动检测。\n\n如果您是从合法的应用程序商店安装的，请在 GitHub 上联系我们，这将有助于我们修复此问题。</string>
 
 </resources>

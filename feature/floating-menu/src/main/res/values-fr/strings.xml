@@ -19,5 +19,6 @@
     <string name="message_scenario_saving_error">Votre scenario ne peux pas être enregistré à cause d\'une erreur interne.\nVoulez vous le modifier ou annuler vos modifications ?</string>
     <string name="button_dialog_modify">Modifier</string>
     <string name="message_tutorial_first_time">Félicitations, Smart AutoClicker est maintenant fonctionnel ! \nVoulez vous suivre le tutorial pour apprendre les bases de l\'application ?</string>
+    <string name="message_error_native_lib">Smart AutoClicker est mal installé et ne peut pas démarrer la détection.\n\nSi vous l\'avez installé à partir d\'une boutique d'applications légitime, veuillez nous contacter sur GitHub, car cela nous aidera à résoudre ce problème.</string>
 
 </resources>

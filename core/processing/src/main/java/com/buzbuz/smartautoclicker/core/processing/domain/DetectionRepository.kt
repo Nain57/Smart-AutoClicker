@@ -18,12 +18,11 @@ package com.buzbuz.smartautoclicker.core.processing.domain
 
 import android.content.Context
 import android.content.Intent
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
-import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -81,7 +80,8 @@ class DetectionRepository private constructor(context: Context) {
     val canStartDetection: Flow<Boolean> = scenarioId
         .filterNotNull()
         .combine(detectionState) { id, state ->
-            if (state == DetectionState.INACTIVE)  return@combine false
+            if (state == DetectionState.INACTIVE || state == DetectionState.ERROR_NO_NATIVE_LIB)
+                return@combine false
 
             scenarioRepository.getEvents(id.databaseId).forEach {
                 event -> if (event.enabledOnStart) return@combine true
@@ -133,14 +133,6 @@ class DetectionRepository private constructor(context: Context) {
         }
         detectorEngine.value = null
         _scenarioId.value = null
-    }
-
-    private fun DetectorState.toDetectionState(): DetectionState? = when (this) {
-        DetectorState.CREATED -> DetectionState.INACTIVE
-        DetectorState.RECORDING -> DetectionState.RECORDING
-        DetectorState.DETECTING -> DetectionState.DETECTING
-        DetectorState.DESTROYED -> DetectionState.INACTIVE
-        DetectorState.TRANSITIONING -> null // Return null to avoid notifying state change when transitioning
     }
 }
 

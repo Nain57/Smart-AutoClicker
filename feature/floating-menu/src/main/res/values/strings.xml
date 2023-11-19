@@ -19,5 +19,6 @@
     <string name="message_scenario_saving_error">Your scenario can\'t be saved due to an internal error.\nDo you want to modify it or cancel all your modifications ?</string>
     <string name="button_dialog_modify">Modify</string>
     <string name="message_tutorial_first_time">Congratulations, Smart AutoClicker is now functional on your device !\nWould you like to follow a tutorial teaching you the basics of the application ?</string>
+    <string name="message_error_native_lib">Smart AutoClicker is incorrectly installed and can\'t start the detection.\n\nIf you have installed it from a legitimate application store, please contact us on GitHub, as it will help us fix this issue.</string>
 
 </resources>

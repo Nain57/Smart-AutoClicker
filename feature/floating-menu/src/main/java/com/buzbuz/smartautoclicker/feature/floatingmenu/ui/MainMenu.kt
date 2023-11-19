@@ -132,6 +132,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canStartScenario.collect(::updatePlayPauseButtonEnabledState) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
+                launch { viewModel.nativeLibError.collect(::showNativeLibErrorDialogIfNeeded) }
                 launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
             }
         }
@@ -344,7 +345,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
             .setTitle(R.string.dialog_title_tutorial)
             .setMessage(R.string.message_tutorial_volume_down_stop)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+            .setPositiveButton(android.R.string.ok) { _, _ ->
                 onPlayPauseClicked()
             }
             .create()
@@ -352,5 +353,19 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             .show()
 
         viewModel.onStopVolumeDownTutorialDialogShown()
+    }
+
+    private fun showNativeLibErrorDialogIfNeeded(haveError: Boolean) {
+        if (!haveError) return
+
+        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+            .setTitle(R.string.dialog_overlay_title_warning)
+            .setMessage(R.string.message_error_native_lib)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                onStopClicked()
+            }
+            .create()
+            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
+            .show()
     }
 }

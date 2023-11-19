@@ -160,12 +160,20 @@ internal class DetectorEngine(context: Context) {
             Log.w(TAG, "startDetection: Screen record is not started.")
             return
         }
+
+        val detector = try {
+            NativeDetector()
+        } catch (ex: UnsatisfiedLinkError) {
+            Log.e(TAG, "startDetection: native library not found.")
+            _state.value = DetectorState.ERROR_NATIVE_DETECTOR_LIB_NOT_FOUND
+            return
+        }
+
         _state.value = DetectorState.TRANSITIONING
 
         Log.i(TAG, "startDetection")
 
         processingScope?.launchProcessingJob {
-            val detector = NativeDetector()
             imageDetector = detector
 
             detectionProgressListener = progressListener
@@ -334,6 +342,8 @@ internal enum class DetectorState {
     DETECTING,
     /** The engine is destroyed and can no longer be used. */
     DESTROYED,
+    /** The native lib can't be loaded and the detection can't be used. */
+    ERROR_NATIVE_DETECTOR_LIB_NOT_FOUND,
 }
 
 /**
