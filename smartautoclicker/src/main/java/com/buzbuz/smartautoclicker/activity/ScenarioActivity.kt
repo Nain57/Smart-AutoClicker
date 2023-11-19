@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.activity
 
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
@@ -98,6 +99,8 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
             try {
                 projectionActivityResult.launch(projectionManager.createScreenCaptureIntent())
             } catch (npe: NullPointerException) {
+                showUnsupportedDeviceDialog()
+            } catch (ex: ActivityNotFoundException) {
                 showUnsupportedDeviceDialog()
             }
         }
