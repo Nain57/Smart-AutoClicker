@@ -120,7 +120,7 @@ private fun ProModeAdvantage.Limitation.toDisplayString(context: Context): Strin
             ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT -> R.string.billing_reason_condition_count
             ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT -> R.string.billing_reason_detection_duration_limit
             ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT -> R.string.billing_reason_event_count
-            ProModeAdvantage.Limitation.SCENARIO_COUNT_LIMIT -> R.string.billing_reason_scenario_count
+            ProModeAdvantage.Limitation.SMART_SCENARIO_COUNT_LIMIT -> R.string.billing_reason_scenario_count
         },
         limit,
     )
