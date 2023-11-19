@@ -72,15 +72,6 @@ dependencies {
 
     implementation project(path: ':core:base')
 
-    testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
-    testImplementation "androidx.arch.core:core-testing:${rootProject.ext.androidxArchCoreTestingVersion}"
-    testImplementation "androidx.room:room-testing:${rootProject.ext.androidxRoomVersion}"
-    testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
-    testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_version"
-    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
-    testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
-
     // The following dependency is required to compile using JDK as Room needs javax.annotation.Generated
     compileOnly "javax.annotation:javax.annotation-api:1.3.2"
 }
