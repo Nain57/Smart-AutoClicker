@@ -40,7 +40,19 @@ fun Service.startForegroundMediaProjectionServiceCompat(notificationId : Int, no
 }
 
 fun AccessibilityService.requestFilterKeyEvents(enabled: Boolean) {
-    serviceInfo = serviceInfo.apply {
+    val info = serviceInfo
+
+    // On some Xiaomi devices, serviceInfo is null. As a AOSP framework developer, I can tell you
+    // this is REALLY bad. Try to force an empty one, but i'm not even sure this call is really
+    // interpreted in their shitty phones.
+    if (info == null) {
+        serviceInfo = AccessibilityServiceInfo().apply {
+            flags = if (enabled) AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS else 0
+        }
+        return
+    }
+
+    serviceInfo = info.apply {
         flags =
             if (enabled) flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
             else flags and AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS.inv()
