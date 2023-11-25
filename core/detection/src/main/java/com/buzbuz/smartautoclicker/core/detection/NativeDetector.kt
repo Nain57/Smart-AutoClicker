@@ -27,12 +27,14 @@ import androidx.annotation.Keep
  * Debug flavour of the library is build against build artifacts of OpenCv in the debug folder.
  * Release flavour of the library is build against the sources of the OpenCv project, downloaded from github.
  */
-class NativeDetector : ImageDetector {
+class NativeDetector private constructor() : ImageDetector {
 
     companion object {
-        // Used to load the 'smartautoclicker' library on application startup.
-        init {
+        fun newInstance(): NativeDetector? = try {
             System.loadLibrary("smartautoclicker")
+            NativeDetector()
+        } catch (ex: UnsatisfiedLinkError) {
+            null
         }
     }
 
