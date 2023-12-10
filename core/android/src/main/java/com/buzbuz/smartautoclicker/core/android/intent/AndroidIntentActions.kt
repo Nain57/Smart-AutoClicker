@@ -14,37 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.flags
+package com.buzbuz.smartautoclicker.core.android.intent
 
 import android.net.Uri
+import com.buzbuz.smartautoclicker.core.android.intent.actions.getAndroidAPIStartActivityIntentActions
 import kotlin.reflect.KProperty0
 
-data class AndroidIntentFlag(
-    val value: Int,
+
+data class AndroidIntentAction(
+    val value: String,
     val displayName: String,
     val helpUri: Uri,
 )
 
-internal fun getStartActivityIntentFlags(): List<AndroidIntentFlag> =
-    getAndroidAPIStartActivityIntentFlags().map { it.toIntentFlag() }
+fun getStartActivityIntentActions(): List<AndroidIntentAction> =
+    getAndroidAPIStartActivityIntentActions().map { it.toIntentAction() }
 
-internal fun getBroadcastIntentFlags(): List<AndroidIntentFlag> =
-    getAndroidAPIBroadcastIntentFlags().map { it.toIntentFlag() }
-
-private fun KProperty0<Int>.toIntentFlag(): AndroidIntentFlag =
-    AndroidIntentFlag(
+private fun KProperty0<String>.toIntentAction(): AndroidIntentAction =
+    AndroidIntentAction(
         value = get(),
-        displayName = name.toFlagName(),
-        helpUri = getFlagDocumentationUri(),
+        displayName = name.toActionName(),
+        helpUri = getActionDocumentationUri(),
     )
 
-private fun String.toFlagName(): String =
-    removePrefix(PREFIX_INTENT_FLAG_VARIABLE_NAME)
+private fun String.toActionName(): String =
+    removePrefix(PREFIX_INTENT_ACTION_VARIABLE_NAME)
         .replace("_", " ")
 
-private fun KProperty0<Int>.getFlagDocumentationUri(): Uri =
-    Uri.parse("$PREFIX_ANDROID_DOCUMENTATION_INTENT_FLAGS_URL$name")
+private fun KProperty0<String>.getActionDocumentationUri(): Uri =
+    Uri.parse("$PREFIX_ANDROID_DOCUMENTATION_INTENT_ACTIONS_URL$name")
 
-private const val PREFIX_INTENT_FLAG_VARIABLE_NAME = "FLAG_"
-private const val PREFIX_ANDROID_DOCUMENTATION_INTENT_FLAGS_URL =
+private const val PREFIX_INTENT_ACTION_VARIABLE_NAME = "ACTION_"
+private const val PREFIX_ANDROID_DOCUMENTATION_INTENT_ACTIONS_URL =
     "https://developer.android.com/reference/android/content/Intent#"

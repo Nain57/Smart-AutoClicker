@@ -249,5 +249,6 @@
     <string name="content_desc_action_icon">L\'icona che mostra il tipo di azione</string>
     <string name="content_desc_application_icon">L\'icona dell\'applicazione da avviare.</string>
     <string name="dialog_overlay_title_intent_flags">Flags</string>
+    <string name="dialog_overlay_title_intent_actions">Intent Actions</string>
 
 </resources>
