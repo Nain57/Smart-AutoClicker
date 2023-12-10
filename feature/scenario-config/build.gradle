@@ -53,6 +53,7 @@ dependencies {
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
+    implementation project(path: ':core:android')
     implementation project(path: ':core:display')
     implementation project(path: ':core:domain')
     implementation project(path: ':core:base')
