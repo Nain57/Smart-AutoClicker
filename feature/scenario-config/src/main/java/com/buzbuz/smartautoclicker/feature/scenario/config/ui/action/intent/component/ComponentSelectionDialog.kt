@@ -85,8 +85,6 @@ class ComponentSelectionDialog(
     }
 
     private fun updateActivityList(activities: List<AndroidApplicationInfo>) {
-        println("TOTO: update !!!! ${activities.size}")
-
         viewBinding.layoutLoadableList.updateState(activities)
         activitiesAdapter.submitList(activities)
     }
