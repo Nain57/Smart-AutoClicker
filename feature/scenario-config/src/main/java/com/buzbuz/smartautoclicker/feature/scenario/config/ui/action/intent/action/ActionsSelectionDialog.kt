@@ -56,7 +56,7 @@ class ActionsSelectionDialog (
     override fun onCreateView(): ViewGroup {
         flagsAdapter = ActionsSelectionAdapter(
             onActionCheckClicked = viewModel::setActionSelectionState,
-            onActionHelpClicked = ::onFlagHelpClicked,
+            onActionHelpClicked = ::onActionHelpClicked,
         )
 
         viewBinding = DialogConfigActionIntentActionsBinding.inflate(LayoutInflater.from(context)).apply {
@@ -73,7 +73,7 @@ class ActionsSelectionDialog (
                 }
             }
 
-            flagsList.apply {
+            actionsList.apply {
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
                 adapter = flagsAdapter
             }
@@ -92,7 +92,7 @@ class ActionsSelectionDialog (
         }
     }
 
-    private fun onFlagHelpClicked(uri: Uri) {
+    private fun onActionHelpClicked(uri: Uri) {
         debounceUserInteraction {
             try {
                 context.startActivity(

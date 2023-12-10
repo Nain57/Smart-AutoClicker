@@ -74,7 +74,7 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
 
     /** The flags for this intent. */
     val flags: Flow<String> = configuredIntent
-        .map { it.flags?.toString() ?: "" }
+        .map { it.flags?.toString() ?: "0" }
         .take(1)
 
     /** The component name for the intent. */
@@ -83,20 +83,19 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         .take(1)
     /** Tells if the intent component name is valid or not. */
     val componentNameError: Flow<Boolean> = configuredIntent.map { intent ->
-        intent.isBroadcast == false && intent.componentName == null
+        !intent.isBroadcast && intent.componentName == null
     }
 
-    private val sendingTypeActivity = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_activity)
-    private val sendingTypeBroadcast = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_broadcast)
+    val sendingTypeActivity = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_activity)
+    val sendingTypeBroadcast = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_broadcast)
     /** Sending types choices for the dropdown field. */
     val sendingTypeItems = listOf(sendingTypeActivity, sendingTypeBroadcast)
     /** Current choice for the sending type dropdown field. */
-    val isBroadcast: Flow<DropdownItem> = configuredIntent
+    val sendingType: Flow<DropdownItem> = configuredIntent
         .map {
             when (it.isBroadcast) {
                 true -> sendingTypeBroadcast
                 false -> sendingTypeActivity
-                null -> null
             }
         }
         .filterNotNull()

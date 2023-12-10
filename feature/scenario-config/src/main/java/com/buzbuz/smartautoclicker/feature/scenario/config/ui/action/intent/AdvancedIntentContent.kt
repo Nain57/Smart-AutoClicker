@@ -27,10 +27,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setNumericValue
@@ -117,7 +119,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { dialogViewModel.name.collect(viewBinding.editNameLayout::setText) }
                 launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
-                launch { dialogViewModel.isBroadcast.collect(viewBinding.intentSendingTypeField::setSelectedItem) }
+                launch { dialogViewModel.sendingType.collect(::updateSendingType) }
                 launch { dialogViewModel.action.collect(viewBinding.editActionLayout::setTextValue) }
                 launch { dialogViewModel.actionError.collect(viewBinding.editActionLayout::setError) }
                 launch { dialogViewModel.flags.collect(viewBinding.editFlagsLayout::setNumericValue) }
@@ -127,6 +129,16 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
             }
         }
     }
+
+    private fun updateSendingType(type: DropdownItem) {
+        viewBinding.intentSendingTypeField.setSelectedItem(type)
+
+        when (type) {
+            dialogViewModel.sendingTypeActivity -> viewBinding.editActionLayout.setButtonVisibility(true)
+            dialogViewModel.sendingTypeBroadcast -> viewBinding.editActionLayout.setButtonVisibility(false)
+        }
+    }
+
     private fun showActionsDialog() {
         OverlayManager.getInstance(context).navigateTo(
             context = context,
