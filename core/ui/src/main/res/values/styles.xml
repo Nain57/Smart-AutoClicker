@@ -22,7 +22,7 @@
     <!-- Style for the dialog top bar root layout. -->
     <style name="AppTheme.Dialog.TopBar">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">65dp</item>
+        <item name="android:layout_height">@dimen/dialog_top_bar_height</item>
         <item name="android:background">?attr/colorSurface</item>
         <item name="android:elevation">3dp</item>
     </style>
@@ -99,6 +99,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
+    </style>
+    <!-- Style for an outlined checkable icon button -->
+    <style name="AppTheme.Widget.CheckableButton" parent="Widget.Material3.Button.IconButton.Outlined">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">@color/selector_button_checkable_background</item>
+        <item name="iconTint">@color/selector_button_checkable_tint</item>
     </style>
     <!-- Style for the main floating action button. -->
     <style name="AppTheme.Widget.Fab" parent="@style/Widget.Material3.FloatingActionButton.Primary">

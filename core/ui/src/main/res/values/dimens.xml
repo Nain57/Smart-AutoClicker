@@ -47,6 +47,7 @@
     <dimen name="card_view_width_horizontal_list">100dp</dimen>
     <dimen name="card_view_height_horizontal_list">100dp</dimen>
 
+    <dimen name="dialog_top_bar_height">65dp</dimen>
     <dimen name="dialog_choice_item_icon_size">32dp</dimen>
 
     <dimen name="android_bottom_navigation_height">80dp</dimen>

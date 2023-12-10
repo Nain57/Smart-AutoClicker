@@ -30,9 +30,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_infinite"
+        app:layout_constraintEnd_toStartOf="@id/button_checkbox"
         app:endIconMode="clear_text"
-        android:hint="@string/input_field_label_repeat_count">
+        tools:hint="Label">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_field"
@@ -45,8 +45,8 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_infinite"
-        style="@style/AppTheme.Widget.InfiniteButton"
+        android:id="@+id/button_checkbox"
+        style="@style/AppTheme.Widget.CheckableButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_horizontal_default"
@@ -56,6 +56,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/edit_text_field_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:icon="@drawable/ic_infinite"/>
+        tools:icon="@drawable/ic_visible_on"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
