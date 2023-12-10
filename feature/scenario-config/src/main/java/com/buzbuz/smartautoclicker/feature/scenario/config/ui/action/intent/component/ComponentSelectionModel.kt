@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.core.android.intent.getAllAndroidApplications
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 /**
@@ -35,9 +35,9 @@ import kotlinx.coroutines.flow.flowOn
 class ComponentSelectionModel(application: Application) : AndroidViewModel(application) {
 
     /** Retrieves the list of activities visible on the Android launcher. */
-    val activities: Flow<List<AndroidApplicationInfo>> = flowOf(
-        getAllAndroidApplicationsInfo(application.packageManager)
-            .sortedBy { it.name.lowercase() }
-    ).flowOn(Dispatchers.IO)
+    val activities: Flow<List<AndroidApplicationInfo>> = flow<List<AndroidApplicationInfo>> {
+        emit(getAllAndroidApplicationsInfo(application.packageManager)
+            .sortedBy { it.name.lowercase() })
+    }.flowOn(Dispatchers.IO)
 
 }

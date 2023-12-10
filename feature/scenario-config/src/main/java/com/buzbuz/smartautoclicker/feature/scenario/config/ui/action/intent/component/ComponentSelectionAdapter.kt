@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.android.intent.AndroidApplicationInfo
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemComponentNameBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 
 
 /**
