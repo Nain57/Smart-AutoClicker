@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.activities
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.component
 
 import android.app.Application
 
@@ -29,14 +29,15 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 
 /**
- * View model for the [ActivitySelectionDialog].
+ * View model for the [ComponentSelectionDialog].
  * @param application the Android application.
  */
-class ActivitySelectionModel(application: Application) : AndroidViewModel(application) {
+class ComponentSelectionModel(application: Application) : AndroidViewModel(application) {
 
     /** Retrieves the list of activities visible on the Android launcher. */
     val activities: Flow<List<AndroidApplicationInfo>> = flowOf(
         getAllAndroidApplicationsInfo(application.packageManager)
             .sortedBy { it.name.lowercase() }
     ).flowOn(Dispatchers.IO)
+
 }

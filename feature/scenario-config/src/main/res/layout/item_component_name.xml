@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_height_big">
+
+    <ImageView
+        android:id="@+id/icon_app"
+        android:layout_width="@dimen/item_height"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/content_desc_application_icon"
+        tools:src="@drawable/ic_settings"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/app_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
+        android:layout_marginTop="@dimen/margin_vertical_small"
+        android:layout_marginBottom="@dimen/margin_vertical_mini"
+        android:layout_marginEnd="@dimen/margin_vertical_large"
+        app:layout_constraintStart_toEndOf="@id/icon_app"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/component_name"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_size_list_item_text_big"
+        android:textStyle="bold"
+        android:singleLine="true"
+        tools:text="Smart AutoClicker"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/component_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_vertical_small"
+        android:layout_marginEnd="@dimen/margin_vertical_large"
+        app:layout_constraintStart_toStartOf="@id/app_name"
+        app:layout_constraintTop_toBottomOf="@id/app_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_size_list_item_text_small"
+        android:textStyle="italic"
+        tools:text="com.buzbuz.smartautoclicker"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

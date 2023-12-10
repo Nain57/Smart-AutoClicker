@@ -28,13 +28,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
+import com.buzbuz.smartautoclicker.core.android.intent.AndroidApplicationInfo
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemApplicationBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.ActivityDisplayInfo
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -89,7 +89,7 @@ class ActivitySelectionDialog(
         }
     }
 
-    private fun updateActivityList(activities: List<ActivityDisplayInfo>) {
+    private fun updateActivityList(activities: List<AndroidApplicationInfo>) {
         viewBinding.layoutLoadableList.updateState(activities)
         activitiesAdapter.submitList(activities)
     }
@@ -101,7 +101,7 @@ class ActivitySelectionDialog(
  */
 private class ApplicationAdapter(
     private val onApplicationSelected: (ComponentName) -> Unit,
-) : ListAdapter<ActivityDisplayInfo, ApplicationViewHolder>(ApplicationDiffUtilCallback) {
+) : ListAdapter<AndroidApplicationInfo, ApplicationViewHolder>(ApplicationDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ApplicationViewHolder =
         ApplicationViewHolder(
@@ -114,10 +114,10 @@ private class ApplicationAdapter(
 }
 
 /** DiffUtil Callback comparing two lists when updating the [ApplicationAdapter]. */
-private object ApplicationDiffUtilCallback: DiffUtil.ItemCallback<ActivityDisplayInfo>() {
-    override fun areItemsTheSame(oldItem: ActivityDisplayInfo, newItem: ActivityDisplayInfo):
+private object ApplicationDiffUtilCallback: DiffUtil.ItemCallback<AndroidApplicationInfo>() {
+    override fun areItemsTheSame(oldItem: AndroidApplicationInfo, newItem: AndroidApplicationInfo):
             Boolean = oldItem == newItem
-    override fun areContentsTheSame(oldItem: ActivityDisplayInfo, newItem: ActivityDisplayInfo):
+    override fun areContentsTheSame(oldItem: AndroidApplicationInfo, newItem: AndroidApplicationInfo):
             Boolean = oldItem == newItem
 }
 
@@ -133,7 +133,7 @@ private class ApplicationViewHolder(
 ): RecyclerView.ViewHolder(viewBinding.root) {
 
     /** Binds this view holder views to the provided activity. */
-    fun onBind(activity: ActivityDisplayInfo) {
+    fun onBind(activity: AndroidApplicationInfo) {
         viewBinding.bind(activity, onApplicationSelected)
     }
 }
