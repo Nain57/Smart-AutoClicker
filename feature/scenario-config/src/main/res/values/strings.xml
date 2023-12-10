@@ -276,5 +276,6 @@
     <string name="dropdown_item_intent_extra_type_float" translatable="false">Float</string>
     <string name="dropdown_item_intent_extra_type_short" translatable="false">Short</string>
     <string name="dropdown_item_intent_extra_type_string" translatable="false">String</string>
+    <string name="dialog_overlay_title_intent_flags">Flags</string>
 
 </resources>

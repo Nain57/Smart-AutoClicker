@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
-            <include layout="@layout/include_text_with_infinite_field"
+            <include layout="@layout/include_input_text_with_checkbox"
                 android:id="@+id/edit_repeat_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

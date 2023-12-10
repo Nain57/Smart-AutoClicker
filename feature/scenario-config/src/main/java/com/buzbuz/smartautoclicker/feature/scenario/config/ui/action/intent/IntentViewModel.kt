@@ -34,8 +34,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putIntentIsAdvancedConfig
-import kotlinx.coroutines.FlowPreview
 
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 
 @OptIn(FlowPreview::class)
@@ -65,7 +65,7 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
     /** Tells if the action name is valid or not. */
     val nameError: Flow<Boolean> = configuredIntent.map { it.name?.isEmpty() ?: true }
 
-    /* The intent action. */
+    /** The intent action. */
     val action: Flow<String?> = configuredIntent
         .map { it.intentAction }
         .take(1)
@@ -212,6 +212,13 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
             editionRepository.updateEditedAction(intent.copy(isBroadcast = isBroadcast))
         }
     }
+
+    fun getConfiguredIntentFlags(): Int =
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.flags ?: 0
+
+    fun isConfiguredIntentBroadcast(): Boolean =
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.isBroadcast ?: false
+
 
     /** @return creates a new extra for this intent. */
     fun createNewExtra(): IntentExtra<Any> =

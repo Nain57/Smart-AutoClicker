@@ -14,59 +14,62 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings
+package com.buzbuz.smartautoclicker.core.ui.bindings
 
 import android.text.Editable
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
+import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputTextWithCheckboxBinding
 import com.buzbuz.smartautoclicker.core.ui.utils.OnAfterTextChangedListener
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.IncludeTextWithInfiniteFieldBinding
 
-fun IncludeTextWithInfiniteFieldBinding.setLabel(@StringRes labelResId: Int) {
-    editTextFieldLayout.setHint(labelResId)
+fun IncludeInputTextWithCheckboxBinding.setup(
+    @StringRes label: Int,
+    @DrawableRes icon: Int,
+    disableInputWithCheckbox: Boolean,
+) {
+    editTextFieldLayout.setHint(label)
+    buttonCheckbox.setIconResource(icon)
+    root.tag = disableInputWithCheckbox
+    buttonCheckbox.isCheckable = disableInputWithCheckbox
 }
-fun IncludeTextWithInfiniteFieldBinding.setRepeatCount(count: String) {
+
+fun IncludeInputTextWithCheckboxBinding.setNumericValue(value: String) {
     textField.apply {
         inputType = InputType.TYPE_CLASS_NUMBER
         imeOptions = EditorInfo.IME_ACTION_DONE
-        textField.setText(count)
+        textField.setText(value)
     }
 }
 
-fun IncludeTextWithInfiniteFieldBinding.setInfiniteState(isInfinite: Boolean) {
-    if (isInfinite) {
-        editTextFieldLayout.apply {
-            isEnabled = false
-            alpha = DISABLED_ITEM_ALPHA
-        }
-        buttonInfinite.isChecked = true
-    } else {
-        editTextFieldLayout.apply {
-            isEnabled = true
-            alpha = ENABLED_ITEM_ALPHA
-        }
-        buttonInfinite.isChecked = false
+fun IncludeInputTextWithCheckboxBinding.setChecked(isChecked: Boolean) {
+    if ((root.tag as? Boolean) != true) return
+
+    editTextFieldLayout.apply {
+        isEnabled = !isChecked
+        alpha = if (isChecked) DISABLED_ITEM_ALPHA else ENABLED_ITEM_ALPHA
     }
+    buttonCheckbox.isChecked = isChecked
 }
 
-fun IncludeTextWithInfiniteFieldBinding.setError(isError: Boolean) {
+fun IncludeInputTextWithCheckboxBinding.setError(isError: Boolean) {
     setError(R.string.input_field_error_required, isError)
 }
 
-fun IncludeTextWithInfiniteFieldBinding.setError(@StringRes messageId: Int, isError: Boolean) {
+fun IncludeInputTextWithCheckboxBinding.setError(@StringRes messageId: Int, isError: Boolean) {
     editTextFieldLayout.error = if (isError) root.context.getString(messageId) else null
 }
 
-fun IncludeTextWithInfiniteFieldBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {
+fun IncludeInputTextWithCheckboxBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {
     textField.addTextChangedListener(OnAfterTextChangedListener(listener))
 }
 
-fun IncludeTextWithInfiniteFieldBinding.setOnInfiniteButtonClickedListener(listener: () -> Unit) {
-    buttonInfinite.setOnClickListener { listener() }
+fun IncludeInputTextWithCheckboxBinding.setOnCheckboxClickedListener(listener: () -> Unit) {
+    buttonCheckbox.setOnClickListener { listener() }
 }
 
 private const val ENABLED_ITEM_ALPHA = 1f

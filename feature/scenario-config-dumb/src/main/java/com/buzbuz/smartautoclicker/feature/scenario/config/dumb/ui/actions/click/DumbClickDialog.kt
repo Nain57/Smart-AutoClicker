@@ -38,10 +38,14 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_DELAY_MAX_MS
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_DELAY_MIN_MS
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.setNumericValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
@@ -50,12 +54,6 @@ import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.DialogConfigDumbActionClickBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setError
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setInfiniteState
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setOnInfiniteButtonClickedListener
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.setRepeatCount
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -114,11 +112,11 @@ class DumbClickDialog(
                     REPEAT_COUNT_MIN_VALUE,
                     REPEAT_COUNT_MAX_VALUE
                 ))
-                setLabel(R.string.input_field_label_repeat_count)
+                setup(R.string.input_field_label_repeat_count, R.drawable.ic_infinite, disableInputWithCheckbox = true)
                 setOnTextChangedListener {
                     viewModel.setRepeatCount(if (it.isNotEmpty()) it.toString().toInt() else 0)
                 }
-                setOnInfiniteButtonClickedListener(viewModel::toggleInfiniteRepeat)
+                setOnCheckboxClickedListener(viewModel::toggleInfiniteRepeat)
             }
             hideSoftInputOnFocusLoss(editRepeatLayout.textField)
 
@@ -148,9 +146,9 @@ class DumbClickDialog(
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { viewModel.pressDuration.collect(::updateDumbClickPressDuration) }
                 launch { viewModel.pressDurationError.collect(viewBinding.editPressDurationLayout::setError)}
-                launch { viewModel.repeatCount.collect(viewBinding.editRepeatLayout::setRepeatCount) }
+                launch { viewModel.repeatCount.collect(viewBinding.editRepeatLayout::setNumericValue) }
                 launch { viewModel.repeatCountError.collect(viewBinding.editRepeatLayout::setError) }
-                launch { viewModel.repeatInfiniteState.collect(viewBinding.editRepeatLayout::setInfiniteState) }
+                launch { viewModel.repeatInfiniteState.collect(viewBinding.editRepeatLayout::setChecked) }
                 launch { viewModel.repeatDelay.collect(::updateDumbClickRepeatDelay) }
                 launch { viewModel.repeatDelayError.collect(viewBinding.editRepeatDelay::setError)}
                 launch { viewModel.clickPositionText.collect(viewBinding.clickSelectorSubtext::setText) }

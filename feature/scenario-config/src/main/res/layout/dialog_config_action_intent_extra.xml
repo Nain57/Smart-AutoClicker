@@ -87,7 +87,7 @@
                             android:id="@+id/edit_value_field"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            tools:visibility="visible"/>
+                            tools:visibility="gone"/>
 
                         <include layout="@layout/include_input_field_dropdown"
                             android:id="@+id/edit_boolean_value_field"
