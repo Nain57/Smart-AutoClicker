@@ -83,20 +83,13 @@ internal class ScenarioDataSource(
     /** State of scenario during an update, to keep track of ids mapping. */
     private val scenarioUpdateState = ScenarioUpdateState()
     /** Updater for a list of conditions. */
-    private val conditionsUpdater = DatabaseListUpdater<Condition, ConditionEntity>(
-        itemPrimaryKeySupplier = { condition -> condition.id },
-        entityPrimaryKeySupplier = { conditionEntity -> conditionEntity.id },
-    )
+    private val conditionsUpdater = DatabaseListUpdater<Condition, ConditionEntity>()
     /** Updater for a list of actions. */
-    private val actionsUpdater = DatabaseListUpdater<Action, CompleteActionEntity>(
-        itemPrimaryKeySupplier = { action -> action.id },
-        entityPrimaryKeySupplier = { completeActionEntity -> completeActionEntity.action.id },
-    )
+    private val actionsUpdater = DatabaseListUpdater<Action, CompleteActionEntity> { completeAction ->
+        completeAction.action.id
+    }
     /** Updater for a list of end conditions. */
-    private val endConditionsUpdater = DatabaseListUpdater<EndCondition, EndConditionEntity>(
-        itemPrimaryKeySupplier = { endCondition -> endCondition.id },
-        entityPrimaryKeySupplier = { endConditionEntity -> endConditionEntity.id },
-    )
+    private val endConditionsUpdater = DatabaseListUpdater<EndCondition, EndConditionEntity>()
 
     val scenarios: Flow<List<ScenarioWithEvents>> =
         scenarioDaoFlow.flatMapLatest { it.getScenariosWithEvents() }

@@ -21,6 +21,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 
 import kotlinx.serialization.Serializable
 
@@ -41,12 +42,12 @@ import kotlinx.serialization.Serializable
 @Entity(tableName = "scenario_table")
 @Serializable
 data class ScenarioEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) override val id: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "detection_quality") val detectionQuality: Int,
     @ColumnInfo(name = "end_condition_operator") val endConditionOperator: Int,
     @ColumnInfo(name = "randomize", defaultValue="0") val randomize: Boolean = false,
-)
+) : EntityWithId
 
 /**
  * Entity embedding a scenario and its events.

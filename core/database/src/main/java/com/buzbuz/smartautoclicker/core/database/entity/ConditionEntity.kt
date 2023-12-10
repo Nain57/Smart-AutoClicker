@@ -21,6 +21,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 /**
@@ -62,7 +63,7 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class ConditionEntity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") var id: Long,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") override var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "path") var path: String,
@@ -77,4 +78,4 @@ data class ConditionEntity(
     @ColumnInfo(name = "detection_area_top") val detectionAreaTop: Int? = null,
     @ColumnInfo(name = "detection_area_right") val detectionAreaRight: Int? = null,
     @ColumnInfo(name = "detection_area_bottom") val detectionAreaBottom: Int? = null,
-)
+) : EntityWithId

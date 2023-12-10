@@ -31,13 +31,11 @@ class EventsEditor(
     parentItem: StateFlow<Scenario?>,
 ): ListEditor<Event, Scenario>(parentItem = parentItem) {
 
-    override fun areItemsTheSame(a: Event, b: Event): Boolean = a.id == b.id
-    override fun isItemComplete(item: Event, parent: Scenario?): Boolean = item.isComplete()
-
-    val conditionsEditor = object : ListEditor<Condition, Event>(::onEditedEventConditionsUpdated, false, parentItem = editedItem) {
-        override fun areItemsTheSame(a: Condition, b: Condition): Boolean = a.id == b.id
-        override fun isItemComplete(item: Condition, parent: Event?): Boolean = item.isComplete()
-    }
+    val conditionsEditor: ListEditor<Condition, Event> = ListEditor(
+        onListUpdated = ::onEditedEventConditionsUpdated,
+        canBeEmpty = false,
+        parentItem = editedItem,
+    )
 
     val actionsEditor = ActionsEditor(::onEditedEventActionsUpdated, parentItem = editedItem)
 

@@ -21,6 +21,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 /**
@@ -39,14 +40,14 @@ import kotlinx.serialization.Serializable
 @Entity(tableName = "dumb_scenario_table")
 @Serializable
 data class DumbScenarioEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) override val id: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "repeat_count") val repeatCount: Int,
     @ColumnInfo(name = "is_repeat_infinite") val isRepeatInfinite: Boolean,
     @ColumnInfo(name = "max_duration_minutes") val maxDurationMin: Int,
     @ColumnInfo(name = "is_duration_infinite") val isDurationInfinite: Boolean,
     @ColumnInfo(name = "randomize") val randomize: Boolean,
-)
+) : EntityWithId
 
 /**
  * Entity embedding a dumb scenario and its dumb actions.

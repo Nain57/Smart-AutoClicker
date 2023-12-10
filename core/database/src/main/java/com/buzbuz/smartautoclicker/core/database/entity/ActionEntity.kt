@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.database.entity
 
 import androidx.room.*
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 /**
@@ -90,7 +91,7 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class ActionEntity(
-    @PrimaryKey(autoGenerate = true) var id: Long,
+    @PrimaryKey(autoGenerate = true) override var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "priority") var priority: Int = 0,
     @ColumnInfo(name = "name") val name: String,
@@ -123,7 +124,7 @@ data class ActionEntity(
     // ActionType.TOGGLE_EVENT
     @ColumnInfo(name = "toggle_event_id") var toggleEventId: Long? = null,
     @ColumnInfo(name = "toggle_type") val toggleEventType: ToggleEventType? = null,
-)
+) : EntityWithId
 
 /**
  * Type of [ActionEntity].

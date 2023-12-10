@@ -16,11 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.event
 
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 
 /**
  * Event of a scenario.
@@ -35,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * @param enabledOnStart tells if the event should be evaluated with the scenario, or if it should be enabled by an action.
  */
 data class Event(
-    val id: Identifier,
+    override val id: Identifier,
     val scenarioId: Identifier,
     val name: String,
     @ConditionOperator val conditionOperator: Int,
@@ -43,10 +45,10 @@ data class Event(
     val actions: List<Action> = emptyList(),
     val conditions: List<Condition> =  emptyList(),
     val enabledOnStart: Boolean = true,
-) {
+): Identifiable, Completable {
 
     /** Tells if this event is complete and valid for save. */
-    fun isComplete(): Boolean {
+    override fun isComplete(): Boolean {
         if (conditions.isEmpty()) return false
         conditions.forEach { condition ->
             if (!condition.isComplete()) return false

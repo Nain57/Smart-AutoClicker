@@ -18,10 +18,12 @@ package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 
 /**
  * Condition for a Event.
@@ -37,7 +39,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * @param detectionArea the area to detect the condition in if [detectionType] is IN_AREA.
  */
 data class Condition(
-    val id: Identifier,
+    override val id: Identifier,
     val eventId: Identifier,
     val name: String,
     val path: String? = null,
@@ -47,7 +49,7 @@ data class Condition(
     val shouldBeDetected: Boolean,
     val bitmap: Bitmap? = null,
     val detectionArea: Rect? = null,
-) {
+): Identifiable, Completable {
 
     /** @return creates a deep copy of this condition. */
     fun deepCopy(): Condition = copy(
@@ -56,7 +58,7 @@ data class Condition(
     )
 
     /** Tells if this condition is complete and valid to be saved. */
-    fun isComplete(): Boolean =
+    override fun isComplete(): Boolean =
         name.isNotEmpty()
                 && (path != null || bitmap != null)
                 && (detectionType == IN_AREA && detectionArea != null || detectionType != IN_AREA)

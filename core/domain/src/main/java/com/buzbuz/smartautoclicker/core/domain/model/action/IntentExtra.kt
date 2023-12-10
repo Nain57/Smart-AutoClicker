@@ -18,7 +18,9 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.Intent
 
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 
 /**
  * Extras for a Intent action.
@@ -30,14 +32,14 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * @param value the value of the extra.
  */
 data class IntentExtra<T>(
-    val id: Identifier,
+    override val id: Identifier,
     val actionId: Identifier,
     val key: String?,
     val value: T?,
-) {
+) : Identifiable, Completable {
 
     /** @return true if this extra is complete and can be transformed into its entity. */
-    fun isComplete(): Boolean = key != null && value != null
+    override fun isComplete(): Boolean = key != null && value != null
 
     /**
      * Copy and change the type of the value contained in this IntentExtra.

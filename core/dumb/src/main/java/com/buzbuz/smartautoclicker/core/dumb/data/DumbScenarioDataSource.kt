@@ -39,10 +39,7 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
     private val dumbScenarioDao: DumbScenarioDao = database.dumbScenarioDao()
 
     /** Updater for a list of actions. */
-    private val dumbActionsUpdater = DatabaseListUpdater<DumbAction, DumbActionEntity>(
-        itemPrimaryKeySupplier = { action -> action.id },
-        entityPrimaryKeySupplier = { dumbActionEntity -> dumbActionEntity.id },
-    )
+    private val dumbActionsUpdater = DatabaseListUpdater<DumbAction, DumbActionEntity>()
 
     val getAllDumbScenarios: Flow<List<DumbScenario>> =
         dumbScenarioDao.getDumbScenariosWithActionsFlow()

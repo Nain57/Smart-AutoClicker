@@ -163,7 +163,7 @@ internal class ActionExecutor(
             intent.extras?.forEach { putDomainExtra(it) }
         }
 
-        if (intent.isBroadcast!!) {
+        if (intent.isBroadcast) {
             withContext(Dispatchers.Main) {
                 androidExecutor.executeSendBroadcast(androidIntent)
             }

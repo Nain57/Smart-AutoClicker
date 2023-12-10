@@ -17,8 +17,10 @@
 package com.buzbuz.smartautoclicker.core.domain.model.endcondition
 
 import androidx.annotation.IntRange
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 
 /**
  * End condition for a scenario.
@@ -30,14 +32,14 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * @param executions the number of execution of the associated event before fulfilling this end condition.
  */
 data class EndCondition(
-    val id: Identifier,
+    override val id: Identifier,
     val scenarioId: Identifier,
     val eventId: Identifier? = null,
     val eventName: String? = null,
     @IntRange(from = 1) val executions: Int = 1,
-) {
+): Identifiable, Completable {
 
     /** @return true if this end condition is complete and can be transformed into its entity. */
-    fun isComplete(): Boolean =
+    override fun isComplete(): Boolean =
         eventId != null && eventName != null
 }

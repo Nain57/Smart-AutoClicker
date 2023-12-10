@@ -16,7 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.base
 
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 
 /**
  * Helper class to update a list in the database.
@@ -27,12 +28,9 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  *
  * @param I type of the items in the list to be updated.
  * @param E type of the entities in the database.
- * @param itemPrimaryKeySupplier
- * @param entityPrimaryKeySupplier
  */
-class DatabaseListUpdater<I, E>(
-    private val itemPrimaryKeySupplier: (item: I) -> Identifier,
-    private val entityPrimaryKeySupplier: (item: E) -> Long,
+class DatabaseListUpdater<I : Identifiable, E>(
+    private val entityPrimaryKeySupplier: ((item: E) -> Long)? = null
 ) {
 
     /** The complete new list of items. */
@@ -70,14 +68,17 @@ class DatabaseListUpdater<I, E>(
         // New items with the default primary key should be added, others should be updated.
         // Updated items are removed from toBeRemoved list.
         newItems.forEachIndexed { index, newItem ->
-            val newItemPrimaryKey = itemPrimaryKeySupplier(newItem).databaseId
+            val newItemPrimaryKey = newItem.getDatabaseId()
             val newEntity = toEntity(index, newItem)
 
             if (newItemPrimaryKey == DATABASE_DEFAULT_LONG_PRIMARY_KEY) {
                 toBeAdded.add(newEntity)
             } else {
                 toBeUpdated.add(newEntity)
-                toBeRemoved.removeIf { entityPrimaryKeySupplier(it) == newItemPrimaryKey }
+                toBeRemoved.removeIf { entity ->
+                    if (entity is EntityWithId) entity.id == newItemPrimaryKey
+                    else (entityPrimaryKeySupplier?.invoke(entity) ?: DATABASE_DEFAULT_LONG_PRIMARY_KEY) == newItemPrimaryKey
+                }
             }
             updateEntities.add(newEntity)
         }
