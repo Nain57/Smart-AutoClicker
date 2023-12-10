@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2023 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.component
 
 import android.content.ComponentName
@@ -15,7 +31,6 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.activities.ActivitySelectionModel
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -31,7 +46,7 @@ class ComponentSelectionDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ActivitySelectionModel by viewModels()
+    private val viewModel: ComponentSelectionModel by viewModels()
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseSelectionBinding
 
@@ -70,6 +85,8 @@ class ComponentSelectionDialog(
     }
 
     private fun updateActivityList(activities: List<AndroidApplicationInfo>) {
+        println("TOTO: update !!!! ${activities.size}")
+
         viewBinding.layoutLoadableList.updateState(activities)
         activitiesAdapter.submitList(activities)
     }
