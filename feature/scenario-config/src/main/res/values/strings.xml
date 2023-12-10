@@ -278,5 +278,6 @@
     <string name="dropdown_item_intent_extra_type_string" translatable="false">String</string>
     <string name="dialog_overlay_title_intent_flags">Flags</string>
     <string name="dialog_overlay_title_intent_actions">Intent Actions</string>
+    <string name="dialog_overlay_title_intent_component_name">Component name</string>
 
 </resources>

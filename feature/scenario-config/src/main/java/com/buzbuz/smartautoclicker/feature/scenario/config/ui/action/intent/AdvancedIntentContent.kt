@@ -44,6 +44,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigAdvancedBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.action.ActionsSelectionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.component.ComponentSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras.ExtraConfigDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.flags.FlagsSelectionDialog
 
@@ -103,8 +104,9 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
             dialogController.hideSoftInputOnFocusLoss(editFlagsLayout.textField)
 
             editComponentNameLayout.apply {
-                setLabel(R.string.input_field_label_intent_component_name)
+                setup(R.string.input_field_label_intent_component_name, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener { dialogViewModel.setComponentName(it.toString()) }
+                setOnCheckboxClickedListener { showComponentNameDialog() }
             }
             dialogController.hideSoftInputOnFocusLoss(editComponentNameLayout.textField)
 
@@ -123,7 +125,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
                 launch { dialogViewModel.action.collect(viewBinding.editActionLayout::setTextValue) }
                 launch { dialogViewModel.actionError.collect(viewBinding.editActionLayout::setError) }
                 launch { dialogViewModel.flags.collect(viewBinding.editFlagsLayout::setNumericValue) }
-                launch { dialogViewModel.componentName.collect(viewBinding.editComponentNameLayout::setText) }
+                launch { dialogViewModel.componentName.collect(viewBinding.editComponentNameLayout::setTextValue) }
                 launch { dialogViewModel.componentNameError.collect(viewBinding.editComponentNameLayout::setError) }
                 launch { dialogViewModel.extras.collect(extrasAdapter::submitList) }
             }
@@ -134,8 +136,14 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
         viewBinding.intentSendingTypeField.setSelectedItem(type)
 
         when (type) {
-            dialogViewModel.sendingTypeActivity -> viewBinding.editActionLayout.setButtonVisibility(true)
-            dialogViewModel.sendingTypeBroadcast -> viewBinding.editActionLayout.setButtonVisibility(false)
+            dialogViewModel.sendingTypeActivity -> {
+                viewBinding.editComponentNameLayout.setButtonVisibility(true)
+                viewBinding.editActionLayout.setButtonVisibility(true)
+            }
+            dialogViewModel.sendingTypeBroadcast -> {
+                viewBinding.editComponentNameLayout.setButtonVisibility(false)
+                viewBinding.editActionLayout.setButtonVisibility(false)
+            }
         }
     }
 
@@ -162,6 +170,19 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
                 onConfigComplete = { newFlags ->
                     dialogViewModel.setIntentFlags(newFlags)
                     viewBinding.editFlagsLayout.setNumericValue(newFlags.toString())
+                },
+            ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun showComponentNameDialog() {
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = ComponentSelectionDialog(
+                onApplicationSelected = { newCompName ->
+                    dialogViewModel.setComponentName(newCompName)
+                    viewBinding.editComponentNameLayout.setTextValue(newCompName.flattenToString())
                 },
             ),
             hideCurrent = true,
