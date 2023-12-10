@@ -24,6 +24,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 /**
@@ -60,13 +61,13 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class EventEntity(
-    @PrimaryKey(autoGenerate = true) var id: Long,
+    @PrimaryKey(autoGenerate = true) override var id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "operator") val conditionOperator: Int,
     @ColumnInfo(name = "priority") var priority: Int,
     @ColumnInfo(name = "enabled_on_start", defaultValue="1") var enabledOnStart: Boolean = true,
-)
+) : EntityWithId
 
 /**
  * Entity embedding an event, its actions and its conditions.

@@ -23,6 +23,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 /**
@@ -56,11 +57,11 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class EndConditionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) override val id: Long,
     @ColumnInfo(name = "scenario_id") val scenarioId: Long,
     @ColumnInfo(name = "event_id") var eventId: Long,
     @ColumnInfo(name = "executions") val executions: Int,
-)
+) : EntityWithId
 
 /**
  * Entity embedding an end condition and its associated event.

@@ -14,24 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.dumb.domain.model
+package com.buzbuz.smartautoclicker.core.base.interfaces
 
-import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
-data class DumbScenario(
-    override val id: Identifier,
-    val name: String,
-    val dumbActions: List<DumbAction> = emptyList(),
-    override val repeatCount: Int,
-    override val isRepeatInfinite: Boolean,
-    val maxDurationMin: Int,
-    val isDurationInfinite: Boolean,
-    val randomize: Boolean,
-) : Identifiable, Repeatable {
+interface Identifiable {
+    val id: Identifier
 
-    fun isValid(): Boolean = name.isNotEmpty() && dumbActions.isNotEmpty()
+    fun getDatabaseId(): Long = id.databaseId
+    fun getDomainId(): Long? = id.domainId
+    fun isInDatabase(): Boolean = id.isInDatabase()
 }
-
-const val DUMB_SCENARIO_MIN_DURATION_MINUTES = 1
-const val DUMB_SCENARIO_MAX_DURATION_MINUTES = 1440

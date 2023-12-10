@@ -22,6 +22,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 /**
@@ -48,12 +49,12 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class IntentExtraEntity(
-    @PrimaryKey(autoGenerate = true) var id: Long,
+    @PrimaryKey(autoGenerate = true) override var id: Long,
     @ColumnInfo(name = "action_id") var actionId: Long,
     @ColumnInfo(name = "type") val type: IntentExtraType,
     @ColumnInfo(name = "key") val key: String,
     @ColumnInfo(name = "value") val value: String,
-)
+) : EntityWithId
 
 /** The list of supported types for the value of an [IntentExtraEntity]. */
 enum class IntentExtraType {

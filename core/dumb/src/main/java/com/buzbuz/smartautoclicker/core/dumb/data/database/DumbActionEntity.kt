@@ -22,6 +22,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 /**
@@ -41,7 +42,7 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data class DumbActionEntity(
-    @PrimaryKey(autoGenerate = true) var id: Long,
+    @PrimaryKey(autoGenerate = true) override var id: Long,
     @ColumnInfo(name = "dumb_scenario_id") var dumbScenarioId: Long,
     @ColumnInfo(name = "priority") var priority: Int = 0,
     @ColumnInfo(name = "name") val name: String,
@@ -66,7 +67,7 @@ data class DumbActionEntity(
 
     // ActionType.PAUSE
     @ColumnInfo(name = "pause_duration") val pauseDuration: Long? = null,
-)
+) : EntityWithId
 
 /**
  * Type of [DumbActionEntity].

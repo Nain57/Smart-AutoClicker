@@ -17,23 +17,23 @@
 package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 
 import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 
 /** Base for for all possible actions for an Event. */
-sealed class Action {
+sealed class Action : Identifiable, Completable {
 
-    /** The unique identifier for the action. */
-    abstract val id: Identifier
     /** The identifier of the event for this action. */
     abstract val eventId: Identifier
     /** The name of the action. */
     abstract val name: String?
 
     /** @return true if this action is complete and can be transformed into its entity. */
-    open fun isComplete(): Boolean = name != null
+    override fun isComplete(): Boolean = name != null
 
     /** @return creates a deep copy of this action. */
     abstract fun deepCopy(): Action

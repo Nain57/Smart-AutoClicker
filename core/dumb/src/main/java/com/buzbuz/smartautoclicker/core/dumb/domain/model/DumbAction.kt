@@ -17,12 +17,11 @@
 package com.buzbuz.smartautoclicker.core.dumb.domain.model
 
 import android.graphics.Point
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
-sealed class DumbAction {
+sealed class DumbAction : Identifiable {
 
-    /** The unique identifier for the action. */
-    abstract val id: Identifier
     /** The identifier of the dumb scenario for this dumb action. */
     abstract val scenarioId: Identifier
     /** The name of the dumb action. */

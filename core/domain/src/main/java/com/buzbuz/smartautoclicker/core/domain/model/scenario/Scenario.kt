@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.scenario
 
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -33,10 +34,10 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * @param eventCount the number of events in this scenario. Default value is 0.
  */
 data class Scenario(
-    val id: Identifier,
+    override val id: Identifier,
     val name: String,
     val detectionQuality: Int,
     @ConditionOperator val endConditionOperator: Int,
     val randomize: Boolean = false,
     val eventCount: Int = 0,
-)
+): Identifiable

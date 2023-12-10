@@ -75,6 +75,7 @@ dependencies {
 
     implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
 
+    implementation project(path: ':core:base')
     implementation project(path: ':core:bitmaps')
     implementation project(path: ':core:database')
     implementation project(path: ':core:display')

@@ -44,10 +44,7 @@ internal class ScenarioEditor {
     }
 
     val eventsEditor = EventsEditor(::deleteAllReferencesToEvent, editedScenario)
-    val endConditionsEditor = object : ListEditor<EndCondition, Scenario>(canBeEmpty = true, parentItem = editedScenario) {
-        override fun areItemsTheSame(a: EndCondition, b: EndCondition): Boolean = a.id == b.id
-        override fun isItemComplete(item: EndCondition, parent: Scenario?): Boolean = item.isComplete()
-    }
+    val endConditionsEditor = ListEditor<EndCondition, Scenario>(canBeEmpty = true, parentItem = editedScenario)
 
     fun startEdition(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>) {
         referenceScenario.value = scenario
