@@ -46,6 +46,14 @@ fun IncludeInputTextWithCheckboxBinding.setNumericValue(value: String) {
     }
 }
 
+fun IncludeInputTextWithCheckboxBinding.setTextValue(value: String?) {
+    textField.apply {
+        inputType = InputType.TYPE_CLASS_TEXT
+        imeOptions = EditorInfo.IME_ACTION_DONE
+        textField.setText(value)
+    }
+}
+
 fun IncludeInputTextWithCheckboxBinding.setChecked(isChecked: Boolean) {
     if ((root.tag as? Boolean) != true) return
 

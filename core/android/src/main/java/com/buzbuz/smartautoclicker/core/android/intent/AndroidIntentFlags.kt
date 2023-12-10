@@ -22,20 +22,20 @@ import com.buzbuz.smartautoclicker.core.android.intent.flags.getAndroidAPIStartA
 import kotlin.reflect.KProperty0
 
 
-data class IntentFlag internal constructor(
+data class AndroidIntentFlags internal constructor(
     val value: Int,
     val displayName: String,
     val helpUri: Uri,
 )
 
-fun getStartActivityIntentFlags(): List<IntentFlag> =
+fun getStartActivityIntentFlags(): List<AndroidIntentFlags> =
     getAndroidAPIStartActivityIntentFlags().map { it.toIntentFlag() }
 
-fun getBroadcastIntentFlags(): List<IntentFlag> =
+fun getBroadcastIntentFlags(): List<AndroidIntentFlags> =
     getAndroidAPIBroadcastIntentFlags().map { it.toIntentFlag() }
 
-private fun KProperty0<Int>.toIntentFlag(): IntentFlag =
-    IntentFlag(
+private fun KProperty0<Int>.toIntentFlag(): AndroidIntentFlags =
+    AndroidIntentFlags(
         value = get(),
         displayName = name.toFlagName(),
         helpUri = getFlagDocumentationUri(),

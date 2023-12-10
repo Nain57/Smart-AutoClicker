@@ -27,14 +27,6 @@
     <!-- Needed to prompt the permission request at the right time -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
-    <!-- Needed to get the list of applications to start when creating an intent action.-->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent>
-    </queries>
-
     <application
         android:name=".SmartAutoClickerApplication"
         android:allowBackup="false"

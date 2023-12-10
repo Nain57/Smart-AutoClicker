@@ -213,6 +213,9 @@ class IntentViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun getConfiguredIntentAction(): String? =
+        editionRepository.editionState.getEditedAction<Action.Intent>()?.intentAction
+
     fun getConfiguredIntentFlags(): Int =
         editionRepository.editionState.getEditedAction<Action.Intent>()?.flags ?: 0
 

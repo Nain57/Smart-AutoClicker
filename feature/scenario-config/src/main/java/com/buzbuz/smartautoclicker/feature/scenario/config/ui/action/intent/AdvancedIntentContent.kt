@@ -35,11 +35,13 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setNumericValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigAdvancedBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.action.ActionsSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras.ExtraConfigDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.flags.FlagsSelectionDialog
 
@@ -49,7 +51,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
 
     /** View model for the container dialog. */
     private val dialogViewModel: IntentViewModel by lazy {
-        ViewModelProvider(dialogController).get(IntentViewModel::class.java)
+        ViewModelProvider(dialogController)[IntentViewModel::class.java]
     }
 
     /** View binding for all views in this content. */
@@ -80,8 +82,9 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
             )
 
             editActionLayout.apply {
-                setLabel(R.string.input_field_label_intent_action)
+                setup(R.string.input_field_label_intent_action, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener { dialogViewModel.setIntentAction(it.toString()) }
+                setOnCheckboxClickedListener { showActionsDialog() }
             }
             dialogController.hideSoftInputOnFocusLoss(editActionLayout.textField)
 
@@ -115,7 +118,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
                 launch { dialogViewModel.name.collect(viewBinding.editNameLayout::setText) }
                 launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { dialogViewModel.isBroadcast.collect(viewBinding.intentSendingTypeField::setSelectedItem) }
-                launch { dialogViewModel.action.collect(viewBinding.editActionLayout::setText) }
+                launch { dialogViewModel.action.collect(viewBinding.editActionLayout::setTextValue) }
                 launch { dialogViewModel.actionError.collect(viewBinding.editActionLayout::setError) }
                 launch { dialogViewModel.flags.collect(viewBinding.editFlagsLayout::setNumericValue) }
                 launch { dialogViewModel.componentName.collect(viewBinding.editComponentNameLayout::setText) }
@@ -123,6 +126,19 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
                 launch { dialogViewModel.extras.collect(extrasAdapter::submitList) }
             }
         }
+    }
+    private fun showActionsDialog() {
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = ActionsSelectionDialog(
+                currentAction = dialogViewModel.getConfiguredIntentAction(),
+                onConfigComplete = { newAction ->
+                    dialogViewModel.setIntentAction(newAction ?: "")
+                    viewBinding.editActionLayout.textField.setText(newAction)
+                },
+            ),
+            hideCurrent = true,
+        )
     }
 
     private fun showFlagsDialog() {
