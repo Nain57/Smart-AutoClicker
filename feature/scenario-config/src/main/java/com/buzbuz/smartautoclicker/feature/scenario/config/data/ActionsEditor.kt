@@ -42,7 +42,7 @@ class ActionsEditor(
     override fun areItemsTheSame(a: Action, b: Action): Boolean = a.id == b.id
 
     override fun isItemComplete(item: Action, parent: Event?): Boolean =
-        item.isValidInEvent(parent)
+        item.isComplete() && item.isValidInEvent(parent)
 
     override fun startItemEdition(item: Action) {
         super.startItemEdition(item)

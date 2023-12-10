@@ -164,7 +164,7 @@ private fun CompleteActionEntity.toIntent(asDomain: Boolean = false) = Action.In
     eventId = Identifier(id = action.eventId, asDomain = asDomain),
     name = action.name,
     isAdvanced = action.isAdvanced,
-    isBroadcast = action.isBroadcast,
+    isBroadcast = action.isBroadcast ?: false,
     intentAction = action.intentAction,
     componentName = action.componentName.toComponentName(),
     flags = action.flags,

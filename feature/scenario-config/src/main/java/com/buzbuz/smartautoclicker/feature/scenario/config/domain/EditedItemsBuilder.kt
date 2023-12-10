@@ -133,6 +133,7 @@ class EditedItemsBuilder internal constructor(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.intentName(context),
+            isBroadcast = false,
             isAdvanced = defaultValues.intentIsAdvanced(context),
         )
 

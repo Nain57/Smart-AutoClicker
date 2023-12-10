@@ -16,8 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.bindings
 
+import android.opengl.Visibility
 import android.text.Editable
 import android.text.InputType
+import android.view.View
 import android.view.inputmethod.EditorInfo
 
 import androidx.annotation.DrawableRes
@@ -62,6 +64,10 @@ fun IncludeInputTextWithCheckboxBinding.setChecked(isChecked: Boolean) {
         alpha = if (isChecked) DISABLED_ITEM_ALPHA else ENABLED_ITEM_ALPHA
     }
     buttonCheckbox.isChecked = isChecked
+}
+
+fun IncludeInputTextWithCheckboxBinding.setButtonVisibility(isVisible: Boolean) {
+    buttonCheckbox.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
 
 fun IncludeInputTextWithCheckboxBinding.setError(isError: Boolean) {

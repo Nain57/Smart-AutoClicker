@@ -153,7 +153,7 @@ sealed class Action {
         override val eventId: Identifier,
         override val name: String? = null,
         val isAdvanced: Boolean? = null,
-        val isBroadcast: Boolean? = null,
+        val isBroadcast: Boolean,
         val intentAction: String? = null,
         val componentName: ComponentName? = null,
         val flags: Int? = null,
