@@ -14,28 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.android.intent
+package com.buzbuz.smartautoclicker.core.android.intent.actions
 
 import android.net.Uri
-import com.buzbuz.smartautoclicker.core.android.intent.actions.getAndroidAPIStartActivityIntentActions
+import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentApi
 import kotlin.reflect.KProperty0
 
-
-data class AndroidIntentAction(
-    val value: String,
-    val displayName: String,
-    val helpUri: Uri,
-)
-
-fun getStartActivityIntentActions(): List<AndroidIntentAction> =
-    getAndroidAPIStartActivityIntentActions().map { it.toIntentAction() }
-
-private fun KProperty0<String>.toIntentAction(): AndroidIntentAction =
-    AndroidIntentAction(
-        value = get(),
-        displayName = name.toActionName(),
-        helpUri = getActionDocumentationUri(),
-    )
+internal fun List<KProperty0<String>>.toAndroidIntentActions(): List<AndroidIntentApi<String>> =
+    map { actionProperty ->
+        AndroidIntentApi(
+            value = actionProperty.get(),
+            displayName = actionProperty.name.toActionName(),
+            helpUri = actionProperty.getActionDocumentationUri(),
+        )
+    }
 
 private fun String.toActionName(): String =
     removePrefix(PREFIX_INTENT_ACTION_VARIABLE_NAME)

@@ -17,10 +17,9 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings
 
 import android.content.ComponentName
-import com.buzbuz.smartautoclicker.core.android.intent.AndroidApplicationInfo
+import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemApplicationBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.ActivityDisplayInfo
 
 /** Binds to the provided activity. */
 fun ItemApplicationBinding.bind(activity: AndroidApplicationInfo, listener: ((ComponentName) -> Unit)? = null) {

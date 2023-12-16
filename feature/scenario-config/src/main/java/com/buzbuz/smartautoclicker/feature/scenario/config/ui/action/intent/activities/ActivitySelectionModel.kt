@@ -20,8 +20,8 @@ import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.android.intent.AndroidApplicationInfo
-import com.buzbuz.smartautoclicker.core.android.intent.getAllAndroidApplicationsInfo
+import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
+import com.buzbuz.smartautoclicker.core.android.application.getAllAndroidApplicationsInfo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +36,8 @@ class ActivitySelectionModel(application: Application) : AndroidViewModel(applic
 
     /** Retrieves the list of activities visible on the Android launcher. */
     val activities: Flow<List<AndroidApplicationInfo>> = flow {
-        emit(getAllAndroidApplicationsInfo(application.packageManager)
+        emit(
+            getAllAndroidApplicationsInfo(application.packageManager)
             .sortedBy { it.name.lowercase() })
     }.flowOn(Dispatchers.IO)
 }

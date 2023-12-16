@@ -17,37 +17,24 @@
 package com.buzbuz.smartautoclicker.core.android.intent
 
 import android.net.Uri
+
+import com.buzbuz.smartautoclicker.core.android.intent.actions.getAndroidAPIStartActivityIntentActions
+import com.buzbuz.smartautoclicker.core.android.intent.actions.toAndroidIntentActions
 import com.buzbuz.smartautoclicker.core.android.intent.flags.getAndroidAPIBroadcastIntentFlags
 import com.buzbuz.smartautoclicker.core.android.intent.flags.getAndroidAPIStartActivityIntentFlags
-import kotlin.reflect.KProperty0
+import com.buzbuz.smartautoclicker.core.android.intent.flags.toAndroidIntentFlags
 
-
-data class AndroidIntentFlags internal constructor(
-    val value: Int,
+data class AndroidIntentApi<Value>(
+    val value: Value,
     val displayName: String,
     val helpUri: Uri,
 )
 
-fun getStartActivityIntentFlags(): List<AndroidIntentFlags> =
-    getAndroidAPIStartActivityIntentFlags().map { it.toIntentFlag() }
+fun getStartActivityIntentActions(): List<AndroidIntentApi<String>> =
+    getAndroidAPIStartActivityIntentActions().toAndroidIntentActions()
 
-fun getBroadcastIntentFlags(): List<AndroidIntentFlags> =
-    getAndroidAPIBroadcastIntentFlags().map { it.toIntentFlag() }
+fun getStartActivityIntentFlags(): List<AndroidIntentApi<Int>> =
+    getAndroidAPIStartActivityIntentFlags().toAndroidIntentFlags()
 
-private fun KProperty0<Int>.toIntentFlag(): AndroidIntentFlags =
-    AndroidIntentFlags(
-        value = get(),
-        displayName = name.toFlagName(),
-        helpUri = getFlagDocumentationUri(),
-    )
-
-private fun String.toFlagName(): String =
-    removePrefix(PREFIX_INTENT_FLAG_VARIABLE_NAME)
-        .replace("_", " ")
-
-private fun KProperty0<Int>.getFlagDocumentationUri(): Uri =
-    Uri.parse("$PREFIX_ANDROID_DOCUMENTATION_INTENT_FLAGS_URL$name")
-
-private const val PREFIX_INTENT_FLAG_VARIABLE_NAME = "FLAG_"
-private const val PREFIX_ANDROID_DOCUMENTATION_INTENT_FLAGS_URL =
-    "https://developer.android.com/reference/android/content/Intent#"
+fun getBroadcastIntentFlags(): List<AndroidIntentApi<Int>> =
+    getAndroidAPIBroadcastIntentFlags().toAndroidIntentFlags()

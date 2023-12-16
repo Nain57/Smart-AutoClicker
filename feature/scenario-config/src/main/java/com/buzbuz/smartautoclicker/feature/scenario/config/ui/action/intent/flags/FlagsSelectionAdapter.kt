@@ -45,9 +45,9 @@ class FlagsSelectionAdapter(
 
 /** DiffUtil Callback comparing two ActionItem when updating the [FlagsSelectionAdapter] list. */
 object ItemFlagDiffUtilCallback: DiffUtil.ItemCallback<ItemFlag>() {
-    override fun areItemsTheSame(oldItem: ItemFlag, newItem: ItemFlag, ): Boolean =
+    override fun areItemsTheSame(oldItem: ItemFlag, newItem: ItemFlag): Boolean =
         oldItem.flag.value == newItem.flag.value
-    override fun areContentsTheSame(oldItem: ItemFlag, newItem: ItemFlag, ): Boolean =
+    override fun areContentsTheSame(oldItem: ItemFlag, newItem: ItemFlag): Boolean =
         oldItem == newItem
 }
 
