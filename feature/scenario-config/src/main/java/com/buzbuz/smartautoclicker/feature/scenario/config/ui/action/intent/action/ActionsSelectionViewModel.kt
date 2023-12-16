@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.act
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentAction
+import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentApi
 import com.buzbuz.smartautoclicker.core.android.intent.getStartActivityIntentActions
 
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +31,7 @@ class ActionsSelectionViewModel(application: Application) : AndroidViewModel(app
 
     private val selectedAction: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    private val allAndroidActions: Flow<List<AndroidIntentAction>> = flow {
+    private val allAndroidActions: Flow<List<AndroidIntentApi<String>>> = flow {
         emit(getStartActivityIntentActions().sortedBy { flag -> flag.displayName })
     }
 
@@ -58,6 +58,6 @@ class ActionsSelectionViewModel(application: Application) : AndroidViewModel(app
 }
 
 data class ItemAction(
-    val action: AndroidIntentAction,
+    val action: AndroidIntentApi<String>,
     val isSelected: Boolean,
 )

@@ -25,8 +25,8 @@ import android.graphics.drawable.Drawable
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.android.intent.AndroidApplicationInfo
-import com.buzbuz.smartautoclicker.core.android.intent.getAndroidApplicationInfo
+import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
+import com.buzbuz.smartautoclicker.core.android.application.getAndroidApplicationInfo
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem

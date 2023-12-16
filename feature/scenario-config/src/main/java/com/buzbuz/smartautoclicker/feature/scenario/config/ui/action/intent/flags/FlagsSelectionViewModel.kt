@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.fla
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentFlags
+import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentApi
 import com.buzbuz.smartautoclicker.core.android.intent.getBroadcastIntentFlags
 import com.buzbuz.smartautoclicker.core.android.intent.getStartActivityIntentFlags
 
@@ -33,7 +33,7 @@ class FlagsSelectionViewModel(application: Application) : AndroidViewModel(appli
     private val isStartActivitiesFlags: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private val selectedFlags: MutableStateFlow<Int> = MutableStateFlow(0)
 
-    private val allAndroidFlags: Flow<List<AndroidIntentFlags>> = isStartActivitiesFlags.mapNotNull { isStartActivity ->
+    private val allAndroidFlags: Flow<List<AndroidIntentApi<Int>>> = isStartActivitiesFlags.mapNotNull { isStartActivity ->
         isStartActivity ?: return@mapNotNull null
 
         (if (isStartActivity == true) getStartActivityIntentFlags() else getBroadcastIntentFlags())
@@ -66,6 +66,6 @@ class FlagsSelectionViewModel(application: Application) : AndroidViewModel(appli
 }
 
 data class ItemFlag(
-    val flag: AndroidIntentFlags,
+    val flag: AndroidIntentApi<Int>,
     val isSelected: Boolean,
 )
