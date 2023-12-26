@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,10 @@
 package com.buzbuz.smartautoclicker.core.database.entity
 
 import androidx.room.*
+
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
+import com.buzbuz.smartautoclicker.core.database.utils.ACTION_TABLE
+
 import kotlinx.serialization.Serializable
 
 /**
@@ -64,9 +67,17 @@ import kotlinx.serialization.Serializable
  * @param toggleEventId [ActionType.TOGGLE_EVENT] only: the id of the event to be manipulated.
  * @param toggleEventType [ActionType.TOGGLE_EVENT] only: the type of toggle for the event.
  *                        Must be one of [ToggleEventType].
+ *
+ * @param counterName [ActionType.CHANGE_COUNTER] only: the name of the counter to change apply the
+ *                     operation on. There is no need for a db object for a "counter", we only need
+ *                     to identify them at runtime using their names. Null for others [ActionType].
+ * @param counterOperation [ActionType.CHANGE_COUNTER] only: the type of operation to apply to the
+ *                                                     counter. Null for others [ActionType].
+ * @param counterOperationValue [ActionType.CHANGE_COUNTER] only: the vale to use for the operation
+ *                                                          on the counter. Null for others [ActionType].
  */
 @Entity(
-    tableName = "action_table",
+    tableName = ACTION_TABLE,
     indices = [Index("eventId"), Index("clickOnConditionId"), Index("toggle_event_id")],
     foreignKeys = [
         ForeignKey(
@@ -124,6 +135,11 @@ data class ActionEntity(
     // ActionType.TOGGLE_EVENT
     @ColumnInfo(name = "toggle_event_id") var toggleEventId: Long? = null,
     @ColumnInfo(name = "toggle_type") val toggleEventType: ToggleEventType? = null,
+
+    // ActionType.CHANGE_COUNTER
+    @ColumnInfo(name = "counter_name") var counterName: String? = null,
+    @ColumnInfo(name = "counter_operation") val counterOperation: ChangeCounterOperationType? = null,
+    @ColumnInfo(name = "counter_operation_value") val counterOperationValue: Int? = null,
 ) : EntityWithId
 
 /**
@@ -144,14 +160,8 @@ enum class ActionType {
     INTENT,
     /** Toggle the enabled state of an event. */
     TOGGLE_EVENT,
-}
-
-/** Type converter to read/write the [ActionType] into the database. */
-internal class ActionTypeStringConverter {
-    @TypeConverter
-    fun fromString(value: String): ActionType = ActionType.valueOf(value)
-    @TypeConverter
-    fun toString(action: ActionType): String = action.toString()
+    /** Change the value of a counter. */
+    CHANGE_COUNTER,
 }
 
 /**
@@ -171,17 +181,8 @@ enum class ClickPositionType {
     ON_DETECTED_CONDITION,
 }
 
-/** Type converter to read/write the [ClickPositionType] into the database. */
-internal class ClickPositionTypeStringConverter {
-    @TypeConverter
-    fun fromString(value: String?): ClickPositionType? = value?.let { ClickPositionType.valueOf(it) }
-    @TypeConverter
-    fun toString(type: ClickPositionType?): String? = type?.toString()
-}
-
 /**
  * The type of manipulation to apply to an event with a [ActionType.TOGGLE_EVENT].
- *
  * /!\ DO NOT RENAME: ToggleEventType enum name is used in the database.
  */
 enum class ToggleEventType {
@@ -193,12 +194,17 @@ enum class ToggleEventType {
     TOGGLE,
 }
 
-/** Type converter to read/write the [ToggleEventType] into the database. */
-internal class ToggleEventTypeStringConverter {
-    @TypeConverter
-    fun fromString(value: String?): ToggleEventType? = value?.let { ToggleEventType.valueOf(it) }
-    @TypeConverter
-    fun toString(type: ToggleEventType?): String? = type?.toString()
+/**
+ * Types of counter change of a [ActionType.CHANGE_COUNTER].
+ * /!\ DO NOT RENAME: ChangeCounterOperationType enum name is used in the database.
+ */
+enum class ChangeCounterOperationType {
+    /** Add to the current counter value. */
+    ADD,
+    /** Remove from the current counter value. */
+    MINUS,
+    /** Set the counter to a specific value. */
+    SET;
 }
 
 /**

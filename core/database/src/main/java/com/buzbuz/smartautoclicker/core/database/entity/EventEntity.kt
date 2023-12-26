@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,10 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
+import com.buzbuz.smartautoclicker.core.database.utils.EVENT_TABLE
+
 import kotlinx.serialization.Serializable
 
 /**
@@ -50,7 +53,7 @@ import kotlinx.serialization.Serializable
  *                       enabled via an action TOGGLE_EVENT to be evaluated.
  */
 @Entity(
-    tableName = "event_table",
+    tableName = EVENT_TABLE,
     indices = [Index("scenario_id")],
     foreignKeys = [ForeignKey(
         entity = ScenarioEntity::class,
@@ -67,6 +70,7 @@ data class EventEntity(
     @ColumnInfo(name = "operator") val conditionOperator: Int,
     @ColumnInfo(name = "priority") var priority: Int,
     @ColumnInfo(name = "enabled_on_start", defaultValue="1") var enabledOnStart: Boolean = true,
+    @ColumnInfo(name = "type") val type: EventType,
 ) : EntityWithId
 
 /**
@@ -94,3 +98,8 @@ data class CompleteEventEntity(
     )
     val conditions: List<ConditionEntity>,
 )
+
+enum class EventType {
+    IMAGE_EVENT,
+    TRIGGER_EVENT,
+}

@@ -21,18 +21,12 @@ import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
-import com.buzbuz.smartautoclicker.core.database.entity.ActionTypeStringConverter
-import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionTypeStringConverter
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
-import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraTypeStringConverter
-import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventTypeStringConverter
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.migrations.*
 
@@ -58,15 +52,9 @@ import com.buzbuz.smartautoclicker.core.database.migrations.*
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 7, to = 8),
-        AutoMigration (from = 8, to = 9, spec = AutoMigration8to9::class),
+        AutoMigration (from = 8, to = 9, spec = Migration8to9::class),
         AutoMigration (from = 11, to = 12),
     ]
-)
-@TypeConverters(
-    ActionTypeStringConverter::class,
-    ClickPositionTypeStringConverter::class,
-    IntentExtraTypeStringConverter::class,
-    ToggleEventTypeStringConverter::class,
 )
 abstract class ClickDatabase : ScenarioDatabase() {
 
@@ -99,6 +87,7 @@ abstract class ClickDatabase : ScenarioDatabase() {
                         Migration6to7,
                         Migration9to10,
                         Migration10to11,
+                        Migration12to13,
                     )
                     .build()
 
@@ -110,4 +99,4 @@ abstract class ClickDatabase : ScenarioDatabase() {
 }
 
 /** Current version of the database. */
-const val CLICK_DATABASE_VERSION = 12
+const val CLICK_DATABASE_VERSION = 13

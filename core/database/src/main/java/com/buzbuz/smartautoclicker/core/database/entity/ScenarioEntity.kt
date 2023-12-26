@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
+import com.buzbuz.smartautoclicker.core.database.utils.SCENARIO_TABLE
 
 import kotlinx.serialization.Serializable
 
@@ -39,7 +41,7 @@ import kotlinx.serialization.Serializable
  * @param randomize if true, the action values such as timers, positions will be shifted by a small random value in
  *                  order to avoid behaving like a bot.
  */
-@Entity(tableName = "scenario_table")
+@Entity(tableName = SCENARIO_TABLE)
 @Serializable
 data class ScenarioEntity(
     @PrimaryKey(autoGenerate = true) override val id: Long,

@@ -34,10 +34,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
-/** Tests the [AutoMigration8to9]. */
+/** Tests the [Migration8to9]. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
-class AutoMigration8to9Tests {
+class Migration8To9Tests {
 
     private companion object {
         private const val TEST_DB = "migration-test"
