@@ -28,4 +28,4 @@ import androidx.room.migration.AutoMigrationSpec
  * * add toggle_event_id and toggle_type to action_table.
  */
 @DeleteColumn(tableName = "event_table", columnName = "stop_after")
-class AutoMigration8to9 : AutoMigrationSpec
+class Migration8to9 : AutoMigrationSpec

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
+import com.buzbuz.smartautoclicker.core.database.utils.CONDITION_TABLE
+
 import kotlinx.serialization.Serializable
 
 /**
@@ -52,7 +55,7 @@ import kotlinx.serialization.Serializable
  * @param detectionAreaBottom
  */
 @Entity(
-    tableName = "condition_table",
+    tableName = CONDITION_TABLE,
     indices = [Index("eventId")],
     foreignKeys = [ForeignKey(
         entity = EventEntity::class,
@@ -66,16 +69,72 @@ data class ConditionEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name= "id") override var id: Long,
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "path") var path: String,
-    @ColumnInfo(name = "area_left") val areaLeft: Int,
-    @ColumnInfo(name = "area_top") val areaTop: Int,
-    @ColumnInfo(name = "area_right") val areaRight: Int,
-    @ColumnInfo(name = "area_bottom") val areaBottom: Int,
-    @ColumnInfo(name = "threshold", defaultValue = "1") val threshold: Int,
-    @ColumnInfo(name = "detection_type") val detectionType: Int,
-    @ColumnInfo(name = "shouldBeDetected") val shouldBeDetected: Boolean,
+    @ColumnInfo(name = "type") val type: ConditionType,
+
+    // ConditionType.ON_IMAGE_DETECTED
+    @ColumnInfo(name = "path") var path: String? = null,
+    @ColumnInfo(name = "area_left") val areaLeft: Int? = null,
+    @ColumnInfo(name = "area_top") val areaTop: Int? = null,
+    @ColumnInfo(name = "area_right") val areaRight: Int? = null,
+    @ColumnInfo(name = "area_bottom") val areaBottom: Int? = null,
+    @ColumnInfo(name = "threshold") val threshold: Int? = null,
+    @ColumnInfo(name = "detection_type") val detectionType: Int? = null,
+    @ColumnInfo(name = "shouldBeDetected") val shouldBeDetected: Boolean? = null,
     @ColumnInfo(name = "detection_area_left") val detectionAreaLeft: Int? = null,
     @ColumnInfo(name = "detection_area_top") val detectionAreaTop: Int? = null,
     @ColumnInfo(name = "detection_area_right") val detectionAreaRight: Int? = null,
     @ColumnInfo(name = "detection_area_bottom") val detectionAreaBottom: Int? = null,
+
+    // ConditionType.ON_BROADCAST_RECEIVED
+    @ColumnInfo(name = "broadcast_action") val broadcastAction: String? = null,
+
+    // ConditionType.ON_COUNTER_REACHED
+    @ColumnInfo(name = "counter_name") val counterName: String? = null,
+    @ColumnInfo(name = "counter_comparison_operation") val counterComparisonOperation: CounterComparisonOperation? = null,
+    @ColumnInfo(name = "counter_value") val counterValue: Int? = null,
+
+    // ConditionType.ON_TIMER_REACHED
+    @ColumnInfo(name = "timer_value_ms") val timerValueMs: Long? = null
 ) : EntityWithId
+
+/**
+ * Type of [ConditionEntity].
+ * For each type there is a set of values that will be available in the database, all others will always be null. Refers
+ * to the [ConditionEntity] documentation for values/type association.
+ *
+ * /!\ DO NOT RENAME: TriggerConditionType enum name is used in the database.
+ */
+enum class ConditionType {
+    /** Condition fulfilled upon broadcast reception. */
+    ON_BROADCAST_RECEIVED,
+    /** Condition fulfilled upon counter value. */
+    ON_COUNTER_REACHED,
+    /** Condition fulfilled upon image detected. */
+    ON_IMAGE_DETECTED,
+    /** Toggle the enabled state of an event. */
+    ON_TIMER_REACHED,
+    /** Condition fulfilled at scenario start. */
+    ON_SCENARIO_START,
+    /** Condition fulfilled at scenario end (once all events/trigger events are disabled). */
+    ON_SCENARIO_END,
+}
+
+/**
+ * Type of counter comparison for [ConditionEntity] of type [ConditionType.ON_COUNTER_REACHED].
+ * For each type there is a set of values that will be available in the database, all others will always be null. Refers
+ * to the [CounterComparisonOperation] documentation for values/type association.
+ *
+ * /!\ DO NOT RENAME: TriggerConditionType enum name is used in the database.
+ */
+enum class CounterComparisonOperation {
+    /** The counter value is strictly equals to the value. */
+    EQUALS,
+    /** The counter value is strictly lower than the value. */
+    LOWER,
+    /** The counter value is lower or equals to the value */
+    LOWER_OR_EQUALS,
+    /** The counter value is strictly greater than the value. */
+    GREATER,
+    /** The counter value is greater or equals to the value. */
+    GREATER_OR_EQUALS,
+}

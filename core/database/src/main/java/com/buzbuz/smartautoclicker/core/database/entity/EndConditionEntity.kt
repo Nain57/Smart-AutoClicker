@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,10 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
+import com.buzbuz.smartautoclicker.core.database.utils.END_CONDITION_TABLE
+
 import kotlinx.serialization.Serializable
 
 /**
@@ -38,7 +41,7 @@ import kotlinx.serialization.Serializable
  * @param executions the number of times the associated event must be executed before fulfilling this end condition.
  */
 @Entity(
-    tableName = "end_condition_table",
+    tableName = END_CONDITION_TABLE,
     indices = [Index("scenario_id"), Index("event_id")],
     foreignKeys = [
         ForeignKey(
