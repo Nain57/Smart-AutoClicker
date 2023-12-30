@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import androidx.room.ForeignKey
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+
+import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
+import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
+import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
+import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
+import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 
 /**
  * Migration from database v3 to v4.
@@ -32,181 +41,179 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  */
 object Migration3to4 : Migration(3, 4) {
 
+    private val scenarioIdForeignKey = SQLiteColumn.ForeignKey(
+        name = "scenario_id", type = Long::class,
+        referencedTable = SCENARIO_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
+    )
+
+    private val eventIdForeignKey = SQLiteColumn.ForeignKey(
+        name = "eventId", type = Long::class,
+        referencedTable = EVENT_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
+    )
+
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.apply {
-            // Creates the new tables.
-            execSQL(createEventTable)
-            execSQL(createActionTable)
-            execSQL(createConditionTable)
+        // Creates the new tables
+        val eventTable = db.createEventTable()
+        val actionTable = db.createActionTable()
+        val newConditionTable = db.createNewConditionTable()
 
-            // Create the indexes fot the relations
-            execSQL(scenarioToEventsIndex)
-            execSQL(eventToActionsIndex)
-            execSQL(eventToConditionsIndex)
+        // Create indexes tables
+        eventTable.createIndex(scenarioIdForeignKey)
+        actionTable.createIndex(eventIdForeignKey)
+        newConditionTable.createIndex(
+            foreignKey = eventIdForeignKey,
+            indexName = "index_condition_table_eventId"
+        )
 
-            // Transform the clicks into event
-            execSQL(insertEvents)
+        // Migrate from old format
+        eventTable.insertEvents()
+        newConditionTable.insertConditions()
+        actionTable.insertClickActions()
+        actionTable.insertSwipeActions()
+        actionTable.insertPauseActions()
 
-            // Update condition table
-            execSQL(insertConditions)
+        // Delete old tables
+        db.getTable("click_table").dropTable()
+        db.getTable("condition_table").dropTable()
+        db.getTable("ClickConditionCrossRef").dropTable()
 
-            // Transform the clicks into actions.
-            execSQL(insertClickActions)
-            execSQL(insertSwipeActions)
-            execSQL(insertPauseActions)
-
-            // Delete old tables
-            execSQL(deleteClickTable)
-            execSQL(deleteConditionTable)
-            execSQL(deleteClickConditionCrossRefTable)
-
-            // Delete old indexes
-            execSQL(deleteScenarioClickIndex)
-            execSQL(deleteClickConditionCrossRefClickIndex)
-            execSQL(deleteClickConditionCrossRefConditionIndex)
-
-            // Rename condition_table_new
-            execSQL(renameNewConditionTable)
-        }
+        // Rename condition_table_new in condition_table to finish the replacement
+        newConditionTable.alterTableRename("condition_table")
     }
 
     /** Create the event table, replacement of the click table. */
-    private val createEventTable = """
-        CREATE TABLE IF NOT EXISTS `event_table` (
-            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            `scenario_id` INTEGER NOT NULL,
-            `name` TEXT NOT NULL,
-            `operator` INTEGER NOT NULL,
-            `priority` INTEGER NOT NULL,
-            `stop_after` INTEGER,
-            FOREIGN KEY(`scenario_id`) REFERENCES `scenario_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE 
-        )
-    """.trimIndent()
+    private fun SupportSQLiteDatabase.createEventTable(): SQLiteTable =
+        getTable(EVENT_TABLE).apply {
+            createTable(
+                primaryKey = SQLiteColumn.PrimaryKey(),
+                columns = setOf(
+                    scenarioIdForeignKey,
+                    SQLiteColumn.Default("name", String::class),
+                    SQLiteColumn.Default("operator", Int::class),
+                    SQLiteColumn.Default("priority", Int::class),
+                    SQLiteColumn.Default("stop_after", Int::class, isNotNull = false),
+                ),
+            )
+        }
 
     /** Create the new action table. */
-    private val createActionTable = """
-        CREATE TABLE IF NOT EXISTS `action_table` (
-            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            `eventId` INTEGER NOT NULL,
-            `priority` INTEGER NOT NULL,
-            `name` TEXT NOT NULL DEFAULT "Default name",
-            `type` TEXT NOT NULL,
-            `x` INTEGER,
-            `y` INTEGER,
-            `pressDuration` INTEGER,
-            `fromX` INTEGER,
-            `fromY` INTEGER,
-            `toX` INTEGER,
-            `toY` INTEGER,
-            `swipeDuration` INTEGER,
-            `pauseDuration` INTEGER,
-            FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
-        )
-    """.trimIndent()
+    private fun SupportSQLiteDatabase.createActionTable(): SQLiteTable =
+        getTable(ACTION_TABLE).apply {
+            createTable(
+                primaryKey = SQLiteColumn.PrimaryKey(),
+                columns = setOf(
+                    eventIdForeignKey,
+                    SQLiteColumn.Default("priority", Int::class),
+                    SQLiteColumn.Default("name", String::class),
+                    SQLiteColumn.Default("type", ActionType::class),
+                    SQLiteColumn.Default("x", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("y", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("pressDuration", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("fromX", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("fromY", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("toX", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("toY", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("swipeDuration", Int::class, isNotNull = false),
+                    SQLiteColumn.Default("pauseDuration", Int::class, isNotNull = false),
+                ),
+            )
+        }
 
     /**
      * Creates the condition table. As the changes on the old condition table are too big, we create a new one here
      * to copy all the values from the old one before renaming this one.
      */
-    private val createConditionTable = """
-        CREATE TABLE IF NOT EXISTS `condition_table_new` (
-            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            `eventId` INTEGER NOT NULL,
-            `path` TEXT NOT NULL,
-            `area_left` INTEGER NOT NULL,
-            `area_top` INTEGER NOT NULL,
-            `area_right` INTEGER NOT NULL,
-            `area_bottom` INTEGER NOT NULL,
-            `threshold` INTEGER NOT NULL DEFAULT 1,
-            FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
-        )
-    """.trimIndent()
-
-    /** Creates the index between a scenario and its events. */
-    private val scenarioToEventsIndex = """
-        CREATE INDEX IF NOT EXISTS `index_event_table_scenario_id` ON `event_table` (`scenario_id`)
-    """.trimIndent()
-
-    /** Creates the index between an event and its actions. */
-    private val eventToActionsIndex = """
-        CREATE INDEX IF NOT EXISTS `index_action_table_eventId` ON `action_table` (`eventId`)
-    """.trimIndent()
-
-    /** Creates the index between an event and its conditions. */
-    private val eventToConditionsIndex = """
-        CREATE INDEX IF NOT EXISTS `index_condition_table_eventId` ON `condition_table_new` (`eventId`)
-    """.trimIndent()
-
-    /** Insert an event for each old click. */
-    private val insertEvents = """
-        INSERT INTO `event_table` (id, scenario_id, name, operator, priority, stop_after)
-        SELECT clickId, scenario_id, name, operator, priority, stop_after
-        FROM click_table
-    """.trimIndent()
-
-    /** Insert an action for each old click. */
-    private val insertClickActions = """
-        INSERT INTO action_table (eventId, priority, name, type, x, y, pressDuration)
-        SELECT clickId, 0, name, "CLICK", from_x, from_y, 1
-        FROM click_table
-        WHERE click_table.type = 1
-    """.trimIndent()
-
-    /** Insert an action for each old swipe. */
-    private val insertSwipeActions = """
-        INSERT INTO action_table (eventId, priority, name, type, fromX, fromY, toX, toY, swipeDuration)
-        SELECT clickId, 0, name, "SWIPE", from_x, from_y, to_x, to_y, 175
-        FROM click_table
-        WHERE click_table.type = 2
-    """.trimIndent()
-
-    /** Insert a pause action for each old action we had to replace the delay_after. */
-    private val insertPauseActions = """
-        INSERT INTO action_table (eventId, priority, name, type, pauseDuration)
-        SELECT clickId, 1, "Pause", "PAUSE", delay_after
-        FROM click_table
-    """.trimIndent()
-
-    /** Copy the existing conditions into the new table. */
-    private val insertConditions = """
-        INSERT INTO `condition_table_new` (eventId, path, area_left, area_top, area_right, area_bottom, threshold)
-        SELECT ClickConditionCrossRef.clickId, ClickConditionCrossRef.path, area_left, area_top, area_right, area_bottom, threshold 
-        FROM condition_table
-        INNER JOIN ClickConditionCrossRef on ClickConditionCrossRef.path = condition_table.path
-    """.trimIndent()
-
-    /** Delete the old index between a scenario and its clicks. */
-    private val deleteScenarioClickIndex = """
-        DROP INDEX IF EXISTS index_click_table_scenario_id
-    """.trimIndent()
-
-    /** Delete the old click table. */
-    private val deleteClickTable = """
-        DROP TABLE IF EXISTS click_table
-    """.trimIndent()
-
-    /** Delete the old index between a click and its conditions. */
-    private val deleteClickConditionCrossRefClickIndex = """
-        DROP INDEX IF EXISTS index_ClickConditionCrossRef_clickId
-    """.trimIndent()
-
-    /** Delete the old index between a condition and its clicks. */
-    private val deleteClickConditionCrossRefConditionIndex = """
-        DROP INDEX IF EXISTS index_ClickConditionCrossRef_path
-    """.trimIndent()
-
-    /** Delete the old condition table. */
-    private val deleteConditionTable = """
-        DROP TABLE condition_table
-    """.trimIndent()
-
-    /** Delete the old click condition cross ref table. */
-    private val deleteClickConditionCrossRefTable = """
-        DROP TABLE ClickConditionCrossRef
-    """.trimIndent()
-
-    /** Rename the new condition table with the old name. */
-    private val renameNewConditionTable = """
-        ALTER TABLE condition_table_new RENAME TO condition_table
-    """.trimIndent()
+    private fun SupportSQLiteDatabase.createNewConditionTable(): SQLiteTable =
+        getTable("condition_table_new").apply {
+            createTable(
+                primaryKey = SQLiteColumn.PrimaryKey(),
+                columns = setOf(
+                    eventIdForeignKey,
+                    SQLiteColumn.Default("path", String::class),
+                    SQLiteColumn.Default("area_left", Int::class),
+                    SQLiteColumn.Default("area_top", Int::class),
+                    SQLiteColumn.Default("area_right", Int::class),
+                    SQLiteColumn.Default("area_bottom", Int::class),
+                    SQLiteColumn.Default("threshold", Int::class, defaultValue = "1"),
+                ),
+            )
+        }
 }
+
+
+/** Insert an event for each old click. */
+private fun SQLiteTable.insertEvents() =
+    insertIntoSelect(
+        fromTableName = "click_table",
+        columnsToFromColumns = arrayOf(
+            "id" to "clickId",
+            "scenario_id" to "scenario_id",
+            "name" to "name",
+            "operator" to "operator",
+            "priority" to "priority",
+            "stop_after" to "stop_after",
+        )
+    )
+
+/** Insert an action for each old click. */
+private fun SQLiteTable.insertClickActions() =
+    insertIntoSelect(
+        fromTableName = "click_table",
+        extraClause = "WHERE click_table.type = 1",
+        columnsToFromColumns = arrayOf(
+            "eventId" to "clickId",
+            "priority" to "0",
+            "name" to "name",
+            "type" to "\"CLICK\"",
+            "x" to "from_x",
+            "y" to "from_y",
+            "pressDuration" to "1",
+        )
+    )
+
+/** Insert an action for each old swipe. */
+private fun SQLiteTable.insertSwipeActions() =
+    insertIntoSelect(
+        fromTableName = "click_table",
+        extraClause = "WHERE click_table.type = 2",
+        columnsToFromColumns = arrayOf(
+            "eventId" to "clickId",
+            "priority" to "0",
+            "name" to "name",
+            "type" to "\"SWIPE\"",
+            "fromX" to "from_x",
+            "fromY" to "from_y",
+            "toX" to "to_x",
+            "toY" to "to_y",
+            "swipeDuration" to "175",
+        )
+    )
+
+/** Insert a pause action for each old action we had to replace the delay_after. */
+private fun SQLiteTable.insertPauseActions() =
+    insertIntoSelect(
+        fromTableName = "click_table",
+        columnsToFromColumns = arrayOf(
+            "eventId" to "clickId",
+            "priority" to "1",
+            "name" to "\"Pause\"",
+            "type" to "\"PAUSE\"",
+            "pauseDuration" to "delay_after",
+        )
+    )
+
+/** Copy the existing conditions into the new table. */
+private fun SQLiteTable.insertConditions() =
+    insertIntoSelect(
+        fromTableName = "condition_table",
+        extraClause = "INNER JOIN ClickConditionCrossRef on ClickConditionCrossRef.path = condition_table.path",
+        columnsToFromColumns = arrayOf(
+            "eventId" to "ClickConditionCrossRef.clickId",
+            "path" to "ClickConditionCrossRef.path",
+            "area_left" to "area_left",
+            "area_top" to "area_top",
+            "area_right" to "area_right",
+            "area_bottom" to "area_bottom",
+            "threshold" to "threshold",
+        )
+    )

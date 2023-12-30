@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import androidx.room.ForeignKey
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+
+import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
 
 /**
  * Migration from database v6 to v7.
@@ -29,64 +34,56 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  */
 object Migration6to7 : Migration(6, 7) {
 
+    private val scenarioIdForeignKey = SQLiteColumn.ForeignKey(
+        name = "scenario_id", type = Long::class,
+        referencedTable = "scenario_table", referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
+    )
+
+    private val eventIdForeignKey = SQLiteColumn.ForeignKey(
+        name = "event_id", type = Long::class,
+        referencedTable = "event_table", referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
+    )
+
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.apply {
-            execSQL(createEndConditionTable)
-            execSQL(endConditionToScenarioIndex)
-            execSQL(endConditionToEventIndex)
-            execSQL(insertEndConditions)
-            execSQL(addDetectionQualityColumn)
-            execSQL(addEndConditionOperatorColumn)
+        db.getTable("end_condition_table").apply {
+            createEndConditionTable()
+            createIndex(scenarioIdForeignKey)
+            createIndex(eventIdForeignKey)
+
+            initializeEndConditions()
         }
+
+        db.getTable("scenario_table")
+            .addScenarioNewColumns()
     }
 
     /** Create the table for the end conditions. */
-    private val createEndConditionTable = """
-        CREATE TABLE IF NOT EXISTS `end_condition_table` (
-            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            `scenario_id` INTEGER NOT NULL,
-            `event_id` INTEGER NOT NULL,
-            `executions` INTEGER NOT NULL,
-            FOREIGN KEY(`scenario_id`) REFERENCES `scenario_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE ,
-            FOREIGN KEY(`event_id`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE 
+    private fun SQLiteTable.createEndConditionTable(): Unit = createTable(
+        primaryKey = SQLiteColumn.PrimaryKey(),
+        columns = setOf(
+            scenarioIdForeignKey,
+            eventIdForeignKey,
+            SQLiteColumn.Default("executions", Int::class),
         )
-    """.trimIndent()
+    )
+}
 
-    /** Creates the index between a end conditions and its scenario. */
-    private val endConditionToScenarioIndex = """
-        CREATE INDEX IF NOT EXISTS `index_end_condition_table_scenario_id` 
-        ON `end_condition_table` (`scenario_id`)
-    """.trimIndent()
+/** Insert a new end condition for each event with a stop after. */
+private fun SQLiteTable.initializeEndConditions() = insertIntoSelect(
+    fromTableName = "event_table",
+    extraClause = "WHERE `stop_after` IS NOT NULL",
+    columnsToFromColumns = arrayOf(
+        "scenario_id" to "scenario_id",
+        "event_id" to "id",
+        "executions" to "stop_after",
+    )
+)
 
-    /** Creates the index between a end conditions and its event. */
-    private val endConditionToEventIndex = """
-        CREATE INDEX IF NOT EXISTS `index_end_condition_table_event_id` 
-        ON `end_condition_table` (`event_id`)
-    """.trimIndent()
-
-    /** Insert a new end condition for each event with a stop after. */
-    private val insertEndConditions = """
-        INSERT INTO `end_condition_table` (scenario_id, event_id, executions)
-        SELECT `scenario_id`, `id`, `stop_after`
-        FROM `event_table`
-        WHERE `stop_after` IS NOT NULL
-    """.trimIndent()
-
-    /**
-     * Add the detection quality column to the scenario table.
-     * Default value is the new algorithm default value.
-     */
-    private val addDetectionQualityColumn = """
-        ALTER TABLE `scenario_table`
-        ADD COLUMN `detection_quality` INTEGER DEFAULT 600 NOT NULL
-    """.trimIndent()
-
-    /**
-     * Add the end condition operator column to the scenario table.
-     * Default value is OR.
-     */
-    private val addEndConditionOperatorColumn = """
-        ALTER TABLE `scenario_table`
-        ADD COLUMN `end_condition_operator` INTEGER DEFAULT 2 NOT NULL
-    """.trimIndent()
+/**
+ * Add the detection quality & operator column to the scenario table.
+ * Quality default value is the new algorithm default value, operator default value is OR.
+ */
+private fun SQLiteTable.addScenarioNewColumns() = apply {
+    alterTableAddColumn(SQLiteColumn.Default("detection_quality", Int::class, defaultValue = "600"))
+    alterTableAddColumn(SQLiteColumn.Default("end_condition_operator", Int::class, defaultValue = "2"))
 }

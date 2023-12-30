@@ -14,27 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.database.utils
+package com.buzbuz.smartautoclicker.core.database
 
 import androidx.annotation.StringDef
-import kotlin.reflect.KClass
 
-/** Defines the supported types by the room database. */
-@StringDef(TEXT, INTEGER)
+/** Defines the different tables in the database. */
+@StringDef(
+    SCENARIO_TABLE, EVENT_TABLE, ACTION_TABLE, CONDITION_TABLE, END_CONDITION_TABLE,
+    INTENT_EXTRA_TABLE, EVENT_TOGGLE_TABLE, TUTORIAL_SUCCESS_TABLE
+)
 @Retention(AnnotationRetention.SOURCE)
-internal annotation class SQLiteType
+internal annotation class DatabaseTable
 
-internal const val TEXT = "TEXT"
-internal const val INTEGER = "INTEGER"
-
-
-@SQLiteType
-internal fun <T : Any> KClass<T>.toSQLiteType(): String =
-    when (this) {
-        String::class -> TEXT
-
-        Int::class,
-        Long::class -> INTEGER
-
-        else -> throw UnsupportedOperationException("This type is not supported ${this.simpleName}")
-    }
+internal const val SCENARIO_TABLE = "scenario_table"
+internal const val EVENT_TABLE = "event_table"
+internal const val ACTION_TABLE = "action_table"
+internal const val CONDITION_TABLE = "condition_table"
+internal const val END_CONDITION_TABLE = "end_condition_table"
+internal const val INTENT_EXTRA_TABLE = "intent_extra_table"
+internal const val EVENT_TOGGLE_TABLE = "event_toggle_table"
+internal const val TUTORIAL_SUCCESS_TABLE = "tutorial_success_table"

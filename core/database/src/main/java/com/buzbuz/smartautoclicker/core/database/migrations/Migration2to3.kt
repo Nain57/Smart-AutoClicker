@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@ package com.buzbuz.smartautoclicker.core.database.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
+import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
+
 /**
  * Migration from database v2 to v3.
  * Changes: clicks have now an optional amount of executions before the scenario is stopped.
@@ -26,6 +29,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 object Migration2to3 : Migration(2, 3) {
 
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL("ALTER TABLE click_table ADD COLUMN stop_after INTEGER DEFAULT NULL")
+        db.getTable("click_table")
+            .alterTableAddColumn(SQLiteColumn.Default("stop_after", Int::class, isNotNull = false))
     }
 }
