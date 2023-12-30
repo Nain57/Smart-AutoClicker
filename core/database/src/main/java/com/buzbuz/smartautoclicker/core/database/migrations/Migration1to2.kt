@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,10 @@ package com.buzbuz.smartautoclicker.core.database.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
+import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
+import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
+
 /**
  * Migration from database v1 to v2.
  * Changes: conditions have now a threshold, allowing to detect images close to the detection one.
@@ -26,6 +30,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 object Migration1to2 : Migration(1, 2) {
 
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL("ALTER TABLE condition_table ADD COLUMN threshold INTEGER DEFAULT 1 NOT NULL")
+        db.getTable(CONDITION_TABLE)
+            .alterTableAddColumn(SQLiteColumn.Default("threshold", Int::class, defaultValue = "1"))
     }
 }
