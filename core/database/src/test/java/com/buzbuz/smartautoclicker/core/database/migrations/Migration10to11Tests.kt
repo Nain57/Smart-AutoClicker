@@ -25,7 +25,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
-import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.database.utils.*
 
 import org.junit.Rule
@@ -106,7 +106,7 @@ class Migration10to11Tests {
             evtId = TEST_EVENT_ID,
             name = "TOTO",
             toggleEventId = 12L,
-            toggleType = ToggleEventType.TOGGLE,
+            toggleType = EventToggleType.TOGGLE,
             priority = 1,
         )
     }

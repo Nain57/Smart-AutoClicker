@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.database.utils
 import android.database.Cursor
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
-import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 
 
 internal data class V10Click(
@@ -194,7 +194,7 @@ internal class ExpectedV10ToV11ToggleEvent(
     val name: String,
     val priority: Int,
     val toggleEventId: Long,
-    val toggleType: ToggleEventType,
+    val toggleType: EventToggleType,
 )
 
 internal fun SupportSQLiteDatabase.insertV10ToggleEvent(expectedToggleEvent: ExpectedV10ToV11ToggleEvent) {

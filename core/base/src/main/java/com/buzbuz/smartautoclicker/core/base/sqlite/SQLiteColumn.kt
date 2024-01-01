@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.base.sqlite
 
 import kotlin.reflect.KClass
-import kotlin.reflect.full.isSubclassOf
 
 sealed class SQLiteColumn<T : Any> {
 
@@ -26,9 +25,11 @@ sealed class SQLiteColumn<T : Any> {
     abstract val isNotNull: Boolean
 
     internal val typeSQLLite: String
-        get() = when  {
-            type == Int::class || type == Long::class || type == Boolean::class-> "INTEGER"
-            type == String::class || type.isSubclassOf(Enum::class) -> "TEXT"
+        get() = when (type) {
+            Int::class,
+            Long::class,
+            Boolean::class -> "INTEGER"
+            String::class -> "TEXT"
             else -> throw UnsupportedOperationException("This type is not supported $this")
         }
 

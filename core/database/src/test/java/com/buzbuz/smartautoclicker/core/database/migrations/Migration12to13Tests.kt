@@ -21,6 +21,12 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
+import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
+import com.buzbuz.smartautoclicker.core.database.utils.assertCountEquals
+import com.buzbuz.smartautoclicker.core.database.utils.assertRowIsV11Click
+import com.buzbuz.smartautoclicker.core.database.utils.getV11Actions
+import com.buzbuz.smartautoclicker.core.database.utils.insertV10Click
+import com.buzbuz.smartautoclicker.core.database.utils.toExpectedV11Click
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,6 +37,13 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.Q])
 class Migration12to13Tests {
 
+    private companion object {
+        private const val TEST_DB = "migration-test"
+
+        private const val OLD_DB_VERSION = 12
+        private const val NEW_DB_VERSION = 13
+    }
+
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
@@ -39,6 +52,17 @@ class Migration12to13Tests {
 
     @Test
     fun migrate_fails() {
-        assert(false)
+        // Given
+
+
+        // Insert in v12 and close
+        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+
+        }
+
+        // Migrate to v13
+        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+
+        }
     }
 }

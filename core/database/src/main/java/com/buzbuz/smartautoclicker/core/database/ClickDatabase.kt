@@ -24,8 +24,8 @@ import androidx.room.Room
 
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.migrations.*
@@ -45,8 +45,8 @@ import com.buzbuz.smartautoclicker.core.database.migrations.*
         EventEntity::class,
         ScenarioEntity::class,
         ConditionEntity::class,
-        EndConditionEntity::class,
         IntentExtraEntity::class,
+        EventToggleEntity::class,
     ],
     version = CLICK_DATABASE_VERSION,
     exportSchema = true,

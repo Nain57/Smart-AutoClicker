@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
-import com.buzbuz.smartautoclicker.core.database.utils.EVENT_TABLE
+import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 
 import kotlinx.serialization.Serializable
 

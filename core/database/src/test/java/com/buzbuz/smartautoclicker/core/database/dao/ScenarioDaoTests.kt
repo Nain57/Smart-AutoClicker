@@ -72,7 +72,7 @@ class ScenarioDaoTests {
         database.scenarioDao().add(scenarioEntity)
 
         assertEquals(
-            CompleteScenario(scenarioEntity, emptyList(), emptyList()),
+            CompleteScenario(scenarioEntity, emptyList()),
             database.scenarioDao().getCompleteScenario(scenarioEntity.id)
         )
     }
@@ -86,7 +86,7 @@ class ScenarioDaoTests {
         database.scenarioDao().update(updatedScenario)
 
         assertEquals(
-            CompleteScenario(updatedScenario, emptyList(), emptyList()),
+            CompleteScenario(updatedScenario, emptyList()),
             database.scenarioDao().getCompleteScenario(scenarioEntity.id)
         )
     }
