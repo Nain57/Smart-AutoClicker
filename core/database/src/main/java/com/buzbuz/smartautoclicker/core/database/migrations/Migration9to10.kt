@@ -19,9 +19,12 @@ package com.buzbuz.smartautoclicker.core.database.migrations
 import androidx.annotation.VisibleForTesting
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
 
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
+import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
+import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 
 import kotlin.math.min
@@ -40,10 +43,15 @@ object Migration9to10 : Migration(9, 10) {
     @VisibleForTesting
     internal const val NEW_GESTURE_DURATION_LIMIT_MS = 59999L
 
+    private val actionIdColumn = SQLiteColumn.PrimaryKey()
+    private val actionTypeColumn = SQLiteColumn.Default("type", String::class)
+    private val actionPressDurationColumn = SQLiteColumn.Default("pressDuration", Long::class)
+    private val actionSwipeDurationColumn = SQLiteColumn.Default("swipeDuration", Long::class)
+
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.getTable("action_table").apply {
+        db.getSQLiteTableReference(ACTION_TABLE).apply {
             forEachClicksAndSwipes { id, type, pressDuration, swipeDuration ->
-                when (type) {
+                when (ActionType.valueOf(type)) {
                     ActionType.CLICK -> updateClickPressDuration(id, pressDuration.toLimitedDuration())
                     ActionType.SWIPE -> updateSwipeDuration(id, swipeDuration.toLimitedDuration())
                     else -> throw IllegalArgumentException("It should be a click or a swipe")
@@ -51,35 +59,23 @@ object Migration9to10 : Migration(9, 10) {
             }
         }
     }
-}
 
-private fun SQLiteTable.forEachClicksAndSwipes(
-    closure: (id: Long, type: ActionType, pressDuration: Long, swipeDuration: Long) -> Unit,
-) {
-    select(
-        columns = setOf("id", "type", "pressDuration", "swipeDuration"),
-        extraClause = "WHERE `type` = \"${ActionType.CLICK}\" OR `type` = \"${ActionType.SWIPE}\""
-    ) { queryRow ->
-        closure(
-            queryRow.getLong("id"),
-            queryRow.getEnumValue("type"),
-            queryRow.getLong("pressDuration"),
-            queryRow.getLong("swipeDuration"),
+    private fun SQLiteTable.forEachClicksAndSwipes(closure: (Long, String, Long, Long) -> Unit) {
+        forEachRow(
+            extraClause = "WHERE `type` = \"${ActionType.CLICK}\" OR `type` = \"${ActionType.SWIPE}\"",
+            actionIdColumn,
+            actionTypeColumn,
+            actionPressDurationColumn,
+            actionSwipeDurationColumn,
+            closure = closure,
         )
     }
+
+    private fun SQLiteTable.updateClickPressDuration(actionId: Long, duration: Long) =
+        update("WHERE `id` = $actionId", actionPressDurationColumn to "$duration")
+
+    private fun SQLiteTable.updateSwipeDuration(actionId: Long, duration: Long) =
+        update("WHERE `id` = $actionId", actionSwipeDurationColumn to "$duration")
+    private fun Long.toLimitedDuration(): Long =
+        min(this, NEW_GESTURE_DURATION_LIMIT_MS)
 }
-
-private fun SQLiteTable.updateClickPressDuration(actionId: Long, duration: Long) =
-    update(
-        extraClause = "WHERE `id` = $actionId",
-        columnNamesToValues = arrayOf("pressDuration" to "$duration")
-    )
-
-private fun SQLiteTable.updateSwipeDuration(actionId: Long, duration: Long) =
-    update(
-        extraClause = "WHERE `id` = $actionId",
-        columnNamesToValues = arrayOf("swipeDuration" to "$duration")
-    )
-
-private fun Long.toLimitedDuration(): Long =
-    min(this, Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS)

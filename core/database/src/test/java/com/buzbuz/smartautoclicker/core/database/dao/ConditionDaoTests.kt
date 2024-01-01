@@ -114,7 +114,7 @@ class ConditionDaoTests {
             TestsData.getNewConditionEntity(id = 3, eventId = TestsData.EVENT_ID, path = "tutu"),
         )
         val expectedPaths = mutableListOf<String>()
-        conditions.forEach { expectedPaths.add(it.path) }
+        conditions.forEach { expectedPaths.add(it.path!!) }
 
         database.apply {
             scenarioDao().add(scenario)

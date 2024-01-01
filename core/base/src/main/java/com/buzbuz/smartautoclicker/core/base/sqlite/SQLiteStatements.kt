@@ -19,18 +19,13 @@ package com.buzbuz.smartautoclicker.core.base.sqlite
 internal fun <T: Any> SQLiteTable.getSQLiteAlterTableAddColumn(column: SQLiteColumn.Default<T>): String =
     """
         ALTER TABLE `$tableName`
-        ADD COLUMN `${column.name}` ${column.typeSQLLite} 
-        DEFAULT ${if (column.isNotNull) "${column.defaultValue!!} NOT NULL" else "NULL"}
+        ADD COLUMN `${column.name}` ${column.typeSQLLite}  
+        ${if (column.isNotNull) "DEFAULT ${column.defaultValue!!} NOT NULL" else ""}
     """.trimIndent()
 
 internal fun SQLiteTable.getSQLiteAlterTableRename(newTableName: String): String =
     """
         ALTER TABLE `$tableName` RENAME TO $newTableName
-    """.trimIndent()
-
-internal fun SQLiteTable.getSQLiteAlterTableDropColumn(columnName: String): String =
-    """
-        ALTER TABLE `$tableName` DROP COLUMN `$columnName`"
     """.trimIndent()
 
 internal fun SQLiteTable.getSQLiteCreateTable(
@@ -63,7 +58,7 @@ internal fun SQLiteTable.getSQLiteDropTable(): String =
 internal fun SQLiteTable.getSQLiteInsertIntoSelect(
     fromTableName: String,
     extraClause: String? = null,
-    vararg columnsToFromColumns: Pair<String, String>,
+    columnsToFromColumns: Array<out Pair<String, String>>,
 ): String =
     """
         INSERT INTO `$tableName` (${columnsToFromColumns.map { it.first }.formatAsSQLiteList()})
@@ -72,25 +67,27 @@ internal fun SQLiteTable.getSQLiteInsertIntoSelect(
         ${extraClause.formatAsOptionalClause()}
     """
 
-internal fun SQLiteTable.getSQLiteInsertIntoValues(vararg columnNamesToValues: Pair<String, String>): String =
-    """
-        INSERT INTO `$tableName` (${columnNamesToValues.map { it.first }.formatAsSQLiteList()})
-        VALUES (${columnNamesToValues.map { it.second }.formatAsSQLiteList()})
-    """.trimIndent()
-
-internal fun SQLiteTable.getSQLiteSelect(columns: Set<String>, extraClause: String?): String =
+internal fun SQLiteTable.getSQLiteSelect(columns: Collection<String>, extraClause: String?): String =
     """
         SELECT ${columns.formatAsSQLiteList()}
         FROM `$tableName`
         ${extraClause.formatAsOptionalClause()}
     """.trimIndent()
 
+internal fun SQLiteTable.getSQLiteSelectAll(): String =
+    """
+        SELECT * FROM `$tableName`
+    """.trimIndent()
+
 internal fun SQLiteTable.getSQLiteUpdate(
     extraClause: String?,
-    vararg columnNamesToValues: Pair<String, String>,
+    columnNamesToValues: Array<out Pair<String, String>>,
 ): String =
     """
         UPDATE `$tableName` 
         SET ${columnNamesToValues.asList().formatAsSQLiteUpdateList()}
         ${extraClause.formatAsOptionalClause()}
     """
+
+internal fun SQLiteTable.getSQLitePragmaForeignKeyList(): String =
+    """PRAGMA foreign_key_list($tableName)"""

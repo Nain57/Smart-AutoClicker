@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.database.utils
 
-import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 
 
 private fun Boolean?.toSqlite(): String =
@@ -206,7 +206,7 @@ fun getInsertV10Intent(id: Long, eventId: Long, name: String, advanced: Boolean,
         VALUES ($id, $eventId, $priority, "$name", "INTENT", ${advanced.toSqlite()}, ${broadcast.toSqlite()}, "$action", "$comp", $flags)
     """.trimIndent()
 
-fun getInsertV10ToggleEvent(id: Long, eventId: Long, name: String, toggleEventId: Long, toggleType: ToggleEventType, priority: Int) =
+fun getInsertV10ToggleEvent(id: Long, eventId: Long, name: String, toggleEventId: Long, toggleType: EventToggleType, priority: Int) =
     """
         INSERT INTO action_table (id, eventId, priority, name, type, toggle_event_id, toggle_type) 
         VALUES ($id, $eventId, $priority, "$name", "TOGGLE_EVENT", $toggleEventId, "$toggleType")

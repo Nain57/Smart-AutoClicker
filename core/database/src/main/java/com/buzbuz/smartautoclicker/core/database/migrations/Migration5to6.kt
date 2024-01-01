@@ -21,7 +21,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
+import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
+import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
+import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 
 /**
@@ -33,36 +36,30 @@ import com.buzbuz.smartautoclicker.core.database.entity.ActionType
  */
 object Migration5to6 : Migration(5, 6) {
 
+    private val conditionShouldBeDetectedColumn =
+        SQLiteColumn.Default("shouldBeDetected", Boolean::class, defaultValue = "1")
+
+    private val actionIdColumn = SQLiteColumn.PrimaryKey()
+    private val actionTypeColumn = SQLiteColumn.Default("type", String::class)
+    private val actionClickOnConditionColumn =
+        SQLiteColumn.Default("clickOnCondition", Int::class, isNotNull = false)
+
     override fun migrate(db: SupportSQLiteDatabase) {
         db.apply {
-            getTable("condition_table").addConditionShouldBeDetectedColumn()
+            getSQLiteTableReference(CONDITION_TABLE).alterTableAddColumn(conditionShouldBeDetectedColumn)
 
-            getTable("action_table").apply {
-                addActionClickOnConditionColumn()
-                forEachActions { id, type ->
-                    if (type == ActionType.CLICK) updateClickOnCondition(id, 0)
+            getSQLiteTableReference(ACTION_TABLE).apply {
+                alterTableAddColumn(actionClickOnConditionColumn)
+
+                forEachRow(null, actionIdColumn, actionTypeColumn) { actionId, actionType ->
+                    if (ActionType.valueOf(actionType) == ActionType.CLICK)
+                        updateClickOnCondition(actionId, 0)
                 }
             }
         }
     }
-}
 
-
-/** Add the should be detected column to the condition table. */
-private fun SQLiteTable.addConditionShouldBeDetectedColumn() =
-    alterTableAddColumn(SQLiteColumn.Default("shouldBeDetected", Boolean::class, defaultValue = "1"))
-
-/** Add the click on condition to the action table. */
-private fun SQLiteTable.addActionClickOnConditionColumn() =
-    alterTableAddColumn(SQLiteColumn.Default("clickOnCondition", Int::class, isNotNull = false))
-
-
-/** Update the click on condition value in the action table. */
-private fun SQLiteTable.updateClickOnCondition(id: Long, clickOnCondition: Int) =
-    update("WHERE `id` = $id", "clickOnCondition" to clickOnCondition.toString())
-
-private fun SQLiteTable.forEachActions(closure: (id: Long, type: ActionType) -> Unit) {
-    select(setOf("id", "type")) { sqlRow ->
-        closure(sqlRow.getLong("id"), sqlRow.getEnumValue("type"))
-    }
+    /** Update the click on condition value in the action table. */
+    private fun SQLiteTable.updateClickOnCondition(id: Long, clickOnCondition: Int): Unit =
+        update("WHERE `id` = $id", actionClickOnConditionColumn to clickOnCondition.toString())
 }

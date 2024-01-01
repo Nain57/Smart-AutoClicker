@@ -77,8 +77,18 @@ abstract class EventDao {
      * @return the flow on the list of complete events.
      */
     @Transaction
-    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId ORDER BY priority")
+    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId AND type='IMAGE_EVENT' ORDER BY priority")
     abstract suspend fun getCompleteEvents(scenarioId: Long): List<CompleteEventEntity>
+
+    /**
+     * Get the list of complete events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of complete events.
+     */
+    @Transaction
+    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId AND type='TRIGGER_EVENT' ORDER BY name")
+    abstract suspend fun getCompleteTriggerEvents(scenarioId: Long): List<CompleteEventEntity>
 
     /**
      * Get the list of event identifier for a given scenario.

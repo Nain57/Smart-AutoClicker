@@ -22,7 +22,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
+import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
+import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 
 /**
@@ -44,10 +45,14 @@ object Migration4to5 : Migration(4, 5) {
     @VisibleForTesting
     internal const val THRESHOLD_MAX_VALUE = 20
 
+    private val conditionIdColumn = SQLiteColumn.PrimaryKey()
+    private val conditionThresholdColumn = SQLiteColumn.Default("threshold", Int::class)
+
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.getTable(CONDITION_TABLE).apply {
+        db.getSQLiteTableReference(CONDITION_TABLE).apply {
             addConditionsColumns()
-            forEachCondition { id, threshold ->
+
+            forEachRow(null, conditionIdColumn, conditionThresholdColumn) { id, threshold ->
                 updateThreshold(
                     id = id,
                     threshold = (threshold + THRESHOLD_INCREASE).coerceAtMost(THRESHOLD_MAX_VALUE),
@@ -55,18 +60,12 @@ object Migration4to5 : Migration(4, 5) {
             }
         }
     }
-}
 
-private fun SQLiteTable.addConditionsColumns() = apply {
-    alterTableAddColumn(SQLiteColumn.Default("name", String::class, defaultValue = "Condition"))
-    alterTableAddColumn(SQLiteColumn.Default("detection_type", Int::class, defaultValue = "1"))
-}
-
-private fun SQLiteTable.forEachCondition(closure: (id: Long, threshold: Int) -> Unit) {
-    select(setOf("id", "threshold")) { sqlRow ->
-        closure(sqlRow.getLong("id"), sqlRow.getInt("threshold"))
+    private fun SQLiteTable.addConditionsColumns() = apply {
+        alterTableAddColumn(SQLiteColumn.Default("name", String::class, defaultValue = "Condition"))
+        alterTableAddColumn(SQLiteColumn.Default("detection_type", Int::class, defaultValue = "1"))
     }
-}
 
-private fun SQLiteTable.updateThreshold(id: Long, threshold: Int) =
-    update("WHERE `id` = $id", "threshold" to "$threshold")
+    private fun SQLiteTable.updateThreshold(id: Long, threshold: Int) =
+        update(extraClause = "WHERE `id` = $id", conditionThresholdColumn to "$threshold")
+}

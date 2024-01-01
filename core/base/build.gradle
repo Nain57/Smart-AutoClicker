@@ -49,9 +49,12 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.9.0"
 
     implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
     implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
+    implementation "androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}"
+
 
     testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
     testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"

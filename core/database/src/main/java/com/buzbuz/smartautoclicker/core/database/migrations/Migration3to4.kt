@@ -22,11 +22,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
+import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
-import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 
 /**
  * Migration from database v3 to v4.
@@ -73,9 +72,9 @@ object Migration3to4 : Migration(3, 4) {
         actionTable.insertPauseActions()
 
         // Delete old tables
-        db.getTable("click_table").dropTable()
-        db.getTable("condition_table").dropTable()
-        db.getTable("ClickConditionCrossRef").dropTable()
+        db.getSQLiteTableReference("click_table").dropTable()
+        db.getSQLiteTableReference("condition_table").dropTable()
+        db.getSQLiteTableReference("ClickConditionCrossRef").dropTable()
 
         // Rename condition_table_new in condition_table to finish the replacement
         newConditionTable.alterTableRename("condition_table")
@@ -83,9 +82,8 @@ object Migration3to4 : Migration(3, 4) {
 
     /** Create the event table, replacement of the click table. */
     private fun SupportSQLiteDatabase.createEventTable(): SQLiteTable =
-        getTable(EVENT_TABLE).apply {
+        getSQLiteTableReference(EVENT_TABLE).apply {
             createTable(
-                primaryKey = SQLiteColumn.PrimaryKey(),
                 columns = setOf(
                     scenarioIdForeignKey,
                     SQLiteColumn.Default("name", String::class),
@@ -98,14 +96,13 @@ object Migration3to4 : Migration(3, 4) {
 
     /** Create the new action table. */
     private fun SupportSQLiteDatabase.createActionTable(): SQLiteTable =
-        getTable(ACTION_TABLE).apply {
+        getSQLiteTableReference(ACTION_TABLE).apply {
             createTable(
-                primaryKey = SQLiteColumn.PrimaryKey(),
                 columns = setOf(
                     eventIdForeignKey,
                     SQLiteColumn.Default("priority", Int::class),
                     SQLiteColumn.Default("name", String::class),
-                    SQLiteColumn.Default("type", ActionType::class),
+                    SQLiteColumn.Default("type", String::class),
                     SQLiteColumn.Default("x", Int::class, isNotNull = false),
                     SQLiteColumn.Default("y", Int::class, isNotNull = false),
                     SQLiteColumn.Default("pressDuration", Int::class, isNotNull = false),
@@ -124,9 +121,8 @@ object Migration3to4 : Migration(3, 4) {
      * to copy all the values from the old one before renaming this one.
      */
     private fun SupportSQLiteDatabase.createNewConditionTable(): SQLiteTable =
-        getTable("condition_table_new").apply {
+        getSQLiteTableReference("condition_table_new").apply {
             createTable(
-                primaryKey = SQLiteColumn.PrimaryKey(),
                 columns = setOf(
                     eventIdForeignKey,
                     SQLiteColumn.Default("path", String::class),

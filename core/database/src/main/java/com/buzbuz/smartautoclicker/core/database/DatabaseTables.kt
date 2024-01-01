@@ -30,7 +30,9 @@ internal const val SCENARIO_TABLE = "scenario_table"
 internal const val EVENT_TABLE = "event_table"
 internal const val ACTION_TABLE = "action_table"
 internal const val CONDITION_TABLE = "condition_table"
-internal const val END_CONDITION_TABLE = "end_condition_table"
 internal const val INTENT_EXTRA_TABLE = "intent_extra_table"
 internal const val EVENT_TOGGLE_TABLE = "event_toggle_table"
 internal const val TUTORIAL_SUCCESS_TABLE = "tutorial_success_table"
+
+/** DELETED but kept because referenced in migrations. */
+internal const val END_CONDITION_TABLE = "end_condition_table"

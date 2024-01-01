@@ -22,15 +22,15 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
 import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.keepColumn
+import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.sqlite.copyColumn
+import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
-import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 
 /**
  * Migration from database v10 to v11.
@@ -41,23 +41,34 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
  */
 object Migration10to11 : Migration(10, 11) {
 
-    private val eventIdForeignKey = SQLiteColumn.ForeignKey(
+    private const val DETECTION_QUALITY_INCREASE = 600
+    private const val DETECTION_QUALITY_NEW_MAX = 3216
+
+
+    private val scenarioIdColumn = SQLiteColumn.PrimaryKey()
+    private val scenarioDetectionQualityColumn = SQLiteColumn.Default("detection_quality", Int::class)
+
+    private val conditionIdColumn = SQLiteColumn.PrimaryKey()
+    private val conditionShouldBeDetectedColumn = SQLiteColumn.Default("shouldBeDetected", Boolean::class)
+
+    private val actionIdColumn = SQLiteColumn.PrimaryKey()
+    private val actionEventIdColumn = SQLiteColumn.ForeignKey(
         name = "eventId", type = Long::class,
         referencedTable = EVENT_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
-
-    private val clickOnConditionIdForeignKey = SQLiteColumn.ForeignKey(
+    private val actionTypeColumn = SQLiteColumn.Default("type", String::class)
+    private val actionOldClickOnConditionColumn = SQLiteColumn.Default("clickOnCondition", Boolean::class)
+    private val actionClickOnConditionIdColumn = SQLiteColumn.ForeignKey(
         name = "clickOnConditionId", type = Long::class, isNotNull = false,
         referencedTable = CONDITION_TABLE, referencedColumn = "id", deleteAction = ForeignKey.SET_NULL,
     )
-
-    private val toggleEventIdForeignKey = SQLiteColumn.ForeignKey(
+    private val actionToggleEventIdColumn = SQLiteColumn.ForeignKey(
         name = "toggle_event_id", type = Long::class, isNotNull = false,
         referencedTable = EVENT_TABLE, referencedColumn = "id", deleteAction = ForeignKey.SET_NULL,
     )
 
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.getTable(SCENARIO_TABLE).apply {
+        db.getSQLiteTableReference(SCENARIO_TABLE).apply {
             forEachScenario { id, oldQuality ->
                 updateDetectionQuality(
                     id,
@@ -66,44 +77,43 @@ object Migration10to11 : Migration(10, 11) {
             }
         }
 
-        val oldActionTable = db.getTable(ACTION_TABLE)
-        db.createTempActionTable().apply {
-            copyAllActionsExceptChangedParams()
+        val conditionTable = db.getSQLiteTableReference(CONDITION_TABLE)
+        val oldActionTable = db.getSQLiteTableReference(ACTION_TABLE)
+        val newActionTable = db.createTempActionTable()
 
-            forEachClick { id, eventId, clickOnCondition ->
+        newActionTable.copyAllActionsExceptChangedParams()
+        oldActionTable.forEachClick { id, eventId, clickOnCondition ->
+            newActionTable.apply {
                 if (clickOnCondition) {
-                    updateClickOnConditionToId(
-                        actionId = id,
-                        conditionId = getEventFirstValidConditionId(eventId),
-                    )
+                    updateClickOnConditionToId(id, conditionTable.getEventFirstValidConditionId(eventId))
                     updateClickPositionType(id, ClickPositionType.ON_DETECTED_CONDITION)
                 } else {
                     updateClickPositionType(id, ClickPositionType.USER_SELECTED)
                 }
             }
+        }
+        oldActionTable.dropTable()
 
-            oldActionTable.dropTable()
-
-            createIndex(eventIdForeignKey, "index_action_table_eventId")
-            createIndex(toggleEventIdForeignKey, "index_action_table_toggle_event_id")
-            createIndex(clickOnConditionIdForeignKey, "index_action_table_clickOnConditionId")
+        newActionTable.apply {
+            createIndex(actionEventIdColumn, "index_action_table_eventId")
+            createIndex(actionToggleEventIdColumn, "index_action_table_toggle_event_id")
+            createIndex(actionClickOnConditionIdColumn, "index_action_table_clickOnConditionId")
             alterTableRename(ACTION_TABLE)
         }
     }
 
     private fun SupportSQLiteDatabase.createTempActionTable(): SQLiteTable =
-        getTable("temp_action_table").apply {
+        getSQLiteTableReference("temp_action_table").apply {
             createTable(
-                primaryKey = SQLiteColumn.PrimaryKey(),
                 columns = setOf(
-                    eventIdForeignKey,
+                    actionEventIdColumn,
                     SQLiteColumn.Default("priority", Int::class),
                     SQLiteColumn.Default("name", String::class),
-                    SQLiteColumn.Default("type", ActionType::class),
-                    SQLiteColumn.Default("clickPositionType", ClickPositionType::class, isNotNull = false),
+                    SQLiteColumn.Default("type", String::class),
+                    SQLiteColumn.Default("clickPositionType", String::class, isNotNull = false),
                     SQLiteColumn.Default("x", Int::class, isNotNull = false),
                     SQLiteColumn.Default("y", Int::class, isNotNull = false),
-                    clickOnConditionIdForeignKey,
+                    actionClickOnConditionIdColumn,
                     SQLiteColumn.Default("pressDuration", Long::class, isNotNull = false),
                     SQLiteColumn.Default("fromX", Int::class, isNotNull = false),
                     SQLiteColumn.Default("fromY", Int::class, isNotNull = false),
@@ -116,79 +126,61 @@ object Migration10to11 : Migration(10, 11) {
                     SQLiteColumn.Default("intent_action", String::class, isNotNull = false),
                     SQLiteColumn.Default("component_name", String::class, isNotNull = false),
                     SQLiteColumn.Default("flags", Int::class, isNotNull = false),
-                    toggleEventIdForeignKey,
-                    SQLiteColumn.Default("toggle_type", EventToggleType::class, isNotNull = false),
+                    actionToggleEventIdColumn,
+                    SQLiteColumn.Default("toggle_type", String::class, isNotNull = false),
                 ),
             )
         }
-}
 
-private fun SQLiteTable.forEachScenario(closure: (id: Long, detectionQuality: Int) -> Unit) {
-    select(setOf("id", "detection_quality")) { sqlRow ->
-        closure(
-            sqlRow.getLong("id"),
-            sqlRow.getInt("detection_quality"),
+    private fun SQLiteTable.forEachScenario(closure: (id: Long, detectionQuality: Int) -> Unit): Unit =
+        forEachRow(null, scenarioIdColumn, scenarioDetectionQualityColumn, closure)
+
+    private fun SQLiteTable.forEachClick(closure: (id: Long, eventId: Long, clickOnCondition: Boolean) -> Unit): Unit =
+        forEachRow(
+            extraClause = "WHERE `type` = \"${ActionType.CLICK}\"",
+            actionIdColumn, actionEventIdColumn, actionTypeColumn, actionOldClickOnConditionColumn,
+        ) { id, eventId, _, clickOnCondition -> closure(id, eventId, clickOnCondition) }
+
+    private fun SQLiteTable.copyAllActionsExceptChangedParams() = insertIntoSelect(
+        fromTableName = ACTION_TABLE,
+        columnsToFromColumns = arrayOf(
+            copyColumn("`id`"), copyColumn("`eventId`"), copyColumn("`priority`"), copyColumn("`name`"), copyColumn("`type`"),
+            "`clickPositionType`" to "NULL",
+            copyColumn("`x`"), copyColumn("`y`"),
+            "`clickOnConditionId`" to "NULL",
+            copyColumn("`pressDuration`"), copyColumn("`fromX`"), copyColumn("`fromY`"), copyColumn("`toX`"), copyColumn("`toY`"),
+            copyColumn("`swipeDuration`"), copyColumn("`pauseDuration`"), copyColumn("`isAdvanced`"), copyColumn("`isBroadcast`"),
+            copyColumn("`intent_action`"), copyColumn("`component_name`"), copyColumn("`flags`"), copyColumn("`toggle_event_id`"),
+            copyColumn("`toggle_type`"),
         )
-    }
-}
-
-private fun SQLiteTable.forEachClick(closure: (id: Long, eventId: Long, clickOnCondition: Boolean) -> Unit) {
-    select(setOf("id", "eventId", "type", "clickOnConditionId"), "WHERE `type` = \"${ActionType.CLICK}\"") { sqlRow ->
-        closure(
-            sqlRow.getLong("id"),
-            sqlRow.getLong("eventId"),
-            sqlRow.getBoolean("clickOnConditionId"),
-        )
-    }
-}
-
-private fun SQLiteTable.forEachEventConditions(eventId: Long, closure: (id: Long, shouldBeDetected: Boolean) -> Unit) {
-    select(setOf("id", "shouldBeDetected"), "WHERE `eventId` = $eventId AND `shouldBeDetected` = 1") { sqlRow ->
-        closure(
-            sqlRow.getLong("id"),
-            sqlRow.getBoolean("shouldBeDetected"),
-        )
-    }
-}
-
-private fun SQLiteTable.copyAllActionsExceptChangedParams() = insertIntoSelect(
-    fromTableName = ACTION_TABLE,
-    columnsToFromColumns = arrayOf(
-        keepColumn("`id`"), keepColumn("`eventId`"), keepColumn("`priority`"), keepColumn("`name`"), keepColumn("`type`"),
-        "`clickPositionType`" to "NULL",
-        keepColumn("`x`"), keepColumn("`y`"),
-        "`clickOnConditionId`" to "NULL",
-        keepColumn("`pressDuration`"), keepColumn("`fromX`"), keepColumn("`fromY`"), keepColumn("`toX`"), keepColumn("`toY`"),
-        keepColumn("`swipeDuration`"), keepColumn("`pauseDuration`"), keepColumn("`isAdvanced`"), keepColumn("`isBroadcast`"),
-        keepColumn("`intent_action`"), keepColumn("`component_name`"), keepColumn("`flags`"), keepColumn("`toggle_event_id`"),
-        keepColumn("`toggle_type`"),
     )
-)
 
-/** Update the current detection quality to have at least the same quality (should overall be better). */
-private fun SQLiteTable.updateDetectionQuality(id: Long, detectionQuality: Int) = update(
-    "WHERE `id` = $id", "detection_quality" to detectionQuality.toString()
-)
+    private fun SQLiteTable.getEventFirstValidConditionId(eventId: Long): Long? {
+        var validConditionId: Long? = null
 
-private fun SQLiteTable.getEventFirstValidConditionId(eventId: Long): Long? {
-    var validConditionId: Long? = null
-    forEachEventConditions(eventId) { id, shouldBeDetected ->
-        if (shouldBeDetected) {
-            validConditionId = id
-            return@forEachEventConditions
+        forEachRow(
+            extraClause = "WHERE `eventId` = $eventId AND `shouldBeDetected` = 1",
+            conditionIdColumn, conditionShouldBeDetectedColumn,
+        ) { id, shouldBeDetected ->
+
+            if (validConditionId == null && shouldBeDetected) {
+                validConditionId = id
+            }
         }
+
+        return validConditionId
     }
 
-    return validConditionId
+    /** Update the current detection quality to have at least the same quality (should overall be better). */
+    private fun SQLiteTable.updateDetectionQuality(id: Long, detectionQuality: Int) = updateWithNames(
+        "WHERE `id` = $id", "detection_quality" to detectionQuality.toString()
+    )
+
+    private fun SQLiteTable.updateClickPositionType(actionId: Long, positionType: ClickPositionType) = updateWithNames(
+        "WHERE `id` = $actionId", "clickPositionType" to "\"${positionType.name}\"",
+    )
+
+    private fun SQLiteTable.updateClickOnConditionToId(actionId: Long, conditionId: Long?) = update(
+        "WHERE `id` = $actionId", actionClickOnConditionIdColumn to "$conditionId",
+    )
 }
-
-private fun SQLiteTable.updateClickPositionType(actionId: Long, positionType: ClickPositionType) = update(
-    "WHERE `id` = $actionId", "clickPositionType" to positionType.name,
-)
-
-private fun SQLiteTable.updateClickOnConditionToId(actionId: Long, conditionId: Long?) = update(
-    "WHERE `id` = $actionId", "clickOnConditionId" to "$conditionId",
-)
-
-private const val DETECTION_QUALITY_INCREASE = 600
-private const val DETECTION_QUALITY_NEW_MAX = 3216

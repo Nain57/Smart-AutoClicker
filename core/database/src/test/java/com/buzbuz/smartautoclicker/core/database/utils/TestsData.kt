@@ -33,8 +33,7 @@ internal object TestsData {
         id: Long = SCENARIO_ID,
         name: String = SCENARIO_NAME,
         detectionQuality: Int = SCENARIO_DETECTION_QUALITY,
-        endConditionOperator: Int = SCENARIO_END_CONDITION_OPERATOR,
-    ) = ScenarioEntity(id, name, detectionQuality, endConditionOperator)
+    ) = ScenarioEntity(id, name, detectionQuality)
 
 
     /* ------- Event Data ------- */
@@ -52,22 +51,9 @@ internal object TestsData {
         conditionOperator: Int = EVENT_CONDITION_OPERATOR,
         scenarioId: Long,
         priority: Int,
-    ) = EventEntity(id, scenarioId, name, conditionOperator, priority)
-
-    /* ------- End Condition Data ------- */
-
-    private const val END_ID = 42L
-    const val END_SCENARIO_ID = SCENARIO_ID
-    private const val END_EVENT_ID = EVENT_ID
-    private const val END_EXECUTIONS = 42
-
-    fun getNewEndConditionEntity(
-        id: Long = END_ID,
-        scenarioId: Long = END_SCENARIO_ID,
-        eventId: Long = END_EVENT_ID,
-        executions: Int = END_EXECUTIONS,
-    ) = EndConditionEntity(id, scenarioId, eventId, executions)
-
+        enabledOnStart: Boolean = true,
+        type: EventType = EventType.IMAGE_EVENT,
+    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart, type)
 
     /* ------- Click Action Data ------- */
 
@@ -91,6 +77,7 @@ internal object TestsData {
         action = ActionEntity(id, eventId, priority, name, ActionType.CLICK, x = x, y = y,
             clickPositionType = clickPositionType, clickOnConditionId = clickOnConditionId, pressDuration = pressDuration),
         intentExtras = emptyList(),
+        eventsToggle = emptyList(),
     )
 
 
@@ -118,6 +105,7 @@ internal object TestsData {
         action = ActionEntity(id, eventId, priority, name, ActionType.SWIPE, fromX = fromX, fromY = fromY, toX = toX,
             toY = toY, swipeDuration = swipeDuration),
         intentExtras = emptyList(),
+        eventsToggle = emptyList(),
     )
 
 
@@ -136,6 +124,7 @@ internal object TestsData {
     ) = CompleteActionEntity(
         action = ActionEntity(id, eventId, priority, name, ActionType.PAUSE, pauseDuration = pauseDuration),
         intentExtras = emptyList(),
+        eventsToggle = emptyList(),
     )
 
 
@@ -164,6 +153,7 @@ internal object TestsData {
         action = ActionEntity(id, eventId, priority, name, ActionType.INTENT, isAdvanced = isAdvanced,
             isBroadcast = isBroadcast, intentAction = action, componentName = componentName, flags = flags),
         intentExtras = intentExtras,
+        eventsToggle = emptyList(),
     )
 
 
@@ -205,8 +195,9 @@ internal object TestsData {
         bottom: Int = CONDITION_BOTTOM,
         threshold: Int = CONDITION_THRESHOLD,
         detectionType: Int = CONDITION_DETECTION_TYPE,
+        type: ConditionType = ConditionType.ON_IMAGE_DETECTED,
         eventId: Long
-    ) = ConditionEntity(id, eventId, name, path, left, top, right, bottom, threshold, detectionType, true)
+    ) = ConditionEntity(id, eventId, name, type, path, left, top, right, bottom, threshold, detectionType, true)
 
     fun CompleteEventEntity.cloneEvent() = copy(
         event = event.copy(),

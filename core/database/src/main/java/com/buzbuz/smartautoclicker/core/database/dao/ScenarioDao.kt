@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -26,7 +25,6 @@ import androidx.room.Update
 
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
-import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEndConditions
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 
 import kotlinx.coroutines.flow.Flow
@@ -43,15 +41,6 @@ interface ScenarioDao {
     @Transaction
     @Query("SELECT * FROM scenario_table ORDER BY name ASC")
     fun getScenariosWithEvents(): Flow<List<ScenarioWithEvents>>
-
-    /**
-     * Get a scenario and its end conditions.
-     *
-     * @return the live data on the scenario.
-     */
-    @Transaction
-    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId")
-    fun getScenarioWithEndConditions(scenarioId: Long): Flow<ScenarioWithEndConditions?>
 
     /**
      * Get a scenario

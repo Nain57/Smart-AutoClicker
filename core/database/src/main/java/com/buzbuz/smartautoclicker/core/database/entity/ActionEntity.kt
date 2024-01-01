@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.database.entity
 import androidx.room.*
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
-import com.buzbuz.smartautoclicker.core.database.utils.ACTION_TABLE
+import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 
 import kotlinx.serialization.Serializable
 
@@ -64,10 +64,6 @@ import kotlinx.serialization.Serializable
  * @param componentName [ActionType.INTENT] only: the component to send the intent to. Null for if [isBroadcast] is true.
  * @param flags [ActionType.INTENT] only: flags for the intent as defined in [android.content.Intent].
  *
- * @param toggleEventId [ActionType.TOGGLE_EVENT] only: the id of the event to be manipulated.
- * @param toggleEventType [ActionType.TOGGLE_EVENT] only: the type of toggle for the event.
- *                        Must be one of [ToggleEventType].
- *
  * @param counterName [ActionType.CHANGE_COUNTER] only: the name of the counter to change apply the
  *                     operation on. There is no need for a db object for a "counter", we only need
  *                     to identify them at runtime using their names. Null for others [ActionType].
@@ -78,7 +74,7 @@ import kotlinx.serialization.Serializable
  */
 @Entity(
     tableName = ACTION_TABLE,
-    indices = [Index("eventId"), Index("clickOnConditionId"), Index("toggle_event_id")],
+    indices = [Index("eventId"), Index("clickOnConditionId")],
     foreignKeys = [
         ForeignKey(
             entity = EventEntity::class,
@@ -90,12 +86,6 @@ import kotlinx.serialization.Serializable
             entity = ConditionEntity::class,
             parentColumns = ["id"],
             childColumns = ["clickOnConditionId"],
-            onDelete = ForeignKey.SET_NULL,
-        ),
-        ForeignKey(
-            entity = EventEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["toggle_event_id"],
             onDelete = ForeignKey.SET_NULL,
         ),
     ]
@@ -133,8 +123,8 @@ data class ActionEntity(
     @ColumnInfo(name = "flags") val flags: Int? = null,
 
     // ActionType.TOGGLE_EVENT
-    @ColumnInfo(name = "toggle_event_id") var toggleEventId: Long? = null,
-    @ColumnInfo(name = "toggle_type") val toggleEventType: ToggleEventType? = null,
+    @ColumnInfo(name = "toggle_all") var toggleAll: Boolean? = null,
+    @ColumnInfo(name = "toggle_all_type") val toggleAllType: EventToggleType? = null,
 
     // ActionType.CHANGE_COUNTER
     @ColumnInfo(name = "counter_name") var counterName: String? = null,
@@ -182,19 +172,6 @@ enum class ClickPositionType {
 }
 
 /**
- * The type of manipulation to apply to an event with a [ActionType.TOGGLE_EVENT].
- * /!\ DO NOT RENAME: ToggleEventType enum name is used in the database.
- */
-enum class ToggleEventType {
-    /** Enable the event. Has no effect if the event is already enabled. */
-    ENABLE,
-    /** Disable the event. Has no effect if the event is already disabled. */
-    DISABLE,
-    /** Enable the event if it is disabled, disable it if it is enabled. */
-    TOGGLE,
-}
-
-/**
  * Types of counter change of a [ActionType.CHANGE_COUNTER].
  * /!\ DO NOT RENAME: ChangeCounterOperationType enum name is used in the database.
  */
@@ -212,9 +189,6 @@ enum class ChangeCounterOperationType {
  *
  * Automatically do the junction between action_table and intent_extra_table, and provide this
  * representation of the one to many relations between scenario to actions and conditions entities.
- *
- * @param action
- * @param intentExtras
  */
 @Serializable
 data class CompleteActionEntity(
@@ -224,4 +198,9 @@ data class CompleteActionEntity(
         entityColumn = "action_id"
     )
     val intentExtras: List<IntentExtraEntity>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "action_id"
+    )
+    val eventsToggle: List<EventToggleEntity>,
 )
