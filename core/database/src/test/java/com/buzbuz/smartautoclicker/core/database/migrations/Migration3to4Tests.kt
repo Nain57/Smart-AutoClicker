@@ -439,7 +439,8 @@ class Migration3to4Tests {
     }
 
     private fun assertDbEvent(cursor: Cursor, eventId: Long, scenarioId: Long, name: String,
-                              operator: Int, priority: Int, stopAfter: Int) {
+                              operator: Int, priority: Int, stopAfter: Int
+    ) {
         cursor.apply {
             assertEquals("Invalid event id", eventId, getLong(getColumnIndex("id")))
             assertEquals("Invalid scenario id", scenarioId, getLong(getColumnIndex("scenario_id")))
@@ -451,7 +452,8 @@ class Migration3to4Tests {
     }
 
     private fun assertDbCondition(cursor: Cursor, eventId: Long, path: String, left: Int, top: Int, right: Int,
-                                  bottom: Int, threshold: Int) {
+                                  bottom: Int, threshold: Int
+    ) {
         cursor.apply {
             assertNotEquals("Invalid condition id", 0, getLong(getColumnIndex("id")))
             assertEquals("Invalid event id", eventId, getLong(getColumnIndex("eventId")))

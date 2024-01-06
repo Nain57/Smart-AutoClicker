@@ -20,9 +20,10 @@ import androidx.room.ForeignKey
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.migrations.copyColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.END_CONDITION_TABLE
 import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
 
@@ -37,12 +38,12 @@ import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
 object Migration6to7 : Migration(6, 7) {
 
     private val endConditionScenarioIdColumn = SQLiteColumn.ForeignKey(
-        name = "scenario_id", type = Long::class,
+        name = "scenario_id",
         referencedTable = "scenario_table", referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
 
     private val endConditionEventIdColumn = SQLiteColumn.ForeignKey(
-        name = "event_id", type = Long::class,
+        name = "event_id",
         referencedTable = "event_table", referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
 
@@ -64,7 +65,7 @@ object Migration6to7 : Migration(6, 7) {
         columns = setOf(
             endConditionScenarioIdColumn,
             endConditionEventIdColumn,
-            SQLiteColumn.Default("executions", Int::class),
+            SQLiteColumn.Int("executions"),
         )
     )
 
@@ -73,7 +74,7 @@ object Migration6to7 : Migration(6, 7) {
         fromTableName = "event_table",
         extraClause = "WHERE `stop_after` IS NOT NULL",
         columnsToFromColumns = arrayOf(
-            "scenario_id" to "scenario_id",
+            copyColumn("scenario_id"),
             "event_id" to "id",
             "executions" to "stop_after",
         )
@@ -84,7 +85,7 @@ object Migration6to7 : Migration(6, 7) {
      * Quality default value is the new algorithm default value, operator default value is OR.
      */
     private fun SQLiteTable.addScenarioNewColumns() = apply {
-        alterTableAddColumn(SQLiteColumn.Default("detection_quality", Int::class, defaultValue = "600"))
-        alterTableAddColumn(SQLiteColumn.Default("end_condition_operator", Int::class, defaultValue = "2"))
+        alterTableAddColumn(SQLiteColumn.Int("detection_quality", defaultValue = "600"))
+        alterTableAddColumn(SQLiteColumn.Int("end_condition_operator", defaultValue = "2"))
     }
 }
