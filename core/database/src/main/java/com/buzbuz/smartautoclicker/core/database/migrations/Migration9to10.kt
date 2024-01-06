@@ -16,14 +16,15 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.ContentValues
 import androidx.annotation.VisibleForTesting
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.migrations.forEachRow
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 
@@ -44,9 +45,9 @@ object Migration9to10 : Migration(9, 10) {
     internal const val NEW_GESTURE_DURATION_LIMIT_MS = 59999L
 
     private val actionIdColumn = SQLiteColumn.PrimaryKey()
-    private val actionTypeColumn = SQLiteColumn.Default("type", String::class)
-    private val actionPressDurationColumn = SQLiteColumn.Default("pressDuration", Long::class)
-    private val actionSwipeDurationColumn = SQLiteColumn.Default("swipeDuration", Long::class)
+    private val actionTypeColumn = SQLiteColumn.Text("type")
+    private val actionPressDurationColumn = SQLiteColumn.Long("pressDuration")
+    private val actionSwipeDurationColumn = SQLiteColumn.Long("swipeDuration")
 
     override fun migrate(db: SupportSQLiteDatabase) {
         db.getSQLiteTableReference(ACTION_TABLE).apply {
@@ -72,10 +73,21 @@ object Migration9to10 : Migration(9, 10) {
     }
 
     private fun SQLiteTable.updateClickPressDuration(actionId: Long, duration: Long) =
-        update("WHERE `id` = $actionId", actionPressDurationColumn to "$duration")
+        update(
+            extraClause = "WHERE `id` = $actionId",
+            contentValues = ContentValues().apply {
+                put(actionPressDurationColumn.name, duration)
+            }
+        )
 
     private fun SQLiteTable.updateSwipeDuration(actionId: Long, duration: Long) =
-        update("WHERE `id` = $actionId", actionSwipeDurationColumn to "$duration")
+        update(
+            extraClause = "WHERE `id` = $actionId",
+            contentValues = ContentValues().apply {
+                put(actionSwipeDurationColumn.name, duration)
+            }
+        )
+
     private fun Long.toLimitedDuration(): Long =
         min(this, NEW_GESTURE_DURATION_LIMIT_MS)
 }

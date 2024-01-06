@@ -16,15 +16,16 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.ContentValues
 import androidx.room.ForeignKey
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
-import com.buzbuz.smartautoclicker.core.base.sqlite.copyColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.copyColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.forEachRow
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
@@ -46,24 +47,24 @@ object Migration10to11 : Migration(10, 11) {
 
 
     private val scenarioIdColumn = SQLiteColumn.PrimaryKey()
-    private val scenarioDetectionQualityColumn = SQLiteColumn.Default("detection_quality", Int::class)
+    private val scenarioDetectionQualityColumn = SQLiteColumn.Int("detection_quality")
 
     private val conditionIdColumn = SQLiteColumn.PrimaryKey()
-    private val conditionShouldBeDetectedColumn = SQLiteColumn.Default("shouldBeDetected", Boolean::class)
+    private val conditionShouldBeDetectedColumn = SQLiteColumn.Boolean("shouldBeDetected")
 
     private val actionIdColumn = SQLiteColumn.PrimaryKey()
     private val actionEventIdColumn = SQLiteColumn.ForeignKey(
-        name = "eventId", type = Long::class,
+        name = "eventId",
         referencedTable = EVENT_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
-    private val actionTypeColumn = SQLiteColumn.Default("type", String::class)
-    private val actionOldClickOnConditionColumn = SQLiteColumn.Default("clickOnCondition", Boolean::class)
+    private val actionTypeColumn = SQLiteColumn.Text("type")
+    private val actionOldClickOnConditionColumn = SQLiteColumn.Boolean("clickOnCondition")
     private val actionClickOnConditionIdColumn = SQLiteColumn.ForeignKey(
-        name = "clickOnConditionId", type = Long::class, isNotNull = false,
+        name = "clickOnConditionId", isNotNull = false,
         referencedTable = CONDITION_TABLE, referencedColumn = "id", deleteAction = ForeignKey.SET_NULL,
     )
     private val actionToggleEventIdColumn = SQLiteColumn.ForeignKey(
-        name = "toggle_event_id", type = Long::class, isNotNull = false,
+        name = "toggle_event_id", isNotNull = false,
         referencedTable = EVENT_TABLE, referencedColumn = "id", deleteAction = ForeignKey.SET_NULL,
     )
 
@@ -107,27 +108,27 @@ object Migration10to11 : Migration(10, 11) {
             createTable(
                 columns = setOf(
                     actionEventIdColumn,
-                    SQLiteColumn.Default("priority", Int::class),
-                    SQLiteColumn.Default("name", String::class),
-                    SQLiteColumn.Default("type", String::class),
-                    SQLiteColumn.Default("clickPositionType", String::class, isNotNull = false),
-                    SQLiteColumn.Default("x", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("y", Int::class, isNotNull = false),
+                    SQLiteColumn.Int("priority"),
+                    SQLiteColumn.Text("name"),
+                    SQLiteColumn.Text("type"),
+                    SQLiteColumn.Text("clickPositionType", isNotNull = false),
+                    SQLiteColumn.Int("x", isNotNull = false),
+                    SQLiteColumn.Int("y", isNotNull = false),
                     actionClickOnConditionIdColumn,
-                    SQLiteColumn.Default("pressDuration", Long::class, isNotNull = false),
-                    SQLiteColumn.Default("fromX", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("fromY", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("toX", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("toY", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("swipeDuration", Long::class, isNotNull = false),
-                    SQLiteColumn.Default("pauseDuration", Long::class, isNotNull = false),
-                    SQLiteColumn.Default("isAdvanced", Boolean::class, isNotNull = false),
-                    SQLiteColumn.Default("isBroadcast", Boolean::class, isNotNull = false),
-                    SQLiteColumn.Default("intent_action", String::class, isNotNull = false),
-                    SQLiteColumn.Default("component_name", String::class, isNotNull = false),
-                    SQLiteColumn.Default("flags", Int::class, isNotNull = false),
+                    SQLiteColumn.Long("pressDuration", isNotNull = false),
+                    SQLiteColumn.Int("fromX", isNotNull = false),
+                    SQLiteColumn.Int("fromY", isNotNull = false),
+                    SQLiteColumn.Int("toX", isNotNull = false),
+                    SQLiteColumn.Int("toY", isNotNull = false),
+                    SQLiteColumn.Long("swipeDuration", isNotNull = false),
+                    SQLiteColumn.Long("pauseDuration", isNotNull = false),
+                    SQLiteColumn.Boolean("isAdvanced", isNotNull = false),
+                    SQLiteColumn.Boolean("isBroadcast", isNotNull = false),
+                    SQLiteColumn.Text("intent_action", isNotNull = false),
+                    SQLiteColumn.Text("component_name", isNotNull = false),
+                    SQLiteColumn.Int("flags", isNotNull = false),
                     actionToggleEventIdColumn,
-                    SQLiteColumn.Default("toggle_type", String::class, isNotNull = false),
+                    SQLiteColumn.Text("toggle_type", isNotNull = false),
                 ),
             )
         }
@@ -172,15 +173,24 @@ object Migration10to11 : Migration(10, 11) {
     }
 
     /** Update the current detection quality to have at least the same quality (should overall be better). */
-    private fun SQLiteTable.updateDetectionQuality(id: Long, detectionQuality: Int) = updateWithNames(
-        "WHERE `id` = $id", "detection_quality" to detectionQuality.toString()
+    private fun SQLiteTable.updateDetectionQuality(id: Long, detectionQuality: Int) = update(
+        extraClause = "WHERE `id` = $id",
+        contentValues = ContentValues().apply {
+            put("detection_quality", detectionQuality)
+        },
     )
 
-    private fun SQLiteTable.updateClickPositionType(actionId: Long, positionType: ClickPositionType) = updateWithNames(
-        "WHERE `id` = $actionId", "clickPositionType" to "\"${positionType.name}\"",
+    private fun SQLiteTable.updateClickPositionType(actionId: Long, positionType: ClickPositionType) = update(
+        extraClause = "WHERE `id` = $actionId",
+        contentValues = ContentValues().apply {
+            put("clickPositionType", "\"${positionType.name}\"")
+        },
     )
 
     private fun SQLiteTable.updateClickOnConditionToId(actionId: Long, conditionId: Long?) = update(
-        "WHERE `id` = $actionId", actionClickOnConditionIdColumn to "$conditionId",
+        extraClause = "WHERE `id` = $actionId",
+        contentValues = ContentValues().apply {
+            put(actionClickOnConditionIdColumn.name, conditionId)
+        },
     )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,16 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.ContentValues
 import androidx.room.ForeignKey
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.copyColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.migrations.copyColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.forEachRow
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 import com.buzbuz.smartautoclicker.core.database.END_CONDITION_TABLE
@@ -41,28 +42,30 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventType
 /**
  * Migration from database v12 to v13.
  *
- *
+ * - Add type column to event_table
+ * - Add type column to condition_table. This comes with new nullable columns depending on it. Previous not nullable
+ * columns related to image detection are now nullable.
+ * - Create a new event_toggle_table
+ * - Migrate action table from old toggle event system to new one
+ * - Migrate the end condition table to its new equivalent (toggle off all events)
+ * - Destroy end condition table.
  */
 object Migration12to13 : Migration(12, 13) {
 
-    private val scenarioEndConditionOperatorColumn =
-        SQLiteColumn.Default("end_condition_operator", Int::class)
+    private val scenarioEndConditionOperatorColumn = SQLiteColumn.Int("end_condition_operator")
 
-    private val evtToggleToggleTypeColumn =
-        SQLiteColumn.Default("toggle_type", String::class)
+    private val evtToggleToggleTypeColumn = SQLiteColumn.Text("toggle_type")
     private val evtToggleActionIdColumn = SQLiteColumn.ForeignKey(
-        name = "action_id", type = Long::class,
+        name = "action_id",
         referencedTable = ACTION_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
     private val evtToggleToggleEventIdColumn = SQLiteColumn.ForeignKey(
-        name = "toggle_event_id", type = Long::class,
+        name = "toggle_event_id",
         referencedTable = EVENT_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
 
-    private val actionOldToggleEventIdColumn =
-        SQLiteColumn.Default("toggle_event_id", Long::class, isNotNull = false)
-    private val actionOldToggleTypeColumn =
-        SQLiteColumn.Default("toggle_type", String::class, isNotNull = false)
+    private val actionOldToggleEventIdColumn = SQLiteColumn.Long("toggle_event_id", isNotNull = false)
+    private val actionOldToggleTypeColumn = SQLiteColumn.Text("toggle_type", isNotNull = false)
 
     override fun migrate(db: SupportSQLiteDatabase) {
         db.apply {
@@ -89,44 +92,48 @@ object Migration12to13 : Migration(12, 13) {
     }
 
     private fun SupportSQLiteDatabase.migrateEventTable() = getSQLiteTableReference(EVENT_TABLE).apply {
-        alterTableAddColumn(SQLiteColumn.Default("type", String::class, defaultValue = EventType.IMAGE_EVENT.name))
+        alterTableAddColumn(SQLiteColumn.Text("type", defaultValue = EventType.IMAGE_EVENT.name))
     }
 
     private fun SupportSQLiteDatabase.migrateConditionTable() = getSQLiteTableReference(CONDITION_TABLE).apply {
         val changedColumns = setOf(
-            SQLiteColumn.Default("path", String::class, isNotNull = false),
-            SQLiteColumn.Default("area_left", Int::class, isNotNull = false),
-            SQLiteColumn.Default("area_top", Int::class, isNotNull = false),
-            SQLiteColumn.Default("area_right", Int::class, isNotNull = false),
-            SQLiteColumn.Default("area_bottom", Int::class, isNotNull = false),
-            SQLiteColumn.Default("threshold", Int::class, isNotNull = false),
-            SQLiteColumn.Default("detection_type", Int::class, isNotNull = false),
-            SQLiteColumn.Default("shouldBeDetected", Boolean::class, isNotNull = false),
-            SQLiteColumn.Default("detection_area_left", Int::class, isNotNull = false),
-            SQLiteColumn.Default("detection_area_top", Int::class, isNotNull = false),
-            SQLiteColumn.Default("detection_area_right", Int::class, isNotNull = false),
-            SQLiteColumn.Default("detection_area_bottom", Int::class, isNotNull = false),
+            SQLiteColumn.Text("path", isNotNull = false),
+            SQLiteColumn.Int("area_left", isNotNull = false),
+            SQLiteColumn.Int("area_top", isNotNull = false),
+            SQLiteColumn.Int("area_right", isNotNull = false),
+            SQLiteColumn.Int("area_bottom", isNotNull = false),
+            SQLiteColumn.Int("threshold", isNotNull = false),
+            SQLiteColumn.Int("detection_type", isNotNull = false),
+            SQLiteColumn.Boolean("shouldBeDetected", isNotNull = false),
+            SQLiteColumn.Int("detection_area_left", isNotNull = false),
+            SQLiteColumn.Int("detection_area_top", isNotNull = false),
+            SQLiteColumn.Int("detection_area_right", isNotNull = false),
+            SQLiteColumn.Int("detection_area_bottom", isNotNull = false),
         )
 
         // Create temp condition table stripped from changed columns
-        val (newConditionTable, indexes) = copyTable(droppedColumns = changedColumns.map { it.name })
-        // Add new columns
+        val (newConditionTable, indexes) = copyTable(droppedColumns = changedColumns.map { it.name }, withValues = false)
+        // Add new columns and old columns that became nullable
         newConditionTable.alterTableAddColumns(
             setOf(
-                SQLiteColumn.Default("type", String::class, defaultValue = ConditionType.ON_IMAGE_DETECTED.name),
-                SQLiteColumn.Default("broadcast_action", String::class, isNotNull = false),
-                SQLiteColumn.Default("counter_name", String::class, isNotNull = false),
-                SQLiteColumn.Default("counter_comparison_operation", String::class, isNotNull = false),
-                SQLiteColumn.Default("counter_value", Int::class, isNotNull = false),
-                SQLiteColumn.Default("timer_value_ms", Long::class, isNotNull = false),
-            )
+                SQLiteColumn.Text("type", defaultValue = ConditionType.ON_IMAGE_DETECTED.name),
+                SQLiteColumn.Text("broadcast_action", isNotNull = false),
+                SQLiteColumn.Text("counter_name", isNotNull = false),
+                SQLiteColumn.Text("counter_comparison_operation", isNotNull = false),
+                SQLiteColumn.Int("counter_value", isNotNull = false),
+                SQLiteColumn.Long("timer_value_ms", isNotNull = false),
+            ) + changedColumns
         )
-        // Add filtered old columns as nullable
-        newConditionTable.alterTableAddColumns(changedColumns)
-        // Copy transformed nullable columns content from table to temp_table
+        // Copy columns content from table to temp_table
+        val copyColumns = buildSet {
+            addAll(changedColumns.map { copyColumn(it.name) })
+            add(copyColumn("id"))
+            add(copyColumn("eventId"))
+            add(copyColumn("name"))
+        }
         newConditionTable.insertIntoSelect(
             fromTableName = CONDITION_TABLE,
-            columnsToFromColumns = changedColumns.map { copyColumn(it.name) }.toTypedArray()
+            columnsToFromColumns = copyColumns.toTypedArray()
         )
         // Remove old condition table
         dropTable()
@@ -152,11 +159,11 @@ object Migration12to13 : Migration(12, 13) {
         getSQLiteTableReference(ACTION_TABLE).apply {
             alterTableAddColumns(
                 setOf(
-                    SQLiteColumn.Default("counter_name", String::class, isNotNull = false),
-                    SQLiteColumn.Default("counter_operation", String::class, isNotNull = false),
-                    SQLiteColumn.Default("counter_operation_value", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("toggle_all", Boolean::class, isNotNull = false),
-                    SQLiteColumn.Default("toggle_all_type", String::class, isNotNull = false),
+                    SQLiteColumn.Text("counter_name", isNotNull = false),
+                    SQLiteColumn.Text("counter_operation", isNotNull = false),
+                    SQLiteColumn.Int("counter_operation_value", isNotNull = false),
+                    SQLiteColumn.Boolean("toggle_all", isNotNull = false),
+                    SQLiteColumn.Text("toggle_all_type", isNotNull = false),
                 )
             )
 
@@ -169,15 +176,17 @@ object Migration12to13 : Migration(12, 13) {
                 // Otherwise, use the one available
                 currentAggregatorId = aggregation.getOrPut(eventId) {
                     // As we will keep this action, set it as manual
-                    updateWithNames(extraClause = "`id` = $id", "toggle_all" to "0",)
+                    update(extraClause = "WHERE `id` = $id", ContentValues().apply { put("toggle_all", "0") })
                     id
                 }
 
                 // For each toggle action, creates it's counterpart as a EventToggle referencing the aggregator
                 postEventToggleTable.insertIntoValues(
-                    evtToggleActionIdColumn.name to currentAggregatorId.toString(),
-                    evtToggleToggleTypeColumn.name to toggleType,
-                    evtToggleToggleEventIdColumn.name to toggleEventId.toString(),
+                    ContentValues().apply {
+                        put(evtToggleActionIdColumn.name, currentAggregatorId)
+                        put(evtToggleToggleTypeColumn.name, toggleType)
+                        put(evtToggleToggleEventIdColumn.name, toggleEventId)
+                    }
                 )
 
                 // If this is not the aggregator, it is now aggregated and useless
@@ -202,22 +211,26 @@ object Migration12to13 : Migration(12, 13) {
             preScenarioTable.forEachScenarioWithEndCondition { scenarioId, endConditionOperator ->
                 // For each scenario with end conditions, create a trigger event that will stop the scenario
                 val endConditionEventId = postEventTable.insertIntoValues(
-                    "scenario_id" to scenarioId.toString(),
-                    "name" to "\"Stop scenario\"",
-                    "type" to "\"${EventType.TRIGGER_EVENT}\"",
-                    "operator" to endConditionOperator.toString(),
-                    "priority" to "-1",
-                    "enabled_on_start" to "1",
+                    ContentValues().apply {
+                        put("scenario_id", scenarioId)
+                        put("name", "Stop scenario")
+                        put("type", EventType.TRIGGER_EVENT.name)
+                        put("operator", endConditionOperator.toString())
+                        put("priority", "-1")
+                        put("enabled_on_start", "1")
+                    }
                 )
 
                 // Add the action that end the scenario
                 postActionTable.insertIntoValues(
-                    "eventId" to endConditionEventId.toString(),
-                    "priority" to "0",
-                    "name" to "\"Stop scenario\"",
-                    "type" to "\"${ActionType.TOGGLE_EVENT}\"",
-                    "toggle_all" to "1",
-                    "toggle_all_type" to "\"${EventToggleType.DISABLE}\"",
+                    ContentValues().apply {
+                        put("eventId", endConditionEventId)
+                        put("priority", 0)
+                        put("name", "Stop scenario")
+                        put("type", ActionType.TOGGLE_EVENT.name)
+                        put("toggle_all", "1")
+                        put("toggle_all_type", EventToggleType.DISABLE.name)
+                    }
                 )
 
                 // For each end condition in this scenario, creates a counter reached condition and a change counter action
@@ -226,23 +239,27 @@ object Migration12to13 : Migration(12, 13) {
 
                     // First, create a counter action for this event
                     postActionTable.insertIntoValues(
-                        "eventId" to targetEventId.toString(),
-                        "priority" to "10000",
-                        "name" to "Execution count",
-                        "type" to "\"${ActionType.CHANGE_COUNTER}\"",
-                        "counter_name" to endConditionCounterName,
-                        "counter_operation" to "\"${ChangeCounterOperationType.ADD}\"",
-                        "counter_operation_value" to "1",
+                        ContentValues().apply {
+                            put("eventId", targetEventId)
+                            put("priority", 10000)
+                            put("name", "Execution count")
+                            put("type", ActionType.CHANGE_COUNTER.name)
+                            put("counter_name", endConditionCounterName)
+                            put("counter_operation", ChangeCounterOperationType.ADD.name)
+                            put("counter_operation_value", 1)
+                        }
                     )
 
                     // Then, create a condition in our end condition trigger event
                     postConditionTable.insertIntoValues(
-                        "eventId" to endConditionEventId.toString(),
-                        "name" to endConditionCounterName,
-                        "type" to "\"${ConditionType.ON_COUNTER_REACHED}\"",
-                        "counter_name" to endConditionCounterName,
-                        "counter_comparison_operation" to "\"${CounterComparisonOperation.GREATER_OR_EQUALS}\"",
-                        "counter_value" to executions.toString(),
+                        ContentValues().apply {
+                            put("eventId", endConditionEventId)
+                            put("name", endConditionCounterName)
+                            put("type", ConditionType.ON_COUNTER_REACHED.name)
+                            put("counter_name", endConditionCounterName)
+                            put("counter_comparison_operation", CounterComparisonOperation.GREATER_OR_EQUALS.name)
+                            put("counter_value", executions)
+                        }
                     )
                 }
             }
@@ -254,14 +271,17 @@ object Migration12to13 : Migration(12, 13) {
         forEachRow(
             extraClause = "WHERE `type` =\"${ActionType.TOGGLE_EVENT}\" ORDER BY `priority` ASC",
             SQLiteColumn.PrimaryKey("id"),
-            SQLiteColumn.Default("eventId", type = Long::class),
+            SQLiteColumn.Long("eventId"),
             actionOldToggleEventIdColumn, actionOldToggleTypeColumn, closure,
         )
 
     private fun SQLiteTable.forEachScenarioWithEndCondition(closure: (Long, Int) -> Unit) =
         forEachRow(
-            extraClause = "JOIN `${END_CONDITION_TABLE}` ON $tableName.id = ${END_CONDITION_TABLE}.scenario_id",
-            SQLiteColumn.Default("$END_CONDITION_TABLE.id", Long::class),
+            extraClause = """
+                JOIN `${END_CONDITION_TABLE}` ON $tableName.id = ${END_CONDITION_TABLE}.scenario_id
+                GROUP BY $END_CONDITION_TABLE.scenario_id
+            """.trimIndent(),
+            SQLiteColumn.Long("$END_CONDITION_TABLE.scenario_id"),
             scenarioEndConditionOperatorColumn,
             closure,
         )
@@ -269,8 +289,8 @@ object Migration12to13 : Migration(12, 13) {
     private fun SQLiteTable.forEachEndCondition(scenarioId: Long, closure: (Long, Int) -> Unit) =
         forEachRow(
             extraClause = "WHERE `scenario_id` = $scenarioId",
-            SQLiteColumn.Default("eventId", type = Long::class),
-            SQLiteColumn.Default("executions", Int::class),
+            SQLiteColumn.Long("event_id"),
+            SQLiteColumn.Int("executions"),
             closure,
         )
 }

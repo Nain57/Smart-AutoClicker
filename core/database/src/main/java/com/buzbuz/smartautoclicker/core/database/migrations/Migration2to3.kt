@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.core.database.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 
 /**
  * Migration from database v2 to v3.
@@ -30,6 +30,6 @@ object Migration2to3 : Migration(2, 3) {
 
     override fun migrate(db: SupportSQLiteDatabase) {
         db.getSQLiteTableReference("click_table")
-            .alterTableAddColumn(SQLiteColumn.Default("stop_after", Int::class, isNotNull = false))
+            .alterTableAddColumn(SQLiteColumn.Int("stop_after", isNotNull = false))
     }
 }

@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.core.database.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 
 /**
@@ -31,6 +31,6 @@ object Migration1to2 : Migration(1, 2) {
 
     override fun migrate(db: SupportSQLiteDatabase) {
         db.getSQLiteTableReference(CONDITION_TABLE)
-            .alterTableAddColumn(SQLiteColumn.Default("threshold", Int::class, defaultValue = "1"))
+            .alterTableAddColumn(SQLiteColumn.Int("threshold", defaultValue = "1"))
     }
 }

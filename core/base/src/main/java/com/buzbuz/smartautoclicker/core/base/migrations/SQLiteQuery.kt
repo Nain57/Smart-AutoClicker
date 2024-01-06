@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.base.sqlite
+package com.buzbuz.smartautoclicker.core.base.migrations
 
 import android.database.Cursor
 
@@ -60,16 +60,14 @@ class SQLiteQueryResult internal constructor(
         } ?: throw IllegalArgumentException("Can't get Boolean value, column $columnName doesn't exist")
 
         inline fun <reified ColumnType : Any> getValue(column: SQLiteColumn<ColumnType>): ColumnType =
-            when (column.type) {
-                Int::class -> getInt(column.name) as ColumnType
-                Long::class -> getLong(column.name) as ColumnType
-                Boolean::class -> getBoolean(column.name) as ColumnType
-                String::class -> getString(column.name) as ColumnType
-                else -> throw UnsupportedOperationException("This type is not supported $this")
+            when (column) {
+                is SQLiteColumn.Boolean -> getBoolean(column.name) as ColumnType
+                is SQLiteColumn.Text -> getString(column.name) as ColumnType
+                is SQLiteColumn.Int -> getInt(column.name) as ColumnType
+                is SQLiteColumn.PrimaryKey,
+                is SQLiteColumn.ForeignKey,
+                is SQLiteColumn.Long -> getLong(column.name) as ColumnType
             }
-
-        fun getType(columnName: String): Int = columnsNamesToInfo[columnName]?.second?.let(cursor::getType)
-            ?: throw IllegalArgumentException("Can't get type, column $columnName doesn't exist")
     }
 }
 

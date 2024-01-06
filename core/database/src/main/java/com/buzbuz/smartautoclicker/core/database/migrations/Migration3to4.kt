@@ -20,9 +20,10 @@ import androidx.room.ForeignKey
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.migrations.copyColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
@@ -41,12 +42,12 @@ import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
 object Migration3to4 : Migration(3, 4) {
 
     private val scenarioIdForeignKey = SQLiteColumn.ForeignKey(
-        name = "scenario_id", type = Long::class,
+        name = "scenario_id",
         referencedTable = SCENARIO_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
 
     private val eventIdForeignKey = SQLiteColumn.ForeignKey(
-        name = "eventId", type = Long::class,
+        name = "eventId",
         referencedTable = EVENT_TABLE, referencedColumn = "id", deleteAction = ForeignKey.CASCADE,
     )
 
@@ -86,10 +87,10 @@ object Migration3to4 : Migration(3, 4) {
             createTable(
                 columns = setOf(
                     scenarioIdForeignKey,
-                    SQLiteColumn.Default("name", String::class),
-                    SQLiteColumn.Default("operator", Int::class),
-                    SQLiteColumn.Default("priority", Int::class),
-                    SQLiteColumn.Default("stop_after", Int::class, isNotNull = false),
+                    SQLiteColumn.Text("name"),
+                    SQLiteColumn.Int("operator"),
+                    SQLiteColumn.Int("priority"),
+                    SQLiteColumn.Int("stop_after", isNotNull = false),
                 ),
             )
         }
@@ -100,18 +101,18 @@ object Migration3to4 : Migration(3, 4) {
             createTable(
                 columns = setOf(
                     eventIdForeignKey,
-                    SQLiteColumn.Default("priority", Int::class),
-                    SQLiteColumn.Default("name", String::class),
-                    SQLiteColumn.Default("type", String::class),
-                    SQLiteColumn.Default("x", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("y", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("pressDuration", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("fromX", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("fromY", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("toX", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("toY", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("swipeDuration", Int::class, isNotNull = false),
-                    SQLiteColumn.Default("pauseDuration", Int::class, isNotNull = false),
+                    SQLiteColumn.Int("priority"),
+                    SQLiteColumn.Text("name"),
+                    SQLiteColumn.Text("type"),
+                    SQLiteColumn.Int("x", isNotNull = false),
+                    SQLiteColumn.Int("y", isNotNull = false),
+                    SQLiteColumn.Long("pressDuration", isNotNull = false),
+                    SQLiteColumn.Int("fromX", isNotNull = false),
+                    SQLiteColumn.Int("fromY", isNotNull = false),
+                    SQLiteColumn.Int("toX", isNotNull = false),
+                    SQLiteColumn.Int("toY", isNotNull = false),
+                    SQLiteColumn.Long("swipeDuration", isNotNull = false),
+                    SQLiteColumn.Long("pauseDuration", isNotNull = false),
                 ),
             )
         }
@@ -125,12 +126,12 @@ object Migration3to4 : Migration(3, 4) {
             createTable(
                 columns = setOf(
                     eventIdForeignKey,
-                    SQLiteColumn.Default("path", String::class),
-                    SQLiteColumn.Default("area_left", Int::class),
-                    SQLiteColumn.Default("area_top", Int::class),
-                    SQLiteColumn.Default("area_right", Int::class),
-                    SQLiteColumn.Default("area_bottom", Int::class),
-                    SQLiteColumn.Default("threshold", Int::class, defaultValue = "1"),
+                    SQLiteColumn.Text("path"),
+                    SQLiteColumn.Int("area_left"),
+                    SQLiteColumn.Int("area_top"),
+                    SQLiteColumn.Int("area_right"),
+                    SQLiteColumn.Int("area_bottom"),
+                    SQLiteColumn.Int("threshold", defaultValue = "1"),
                 ),
             )
         }
@@ -206,10 +207,10 @@ private fun SQLiteTable.insertConditions() =
         columnsToFromColumns = arrayOf(
             "eventId" to "ClickConditionCrossRef.clickId",
             "path" to "ClickConditionCrossRef.path",
-            "area_left" to "area_left",
-            "area_top" to "area_top",
-            "area_right" to "area_right",
-            "area_bottom" to "area_bottom",
-            "threshold" to "threshold",
+            copyColumn("area_left"),
+            copyColumn("area_top"),
+            copyColumn("area_right"),
+            copyColumn("area_bottom"),
+            copyColumn("threshold"),
         )
     )

@@ -16,15 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.core.database.utils
 
+import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 
 
-private fun Boolean?.toSqlite(): String =
+internal fun Boolean?.toSqlite(): String =
     when (this) {
         true -> "1"
         false -> "0"
         null -> "NULL"
     }
+
+internal fun Rect?.toSqlite(): String =
+    if (this != null) "$left, $top, $right, $bottom"
+    else "NULL, NULL, NULL, NULL"
 
 // ----- Utils for Database V3 -----
 
@@ -36,7 +41,8 @@ fun getInsertV3Scenario(id: Long, name: String) =
 
 
 fun getInsertV3Click(id: Long, scenarioId: Long, name: String, type: Int, fromX: Int, fromY: Int, toX: Int, toY: Int,
-                     operator: Int, delayAfter: Long, stopAfter: Int, priority: Int) =
+                     operator: Int, delayAfter: Long, stopAfter: Int, priority: Int
+) =
     """
         INSERT INTO click_table (clickId, scenario_id, name, type, from_X, from_y, to_x, to_y, operator, delay_after, stop_after, priority) 
         VALUES ($id, $scenarioId, "$name", $type, $fromX, $fromY, $toX, $toY, $operator, $delayAfter, $stopAfter, $priority)
@@ -65,7 +71,8 @@ fun getV4Conditions() = "SELECT * FROM condition_table"
 fun getV4Actions() = "SELECT * FROM action_table"
 
 fun getInsertV4Condition(id: Long, eventId: Long, path: String, left: Int, top: Int, right: Int, bottom: Int,
-                         threshold: Int) =
+                         threshold: Int
+) =
     """
         INSERT INTO condition_table (id, eventId, path, area_left, area_top, area_right, area_bottom, threshold) 
         VALUES ($id, $eventId, "$path", $left, $top, $right, $bottom, $threshold)
@@ -95,7 +102,8 @@ fun getInsertV5Pause(id: Long, eventId: Long, name: String, type: String, pauseD
     """.trimIndent()
 
 fun getInsertV5Condition(id: Long, eventId: Long, name: String, path: String, left: Int, top: Int, right: Int, bottom: Int,
-                         threshold: Int, detectionType: Int) =
+                         threshold: Int, detectionType: Int
+) =
     """
         INSERT INTO condition_table (id, eventId, name, path, area_left, area_top, area_right, area_bottom, threshold, detection_type) 
         VALUES ($id, $eventId, "$name","$path", $left, $top, $right, $bottom, $threshold, $detectionType)
@@ -219,7 +227,7 @@ fun getInsertV10Click(id: Long, eventId: Long, name: String, x: Int?, y: Int?, c
     """.trimIndent()
 
 fun getInsertV10Condition(id: Long, eventId: Long, name: String, path: String, left: Int, top: Int, right: Int, bottom: Int,
-                         threshold: Int, detectionType: Int, shouldBeDetected: Boolean) =
+                          threshold: Int, detectionType: Int, shouldBeDetected: Boolean) =
     """
         INSERT INTO condition_table (id, eventId, name, path, area_left, area_top, area_right, area_bottom, threshold, detection_type, shouldBeDetected) 
         VALUES ($id, $eventId, "$name","$path", $left, $top, $right, $bottom, $threshold, $detectionType, ${shouldBeDetected.toSqlite()})

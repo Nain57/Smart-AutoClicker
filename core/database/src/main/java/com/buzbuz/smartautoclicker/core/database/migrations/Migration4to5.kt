@@ -16,14 +16,15 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.ContentValues
 import androidx.annotation.VisibleForTesting
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteColumn
-import com.buzbuz.smartautoclicker.core.base.sqlite.SQLiteTable
-import com.buzbuz.smartautoclicker.core.base.sqlite.forEachRow
-import com.buzbuz.smartautoclicker.core.base.sqlite.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
+import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteTable
+import com.buzbuz.smartautoclicker.core.base.migrations.forEachRow
+import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 
 /**
@@ -46,7 +47,7 @@ object Migration4to5 : Migration(4, 5) {
     internal const val THRESHOLD_MAX_VALUE = 20
 
     private val conditionIdColumn = SQLiteColumn.PrimaryKey()
-    private val conditionThresholdColumn = SQLiteColumn.Default("threshold", Int::class)
+    private val conditionThresholdColumn = SQLiteColumn.Int("threshold")
 
     override fun migrate(db: SupportSQLiteDatabase) {
         db.getSQLiteTableReference(CONDITION_TABLE).apply {
@@ -62,10 +63,15 @@ object Migration4to5 : Migration(4, 5) {
     }
 
     private fun SQLiteTable.addConditionsColumns() = apply {
-        alterTableAddColumn(SQLiteColumn.Default("name", String::class, defaultValue = "Condition"))
-        alterTableAddColumn(SQLiteColumn.Default("detection_type", Int::class, defaultValue = "1"))
+        alterTableAddColumn(SQLiteColumn.Text("name", defaultValue = "Condition"))
+        alterTableAddColumn(SQLiteColumn.Int("detection_type", defaultValue = "1"))
     }
 
     private fun SQLiteTable.updateThreshold(id: Long, threshold: Int) =
-        update(extraClause = "WHERE `id` = $id", conditionThresholdColumn to "$threshold")
+        update(
+            extraClause = "WHERE `id` = $id",
+            contentValues = ContentValues().apply {
+                put(conditionThresholdColumn.name, threshold)
+            }
+        )
 }
