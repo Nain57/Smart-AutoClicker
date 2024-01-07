@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.backup.data.ext
+package com.buzbuz.smartautoclicker.core.base.extensions
 
+import android.graphics.Rect
 import android.util.Log
 
 import kotlinx.serialization.json.boolean
@@ -35,7 +36,7 @@ import kotlinx.serialization.json.long
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the JsonObject value or null if not found.
  */
-internal fun JsonElement.getJsonObject(shouldLogError: Boolean = false): JsonObject? =
+fun JsonElement.getJsonObject(shouldLogError: Boolean = false): JsonObject? =
     try {
         jsonObject
     } catch (iaEx: IllegalArgumentException) {
@@ -49,7 +50,7 @@ internal fun JsonElement.getJsonObject(shouldLogError: Boolean = false): JsonObj
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal fun JsonObject.getJsonObject(key: String, shouldLogError: Boolean = false): JsonObject? =
+fun JsonObject.getJsonObject(key: String, shouldLogError: Boolean = false): JsonObject? =
     getValue(key, shouldLogError)?.let {
         try {
             it.jsonObject
@@ -65,7 +66,7 @@ internal fun JsonObject.getJsonObject(key: String, shouldLogError: Boolean = fal
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal fun JsonObject.getJsonArray(key: String, shouldLogError: Boolean = false): JsonArray? =
+fun JsonObject.getJsonArray(key: String, shouldLogError: Boolean = false): JsonArray? =
     getValue(key, shouldLogError)?.let {
         try {
             it.jsonArray
@@ -81,7 +82,7 @@ internal fun JsonObject.getJsonArray(key: String, shouldLogError: Boolean = fals
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal fun JsonObject.getBoolean(key: String, shouldLogError: Boolean = false): Boolean? =
+fun JsonObject.getBoolean(key: String, shouldLogError: Boolean = false): Boolean? =
     getValue(key, shouldLogError)?.let {
         try {
             it.jsonPrimitive.boolean
@@ -100,7 +101,7 @@ internal fun JsonObject.getBoolean(key: String, shouldLogError: Boolean = false)
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal fun JsonObject.getInt(key: String, shouldLogError: Boolean = false): Int? =
+fun JsonObject.getInt(key: String, shouldLogError: Boolean = false): Int? =
     getValue(key, shouldLogError)?.let {
         try {
             it.jsonPrimitive.int
@@ -119,7 +120,7 @@ internal fun JsonObject.getInt(key: String, shouldLogError: Boolean = false): In
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal fun JsonObject.getLong(key: String, shouldLogError: Boolean = false): Long? =
+fun JsonObject.getLong(key: String, shouldLogError: Boolean = false): Long? =
     getValue(key, shouldLogError)?.let {
         try {
             it.jsonPrimitive.long
@@ -138,7 +139,7 @@ internal fun JsonObject.getLong(key: String, shouldLogError: Boolean = false): L
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal fun JsonObject.getString(key: String, shouldLogError: Boolean = false): String? =
+fun JsonObject.getString(key: String, shouldLogError: Boolean = false): String? =
     getValue(key, shouldLogError)?.let {
         try {
             if (it.jsonPrimitive.isString) it.jsonPrimitive.content else null
@@ -155,15 +156,27 @@ internal fun JsonObject.getString(key: String, shouldLogError: Boolean = false):
  * @param shouldLogError true if any error should be logged, false if not.
  * @return the child value for the given key, or null if not found.
  */
-internal inline fun <reified T : Enum<T>> JsonObject.getEnum(key: String, shouldLogError: Boolean = false): T? =
+inline fun <reified T : Enum<T>> JsonObject.getEnum(key: String, shouldLogError: Boolean = false): T? =
     getString(key, shouldLogError)?.let { stringEnum ->
         try {
             enumValueOf<T>(stringEnum)
         } catch (iae: IllegalArgumentException) {
-            if (shouldLogError) Log.w(TAG, "Can't create IntentExtraType, value $stringEnum is invalid")
+            if (shouldLogError) Log.w("JsonObject", "Can't create IntentExtraType, value $stringEnum is invalid")
             null
         }
     }
+
+fun JsonObject.getRect(keyLeft: String, keyTop: String, keyRight: String, keyBottom: String, shouldLogError: Boolean = false): Rect? {
+    return Rect(
+        getInt(keyLeft, shouldLogError) ?: return null,
+        getInt(keyTop, shouldLogError) ?: return null,
+        getInt(keyRight, shouldLogError) ?: return null,
+        getInt(keyBottom, shouldLogError) ?: return null,
+    )
+}
+
+inline fun <T : Any> JsonArray.getListOf(transform: (JsonObject) -> T?): List<T> =
+    mapNotNull { transform(it.jsonObject) }
 
 /**
  * Safely get the child value
