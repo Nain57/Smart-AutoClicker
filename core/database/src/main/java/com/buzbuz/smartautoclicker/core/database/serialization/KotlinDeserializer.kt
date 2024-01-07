@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.base.interfaces
+package com.buzbuz.smartautoclicker.core.database.serialization
 
-interface EntityWithId {
-    val id: Long
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
+
+internal class KotlinDeserializer : Deserializer {
+
+    override fun deserializeCompleteScenario(jsonCompleteScenario: JsonObject): CompleteScenario =
+        Json.decodeFromJsonElement(jsonCompleteScenario)
 }
-
-fun Collection<EntityWithId>.containsId(id: Long): Boolean =
-    find { entity -> entity.id == id } != null

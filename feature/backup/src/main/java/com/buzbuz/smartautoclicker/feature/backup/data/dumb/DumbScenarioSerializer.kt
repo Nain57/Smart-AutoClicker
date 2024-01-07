@@ -18,6 +18,13 @@ package com.buzbuz.smartautoclicker.feature.backup.data.dumb
 
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.extensions.getBoolean
+import com.buzbuz.smartautoclicker.core.base.extensions.getEnum
+import com.buzbuz.smartautoclicker.core.base.extensions.getInt
+import com.buzbuz.smartautoclicker.core.base.extensions.getJsonArray
+import com.buzbuz.smartautoclicker.core.base.extensions.getJsonObject
+import com.buzbuz.smartautoclicker.core.base.extensions.getLong
+import com.buzbuz.smartautoclicker.core.base.extensions.getString
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DUMB_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionType
@@ -30,13 +37,6 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MIN_VALUE
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_DELAY_MAX_MS
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_DELAY_MIN_MS
 import com.buzbuz.smartautoclicker.feature.backup.data.base.ScenarioBackupSerializer
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.getBoolean
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.getEnum
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.getInt
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.getJsonArray
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.getJsonObject
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.getLong
-import com.buzbuz.smartautoclicker.feature.backup.data.ext.getString
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

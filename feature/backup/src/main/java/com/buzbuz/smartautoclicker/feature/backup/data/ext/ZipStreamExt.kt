@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,8 +35,7 @@ internal fun ZipOutputStream.writeEntryFile(entry: File) {
  * @param output the file to put the content into.
  */
 internal fun ZipInputStream.readAndCopyEntryFile(output: File) =
-    output.apply {
-        outputStream().use { output ->
-            copyTo(output)
-        }
+    output.outputStream().use { outputStream ->
+        copyTo(outputStream)
     }
+    
