@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import kotlinx.serialization.json.JsonObject
 
 /** Deserializer for all Json object version below 11. */
-internal open class DeserializerCompatV11 : DeserializerCompatV13() {
+internal open class CompatV11Deserializer : CompatV13Deserializer() {
 
     override fun deserializeScenarioDetectionQuality(jsonScenario: JsonObject): Int =
         super.deserializeScenarioDetectionQuality(jsonScenario) + 600

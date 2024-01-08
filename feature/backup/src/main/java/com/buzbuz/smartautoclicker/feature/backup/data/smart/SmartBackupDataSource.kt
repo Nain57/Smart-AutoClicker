@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
+import com.buzbuz.smartautoclicker.core.database.entity.EventType
 import com.buzbuz.smartautoclicker.feature.backup.data.base.SCENARIO_BACKUP_EXTENSION
 import com.buzbuz.smartautoclicker.feature.backup.data.base.ScenarioBackupDataSource
 import com.buzbuz.smartautoclicker.feature.backup.data.base.ScenarioBackupSerializer
@@ -64,8 +66,10 @@ internal class SmartBackupDataSource(
     override fun getBackupAdditionalFilesPaths(scenario: CompleteScenario): Set<String> =
         buildSet {
             scenario.events.forEach { completeEvent ->
-                completeEvent.conditions.forEach { condition ->
-                    add(condition.path)
+                if (completeEvent.event.type == EventType.IMAGE_EVENT) {
+                    completeEvent.conditions.forEach { condition ->
+                        if (condition.type == ConditionType.ON_IMAGE_DETECTED) add(condition.path!!)
+                    }
                 }
             }
         }
@@ -99,7 +103,7 @@ internal class SmartBackupDataSource(
             }
 
             event.conditions.forEach { condition ->
-                if (!File(appDataDir, condition.path).exists()) {
+                if (condition.path == null || !File(appDataDir, condition.path!!).exists()) {
                     Log.w(TAG, "Invalid condition, ${condition.path} file does not exist.")
                     return null
                 }

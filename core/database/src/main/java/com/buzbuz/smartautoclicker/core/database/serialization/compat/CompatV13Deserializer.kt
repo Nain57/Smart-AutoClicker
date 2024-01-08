@@ -41,7 +41,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 
 /** Deserializer for all Json object version below 13. */
-internal open class DeserializerCompatV13 : CompatDeserializer() {
+internal open class CompatV13Deserializer : CompatDeserializer() {
 
     private companion object {
         /** Operators lower bound on compat deserialization. */

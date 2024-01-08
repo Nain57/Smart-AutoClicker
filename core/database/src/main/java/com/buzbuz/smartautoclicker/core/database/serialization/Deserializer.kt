@@ -20,8 +20,8 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
-import com.buzbuz.smartautoclicker.core.database.serialization.compat.DeserializerCompatV11
-import com.buzbuz.smartautoclicker.core.database.serialization.compat.DeserializerCompatV13
+import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV11Deserializer
+import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV13Deserializer
 import kotlinx.serialization.json.JsonObject
 
 object DeserializerFactory {
@@ -33,8 +33,8 @@ object DeserializerFactory {
                 null
             }
 
-            databaseVersion < VERSION_DETECTION_QUALITY_UPDATE -> DeserializerCompatV11()
-            databaseVersion < VERSION_ADVANCED_AUTOMATION_UPDATE -> DeserializerCompatV13()
+            databaseVersion < VERSION_DETECTION_QUALITY_UPDATE -> CompatV11Deserializer()
+            databaseVersion < VERSION_ADVANCED_AUTOMATION_UPDATE -> CompatV13Deserializer()
             databaseVersion == VERSION_UP_TO_DATE  -> KotlinDeserializer()
 
             else -> {
