@@ -52,7 +52,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 
-internal open class CompatDeserializer : Deserializer {
+internal abstract class CompatDeserializer : Deserializer {
 
     protected companion object {
         /** Scenario detection quality lower bound on compat deserialization. */
@@ -118,7 +118,7 @@ internal open class CompatDeserializer : Deserializer {
             jsonCompleteEvent.jsonObject.getJsonObject("event", true)?.let { jsonEvent ->
                 jsonEvent.let(::deserializeEvent)?.let { eventEntity ->
                     eventEntityList.add(eventEntity)
-                    jsonEvent to eventEntity
+                    jsonCompleteEvent.jsonObject to eventEntity
                 }
             }
         }
@@ -151,7 +151,6 @@ internal open class CompatDeserializer : Deserializer {
         scenarioEvents: List<EventEntity>,
         eventConditions: List<ConditionEntity>,
     ): CompleteActionEntity? {
-
         val actionEntity = jsonCompleteAction.getJsonObject("action")?.let { jsonAction ->
             deserializeAction(jsonAction, eventConditions)
         } ?: return null
