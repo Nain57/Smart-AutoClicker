@@ -27,12 +27,15 @@ sealed class DumbAction : Identifiable {
     /** The name of the dumb action. */
     abstract val name: String?
 
+    abstract val priority: Int
+
     abstract fun isValid(): Boolean
 
     data class DumbClick(
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
+        override val priority: Int,
         override val repeatCount: Int,
         override val isRepeatInfinite: Boolean,
         override val repeatDelayMs: Long,
@@ -48,6 +51,7 @@ sealed class DumbAction : Identifiable {
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
+        override val priority: Int,
         override val repeatCount: Int,
         override val isRepeatInfinite: Boolean,
         override val repeatDelayMs: Long,
@@ -63,6 +67,7 @@ sealed class DumbAction : Identifiable {
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
+        override val priority: Int,
         val pauseDurationMs: Long,
     ) : DumbAction() {
 

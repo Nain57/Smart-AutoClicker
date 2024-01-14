@@ -95,7 +95,7 @@ interface DumbScenarioDao {
      * @param dumbActions the dumb actions to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addDumbActions(dumbActions: List<DumbActionEntity>)
+    suspend fun addDumbActions(dumbActions: List<DumbActionEntity>): List<Long>
 
     /**
      * Update the selected dumb actions.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,24 +99,20 @@ internal class DumbScenarioDataSource(database: DumbDatabase,) {
     }
 
     private suspend fun updateDumbScenarioActions(scenarioDbId: Long, actions: List<DumbAction>) {
-        dumbActionsUpdater.refreshUpdateValues(
+        val updater = DatabaseListUpdater<DumbAction, DumbActionEntity>()
+        updater.refreshUpdateValues(
             currentEntities = dumbScenarioDao.getDumbActions(scenarioDbId),
             newItems = actions,
-            toEntity = { index, action ->
-                action.toEntity(
-                    scenarioDbId = scenarioDbId,
-                    priority = index,
-                )
-            }
+            mappingClosure = { action -> action.toEntity(scenarioDbId = scenarioDbId) }
         )
 
         Log.d(TAG, "Dumb actions updater: $dumbActionsUpdater")
 
-        dumbScenarioDao.apply {
-            addDumbActions(dumbActionsUpdater.toBeAdded)
-            updateDumbActions(dumbActionsUpdater.toBeUpdated)
-            deleteDumbActions(dumbActionsUpdater.toBeRemoved)
-        }
+        updater.executeUpdate(
+            addList = dumbScenarioDao::addDumbActions,
+            updateList = dumbScenarioDao::updateDumbActions,
+            removeList = dumbScenarioDao::deleteDumbActions,
+        )
     }
 
     suspend fun deleteDumbScenario(scenario: DumbScenario) {
