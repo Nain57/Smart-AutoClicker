@@ -23,7 +23,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -53,7 +53,7 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
 
     /** List of displayed condition items. */
     val conditionList: Flow<List<ConditionCopyItem>?> =
-        combine(repository.getAllConditions(), editionRepository.editionState.editedEventConditionsState, searchQuery) { dbCond, eventCond, query ->
+        combine(repository.getAllImageConditions(), editionRepository.editionState.editedEventConditionsState, searchQuery) { dbCond, eventCond, query ->
             val editedConditions = eventCond.value ?: return@combine null
             if (query.isNullOrEmpty()) getAllItems(dbCond, editedConditions) else dbCond.toCopyItemsFromSearch(query)
         }
@@ -69,7 +69,7 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
         if (condition.bitmap != null) {
             onBitmapLoaded.invoke(condition.bitmap)
             return null
@@ -97,7 +97,7 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
      * @param eventConditions all conditions in the current event.
      * @return the complete list of condition items.
      */
-    private fun getAllItems(dbConditions: List<Condition>, eventConditions: List<Condition>): List<ConditionCopyItem> {
+    private fun getAllItems(dbConditions: List<ImageCondition>, eventConditions: List<ImageCondition>): List<ConditionCopyItem> {
         val allItems = mutableListOf<ConditionCopyItem>()
 
         // First, add the actions from the current event
@@ -121,19 +121,19 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
      * Get the result of the search query.
      * @param query the current search query.
      */
-    private fun List<Condition>.toCopyItemsFromSearch(query: String) =
+    private fun List<ImageCondition>.toCopyItemsFromSearch(query: String) =
         filter { condition -> condition.name.contains(query, true) }
             .map { ConditionCopyItem.ConditionItem(it) }
             .distinct()
 
     /** */
-    private fun List<Condition>.toCopyItemsFromCurrentEvent() =
+    private fun List<ImageCondition>.toCopyItemsFromCurrentEvent() =
         sortedBy { it.name }
             .map { ConditionCopyItem.ConditionItem(it) }
             .distinct()
 
     /** */
-    private fun List<Condition>.toCopyItemsFromOtherEvents(eventItems: List<ConditionCopyItem.ConditionItem>) =
+    private fun List<ImageCondition>.toCopyItemsFromOtherEvents(eventItems: List<ConditionCopyItem.ConditionItem>) =
         map { ConditionCopyItem.ConditionItem(it) }
             .toMutableList()
             .apply {
@@ -158,6 +158,6 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
          * Condition item.
          * @param condition the details for the condition.
          */
-        data class ConditionItem (val condition: Condition) : ConditionCopyItem()
+        data class ConditionItem (val condition: ImageCondition) : ConditionCopyItem()
     }
 }

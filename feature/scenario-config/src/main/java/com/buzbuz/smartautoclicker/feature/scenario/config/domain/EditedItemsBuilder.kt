@@ -23,9 +23,9 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
@@ -56,8 +56,8 @@ class EditedItemsBuilder internal constructor(
         endConditionsIdCreator.resetIdCount()
     }
 
-    fun createNewEvent(context: Context): Event =
-        Event(
+    fun createNewEvent(context: Context): ImageEvent =
+        ImageEvent(
             id = eventsIdCreator.generateNewIdentifier(),
             scenarioId = getEditedScenarioIdOrThrow(),
             name = defaultValues.eventName(context),
@@ -67,7 +67,7 @@ class EditedItemsBuilder internal constructor(
             actions = mutableListOf(),
         )
 
-    fun createNewEventFrom(from: Event, scenarioId: Identifier = getEditedScenarioIdOrThrow()): Event {
+    fun createNewEventFrom(from: ImageEvent, scenarioId: Identifier = getEditedScenarioIdOrThrow()): ImageEvent {
         val eventId = eventsIdCreator.generateNewIdentifier()
 
         return from.copy(
@@ -83,8 +83,8 @@ class EditedItemsBuilder internal constructor(
         ).also { eventCopyConditionIdMap.clear() }
     }
 
-    fun createNewCondition(context: Context, area: Rect, bitmap: Bitmap): Condition =
-        Condition(
+    fun createNewCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
+        ImageCondition(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.conditionName(context),
@@ -95,7 +95,7 @@ class EditedItemsBuilder internal constructor(
             shouldBeDetected = defaultValues.conditionShouldBeDetected(),
         )
 
-    fun createNewConditionFrom(condition: Condition, eventId: Identifier = getEditedEventIdOrThrow()) =
+    fun createNewConditionFrom(condition: ImageCondition, eventId: Identifier = getEditedEventIdOrThrow()) =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
@@ -237,7 +237,7 @@ class EditedItemsBuilder internal constructor(
             eventName = from.eventName?.let { "" + it },
         )
 
-    private fun getEditedScenarioEvent(eventId: Identifier): Event? =
+    private fun getEditedScenarioEvent(eventId: Identifier): ImageEvent? =
         editor.eventsEditor.editedList.value?.find { event -> event.id == eventId }
 
     private fun getEditedScenarioIdOrThrow(): Identifier = editor.editedScenario.value?.id

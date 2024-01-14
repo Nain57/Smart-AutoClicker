@@ -28,7 +28,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageButton
-import android.widget.ImageView
 
 import androidx.annotation.IdRes
 import androidx.test.ext.junit.runners.AndroidJUnit4

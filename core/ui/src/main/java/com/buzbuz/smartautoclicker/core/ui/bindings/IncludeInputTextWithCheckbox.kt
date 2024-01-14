@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.bindings
 
-import android.opengl.Visibility
 import android.text.Editable
 import android.text.InputType
 import android.view.View

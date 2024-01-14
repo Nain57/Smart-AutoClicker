@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.game.rules
 import android.graphics.PointF
 import android.graphics.Rect
 import android.util.Log
-import androidx.annotation.CallSuper
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.feature.tutorial.data.game.TutorialGameStateData

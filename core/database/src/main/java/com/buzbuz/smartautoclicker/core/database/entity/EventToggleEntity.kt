@@ -61,7 +61,7 @@ data class EventToggleEntity(
     @PrimaryKey(autoGenerate = true) override var id: Long,
     @ColumnInfo(name = "action_id") var actionId: Long,
     @ColumnInfo(name = "toggle_type") val type: EventToggleType,
-    @ColumnInfo(name = "toggle_event_id") val toggleEventId: Long,
+    @ColumnInfo(name = "toggle_event_id") var toggleEventId: Long,
 ) : EntityWithId
 
 /**

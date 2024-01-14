@@ -22,9 +22,9 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 
@@ -100,7 +100,7 @@ class EditionRepository private constructor(context: Context) {
 
         scenarioEditor.startEdition(
             scenario = scenario,
-            events = repository.getEvents(scenarioId),
+            events = repository.getImageEvents(scenarioId),
             endConditions = repository.getEndConditions(scenarioId),
         )
         return true
@@ -128,14 +128,14 @@ class EditionRepository private constructor(context: Context) {
     /** Update the currently edited scenario. */
     fun updateEditedScenario(scenario: Scenario): Unit = scenarioEditor.updateEditedScenario(scenario)
     /** Update the priority of the events in the scenario. */
-    fun updateEventsOrder(newEvents: List<Event>): Unit = scenarioEditor.eventsEditor.updateList(newEvents)
+    fun updateEventsOrder(newEvents: List<ImageEvent>): Unit = scenarioEditor.eventsEditor.updateList(newEvents)
 
 
     // --- EVENT - START ---
 
-    fun startEventEdition(event: Event): Unit =
+    fun startEventEdition(event: ImageEvent): Unit =
         scenarioEditor.eventsEditor.startItemEdition(event)
-    fun updateEditedEvent(event: Event): Unit =
+    fun updateEditedEvent(event: ImageEvent): Unit =
         scenarioEditor.eventsEditor.updateEditedItem(event)
     fun updateActionsOrder(actions: List<Action>): Unit =
         scenarioEditor.eventsEditor.actionsEditor.updateList(actions)
@@ -147,9 +147,9 @@ class EditionRepository private constructor(context: Context) {
 
     // --- CONDITION - START ---
 
-    fun startConditionEdition(condition: Condition): Unit =
+    fun startConditionEdition(condition: ImageCondition): Unit =
         scenarioEditor.eventsEditor.conditionsEditor.startItemEdition(condition)
-    fun updateEditedCondition(condition: Condition): Unit =
+    fun updateEditedCondition(condition: ImageCondition): Unit =
         scenarioEditor.eventsEditor.conditionsEditor.updateEditedItem(condition)
     fun upsertEditedCondition(): Unit =
         scenarioEditor.eventsEditor.conditionsEditor.upsertEditedItem()

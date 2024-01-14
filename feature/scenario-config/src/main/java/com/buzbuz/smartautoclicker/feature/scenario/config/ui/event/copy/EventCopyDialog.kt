@@ -25,7 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
@@ -36,7 +36,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 class EventCopyDialog(
-    private val onEventSelected: (Event) -> Unit,
+    private val onEventSelected: (ImageEvent) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */
@@ -67,7 +67,7 @@ class EventCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
-    private fun onEventClicked(event: Event) {
+    private fun onEventClicked(event: ImageEvent) {
         debounceUserInteraction {
             if (viewModel.eventCopyShouldWarnUser(event)) {
                 showToggleEventCopyWarning(event)
@@ -78,7 +78,7 @@ class EventCopyDialog(
     }
 
     /** Show the copy event with toggle event action warning. */
-    private fun showToggleEventCopyWarning(event: Event) {
+    private fun showToggleEventCopyWarning(event: ImageEvent) {
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.dialog_overlay_title_warning)
             .setMessage(R.string.message_event_copy_with_toggle_action_from_another_scenario)
@@ -93,7 +93,7 @@ class EventCopyDialog(
             .show()
     }
 
-    private fun notifySelectionAndDestroy(event: Event) {
+    private fun notifySelectionAndDestroy(event: ImageEvent) {
         back()
         onEventSelected(event)
     }

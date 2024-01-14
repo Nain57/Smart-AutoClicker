@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,34 +16,41 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.scenario
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.toDomain
 
 /** @return the entity equivalent of this scenario. */
 internal fun Scenario.toEntity() = ScenarioEntity(
     id = id.databaseId,
     name = name,
     detectionQuality = detectionQuality,
-    endConditionOperator = endConditionOperator,
     randomize = randomize,
 )
 
 /** @return the scenario for this entity. */
-internal fun ScenarioEntity.toScenario(asDomain: Boolean = false) = Scenario(
-    id = Identifier(id = id, asDomain = asDomain),
-    name = name,
-    detectionQuality = detectionQuality,
-    endConditionOperator = endConditionOperator,
-    randomize = randomize,
-)
-
-/** @return the scenario for this entity. */
-internal fun ScenarioWithEvents.toScenario() = Scenario(
-    id = Identifier(databaseId = scenario.id),
+internal fun ScenarioWithEvents.toDomain(asDomain: Boolean = false) = Scenario(
+    id = Identifier(id = scenario.id, asTemporary = asDomain),
     name = scenario.name,
     detectionQuality = scenario.detectionQuality,
-    endConditionOperator = scenario.endConditionOperator,
     randomize = scenario.randomize,
     eventCount = events.size,
+)
+
+/** @return the scenario for this entity. */
+internal fun CompleteScenario.toDomain(cleanIds: Boolean = false): Pair<Scenario, List<Event>> =
+    scenario.toDomain(cleanIds) to events.map { completeEventEntity ->
+        completeEventEntity.toDomain()
+    }
+
+
+/** @return the scenario for this entity. */
+private fun ScenarioEntity.toDomain(cleanIds: Boolean = false) = Scenario(
+    id = Identifier(id = id, asTemporary = cleanIds),
+    name = name,
+    detectionQuality = detectionQuality,
+    randomize = randomize,
 )

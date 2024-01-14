@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,14 @@ import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 
 /** @return the entity equivalent of this condition. */
-internal fun Condition.toEntity() = ConditionEntity(
+internal fun ImageCondition.toEntity() = ConditionEntity(
     id = id.databaseId,
     eventId = eventId.databaseId,
     name = name,
+    type = ConditionType.ON_IMAGE_DETECTED,
     path = path!!,
     areaLeft = area.left,
     areaTop = area.top,
@@ -41,17 +43,21 @@ internal fun Condition.toEntity() = ConditionEntity(
 )
 
 /** @return the condition for this entity. */
-internal fun ConditionEntity.toCondition(asDomain: Boolean = false) = Condition(
-    id = Identifier(id = id, asDomain = asDomain),
-    eventId = Identifier(id = eventId, asDomain = asDomain),
-    name = name,
-    path = path,
-    area = Rect(areaLeft, areaTop, areaRight, areaBottom),
-    threshold = threshold,
-    detectionType = detectionType,
-    detectionArea = getDetectionArea(),
-    shouldBeDetected = shouldBeDetected,
-)
+internal fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): ImageCondition {
+    if (type != ConditionType.ON_IMAGE_DETECTED) throw IllegalArgumentException("Not an image condition")
+
+    return ImageCondition(
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
+        name = name,
+        path = path,
+        area = Rect(areaLeft!!, areaTop!!, areaRight!!, areaBottom!!),
+        threshold = threshold!!,
+        detectionType = detectionType!!,
+        detectionArea = getDetectionArea(),
+        shouldBeDetected = shouldBeDetected ?: true,
+    )
+}
 
 private fun ConditionEntity.getDetectionArea(): Rect? =
     if (detectionAreaLeft != null && detectionAreaTop != null && detectionAreaRight != null && detectionAreaBottom != null)

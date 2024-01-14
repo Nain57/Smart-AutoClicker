@@ -22,7 +22,7 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
@@ -133,7 +133,7 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
      * Set the event for the configured toggle event action.
      * @param confEvent the new event.
      */
-    fun setEvent(confEvent: Event) {
+    fun setEvent(confEvent: ImageEvent) {
         editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
             editionRepository.updateEditedAction(toggleEvent.copy(toggleEventId = confEvent.id))
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,9 @@ package com.buzbuz.smartautoclicker.core.domain.data
 
 import android.util.Log
 import androidx.room.withTransaction
-import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 
+import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
@@ -29,30 +30,28 @@ import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
+import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.core.database.entity.EndConditionEntity
-import com.buzbuz.smartautoclicker.core.database.entity.EndConditionWithEvent
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
-import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
-import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEndConditions
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
+import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toEntity
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.toEndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.toEntity
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.toEntity
-import com.buzbuz.smartautoclicker.core.domain.model.event.toEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.toScenario
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -82,41 +81,37 @@ internal class ScenarioDataSource(
 
     /** State of scenario during an update, to keep track of ids mapping. */
     private val scenarioUpdateState = ScenarioUpdateState()
-    /** Updater for a list of conditions. */
-    private val conditionsUpdater = DatabaseListUpdater<Condition, ConditionEntity>()
-    /** Updater for a list of actions. */
-    private val actionsUpdater = DatabaseListUpdater<Action, CompleteActionEntity> { completeAction ->
-        completeAction.action.id
-    }
-    /** Updater for a list of end conditions. */
-    private val endConditionsUpdater = DatabaseListUpdater<EndCondition, EndConditionEntity>()
 
     val scenarios: Flow<List<ScenarioWithEvents>> =
         scenarioDaoFlow.flatMapLatest { it.getScenariosWithEvents() }
 
-    suspend fun getScenario(scenarioId: Long): ScenarioEntity? =
+    val allTriggerEvents: Flow<List<CompleteEventEntity>> =
+        eventDaoFlow.flatMapLatest { it.getAllTriggerEventsFlow() }
+
+    val allImageEvents: Flow<List<CompleteEventEntity>> =
+        eventDaoFlow.flatMapLatest { it.getAllImageEventsFlow() }
+
+    suspend fun getScenario(scenarioId: Long): ScenarioWithEvents? =
         currentDatabase.value.scenarioDao().getScenario(scenarioId)
 
-    suspend fun getEvents(scenarioId: Long): List<CompleteEventEntity> =
-        currentDatabase.value.eventDao().getCompleteEvents(scenarioId)
+    suspend fun getImageEvents(scenarioId: Long): List<CompleteEventEntity> =
+        currentDatabase.value.eventDao().getCompleteImageEvents(scenarioId)
 
-    suspend fun getEndConditionsWithEvent(scenarioId: Long): List<EndConditionWithEvent> =
-        currentDatabase.value.endConditionDao().getEndConditionsWithEvent(scenarioId)
+    fun getImageEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
+        eventDaoFlow.flatMapLatest { it.getCompleteImageEventsFlow(scenarioId) }
 
-    fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<ScenarioWithEndConditions?> =
-        scenarioDaoFlow.flatMapLatest { it.getScenarioWithEndConditions(scenarioId) }
+    suspend fun getTriggerEvents(scenarioId: Long): List<CompleteEventEntity> =
+        currentDatabase.value.eventDao().getCompleteTriggerEvents(scenarioId)
 
-    fun getCompleteEventListFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getCompleteEventsFlow(scenarioId) }
-
-    fun getAllEvents(): Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getAllEvents() }
+    fun getTriggerEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
+        eventDaoFlow.flatMapLatest { it.getCompleteTriggerEventsFlow(scenarioId) }
 
     fun getAllActions(): Flow<List<CompleteActionEntity>> =
         actionDaoFlow.flatMapLatest { it.getAllActions() }
 
     fun getAllConditions(): Flow<List<ConditionEntity>> =
         conditionsDaoFlow.flatMapLatest { it.getAllConditions() }
+
 
     suspend fun addScenario(scenario: Scenario): Long {
         Log.d(TAG, "Add scenario to the database: ${scenario.id}")
@@ -137,37 +132,30 @@ internal class ScenarioDataSource(
         clearRemovedConditionsBitmaps(removedConditionsPath)
     }
 
-    suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? {
+    suspend fun importScenario(completeScenario: CompleteScenario): Long? {
         Log.d(TAG, "Add scenario copy to the database: ${completeScenario.scenario.id}")
+
+        // The scenario comes from another database, so we need to clean all ids to avoid any insertion conflict while
+        // keeping the correct references of foreign keys
+        val (scenario, events) = completeScenario.toDomain(cleanIds = true)
+
+        // Check the events correctness
+        if (events.find { !it.isComplete() } != null)
+            throw IllegalArgumentException("Can't update scenario content, one of the event is not complete")
 
         return try {
             currentDatabase.value.withTransaction {
-                val scenario = completeScenario.scenario.toScenario(asDomain = true)
-                val scenarioDbId = currentDatabase.value.scenarioDao().add(scenario.toEntity())
+                // First insert the scenario to get its database id, and put it in all events
+                val scenarioId = Identifier(
+                    databaseId = currentDatabase.value.scenarioDao().add(scenario.toEntity())
+                )
 
-                /*
-                 * Get the entities as domain object to use the same insertion.
-                 * Update the scenario id with the database one.
-                 */
-                val events = completeScenario.events.map { completeEventEntity ->
-                    completeEventEntity
-                        .toEvent(asDomain = true)
-                        .copy(scenarioId = Identifier(databaseId = scenarioDbId))
-                }.sortedBy { it.priority }
+                updateEvents(
+                    scenarioDbId = scenarioId.databaseId,
+                    events = events,
+                )
 
-                /* Same with the end conditions. */
-                val endConditions = completeScenario.endConditions.mapNotNull { endConditionEntity ->
-                    val associatedEvent = completeScenario.events.find { it.event.id == endConditionEntity.eventId }
-                        ?: return@mapNotNull null
-
-                    EndConditionWithEvent(endConditionEntity, associatedEvent.event)
-                        .toEndCondition(asDomain = true)
-                        .copy(scenarioId = Identifier(databaseId = scenarioDbId))
-                }
-
-                updateScenarioContent(scenarioDbId, events, endConditions)
-
-                scenarioDbId
+                scenarioId.databaseId
             }
         } catch (ex: Exception) {
             Log.e(TAG, "Error while inserting scenario copy", ex)
@@ -175,7 +163,7 @@ internal class ScenarioDataSource(
         }
     }
 
-    suspend fun updateScenario(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>): Boolean {
+    suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean {
         Log.d(TAG, "Update scenario in the database: ${scenario.id}")
 
         return try {
@@ -183,181 +171,215 @@ internal class ScenarioDataSource(
                 // Update scenario entity values
                 currentDatabase.value.scenarioDao().update(scenario.toEntity())
                 // Update scenario content
-                updateScenarioContent(scenario.id.databaseId, events, endConditions)
+                updateEvents(
+                    scenarioDbId = scenario.id.databaseId,
+                    events = events,
+                )
             }
 
             true
         } catch (ex: Exception) {
-            Log.e(TAG, "Error while updating scenario\n* Scenario=$scenario\n* Events=$events\n* endCondition=$endConditions", ex)
+            Log.e(TAG, "Error while updating scenario\n* Scenario=$scenario\n* Events=$events\n", ex)
             false
         }
     }
 
-    private suspend fun updateScenarioContent(scenarioDbId: Long, events: List<Event>, endConditions: List<EndCondition>) {
-        Log.d(TAG, "Update scenario $scenarioDbId content in the database")
+    private suspend fun updateEvents(scenarioDbId: Long, events: List<Event>) {
+        scenarioUpdateState.initUpdateState()
+        val updater = DatabaseListUpdater<Event, EventEntity>()
 
-        // Check arguments
-        if (events.find { !it.isComplete() } != null)
-            throw IllegalArgumentException("Can't update scenario content, one of the event is not complete")
-        if (endConditions.find { !it.isComplete() } != null)
-            throw IllegalArgumentException("Can't update scenario content, one of the end condition is not complete")
-
-        // Init update state.
-        scenarioUpdateState.initUpdateState(
-            oldScenarioEvents = currentDatabase.value.eventDao().getEvents(scenarioDbId)
-        )
-
-        // Add/Update all events entities. Removals will be done at the end.
-        updateEvents(events)
-
-        // Now that all events have a database id, process actions and conditions
-        events.forEach { eventInScenario ->
-            val eventDbId = scenarioUpdateState.getEventDbId(eventInScenario.id)
-
-            updateConditions(eventDbId, eventInScenario.conditions)
-            updateActions(eventDbId, eventInScenario.actions)
-        }
-
-        // Update the scenario's end conditions
-        updateEndConditions(scenarioDbId, endConditions)
-
-        // Remove events that are not in the new scenario.
-        // Cascade deletion will remove all linked actions and conditions.
-        val evtToBeRemoved = scenarioUpdateState.getEventToBeRemoved()
-        if (evtToBeRemoved.isNotEmpty()) {
-            currentDatabase.value.eventDao().deleteEvents(evtToBeRemoved)
-            clearRemovedEventsBitmaps(evtToBeRemoved)
-        }
-
-        conditionsUpdater.clear()
-        actionsUpdater.clear()
-        endConditionsUpdater.clear()
-    }
-
-    /** Add/Update all events entities. Removals will be done at the end. */
-    private suspend fun updateEvents(events: List<Event>) {
-        events.forEachIndexed { index, eventInScenario ->
-            eventInScenario.priority = index
-
-            val entity = eventInScenario.toEntity()
-            if (eventInScenario.id.isInDatabase()) {
-                currentDatabase.value.eventDao().updateEvent(entity)
-                scenarioUpdateState.setEventAsKept(eventInScenario.id.databaseId)
-            } else {
-                eventInScenario.id.domainId?.let {
-                    scenarioUpdateState.addEventIdMapping(
-                        domainId = it,
-                        dbId = currentDatabase.value.eventDao().addEvent(entity),
-                    )
+        Log.d(TAG, "Updating events in the database for scenario $scenarioDbId")
+        updater.refreshUpdateValues(
+            currentEntities = currentDatabase.value.eventDao().getEvents(scenarioDbId),
+            newItems = events,
+            mappingClosure = { event ->
+                event.toEntity().apply {
+                    scenarioId = scenarioDbId
                 }
             }
+        )
+        Log.d(TAG, "Events updater: $updater")
+
+        currentDatabase.value.eventDao().let { eventDao ->
+            updater.executeUpdate(
+                addList = eventDao::addEvents,
+                updateList = eventDao::updateEvent,
+                removeList = eventDao::deleteEvents,
+                onSuccess = { addedMapping, added, updated, removed ->
+                    addedMapping.forEach { (domainId, dbId) ->
+                        scenarioUpdateState.addEventIdMapping(domainId, dbId)
+                    }
+
+                    updateEventsChildren(buildList {
+                        addAll(added)
+                        addAll(updated)
+                    })
+
+                    if (removed.isNotEmpty()) clearRemovedEventsBitmaps(removed)
+                }
+            )
         }
     }
 
-    private suspend fun updateConditions(eventDbId: Long, conditions: List<Condition>) {
+    private suspend fun updateEventsChildren(events: List<Event>) {
+        // Actions can reference a condition, do them all first
+        events.forEach { event ->
+            updateConditions(
+                eventDbId = scenarioUpdateState.getEventDbId(event.id),
+                newConditions = event.conditions,
+            )
+        }
+
+        // Second iteration for actions
+        events.forEach { event ->
+            updateActions(
+                eventDbId = scenarioUpdateState.getEventDbId(event.id),
+                newActions = event.actions,
+            )
+        }
+    }
+
+    private suspend fun updateConditions(eventDbId: Long, newConditions: List<Condition>) {
+        val updater = DatabaseListUpdater<Condition, ConditionEntity>()
+
         Log.d(TAG, "Updating conditions in the database for event $eventDbId")
-        conditionsUpdater.refreshUpdateValues(
+        updater.refreshUpdateValues(
             currentEntities = currentDatabase.value.conditionDao().getConditions(eventDbId),
-            newItems = conditions,
-            toEntity = { _, condition ->
-                condition.copy(
-                    eventId = Identifier(databaseId = eventDbId),
-                    path = saveBitmapIfNeeded(condition),
-                ).toEntity()
-            }
-        )
-        Log.d(TAG, "Conditions updater: $conditionsUpdater")
+            newItems = newConditions,
+            mappingClosure = { condition ->
+                when (condition) {
+                    is ImageCondition ->
+                        condition.copy(
+                            eventId = Identifier(databaseId = eventDbId),
+                            path = saveBitmapIfNeeded(condition),
+                        ).toEntity()
 
-        currentDatabase.value.conditionDao().apply {
-            addConditions(conditionsUpdater.toBeAdded).forEachIndexed { index, conditionDbId ->
-                conditionsUpdater.getItemFromEntity(conditionsUpdater.toBeAdded[index])?.id?.domainId?.let { conditionDomainId ->
-                    scenarioUpdateState.addConditionIdMapping(
-                        domainId = conditionDomainId,
-                        dbId = conditionDbId,
-                    )
+                    is TriggerCondition ->
+                        condition.copy(evtId = Identifier(databaseId = eventDbId)).toEntity()
                 }
             }
-            updateConditions(conditionsUpdater.toBeUpdated)
-            deleteConditions(conditionsUpdater.toBeRemoved)
-        }
+        )
+        Log.d(TAG, "Conditions updater: $updater")
 
-        if (conditionsUpdater.toBeRemoved.isNotEmpty()) {
-            clearRemovedConditionsBitmaps(conditionsUpdater.toBeRemoved.map { it.path })
+        currentDatabase.value.conditionDao().let { conditionDao ->
+            updater.executeUpdate(
+                addList = conditionDao::addConditions,
+                updateList = conditionDao::updateConditions,
+                removeList = conditionDao::deleteConditions,
+                onSuccess = { addedMapping, _, _, removed ->
+                    addedMapping.forEach { (domainId, dbId) ->
+                        scenarioUpdateState.addConditionIdMapping(domainId, dbId)
+                    }
+
+                    if (removed.isNotEmpty()) clearRemovedConditionsBitmaps(removed.mapNotNull { it.path })
+                }
+            )
         }
     }
 
-    private suspend fun updateActions(eventDbId: Long, actions: List<Action>) {
+    private suspend fun updateActions(eventDbId: Long, newActions: List<Action>) {
+        val currentCompleteActions = currentDatabase.value.actionDao().getCompleteActions(eventDbId)
+        val currentActionsEntities = currentCompleteActions.map { it.action }
+        val updater = DatabaseListUpdater<Action, ActionEntity>()
+
         Log.d(TAG, "Updating actions in the database for event $eventDbId")
-        actionsUpdater.refreshUpdateValues(
-            currentEntities = currentDatabase.value.actionDao().getCompleteActions(eventDbId),
-            newItems = actions,
-            toEntity = { index, actionInEvent ->
+        updater.refreshUpdateValues(
+            currentEntities = currentActionsEntities,
+            newItems = newActions,
+            mappingClosure = { actionInEvent ->
                 actionInEvent.toEntity().apply {
-                    action.eventId = eventDbId
-                    action.toggleEventId = scenarioUpdateState.getToggleEventDatabaseId(actionInEvent)
-                    action.clickOnConditionId = scenarioUpdateState.getClickOnConditionDatabaseId(actionInEvent)
-                    action.priority = index
+                    eventId = eventDbId
+                    clickOnConditionId = scenarioUpdateState.getClickOnConditionDatabaseId(actionInEvent)
                 }
             }
         )
-        Log.d(TAG, "Actions updater: $actionsUpdater")
+        Log.d(TAG, "Actions updater: $updater")
 
-        addCompleteActions(actionsUpdater.toBeAdded)
-        updateCompleteActions(actionsUpdater.toBeUpdated)
-        currentDatabase.value.actionDao()
-            .deleteActions(actionsUpdater.toBeRemoved.map { it.action })
-    }
+        currentDatabase.value.actionDao().let { actionDao ->
+            updater.executeUpdate(
+                addList = actionDao::addActions,
+                updateList = actionDao::updateActions,
+                removeList = actionDao::deleteActions,
+                onSuccess = { addedMapping, added, updated, _ ->
+                    addedMapping.forEach { (domainId, dbId) ->
+                        scenarioUpdateState.addActionIdMapping(domainId, dbId)
+                    }
 
-    private suspend fun addCompleteActions(completeActions: List<CompleteActionEntity>) {
-        completeActions.forEach { completeAction ->
-
-            currentDatabase.value.actionDao().apply {
-                val actionId = addAction(completeAction.action)
-
-                completeAction.intentExtras.forEach { intentExtra ->
-                    intentExtra.actionId = actionId
-                    addIntentExtra(intentExtra)
+                    updateActionsChildren(buildList {
+                        addAll(added)
+                        addAll(updated)
+                    })
                 }
-            }
+            )
         }
     }
 
-    private suspend fun updateCompleteActions(completeActions: List<CompleteActionEntity>) {
-        completeActions.forEach { completeAction ->
-            currentDatabase.value.actionDao().apply {
-                updateAction(completeAction.action)
-
-                val extrasToBeRemoved = getIntentExtras(completeAction.action.id).toMutableList()
-                completeAction.intentExtras.forEach { intentExtra ->
-                    intentExtra.actionId = completeAction.action.id
-
-                    if (intentExtra.id == 0L) {
-                        addIntentExtra(intentExtra)
-                    } else {
-                        updateIntentExtra(intentExtra)
-                        extrasToBeRemoved.removeIf { it.id == intentExtra.id }
+    private suspend fun updateActionsChildren(actions: List<Action>) {
+        actions.forEach { action ->
+            when (action) {
+                is Action.Intent -> {
+                    action.extras?.let { extras ->
+                        updateIntentExtras(
+                            actionDbId = scenarioUpdateState.getActionDbId(action.id),
+                            newExtras = extras,
+                        )
                     }
                 }
-                if (extrasToBeRemoved.isNotEmpty()) deleteIntentExtras(extrasToBeRemoved)
+
+                is Action.ToggleEvent -> {
+                    updateEventToggles(
+                        actionDbId = scenarioUpdateState.getActionDbId(action.id),
+                        newToggles = action.eventToggles,
+                    )
+                }
+
+                else -> Unit
             }
         }
     }
 
-    private suspend fun updateEndConditions(scenarioId: Long, endConditions: List<EndCondition>) {
-        endConditionsUpdater.refreshUpdateValues(
-            currentEntities = currentDatabase.value.endConditionDao().getEndConditions(scenarioId),
-            newItems = endConditions,
-            toEntity = { _, endCondition ->
-                endCondition.copy(
-                    eventId = Identifier(databaseId = scenarioUpdateState.getEventDbId(endCondition.eventId)),
-                ).toEntity()
+    private suspend fun updateIntentExtras(actionDbId: Long, newExtras: List<IntentExtra<out Any>>) {
+        val updater = DatabaseListUpdater<IntentExtra<out Any>, IntentExtraEntity>()
+
+        updater.refreshUpdateValues(
+            currentEntities = currentDatabase.value.actionDao().getIntentExtras(actionDbId),
+            newItems = newExtras,
+            mappingClosure = { item ->
+                item.toEntity().apply {
+                    actionId = actionDbId
+                }
             }
         )
 
-        currentDatabase.value.endConditionDao().apply {
-            addEndConditions(endConditionsUpdater.toBeAdded)
-            updateEndConditions(endConditionsUpdater.toBeUpdated)
-            deleteEndConditions(endConditionsUpdater.toBeRemoved)
+        currentDatabase.value.actionDao().let { actionDao ->
+            updater.executeUpdate(
+                addList = actionDao::addIntentExtras,
+                updateList = actionDao::updateIntentExtras,
+                removeList = actionDao::deleteIntentExtras,
+            )
+        }
+    }
+
+    private suspend fun updateEventToggles(actionDbId: Long, newToggles: List<EventToggle>) {
+        val updater = DatabaseListUpdater<EventToggle, EventToggleEntity>()
+
+        updater.refreshUpdateValues(
+            currentEntities = currentDatabase.value.actionDao().getEventsToggles(actionDbId),
+            newItems = newToggles,
+            mappingClosure = { item ->
+                item.toEntity().apply {
+                    actionId = actionDbId
+                    toggleEventId = scenarioUpdateState.getEventDbId(item.targetEventId)
+                }
+            }
+        )
+
+        currentDatabase.value.actionDao().let { actionDao ->
+            updater.executeUpdate(
+                addList = actionDao::addEventToggles,
+                updateList = actionDao::updateEventToggles,
+                removeList = actionDao::deleteEventToggles,
+            )
         }
     }
 
@@ -390,7 +412,7 @@ internal class ScenarioDataSource(
         bitmapManager.deleteBitmaps(deletedPaths)
     }
 
-    private suspend fun saveBitmapIfNeeded(condition: Condition): String =
+    private suspend fun saveBitmapIfNeeded(condition: ImageCondition): String =
         if (condition.path.isNullOrEmpty()) {
             condition.bitmap?.let { bitmapManager.saveBitmap(it, getBitmapFilePrefix()) }
                 ?: throw IllegalArgumentException("Can't insert condition, bitmap and path are both null.")

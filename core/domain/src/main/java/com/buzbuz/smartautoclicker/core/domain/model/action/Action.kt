@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,13 @@
 package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
-import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
-import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 
-import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
+import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
+import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 
 /** Base for for all possible actions for an Event. */
 sealed class Action : Identifiable, Completable {
@@ -31,6 +32,8 @@ sealed class Action : Identifiable, Completable {
     abstract val eventId: Identifier
     /** The name of the action. */
     abstract val name: String?
+    /** The name of the action. */
+    abstract val priority: Int
 
     /** @return true if this action is complete and can be transformed into its entity. */
     override fun isComplete(): Boolean = name != null
@@ -52,6 +55,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
+        override val priority: Int,
         val pressDuration: Long? = null,
         val positionType: PositionType,
         val x: Int? = null,
@@ -84,6 +88,9 @@ sealed class Action : Identifiable, Completable {
 
         private fun isPositionValid(): Boolean =
             (positionType == PositionType.USER_SELECTED && x != null && y != null) || positionType == PositionType.ON_DETECTED_CONDITION
+
+        internal fun isClickOnConditionValid(): Boolean =
+            (positionType == PositionType.ON_DETECTED_CONDITION && clickOnConditionId != null) || positionType == PositionType.USER_SELECTED
     }
 
     /**
@@ -102,6 +109,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
+        override val priority: Int,
         val swipeDuration: Long? = null,
         val fromX: Int? = null,
         val fromY: Int? = null,
@@ -127,6 +135,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
+        override val priority: Int,
         val pauseDuration: Long? = null,
     ) : Action() {
 
@@ -152,6 +161,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
+        override val priority: Int,
         val isAdvanced: Boolean? = null,
         val isBroadcast: Boolean,
         val intentAction: String? = null,
@@ -179,15 +189,17 @@ sealed class Action : Identifiable, Completable {
      * @param id the unique identifier for the action.
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
-     * @param toggleEventId the identifier of the event to manipulate.
-     * @param toggleEventType the type of manipulation to apply.
+     * @param toggleAll true to toggle all events, false to control only via EventToggle.
+     * @param toggleAllType the type of manipulation to apply for toggle all.
      */
     data class ToggleEvent(
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        val toggleEventId: Identifier? = null,
-        val toggleEventType: ToggleType? = null,
+        override val priority: Int,
+        val toggleAll: Boolean = false,
+        val toggleAllType: ToggleType? = null,
+        val eventToggles: List<EventToggle> = emptyList(),
     ) : Action() {
 
         /**
@@ -202,11 +214,53 @@ sealed class Action : Identifiable, Completable {
             /** Enable the event if it is disabled, disable it if it is enabled. */
             TOGGLE;
 
-            fun toEntity(): ToggleEventType = ToggleEventType.valueOf(name)
+            fun toEntity(): EventToggleType = EventToggleType.valueOf(name)
         }
 
-        override fun isComplete(): Boolean = super.isComplete() && toggleEventId != null && toggleEventType != null
+        override fun isComplete(): Boolean {
+            if (!super.isComplete()) return false
+
+            return if (toggleAll) {
+                toggleAllType != null
+            } else {
+                eventToggles.find { !it.isComplete() } == null
+            }
+        }
 
         override fun deepCopy(): ToggleEvent = copy(name = "" + name)
+    }
+
+    data class ChangeCounter(
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String? = null,
+        override val priority: Int,
+        val counterName: String,
+        val operation: OperationType,
+        val operationValue: Int,
+    ): Action() {
+
+        /**
+         * Types of counter change of a [ChangeCounter].
+         * Keep the same names as the db ones.
+         */
+        enum class OperationType {
+            /** Add to the current counter value. */
+            ADD,
+            /** Remove from the current counter value. */
+            MINUS,
+            /** Set the counter to a specific value. */
+            SET;
+
+            fun toEntity(): ChangeCounterOperationType = ChangeCounterOperationType.valueOf(name)
+        }
+
+        override fun isComplete(): Boolean =
+            super.isComplete() && counterName.isNotEmpty()
+
+        override fun deepCopy(): ChangeCounter = copy(
+            name = "" + name,
+            counterName = "" + counterName,
+        )
     }
 }

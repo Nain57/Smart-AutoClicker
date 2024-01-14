@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActio
 
 internal fun DumbScenarioWithActions.toDomain(asDomain: Boolean = false): DumbScenario =
     DumbScenario(
-        id = Identifier(id = scenario.id, asDomain = asDomain),
+        id = Identifier(id = scenario.id, asTemporary = asDomain),
         name = scenario.name,
         repeatCount = scenario.repeatCount,
         isRepeatInfinite = scenario.isRepeatInfinite,

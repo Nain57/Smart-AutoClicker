@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
@@ -38,8 +38,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class EventSelectionDialog(
-    private val eventList: List<Event>,
-    private val onEventClicked: (Event) -> Unit,
+    private val eventList: List<ImageEvent>,
+    private val onEventClicked: (ImageEvent) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** ViewBinding containing the views for this dialog. */
@@ -79,7 +79,7 @@ class EventSelectionDialog(
      *
      * @param event the selected event.
      */
-    private fun onEventSelected(event: Event) {
+    private fun onEventSelected(event: ImageEvent) {
         debounceUserInteraction {
             onEventClicked(event)
             back()
@@ -92,8 +92,8 @@ class EventSelectionDialog(
  * @param onEventSelected listener on user click on an event.
  */
 private class EventsAdapter(
-    private val onEventSelected: (Event) -> Unit,
-) : ListAdapter<Event, EventViewHolder>(EventsDiffUtilCallback) {
+    private val onEventSelected: (ImageEvent) -> Unit,
+) : ListAdapter<ImageEvent, EventViewHolder>(EventsDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(
@@ -106,9 +106,9 @@ private class EventsAdapter(
 }
 
 /** DiffUtil Callback comparing two EndConditionListItem when updating the [EventsAdapter] list. */
-private object EventsDiffUtilCallback: DiffUtil.ItemCallback<Event>() {
-    override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean = oldItem == newItem
+private object EventsDiffUtilCallback: DiffUtil.ItemCallback<ImageEvent>() {
+    override fun areItemsTheSame(oldItem: ImageEvent, newItem: ImageEvent): Boolean = oldItem.id == newItem.id
+    override fun areContentsTheSame(oldItem: ImageEvent, newItem: ImageEvent): Boolean = oldItem == newItem
 }
 
 /**
@@ -119,10 +119,10 @@ private object EventsDiffUtilCallback: DiffUtil.ItemCallback<Event>() {
  */
 private class EventViewHolder(
     private val viewBinding: ItemEventBinding,
-    private val onEventSelected: (Event) -> Unit,
+    private val onEventSelected: (ImageEvent) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(event: Event) {
+    fun onBind(event: ImageEvent) {
         viewBinding.bind(event, false) { onEventSelected(event) }
     }
 }

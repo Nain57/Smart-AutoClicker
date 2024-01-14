@@ -25,7 +25,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
@@ -167,7 +167,7 @@ class ScenarioListViewModel(application: Application) : AndroidViewModel(applica
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
         if (condition.bitmap != null) {
             onBitmapLoaded.invoke(condition.bitmap)
             return null
@@ -215,7 +215,7 @@ class ScenarioListViewModel(application: Application) : AndroidViewModel(applica
         if (eventCount == 0) ScenarioListUiState.Item.Empty.Smart(this)
         else ScenarioListUiState.Item.Valid.Smart(
             scenario = this,
-            eventsItems = smartRepository.getEvents(id.databaseId).map { event ->
+            eventsItems = smartRepository.getImageEvents(id.databaseId).map { event ->
                 ScenarioListUiState.Item.Valid.Smart.EventItem(
                     id = event.id.databaseId,
                     eventName = event.name,

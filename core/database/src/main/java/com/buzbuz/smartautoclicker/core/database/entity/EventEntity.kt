@@ -65,7 +65,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EventEntity(
     @PrimaryKey(autoGenerate = true) override var id: Long,
-    @ColumnInfo(name = "scenario_id") val scenarioId: Long,
+    @ColumnInfo(name = "scenario_id") var scenarioId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "operator") val conditionOperator: Int,
     @ColumnInfo(name = "priority") var priority: Int,

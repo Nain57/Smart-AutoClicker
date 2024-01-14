@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
@@ -43,10 +43,11 @@ internal class ScenarioEditor {
         EditedElementState(edit, hasChanged, canBeSaved)
     }
 
+    val triggerEventsEditor = TriggerEventsEditor()
     val eventsEditor = EventsEditor(::deleteAllReferencesToEvent, editedScenario)
     val endConditionsEditor = ListEditor<EndCondition, Scenario>(canBeEmpty = true, parentItem = editedScenario)
 
-    fun startEdition(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>) {
+    fun startEdition(scenario: Scenario, events: List<ImageEvent>, endConditions: List<EndCondition>) {
         referenceScenario.value = scenario
         _editedScenario.value = scenario
 
@@ -67,12 +68,11 @@ internal class ScenarioEditor {
         _editedScenario.value = item
     }
 
-    private fun deleteAllReferencesToEvent(event: Event) {
+    private fun deleteAllReferencesToEvent(event: ImageEvent) {
         eventsEditor.deleteAllActionsReferencing(event)
 
         endConditionsEditor.editedList.value
             ?.filter { it.eventId != event.id }
             ?.let { endConditionsEditor.updateList(it) }
-
     }
 }

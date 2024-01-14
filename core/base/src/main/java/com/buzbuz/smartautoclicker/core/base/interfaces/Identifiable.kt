@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,6 @@ interface Identifiable {
     val id: Identifier
 
     fun getDatabaseId(): Long = id.databaseId
-    fun getDomainId(): Long? = id.domainId
+    fun getDomainId(): Long? = id.tempId
     fun isInDatabase(): Boolean = id.isInDatabase()
 }

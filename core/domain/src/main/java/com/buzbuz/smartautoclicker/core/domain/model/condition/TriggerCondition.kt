@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,48 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.domain.model.triggercondition
-
-import androidx.annotation.CallSuper
+package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
 
-sealed class TriggerCondition: Identifiable, Completable {
-
-    abstract val triggerEventId: Identifier
-    abstract val name: String
-
-    @CallSuper
-    override fun isComplete(): Boolean =
-        name.isNotEmpty()
+sealed class TriggerCondition: Condition(), Identifiable, Completable {
 
     @Suppress("USELESS_CAST") // Yet it is required by Android Studio
-    fun copy(eventId: Identifier) = when (this) {
-        is OnScenarioStart -> (this as OnScenarioStart).copy(triggerEventId = eventId)
-        is OnScenarioEnd -> (this as OnScenarioEnd).copy(triggerEventId = eventId)
-        is OnBroadcastReceived -> (this as OnBroadcastReceived).copy(triggerEventId = eventId)
-        is OnCounterCountReached -> (this as OnCounterCountReached).copy(triggerEventId = eventId)
-        is OnTimerReached -> (this as OnTimerReached).copy(triggerEventId = eventId)
+    fun copy(evtId: Identifier) = when (this) {
+        is OnScenarioStart -> (this as OnScenarioStart).copy(eventId = evtId)
+        is OnScenarioEnd -> (this as OnScenarioEnd).copy(eventId = evtId)
+        is OnBroadcastReceived -> (this as OnBroadcastReceived).copy(eventId = evtId)
+        is OnCounterCountReached -> (this as OnCounterCountReached).copy(eventId = evtId)
+        is OnTimerReached -> (this as OnTimerReached).copy(eventId = evtId)
     }
 
     data class OnScenarioStart(
         override val id: Identifier,
-        override val triggerEventId: Identifier,
+        override val eventId: Identifier,
         override val name: String,
     ) : TriggerCondition()
 
     data class OnScenarioEnd(
         override val id: Identifier,
-        override val triggerEventId: Identifier,
+        override val eventId: Identifier,
         override val name: String,
     ) : TriggerCondition()
 
     data class OnBroadcastReceived(
         override val id: Identifier,
-        override val triggerEventId: Identifier,
+        override val eventId: Identifier,
         override val name: String,
         val intentAction: String,
     ) : TriggerCondition() {
@@ -66,7 +57,7 @@ sealed class TriggerCondition: Identifiable, Completable {
 
     data class OnCounterCountReached(
         override val id: Identifier,
-        override val triggerEventId: Identifier,
+        override val eventId: Identifier,
         override val name: String,
         val counterName: String,
         val comparisonOperation: ComparisonOperation,
@@ -98,7 +89,7 @@ sealed class TriggerCondition: Identifiable, Completable {
 
     data class OnTimerReached(
         override val id: Identifier,
-        override val triggerEventId: Identifier,
+        override val eventId: Identifier,
         override val name: String,
         val durationMs: Long,
     ) : TriggerCondition() {

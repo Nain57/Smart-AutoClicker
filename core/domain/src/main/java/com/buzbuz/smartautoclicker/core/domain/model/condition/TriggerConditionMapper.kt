@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.domain.model.triggercondition
+package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
@@ -33,7 +33,7 @@ internal fun TriggerCondition.toEntity(): ConditionEntity = when (this) {
 private fun TriggerCondition.OnScenarioStart.toScenarioStartEntity(): ConditionEntity =
     ConditionEntity(
         id = id.databaseId,
-        eventId = triggerEventId.databaseId,
+        eventId = eventId.databaseId,
         name = name,
         type = ConditionType.ON_SCENARIO_START,
     )
@@ -41,7 +41,7 @@ private fun TriggerCondition.OnScenarioStart.toScenarioStartEntity(): ConditionE
 private fun TriggerCondition.OnScenarioEnd.toScenarioEndEntity(): ConditionEntity =
     ConditionEntity(
         id = id.databaseId,
-        eventId = triggerEventId.databaseId,
+        eventId = eventId.databaseId,
         name = name,
         type = ConditionType.ON_SCENARIO_END,
     )
@@ -49,7 +49,7 @@ private fun TriggerCondition.OnScenarioEnd.toScenarioEndEntity(): ConditionEntit
 private fun TriggerCondition.OnBroadcastReceived.toBroadcastReceivedEntity(): ConditionEntity =
     ConditionEntity(
         id = id.databaseId,
-        eventId = triggerEventId.databaseId,
+        eventId = eventId.databaseId,
         name = name,
         type = ConditionType.ON_BROADCAST_RECEIVED,
         broadcastAction = intentAction,
@@ -58,7 +58,7 @@ private fun TriggerCondition.OnBroadcastReceived.toBroadcastReceivedEntity(): Co
 private fun TriggerCondition.OnCounterCountReached.toCounterReachedEntity(): ConditionEntity =
     ConditionEntity(
         id = id.databaseId,
-        eventId = triggerEventId.databaseId,
+        eventId = eventId.databaseId,
         name = name,
         type = ConditionType.ON_COUNTER_REACHED,
         counterName = counterName,
@@ -69,58 +69,58 @@ private fun TriggerCondition.OnCounterCountReached.toCounterReachedEntity(): Con
 private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEntity =
     ConditionEntity(
         id = id.databaseId,
-        eventId = triggerEventId.databaseId,
+        eventId = eventId.databaseId,
         name = name,
-        type = ConditionType.ON_COUNTER_REACHED,
+        type = ConditionType.ON_TIMER_REACHED,
         timerValueMs = durationMs,
     )
 
-internal fun ConditionEntity.toTriggerCondition(asDomain: Boolean = false): TriggerCondition =
+internal fun ConditionEntity.toDomainTriggerCondition(cleanIds: Boolean = false): TriggerCondition =
     when (type) {
-        ConditionType.ON_SCENARIO_START -> toScenarioStart(asDomain)
-        ConditionType.ON_SCENARIO_END-> toScenarioEnd(asDomain)
-        ConditionType.ON_BROADCAST_RECEIVED-> toBroadcastReceived(asDomain)
-        ConditionType.ON_COUNTER_REACHED -> toCounterReached(asDomain)
-        ConditionType.ON_TIMER_REACHED -> toTimerReached(asDomain)
+        ConditionType.ON_SCENARIO_START -> toDomainScenarioStart(cleanIds)
+        ConditionType.ON_SCENARIO_END -> toDomainScenarioEnd(cleanIds)
+        ConditionType.ON_BROADCAST_RECEIVED -> toDomainBroadcastReceived(cleanIds)
+        ConditionType.ON_COUNTER_REACHED -> toDomainCounterReached(cleanIds)
+        ConditionType.ON_TIMER_REACHED -> toDomainTimerReached(cleanIds)
         else -> throw IllegalArgumentException("Unsupported condition type for a TriggerCondition")
     }
 
-private fun ConditionEntity.toScenarioStart(asDomain: Boolean = false): TriggerCondition =
+private fun ConditionEntity.toDomainScenarioStart(cleanIds: Boolean = false): TriggerCondition =
     TriggerCondition.OnScenarioStart(
-        id = Identifier(id = id, asDomain = asDomain),
-        triggerEventId = Identifier(id = eventId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,
     )
 
-private fun ConditionEntity.toScenarioEnd(asDomain: Boolean = false): TriggerCondition =
+private fun ConditionEntity.toDomainScenarioEnd(cleanIds: Boolean = false): TriggerCondition =
     TriggerCondition.OnScenarioEnd(
-        id = Identifier(id = id, asDomain = asDomain),
-        triggerEventId = Identifier(id = eventId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,
     )
 
-private fun ConditionEntity.toBroadcastReceived(asDomain: Boolean = false): TriggerCondition =
+private fun ConditionEntity.toDomainBroadcastReceived(cleanIds: Boolean = false): TriggerCondition =
     TriggerCondition.OnBroadcastReceived(
-        id = Identifier(id = id, asDomain = asDomain),
-        triggerEventId = Identifier(id = eventId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,
         intentAction = broadcastAction!!,
     )
 
-private fun ConditionEntity.toCounterReached(asDomain: Boolean = false): TriggerCondition =
+private fun ConditionEntity.toDomainCounterReached(cleanIds: Boolean = false): TriggerCondition =
     TriggerCondition.OnCounterCountReached(
-        id = Identifier(id = id, asDomain = asDomain),
-        triggerEventId = Identifier(id = eventId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,
         counterName = counterName!!,
         comparisonOperation = counterComparisonOperation!!.toDomain(),
         counterValue = counterValue!!,
     )
 
-private fun ConditionEntity.toTimerReached(asDomain: Boolean = false): TriggerCondition =
+private fun ConditionEntity.toDomainTimerReached(cleanIds: Boolean = false): TriggerCondition =
     TriggerCondition.OnTimerReached(
-        id = Identifier(id = id, asDomain = asDomain),
-        triggerEventId = Identifier(id = eventId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,
         durationMs = timerValueMs!!,
     )

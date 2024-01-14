@@ -24,7 +24,7 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -59,7 +59,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
 
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> =
-        combine(repository.getAllEventsFlow(), editionRepository.editionState.eventsState) { allEvts, scenarioEvts ->
+        combine(repository.getAllImageEventsFlow(), editionRepository.editionState.eventsState) { allEvts, scenarioEvts ->
             allEvts.isNotEmpty() || !scenarioEvts.value.isNullOrEmpty()
         }
 
@@ -68,12 +68,12 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
      * @param context the Android context.
      * @return the new event item.
      */
-    fun createNewEvent(context: Context, event: Event? = null): Event = with(editionRepository.editedItemsBuilder) {
+    fun createNewEvent(context: Context, event: ImageEvent? = null): ImageEvent = with(editionRepository.editedItemsBuilder) {
         if (event == null) createNewEvent(context)
         else createNewEventFrom(event)
     }
 
-    fun startEventEdition(event: Event) = editionRepository.startEventEdition(event)
+    fun startEventEdition(event: ImageEvent) = editionRepository.startEventEdition(event)
 
     /** Add or update an event. If the event id is unset, it will be added. If not, updated. */
     fun saveEventEdition() = editionRepository.upsertEditedEvent()
@@ -85,7 +85,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
     fun dismissEditedEvent() = editionRepository.stopEventEdition()
 
     /** Update the priority of the events in the scenario. */
-    fun updateEventsPriority(events: List<Event>) = editionRepository.updateEventsOrder(events)
+    fun updateEventsPriority(events: List<ImageEvent>) = editionRepository.updateEventsOrder(events)
 
     fun onEventCountReachedAddCopyClicked(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT)

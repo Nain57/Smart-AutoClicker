@@ -24,15 +24,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldTextBinding
 
 import com.google.android.material.textfield.TextInputLayout
 
 import kotlin.reflect.KClass
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Get the icon for a given action.

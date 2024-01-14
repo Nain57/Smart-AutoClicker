@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.R
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.ItemDebugReportConditionBinding
 
@@ -34,7 +34,7 @@ import kotlinx.coroutines.Job
 
 /** Adapter for the debug condition reports displayed in a event debug report item. */
 class DebugReportConditionsAdapter(
-    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val conditionClickedListener: (ConditionReport) -> Unit,
 ) : ListAdapter<ConditionReport, ConditionDebugInfoViewHolder>(ConditionDiffUtilCallback) {
 
@@ -62,7 +62,7 @@ private object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ConditionReport>
 /** ViewHolder for a condition report. */
 class ConditionDebugInfoViewHolder(
     private val viewBinding: ItemDebugReportConditionBinding,
-    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionClicked: (ConditionReport) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 

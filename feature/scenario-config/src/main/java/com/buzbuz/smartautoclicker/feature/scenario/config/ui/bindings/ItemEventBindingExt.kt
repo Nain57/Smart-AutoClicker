@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings
 import android.util.TypedValue
 import android.view.View
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setIconTintColor
@@ -32,9 +32,9 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setIconTintColo
  * @param itemClickedListener called when the user clicks on the item.
  */
 fun ItemEventBinding.bind(
-    event: Event,
+    event: ImageEvent,
     canDrag: Boolean,
-    itemClickedListener: (Event) -> Unit,
+    itemClickedListener: (ImageEvent) -> Unit,
 ) {
     textName.text = event.name
     textConditionsCount.text = event.conditions.size.toString()

@@ -21,7 +21,7 @@ import android.graphics.Color
 
 import androidx.core.content.ContextCompat
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
@@ -35,9 +35,9 @@ import kotlinx.coroutines.Job
  * Bind the [ItemConditionBinding] to a condition.
  */
 fun ItemConditionBinding.bind(
-    condition: Condition,
-    bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    conditionClickedListener: (Condition) -> Unit
+    condition: ImageCondition,
+    bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    conditionClickedListener: (ImageCondition) -> Unit
 ): Job? {
     root.setOnClickListener { conditionClickedListener.invoke(condition) }
 

@@ -28,7 +28,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
@@ -60,7 +60,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
 
     /** Tells if there is at least one condition to copy. */
     val canCopyCondition: Flow<Boolean> = combine(
-        repository.getAllConditions(),
+        repository.getAllImageConditions(),
         configuredEventConditions,
         editionRepository.editionState.eventsState
     ) { dbConds, editedConds, scenarioEvents ->
@@ -84,17 +84,17 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param area the area of the condition to create.
      * @param bitmap the image for the condition to create.
      */
-    fun createCondition(context: Context, area: Rect, bitmap: Bitmap): Condition =
+    fun createCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
         editionRepository.editedItemsBuilder.createNewCondition(context, area, bitmap)
 
     /**
      * Get a new condition based on the provided one.
      * @param condition the condition to copy.
      */
-    fun createNewConditionFromCopy(condition: Condition): Condition =
+    fun createNewConditionFromCopy(condition: ImageCondition): ImageCondition =
         editionRepository.editedItemsBuilder.createNewConditionFrom(condition)
 
-    fun startConditionEdition(condition: Condition) = editionRepository.startConditionEdition(condition)
+    fun startConditionEdition(condition: ImageCondition) = editionRepository.startConditionEdition(condition)
 
     /** Insert/update a new condition to the event. */
     fun upsertEditedCondition() =
@@ -114,7 +114,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
         if (condition.bitmap != null) {
             onBitmapLoaded.invoke(condition.bitmap)
             return null

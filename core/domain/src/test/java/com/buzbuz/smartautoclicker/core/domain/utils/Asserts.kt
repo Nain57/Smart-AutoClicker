@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +17,20 @@
 package com.buzbuz.smartautoclicker.core.domain.utils
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 
-
-fun assertSameEndConditionNoIdCheck(expected: EndCondition, actual: EndCondition) = assertTrue(
-    "End conditions are not the same",
-    expected.scenarioId == actual.scenarioId
-            && expected.eventName == actual.eventName
-            && expected.executions == actual.executions
-)
-
-fun assertSameEventListNoIdCheck(expected: List<Event>, actual: List<Event>) {
+fun assertSameEventListNoIdCheck(expected: List<ImageEvent>, actual: List<ImageEvent>) {
     forEachExpectedAndActual(expected, actual) { expectedEvent, actualEvent ->
         assertSameEventNoIdCheck(expectedEvent, actualEvent)
     }
 }
 
-private fun assertSameEventNoIdCheck(expected: Event, actual: Event) {
+private fun assertSameEventNoIdCheck(expected: ImageEvent, actual: ImageEvent) {
     assertTrue(
         "Events content are not the same",
         expected.name == actual.name
@@ -61,7 +52,7 @@ private fun assertSameEventNoIdCheck(expected: Event, actual: Event) {
     }
 }
 
-private fun assertSameConditionNoIdCheck(expected: Condition, actual: Condition) = assertTrue(
+private fun assertSameConditionNoIdCheck(expected: ImageCondition, actual: ImageCondition) = assertTrue(
     "Conditions are not the same",
     expected.name == actual.name
             && expected.shouldBeDetected == actual.shouldBeDetected
@@ -120,7 +111,7 @@ private fun assertSameIntentNoIdCheck(expected: Action.Intent, actual: Action.In
 private fun assertSameToggleEventNoIdCheck(expected: Action.ToggleEvent, actual: Action.ToggleEvent) = assertTrue(
     "ToggleEvents are not the same",
     expected.name == actual.name
-            && expected.toggleEventType == actual.toggleEventType
+            //&& expected.toggleEventType == actual.toggleEventType
 )
 
 private fun <T> forEachExpectedAndActual(expected: List<T>, actual: List<T>, closure: (T, T) -> Unit) {

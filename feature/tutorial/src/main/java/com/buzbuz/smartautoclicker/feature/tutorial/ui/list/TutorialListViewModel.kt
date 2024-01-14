@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui.list
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 

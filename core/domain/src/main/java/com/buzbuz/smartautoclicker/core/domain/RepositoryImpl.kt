@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +17,28 @@
 package com.buzbuz.smartautoclicker.core.domain
 
 import android.util.Log
-import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 
+import com.buzbuz.smartautoclicker.core.base.extensions.mapList
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.data.ScenarioDataSource
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.action.toAction
-import com.buzbuz.smartautoclicker.core.domain.model.condition.toCondition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.toEndCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.action.toDomain
+import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomainImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.toEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainTriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.toScenario
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.mapNotNull
 
-// TODO: We should clean unused bitmaps, it can happens that some stays there
 /**
  * Repository for the database and bitmap manager.
  * Provide the access to the scenario, events, actions and conditions from the database and the conditions bitmap from
@@ -56,36 +55,38 @@ internal class RepositoryImpl internal constructor(
 
     private val dataSource: ScenarioDataSource = ScenarioDataSource(database, bitmapManager)
 
+
     override val scenarios: Flow<List<Scenario>> =
-        dataSource.scenarios.mapList { it.toScenario() }
+        dataSource.scenarios.mapList { it.toDomain() }
+
+    override val allImageEvents: Flow<List<ImageEvent>> =
+        dataSource.allImageEvents.mapList { it.toDomainImageEvent() }
+
+    override val allTriggerEvents: Flow<List<TriggerEvent>> =
+        dataSource.allTriggerEvents.mapList { it.toDomainTriggerEvent() }
+
 
     override suspend fun getScenario(scenarioId: Long): Scenario? =
-        dataSource.getScenario(scenarioId)?.toScenario()
+        dataSource.getScenario(scenarioId)?.toDomain()
 
-    override suspend fun getEvents(scenarioId: Long): List<Event> =
-        dataSource.getEvents(scenarioId).map { it.toEvent() }
+    override suspend fun getImageEvents(scenarioId: Long): List<ImageEvent> =
+        dataSource.getImageEvents(scenarioId).map { it.toDomainImageEvent() }
 
-    override suspend fun getEndConditions(scenarioId: Long): List<EndCondition> =
-        dataSource.getEndConditionsWithEvent(scenarioId).map { it.toEndCondition() }
+    override fun getImageEventsFlow(scenarioId: Long): Flow<List<ImageEvent>> =
+        dataSource.getImageEventsFlow(scenarioId).mapList { it.toDomainImageEvent() }
 
-    override fun getScenarioWithEndConditionsFlow(scenarioId: Long): Flow<Pair<Scenario, List<EndCondition>>> =
-        dataSource.getScenarioWithEndConditionsFlow(scenarioId)
-            .mapNotNull { scenarioWithEndConditions ->
-                scenarioWithEndConditions ?: return@mapNotNull null
-                scenarioWithEndConditions.scenario.toScenario() to scenarioWithEndConditions.endConditions.map { it.toEndCondition() }
-            }
+    override suspend fun getTriggerEvents(scenarioId: Long): List<TriggerEvent> =
+        dataSource.getTriggerEvents(scenarioId).map { it.toDomainTriggerEvent() }
 
-    override fun getEventsFlow(scenarioId: Long): Flow<List<Event>> =
-        dataSource.getCompleteEventListFlow(scenarioId).mapList { it.toEvent() }
-
-    override fun getAllEventsFlow(): Flow<List<Event>> =
-        dataSource.getAllEvents().mapList { it.toEvent() }
+    override fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>> =
+        dataSource.getTriggerEventsFlow(scenarioId).mapList { it.toDomainTriggerEvent() }
 
     override fun getAllActions(): Flow<List<Action>> =
-        dataSource.getAllActions().mapList { it.toAction() }
+        dataSource.getAllActions().mapList { it.toDomain() }
 
-    override fun getAllConditions(): Flow<List<Condition>> =
-        dataSource.getAllConditions().mapList { it.toCondition() }
+    override fun getAllImageConditions(): Flow<List<ImageCondition>> =
+        dataSource.getAllConditions().mapList { it.toDomainImageCondition() }
+
 
     override suspend fun addScenario(scenario: Scenario): Long =
         dataSource.addScenario(scenario)
@@ -94,15 +95,17 @@ internal class RepositoryImpl internal constructor(
         dataSource.deleteScenario(scenarioId)
 
     override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? =
-        dataSource.addScenarioCopy(completeScenario)
+        dataSource.importScenario(completeScenario)
 
-    override suspend fun updateScenario(scenario: Scenario, events: List<Event>, endConditions: List<EndCondition>): Boolean =
-        dataSource.updateScenario(scenario, events, endConditions)
+    override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
+        dataSource.updateScenario(scenario, events)
+
     override suspend fun getBitmap(path: String, width: Int, height: Int) =
         bitmapManager.loadBitmap(path, width, height)
 
     override fun cleanCache(): Unit =
         bitmapManager.releaseCache()
+
 
     override fun startTutorialMode() {
         Log.d(TAG, "Start tutorial mode, use tutorial database")

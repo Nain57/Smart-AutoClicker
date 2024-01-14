@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,53 +16,103 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.event
 
+import androidx.annotation.CallSuper
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+
+sealed class Event: Identifiable, Completable {
+
+    /** The unique identifier of the scenario for this event. */
+    abstract val scenarioId: Identifier
+    /** The name of the event. */
+    abstract val name: String
+    /** The operator to apply between the conditions in the [conditions] list. */
+    @ConditionOperator abstract val conditionOperator: Int
+    /** Tells if the event should be evaluated with the scenario, or if it should be enabled by an action. */
+    abstract val enabledOnStart: Boolean
+    /** The list of action to execute when the [conditions] have been fulfilled. */
+    abstract val actions: List<Action>
+    /** The list of conditions to fulfill to execute the [actions].  */
+    abstract val conditions: List<Condition>
+
+    @CallSuper
+    override fun isComplete(): Boolean =
+        name.isNotEmpty() && actions.isNotEmpty() && conditions.isNotEmpty()
+}
 
 /**
  * Event of a scenario.
  *
- * @param id the unique identifier for the event.
- * @param scenarioId the identifier of the scenario for this event.
- * @param name the name of the event.
- * @param conditionOperator the operator to apply between the conditions in the [conditions] list.
  * @param priority the execution priority of the event in the scenario.
- * @param actions the list of action to execute when the conditions have been fulfilled
- * @param conditions the list of conditions to fulfill to execute the [actions].
- * @param enabledOnStart tells if the event should be evaluated with the scenario, or if it should be enabled by an action.
  */
-data class Event(
+data class ImageEvent(
     override val id: Identifier,
-    val scenarioId: Identifier,
-    val name: String,
-    @ConditionOperator val conditionOperator: Int,
+    override val scenarioId: Identifier,
+    override val name: String,
+    @ConditionOperator override val conditionOperator: Int,
+    override val actions: List<Action> = emptyList(),
+    override val conditions: List<ImageCondition> =  emptyList(),
+    override val enabledOnStart: Boolean = true,
     var priority: Int,
-    val actions: List<Action> = emptyList(),
-    val conditions: List<Condition> =  emptyList(),
-    val enabledOnStart: Boolean = true,
-): Identifiable, Completable {
+): Event() {
 
     /** Tells if this event is complete and valid for save. */
     override fun isComplete(): Boolean {
-        if (conditions.isEmpty()) return false
+        if (super.isComplete()) return false
+
+        conditions.forEach { condition ->
+            if (!condition.isComplete()) return false
+        }
+
+        actions.forEach { action ->
+            if (!action.isComplete()) return false
+            if (conditionOperator == AND && action is Action.Click && !action.isClickOnConditionValid()) return false
+        }
+
+        return true
+    }
+}
+
+
+data class TriggerEvent(
+    override val id: Identifier,
+    override val scenarioId: Identifier,
+    override val name: String,
+    @ConditionOperator override val conditionOperator: Int,
+    override val actions: List<Action> = emptyList(),
+    override val conditions: List<TriggerCondition> =  emptyList(),
+    override val enabledOnStart: Boolean = true,
+) : Event() {
+
+    override fun isComplete(): Boolean {
+        if (super.isComplete()) return false
         conditions.forEach { condition ->
             if (!condition.isComplete()) return false
         }
 
         if (actions.isEmpty()) return false
         actions.forEach { action ->
-            if (!action.isComplete()) return false
-            if (conditionOperator == AND
-                && action is Action.Click
-                && action.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION
-                && action.clickOnConditionId == null) return false
+            if (!action.isValidForTrigger()) return false
         }
 
         return true
+    }
+
+    private fun Action.isValidForTrigger(): Boolean {
+        if (!isComplete()) return false
+
+        return when (this) {
+            is Action.Click -> positionType == Action.Click.PositionType.USER_SELECTED
+                    && clickOnConditionId == null
+
+            else -> true
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,13 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 
+import com.buzbuz.smartautoclicker.core.database.EVENT_TOGGLE_TABLE
+import com.buzbuz.smartautoclicker.core.database.INTENT_EXTRA_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +44,7 @@ abstract class ActionDao {
      * @return the list containing all actions.
      */
     @Transaction
-    @Query("SELECT * FROM action_table ORDER BY name")
+    @Query("SELECT * FROM $ACTION_TABLE ORDER BY name")
     abstract fun getAllActions(): Flow<List<CompleteActionEntity>>
 
     /**
@@ -49,7 +53,7 @@ abstract class ActionDao {
      * @param eventId the identifier of the event to get the actions from.
      */
     @Transaction
-    @Query("SELECT * FROM action_table WHERE eventId=:eventId ORDER BY priority")
+    @Query("SELECT * FROM $ACTION_TABLE WHERE eventId=:eventId ORDER BY priority")
     abstract suspend fun getCompleteActions(eventId: Long): List<CompleteActionEntity>
 
     /**
@@ -58,36 +62,59 @@ abstract class ActionDao {
      * @param actionId the identifier of the action to get the intent extras from.
      * @return the list of intent extras for the action.
      */
-    @Query("SELECT * FROM intent_extra_table WHERE action_id=:actionId ORDER BY id")
+    @Query("SELECT * FROM $INTENT_EXTRA_TABLE WHERE action_id=:actionId ORDER BY id")
     abstract suspend fun getIntentExtras(actionId: Long): List<IntentExtraEntity>
 
     /**
-     * Add an action to the database.
-     * @param action the action to be added.
+     * Get the list of events toggles for a given action.
+     *
+     * @param actionId the identifier of the action to get the event toggles from.
+     * @return the list of event toggles for the action.
+     */
+    @Query("SELECT * FROM $EVENT_TOGGLE_TABLE WHERE action_id=:actionId ORDER BY id")
+    abstract suspend fun getEventsToggles(actionId: Long): List<EventToggleEntity>
+
+    /**
+     * Add a list of action to the database.
+     * @param actions the actions to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun addAction(action: ActionEntity): Long
+    abstract suspend fun addActions(actions: List<ActionEntity>): List<Long>
 
     /**
-     * Add an intent extras to the database.
-     * @param intentExtra the intent extra to be added.
+     * Add a list of intent extras to the database.
+     * @param intentExtras the intent extras to be added.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun addIntentExtra(intentExtra: IntentExtraEntity)
+    abstract suspend fun addIntentExtras(intentExtras: List<IntentExtraEntity>): List<Long>
 
     /**
-     * Update an action in the database.
-     * @param action the action to be updated.
+     * Add a list of event toggle to the database.
+     * @param eventToggles the event toggles to be added.
      */
-    @Update
-    abstract suspend fun updateAction(action: ActionEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun addEventToggles(eventToggles: List<EventToggleEntity>): List<Long>
 
     /**
-     * Update an intent extra in the database.
-     * @param extra the intent extra to be updated.
+     * Update a list of action to the database.
+     * @param actions the actions to be updated.
      */
     @Update
-    abstract suspend fun updateIntentExtra(extra: IntentExtraEntity)
+    abstract suspend fun updateActions(actions: List<ActionEntity>)
+
+    /**
+     * Update a list of intent extra in the database.
+     * @param extras the intent extras to be updated.
+     */
+    @Update
+    abstract suspend fun updateIntentExtras(extras: List<IntentExtraEntity>)
+
+    /**
+     * Update a list of event toggle in the database.
+     * @param eventToggles the event toggles to be updated.
+     */
+    @Update
+    abstract suspend fun updateEventToggles(eventToggles: List<EventToggleEntity>)
 
     /**
      * Delete a list of actions in the database.
@@ -102,4 +129,11 @@ abstract class ActionDao {
      */
     @Delete
     abstract suspend fun deleteIntentExtras(extras: List<IntentExtraEntity>)
+
+    /**
+     * Delete a list of event toggle in the database.
+     * @param eventToggles the event toggles to be removed.
+     */
+    @Delete
+    abstract suspend fun deleteEventToggles(eventToggles: List<EventToggleEntity>)
 }

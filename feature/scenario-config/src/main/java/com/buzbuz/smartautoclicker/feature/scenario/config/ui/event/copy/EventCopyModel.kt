@@ -22,7 +22,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -52,7 +52,7 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      * This list can contains all events with headers, or the search result depending on the current search query.
      */
     val eventList: Flow<List<EventCopyItem>?> =
-        combine(repository.getAllEventsFlow(), editionRepository.editionState.eventsState, searchQuery) { dbEvents, editedEvents, query ->
+        combine(repository.getAllImageEventsFlow(), editionRepository.editionState.eventsState, searchQuery) { dbEvents, editedEvents, query ->
             if (query.isNullOrEmpty()) getAllItems(dbEvents, editedEvents.value)
             else getSearchedItems(dbEvents, query)
         }
@@ -63,7 +63,7 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      * @param scenarioEvents all actions in the current event.
      * @return the complete list of action items.
      */
-    private fun getAllItems(dbEvents: List<Event>, scenarioEvents: List<Event>?): List<EventCopyItem> {
+    private fun getAllItems(dbEvents: List<ImageEvent>, scenarioEvents: List<ImageEvent>?): List<EventCopyItem> {
         val allItems = mutableListOf<EventCopyItem>()
 
         // First, add the events from the current scenario
@@ -101,7 +101,7 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
      * @param dbEvents all actions in the database.
      * @param query the current search query.
      */
-    private fun getSearchedItems(dbEvents: List<Event>, query: String): List<EventCopyItem> = dbEvents
+    private fun getSearchedItems(dbEvents: List<ImageEvent>, query: String): List<EventCopyItem> = dbEvents
         .filter { event ->
             event.name.contains(query, true)
         }
@@ -109,14 +109,14 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
         .distinct()
 
     /** If that's not the same scenario and we are copying an event with a toggle event action, warn the user */
-    fun eventCopyShouldWarnUser(event: Event): Boolean =
+    fun eventCopyShouldWarnUser(event: ImageEvent): Boolean =
         !event.isFromEditedScenario() && event.actions.firstOrNull { it is Action.ToggleEvent } != null
 
-    private fun Event.isFromEditedScenario(): Boolean =
+    private fun ImageEvent.isFromEditedScenario(): Boolean =
         editionRepository.editionState.getScenario()?.id == scenarioId
 
     /** @return the [EventCopyItem.EventItem] corresponding to this event. */
-    private fun Event.toEventItem(): EventCopyItem.EventItem =
+    private fun ImageEvent.toEventItem(): EventCopyItem.EventItem =
         EventCopyItem.EventItem(
             name = name,
             actionsIcons = actions.map { it.getIconRes() },
@@ -143,7 +143,7 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
         data class EventItem (
             val name: String,
             val actionsIcons: List<Int>,
-            val event: Event,
+            val event: ImageEvent,
         ) : EventCopyItem()
     }
 }

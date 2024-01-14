@@ -45,7 +45,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 import kotlin.math.max
-import kotlin.math.min
 
 @OptIn(FlowPreview::class)
 class ConditionViewModel(application: Application) : AndroidViewModel(application) {
