@@ -28,13 +28,13 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListUiState.Item.Valid.Smart.EventItem
 
 import kotlinx.coroutines.Job
 
 class ScenarioEventsAdapter(
-    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : ListAdapter<EventItem, EventCardViewHolder>(EventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventCardViewHolder =
@@ -63,7 +63,7 @@ object EventDiffUtilCallback: DiffUtil.ItemCallback<EventItem>() {
 
 class EventCardViewHolder(
     private val viewBinding: ItemEventCardBinding,
-    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /** The job for the condition bitmap loading. */

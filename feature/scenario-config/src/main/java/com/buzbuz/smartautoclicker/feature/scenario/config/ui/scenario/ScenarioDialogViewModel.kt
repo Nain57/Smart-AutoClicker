@@ -27,7 +27,6 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce

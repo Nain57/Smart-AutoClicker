@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 
-open class ListEditor<Item , Parent>(
+internal open class ListEditor<Item , Parent>(
     private val onListUpdated: ((List<Item>) -> Unit)? = null,
     canBeEmpty: Boolean = false,
     parentItem: StateFlow<Parent?>,

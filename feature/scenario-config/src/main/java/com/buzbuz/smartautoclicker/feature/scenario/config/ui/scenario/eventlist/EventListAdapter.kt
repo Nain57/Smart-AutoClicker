@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 
@@ -39,10 +39,10 @@ import java.util.Collections
  * @param itemViewBound listener called when a view is bound to an Event item.
  */
 class EventListAdapter(
-    private val itemClickedListener: (Event) -> Unit,
-    private val itemReorderListener: (List<Event>) -> Unit,
+    private val itemClickedListener: (ImageEvent) -> Unit,
+    private val itemReorderListener: (List<ImageEvent>) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
-) : ListAdapter<Event, EventViewHolder>(EventDiffUtilCallback) {
+) : ListAdapter<ImageEvent, EventViewHolder>(EventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
         EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -76,11 +76,11 @@ class EventListAdapter(
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [EventListAdapter] list. */
-object EventDiffUtilCallback: DiffUtil.ItemCallback<Event>() {
-    override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean =
+object EventDiffUtilCallback: DiffUtil.ItemCallback<ImageEvent>() {
+    override fun areItemsTheSame(oldItem: ImageEvent, newItem: ImageEvent): Boolean =
         oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean =
+    override fun areContentsTheSame(oldItem: ImageEvent, newItem: ImageEvent): Boolean =
         oldItem == newItem
 }
 
@@ -97,7 +97,7 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
      * @param item the item providing the binding data.
      * @param itemClickedListener listener called when an event is clicked.
      */
-    fun bindEvent(item: Event, itemClickedListener: (Event) -> Unit) {
+    fun bindEvent(item: ImageEvent, itemClickedListener: (ImageEvent) -> Unit) {
         holderViewBinding.bind(item, true) { itemClickedListener(item) }
     }
 }

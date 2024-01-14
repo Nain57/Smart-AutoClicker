@@ -14,11 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.domain.utils
+package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 
-internal fun Long.asIdentifier() = Identifier(
-    databaseId = this,
-    tempId = if (this == 0L) 1L else null,
-)
+internal fun EventToggle.toEntity(): EventToggleEntity =
+    EventToggleEntity(
+        id = id.databaseId,
+        actionId = actionId.databaseId,
+        toggleEventId = targetEventId.databaseId,
+        type = toggleType.toEntity(),
+    )
+
+internal fun EventToggleEntity.toDomain(cleanIds: Boolean = false): EventToggle =
+    EventToggle(
+        id = Identifier(id, cleanIds),
+        actionId = Identifier(actionId, cleanIds),
+        targetEventId = Identifier(toggleEventId, cleanIds),
+        toggleType = Action.ToggleEvent.ToggleType.valueOf(type.name),
+    )

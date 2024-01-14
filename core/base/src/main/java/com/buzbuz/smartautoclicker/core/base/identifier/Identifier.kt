@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,24 +22,24 @@ package com.buzbuz.smartautoclicker.core.base.identifier
  *
  * @param databaseId: the identifier in the database. 0 if this object is not yet inserted, in that case, the domainId must
  * be defined.
- * @param domainId: the identifier for the domain, set only when the object is not yet inserted in database.
+ * @param tempId: the temporary identifier, set only when the object is not yet inserted in database.
  */
 data class Identifier(
     val databaseId: Long = DATABASE_ID_INSERTION,
-    val domainId: Long? = null,
+    val tempId: Long? = null,
 ) {
 
-    constructor(id: Long, asDomain: Boolean = false) : this(
-        databaseId = if (asDomain) DATABASE_ID_INSERTION else id,
-        domainId = if (asDomain) id else null,
+    constructor(id: Long, asTemporary: Boolean = false) : this(
+        databaseId = if (asTemporary) DATABASE_ID_INSERTION else id,
+        tempId = if (asTemporary) id else null,
     )
 
     /** Ensure correctness of ids. */
     init {
-        if (databaseId == DATABASE_ID_INSERTION && domainId == null)
+        if (databaseId == DATABASE_ID_INSERTION && tempId == null)
             throw IllegalArgumentException("DomainId must be set when using db id 0")
 
-        if (databaseId != DATABASE_ID_INSERTION && domainId != null)
+        if (databaseId != DATABASE_ID_INSERTION && tempId != null)
                 throw IllegalArgumentException("Both ids can't be set")
     }
 

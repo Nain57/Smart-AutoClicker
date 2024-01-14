@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.base.sqlite
+package com.buzbuz.smartautoclicker.core.domain.model.action
 
-import android.os.Build
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 
-/** Tests for the class [SQLiteTable]. */
-@RunWith(AndroidJUnit4::class)
-@Config(sdk = [Build.VERSION_CODES.Q])
-class SQLiteTableTests {
-
+data class EventToggle(
+    override val id: Identifier,
+    val actionId: Identifier,
+    val targetEventId: Identifier,
+    val toggleType: Action.ToggleEvent.ToggleType,
+): Identifiable, Completable {
+    override fun isComplete(): Boolean = true
 }

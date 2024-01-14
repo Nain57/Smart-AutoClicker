@@ -122,7 +122,7 @@ class ScenarioCreationViewModel(application: Application) : AndroidViewModel(app
     private suspend fun createDumbScenario() {
         dumbRepository.addDumbScenario(
             DumbScenario(
-                id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0L),
+                id = Identifier(databaseId = DATABASE_ID_INSERTION, tempId = 0L),
                 name = _name.value!!,
                 dumbActions = emptyList(),
                 repeatCount = 1,
@@ -137,7 +137,7 @@ class ScenarioCreationViewModel(application: Application) : AndroidViewModel(app
     private suspend fun createSmartScenario(context: Context) {
         repository.addScenario(
             Scenario(
-                id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0L),
+                id = Identifier(databaseId = DATABASE_ID_INSERTION, tempId = 0L),
                 name = _name.value!!,
                 detectionQuality = context.resources.getInteger(R.integer.default_detection_quality),
                 endConditionOperator = OR,
@@ -155,7 +155,7 @@ data class ScenarioTypeSelectionState(
     val selectedItem: ScenarioTypeSelection,
     val smartItemEnabled: Boolean,
 )
-sealed class ScenarioTypeItem(val titleRes: Int,  val iconRes: Int, val descriptionText: Int) {
+sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descriptionText: Int) {
 
     data object Dumb: ScenarioTypeItem(
         titleRes = R.string.item_title_dumb_scenario,

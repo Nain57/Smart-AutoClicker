@@ -22,7 +22,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebugReport
@@ -76,7 +76,7 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
         if (condition.bitmap != null) {
             onBitmapLoaded.invoke(condition.bitmap)
             return null
@@ -121,7 +121,7 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
             conditionReports = conditionReports,
         )
 
-    private fun createConditionReports(conditions: List<Condition>?, debugReport: DebugReport) = buildList {
+    private fun createConditionReports(conditions: List<ImageCondition>?, debugReport: DebugReport) = buildList {
         conditions?.forEach { condition ->
             debugReport.conditionsProcessedInfo[condition.id.databaseId]?.let { (condition, condDebugInfo) ->
                 add(newConditionReport(condition.id.databaseId, condition, condDebugInfo))
@@ -129,7 +129,7 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    private fun newConditionReport(id: Long, condition: Condition, debugInfo: ConditionProcessingDebugInfo) =
+    private fun newConditionReport(id: Long, condition: ImageCondition, debugInfo: ConditionProcessingDebugInfo) =
         ConditionReport(
             id = id,
             condition = condition,
@@ -173,7 +173,7 @@ sealed class DebugReportItem {
 
 data class ConditionReport(
     val id: Long,
-    val condition: Condition,
+    val condition: ImageCondition,
     val matchCount: String,
     val processingCount: String,
     val avgProcessingDuration: String,

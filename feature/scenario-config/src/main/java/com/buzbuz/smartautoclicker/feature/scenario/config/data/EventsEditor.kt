@@ -19,19 +19,19 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.data
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 
 import kotlinx.coroutines.flow.StateFlow
 
-class EventsEditor(
-    private val onDeleteEvent: (Event) -> Unit,
+internal class EventsEditor(
+    private val onDeleteEvent: (ImageEvent) -> Unit,
     parentItem: StateFlow<Scenario?>,
-): ListEditor<Event, Scenario>(parentItem = parentItem) {
+): ListEditor<ImageEvent, Scenario>(parentItem = parentItem) {
 
-    val conditionsEditor: ListEditor<Condition, Event> = ListEditor(
+    val conditionsEditor: ListEditor<ImageCondition, ImageEvent> = ListEditor(
         onListUpdated = ::onEditedEventConditionsUpdated,
         canBeEmpty = false,
         parentItem = editedItem,
@@ -39,7 +39,7 @@ class EventsEditor(
 
     val actionsEditor = ActionsEditor(::onEditedEventActionsUpdated, parentItem = editedItem)
 
-    override fun startItemEdition(item: Event) {
+    override fun startItemEdition(item: ImageEvent) {
         super.startItemEdition(item)
         conditionsEditor.startEdition(item.conditions)
         actionsEditor.startEdition(item.actions)
@@ -57,7 +57,7 @@ class EventsEditor(
         super.stopItemEdition()
     }
 
-    fun deleteAllActionsReferencing(event: Event) {
+    fun deleteAllActionsReferencing(event: ImageEvent) {
         val events = editedList.value ?: return
 
         val newEvents = events.mapNotNull { scenarioEvent ->
@@ -74,7 +74,7 @@ class EventsEditor(
         updateList(newEvents)
     }
 
-    private fun onEditedEventConditionsUpdated(conditions: List<Condition>) {
+    private fun onEditedEventConditionsUpdated(conditions: List<ImageCondition>) {
         val editedEvent = editedItem.value ?: return
 
         actionsEditor.editedList.value?.let { actions ->

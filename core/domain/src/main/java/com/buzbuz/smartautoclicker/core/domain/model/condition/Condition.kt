@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,50 +16,19 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.condition
 
-import android.graphics.Bitmap
-import android.graphics.Rect
-import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
+import androidx.annotation.CallSuper
 
-import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
-import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
+import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 
-/**
- * Condition for a Event.
- *
- * @param id the unique identifier for the condition.
- * @param eventId the identifier of the event for this condition.
- * @param name the name of the condition.
- * @param path the path to the bitmap that should be matched for detection.
- * @param area the area of the screen to detect.
- * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
- * @param detectionType the type of detection for this condition. Must be one of [DetectionType].
- * @param bitmap the bitmap for the condition. Not set when fetched from the repository.
- * @param detectionArea the area to detect the condition in if [detectionType] is IN_AREA.
- */
-data class Condition(
-    override val id: Identifier,
-    val eventId: Identifier,
-    val name: String,
-    val path: String? = null,
-    val area: Rect,
-    val threshold: Int,
-    @DetectionType val detectionType: Int,
-    val shouldBeDetected: Boolean,
-    val bitmap: Bitmap? = null,
-    val detectionArea: Rect? = null,
-): Identifiable, Completable {
+sealed class Condition : Identifiable, Completable {
 
-    /** @return creates a deep copy of this condition. */
-    fun deepCopy(): Condition = copy(
-        path = "" + path,
-        area = Rect(area),
-    )
+    abstract val eventId: Identifier
+    abstract val name: String
 
-    /** Tells if this condition is complete and valid to be saved. */
+    @CallSuper
     override fun isComplete(): Boolean =
         name.isNotEmpty()
-                && (path != null || bitmap != null)
-                && (detectionType == IN_AREA && detectionArea != null || detectionType != IN_AREA)
+
 }

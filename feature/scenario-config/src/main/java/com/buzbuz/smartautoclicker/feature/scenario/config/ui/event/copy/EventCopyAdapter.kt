@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemCopyHeaderBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCo
  * @param onEventSelected Called when the user presses an event.
  */
 class EventCopyAdapter(
-    private val onEventSelected: (Event) -> Unit
+    private val onEventSelected: (ImageEvent) -> Unit
 ) : ListAdapter<EventCopyItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -100,7 +100,7 @@ class EventViewHolder(private val viewBinding: ItemEventBinding) : RecyclerView.
      * @param item the item to be represented by this view holder.
      * @param eventClickedListener listener notified upon user click on this item.
      */
-    fun onBind(item: EventCopyItem.EventItem, eventClickedListener: (Event) -> Unit) {
+    fun onBind(item: EventCopyItem.EventItem, eventClickedListener: (ImageEvent) -> Unit) {
         viewBinding.bind(item.event, false, eventClickedListener)
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,15 +35,15 @@ internal fun <T> IntentExtra<T>.toEntity(): IntentExtraEntity {
 }
 
 /** @return the intent extra for this entity. */
-internal fun IntentExtraEntity.toIntentExtra(asDomain: Boolean = false) = when (type) {
-    IntentExtraType.BYTE -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toByte())
-    IntentExtraType.BOOLEAN -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toBooleanStrict())
-    IntentExtraType.CHAR -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value[0])
-    IntentExtraType.DOUBLE -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toDouble())
-    IntentExtraType.INTEGER -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toInt())
-    IntentExtraType.FLOAT -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toFloat())
-    IntentExtraType.SHORT -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value.toShort())
-    IntentExtraType.STRING -> IntentExtra(Identifier(id, asDomain), Identifier(actionId, asDomain), key, value)
+internal fun IntentExtraEntity.toDomainIntentExtra(cleanIds: Boolean = false) = when (type) {
+    IntentExtraType.BYTE -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value.toByte())
+    IntentExtraType.BOOLEAN -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value.toBooleanStrict())
+    IntentExtraType.CHAR -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value[0])
+    IntentExtraType.DOUBLE -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value.toDouble())
+    IntentExtraType.INTEGER -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value.toInt())
+    IntentExtraType.FLOAT -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value.toFloat())
+    IntentExtraType.SHORT -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value.toShort())
+    IntentExtraType.STRING -> IntentExtra(Identifier(id, cleanIds), Identifier(actionId, cleanIds), key, value)
 }
 
 private fun <T> T?.toIntentExtraType(): IntentExtraType = when (this) {

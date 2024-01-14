@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
@@ -149,7 +149,7 @@ class ToggleEventDialog(
     }
 
     /** Show the event selection dialog. */
-    private fun showEventSelectionDialog(availableEvents: List<Event>) =
+    private fun showEventSelectionDialog(availableEvents: List<ImageEvent>) =
         OverlayManager.getInstance(context).navigateTo(
             context = context,
             newOverlay = EventSelectionDialog(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 
+import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 
@@ -34,85 +35,91 @@ import kotlinx.coroutines.flow.Flow
 abstract class EventDao {
 
     /**
-     * Get all events from all scenarios.
-     *
-     * @return the list containing all events.
-     */
-    @Transaction
-    @Query("SELECT * FROM event_table ORDER BY name")
-    abstract fun getAllEvents(): Flow<List<CompleteEventEntity>>
-
-    /**
-     * Get the list of events for a scenario ordered by priority.
-     *
-     * @param scenarioId the identifier of the scenario to get the events from.
-     * @return the flow on the list of events.
-     */
-    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId ORDER BY priority")
-    abstract fun getEventsFlow(scenarioId: Long): Flow<List<EventEntity>>
-
-    /**
-     * Get the list of events for a scenario ordered by priority.
-     *
-     * @param scenarioId the identifier of the scenario to get the events from.
-     * @return the flow on the list of events.
-     */
-    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId ORDER BY priority")
-    abstract suspend fun getEvents(scenarioId: Long): List<EventEntity>
-
-    /**
-     * Get the list of complete events for a scenario ordered by priority.
-     *
-     * @param scenarioId the identifier of the scenario to get the events from.
-     * @return the flow on the list of complete events.
-     */
-    @Transaction
-    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId ORDER BY priority")
-    abstract fun getCompleteEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>>
-
-    /**
-     * Get the list of complete events for a scenario ordered by priority.
-     *
-     * @param scenarioId the identifier of the scenario to get the events from.
-     * @return the flow on the list of complete events.
-     */
-    @Transaction
-    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId AND type='IMAGE_EVENT' ORDER BY priority")
-    abstract suspend fun getCompleteEvents(scenarioId: Long): List<CompleteEventEntity>
-
-    /**
-     * Get the list of complete events for a scenario ordered by priority.
-     *
-     * @param scenarioId the identifier of the scenario to get the events from.
-     * @return the flow on the list of complete events.
-     */
-    @Transaction
-    @Query("SELECT * FROM event_table WHERE scenario_id=:scenarioId AND type='TRIGGER_EVENT' ORDER BY name")
-    abstract suspend fun getCompleteTriggerEvents(scenarioId: Long): List<CompleteEventEntity>
-
-    /**
      * Get the list of event identifier for a given scenario.
      *
      * @param scenarioId the identifier of the scenario to get the events from.
      * @return the flow on the list of events id.
      */
     @Transaction
-    @Query("SELECT id FROM event_table WHERE scenario_id=:scenarioId")
+    @Query("SELECT id FROM $EVENT_TABLE WHERE scenario_id=:scenarioId")
     abstract suspend fun getEventsIds(scenarioId: Long): List<Long>
 
     /**
-     * Add an event to the database.
-     * @param event the event to be added.
+     * Get the list of events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of events.
      */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun addEvent(event: EventEntity): Long
+    @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId ORDER BY priority")
+    abstract suspend fun getEvents(scenarioId: Long): List<EventEntity>
 
     /**
-     * Update an event in the database.
-     * @param event the event to be updated.
+     * Get the list of image events from all scenarios.
+     * @return the flow on the list of events.
+     */
+    @Query("SELECT * FROM $EVENT_TABLE WHERE type='IMAGE_EVENT' ORDER BY name")
+    abstract fun getAllImageEventsFlow(): Flow<List<CompleteEventEntity>>
+
+    /**
+     * Get the list of complete events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of complete events.
+     */
+    @Transaction
+    @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId AND type='IMAGE_EVENT' ORDER BY priority")
+    abstract suspend fun getCompleteImageEvents(scenarioId: Long): List<CompleteEventEntity>
+
+    /**
+     * Get the list of complete events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of complete events.
+     */
+    @Transaction
+    @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId AND type='IMAGE_EVENT' ORDER BY priority")
+    abstract fun getCompleteImageEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>>
+
+    /**
+     * Get the list of trigger events from all scenarios.
+     * @return the flow on the list of events.
+     */
+    @Query("SELECT * FROM $EVENT_TABLE WHERE type='TRIGGER_EVENT' ORDER BY name")
+    abstract fun getAllTriggerEventsFlow(): Flow<List<CompleteEventEntity>>
+
+    /**
+     * Get the list of complete events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of complete events.
+     */
+    @Transaction
+    @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId AND type='TRIGGER_EVENT' ORDER BY name")
+    abstract suspend fun getCompleteTriggerEvents(scenarioId: Long): List<CompleteEventEntity>
+
+    /**
+     * Get the list of complete events for a scenario ordered by priority.
+     *
+     * @param scenarioId the identifier of the scenario to get the events from.
+     * @return the flow on the list of complete events.
+     */
+    @Transaction
+    @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId AND type='TRIGGER_EVENT' ORDER BY name")
+    abstract fun getCompleteTriggerEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>>
+
+    /**
+     * Add a list of events to the database.
+     * @param events the events to be added.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun addEvents(events: List<EventEntity>): List<Long>
+
+    /**
+     * Update a list of events in the database.
+     * @param events the events to be updated.
      */
     @Update
-    abstract suspend fun updateEvent(event: EventEntity)
+    abstract suspend fun updateEvent(events: List<EventEntity>)
 
     /**
      * Delete an event list from the database.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ class IdentifierCreator {
     private var lastGeneratedDomainId: Long = 0
 
     fun generateNewIdentifier(): Identifier =
-        Identifier(databaseId = DATABASE_ID_INSERTION, domainId = ++lastGeneratedDomainId)
+        Identifier(databaseId = DATABASE_ID_INSERTION, tempId = ++lastGeneratedDomainId)
 
     fun resetIdCount() {
         lastGeneratedDomainId = 0

@@ -18,15 +18,14 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 
 import kotlinx.coroutines.flow.StateFlow
 
-class ActionsEditor(
+internal class ActionsEditor<Parent>(
     onListUpdated: (List<Action>) -> Unit,
-    parentItem: StateFlow<Event?>,
-): ListEditor<Action, Event>(onListUpdated, parentItem = parentItem) {
+    parentItem: StateFlow<Parent?>,
+): ListEditor<Action, Parent>(onListUpdated, parentItem = parentItem) {
 
     val intentExtraEditor: ListEditor<IntentExtra<out Any>, Action> = ListEditor(
         onListUpdated = ::onEditedActionIntentExtraUpdated,

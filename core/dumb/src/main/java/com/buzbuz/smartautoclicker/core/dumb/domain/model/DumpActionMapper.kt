@@ -36,8 +36,8 @@ internal fun DumbAction.toEntity(scenarioDbId: Long = DATABASE_ID_INSERTION, pri
 
 private fun DumbActionEntity.toDomainClick(asDomain: Boolean): DumbAction.DumbClick =
     DumbAction.DumbClick(
-        id = Identifier(id = id, asDomain = asDomain),
-        scenarioId = Identifier(id = dumbScenarioId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = asDomain),
+        scenarioId = Identifier(id = dumbScenarioId, asTemporary = asDomain),
         name = name,
         position = Point(x!!, y!!),
         pressDurationMs = pressDuration!!,
@@ -48,8 +48,8 @@ private fun DumbActionEntity.toDomainClick(asDomain: Boolean): DumbAction.DumbCl
 
 private fun DumbActionEntity.toDomainSwipe(asDomain: Boolean): DumbAction.DumbSwipe =
     DumbAction.DumbSwipe(
-        id = Identifier(id = id, asDomain = asDomain),
-        scenarioId = Identifier(id = dumbScenarioId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = asDomain),
+        scenarioId = Identifier(id = dumbScenarioId, asTemporary = asDomain),
         name = name,
         fromPosition = Point(fromX!!, fromY!!),
         toPosition = Point(toX!!, toY!!),
@@ -61,8 +61,8 @@ private fun DumbActionEntity.toDomainSwipe(asDomain: Boolean): DumbAction.DumbSw
 
 private fun DumbActionEntity.toDomainPause(asDomain: Boolean): DumbAction.DumbPause =
     DumbAction.DumbPause(
-        id = Identifier(id = id, asDomain = asDomain),
-        scenarioId = Identifier(id = dumbScenarioId, asDomain = asDomain),
+        id = Identifier(id = id, asTemporary = asDomain),
+        scenarioId = Identifier(id = dumbScenarioId, asTemporary = asDomain),
         name = name,
         pauseDurationMs = pauseDuration!!,
     )

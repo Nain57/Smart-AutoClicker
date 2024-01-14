@@ -30,8 +30,8 @@ import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
@@ -95,7 +95,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     /** Tells if the press duration value is valid or not. */
     val pressDurationError: Flow<Boolean> = configuredClick.map { (it.pressDuration ?: -1) <= 0 }
 
-    val availableConditions: StateFlow<List<Condition>> = editionRepository.editionState.editedEventConditionsState
+    val availableConditions: StateFlow<List<ImageCondition>> = editionRepository.editionState.editedEventConditionsState
         .map { editedConditions -> editedConditions.value?.filter { it.shouldBeDetected } ?: emptyList() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -182,7 +182,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: Condition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
         if (condition.bitmap != null) {
             onBitmapLoaded.invoke(condition.bitmap)
             return null
@@ -205,7 +205,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /** Set the condition to click on when the events conditions are fulfilled. */
-    fun setConditionToBeClicked(condition: Condition) {
+    fun setConditionToBeClicked(condition: ImageCondition) {
         editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(clickOnConditionId = condition.id))
         }
@@ -276,7 +276,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
             action = ClickPositionSelectorAction.NONE,
         )
 
-    private suspend fun Context.getOnConditionWithAndPositionState(event: Event, click: Action.Click): ClickPositionUiState {
+    private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Action.Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
         val conditionBitmap = conditionToClick?.let { condition ->
             condition.bitmap ?: condition.path?.let { path ->

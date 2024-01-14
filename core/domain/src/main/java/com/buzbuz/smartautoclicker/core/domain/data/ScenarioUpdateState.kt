@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.data
 
-import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
@@ -26,40 +25,24 @@ internal class ScenarioUpdateState {
     private val eventsDomainToDbIdMap = mutableMapOf<Long, Long>()
     /** Keep track of the conditions identifiers (DomainId to DatabaseId]. */
     private val conditionsDomainToDbIdMap = mutableMapOf<Long, Long>()
+    /** Keep track of the actions identifiers (DomainId to DatabaseId]. */
+    private val actionsDomainToDbIdMap = mutableMapOf<Long, Long>()
 
-    private val eventsToBeRemoved = mutableListOf<EventEntity>()
-
-    fun initUpdateState(oldScenarioEvents: List<EventEntity>) {
+    fun initUpdateState() {
         eventsDomainToDbIdMap.clear()
         conditionsDomainToDbIdMap.clear()
-        eventsToBeRemoved.apply {
-            clear()
-            addAll(oldScenarioEvents)
-        }
+        actionsDomainToDbIdMap.clear()
     }
-
-    fun setEventAsKept(eventDbId: Long) {
-        eventsToBeRemoved.removeIf { it.id == eventDbId }
-    }
-
-    fun getEventToBeRemoved(): List<EventEntity> = eventsToBeRemoved
 
     fun addEventIdMapping(domainId: Long, dbId: Long) {
         eventsDomainToDbIdMap[domainId] = dbId
     }
 
     fun getEventDbId(identifier: Identifier?): Long = when {
-        identifier != null && identifier.domainId == null && identifier.databaseId != 0L -> identifier.databaseId
-        identifier != null -> eventsDomainToDbIdMap[identifier.domainId] ?: throw IllegalStateException("Identifier is not found in event map for $identifier")
+        identifier != null && identifier.tempId == null && identifier.databaseId != 0L -> identifier.databaseId
+        identifier != null -> eventsDomainToDbIdMap[identifier.tempId] ?: throw IllegalStateException("Identifier is not found in event map for $identifier")
         else -> throw IllegalStateException("Event database id can't be found")
     }
-
-    fun getToggleEventDatabaseId(action: Action): Long? =
-        if (action is Action.ToggleEvent) {
-            val toggleEventId = action.toggleEventId
-                ?: throw IllegalArgumentException("Invalid toggle event insertion")
-            getEventDbId(toggleEventId)
-        } else null
 
     fun addConditionIdMapping(domainId: Long, dbId: Long) {
         conditionsDomainToDbIdMap[domainId] = dbId
@@ -70,9 +53,20 @@ internal class ScenarioUpdateState {
         else null
 
     private fun getConditionDbId(identifier: Identifier?): Long = when {
-        identifier != null && identifier.domainId == null && identifier.databaseId != 0L -> identifier.databaseId
-        identifier != null -> conditionsDomainToDbIdMap[identifier.domainId]
+        identifier != null && identifier.tempId == null && identifier.databaseId != 0L -> identifier.databaseId
+        identifier != null -> conditionsDomainToDbIdMap[identifier.tempId]
             ?: throw IllegalStateException("Identifier is not found in condition map for $identifier")
         else -> throw IllegalStateException("Database id can't be found for null condition identifier")
+    }
+
+    fun addActionIdMapping(domainId: Long, dbId: Long) {
+        actionsDomainToDbIdMap[domainId] = dbId
+    }
+
+    fun getActionDbId(identifier: Identifier?): Long = when {
+        identifier != null && identifier.tempId == null && identifier.databaseId != 0L -> identifier.databaseId
+        identifier != null -> actionsDomainToDbIdMap[identifier.tempId]
+            ?: throw IllegalStateException("Identifier is not found in action map for $identifier")
+        else -> throw IllegalStateException("Database id can't be found for null action identifier")
     }
 }

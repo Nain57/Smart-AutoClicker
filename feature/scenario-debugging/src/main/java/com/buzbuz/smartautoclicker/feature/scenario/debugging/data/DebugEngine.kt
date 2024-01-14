@@ -22,8 +22,8 @@ import android.graphics.Rect
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
@@ -59,7 +59,7 @@ internal class DebugEngine : ProgressListener {
     /** The scenario currently processed. */
     private var currentScenario: Scenario? = null
     /** The events for the scenario currently processed. */
-    private var currentEvents: List<Event> = emptyList()
+    private var currentEvents: List<ImageEvent> = emptyList()
 
     /** The event currently processed. */
     private var currProcEvtId: Long? = null
@@ -77,7 +77,7 @@ internal class DebugEngine : ProgressListener {
     /** The DebugInfo for the current image. */
     val currentInfo = MutableStateFlow<DebugInfo?>(null)
 
-    override suspend fun onSessionStarted(context: Context, scenario: Scenario, events: List<Event>) = mutex.withLock {
+    override suspend fun onSessionStarted(context: Context, scenario: Scenario, events: List<ImageEvent>) = mutex.withLock {
         if (_isDebugging.value) return
         _isDebugging.value = true
         _debugReport.value = null
@@ -99,7 +99,7 @@ internal class DebugEngine : ProgressListener {
         imageRecorder.onProcessingStart()
     }
 
-    override suspend fun onEventProcessingStarted(event: Event) = mutex.withLock {
+    override suspend fun onEventProcessingStarted(event: ImageEvent) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcEvtId != null)
@@ -111,7 +111,7 @@ internal class DebugEngine : ProgressListener {
             .onProcessingStart()
     }
 
-    override suspend fun onConditionProcessingStarted(condition: Condition) = mutex.withLock {
+    override suspend fun onConditionProcessingStarted(condition: ImageCondition) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcCondId != null)
@@ -140,8 +140,8 @@ internal class DebugEngine : ProgressListener {
 
     override suspend fun onEventProcessingCompleted(
         isEventMatched: Boolean,
-        event: Event?,
-        condition: Condition?,
+        event: ImageEvent?,
+        condition: ImageCondition?,
         isDetected: Boolean?,
         position: Point?,
         confidenceRate: Double?,
@@ -196,7 +196,7 @@ internal class DebugEngine : ProgressListener {
 
         var eventsTriggeredCount = 0L
         var conditionsDetectedCount = 0L
-        val conditions = mutableListOf<Condition>()
+        val conditions = mutableListOf<ImageCondition>()
 
         val eventsReport = currentEvents.map { event ->
             event.conditions.let { conditions.addAll(it) }
@@ -209,7 +209,7 @@ internal class DebugEngine : ProgressListener {
             event to debugInfo
         }.sortedBy { it.first.priority }
 
-        val conditionReport = HashMap<Long, Pair<Condition, ConditionProcessingDebugInfo>>()
+        val conditionReport = HashMap<Long, Pair<ImageCondition, ConditionProcessingDebugInfo>>()
         conditions.forEach { condition ->
             val debugInfo = conditionsRecorderMap[condition.id.databaseId]?.let { processingRecorder ->
                 conditionsDetectedCount += processingRecorder.successCount

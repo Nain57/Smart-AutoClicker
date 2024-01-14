@@ -25,10 +25,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlist.EventViewHolder
 
 import kotlinx.coroutines.Job
 
@@ -41,10 +40,10 @@ import kotlinx.coroutines.Job
  * @param itemViewBound listener called when a view is bound to a Condition item.
  */
 class ConditionAdapter(
-    private val conditionClickedListener: (Condition) -> Unit,
-    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val conditionClickedListener: (ImageCondition) -> Unit,
+    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val itemViewBound: ((Int, View?) -> Unit),
-    ) : ListAdapter<Condition, ConditionViewHolder>(ConditionDiffUtilCallback) {
+    ) : ListAdapter<ImageCondition, ConditionViewHolder>(ConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ConditionViewHolder(
@@ -65,9 +64,9 @@ class ConditionAdapter(
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [ConditionAdapter] list. */
-object ConditionDiffUtilCallback: DiffUtil.ItemCallback<Condition>() {
-    override fun areItemsTheSame(oldItem: Condition, newItem: Condition): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Condition, newItem: Condition): Boolean = oldItem == newItem
+object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
+    override fun areItemsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem.id == newItem.id
+    override fun areContentsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem == newItem
 }
 
 /**
@@ -77,7 +76,7 @@ object ConditionDiffUtilCallback: DiffUtil.ItemCallback<Condition>() {
  */
 class ConditionViewHolder(
     private val viewBinding: ItemConditionBinding,
-    private val bitmapProvider: (Condition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
+    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /** Job for the loading of the condition bitmap. Null until bound. */
@@ -89,7 +88,7 @@ class ConditionViewHolder(
      * @param condition the condition to be represented by this item.
      * @param conditionClickedListener listener notified upon user click on this item.
      */
-    fun onBindCondition(condition: Condition, conditionClickedListener: (Condition) -> Unit) {
+    fun onBindCondition(condition: ImageCondition, conditionClickedListener: (ImageCondition) -> Unit) {
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = viewBinding.bind(condition, bitmapProvider, conditionClickedListener)
     }

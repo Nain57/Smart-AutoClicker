@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionSelectorMenu
@@ -151,7 +151,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
-    private fun onConditionClicked(condition: Condition) {
+    private fun onConditionClicked(condition: ImageCondition) {
         debounceUserInteraction {
             showConditionConfigDialog(condition)
         }
@@ -184,12 +184,12 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
-    private fun updateConditionList(newItems: List<Condition>?) {
+    private fun updateConditionList(newItems: List<ImageCondition>?) {
         viewBinding.updateState(newItems)
         conditionsAdapter.submitList(newItems)
     }
 
-    private fun showConditionConfigDialog(condition: Condition) {
+    private fun showConditionConfigDialog(condition: ImageCondition) {
         viewModel.startConditionEdition(condition)
 
         OverlayManager.getInstance(context).navigateTo(

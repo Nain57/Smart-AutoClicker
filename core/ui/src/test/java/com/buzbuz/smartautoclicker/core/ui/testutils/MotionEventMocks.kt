@@ -49,7 +49,7 @@ fun mockSimpleRawEvent(action: Int, rawXPos: Float, rawYPos: Float) = newMock().
  * @param actionIndex the index of the pointer doing the action.
  */
 fun mockEvent(action: Int, xPos: Float, yPos: Float, pointerId: Int, pointerCount: Int = 1, pointerIndex: Int = 0,
-        actionIndex: Int = pointerIndex) = newMock().also {
+              actionIndex: Int = pointerIndex) = newMock().also {
     mockWhen(it.action).thenReturn(action)
     mockWhen(it.pointerCount).thenReturn(pointerCount)
     mockWhen(it.getPointerId(pointerIndex)).thenReturn(pointerId)

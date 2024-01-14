@@ -270,7 +270,7 @@ internal open class CompatV13Deserializer : CompatDeserializer() {
             )
         }
 
-    private fun getNextId(): Long = ++currentTemporaryId
+    private fun getNextId(): Long = --currentTemporaryId
 
 
     // ===== The following structures were not possible yet:

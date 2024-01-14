@@ -51,7 +51,7 @@ internal class TutorialStateDataSource(context: Context) {
             if (tutorialIndex == 0) {
                 scenarioRepository.addScenario(
                     Scenario(
-                        id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0L),
+                        id = Identifier(databaseId = DATABASE_ID_INSERTION, tempId = 0L),
                         name = "Tutorial",
                         detectionQuality = 1200,
                         endConditionOperator = OR,

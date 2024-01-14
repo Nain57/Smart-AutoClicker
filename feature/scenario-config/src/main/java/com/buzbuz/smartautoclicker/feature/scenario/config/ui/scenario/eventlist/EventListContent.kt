@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCopyDialog
@@ -132,7 +132,7 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
-    private fun onEventItemClicked(event: Event) {
+    private fun onEventItemClicked(event: ImageEvent) {
         debounceUserInteraction {
             showEventConfigDialog(event)
         }
@@ -159,7 +159,7 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
-    private fun updateEventList(newItems: List<Event>?) {
+    private fun updateEventList(newItems: List<ImageEvent>?) {
         viewBinding.updateState(newItems)
         eventAdapter.submitList(newItems)
     }
@@ -181,7 +181,7 @@ class EventListContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     /** Opens the dialog allowing the user to add a new event. */
-    private fun showEventConfigDialog(item: Event) {
+    private fun showEventConfigDialog(item: ImageEvent) {
         viewModel.startEventEdition(item)
 
         OverlayManager.getInstance(context).navigateTo(
