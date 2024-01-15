@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration10to11
+import com.buzbuz.smartautoclicker.core.database.migrations.Migration12to13
 
 @Database(
     entities = [
@@ -73,6 +74,7 @@ abstract class TutorialDatabase : ScenarioDatabase() {
                 )
                     .addMigrations(
                         Migration10to11,
+                        Migration12to13
                     )
                     .build()
 
