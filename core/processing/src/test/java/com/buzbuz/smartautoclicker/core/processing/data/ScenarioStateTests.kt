@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.processing.data.processor.state.EventsState
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData
 
 import org.junit.Assert
@@ -29,7 +29,7 @@ import org.junit.runner.RunWith
 
 import org.robolectric.annotation.Config
 
-/** Test the [ScenarioState] class. */
+/** Test the [EventsState] class. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class ScenarioStateTests {
@@ -42,9 +42,9 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = true),
         )
 
-        val scenarioState = ScenarioState(eventList)
+        val scenarioState = EventsState(eventList, emptyList())
 
-        Assert.assertEquals("Invalid enabled events count", eventList.size, scenarioState.getEnabledEvents().size)
+        Assert.assertEquals("Invalid enabled events count", eventList.size, scenarioState.getEnabledImageEvents().size)
     }
 
     @Test
@@ -55,9 +55,9 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList)
+        val scenarioState = EventsState(eventList, emptyList())
 
-        Assert.assertEquals("Invalid enabled events count", 0, scenarioState.getEnabledEvents().size)
+        Assert.assertEquals("Invalid enabled events count", 0, scenarioState.getEnabledImageEvents().size)
     }
 
     @Test
@@ -68,9 +68,9 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList)
+        val scenarioState = EventsState(eventList, emptyList())
 
-        Assert.assertEquals("Invalid enabled events count", 1, scenarioState.getEnabledEvents().size)
+        Assert.assertEquals("Invalid enabled events count", 1, scenarioState.getEnabledImageEvents().size)
     }
 
     @Test
@@ -82,11 +82,11 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.ENABLE)
+        val scenarioState = EventsState(eventList, emptyList()).apply {
+            enableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertTrue("Event not enabled", scenarioState.getEnabledEvents().contains(changingEvent))
+        Assert.assertTrue("Event not enabled", scenarioState.getEnabledImageEvents().contains(changingEvent))
     }
 
     @Test
@@ -98,11 +98,11 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.ENABLE)
+        val scenarioState = EventsState(eventList, emptyList()).apply {
+            enableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertTrue("Event not enabled", scenarioState.getEnabledEvents().contains(changingEvent))
+        Assert.assertTrue("Event not enabled", scenarioState.getEnabledImageEvents().contains(changingEvent))
     }
 
     @Test
@@ -114,11 +114,11 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.DISABLE)
+        val scenarioState = EventsState(eventList, emptyList()).apply {
+            disableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledEvents().contains(changingEvent))
+        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledImageEvents().contains(changingEvent))
     }
 
     @Test
@@ -130,11 +130,11 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.DISABLE)
+        val scenarioState = EventsState(eventList, emptyList()).apply {
+            disableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledEvents().contains(changingEvent))
+        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledImageEvents().contains(changingEvent))
     }
 
     @Test
@@ -146,11 +146,11 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.TOGGLE)
+        val scenarioState = EventsState(eventList, emptyList()).apply {
+            toggleEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledEvents().contains(changingEvent))
+        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledImageEvents().contains(changingEvent))
     }
 
     @Test
@@ -162,10 +162,10 @@ class ScenarioStateTests {
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
-        val scenarioState = ScenarioState(eventList).apply {
-            changeEventState(changingEvent.id.databaseId, Action.ToggleEvent.ToggleType.ENABLE)
+        val scenarioState = EventsState(eventList, emptyList()).apply {
+            toggleEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertTrue("Event not enabled", scenarioState.getEnabledEvents().contains(changingEvent))
+        Assert.assertTrue("Event not enabled", scenarioState.getEnabledImageEvents().contains(changingEvent))
     }
 }

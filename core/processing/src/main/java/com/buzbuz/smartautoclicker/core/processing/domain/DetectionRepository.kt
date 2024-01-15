@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -83,7 +82,7 @@ class DetectionRepository private constructor(context: Context) {
             if (state == DetectionState.INACTIVE || state == DetectionState.ERROR_NO_NATIVE_LIB)
                 return@combine false
 
-            scenarioRepository.getEvents(id.databaseId).forEach {
+            scenarioRepository.getImageEvents(id.databaseId).forEach {
                 event -> if (event.enabledOnStart) return@combine true
             }
             false
@@ -106,17 +105,17 @@ class DetectionRepository private constructor(context: Context) {
         }
     }
 
-    suspend fun startDetection(context: Context, progressListener: ProgressListener) {
+    suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
-        val events = scenarioRepository.getEvents(id)
-        val endCondition = scenarioRepository.getEndConditions(id)
+        val events = scenarioRepository.getImageEvents(id)
+        val triggerEvents = scenarioRepository.getTriggerEvents(id)
 
         detectorEngine.value?.startDetection(
             context = context,
             scenario = scenario,
-            events = events,
-            endConditions = endCondition,
+            imageEvents = events,
+            triggerEvents = triggerEvents,
             bitmapSupplier = scenarioRepository::getBitmap,
             progressListener = progressListener,
         )

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 
 /** Test data and helpers for the detection tests. */
 internal object ProcessingData {
@@ -34,9 +34,9 @@ internal object ProcessingData {
         id: Long = 1L,
         @ConditionOperator operator: Int = AND,
         actions: List<Action> = emptyList(),
-        conditions: List<Condition> = emptyList(),
+        conditions: List<ImageCondition> = emptyList(),
         enableOnStart: Boolean = true,
-    ) = Event(
+    ) = ImageEvent(
         id = Identifier(databaseId = id),
         scenarioId = Identifier(databaseId = 1L),
         name = "TOTO",
@@ -54,7 +54,7 @@ internal object ProcessingData {
         threshold: Int,
         @DetectionType detectionType: Int,
         shouldBeDetected: Boolean = true,
-    ) = Condition(
+    ) = ImageCondition(
         Identifier(databaseId = 1L),
         Identifier(databaseId = 1L),
         "TOTO",

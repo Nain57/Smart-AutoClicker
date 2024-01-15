@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
+import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 
 import kotlinx.coroutines.CoroutineScope
@@ -46,10 +46,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Detects [Event] conditions on a display and execute its actions.
+ * Detects [ImageEvent] conditions on a display and execute its actions.
  *
  * In order to detect, you must start recording the screen to get images to detect on, this can be done by calling
- * [startScreenRecord]. Or, you can start the detection of a list of [Event] by using [startDetection].
+ * [startScreenRecord]. Or, you can start the detection of a list of [ImageEvent] by using [startDetection].
  * The states of the recording and the detection are available in [state].
  * Once you no longer needs to capture or detect, call [stopDetection] or [stopScreenRecord] to release all processing resources.
  *
@@ -87,7 +87,7 @@ internal class DetectorEngine(context: Context) {
      * Object to notify upon start/completion of detections steps.
      * Defined at detection start, reset to null at detection end.
      */
-    private var detectionProgressListener: ProgressListener? = null
+    private var detectionProgressListener: ScenarioProcessingListener? = null
 
     /**
      * Start the screen detection.
@@ -150,10 +150,10 @@ internal class DetectorEngine(context: Context) {
     fun startDetection(
         context: Context,
         scenario: Scenario,
-        events: List<Event>,
-        endConditions: List<EndCondition>,
+        imageEvents: List<ImageEvent>,
+        triggerEvents: List<TriggerEvent>,
         bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
-        progressListener: ProgressListener? = null,
+        progressListener: ScenarioProcessingListener? = null,
     ) {
         val executor = androidExecutor
         if (_state.value != DetectorState.RECORDING || executor == null) {
@@ -176,21 +176,21 @@ internal class DetectorEngine(context: Context) {
             imageDetector = detector
 
             detectionProgressListener = progressListener
-            progressListener?.onSessionStarted(context, scenario, events)
+            progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
 
             scenarioProcessor = ScenarioProcessor(
                 imageDetector = detector,
                 detectionQuality = scenario.detectionQuality,
                 randomize = scenario.randomize,
-                events = events,
+                imageEvents = imageEvents,
+                triggerEvents = triggerEvents,
                 bitmapSupplier = bitmapSupplier,
                 androidExecutor = executor,
-                endConditionOperator = scenario.endConditionOperator,
-                endConditions =  endConditions,
                 onStopRequested = { stopDetection() },
                 progressListener  = progressListener,
             )
 
+            scenarioProcessor?.onScenarioStart(context)
             processScreenImages()
         }
     }
@@ -211,6 +211,7 @@ internal class DetectorEngine(context: Context) {
                 processingJob?.cancelAndJoin()
             }
 
+            detectionProgressListener?.onImageEventProcessingCancelled()
             displayRecorder.resizeDisplay(context, displayMetrics.screenSize)
 
             if (_state.value == DetectorState.DETECTING) {
@@ -242,6 +243,7 @@ internal class DetectorEngine(context: Context) {
             processingJob = null
             imageDetector?.close()
             imageDetector = null
+            scenarioProcessor?.onScenarioEnd()
             scenarioProcessor = null
             detectionProgressListener?.onSessionEnded()
             detectionProgressListener = null

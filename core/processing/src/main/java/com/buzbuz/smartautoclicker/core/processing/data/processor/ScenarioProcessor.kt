@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,39 +16,27 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
+import android.content.Context
 import android.graphics.Bitmap
-import android.media.Image
-import android.util.Log
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 
-import com.buzbuz.smartautoclicker.core.detection.DetectionResult
+import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
-import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
-import com.buzbuz.smartautoclicker.core.processing.data.ActionExecutor
-import com.buzbuz.smartautoclicker.core.processing.data.EndConditionVerifier
-import com.buzbuz.smartautoclicker.core.processing.data.ScenarioState
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
+import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
 import kotlinx.coroutines.yield
 
 /**
- * Process a screen image and tries to detect the list of [Event] on it.
+ * Process a screen image and tries to detect the list of [ImageEvent] on it.
  *
  * @param imageDetector the detector for images.
  * @param detectionQuality the quality of the detection.
  * @param randomize true to randomize the actions values a bit to avoid being taken for a bot.
- * @param events the list of scenario events to be detected.
+ * @param imageEvents the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param androidExecutor execute the actions requiring an interaction with Android..
- * @param endConditionOperator the operator to apply between the end conditions.
- * @param endConditions the list of end conditions for the current scenario.
  * @param onStopRequested called when a end condition of the scenario have been reached or all events are disabled.
  * @param progressListener the object to notify for detection progress. Can be null if not required.
  */
@@ -56,26 +44,37 @@ internal class ScenarioProcessor(
     private val imageDetector: ImageDetector,
     private val detectionQuality: Int,
     randomize: Boolean,
-    events: List<Event>,
+    imageEvents: List<ImageEvent>,
+    triggerEvents: List<TriggerEvent>,
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     androidExecutor: AndroidExecutor,
-    @ConditionOperator endConditionOperator: Int,
-    endConditions: List<EndCondition>,
     private val onStopRequested: () -> Unit,
-    private val progressListener: ProgressListener? = null,
+    private val progressListener: ScenarioProcessingListener? = null,
 ) {
 
     /** Handle the processing state of the scenario. */
-    private val scenarioState = ScenarioState(events)
+    private val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
+    /** Check conditions and tell if they are fulfilled. */
+    private val conditionsVerifier = ConditionsVerifier(processingState, imageDetector, bitmapSupplier)
     /** Execute the detected event actions. */
-    private val actionExecutor = ActionExecutor(androidExecutor, scenarioState, randomize)
-    /** Verifies the end conditions of a scenario. */
-    private val endConditionVerifier = EndConditionVerifier(endConditions, endConditionOperator, onStopRequested)
-    /** Keep track of the detection results during the processing. */
-    private val processingResults = ProcessingResults(events)
+    private val actionExecutor = ActionExecutor(androidExecutor, processingState, randomize)
 
     /** Tells if the screen metrics have been invalidated and should be updated. */
     private var invalidateScreenMetrics = true
+
+    suspend fun onScenarioStart(context: Context) {
+        processingState.onProcessingStarted(context)
+        processingState.startEvent?.let { startEvent ->
+            if (processingState.isEventEnabled(startEvent)) actionExecutor.executeActions(startEvent)
+        }
+    }
+
+    suspend fun onScenarioEnd() {
+        processingState.endEvent?.let { endEvent ->
+            if (processingState.isEventEnabled(endEvent)) actionExecutor.executeActions(endEvent)
+        }
+        processingState.onProcessingStopped()
+    }
 
     /** Drop all current cache related to screen metrics. */
     fun invalidateScreenMetrics() {
@@ -91,140 +90,67 @@ internal class ScenarioProcessor(
      */
     suspend fun process(screenFrame: Bitmap) {
         // No more events enabled, there is nothing more to do. Stop the detection.
-        if (scenarioState.areAllEventsDisabled()) {
+        if (processingState.areAllEventsDisabled()) {
             onStopRequested()
             return
         }
 
-        progressListener?.onImageProcessingStarted()
+        if (!processingState.areAllTriggerEventsDisabled()) {
+            processTriggerEvents(processingState.getEnabledTriggerEvents())?.let { (triggerEvent, results) ->
+                actionExecutor.executeActions(triggerEvent, results)
+            }
+        }
+
+        if (!processingState.areAllImageEventsDisabled()) {
+            processImageEvents(screenFrame, processingState.getEnabledImageEvents())?.let { (imageEvent, results) ->
+                actionExecutor.executeActions(imageEvent, results)
+            }
+        }
+
+        return
+    }
+
+    private suspend fun processTriggerEvents(events: Collection<TriggerEvent>): Pair<TriggerEvent, ConditionsResult>? {
+        for (triggerEvent in events) {
+            // No conditions ? This should not happen, skip this event
+            if (triggerEvent.conditions.isEmpty()) continue
+
+            val results = conditionsVerifier.verifyConditions(triggerEvent.conditionOperator, triggerEvent.conditions)
+            if (results.fulfilled == true) return triggerEvent to results
+        }
+
+        return null
+    }
+
+    private suspend fun processImageEvents(
+        screenFrame: Bitmap,
+        events: Collection<ImageEvent>,
+    ): Pair<ImageEvent, ConditionsResult>? {
+
+        progressListener?.onImageEventsProcessingStarted()
 
         // Set the current screen image
-        initScreenFrame(screenFrame)
+        if (invalidateScreenMetrics) {
+            imageDetector.setScreenMetrics(screenFrame, detectionQuality.toDouble())
+            invalidateScreenMetrics = false
+        }
+        imageDetector.setupDetection(screenFrame)
 
-        // Clear previous results
-        processingResults.clearResults()
-
-        for (event in scenarioState.getEnabledEvents()) {
+        // Check all events
+        for (imageEvent in events) {
             // No conditions ? This should not happen, skip this event
-            if (event.conditions.isEmpty()) {
-                continue
-            }
+            if (imageEvent.conditions.isEmpty()) continue
 
-            // Event conditions verification
-            progressListener?.onEventProcessingStarted(event)
-            val conditionAreFulfilled = verifyConditions(event)
-            progressListener?.onEventProcessingCompleted(event, conditionAreFulfilled, processingResults.getFirstMatchResult())
+            progressListener?.onImageEventProcessingStarted(imageEvent)
+            val results = conditionsVerifier.verifyConditions(imageEvent.conditionOperator, imageEvent.conditions)
+            progressListener?.onImageEventProcessingCompleted(results)
 
-            // If conditions are fulfilled, execute this event's actions !
-            if (conditionAreFulfilled) {
-                event.actions.let { actions ->
-                    actionExecutor.executeActions(event, actions, processingResults)
-                }
-
-                // Check if an event has reached its max execution count.
-                if (endConditionVerifier.onEventTriggered(event)) return
-
-                break
-            }
+            if (results.fulfilled == true) return imageEvent to results
 
             // Stop processing if requested
             yield()
         }
 
-        progressListener?.onImageProcessingCompleted()
-        return
-    }
-
-    /**
-     * Initialize the detection algorithm with the current screen frame.
-     * @return the image, as a Bitmap.
-     */
-    private fun initScreenFrame(screenFrame: Bitmap) {
-        if (invalidateScreenMetrics) {
-            imageDetector.setScreenMetrics(screenFrame, detectionQuality.toDouble())
-            invalidateScreenMetrics = false
-        }
-
-        imageDetector.setupDetection(screenFrame)
-    }
-
-    /**
-     * Verifies if all conditions of an event are fulfilled.
-     * Applies the provided conditions the currently processed [Image] according to the provided operator.
-     *
-     * @param event the event to verify the conditions of.
-     * @return true if the conditions are fulfilled, false if not.
-     */
-    private suspend fun verifyConditions(event: Event) : Boolean {
-        event.conditions.forEach { condition ->
-            // Verify if the condition is fulfilled.
-            progressListener?.onConditionProcessingStarted(condition)
-            checkCondition(condition)
-                ?.let { result ->
-                    processingResults.addResult(condition, result.isDetected, result.position, result.confidenceRate)
-                    progressListener?.onConditionProcessingCompleted(result)
-
-                    if (condition.isNotFulfilled(result)) {
-                        // One of the condition isn't fulfilled, it's a false for a AND operator.
-                        if (event.conditionOperator == AND) return false
-                    } else if (event.conditionOperator == OR) {
-                        // One of the condition is fulfilled, it's a yes for a OR operator.
-                        return true
-                    }
-                }
-                ?:let {
-                    progressListener?.cancelCurrentConditionProcessing()
-                    return false
-                }
-
-            yield()
-        }
-
-        // All conditions passed for AND, none are for OR.
-        return event.conditionOperator == AND
-    }
-
-    private fun Condition.isNotFulfilled(result: DetectionResult): Boolean =
-        result.isDetected xor shouldBeDetected
-
-    /**
-     * Check if the provided condition is fulfilled.
-     *
-     * Check if the condition bitmap match the content of the condition area on the currently processed [Image].
-     *
-     * @param condition the event condition to be verified.
-     *
-     * @return the result of the detection, or null of the detection is not possible.
-     */
-    private suspend fun checkCondition(condition: Condition) : DetectionResult? {
-        condition.path?.let { path ->
-            bitmapSupplier(path, condition.area.width(), condition.area.height())?.let { conditionBitmap ->
-                return detect(condition, conditionBitmap)
-            }
-        }
-
-        Log.w(TAG, "Bitmap for condition with path ${condition.path} not found.")
         return null
     }
-
-    /**
-     * Detect the condition on the screen.
-     *
-     * @param condition the condition to be detected.
-     * @param conditionBitmap the bitmap representing the condition.
-     *
-     * @return the result of the detection.
-     */
-    private fun detect(condition: Condition, conditionBitmap: Bitmap): DetectionResult =
-         when (condition.detectionType) {
-             EXACT -> imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
-             WHOLE_SCREEN -> imageDetector.detectCondition(conditionBitmap, condition.threshold)
-             IN_AREA -> condition.detectionArea?.let { area ->
-                 imageDetector.detectCondition(conditionBitmap, area, condition.threshold)
-             } ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
-             else -> throw IllegalArgumentException("Unexpected detection type")
-         }
 }
-
-/** Tag for logs. */
-private const val TAG = "ScenarioProcessor"
