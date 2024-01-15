@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.debugging.domain
 import android.content.Context
 import android.content.SharedPreferences
 
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
+import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.data.DebugEngine
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugReportEnabled
@@ -71,7 +71,7 @@ class DebuggingRepository private constructor(context: Context) {
         .filter { it?.isDetected ?: false }
 
     /** The listener upon scenario detection progress. Must be set at detection start in order to get debugging info. */
-    val detectionProgressListener: ProgressListener = debugEngine
+    val detectionProgressListener: ScenarioProcessingListener = debugEngine
 
     fun isDebugViewEnabled(context: Context): Boolean =
         sharedPreferences.getIsDebugViewEnabled(context)

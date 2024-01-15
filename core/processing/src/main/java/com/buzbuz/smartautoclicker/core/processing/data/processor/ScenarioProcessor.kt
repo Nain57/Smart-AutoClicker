@@ -143,7 +143,7 @@ internal class ScenarioProcessor(
 
             progressListener?.onImageEventProcessingStarted(imageEvent)
             val results = conditionsVerifier.verifyConditions(imageEvent.conditionOperator, imageEvent.conditions)
-            progressListener?.onImageEventProcessingCompleted(results)
+            progressListener?.onImageEventProcessingCompleted(imageEvent, results)
 
             if (results.fulfilled == true) return imageEvent to results
 

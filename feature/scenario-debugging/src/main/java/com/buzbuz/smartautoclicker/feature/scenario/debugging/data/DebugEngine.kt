@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,17 @@
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.data
 
 import android.content.Context
-import android.graphics.Point
 import android.graphics.Rect
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ProgressListener
+import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.IConditionsResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugViewEnabled
@@ -39,7 +41,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /** Engine for the debugging of a scenario processing. */
-internal class DebugEngine : ProgressListener {
+internal class DebugEngine : ScenarioProcessingListener {
 
     /** Mutex to ensure correct synchronization of received progress events. */
     private val mutex = Mutex()
@@ -77,7 +79,13 @@ internal class DebugEngine : ProgressListener {
     /** The DebugInfo for the current image. */
     val currentInfo = MutableStateFlow<DebugInfo?>(null)
 
-    override suspend fun onSessionStarted(context: Context, scenario: Scenario, events: List<ImageEvent>) = mutex.withLock {
+    override suspend fun onSessionStarted(
+        context: Context,
+        scenario: Scenario,
+        imageEvents: List<ImageEvent>,
+        triggerEvents: List<TriggerEvent>
+    ) = mutex.withLock {
+
         if (_isDebugging.value) return
         _isDebugging.value = true
         _debugReport.value = null
@@ -88,18 +96,18 @@ internal class DebugEngine : ProgressListener {
         }
 
         currentScenario = scenario
-        currentEvents = events.toList()
+        currentEvents = imageEvents.toList()
 
         if (generateReport) sessionRecorder.onProcessingStart()
     }
 
-    override suspend fun onImageProcessingStarted() = mutex.withLock {
+    override suspend fun onImageEventsProcessingStarted() = mutex.withLock {
         if (!generateReport) return
 
         imageRecorder.onProcessingStart()
     }
 
-    override suspend fun onEventProcessingStarted(event: ImageEvent) = mutex.withLock {
+    override suspend fun onImageEventProcessingStarted(event: ImageEvent) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcEvtId != null)
@@ -111,7 +119,7 @@ internal class DebugEngine : ProgressListener {
             .onProcessingStart()
     }
 
-    override suspend fun onConditionProcessingStarted(condition: ImageCondition) = mutex.withLock {
+    override suspend fun onImageConditionProcessingStarted(condition: ImageCondition) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcCondId != null)
@@ -123,7 +131,7 @@ internal class DebugEngine : ProgressListener {
             .onProcessingStart()
     }
 
-    override suspend fun onConditionProcessingCompleted(detectionResult: DetectionResult) = mutex.withLock {
+    override suspend fun onImageConditionProcessingCompleted(result: ConditionResult) {
         if (!generateReport) return
 
         if (currProcCondId == null) {
@@ -131,49 +139,46 @@ internal class DebugEngine : ProgressListener {
             return
         }
 
-        conditionsRecorderMap[currProcCondId]?.onProcessingEnd(
-            detectionResult.isDetected,
-            detectionResult.confidenceRate
-        )
+        if (result is ImageConditionResult) {
+            conditionsRecorderMap[currProcCondId]?.onProcessingEnd(
+                result.haveBeenDetected,
+                result.confidenceRate
+            )
+        }
         currProcCondId = null
     }
 
-    override suspend fun onEventProcessingCompleted(
-        isEventMatched: Boolean,
-        event: ImageEvent?,
-        condition: ImageCondition?,
-        isDetected: Boolean?,
-        position: Point?,
-        confidenceRate: Double?,
-    ) = mutex.withLock {
+    override suspend fun onImageEventProcessingCompleted(event: ImageEvent, results: IConditionsResult) = mutex.withLock {
         if (generateReport) {
             if (currProcEvtId == null) {
                 Log.w(TAG, "onEventProcessingCompleted called before start")
                 return
             }
 
-            eventsRecorderMap[currProcEvtId]?.onProcessingEnd(isEventMatched)
+            eventsRecorderMap[currProcEvtId]?.onProcessingEnd(results.fulfilled == true)
             currProcEvtId = null
         }
 
         // Notify current detection progress
-        if (instantData && event != null && condition != null && isDetected != null && position != null && confidenceRate != null) {
-            val halfWidth = condition.area.width() / 2
-            val halfHeight = condition.area.height() / 2
+        val conditionResults = results.getFirstImageDetectedResult() ?: return@withLock
+        if (instantData && conditionResults.haveBeenDetected) {
+            val halfWidth = conditionResults.condition.area.width() / 2
+            val halfHeight = conditionResults.condition.area.height() / 2
 
-            val coordinates = if (position.x == 0 && position.y == 0) Rect()
+            val coordinates = if (conditionResults.position.x == 0 && conditionResults.position.y == 0) Rect()
             else Rect(
-                position.x - halfWidth,
-                position.y - halfHeight,
-                position.x + halfWidth,
-                position.y + halfHeight
+                conditionResults.position.x - halfWidth,
+                conditionResults.position.y - halfHeight,
+                conditionResults.position.x + halfWidth,
+                conditionResults.position.y + halfHeight
             )
 
-            currentInfo.value = DebugInfo(event, condition, isDetected, position, confidenceRate, coordinates)
+            currentInfo.value = DebugInfo(event, conditionResults.condition, conditionResults.haveBeenDetected,
+                conditionResults.position, conditionResults.confidenceRate, coordinates)
         }
     }
 
-    override suspend fun onImageProcessingCompleted() = mutex.withLock {
+    override suspend fun onImageEventsProcessingCompleted() = mutex.withLock {
         if (!generateReport) return
 
         imageRecorder.onProcessingEnd()
@@ -239,12 +244,12 @@ internal class DebugEngine : ProgressListener {
         _isDebugging.value = false
     }
 
-    override suspend fun cancelCurrentProcessing() = mutex.withLock {
+    override suspend fun onImageEventProcessingCancelled() = mutex.withLock {
         currProcEvtId = null
         currProcCondId = null
     }
 
-    override suspend fun cancelCurrentConditionProcessing() = mutex.withLock {
+    override suspend fun onImageConditionProcessingCancelled() = mutex.withLock {
         currProcCondId = null
     }
 }

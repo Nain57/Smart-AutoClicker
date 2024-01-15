@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.IConditionsResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
@@ -38,7 +39,7 @@ internal class ConditionsResult : IConditionsResult {
         }
 
     override fun getFirstImageDetectedResult(): ImageResult? =
-        results.values.find { it is ImageResult && it.isFulfilled && it.shouldBeDetected }
+        results.values.find { it is ImageResult && it.isFulfilled && it.condition.shouldBeDetected }
                 as ImageResult?
 
     fun reset(@ConditionOperator operator: Int) {
@@ -62,9 +63,10 @@ internal data class DefaultResult(
 
 internal data class ImageResult(
     override val isFulfilled: Boolean,
-    override val shouldBeDetected: Boolean,
+    override val haveBeenDetected: Boolean,
+    override val condition: ImageCondition,
     override val position: Point = Point(),
-    override var confidenceRate: Double = 0.0
+    override var confidenceRate: Double = 0.0,
 ) : ImageConditionResult
 
 

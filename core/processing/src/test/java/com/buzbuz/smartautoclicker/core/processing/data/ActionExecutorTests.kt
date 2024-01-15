@@ -146,7 +146,7 @@ class ActionExecutorTests {
         val results = ConditionsResult()
         results.addResult(
             condition.getDatabaseId(),
-            ImageResult(isFulfilled = true, shouldBeDetected = true, Point(15, 15), 100.0)
+            ImageResult(isFulfilled = true, haveBeenDetected = true, condition, Point(15, 15), 100.0)
         )
 
         actionExecutor.executeActions(event, results)
@@ -170,11 +170,11 @@ class ActionExecutorTests {
         val results = ConditionsResult()
         results.addResult(
             conditionValid.getDatabaseId(),
-            ImageResult(isFulfilled = true, shouldBeDetected = true, Point(15, 15), 100.0)
+            ImageResult(isFulfilled = true, haveBeenDetected = true, conditionValid, Point(15, 15), 100.0)
         )
         results.addResult(
             conditionOther.getDatabaseId(),
-            ImageResult(isFulfilled = true, shouldBeDetected = true, Point(45, 45), 98.0)
+            ImageResult(isFulfilled = true, haveBeenDetected = false, conditionOther, Point(45, 45), 98.0)
         )
 
         actionExecutor.executeActions(event, results)
