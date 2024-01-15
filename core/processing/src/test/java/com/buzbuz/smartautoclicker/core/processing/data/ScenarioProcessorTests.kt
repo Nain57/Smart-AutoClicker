@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,9 +34,9 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newCondition
@@ -56,8 +56,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.never
-import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.MockitoAnnotations
@@ -76,8 +74,6 @@ class ScenarioProcessorTests {
 
         private const val TEST_DATA_SCREEN_IMAGE_WIDTH = 800
         private const val TEST_DATA_SCREEN_IMAGE_HEIGHT = 600
-        private const val TEST_DATA_SCREEN_IMAGE_PIXEL_STRIDE = 1
-        private const val TEST_DATA_SCREEN_IMAGE_ROW_STRIDE = TEST_DATA_SCREEN_IMAGE_WIDTH
 
         private const val TEST_CONDITION_PATH_1 = "TOTO1"
         private val TEST_CONDITION_AREA_1 = Rect(0 , 1, 2, 3)
@@ -96,6 +92,7 @@ class ScenarioProcessorTests {
             Action.Click(
                 id = Identifier(databaseId = 1),
                 eventId = Identifier(databaseId = 1),
+                priority = 0,
                 pressDuration = duration,
                 positionType = Action.Click.PositionType.USER_SELECTED,
                 x = 10, y = 10,
@@ -129,7 +126,7 @@ class ScenarioProcessorTests {
         @DetectionType detectionType: Int,
         shouldBeOnScreen: Boolean,
         isDetected: Boolean,
-    ) : Condition {
+    ) : ImageCondition {
         val conditionBitmap = mock(Bitmap::class.java)
         mockWhen(mockBitmapSupplier.getBitmap(path, area.width(), area.height())).thenReturn(conditionBitmap)
 
@@ -156,18 +153,16 @@ class ScenarioProcessorTests {
 
     /** @return a new SceanarioProcessor with all necessary mocks. */
     private fun createNewScenarioProcessor(
-        events: List<Event>,
-        endConditions: List<EndCondition>,
-        endConditionOperator: Int
+        events: List<ImageEvent>,
+        triggerEvent: List<TriggerEvent>,
     ) = ScenarioProcessor(
         mockImageDetector,
         TEST_DATA_DETECTION_QUALITY.toInt(),
         false,
         events,
+        triggerEvent,
         mockBitmapSupplier::getBitmap,
         mockAndroidExecutor,
-        endConditionOperator,
-        endConditions,
         mockEndListener::onStopRequested,
     )
 
@@ -189,7 +184,7 @@ class ScenarioProcessorTests {
 
     @Test
     fun noEvent() = runTest{
-        scenarioProcessor = createNewScenarioProcessor(emptyList(), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(emptyList(), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
 
@@ -204,7 +199,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -228,7 +223,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -252,7 +247,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -277,7 +272,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -301,7 +296,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -323,7 +318,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -346,7 +341,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -371,7 +366,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -395,7 +390,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -435,7 +430,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -474,7 +469,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -514,7 +509,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -555,7 +550,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -595,7 +590,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -637,7 +632,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
 
@@ -679,7 +674,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
 
@@ -720,7 +715,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -761,7 +756,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -803,7 +798,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -845,7 +840,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -887,7 +882,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -929,7 +924,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -970,7 +965,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -1007,7 +1002,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -1048,7 +1043,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction(actionDuration2)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -1088,7 +1083,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction(actionDuration2)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -1128,7 +1123,7 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction(actionDuration2)),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
@@ -1153,275 +1148,10 @@ class ScenarioProcessorTests {
             enableOnStart = true,
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event1), emptyList(), OR)
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1), emptyList())
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setupDetection(mockScreenBitmap)
         verifyNoInteractions(mockAndroidExecutor, mockEndListener)
-    }
-
-    @Test
-    fun endConditionReached_or_one() = runTest {
-        val condition1 = createTestCondition(
-            TEST_CONDITION_PATH_1,
-            TEST_CONDITION_AREA_1,
-            TEST_CONDITION_THRESHOLD_1,
-            EXACT,
-            isDetected = true,
-            shouldBeOnScreen = true,
-        )
-        val actionDuration1 = 1L
-        val event1 = newEvent(
-            operator = OR,
-            conditions = listOf(condition1),
-            actions = listOf(newDefaultClickAction(actionDuration1)),
-        )
-
-        scenarioProcessor = createNewScenarioProcessor(
-            listOf(event1),
-            listOf(
-                EndCondition(
-                    id = Identifier(databaseId = 1),
-                    scenarioId = event1.scenarioId,
-                    eventId = event1.id,
-                    eventName = event1.name,
-                    executions = 1
-                )
-            ),
-            OR
-        )
-        scenarioProcessor.process(mockScreenBitmap)
-
-        verify(mockImageDetector).setupDetection(mockScreenBitmap)
-        assertActionGesture(actionDuration1)
-        verify(mockEndListener).onStopRequested()
-    }
-
-    @Test
-    fun endConditionReached_or_three() = runTest {
-        val condition1 = createTestCondition(
-            TEST_CONDITION_PATH_1,
-            TEST_CONDITION_AREA_1,
-            TEST_CONDITION_THRESHOLD_1,
-            EXACT,
-            isDetected = true,
-            shouldBeOnScreen = true,
-        )
-        val event1 = newEvent(
-            operator = OR,
-            conditions = listOf(condition1),
-            actions = listOf(newDefaultClickAction()),
-        )
-
-        scenarioProcessor = createNewScenarioProcessor(
-            listOf(event1),
-            listOf(
-                EndCondition(
-                    id = Identifier(databaseId = 1),
-                    scenarioId = event1.scenarioId,
-                    eventId = event1.id,
-                    eventName = event1.name,
-                    executions = 3,
-                )
-            ),
-            OR
-        )
-
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, never()).onStopRequested()
-
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, never()).onStopRequested()
-
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, times(1)).onStopRequested()
-    }
-
-    @Test
-    fun endConditionReached_or_twoEndCondition_oneOk() = runTest {
-        val condition1 = createTestCondition(
-            TEST_CONDITION_PATH_1,
-            TEST_CONDITION_AREA_1,
-            TEST_CONDITION_THRESHOLD_1,
-            EXACT,
-            isDetected = true,
-            shouldBeOnScreen = true,
-        )
-        val condition2 = createTestCondition(
-            TEST_CONDITION_PATH_2,
-            TEST_CONDITION_AREA_2,
-            TEST_CONDITION_THRESHOLD_2,
-            EXACT,
-            isDetected = false,
-            shouldBeOnScreen = true,
-        )
-        val event1 = newEvent(
-            id = 42,
-            operator = OR,
-            conditions = listOf(condition1),
-            actions = listOf(newDefaultClickAction()),
-        )
-        val event2 = newEvent(
-            id = 85,
-            operator = OR,
-            conditions = listOf(condition2),
-            actions = listOf(newDefaultClickAction()),
-        )
-
-        scenarioProcessor = createNewScenarioProcessor(
-            listOf(event1, event2),
-            listOf(
-                EndCondition(
-                    id = Identifier(databaseId = 1),
-                    scenarioId = event1.scenarioId,
-                    eventId = event1.id,
-                    eventName = event1.name,
-                    executions = 1
-                ),
-                EndCondition(
-                    id = Identifier(databaseId = 2),
-                    scenarioId = event2.scenarioId,
-                    eventId = event2.id,
-                    eventName = event2.name,
-                    executions = 3
-                )
-            ),
-            OR,
-        )
-
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, times(1)).onStopRequested()
-    }
-
-    @Test
-    fun endConditionReached_and_one() = runTest {
-        val condition1 = createTestCondition(
-            TEST_CONDITION_PATH_1,
-            TEST_CONDITION_AREA_1,
-            TEST_CONDITION_THRESHOLD_1,
-            EXACT,
-            isDetected = true,
-            shouldBeOnScreen = true,
-        )
-        val actionDuration1 = 1L
-        val event1 = newEvent(
-            operator = AND,
-            conditions = listOf(condition1),
-            actions = listOf(newDefaultClickAction(actionDuration1)),
-        )
-
-        scenarioProcessor = createNewScenarioProcessor(
-            listOf(event1),
-            listOf(
-                EndCondition(
-                    id = Identifier(databaseId = 1),
-                    scenarioId = event1.scenarioId,
-                    eventId = event1.id,
-                    eventName = event1.name,
-                    executions = 1
-                ),
-            ),
-            AND,
-        )
-        scenarioProcessor.process(mockScreenBitmap)
-
-        verify(mockImageDetector).setupDetection(mockScreenBitmap)
-        assertActionGesture(actionDuration1)
-        verify(mockEndListener).onStopRequested()
-    }
-
-    @Test
-    fun endConditionReached_and_three() = runTest {
-        val condition1 = createTestCondition(
-            TEST_CONDITION_PATH_1,
-            TEST_CONDITION_AREA_1,
-            TEST_CONDITION_THRESHOLD_1,
-            EXACT,
-            isDetected = true,
-            shouldBeOnScreen = true,
-        )
-        val event1 = newEvent(
-            operator = AND,
-            conditions = listOf(condition1),
-            actions = listOf(newDefaultClickAction()),
-        )
-
-        scenarioProcessor = createNewScenarioProcessor(
-            listOf(event1),
-            listOf(
-                EndCondition(
-                    id = Identifier(databaseId = 1),
-                    scenarioId = event1.scenarioId,
-                    eventId = event1.id,
-                    eventName = event1.name,
-                    executions = 3
-                ),
-            ),
-            AND,
-        )
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, never()).onStopRequested()
-
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, never()).onStopRequested()
-
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, times(1)).onStopRequested()
-    }
-
-    @Test
-    fun endConditionReached_and_twoEndCondition_oneOk() = runTest {
-        val condition1 = createTestCondition(
-            TEST_CONDITION_PATH_1,
-            TEST_CONDITION_AREA_1,
-            TEST_CONDITION_THRESHOLD_1,
-            EXACT,
-            isDetected = true,
-            shouldBeOnScreen = true,
-        )
-        val condition2 = createTestCondition(
-            TEST_CONDITION_PATH_2,
-            TEST_CONDITION_AREA_2,
-            TEST_CONDITION_THRESHOLD_2,
-            EXACT,
-            isDetected = false,
-            shouldBeOnScreen = true,
-        )
-        val event1 = newEvent(
-            id = 42,
-            operator = OR,
-            conditions = listOf(condition1),
-            actions = listOf(newDefaultClickAction()),
-        )
-        val event2 = newEvent(
-            id = 85,
-            operator = OR,
-            conditions = listOf(condition2),
-            actions = listOf(newDefaultClickAction()),
-        )
-
-        scenarioProcessor = createNewScenarioProcessor(
-            listOf(event1, event2),
-            listOf(
-                EndCondition(
-                    id = Identifier(databaseId = 1),
-                    scenarioId = event1.scenarioId,
-                    eventId = event1.id,
-                    eventName = event1.name,
-                    executions = 1
-                ),
-                EndCondition(
-                    id = Identifier(databaseId = 2),
-                    scenarioId = event2.scenarioId,
-                    eventId = event2.id,
-                    eventName = event2.name,
-                    executions = 3
-                )
-            ),
-            AND,
-        )
-
-        scenarioProcessor.process(mockScreenBitmap)
-        verify(mockEndListener, never()).onStopRequested()
     }
 }

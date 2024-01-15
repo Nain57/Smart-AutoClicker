@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.processing.data
+package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.accessibilityservice.GestureDescription
 import android.content.Intent
@@ -32,9 +32,11 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ProcessingResults
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -45,63 +47,40 @@ import kotlin.random.Random
  * Execute the actions of an event.
  *
  * @param androidExecutor the executor for the actions requiring an interaction with Android.
- * @param scenarioEditor the executor for the actions modifying the scenario processing.
+ * @param processingState the state of the current processing (counters, enabled events...).
  * @param randomize true to randomize the actions values a bit (positions, timers...), false to be precise.
  */
 internal class ActionExecutor(
     private val androidExecutor: AndroidExecutor,
-    private val scenarioEditor: ScenarioEditor,
+    private val processingState: ProcessingState,
     randomize: Boolean,
 ) {
 
     private val random: Random? = if (randomize) Random(System.currentTimeMillis()) else null
 
-    /**
-     * Execute the provided actions.
-     * @param actions the actions to be executed.
-     * @param processingResults contains the detection results for actions that needs context.
-     */
-    suspend fun executeActions(event: Event, actions: List<Action>, processingResults: ProcessingResults) {
-        actions.forEach { action ->
+    suspend fun executeActions(event: Event, results: ConditionsResult? = null) {
+        event.actions.forEach { action ->
             when (action) {
-                is Click -> executeClick(event, action, processingResults)
+                is Click -> executeClick(event, action, results)
                 is Swipe -> executeSwipe(action)
                 is Pause -> executePause(action)
                 is Action.Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
+                is ChangeCounter -> executeChangeCounter(action)
             }
         }
     }
 
-    /**
-     * Execute the provided click.
-     * @param click the click to be executed.
-     */
-    private suspend fun executeClick(event: Event, click: Click, processingResults: ProcessingResults) {
-        val clickPath = Path()
+    private suspend fun executeClick(event: Event, click: Click, results: ConditionsResult?) {
         val clickBuilder = GestureDescription.Builder()
-
-        when (click.positionType) {
-            Click.PositionType.USER_SELECTED ->
-                clickPath.moveTo(click.x!!, click.y!!, random)
-
-            Click.PositionType.ON_DETECTED_CONDITION -> {
-                val result = when {
-                    event.conditionOperator == OR ->
-                        processingResults.getFirstMatchResult()
-                    click.clickOnConditionId != null ->
-                        processingResults.getResult(click.eventId.databaseId, click.clickOnConditionId!!.databaseId)
-                    else -> null
-                }
-
-                if (result == null) {
-                    Log.w(TAG, "Click is invalid, can't execute")
-                    return
-                }
-
-                clickPath.moveTo(result.position.x, result.position.y, random)
+        val clickPath = when (click.positionType) {
+            Click.PositionType.USER_SELECTED -> Path().apply {
+                moveTo(click.x!!, click.y!!, random)
             }
-        }
+
+            Click.PositionType.ON_DETECTED_CONDITION ->
+                getOnConditionClickPath(event, click, results)
+        } ?: return
 
         clickBuilder.addStroke(
             GestureDescription.StrokeDescription(
@@ -113,6 +92,25 @@ internal class ActionExecutor(
 
         withContext(Dispatchers.Main) {
             androidExecutor.executeGesture(clickBuilder.build())
+        }
+    }
+
+    private fun getOnConditionClickPath(event: Event, click: Click, results: ConditionsResult?): Path? {
+        if (event !is ImageEvent) return null
+
+        val result = when {
+            event.conditionOperator == OR -> results?.getFirstImageDetectedResult()
+            click.clickOnConditionId != null -> results?.getImageConditionResult(click.clickOnConditionId!!.databaseId)
+            else -> null
+        }
+
+        if (result == null) {
+            Log.w(TAG, "Click is invalid, can't execute")
+            return null
+        }
+
+        return Path().apply {
+            moveTo(result.position.x, result.position.y, random)
         }
     }
 
@@ -181,15 +179,42 @@ internal class ActionExecutor(
      * @param toggleEvent the toggleEvent to be executed.
      */
     private fun executeToggleEvent(toggleEvent: ToggleEvent) {
-        scenarioEditor.changeEventState(toggleEvent.toggleEventId!!.databaseId, toggleEvent.toggleEventType!!)
+        if (toggleEvent.toggleAll) {
+            when (toggleEvent.toggleAllType) {
+                ToggleEvent.ToggleType.ENABLE -> processingState.enableAll()
+                ToggleEvent.ToggleType.DISABLE -> processingState.disableAll()
+                ToggleEvent.ToggleType.TOGGLE -> processingState.toggleAll()
+                null -> Unit
+            }
+
+            return
+        }
+
+        toggleEvent.eventToggles.forEach { eventToggle ->
+            when (eventToggle.toggleType) {
+                ToggleEvent.ToggleType.ENABLE -> processingState.enableEvent(eventToggle.targetEventId.databaseId)
+                ToggleEvent.ToggleType.DISABLE -> processingState.disableEvent(eventToggle.targetEventId.databaseId)
+                ToggleEvent.ToggleType.TOGGLE -> processingState.toggleEvent(eventToggle.targetEventId.databaseId)
+            }
+        }
     }
-}
 
-/** Execute the actions related to the scenario processing modifications. */
-interface ScenarioEditor {
+    /**
+     * Execute the provided change counter.
+     * @param changeCounter the changeCounter action to be executed.
+     */
+    private fun executeChangeCounter(changeCounter: ChangeCounter) {
+        val oldValue = processingState.getCounterValue(changeCounter.counterName) ?: return
 
-    /** Change the enable state of an event. */
-    fun changeEventState(eventId: Long, toggleType: ToggleEvent.ToggleType)
+        processingState.setCounterValue(
+            counterName = changeCounter.counterName,
+            value = when (changeCounter.operation) {
+                ChangeCounter.OperationType.ADD -> oldValue + changeCounter.operationValue
+                ChangeCounter.OperationType.MINUS -> oldValue - changeCounter.operationValue
+                ChangeCounter.OperationType.SET -> changeCounter.operationValue
+            }
+        )
+    }
 }
 
 /** Tag for logs. */

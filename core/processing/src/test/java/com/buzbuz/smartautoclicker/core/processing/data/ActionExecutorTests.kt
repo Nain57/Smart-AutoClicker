@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,9 +29,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ProcessingResults
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ImageResult
+import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
 
 import kotlinx.coroutines.*
@@ -68,24 +71,24 @@ class ActionExecutorTests {
         private const val TEST_Y1 = 88
         private const val TEST_Y2 = 76
 
-        fun getNewDefaultEvent(operator: Int = OR, conditions: List<Condition> = emptyList(), actions: List<Action> = emptyList()) =
-            Event(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, 0, actions, conditions, true)
+        fun getNewDefaultEvent(operator: Int = OR, conditions: List<ImageCondition> = emptyList(), actions: List<Action> = emptyList()) =
+            ImageEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0)
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
-            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, duration, Action.Click.PositionType.USER_SELECTED, TEST_X1, TEST_Y1, null)
+            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration, Action.Click.PositionType.USER_SELECTED, TEST_X1, TEST_Y1, null)
         fun getNewDefaultClickCondition(id: Long, conditionId: Long? = null) =
-            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION, Action.Click.PositionType.ON_DETECTED_CONDITION, null, null, conditionId?.let { Identifier(databaseId = conditionId) })
+            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION, Action.Click.PositionType.ON_DETECTED_CONDITION, null, null, conditionId?.let { Identifier(databaseId = conditionId) })
         fun getNewDefaultSwipe(id: Long) =
-            Action.Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
+            Action.Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 2, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
         fun getNewDefaultPause(id: Long) =
-            Action.Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, TEST_DURATION)
+            Action.Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
         fun getNewDefaultCondition(id: Long) =
-            Condition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, "path", Rect(), 10, EXACT, true, null)
+            ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, "path", Rect(), 10, EXACT, true, null)
     }
 
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
-    @Mock private lateinit var mockScenarioEditor: ScenarioEditor
+    @Mock private lateinit var mockProcessingState: ProcessingState
 
     private lateinit var actionExecutor: ActionExecutor
 
@@ -102,7 +105,7 @@ class ActionExecutorTests {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
 
-        actionExecutor = ActionExecutor(mockAndroidExecutor, mockScenarioEditor, randomize = false)
+        actionExecutor = ActionExecutor(mockAndroidExecutor, mockProcessingState, randomize = false)
     }
 
     @After
@@ -113,16 +116,16 @@ class ActionExecutorTests {
     @Test
     fun noActions() = runTest {
         val event = getNewDefaultEvent()
-        actionExecutor.executeActions(event, emptyList(), ProcessingResults(listOf(event)))
+        actionExecutor.executeActions(event, ConditionsResult())
         verify(mockAndroidExecutor, never()).executeGesture(anyNotNull())
     }
 
     @Test
     fun execute_oneClick_notOnCondition() = runTest {
         val clickAction = getNewDefaultClickUserPos(1)
-        val event = getNewDefaultEvent()
+        val event = getNewDefaultEvent(actions = listOf(clickAction))
 
-        actionExecutor.executeActions(event, listOf(clickAction), ProcessingResults(listOf(event)))
+        actionExecutor.executeActions(event, ConditionsResult())
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
@@ -134,11 +137,19 @@ class ActionExecutorTests {
         val clickAction = getNewDefaultClickUserPos(1)
 
         val condition = getNewDefaultCondition(42L)
-        val event = getNewDefaultEvent(OR, conditions = listOf(condition))
-        val results = ProcessingResults(listOf(event))
-        results.addResult(condition, true, Point(15, 15), 100.0)
+        val event = getNewDefaultEvent(
+            OR,
+            conditions = listOf(condition),
+            actions = listOf(clickAction),
+        )
 
-        actionExecutor.executeActions(event, listOf(clickAction), results)
+        val results = ConditionsResult()
+        results.addResult(
+            condition.getDatabaseId(),
+            ImageResult(isFulfilled = true, shouldBeDetected = true, Point(15, 15), 100.0)
+        )
+
+        actionExecutor.executeActions(event, results)
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
@@ -151,12 +162,22 @@ class ActionExecutorTests {
         val conditionOther = getNewDefaultCondition(75L)
         val clickAction = getNewDefaultClickCondition(1, conditionValid.id.databaseId)
 
-        val event = getNewDefaultEvent(AND, conditions = listOf(conditionValid, conditionOther))
-        val results = ProcessingResults(listOf(event))
-        results.addResult(conditionValid, true, Point(15, 15), 100.0)
-        results.addResult(conditionOther, true, Point(45, 45), 98.0)
+        val event = getNewDefaultEvent(
+            AND,
+            conditions = listOf(conditionValid, conditionOther),
+            actions = listOf(clickAction),
+        )
+        val results = ConditionsResult()
+        results.addResult(
+            conditionValid.getDatabaseId(),
+            ImageResult(isFulfilled = true, shouldBeDetected = true, Point(15, 15), 100.0)
+        )
+        results.addResult(
+            conditionOther.getDatabaseId(),
+            ImageResult(isFulfilled = true, shouldBeDetected = true, Point(45, 45), 98.0)
+        )
 
-        actionExecutor.executeActions(event, listOf(clickAction), results)
+        actionExecutor.executeActions(event, results)
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
@@ -167,7 +188,10 @@ class ActionExecutorTests {
     fun execute_oneSwipe() = runTest {
         val swipeAction = getNewDefaultSwipe(1)
 
-        actionExecutor.executeActions(getNewDefaultEvent(), listOf(swipeAction), ProcessingResults(emptyList()))
+        actionExecutor.executeActions(
+            getNewDefaultEvent(actions = listOf(swipeAction)),
+            ConditionsResult(),
+        )
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
@@ -179,7 +203,10 @@ class ActionExecutorTests {
         val pause = getNewDefaultPause(1)
 
         // Execute the pause. As the handler is waiting to the finish the pause, we should stays in EXECUTING
-        actionExecutor.executeActions(getNewDefaultEvent(), listOf(pause), ProcessingResults(emptyList()))
+        actionExecutor.executeActions(
+            getNewDefaultEvent(actions = listOf(pause)),
+            ConditionsResult(),
+        )
 
         // Only a pause, there should be no gestures
         verify(mockAndroidExecutor, never()).executeGesture(anyNotNull())
@@ -193,7 +220,10 @@ class ActionExecutorTests {
         val gestureCaptor = argumentCaptor<GestureDescription>()
 
         // Execute the actions.
-        actionExecutor.executeActions(getNewDefaultEvent(), listOf(click, pause, swipe), ProcessingResults(emptyList()))
+        actionExecutor.executeActions(
+            getNewDefaultEvent(actions = listOf(click, pause, swipe)),
+            ConditionsResult(),
+        )
 
         // Verify the gestures executions
         verify(mockAndroidExecutor, times(2)).executeGesture(gestureCaptor.capture())
@@ -215,9 +245,8 @@ class ActionExecutorTests {
 
         launch(Dispatchers.IO) {
             actionExecutor.executeActions(
-                getNewDefaultEvent(),
-                listOf(getNewDefaultClickUserPos(1, executionDurationMs)),
-                ProcessingResults(emptyList()),
+                getNewDefaultEvent(actions = listOf(getNewDefaultClickUserPos(1, executionDurationMs))),
+                ConditionsResult(),
             )
 
             assertTrue("Action execution have not completed yet", isCompleted)
