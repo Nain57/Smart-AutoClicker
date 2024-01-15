@@ -123,7 +123,7 @@ internal class ConditionsVerifier(
             currentTimeMs > state.processingStartTsMs + condition.durationMs
         } ?: false
 
-    private fun verifyOnScenarioStart() : Boolean = true
+    private fun verifyOnScenarioStart() : Boolean = false
     private fun verifyOnScenarioEnd() : Boolean = false
 
     private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult =
