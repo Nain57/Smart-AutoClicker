@@ -148,7 +148,8 @@ internal class ConditionsVerifier(
 
                 ImageResult(
                     isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
-                    shouldBeDetected = condition.shouldBeDetected,
+                    haveBeenDetected = detectionResult.isDetected,
+                    condition = condition,
                     position = Point(detectionResult.position.x, detectionResult.position.y),
                     confidenceRate = detectionResult.confidenceRate,
                 )

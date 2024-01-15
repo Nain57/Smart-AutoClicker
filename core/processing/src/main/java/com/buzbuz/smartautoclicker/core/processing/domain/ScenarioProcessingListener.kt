@@ -40,7 +40,7 @@ interface ScenarioProcessingListener {
     suspend fun onImageConditionProcessingCompleted(result: ConditionResult)
     suspend fun onImageConditionProcessingCancelled()
 
-    suspend fun onImageEventProcessingCompleted(results: IConditionsResult)
+    suspend fun onImageEventProcessingCompleted(event: ImageEvent, results: IConditionsResult)
     suspend fun onImageEventProcessingCancelled()
 
     suspend fun onImageEventsProcessingCompleted()

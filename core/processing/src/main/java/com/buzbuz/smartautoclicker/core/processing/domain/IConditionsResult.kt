@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.domain
 
 import android.graphics.Point
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 
 interface IConditionsResult {
 
@@ -31,7 +32,8 @@ interface ConditionResult {
 }
 
 interface ImageConditionResult : ConditionResult {
-    val shouldBeDetected: Boolean
+    val haveBeenDetected: Boolean
+    val condition: ImageCondition
     val position: Point
     val confidenceRate: Double
 }
