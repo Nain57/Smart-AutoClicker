@@ -59,8 +59,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scenario_name_field"
-            app:layout_constraintBottom_toTopOf="@id/end_conditions_card">
+            app:layout_constraintTop_toBottomOf="@id/scenario_action_randomization"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -146,95 +146,6 @@
                     app:layout_constraintTop_toBottomOf="@id/text_precision"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:labelBehavior="gone"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/end_conditions_card"
-            style="@style/AppTheme.Widget.Card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detection_quality_card">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_vertical_large"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/end_conditions_title"
-                    style="@style/AppTheme.TextAppearance.CardTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/section_title_end_condition"
-                    app:layout_constraintBottom_toTopOf="@id/end_conditions_operator_field"
-                    app:layout_constraintEnd_toStartOf="@+id/end_conditions_pro_mode"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/end_conditions_pro_mode"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/end_conditions_title"
-                    app:layout_constraintBottom_toBottomOf="@id/end_conditions_title"
-                    app:srcCompat="@drawable/ic_pro"
-                    android:visibility="gone"
-                    tools:visibility="visible"/>
-
-                <include layout="@layout/include_input_field_dropdown"
-                    android:id="@+id/end_conditions_operator_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/end_conditions_list_layout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/end_conditions_title"/>
-
-                <FrameLayout
-                    android:id="@+id/end_conditions_list_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/end_conditions_operator_field">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/end_conditions_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:scrollbars="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:itemCount="1"
-                        tools:listitem="@layout/item_end_condition_card" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/end_conditions_no_events"
-                        style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginVertical="@dimen/margin_vertical_large"
-                        android:gravity="center"
-                        android:text="@string/message_empty_secondary_end_condition_no_events"
-                        android:visibility="gone" />
-
-                </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

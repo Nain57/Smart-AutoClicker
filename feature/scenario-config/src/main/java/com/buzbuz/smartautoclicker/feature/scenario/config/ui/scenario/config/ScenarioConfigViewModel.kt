@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,14 +27,10 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
@@ -99,41 +95,6 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     /** The quality of the detection. */
     val detectionQuality: Flow<Int?> = configuredScenario
         .map { it.detectionQuality }
-
-    private val conditionAndItem = DropdownItem(
-        title = R.string.dropdown_item_title_condition_and,
-        helperText = R.string.dropdown_helper_text_end_condition_and,
-    )
-    private val conditionOrItem = DropdownItem(
-        title= R.string.dropdown_item_title_condition_or,
-        helperText = R.string.dropdown_helper_text_end_condition_or,
-    )
-    val endConditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
-
-    /** The operator applied to the end conditions. */
-    val endConditionOperator: Flow<DropdownItem> = configuredScenario
-        .map {
-            when (it.endConditionOperator) {
-                AND -> conditionAndItem
-                OR -> conditionOrItem
-                else -> null
-            }
-        }
-        .filterNotNull()
-
-
-    /** Events available for a new end condition. */
-    private val eventsAvailable: Flow<Boolean> = editionRepository.editionState.eventsAvailableForNewEndCondition
-        .map { it.isNotEmpty() }
-
-    /** The end conditions for the configured scenario. */
-    val endConditions: Flow<List<EndConditionListItem>> =
-        editionRepository.editionState.endConditionsState.combine(eventsAvailable) { endConditions, eventsAvailable ->
-            buildList {
-                endConditions.value?.forEach { add(EndConditionListItem.EndConditionItem(it)) }
-                if (eventsAvailable) add(EndConditionListItem.AddEndConditionItem)
-            }
-        }
 
     /** Tells if the pro mode has been purchased by the user. */
     val isProModePurchased: Flow<Boolean> = billingRepository.isProModePurchased
@@ -202,37 +163,6 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-    /** Toggle the end condition operator between AND and OR. */
-    fun setConditionOperator(operatorItem: DropdownItem) {
-        editionRepository.editionState.getScenario()?.let { scenario ->
-            val operator = when (operatorItem) {
-                conditionAndItem -> AND
-                conditionOrItem -> OR
-                else -> return
-            }
-
-            viewModelScope.launch {
-                editionRepository.updateEditedScenario(scenario.copy(endConditionOperator = operator))
-            }
-        }
-    }
-
-    /** @return a new empty end condition. */
-    fun createNewEndCondition(): EndCondition =
-        editionRepository.editedItemsBuilder.createNewEndCondition()
-
-    fun startEndConditionEdition(endCondition: EndCondition) =
-        editionRepository.startEndConditionEdition(endCondition)
-
-    fun upsertEndCondition() =
-        editionRepository.upsertEditedEndCondition()
-
-    fun deleteEndCondition() =
-        editionRepository.deleteEditedEndCondition()
-
-    fun discardEndCondition() =
-        editionRepository.stopEndConditionEdition()
-
     fun onAntiDetectionClickedWithoutProMode(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_ANTI_DETECTION)
     }
@@ -240,18 +170,6 @@ class ScenarioConfigViewModel(application: Application) : AndroidViewModel(appli
     fun onDetectionQualityClickedWithoutProMode(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_DETECTION_QUALITY)
     }
-
-    fun onEndConditionsClickedWithoutProMode(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_END_CONDITIONS)
-    }
-}
-
-/** Items displayed in the end condition list. */
-sealed class EndConditionListItem {
-    /** The add end condition item. */
-    object AddEndConditionItem : EndConditionListItem()
-    /** Item representing a end condition. */
-    data class EndConditionItem(val endCondition: EndCondition) : EndConditionListItem()
 }
 
 data class RandomizationDropdownUiState(
