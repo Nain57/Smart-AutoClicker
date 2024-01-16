@@ -241,13 +241,11 @@
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
-    <string name="content_desc_drag_and_drop">Drag and drop pour changer l\'ordre des éléments</string>
     <string name="content_desc_event_state">L\'état de l\'évènement</string>
     <string name="content_desc_conditions_count">Le nombre de conditions dans cet évènement</string>
     <string name="content_desc_actions_count">Le nombre d\'actions dans cet évènement</string>
     <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
-    <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
     <string name="dialog_overlay_title_intent_flags">Flags</string>
     <string name="dialog_overlay_title_intent_actions">Intent Actions</string>

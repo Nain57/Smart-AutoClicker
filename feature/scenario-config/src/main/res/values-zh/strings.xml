@@ -235,13 +235,11 @@
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
-    <string name="content_desc_drag_and_drop">拖放以重新排序元素</string>
     <string name="content_desc_event_state">事件的状态</string>
     <string name="content_desc_conditions_count">本次事件的条件数</string>
     <string name="content_desc_actions_count">此事件中的操作数</string>
     <string name="content_desc_image_condition">要被检测的图像</string>
     <string name="content_desc_open_event_list">打开脚本列表</string>
-    <string name="content_desc_action_icon">这个图标标注动作类型</string>
     <string name="content_desc_application_icon">应用图标</string>
     <string name="dialog_overlay_title_intent_flags">Flags</string>
     <string name="dialog_overlay_title_intent_actions">Intent Actions</string>

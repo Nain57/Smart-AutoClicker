@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ sealed class DumbAction : Identifiable {
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
-        override val priority: Int,
+        override val priority: Int = 0,
         override val repeatCount: Int,
         override val isRepeatInfinite: Boolean,
         override val repeatDelayMs: Long,
@@ -51,7 +51,7 @@ sealed class DumbAction : Identifiable {
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
-        override val priority: Int,
+        override val priority: Int = 0,
         override val repeatCount: Int,
         override val isRepeatInfinite: Boolean,
         override val repeatDelayMs: Long,
@@ -67,7 +67,7 @@ sealed class DumbAction : Identifiable {
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
-        override val priority: Int,
+        override val priority: Int = 0,
         val pauseDurationMs: Long,
     ) : DumbAction() {
 

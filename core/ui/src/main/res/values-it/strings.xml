@@ -88,8 +88,10 @@
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
+    <string name="content_desc_action_icon">L\'icona che mostra il tipo di azione</string>
     <string name="content_desc_add_button">Il pulsante per creare un elemento</string>
     <string name="content_desc_copy_button">Il pulsante per creare una copia da un elemento esistente</string>
+    <string name="content_desc_drag_and_drop">Trascina e rilascia per riordinare gli elementi</string>
     <string name="content_desc_move_menu">Sposta il menù fluttuante</string>
     <string name="content_desc_play_pause_scenario">Avvia o ferma lo scenario</string>
     <string name="content_desc_stop_clicker">Ferma Smart AutoClicker</string>

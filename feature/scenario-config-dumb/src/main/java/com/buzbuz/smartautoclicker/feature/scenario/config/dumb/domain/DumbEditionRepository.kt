@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -115,6 +115,11 @@ internal class DumbEditionRepository private constructor(context: Context) {
         dumbActionBuilder.clearState()
     }
 
+    fun updateDumbScenario(dumbScenario: DumbScenario) {
+        Log.d(TAG, "Updating dumb scenario with $dumbScenario")
+        _editedDumbScenario.value = dumbScenario
+    }
+
     fun addNewDumbAction(dumbAction: DumbAction, insertionIndex: Int? = null) {
         val editedScenario = _editedDumbScenario.value ?: return
 
@@ -123,6 +128,9 @@ internal class DumbEditionRepository private constructor(context: Context) {
             dumbActions = editedScenario.dumbActions.toMutableList().apply {
                 if (insertionIndex != null && insertionIndex in editedScenario.dumbActions.indices) {
                     add(insertionIndex, dumbAction)
+                    for (index in editedScenario.dumbActions.indices) {
+                        set(index, dumbAction.copyWithNewPriority(index))
+                    }
                 } else {
                     add(dumbAction)
                 }
@@ -153,12 +161,29 @@ internal class DumbEditionRepository private constructor(context: Context) {
         _editedDumbScenario.value = editedScenario.copy(
             dumbActions = editedScenario.dumbActions.toMutableList().apply {
                 removeAt(deleteIndex)
+
+                for (index in editedScenario.dumbActions.indices) {
+                    set(index, dumbAction.copyWithNewPriority(index))
+                }
             }
         )
     }
 
-    fun updateDumbScenario(dumbScenario: DumbScenario) {
-        Log.d(TAG, "Updating dumb scenario with $dumbScenario")
-        _editedDumbScenario.value = dumbScenario
+    fun updateDumbActions(dumbActions: List<DumbAction>) {
+        val editedScenario = _editedDumbScenario.value ?: return
+
+        Log.d(TAG, "Updating dumb action list with $dumbActions")
+        _editedDumbScenario.value = editedScenario.copy(
+            dumbActions = dumbActions.mapIndexed { index, action ->
+                action.copyWithNewPriority(index)
+            }
+        )
     }
+
+    private fun DumbAction.copyWithNewPriority(priority: Int): DumbAction =
+        when (this) {
+            is DumbAction.DumbClick -> copy(priority = priority)
+            is DumbAction.DumbPause -> copy(priority = priority)
+            is DumbAction.DumbSwipe -> copy(priority = priority)
+        }
 }

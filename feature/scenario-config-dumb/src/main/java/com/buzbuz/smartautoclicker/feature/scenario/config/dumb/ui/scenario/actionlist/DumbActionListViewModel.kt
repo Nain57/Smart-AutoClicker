@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,36 +58,15 @@ class DumbActionListViewModel(application: Application) : AndroidViewModel(appli
         dumbEditionRepository.dumbActionBuilder.createNewDumbActionFrom(actionToCopy)
 
     fun addNewDumbAction(dumbAction: DumbAction) {
-        val actionList = userModifications.value?.dumbActions ?: return
-
-        userModifications.value?.copy(
-            dumbActions = actionList.toMutableList().apply {
-                add(dumbAction)
-            }
-        )?.let {
-            dumbEditionRepository.updateDumbScenario(it)
-        }
+        dumbEditionRepository.addNewDumbAction(dumbAction)
     }
 
     fun updateDumbAction(dumbAction: DumbAction) {
-        val actionList = userModifications.value?.dumbActions ?: return
-
-        val actionIndex = actionList.indexOfFirst { it.id == dumbAction.id }
-        if (actionIndex == -1) return
-
-        userModifications.value?.copy(
-            dumbActions = actionList.toMutableList().apply {
-                set(actionIndex, dumbAction)
-            }
-        )?.let {
-            dumbEditionRepository.updateDumbScenario(it)
-        }
+        dumbEditionRepository.updateDumbAction(dumbAction)
     }
 
     fun updateDumbActionOrder(actions: List<DumbActionDetails>) {
-        userModifications.value?.copy(dumbActions = actions.map { it.action })?.let {
-            dumbEditionRepository.updateDumbScenario(it)
-        }
+        dumbEditionRepository.updateDumbActions(actions.map { it.action })
     }
 
     fun deleteDumbAction(dumbAction: DumbAction) {
