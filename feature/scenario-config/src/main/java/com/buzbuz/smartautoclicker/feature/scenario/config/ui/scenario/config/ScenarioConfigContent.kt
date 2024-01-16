@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,18 +31,15 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentScenarioConfigBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.endcondition.EndConditionConfigDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
@@ -57,7 +54,6 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
     private val viewModel: ScenarioConfigViewModel by viewModels()
 
     private lateinit var viewBinding: ContentScenarioConfigBinding
-    private lateinit var endConditionAdapter: EndConditionAdapter
 
     private var billingFlowStarted: Boolean = false
 
@@ -77,17 +73,6 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
             seekbarQuality.addOnChangeListener { _, value, fromUser ->
                 if (fromUser) viewModel.setDetectionQuality(value.roundToInt())
             }
-
-            endConditionsOperatorField.setItems(
-                items = viewModel.endConditionOperatorsItems,
-                onItemSelected = viewModel::setConditionOperator,
-            )
-
-            endConditionAdapter = EndConditionAdapter(
-                addEndConditionClickedListener = ::onAddEndConditionClicked,
-                endConditionClickedListener = ::showEndConditionDialog,
-            )
-            endConditionsList.adapter = endConditionAdapter
         }
 
         return viewBinding.root
@@ -116,8 +101,6 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 launch { viewModel.randomization.collect(::updateRandomization) }
                 launch { viewModel.isProModePurchased.collect(::updateProModeFeaturesUi) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
-                launch { viewModel.endConditionOperator.collect(::updateEndConditionOperator) }
-                launch { viewModel.endConditions.collect(::updateEndConditions) }
             }
         }
     }
@@ -156,12 +139,6 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 dialogController.hide()
                 viewModel.onDetectionQualityClickedWithoutProMode(context)
             }
-
-            endConditionsCard.setEnabledState(isEnabled, R.id.end_conditions_pro_mode) {
-                billingFlowStarted = true
-                dialogController.hide()
-                viewModel.onEndConditionsClickedWithoutProMode(context)
-            }
         }
     }
 
@@ -179,40 +156,6 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 seekbarQuality.valueTo = SLIDER_QUALITY_MAX
             }
         }
-    }
-
-    private fun updateEndConditionOperator(operatorItem: DropdownItem) {
-        viewBinding.endConditionsOperatorField.setSelectedItem(operatorItem)
-    }
-
-    private fun updateEndConditions(endConditions: List<EndConditionListItem>) {
-        viewBinding.apply {
-            if (endConditions.isEmpty()) {
-                endConditionsList.visibility = View.GONE
-                endConditionsNoEvents.visibility = View.VISIBLE
-            } else {
-                endConditionsList.visibility = View.VISIBLE
-                endConditionsNoEvents.visibility = View.GONE
-            }
-        }
-
-        endConditionAdapter.submitList(endConditions)
-    }
-
-    private fun onAddEndConditionClicked() {
-        showEndConditionDialog(viewModel.createNewEndCondition())
-    }
-
-    private fun showEndConditionDialog(endCondition: EndCondition) {
-        viewModel.startEndConditionEdition(endCondition)
-        OverlayManager.getInstance(context).navigateTo(
-            context = context,
-            newOverlay = EndConditionConfigDialog(
-                onConfirmClicked = viewModel::upsertEndCondition,
-                onDeleteClicked = viewModel::deleteEndCondition,
-                onDismissClicked = viewModel::discardEndCondition,
-            )
-        )
     }
 
     private fun MaterialCardView.setEnabledState(
