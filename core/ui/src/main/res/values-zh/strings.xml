@@ -86,9 +86,11 @@
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
+    <string name="content_desc_action_icon">这个图标标注动作类型</string>
     <string name="content_desc_add_button">创建元素的按钮</string>
     <string name="content_desc_copy_button">从现有元素创建副本的按钮</string>
     <string name="content_desc_move_menu">移动悬浮窗菜单</string>
+    <string name="content_desc_drag_and_drop">拖放以重新排序元素</string>
     <string name="content_desc_play_pause_scenario">开始或者停止该脚本</string>
     <string name="content_desc_stop_clicker">停止自动点击器</string>
     <string name="content_desc_confirm">确认</string>

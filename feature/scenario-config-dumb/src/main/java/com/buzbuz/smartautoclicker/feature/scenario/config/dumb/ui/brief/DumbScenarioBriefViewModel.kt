@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import android.graphics.Point
 
 import androidx.core.graphics.toPointF
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -33,14 +32,12 @@ import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.toDumbActionDetails
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(application) {
 
@@ -89,24 +86,18 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
         dumbEditionRepository.dumbActionBuilder.createNewDumbActionFrom(actionToCopy)
 
     fun addNewDumbAction(dumbAction: DumbAction, index: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dumbEditionRepository.addNewDumbAction(
-                dumbAction = dumbAction,
-                insertionIndex = index,
-            )
-        }
+        dumbEditionRepository.addNewDumbAction(
+            dumbAction = dumbAction,
+            insertionIndex = index,
+        )
     }
 
     fun updateDumbAction(dumbAction: DumbAction) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dumbEditionRepository.updateDumbAction(dumbAction)
-        }
+        dumbEditionRepository.updateDumbAction(dumbAction)
     }
 
     fun deleteDumbAction(dumbAction: DumbAction) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dumbEditionRepository.deleteDumbAction(dumbAction)
-        }
+        dumbEditionRepository.deleteDumbAction(dumbAction)
     }
 }
 
