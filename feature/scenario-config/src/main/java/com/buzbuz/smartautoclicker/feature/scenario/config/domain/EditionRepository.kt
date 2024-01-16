@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
@@ -80,9 +80,6 @@ class EditionRepository private constructor(context: Context) {
     /** Tells if the user is currently editing an action. */
     val isEditingAction: Flow<Boolean> = scenarioEditor.eventsEditor.actionsEditor.editedItem
         .map { it?.id != null }
-    /** Tells if the user is currently editing an end condition. */
-    val isEditingEndCondition: Flow<Boolean> = scenarioEditor.endConditionsEditor.editedItem
-        .map { it?.id != null }
     /** Tells if the user is currently editing an Intent Extra. */
     val isEditingIntentExtra: Flow<Boolean> = scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.editedItem
         .map { it?.id != null }
@@ -101,7 +98,6 @@ class EditionRepository private constructor(context: Context) {
         scenarioEditor.startEdition(
             scenario = scenario,
             events = repository.getImageEvents(scenarioId),
-            endConditions = repository.getEndConditions(scenarioId),
         )
         return true
     }
@@ -113,7 +109,6 @@ class EditionRepository private constructor(context: Context) {
         val updateResult = repository.updateScenario(
             scenario = scenarioEditor.editedScenario.value ?: return false,
             events = scenarioEditor.eventsEditor.editedList.value ?: return false,
-            endConditions = scenarioEditor.endConditionsEditor.editedList.value ?: return false,
         )
 
         // In case of error, do not stop the edition
@@ -188,6 +183,22 @@ class EditionRepository private constructor(context: Context) {
 
     // --- INTENT EXTRA - END ---
 
+
+    // --- EVENT TOGGLE - START ---
+
+    fun startEventToggleEdition(eventToggle: EventToggle): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.startItemEdition(eventToggle)
+    fun updateEditedEventToggle(eventToggle: EventToggle): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.updateEditedItem(eventToggle)
+    fun upsertEditedEventToggle(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.upsertEditedItem()
+    fun deleteEditedEventToggle(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.deleteEditedItem()
+    fun stopEventToggleEdition(): Unit =
+        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.stopItemEdition()
+
+    // --- EVENT TOGGLE - END ---
+
     fun stopActionEdition(): Unit =
         scenarioEditor.eventsEditor.actionsEditor.stopItemEdition()
 
@@ -198,20 +209,6 @@ class EditionRepository private constructor(context: Context) {
 
     // --- EVENT - END ---
 
-    // --- END CONDITION - START ---
-
-    fun startEndConditionEdition(endCondition: EndCondition): Unit =
-        scenarioEditor.endConditionsEditor.startItemEdition(endCondition)
-    fun updateEditedEndCondition(endCondition: EndCondition): Unit =
-        scenarioEditor.endConditionsEditor.updateEditedItem(endCondition)
-    fun upsertEditedEndCondition(): Unit =
-        scenarioEditor.endConditionsEditor.upsertEditedItem()
-    fun deleteEditedEndCondition(): Unit =
-        scenarioEditor.endConditionsEditor.deleteEditedItem()
-    fun stopEndConditionEdition(): Unit =
-        scenarioEditor.endConditionsEditor.stopItemEdition()
-
-    // --- END CONDITION - END ---
 
     /** Cancel all changes made during the edition. */
     fun stopEdition() {

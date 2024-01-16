@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,18 +57,23 @@ internal class EventsEditor(
         super.stopItemEdition()
     }
 
-    fun deleteAllActionsReferencing(event: ImageEvent) {
+    fun deleteAllEventToggleReferencing(event: ImageEvent) {
         val events = editedList.value ?: return
 
         val newEvents = events.mapNotNull { scenarioEvent ->
             if (scenarioEvent.id == event.id) return@mapNotNull null // Skip same item
 
-            val newActions = scenarioEvent.actions.toMutableList()
-            scenarioEvent.actions.forEach { action ->
-                if (action is Action.ToggleEvent && action.toggleEventId == event.id) newActions.remove(action)
-            }
-
-            scenarioEvent.copy(actions = newActions)
+            scenarioEvent.copy(
+                actions = scenarioEvent.actions.map { action ->
+                    if (action is Action.ToggleEvent) {
+                        action.copy(
+                            eventToggles = action.eventToggles.mapNotNull { eventToggle ->
+                                if (eventToggle.targetEventId == event.id) null else eventToggle
+                            }
+                        )
+                    } else action
+                }
+            )
         }
 
         updateList(newEvents)
@@ -83,11 +88,14 @@ internal class EventsEditor(
                 when {
                     // Skip all actions but clicks
                     action !is Action.Click -> return@forEach
+
                     // Nothing to do on user selected position
                     action.positionType == Action.Click.PositionType.USER_SELECTED -> return@forEach
+
                     // Condition was referenced and used by an action, delete it
                     editedEvent.conditionOperator == AND && conditions.find { action.clickOnConditionId == it.id } == null ->
                         newActions.remove(action)
+
                     // Condition was referenced but not used by an action, delete the reference
                     editedEvent.conditionOperator == OR && action.clickOnConditionId != null ->
                         newActions[newActions.indexOf(action)] = action.copy(clickOnConditionId = null)

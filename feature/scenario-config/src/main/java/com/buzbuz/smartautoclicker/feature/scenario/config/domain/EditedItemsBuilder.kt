@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,11 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
+import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 
 class EditedItemsBuilder internal constructor(
     context: Context,
@@ -110,6 +110,7 @@ class EditedItemsBuilder internal constructor(
             name = defaultValues.clickName(context),
             pressDuration = defaultValues.clickPressDuration(context),
             positionType = defaultValues.clickPositionType(),
+            priority = 0,
         )
 
     fun createNewSwipe(context: Context): Action.Swipe =
@@ -118,6 +119,7 @@ class EditedItemsBuilder internal constructor(
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.swipeName(context),
             swipeDuration = defaultValues.swipeDuration(context),
+            priority = 0,
         )
 
     fun createNewPause(context: Context): Action.Pause =
@@ -126,6 +128,7 @@ class EditedItemsBuilder internal constructor(
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.pauseName(context),
             pauseDuration = defaultValues.pauseDuration(context),
+            priority = 0,
         )
 
     fun createNewIntent(context: Context): Action.Intent =
@@ -135,6 +138,15 @@ class EditedItemsBuilder internal constructor(
             name = defaultValues.intentName(context),
             isBroadcast = false,
             isAdvanced = defaultValues.intentIsAdvanced(context),
+            priority = 0,
+        )
+
+    fun createNewIntentExtra() : IntentExtra<Any> =
+        IntentExtra(
+            id = intentExtrasIdCreator.generateNewIdentifier(),
+            actionId = getEditedActionIdOrThrow(),
+            key = null,
+            value = null,
         )
 
     fun createNewToggleEvent(context: Context): Action.ToggleEvent =
@@ -142,7 +154,18 @@ class EditedItemsBuilder internal constructor(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.toggleEventName(context),
-            toggleEventType = defaultValues.toggleEventType(),
+            toggleAll = false,
+            toggleAllType = null,
+            eventToggles = emptyList(),
+            priority = 0,
+        )
+
+    fun createEventToggle() : EventToggle =
+        EventToggle(
+            id = intentExtrasIdCreator.generateNewIdentifier(),
+            actionId = getEditedActionIdOrThrow(),
+            targetEventId = null,
+            toggleType = defaultValues.eventToggleType(),
         )
 
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
@@ -151,6 +174,7 @@ class EditedItemsBuilder internal constructor(
         is Action.Pause -> createNewPauseFrom(from, eventId)
         is Action.Intent -> createNewIntentFrom(from, eventId)
         is Action.ToggleEvent -> createNewToggleEventFrom(from, eventId)
+        is Action.ChangeCounter -> TODO()
     }
 
     private fun createNewClickFrom(from: Action.Click, eventId: Identifier): Action.Click {
@@ -194,51 +218,42 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
-    private fun createNewToggleEventFrom(from: Action.ToggleEvent, eventId: Identifier): Action.ToggleEvent {
-        // If the referenced event is in this scenario, keep it. If not, clear it.
-        val toggleEventId = from.toggleEventId?.let { toggleEventId ->
-            getEditedScenarioEvent(toggleEventId)?.id
-        }
-
-        return from.copy(
-            id = actionsIdCreator.generateNewIdentifier(),
-            eventId = eventId,
-            name = "" + from.name,
-            toggleEventId = toggleEventId,
-        )
-    }
-
-    fun createNewIntentExtra() : IntentExtra<Any> =
-        IntentExtra(
-            id = intentExtrasIdCreator.generateNewIdentifier(),
-            actionId = getEditedActionIdOrThrow(),
-            key = null,
-            value = null,
-        )
-
-    fun createNewIntentExtraFrom(from: IntentExtra<out Any>, actionId: Identifier = getEditedActionIdOrThrow()): IntentExtra<out Any> =
+    private fun createNewIntentExtraFrom(from: IntentExtra<out Any>, actionId: Identifier = getEditedActionIdOrThrow()): IntentExtra<out Any> =
         from.copy(
             id = intentExtrasIdCreator.generateNewIdentifier(),
             actionId = actionId,
             key = "" + from.key,
         )
 
-    fun createNewEndCondition(): EndCondition =
-        EndCondition(
-            id = endConditionsIdCreator.generateNewIdentifier(),
-            scenarioId = getEditedScenarioIdOrThrow(),
-        )
+    private fun createNewToggleEventFrom(from: Action.ToggleEvent, eventId: Identifier): Action.ToggleEvent {
+        val actionId = actionsIdCreator.generateNewIdentifier()
 
-    fun createNewEndConditionFrom(from: EndCondition, scenarioId: Identifier = getEditedScenarioIdOrThrow()): EndCondition =
+        val eventsToggles = from.eventToggles.mapNotNull { eventToggle ->
+            // Check if the current edited scenario contains the event modified by the child event toggle.
+            // Filter if not
+            if (eventToggle.targetEventId == eventId || isEventIdValidInEditedScenario(eventId)) {
+                createEventToggleFrom(eventToggle, actionId)
+            } else null
+        }
+
+        return from.copy(
+            id = actionId,
+            eventId = eventId,
+            name = "" + from.name,
+            eventToggles = eventsToggles,
+        )
+    }
+
+    private fun createEventToggleFrom(from: EventToggle, actionId: Identifier = getEditedActionIdOrThrow()): EventToggle =
         from.copy(
-            id = endConditionsIdCreator.generateNewIdentifier(),
-            scenarioId = scenarioId,
-            eventId = from.eventId?.copy(),
-            eventName = from.eventName?.let { "" + it },
+            id = intentExtrasIdCreator.generateNewIdentifier(),
+            actionId = actionId,
         )
 
-    private fun getEditedScenarioEvent(eventId: Identifier): ImageEvent? =
-        editor.eventsEditor.editedList.value?.find { event -> event.id == eventId }
+    private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
+        editor.eventsEditor.editedList.value?.let { events ->
+            events.find { eventId == it.id } != null
+        } ?: false
 
     private fun getEditedScenarioIdOrThrow(): Identifier = editor.editedScenario.value?.id
         ?: throw IllegalStateException("Can't create items without an edited scenario")

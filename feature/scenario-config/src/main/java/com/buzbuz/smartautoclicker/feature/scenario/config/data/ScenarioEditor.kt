@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
 
 import kotlinx.coroutines.flow.Flow
@@ -43,20 +41,16 @@ internal class ScenarioEditor {
         EditedElementState(edit, hasChanged, canBeSaved)
     }
 
-    val triggerEventsEditor = TriggerEventsEditor()
     val eventsEditor = EventsEditor(::deleteAllReferencesToEvent, editedScenario)
-    val endConditionsEditor = ListEditor<EndCondition, Scenario>(canBeEmpty = true, parentItem = editedScenario)
 
-    fun startEdition(scenario: Scenario, events: List<ImageEvent>, endConditions: List<EndCondition>) {
+    fun startEdition(scenario: Scenario, events: List<ImageEvent>) {
         referenceScenario.value = scenario
         _editedScenario.value = scenario
 
         eventsEditor.startEdition(events)
-        endConditionsEditor.startEdition(endConditions)
     }
 
     fun stopEdition() {
-        endConditionsEditor.stopEdition()
         eventsEditor.stopEdition()
 
         referenceScenario.value = null
@@ -69,10 +63,6 @@ internal class ScenarioEditor {
     }
 
     private fun deleteAllReferencesToEvent(event: ImageEvent) {
-        eventsEditor.deleteAllActionsReferencing(event)
-
-        endConditionsEditor.editedList.value
-            ?.filter { it.eventId != event.id }
-            ?.let { endConditionsEditor.updateList(it) }
+        eventsEditor.deleteAllEventToggleReferencing(event)
     }
 }

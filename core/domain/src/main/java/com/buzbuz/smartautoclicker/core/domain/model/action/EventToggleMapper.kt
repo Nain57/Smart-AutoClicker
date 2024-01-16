@@ -23,7 +23,7 @@ internal fun EventToggle.toEntity(): EventToggleEntity =
     EventToggleEntity(
         id = id.databaseId,
         actionId = actionId.databaseId,
-        toggleEventId = targetEventId.databaseId,
+        toggleEventId = targetEventId!!.databaseId,
         type = toggleType.toEntity(),
     )
 

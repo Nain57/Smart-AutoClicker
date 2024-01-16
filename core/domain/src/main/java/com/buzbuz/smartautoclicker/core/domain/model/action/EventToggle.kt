@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 data class EventToggle(
     override val id: Identifier,
     val actionId: Identifier,
-    val targetEventId: Identifier,
+    val targetEventId: Identifier?,
     val toggleType: Action.ToggleEvent.ToggleType,
 ): Identifiable, Completable {
     override fun isComplete(): Boolean = true
