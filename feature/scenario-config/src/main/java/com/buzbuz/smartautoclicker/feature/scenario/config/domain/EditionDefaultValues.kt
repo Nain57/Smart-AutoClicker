@@ -76,6 +76,6 @@ internal class EditionDefaultValues(context: Context) {
 
     fun toggleEventName(context: Context): String =
         context.getString(R.string.default_toggle_event_name)
-    fun toggleEventType(): Action.ToggleEvent.ToggleType =
+    fun eventToggleType(): Action.ToggleEvent.ToggleType =
         Action.ToggleEvent.ToggleType.ENABLE
 }

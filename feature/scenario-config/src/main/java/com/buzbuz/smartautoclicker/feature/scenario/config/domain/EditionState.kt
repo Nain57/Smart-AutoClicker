@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.endcondition.EndCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
@@ -47,16 +46,15 @@ class EditionState internal constructor(context: Context, private val editor: Sc
         combine(
             editor.editedScenarioState,
             editor.eventsEditor.listState,
-            editor.endConditionsEditor.listState,
-        ) { scenario, events, endConditions ->
+        ) { scenario, events ->
 
-            if (scenario.value == null || events.value == null || endConditions.value == null)
+            if (scenario.value == null || events.value == null)
                 return@combine EditedElementState(value = null, hasChanged = false, canBeSaved = false)
 
             EditedElementState(
-                value = ScenarioEditionState(scenario.value, events.value, endConditions.value),
-                hasChanged = scenario.hasChanged || events.hasChanged || endConditions.hasChanged,
-                canBeSaved = scenario.canBeSaved && events.canBeSaved && endConditions.canBeSaved
+                value = ScenarioEditionState(scenario.value, events.value),
+                hasChanged = scenario.hasChanged || events.hasChanged,
+                canBeSaved = scenario.canBeSaved && events.canBeSaved
             )
         }
     val scenarioState: Flow<EditedElementState<Scenario>> =
@@ -101,29 +99,6 @@ class EditionState internal constructor(context: Context, private val editor: Sc
     fun getEditedIntentExtra(): IntentExtra<out Any>? =
         editor.eventsEditor.actionsEditor.intentExtraEditor.editedItem.value
 
-    val endConditionsState: Flow<EditedListState<EndCondition>> =
-        editor.endConditionsEditor.listState
-    val editedEndConditionState: Flow<EditedElementState<EndCondition>> =
-        editor.endConditionsEditor.editedItemState
-    val eventsAvailableForNewEndCondition: Flow<List<ImageEvent>> =
-        combine(eventsState, endConditionsState) { events, endConditions ->
-            if (endConditions.value.isNullOrEmpty()) events.value ?: emptyList()
-            else events.value?.filter { event ->
-                endConditions.value.find { endCondition ->
-                    endCondition.eventId == event.id
-                } == null
-            } ?: emptyList()
-        }
-    fun getEditedEndCondition(): EndCondition? = editor.endConditionsEditor.editedItem.value
-
-    /** Check if the edited Event is referenced by an EndCondition in the edited scenario. */
-    fun isEditedEventReferencedByEndCondition(): Boolean {
-        val event = editor.eventsEditor.editedItem.value ?: return false
-        val endConditions = editor.endConditionsEditor.editedList.value ?: return false
-
-        return endConditions.find { it.eventId == event.id } != null
-    }
-
     /** Check if the edited Event is referenced by an Action in the edited scenario. */
     fun isEditedEventReferencedByAction(): Boolean {
         val event = editor.eventsEditor.editedItem.value ?: return false
@@ -133,7 +108,7 @@ class EditionState internal constructor(context: Context, private val editor: Sc
             if (scenarioEvent.id == event.id) return@find false
 
             scenarioEvent.actions.find { action ->
-                action is Action.ToggleEvent && action.toggleEventId == event.id
+                action is Action.ToggleEvent && !action.toggleAll && action.eventToggles.find { it.targetEventId == event.id } != null
             } != null
         } != null
     }

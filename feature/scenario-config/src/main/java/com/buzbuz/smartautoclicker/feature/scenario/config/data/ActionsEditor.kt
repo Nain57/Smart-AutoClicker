@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 
@@ -33,10 +34,19 @@ internal class ActionsEditor<Parent>(
         parentItem = editedItem,
     )
 
+    val eventToggleEditor: ListEditor<EventToggle, Action> = ListEditor(
+        onListUpdated = ::onEditedActionEventToggleUpdated,
+        canBeEmpty = true,
+        parentItem = editedItem,
+    )
+
     override fun startItemEdition(item: Action) {
         super.startItemEdition(item)
-        if (item is Action.Intent) {
-            intentExtraEditor.startEdition(item.extras ?: emptyList())
+
+        when (item) {
+            is Action.Intent -> intentExtraEditor.startEdition(item.extras ?: emptyList())
+            is Action.ToggleEvent -> eventToggleEditor.startEdition(item.eventToggles)
+            else -> Unit
         }
     }
 
@@ -50,5 +60,12 @@ internal class ActionsEditor<Parent>(
         if (action == null || action !is Action.Intent) return
 
         updateEditedItem(action.copy(extras = extras))
+    }
+
+    private fun onEditedActionEventToggleUpdated(eventToggles: List<EventToggle>) {
+        val action = editedItem.value
+        if (action == null || action !is Action.ToggleEvent) return
+
+        updateEditedItem(action.copy(eventToggles = eventToggles))
     }
 }
