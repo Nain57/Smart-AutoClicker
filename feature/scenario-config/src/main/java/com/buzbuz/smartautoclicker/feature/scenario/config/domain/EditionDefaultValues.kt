@@ -78,4 +78,7 @@ internal class EditionDefaultValues(context: Context) {
         context.getString(R.string.default_toggle_event_name)
     fun eventToggleType(): Action.ToggleEvent.ToggleType =
         Action.ToggleEvent.ToggleType.ENABLE
+
+    fun changeCounterName(context: Context): String =
+        context.getString(R.string.default_change_counter_name)
 }

@@ -161,7 +161,7 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
-    fun createEventToggle(
+    fun createNewEventToggle(
         id: Identifier = eventTogglesIdCreator.generateNewIdentifier(),
         targetEventId: Identifier? = null,
         toggleType: Action.ToggleEvent.ToggleType = defaultValues.eventToggleType(),
@@ -172,13 +172,24 @@ class EditedItemsBuilder internal constructor(
             toggleType = toggleType,
         )
 
+    fun createNewChangeCounter(context: Context): Action.ChangeCounter =
+        Action.ChangeCounter(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.changeCounterName(context),
+            counterName = "",
+            operation = Action.ChangeCounter.OperationType.ADD,
+            operationValue = 0,
+            priority = 0,
+        )
+
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
         is Action.Click -> createNewClickFrom(from, eventId)
         is Action.Swipe -> createNewSwipeFrom(from, eventId)
         is Action.Pause -> createNewPauseFrom(from, eventId)
         is Action.Intent -> createNewIntentFrom(from, eventId)
         is Action.ToggleEvent -> createNewToggleEventFrom(from, eventId)
-        is Action.ChangeCounter -> TODO()
+        is Action.ChangeCounter -> createNewChangeCounterFrom(from, eventId)
     }
 
     private fun createNewClickFrom(from: Action.Click, eventId: Identifier): Action.Click {
@@ -253,6 +264,17 @@ class EditedItemsBuilder internal constructor(
             id = eventTogglesIdCreator.generateNewIdentifier(),
             actionId = actionId,
         )
+
+    private fun createNewChangeCounterFrom(from: Action.ChangeCounter, eventId: Identifier): Action.ChangeCounter {
+        val actionId = actionsIdCreator.generateNewIdentifier()
+
+        return from.copy(
+            id = actionId,
+            eventId = eventId,
+            name = "" + from.name,
+            counterName = "" + from.counterName,
+        )
+    }
 
     private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
         editor.imageEventsEditor.editedList.value?.let { events ->

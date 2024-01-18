@@ -83,8 +83,9 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
                 add(ActionTypeChoice.Click)
                 add(ActionTypeChoice.Swipe)
                 add(ActionTypeChoice.Pause)
-                add(ActionTypeChoice.Intent(isProModePurchased))
+                add(ActionTypeChoice.ChangeCounter(isProModePurchased))
                 add(ActionTypeChoice.ToggleEvent(isProModePurchased))
+                add(ActionTypeChoice.Intent(isProModePurchased))
             }
         }.stateIn(
             viewModelScope,
@@ -107,6 +108,7 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
         is ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
         is ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
         is ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
+        is ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
     }
 
     /**
@@ -178,21 +180,21 @@ sealed class ActionTypeChoice(
     enabled = enabled,
 ) {
     /** Click Action choice. */
-    object Click : ActionTypeChoice(
+    data object Click : ActionTypeChoice(
         R.string.item_title_click,
         R.string.item_desc_click,
         R.drawable.ic_click,
         enabled = true,
     )
     /** Swipe Action choice. */
-    object Swipe : ActionTypeChoice(
+    data object Swipe : ActionTypeChoice(
         R.string.item_title_swipe,
         R.string.item_desc_swipe,
         R.drawable.ic_swipe,
         enabled = true,
     )
     /** Pause Action choice. */
-    object Pause : ActionTypeChoice(
+    data object Pause : ActionTypeChoice(
         R.string.item_title_pause,
         R.string.item_desc_pause,
         R.drawable.ic_wait,
@@ -210,6 +212,14 @@ sealed class ActionTypeChoice(
         R.string.item_title_toggle_event,
         R.string.item_desc_toggle_event,
         R.drawable.ic_toggle_event,
+        enabled = enabled,
+    )
+
+    /** Change counter Action choice. */
+    class ChangeCounter(enabled: Boolean) : ActionTypeChoice(
+        R.string.item_title_change_counter,
+        R.string.item_desc_change_counter,
+        R.drawable.ic_change_counter,
         enabled = enabled,
     )
 }

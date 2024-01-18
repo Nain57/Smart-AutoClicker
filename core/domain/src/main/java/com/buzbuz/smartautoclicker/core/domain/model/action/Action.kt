@@ -256,7 +256,7 @@ sealed class Action : Identifiable, Completable {
         }
 
         override fun isComplete(): Boolean =
-            super.isComplete() && counterName.isNotEmpty()
+            super.isComplete() && counterName.isNotEmpty() && operationValue >= 0
 
         override fun deepCopy(): ChangeCounter = copy(
             name = "" + name,
