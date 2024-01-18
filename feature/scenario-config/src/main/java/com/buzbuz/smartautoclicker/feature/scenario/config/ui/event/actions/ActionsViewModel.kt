@@ -61,7 +61,7 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
 
     /** Tells if there is at least one action to copy. */
     val canCopyAction: Flow<Boolean> = combine(
-        editionRepository.editionState.editedEventState,
+        editionRepository.editionState.editedImageEventState,
         editionRepository.editionState.editedScenarioOtherActionsForCopy,
         editionRepository.editionState.allOtherScenarioActionsForCopy,
     ) { eventState, scenarioActions, allActions ->

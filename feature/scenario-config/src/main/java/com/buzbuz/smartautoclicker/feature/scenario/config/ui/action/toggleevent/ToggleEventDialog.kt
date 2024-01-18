@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,24 +26,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionToggleEventBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.endcondition.EventSelectionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -82,12 +80,6 @@ class ToggleEventDialog(
                 }
             }
 
-            toggleTypeField.setItems(
-                label = context.getString(R.string.input_field_toggle_event_type),
-                items = viewModel.toggleStateItems,
-                onItemSelected = viewModel::setToggleType,
-            )
-
             editNameLayout.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
@@ -96,6 +88,13 @@ class ToggleEventDialog(
                 )
             }
             hideSoftInputOnFocusLoss(editNameLayout.textField)
+
+            toggleAllButton.apply {
+                setIcons(listOf(R.drawable.ic_confirm, R.drawable.ic_invert, R.drawable.ic_cancel))
+                setOnCheckedListener(viewModel::setToggleAllType)
+            }
+
+            layoutEventToggles.setOnClickListener { showEventTogglesDialog() }
         }
 
         return viewBinding.root
@@ -111,8 +110,8 @@ class ToggleEventDialog(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateToggleEventName) }
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
-                launch { viewModel.toggleStateItem.collect(::updateToggleType) }
-                launch { viewModel.eventViewState.collect(::updateEvent) }
+                launch { viewModel.toggleAllEnabledButton.collect(::updateToggleAllButton) }
+                launch { viewModel.eventToggleSelectorState.collect(::updateEventToggleSelector) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
@@ -136,25 +135,45 @@ class ToggleEventDialog(
         viewBinding.editNameLayout.setText(newName)
     }
 
-    private fun updateToggleType(operatorItem: DropdownItem) {
-        viewBinding.toggleTypeField.setSelectedItem(operatorItem)
-    }
-
-    private fun updateEvent(viewState: EventPickerViewState) {
-        viewBinding.eventPicker.updateState(viewState, ::showEventSelectionDialog)
-    }
-
     private fun updateSaveButton(isValidCondition: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
+    private fun updateToggleAllButton(buttonState: ToggleAllButtonState) {
+        viewBinding.apply {
+            toggleAllButton.setChecked(buttonState.checkedButton)
+            toggleAllSubtext.setText(buttonState.descriptionText)
+
+            val isToggleSelectionEnabled = buttonState.checkedButton == null
+            layoutEventToggles.alpha = if (isToggleSelectionEnabled) ALPHA_ENABLED_ITEM else ALPHA_DISABLED_ITEM
+            layoutEventToggles.isEnabled = isToggleSelectionEnabled
+        }
+    }
+
+    private fun updateEventToggleSelector(state: EventToggleSelectorState) {
+        viewBinding.apply {
+            toggleEventsTitle.text = state.title
+
+            if (state.emptyText != null) {
+                togglesCountLayout.visibility = View.GONE
+                toggleEventsSubtext.visibility = View.VISIBLE
+                toggleEventsSubtext.setText(state.emptyText)
+            } else {
+                toggleEventsSubtext.visibility = View.GONE
+                togglesCountLayout.visibility = View.VISIBLE
+                textEnableCount.text = state.enableCount.toString()
+                textToggleCount.text = state.toggleCount.toString()
+                textDisableCount.text = state.disableCount.toString()
+            }
+        }
+    }
+
     /** Show the event selection dialog. */
-    private fun showEventSelectionDialog(availableEvents: List<ImageEvent>) =
+    private fun showEventTogglesDialog() =
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = EventSelectionDialog(
-                eventList = availableEvents,
-                onEventClicked = { event -> viewModel.setEvent(event) }
+            newOverlay = EventTogglesDialog(
+                onConfirmClicked = viewModel::setNewEventToggles,
             )
         )
 

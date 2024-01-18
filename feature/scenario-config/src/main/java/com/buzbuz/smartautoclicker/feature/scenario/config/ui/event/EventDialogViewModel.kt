@@ -45,7 +45,7 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
      * Used to display the red badge if indicating if there is something missing.
      */
     val navItemsValidity: Flow<Map<Int, Boolean>> = combine(
-        editionRepository.editionState.editedEventState,
+        editionRepository.editionState.editedImageEventState,
         editionRepository.editionState.editedEventConditionsState,
         editionRepository.editionState.editedEventActionsState,
     ) { editedEvent, conditions, actions, ->
@@ -57,17 +57,13 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /** Tells if the configured event is valid and can be saved. */
-    val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState
+    val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageEventState
         .map { it.canBeSaved }
 
     /** Tells if the user is currently editing an event. If that's not the case, dialog should be closed. */
     val isEditingEvent: Flow<Boolean> = editionRepository.isEditingEvent
         .distinctUntilChanged()
         .debounce(1000)
-
-    /** Tells if this event have associated end conditions. */
-    fun isEventHaveRelatedEndConditions(): Boolean =
-        editionRepository.editionState.isEditedEventReferencedByEndCondition()
 
     /** Tells if this event have associated actions. */
     fun isEventHaveRelatedActions(): Boolean =

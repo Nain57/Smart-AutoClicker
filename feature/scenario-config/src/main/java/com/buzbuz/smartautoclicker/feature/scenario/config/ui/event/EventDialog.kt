@@ -132,28 +132,11 @@ class EventDialog(
      * It will display the relation warnings if needed, or delete the event immediately and close the dialog.
      */
     private fun onDeleteButtonPressed() {
-        if (viewModel.isEventHaveRelatedEndConditions()) {
-            showAssociatedEndConditionsWarning()
-        } else if (viewModel.isEventHaveRelatedActions()) {
+        if (viewModel.isEventHaveRelatedActions()) {
             showAssociatedActionsWarning()
         } else {
             onDelete()
             back()
-        }
-    }
-
-    /**
-     * Show the end condition relation warning dialog.
-     * Once confirmed, it will show the action relation warning, or delete the event immediately and close the dialog.
-     */
-    private fun showAssociatedEndConditionsWarning() {
-        showMessageDialog(R.string.dialog_overlay_title_warning, R.string.message_event_delete_associated_end_condition) {
-            if (viewModel.isEventHaveRelatedActions()) {
-                showAssociatedActionsWarning()
-            } else {
-                onDelete()
-                back()
-            }
         }
     }
 

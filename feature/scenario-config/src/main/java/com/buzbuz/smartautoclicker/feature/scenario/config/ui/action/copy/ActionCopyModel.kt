@@ -46,7 +46,7 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
 
     /** List of all actions available for copy */
     private val allCopyItems: Flow<List<ActionCopyItem>> = combine(
-        editionRepository.editionState.editedEventState,
+        editionRepository.editionState.editedImageEventState,
         editionRepository.editionState.editedScenarioOtherActionsForCopy,
         editionRepository.editionState.allOtherScenarioActionsForCopy,
     ) { editedEvent, otherActionsFromEditedScenario, otherActionsFromOtherScenario ->

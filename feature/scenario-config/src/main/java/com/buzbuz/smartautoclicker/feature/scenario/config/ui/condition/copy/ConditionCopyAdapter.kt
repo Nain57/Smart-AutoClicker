@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemConditionBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemCopyHeaderBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 
 import kotlinx.coroutines.Job
@@ -53,14 +53,14 @@ class ConditionCopyAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
-            is ConditionCopyModel.ConditionCopyItem.HeaderItem -> R.layout.item_copy_header
+            is ConditionCopyModel.ConditionCopyItem.HeaderItem -> R.layout.item_list_header
             is ConditionCopyModel.ConditionCopyItem.ConditionItem -> R.layout.item_condition
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_copy_header -> HeaderViewHolder(
-                ItemCopyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_list_header -> HeaderViewHolder(
+                ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.item_condition -> ConditionViewHolder(
                 ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 bitmapProvider
@@ -108,7 +108,7 @@ object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ConditionCopyModel.Condi
  * @param viewBinding the view binding for this header.
  */
 class HeaderViewHolder(
-    private val viewBinding: ItemCopyHeaderBinding,
+    private val viewBinding: ItemListHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(header: ConditionCopyModel.ConditionCopyItem.HeaderItem) {

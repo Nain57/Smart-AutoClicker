@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -140,7 +139,7 @@ class ScenarioCreationViewModel(application: Application) : AndroidViewModel(app
                 id = Identifier(databaseId = DATABASE_ID_INSERTION, tempId = 0L),
                 name = _name.value!!,
                 detectionQuality = context.resources.getInteger(R.integer.default_detection_quality),
-                endConditionOperator = OR,
+                randomize = false,
             )
         )
     }

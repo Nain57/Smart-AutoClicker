@@ -221,7 +221,7 @@ class ScenarioListViewModel(application: Application) : AndroidViewModel(applica
                     eventName = event.name,
                     actionsCount = event.actions.size,
                     conditionsCount = event.conditions.size,
-                    firstCondition = event.conditions.first(),
+                    firstCondition = if (event.conditions.isNotEmpty()) event.conditions.first() else null,
                 )
             },
         )

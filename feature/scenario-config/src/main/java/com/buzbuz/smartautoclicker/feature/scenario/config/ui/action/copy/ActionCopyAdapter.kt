@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
+import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemActionBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemCopyHeaderBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.copy.ActionCopyModel.ActionCopyItem
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 
@@ -39,14 +39,14 @@ class ActionCopyAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
-            is ActionCopyItem.HeaderItem -> R.layout.item_copy_header
+            is ActionCopyItem.HeaderItem -> R.layout.item_list_header
             is ActionCopyItem.ActionItem -> R.layout.item_action
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_copy_header -> HeaderViewHolder(
-                ItemCopyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_list_header -> HeaderViewHolder(
+                ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.item_action -> ActionViewHolder(
                 ItemActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw IllegalArgumentException("Unsupported view type !")
@@ -78,7 +78,7 @@ object DiffUtilCallback: DiffUtil.ItemCallback<ActionCopyItem>(){
  * @param viewBinding the view binding for this header.
  */
 class HeaderViewHolder(
-    private val viewBinding: ItemCopyHeaderBinding,
+    private val viewBinding: ItemListHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(header: ActionCopyItem.HeaderItem) {

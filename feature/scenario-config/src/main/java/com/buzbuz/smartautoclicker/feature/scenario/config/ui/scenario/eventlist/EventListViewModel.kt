@@ -46,7 +46,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured events. */
-    val eventsItems = editionRepository.editionState.eventsState
+    val eventsItems = editionRepository.editionState.editedImageEventsState
         .mapNotNull { it.value }
 
     /** Tells if the limitation in event count have been reached. */
@@ -59,7 +59,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
 
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> =
-        combine(repository.getAllImageEventsFlow(), editionRepository.editionState.eventsState) { allEvts, scenarioEvts ->
+        combine(repository.allImageEvents, editionRepository.editionState.editedImageEventsState) { allEvts, scenarioEvts ->
             allEvts.isNotEmpty() || !scenarioEvts.value.isNullOrEmpty()
         }
 

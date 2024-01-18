@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.ui.databinding.ItemCopyHeaderBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.ItemDumbActionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.bindings.onBind
@@ -45,7 +45,7 @@ class DumbActionCopyAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.item_copy_header -> HeaderViewHolder(
-                ItemCopyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+                ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.item_dumb_action -> DumbActionViewHolder(
                 ItemDumbActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw IllegalArgumentException("Unsupported view type !")
@@ -78,7 +78,7 @@ object DiffUtilCallback: DiffUtil.ItemCallback<DumbActionCopyItem>(){
  * @param viewBinding the view binding for this header.
  */
 class HeaderViewHolder(
-    private val viewBinding: ItemCopyHeaderBinding,
+    private val viewBinding: ItemListHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(header: DumbActionCopyItem.HeaderItem) {
