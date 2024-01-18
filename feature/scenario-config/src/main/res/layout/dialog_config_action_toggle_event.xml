@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2024 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -43,18 +44,201 @@
                 android:id="@+id/edit_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_vertical_small"/>
+                android:layout_marginBottom="@dimen/margin_vertical_extra_large"/>
 
-            <include layout="@layout/include_input_field_dropdown"
-                android:id="@+id/toggle_type_field"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/toggle_type_card"
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_vertical_large"/>
+                android:layout_height="wrap_content">
 
-            <include layout="@layout/include_event_picker"
-                android:id="@+id/event_picker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_large">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/toggle_type_title"
+                        style="@style/AppTheme.TextAppearance.CardTitle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="Toggle type" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/enable_all_text"
+                        style="@style/AppTheme.TextAppearance.BodyLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/toggle_all_button"
+                        app:layout_constraintTop_toTopOf="@id/toggle_all_button"
+                        app:layout_constraintBottom_toBottomOf="@id/toggle_all_button"
+                        android:text="Change all " />
+
+                    <include layout="@layout/include_tri_state_button"
+                        android:id="@+id/toggle_all_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_extra_large"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/toggle_type_title"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/toggle_all_subtext"
+                        style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_large"
+                        android:gravity="center"
+                        android:lines="2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/toggle_all_button"
+                        app:layout_constraintBottom_toTopOf="@id/separator"
+                        tools:text="@string/item_desc_toggle_event_disable_all" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/separator"
+                        style="@style/AppTheme.Widget.DividerSecondaryH"
+                        android:layout_marginTop="@dimen/margin_vertical_default"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/toggle_all_subtext"
+                        app:layout_constraintBottom_toTopOf="@id/layout_event_toggles"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_event_toggles"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/separator"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/toggle_events_title"
+                            style="@style/AppTheme.TextAppearance.BodyLarge"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_vertical_large"
+                            android:layout_marginEnd="@dimen/margin_horizontal_default"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="@string/item_title_empty_event_toggles" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/toggle_events_subtext"
+                            style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_vertical_small"
+                            android:layout_marginBottom="@dimen/margin_vertical_default"
+                            android:layout_marginEnd="@dimen/margin_horizontal_default"
+                            android:maxLines="2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
+                            app:layout_constraintTop_toBottomOf="@id/toggle_events_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:text="@string/item_desc_event_toggles_empty"
+                            android:visibility="visible"/>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/toggles_count_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_vertical_small"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
+                            app:layout_constraintTop_toBottomOf="@id/toggle_events_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/enable_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:src="@drawable/ic_confirm"
+                                android:contentDescription="@string/content_desc_conditions_count"/>
+
+                            <TextView
+                                android:id="@+id/text_enable_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_horizontal_mini"
+                                android:gravity="center_vertical"
+                                app:layout_constraintStart_toEndOf="@id/enable_count"
+                                app:layout_constraintTop_toTopOf="@id/enable_count"
+                                app:layout_constraintBottom_toBottomOf="@id/enable_count"
+                                tools:text="3"/>
+
+                            <ImageView
+                                android:id="@+id/toggle_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_horizontal_large"
+                                app:layout_constraintStart_toEndOf="@id/text_enable_count"
+                                app:layout_constraintTop_toTopOf="@id/enable_count"
+                                app:layout_constraintBottom_toBottomOf="@id/enable_count"
+                                android:src="@drawable/ic_invert"
+                                android:contentDescription="@string/content_desc_actions_count"/>
+
+                            <TextView
+                                android:id="@+id/text_toggle_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_horizontal_mini"
+                                app:layout_constraintStart_toEndOf="@id/toggle_count"
+                                app:layout_constraintTop_toTopOf="@id/toggle_count"
+                                app:layout_constraintBottom_toBottomOf="@id/toggle_count"
+                                android:gravity="center_vertical"
+                                tools:text="1"/>
+
+                            <ImageView
+                                android:id="@+id/disable_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_horizontal_large"
+                                app:layout_constraintStart_toEndOf="@id/text_toggle_count"
+                                app:layout_constraintTop_toTopOf="@id/toggle_count"
+                                app:layout_constraintBottom_toBottomOf="@id/toggle_count"
+                                android:src="@drawable/ic_cancel"
+                                android:contentDescription="@string/content_desc_actions_count"/>
+
+                            <TextView
+                                android:id="@+id/text_disable_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_horizontal_mini"
+                                app:layout_constraintStart_toEndOf="@id/disable_count"
+                                app:layout_constraintTop_toTopOf="@id/disable_count"
+                                app:layout_constraintBottom_toBottomOf="@id/disable_count"
+                                android:gravity="center_vertical"
+                                tools:text="1"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <ImageView
+                            android:id="@+id/click_selector_chevron"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="@id/toggle_events_title"
+                            app:layout_constraintBottom_toBottomOf="@id/layout_event_toggles"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_chevron_right"
+                            tools:ignore="ContentDescription"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

@@ -100,7 +100,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val positionStateUi: Flow<ClickPositionUiState?> =
-        combine(editionRepository.editionState.editedEventState, configuredClick) { event, click ->
+        combine(editionRepository.editionState.editedImageEventState, configuredClick) { event, click ->
             val evt = event.value ?: return@combine null
 
             when {

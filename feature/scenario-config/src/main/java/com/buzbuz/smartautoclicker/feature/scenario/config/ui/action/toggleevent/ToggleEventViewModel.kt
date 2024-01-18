@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,22 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.toggleevent
 
 import android.app.Application
+import android.content.Context
+import androidx.annotation.StringRes
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.EventPickerViewState
-import kotlinx.coroutines.FlowPreview
 
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -61,41 +60,45 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
     /** Tells if the action name is valid or not. */
     val nameError: Flow<Boolean> = configuredToggleEvent.map { it.name?.isEmpty() ?: true }
 
-    private val enableEventItem = DropdownItem(
-        title = R.string.dropdown_item_title_toggle_event_state_enable,
-        helperText = R.string.dropdown_helper_text_toggle_event_state_enable,
-    )
-    private val disableEventItem = DropdownItem(
-        title = R.string.dropdown_item_title_toggle_event_state_disable,
-        helperText = R.string.dropdown_helper_text_toggle_event_state_disable,
-    )
-    private val toggleEventItem = DropdownItem(
-        title = R.string.dropdown_item_title_toggle_event_state_toggle,
-        helperText = R.string.dropdown_helper_text_toggle_event_state_toggle,
-    )
-    val toggleStateItems = listOf(enableEventItem, disableEventItem, toggleEventItem)
-
-    /** The selected toggle state for the action. */
-    val toggleStateItem: Flow<DropdownItem> = configuredToggleEvent
+    /** The selected toggle all state for the action. */
+    val toggleAllEnabledButton: Flow<ToggleAllButtonState> = configuredToggleEvent
         .map { toggleEventAction ->
-            when (toggleEventAction.toggleEventType) {
-                Action.ToggleEvent.ToggleType.ENABLE -> enableEventItem
-                Action.ToggleEvent.ToggleType.DISABLE -> disableEventItem
-                Action.ToggleEvent.ToggleType.TOGGLE -> toggleEventItem
-                else -> throw IllegalStateException("Unknown toggle event type")
+            when {
+                !toggleEventAction.toggleAll ->
+                    ToggleAllButtonState(null, R.string.item_desc_toggle_event_manual)
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.ENABLE ->
+                    ToggleAllButtonState(BUTTON_ENABLE_EVENT,R.string.item_desc_toggle_event_enable_all)
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.TOGGLE ->
+                    ToggleAllButtonState(BUTTON_TOGGLE_EVENT, R.string.item_desc_toggle_event_invert_all)
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.DISABLE ->
+                    ToggleAllButtonState(BUTTON_DISABLE_EVENT, R.string.item_desc_toggle_event_disable_all)
+                else -> null
             }
         }
         .filterNotNull()
 
-    /** The event selected for the toggle action. Null if none is. */
-    val eventViewState: Flow<EventPickerViewState> = configuredToggleEvent
-        .combine(editionRepository.editionState.eventsAvailableForToggleEventAction) { editedAction, editedEvents ->
-            val selectedEvent = editedEvents.find { editedEvent ->
-                editedAction.toggleEventId == editedEvent.id
+    val eventToggleSelectorState: Flow<EventToggleSelectorState> = configuredToggleEvent
+        .map { toggleEventAction ->
+            var enableCount = 0
+            var toggleCount = 0
+            var disableCount = 0
+
+            toggleEventAction.eventToggles.forEach {
+                when (it.toggleType) {
+                    Action.ToggleEvent.ToggleType.ENABLE -> enableCount++
+                    Action.ToggleEvent.ToggleType.TOGGLE -> toggleCount++
+                    Action.ToggleEvent.ToggleType.DISABLE -> disableCount++
+                }
             }
 
-            if (selectedEvent != null) EventPickerViewState.Selected(selectedEvent, editedEvents)
-            else EventPickerViewState.NoSelection(editedEvents)
+            EventToggleSelectorState(
+                isEnabled = !toggleEventAction.toggleAll,
+                title = application.getEventToggleListName(toggleEventAction),
+                emptyText = if (toggleEventAction.eventToggles.isEmpty()) R.string.item_desc_event_toggles_empty else null,
+                enableCount = enableCount,
+                toggleCount = toggleCount,
+                disableCount = disableCount,
+            )
         }
 
     /** Tells if the configured toggle event action is valid and can be saved. */
@@ -113,29 +116,61 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /**
-     * Set the toggle type for the configured toggle event action.
-     * @param item the new selected type.
+     * Set the toggle all type for the configured toggle event action.
+     * @param checkedButtonId the new selected type.
      */
-    fun setToggleType(item: DropdownItem) {
+    fun setToggleAllType(checkedButtonId: Int?) {
         editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
-            val type = when (item) {
-                enableEventItem -> Action.ToggleEvent.ToggleType.ENABLE
-                disableEventItem -> Action.ToggleEvent.ToggleType.DISABLE
-                toggleEventItem -> Action.ToggleEvent.ToggleType.TOGGLE
+            val type = when (checkedButtonId) {
+                BUTTON_ENABLE_EVENT -> Action.ToggleEvent.ToggleType.ENABLE
+                BUTTON_TOGGLE_EVENT -> Action.ToggleEvent.ToggleType.TOGGLE
+                BUTTON_DISABLE_EVENT -> Action.ToggleEvent.ToggleType.DISABLE
+                null -> null
                 else -> return
             }
+            if (type == toggleEvent.toggleAllType) return
 
-            editionRepository.updateEditedAction(toggleEvent.copy(toggleEventType = type))
+            editionRepository.updateEditedAction(
+                toggleEvent.copy(
+                    toggleAll = type != null,
+                    toggleAllType = type
+                )
+            )
         }
     }
 
-    /**
-     * Set the event for the configured toggle event action.
-     * @param confEvent the new event.
-     */
-    fun setEvent(confEvent: ImageEvent) {
+    fun setNewEventToggles(toggles: List<EventToggle>) {
         editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
-            editionRepository.updateEditedAction(toggleEvent.copy(toggleEventId = confEvent.id))
+            editionRepository.updateEditedAction(
+                toggleEvent.copy(
+                    toggleAll = false,
+                    toggleAllType = null,
+                    eventToggles = toggles,
+                )
+            )
         }
     }
+
+    private fun Context.getEventToggleListName(toggleEventAction: Action.ToggleEvent): String =
+        if (toggleEventAction.eventToggles.isEmpty()) getString(R.string.item_title_empty_event_toggles)
+        else getString(R.string.item_title_event_toggles, toggleEventAction.eventToggles.size)
+
 }
+
+data class ToggleAllButtonState(
+    val checkedButton: Int?,
+    @StringRes val descriptionText: Int,
+)
+
+data class EventToggleSelectorState(
+    val isEnabled: Boolean,
+    val title: String,
+    @StringRes val emptyText: Int?,
+    val enableCount: Int?,
+    val toggleCount: Int?,
+    val disableCount: Int?,
+)
+
+internal const val BUTTON_ENABLE_EVENT = 0
+internal const val BUTTON_TOGGLE_EVENT = 1
+internal const val BUTTON_DISABLE_EVENT = 2

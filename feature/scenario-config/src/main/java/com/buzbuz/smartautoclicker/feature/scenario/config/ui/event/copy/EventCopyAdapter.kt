@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemCopyHeaderBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCopyModel.EventCopyItem
@@ -40,14 +40,14 @@ class EventCopyAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
-            is EventCopyItem.HeaderItem -> R.layout.item_copy_header
+            is EventCopyItem.HeaderItem -> R.layout.item_list_header
             is EventCopyItem.EventItem -> R.layout.item_event
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_copy_header -> HeaderViewHolder(
-                ItemCopyHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_list_header -> HeaderViewHolder(
+                ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.item_event -> EventViewHolder(
                 ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw IllegalArgumentException("Unsupported view type !")
@@ -79,7 +79,7 @@ private object DiffUtilCallback: DiffUtil.ItemCallback<EventCopyItem>() {
  * @param viewBinding the view binding for this header.
  */
 class HeaderViewHolder(
-    private val viewBinding: ItemCopyHeaderBinding,
+    private val viewBinding: ItemListHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(header: EventCopyItem.HeaderItem) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured event. */
-    private val configuredEvent = editionRepository.editionState.editedEventState
+    private val configuredEvent = editionRepository.editionState.editedImageEventState
         .mapNotNull { it.value }
 
     private val enableEventItem = DropdownItem(
@@ -118,7 +118,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Set a new name for the configured event. */
     fun setEventName(newName: String) {
-        editionRepository.editionState.getEditedEvent()?.let { event ->
+        editionRepository.editionState.getEditedImageEvent()?.let { event ->
             viewModelScope.launch {
                 editionRepository.updateEditedEvent(event.copy(name = newName))
             }
@@ -127,7 +127,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Toggle the end condition operator between AND and OR. */
     fun setConditionOperator(operatorItem: DropdownItem) {
-        editionRepository.editionState.getEditedEvent()?.let { event ->
+        editionRepository.editionState.getEditedImageEvent()?.let { event ->
             val operator = when (operatorItem) {
                 conditionAndItem -> AND
                 conditionOrItem -> OR
@@ -142,7 +142,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Toggle the event state between true and false. */
     fun setEventState(state: DropdownItem) {
-        editionRepository.editionState.getEditedEvent()?.let { conf ->
+        editionRepository.editionState.getEditedImageEvent()?.let { conf ->
             val value = when (state) {
                 enableEventItem -> true
                 disableEventItem -> false

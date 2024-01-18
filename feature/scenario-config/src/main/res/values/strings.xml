@@ -277,5 +277,17 @@
     <string name="dialog_overlay_title_intent_flags">Flags</string>
     <string name="dialog_overlay_title_intent_actions">Intent Actions</string>
     <string name="dialog_overlay_title_intent_component_name">Component name</string>
+    <string name="dialog_overlay_title_events_toggle">Events toggles</string>
+    <string name="item_desc_toggle_event_manual">Define the events to change manually</string>
+    <string name="item_desc_toggle_event_enable_all">Enable all events in this scenario</string>
+    <string name="item_desc_toggle_event_invert_all">Invert the state of all events in this scenario</string>
+    <string name="item_desc_toggle_event_disable_all">Disable all events in this scenario. When all events are disabled, the scenario is stopped automatically.</string>
+    <string name="item_title_empty_event_toggles">No changes</string>
+    <string name="item_title_event_toggles">%1$d changes</string>
+    <string name="item_desc_event_toggles_empty">Select at least one event to change to state of</string>
+    <string name="item_desc_toggle_event_state_enable_all">Enable all events</string>
+    <string name="item_desc_toggle_event_state_disable_all">Disable all items and stop scenario</string>
+    <string name="item_desc_toggle_event_state_invert_all">Invert all events state</string>
+    <string name="item_desc_toggle_event_state_manual">Change %1$d events</string>
 
 </resources>

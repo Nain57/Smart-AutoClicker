@@ -62,7 +62,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     val canCopyCondition: Flow<Boolean> = combine(
         repository.getAllImageConditions(),
         configuredEventConditions,
-        editionRepository.editionState.eventsState
+        editionRepository.editionState.editedImageEventsState
     ) { dbConds, editedConds, scenarioEvents ->
 
         if (dbConds.isNotEmpty()) return@combine true

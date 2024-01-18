@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -187,19 +187,20 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
  * @param context the Android context.
  * @return the formatted toggle event action.
  */
-private fun formatToggleEventState(toggleEvent: Action.ToggleEvent, context: Context): String {
-    val toggleTypeStringId = when (toggleEvent.toggleEventType) {
-        Action.ToggleEvent.ToggleType.ENABLE -> R.string.dropdown_item_title_toggle_event_state_enable
-        Action.ToggleEvent.ToggleType.DISABLE -> R.string.dropdown_item_title_toggle_event_state_disable
-        Action.ToggleEvent.ToggleType.TOGGLE -> R.string.dropdown_item_title_toggle_event_state_toggle
-        null -> throw IllegalArgumentException("Invalid toggle event type")
+private fun formatToggleEventState(toggleEvent: Action.ToggleEvent, context: Context): String =
+    if (toggleEvent.toggleAll) {
+        when (toggleEvent.toggleAllType) {
+            Action.ToggleEvent.ToggleType.ENABLE -> context.getString(R.string.item_desc_toggle_event_state_enable_all)
+            Action.ToggleEvent.ToggleType.TOGGLE -> context.getString(R.string.item_desc_toggle_event_state_invert_all)
+            Action.ToggleEvent.ToggleType.DISABLE -> context.getString(R.string.item_desc_toggle_event_state_disable_all)
+            null -> throw IllegalArgumentException("Invalid toggle event type")
+        }
+    } else {
+        context.getString(
+            R.string.item_desc_toggle_event_state_manual,
+            toggleEvent.eventToggles.size,
+        )
     }
-
-    return context.getString(
-        R.string.item_desc_toggle_event_details,
-        context.getString(toggleTypeStringId),
-    )
-}
 
 /** The maximal length of the displayed intent action string. */
 private const val INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT = 15
