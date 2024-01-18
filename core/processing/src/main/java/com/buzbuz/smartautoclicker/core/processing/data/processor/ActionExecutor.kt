@@ -192,9 +192,9 @@ internal class ActionExecutor(
 
         toggleEvent.eventToggles.forEach { eventToggle ->
             when (eventToggle.toggleType) {
-                ToggleEvent.ToggleType.ENABLE -> processingState.enableEvent(eventToggle.targetEventId.databaseId)
-                ToggleEvent.ToggleType.DISABLE -> processingState.disableEvent(eventToggle.targetEventId.databaseId)
-                ToggleEvent.ToggleType.TOGGLE -> processingState.toggleEvent(eventToggle.targetEventId.databaseId)
+                ToggleEvent.ToggleType.ENABLE -> processingState.enableEvent(eventToggle.targetEventId!!.databaseId)
+                ToggleEvent.ToggleType.DISABLE -> processingState.disableEvent(eventToggle.targetEventId!!.databaseId)
+                ToggleEvent.ToggleType.TOGGLE -> processingState.toggleEvent(eventToggle.targetEventId!!.databaseId)
             }
         }
     }

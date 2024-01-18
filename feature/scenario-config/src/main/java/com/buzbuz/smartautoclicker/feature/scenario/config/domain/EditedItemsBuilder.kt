@@ -40,6 +40,7 @@ class EditedItemsBuilder internal constructor(
     private val conditionsIdCreator = IdentifierCreator()
     private val actionsIdCreator = IdentifierCreator()
     private val intentExtrasIdCreator = IdentifierCreator()
+    private val eventTogglesIdCreator = IdentifierCreator()
     private val endConditionsIdCreator = IdentifierCreator()
 
     /**
@@ -160,12 +161,15 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
-    fun createEventToggle() : EventToggle =
-        EventToggle(
-            id = intentExtrasIdCreator.generateNewIdentifier(),
+    fun createEventToggle(
+        id: Identifier = eventTogglesIdCreator.generateNewIdentifier(),
+        targetEventId: Identifier? = null,
+        toggleType: Action.ToggleEvent.ToggleType = defaultValues.eventToggleType(),
+    ) = EventToggle(
+            id = id,
             actionId = getEditedActionIdOrThrow(),
-            targetEventId = null,
-            toggleType = defaultValues.eventToggleType(),
+            targetEventId = targetEventId,
+            toggleType = toggleType,
         )
 
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
@@ -246,24 +250,24 @@ class EditedItemsBuilder internal constructor(
 
     private fun createEventToggleFrom(from: EventToggle, actionId: Identifier = getEditedActionIdOrThrow()): EventToggle =
         from.copy(
-            id = intentExtrasIdCreator.generateNewIdentifier(),
+            id = eventTogglesIdCreator.generateNewIdentifier(),
             actionId = actionId,
         )
 
     private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
-        editor.eventsEditor.editedList.value?.let { events ->
+        editor.imageEventsEditor.editedList.value?.let { events ->
             events.find { eventId == it.id } != null
         } ?: false
 
     private fun getEditedScenarioIdOrThrow(): Identifier = editor.editedScenario.value?.id
         ?: throw IllegalStateException("Can't create items without an edited scenario")
 
-    private fun getEditedEventsCountOrThrow(): Int = editor.eventsEditor.editedList.value?.size
+    private fun getEditedEventsCountOrThrow(): Int = editor.imageEventsEditor.editedList.value?.size
         ?: throw IllegalStateException("Can't create items without an edited event list")
 
-    private fun getEditedEventIdOrThrow(): Identifier = editor.eventsEditor.editedItem.value?.id
+    private fun getEditedEventIdOrThrow(): Identifier = editor.imageEventsEditor.editedItem.value?.id
         ?: throw IllegalStateException("Can't create items without an edited event")
 
-    private fun getEditedActionIdOrThrow(): Identifier = editor.eventsEditor.actionsEditor.editedItem.value?.id
+    private fun getEditedActionIdOrThrow(): Identifier = editor.imageEventsEditor.actionsEditor.editedItem.value?.id
         ?: throw IllegalStateException("Can't create items without an edited action")
 }
