@@ -44,7 +44,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_I
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.type.ActionTypeSelectionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.ActionTypeSelectionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.changecounter.ChangeCounterDialog
 
 import kotlinx.coroutines.launch
 
@@ -238,6 +239,12 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             )
 
             is Action.ToggleEvent -> ToggleEventDialog(
+                onConfirmClicked = viewModel::upsertEditedAction,
+                onDeleteClicked = viewModel::removeEditedAction,
+                onDismissClicked = viewModel::dismissEditedAction,
+            )
+
+            is Action.ChangeCounter -> ChangeCounterDialog(
                 onConfirmClicked = viewModel::upsertEditedAction,
                 onDeleteClicked = viewModel::removeEditedAction,
                 onDismissClicked = viewModel::dismissEditedAction,

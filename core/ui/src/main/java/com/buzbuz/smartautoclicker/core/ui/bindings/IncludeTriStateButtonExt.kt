@@ -20,14 +20,14 @@ import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeTriStateButtonBinding
 
 
-fun IncludeTriStateButtonBinding.setIcons(icons: List<Int>) {
+fun IncludeTriStateButtonBinding.setIcons(icons: List<Int>, selectionRequired: Boolean = false) {
     if (icons.size != 3) throw IllegalArgumentException("idToIcon map should have one entry for each buttons")
 
     button1.icon = ContextCompat.getDrawable(button1.context, icons[0])
     button2.icon = ContextCompat.getDrawable(button2.context, icons[1])
     button3.icon = ContextCompat.getDrawable(button3.context, icons[2])
     root.isSingleSelection = true
-    root.isSelectionRequired = false
+    root.isSelectionRequired = selectionRequired
 }
 
 fun IncludeTriStateButtonBinding.setChecked(checkedId: Int?) {

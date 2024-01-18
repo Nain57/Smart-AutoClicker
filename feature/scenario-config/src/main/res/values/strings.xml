@@ -289,5 +289,11 @@
     <string name="item_desc_toggle_event_state_disable_all">Disable all items and stop scenario</string>
     <string name="item_desc_toggle_event_state_invert_all">Invert all events state</string>
     <string name="item_desc_toggle_event_state_manual">Change %1$d events</string>
+    <string name="dialog_overlay_title_change_counter">Change counter</string>
+    <string name="default_change_counter_name">Change counter</string>
+    <string name="input_field_label_change_counter_operation_value">Operation value</string>
+    <string name="input_field_label_change_counter_name">Counter name</string>
+    <string name="item_title_change_counter">Change counter</string>
+    <string name="item_desc_change_counter">Change a value to check it later</string>
 
 </resources>

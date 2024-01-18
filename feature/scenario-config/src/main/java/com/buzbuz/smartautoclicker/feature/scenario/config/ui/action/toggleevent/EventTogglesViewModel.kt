@@ -111,13 +111,13 @@ class EventTogglesViewModel(application: Application) : AndroidViewModel(applica
             if (newType == null) return@mapNotNull null
 
             if (editedToggleId != null) {
-                editionRepository.editedItemsBuilder.createEventToggle(
+                editionRepository.editedItemsBuilder.createNewEventToggle(
                     id = editedToggleId,
                     targetEventId = eventId,
                     toggleType = newType,
                 )
             } else {
-                editionRepository.editedItemsBuilder.createEventToggle(
+                editionRepository.editedItemsBuilder.createNewEventToggle(
                     targetEventId = eventId,
                     toggleType = newType,
                 )
