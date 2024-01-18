@@ -350,6 +350,7 @@ internal class ScenarioDataSource(
                 }
             }
         )
+        Log.d(TAG, "IntentExtra updater $updater")
 
         currentDatabase.value.actionDao().let { actionDao ->
             updater.executeUpdate(
@@ -373,6 +374,7 @@ internal class ScenarioDataSource(
                 }
             }
         )
+        Log.d(TAG, "EventToggle updater $updater")
 
         currentDatabase.value.actionDao().let { actionDao ->
             updater.executeUpdate(
