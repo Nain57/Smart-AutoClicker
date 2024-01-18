@@ -59,10 +59,10 @@ class DatabaseListUpdater<Item : Identifiable, Entity : EntityWithId> {
             val newEntity = mappingClosure(newItem)
             if (newEntity.id == DATABASE_ID_INSERTION) toBeAdded.add(newItem, newEntity)
             else {
-                val oldItem = toBeRemoved.find { it.id == newItem.id.databaseId }
-                if (oldItem != null) {
+                val oldItemIndex = toBeRemoved.indexOfFirst { it.id == newItem.id.databaseId }
+                if (oldItemIndex != -1) {
                     toBeUpdated.add(newItem, newEntity)
-                    toBeRemoved.remove(newEntity)
+                    toBeRemoved.removeAt(oldItemIndex)
                 }
             }
         }
