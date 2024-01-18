@@ -20,6 +20,7 @@ import androidx.annotation.CallSuper
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
 
@@ -74,6 +75,12 @@ internal open class ListEditor<Item , Parent>(
 
         EditedElementState(edit, hasChanged, canBeSaved)
     }
+
+    val allEditedItems: Flow<List<Item>> =
+        combine(editedList, editedItem, ::buildAllItemList)
+
+    fun getAllEditedItems(): List<Item> =
+        buildAllItemList(editedList.value, editedItem.value)
 
     fun startEdition(referenceItems: List<Item>) {
         referenceList.value = referenceItems
@@ -148,4 +155,14 @@ internal open class ListEditor<Item , Parent>(
 
     private fun List<Item>.indexOfItem(item: Item): Int =
         indexOfFirst { it.id == item.id }
+
+    private fun buildAllItemList(editedList: List<Item>?, editedItem: Item?) =
+        buildList {
+            val items = editedList ?: emptyList()
+            addAll(items)
+
+            editedItem?.let { item ->
+                if (items.find { item.id == it.id } == null) add(item)
+            }
+        }
 }

@@ -72,16 +72,16 @@ class EditionRepository private constructor(context: Context) {
     val isEditingScenario: Flow<Boolean> = scenarioEditor.editedScenario
         .map { it?.id != null }
     /** Tells if the user is currently editing an event. */
-    val isEditingEvent: Flow<Boolean> = scenarioEditor.eventsEditor.editedItem
+    val isEditingEvent: Flow<Boolean> = scenarioEditor.imageEventsEditor.editedItem
         .map { it?.id != null }
     /** Tells if the user is currently editing a condition. */
-    val isEditingCondition: Flow<Boolean> = scenarioEditor.eventsEditor.conditionsEditor.editedItem
+    val isEditingCondition: Flow<Boolean> = scenarioEditor.imageEventsEditor.conditionsEditor.editedItem
         .map { it?.id != null }
     /** Tells if the user is currently editing an action. */
-    val isEditingAction: Flow<Boolean> = scenarioEditor.eventsEditor.actionsEditor.editedItem
+    val isEditingAction: Flow<Boolean> = scenarioEditor.imageEventsEditor.actionsEditor.editedItem
         .map { it?.id != null }
     /** Tells if the user is currently editing an Intent Extra. */
-    val isEditingIntentExtra: Flow<Boolean> = scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.editedItem
+    val isEditingIntentExtra: Flow<Boolean> = scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.editedItem
         .map { it?.id != null }
 
     // --- SCENARIO - START ---
@@ -97,7 +97,8 @@ class EditionRepository private constructor(context: Context) {
 
         scenarioEditor.startEdition(
             scenario = scenario,
-            events = repository.getImageEvents(scenarioId),
+            imageEvents = repository.getImageEvents(scenarioId),
+            triggerEvents = repository.getTriggerEvents(scenarioId),
         )
         return true
     }
@@ -108,7 +109,7 @@ class EditionRepository private constructor(context: Context) {
 
         val updateResult = repository.updateScenario(
             scenario = scenarioEditor.editedScenario.value ?: return false,
-            events = scenarioEditor.eventsEditor.editedList.value ?: return false,
+            events = scenarioEditor.imageEventsEditor.editedList.value ?: return false,
         )
 
         // In case of error, do not stop the edition
@@ -123,35 +124,35 @@ class EditionRepository private constructor(context: Context) {
     /** Update the currently edited scenario. */
     fun updateEditedScenario(scenario: Scenario): Unit = scenarioEditor.updateEditedScenario(scenario)
     /** Update the priority of the events in the scenario. */
-    fun updateEventsOrder(newEvents: List<ImageEvent>): Unit = scenarioEditor.eventsEditor.updateList(newEvents)
+    fun updateEventsOrder(newEvents: List<ImageEvent>): Unit = scenarioEditor.imageEventsEditor.updateList(newEvents)
 
 
     // --- EVENT - START ---
 
     fun startEventEdition(event: ImageEvent): Unit =
-        scenarioEditor.eventsEditor.startItemEdition(event)
+        scenarioEditor.imageEventsEditor.startItemEdition(event)
     fun updateEditedEvent(event: ImageEvent): Unit =
-        scenarioEditor.eventsEditor.updateEditedItem(event)
+        scenarioEditor.imageEventsEditor.updateEditedItem(event)
     fun updateActionsOrder(actions: List<Action>): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.updateList(actions)
+        scenarioEditor.imageEventsEditor.actionsEditor.updateList(actions)
     fun upsertEditedEvent(): Unit =
-        scenarioEditor.eventsEditor.upsertEditedItem()
+        scenarioEditor.imageEventsEditor.upsertEditedItem()
     fun deleteEditedEvent(): Unit =
-        scenarioEditor.eventsEditor.deleteEditedItem()
+        scenarioEditor.imageEventsEditor.deleteEditedItem()
 
 
     // --- CONDITION - START ---
 
     fun startConditionEdition(condition: ImageCondition): Unit =
-        scenarioEditor.eventsEditor.conditionsEditor.startItemEdition(condition)
+        scenarioEditor.imageEventsEditor.conditionsEditor.startItemEdition(condition)
     fun updateEditedCondition(condition: ImageCondition): Unit =
-        scenarioEditor.eventsEditor.conditionsEditor.updateEditedItem(condition)
+        scenarioEditor.imageEventsEditor.conditionsEditor.updateEditedItem(condition)
     fun upsertEditedCondition(): Unit =
-        scenarioEditor.eventsEditor.conditionsEditor.upsertEditedItem()
+        scenarioEditor.imageEventsEditor.conditionsEditor.upsertEditedItem()
     fun deleteEditedCondition(): Unit =
-        scenarioEditor.eventsEditor.conditionsEditor.deleteEditedItem()
+        scenarioEditor.imageEventsEditor.conditionsEditor.deleteEditedItem()
     fun stopConditionEdition(): Unit =
-        scenarioEditor.eventsEditor.conditionsEditor.stopItemEdition()
+        scenarioEditor.imageEventsEditor.conditionsEditor.stopItemEdition()
 
     // --- CONDITION - END ---
 
@@ -159,53 +160,37 @@ class EditionRepository private constructor(context: Context) {
     // --- ACTION - START ---
 
     fun startActionEdition(action: Action): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.startItemEdition(action)
+        scenarioEditor.imageEventsEditor.actionsEditor.startItemEdition(action)
     fun updateEditedAction(action: Action): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.updateEditedItem(action)
+        scenarioEditor.imageEventsEditor.actionsEditor.updateEditedItem(action)
     fun upsertEditedAction(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.upsertEditedItem()
+        scenarioEditor.imageEventsEditor.actionsEditor.upsertEditedItem()
     fun deleteEditedAction(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.deleteEditedItem()
+        scenarioEditor.imageEventsEditor.actionsEditor.deleteEditedItem()
 
 
     // --- INTENT EXTRA - START ---
 
     fun startIntentExtraEdition(extra: IntentExtra<out Any>): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.startItemEdition(extra)
+        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.startItemEdition(extra)
     fun updateEditedIntentExtra(extra: IntentExtra<out Any>): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.updateEditedItem(extra)
+        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.updateEditedItem(extra)
     fun upsertEditedIntentExtra(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.upsertEditedItem()
+        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.upsertEditedItem()
     fun deleteEditedIntentExtra(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.deleteEditedItem()
+        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.deleteEditedItem()
     fun stopIntentExtraEdition(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.intentExtraEditor.stopItemEdition()
+        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.stopItemEdition()
 
     // --- INTENT EXTRA - END ---
 
-
-    // --- EVENT TOGGLE - START ---
-
-    fun startEventToggleEdition(eventToggle: EventToggle): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.startItemEdition(eventToggle)
-    fun updateEditedEventToggle(eventToggle: EventToggle): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.updateEditedItem(eventToggle)
-    fun upsertEditedEventToggle(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.upsertEditedItem()
-    fun deleteEditedEventToggle(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.deleteEditedItem()
-    fun stopEventToggleEdition(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.eventToggleEditor.stopItemEdition()
-
-    // --- EVENT TOGGLE - END ---
-
     fun stopActionEdition(): Unit =
-        scenarioEditor.eventsEditor.actionsEditor.stopItemEdition()
+        scenarioEditor.imageEventsEditor.actionsEditor.stopItemEdition()
 
     // --- ACTION - END ---
 
     fun stopEventEdition(): Unit =
-        scenarioEditor.eventsEditor.stopItemEdition()
+        scenarioEditor.imageEventsEditor.stopItemEdition()
 
     // --- EVENT - END ---
 

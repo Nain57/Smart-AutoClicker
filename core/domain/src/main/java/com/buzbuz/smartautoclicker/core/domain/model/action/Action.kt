@@ -223,7 +223,7 @@ sealed class Action : Identifiable, Completable {
             return if (toggleAll) {
                 toggleAllType != null
             } else {
-                eventToggles.find { !it.isComplete() } == null
+                eventToggles.isNotEmpty() && eventToggles.find { !it.isComplete() } == null
             }
         }
 

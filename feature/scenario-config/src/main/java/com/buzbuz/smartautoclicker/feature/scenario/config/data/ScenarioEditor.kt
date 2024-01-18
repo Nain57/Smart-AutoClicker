@@ -16,8 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.events.EventsEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.events.ImageEventsEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.events.TriggerEventsEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
 
 import kotlinx.coroutines.flow.Flow
@@ -41,17 +46,20 @@ internal class ScenarioEditor {
         EditedElementState(edit, hasChanged, canBeSaved)
     }
 
-    val eventsEditor = EventsEditor(::deleteAllReferencesToEvent, editedScenario)
+    val imageEventsEditor = ImageEventsEditor(::deleteAllReferencesToEvent, editedScenario)
+    val triggerEventsEditor = TriggerEventsEditor(::deleteAllReferencesToEvent, editedScenario)
 
-    fun startEdition(scenario: Scenario, events: List<ImageEvent>) {
+    fun startEdition(scenario: Scenario, imageEvents: List<ImageEvent>, triggerEvents: List<TriggerEvent>) {
         referenceScenario.value = scenario
         _editedScenario.value = scenario
 
-        eventsEditor.startEdition(events)
+        imageEventsEditor.startEdition(imageEvents)
+        triggerEventsEditor.startEdition(triggerEvents)
     }
 
     fun stopEdition() {
-        eventsEditor.stopEdition()
+        imageEventsEditor.stopEdition()
+        triggerEventsEditor.stopEdition()
 
         referenceScenario.value = null
         _editedScenario.value = null
@@ -62,7 +70,8 @@ internal class ScenarioEditor {
         _editedScenario.value = item
     }
 
-    private fun deleteAllReferencesToEvent(event: ImageEvent) {
-        eventsEditor.deleteAllEventToggleReferencing(event)
+    private fun deleteAllReferencesToEvent(event: Event) {
+        imageEventsEditor.deleteAllEventToggleReferencing(event)
+        triggerEventsEditor.deleteAllEventToggleReferencing(event)
     }
 }

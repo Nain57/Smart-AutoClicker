@@ -170,7 +170,7 @@ private fun CompleteActionEntity.toDomainToggleEvent(cleanIds: Boolean = false) 
     name = action.name,
     priority = action.priority,
     toggleAll = action.toggleAll == true,
-    toggleAllType = action.toggleAllType!!.toDomain(),
+    toggleAllType = action.toggleAllType?.toDomain(),
     eventToggles = eventsToggle.map { it.toDomain(cleanIds) }.toMutableList(),
 )
 

@@ -65,7 +65,7 @@ data class ImageEvent(
 
     /** Tells if this event is complete and valid for save. */
     override fun isComplete(): Boolean {
-        if (super.isComplete()) return false
+        if (!super.isComplete()) return false
 
         conditions.forEach { condition ->
             if (!condition.isComplete()) return false
@@ -92,7 +92,7 @@ data class TriggerEvent(
 ) : Event() {
 
     override fun isComplete(): Boolean {
-        if (super.isComplete()) return false
+        if (!super.isComplete()) return false
         conditions.forEach { condition ->
             if (!condition.isComplete()) return false
         }
