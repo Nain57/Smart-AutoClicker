@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured event. */
-    val configuredEventConditions = editionRepository.editionState.editedEventConditionsState
+    val configuredEventConditions: Flow<List<ImageCondition>> = editionRepository.editionState.editedEventImageConditionsState
         .mapNotNull { it.value }
 
     /** Tells if the limitation in conditions count have been reached. */

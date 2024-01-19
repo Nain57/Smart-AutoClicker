@@ -42,6 +42,23 @@ sealed class Event: Identifiable, Completable {
     /** The list of conditions to fulfill to execute the [actions].  */
     abstract val conditions: List<Condition>
 
+    @Suppress("UNCHECKED_CAST")
+    fun copyBase(
+        id: Identifier = this.id,
+        scenarioId: Identifier = this.scenarioId,
+        name: String = this.name,
+        conditionOperator: Int = this.conditionOperator,
+        enabledOnStart: Boolean = this.enabledOnStart,
+        actions: List<Action> = this.actions,
+        conditions: List<Condition> = this.conditions,
+    ): Event =
+        when (this) {
+            is ImageEvent -> copy(id = id, scenarioId = scenarioId, name = name, conditionOperator = conditionOperator,
+                enabledOnStart = enabledOnStart, actions = actions, conditions = conditions as List<ImageCondition>)
+            is TriggerEvent -> copy(id = id, scenarioId = scenarioId, name = name, conditionOperator = conditionOperator,
+                enabledOnStart = enabledOnStart, actions = actions, conditions = conditions as List<TriggerCondition>)
+        }
+
     @CallSuper
     override fun isComplete(): Boolean =
         name.isNotEmpty() && actions.isNotEmpty() && conditions.isNotEmpty()

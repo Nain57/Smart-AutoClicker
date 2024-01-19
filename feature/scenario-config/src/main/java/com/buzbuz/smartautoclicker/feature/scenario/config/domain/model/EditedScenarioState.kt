@@ -16,10 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain.model
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
-data class ScenarioEditionState(
+data class EditedScenarioState(
     val scenario: Scenario,
-    val events: List<ImageEvent>,
+    val events: List<Event>,
 )

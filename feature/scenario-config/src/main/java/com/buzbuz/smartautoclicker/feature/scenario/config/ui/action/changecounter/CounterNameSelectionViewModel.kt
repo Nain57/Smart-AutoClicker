@@ -31,7 +31,7 @@ class CounterNameSelectionViewModel (application: Application) : AndroidViewMode
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
 
-    val counterNames: Flow<Set<String>> = editionRepository.editionState.getAllEditedEventsFlow()
+    val counterNames: Flow<Set<String>> = editionRepository.editionState.allEditedEvents
         .combine(editionRepository.editionState.editedEventActionsState) { allEditedEvents, currentActions ->
             buildSet {
                 allEditedEvents.forEach { event ->

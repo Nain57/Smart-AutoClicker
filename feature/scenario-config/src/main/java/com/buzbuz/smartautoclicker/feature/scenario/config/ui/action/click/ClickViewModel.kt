@@ -95,7 +95,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
     /** Tells if the press duration value is valid or not. */
     val pressDurationError: Flow<Boolean> = configuredClick.map { (it.pressDuration ?: -1) <= 0 }
 
-    val availableConditions: StateFlow<List<ImageCondition>> = editionRepository.editionState.editedEventConditionsState
+    val availableConditions: StateFlow<List<ImageCondition>> = editionRepository.editionState.editedEventImageConditionsState
         .map { editedConditions -> editedConditions.value?.filter { it.shouldBeDetected } ?: emptyList() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 

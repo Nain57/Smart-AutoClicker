@@ -20,7 +20,6 @@ import androidx.annotation.CallSuper
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
 
@@ -86,6 +85,9 @@ internal open class ListEditor<Item , Parent>(
         referenceList.value = referenceItems
         _editedList.value = referenceItems.toList()
     }
+
+    fun isItemEditionStarted(): Boolean =
+        referenceEditedItem.value != null
 
     @CallSuper
     open fun startItemEdition(item: Item) {
