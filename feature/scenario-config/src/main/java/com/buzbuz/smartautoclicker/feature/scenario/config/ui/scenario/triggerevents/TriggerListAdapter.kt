@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.triggereventlist
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.triggerevents
 
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemTriggerEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setIconTintColor
 

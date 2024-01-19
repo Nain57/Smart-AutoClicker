@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.triggereventlist
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.triggerevents
 
 import android.app.Application
 import android.content.Context
@@ -23,7 +23,6 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository

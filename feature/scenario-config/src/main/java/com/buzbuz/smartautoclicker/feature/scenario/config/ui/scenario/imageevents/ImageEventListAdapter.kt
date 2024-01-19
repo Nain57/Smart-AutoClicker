@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlist
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.imageevents
 
 import android.view.LayoutInflater
 import android.view.View
@@ -38,21 +38,21 @@ import java.util.Collections
  * @param itemReorderListener listener called when the user finish moving an item.
  * @param itemViewBound listener called when a view is bound to an Event item.
  */
-class EventListAdapter(
+class ImageEventListAdapter(
     private val itemClickedListener: (ImageEvent) -> Unit,
     private val itemReorderListener: (List<ImageEvent>) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
-) : ListAdapter<ImageEvent, EventViewHolder>(EventDiffUtilCallback) {
+) : ListAdapter<ImageEvent, ImageEventViewHolder>(ImageEventDiffUtilCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder =
-        EventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageEventViewHolder =
+        ImageEventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ImageEventViewHolder, position: Int) {
         holder.bindEvent(getItem(position), itemClickedListener)
         itemViewBound(position, holder.itemView)
     }
 
-    override fun onViewRecycled(holder: EventViewHolder) {
+    override fun onViewRecycled(holder: ImageEventViewHolder) {
         itemViewBound(holder.bindingAdapterPosition, null)
         super.onViewRecycled(holder)
     }
@@ -75,8 +75,8 @@ class EventListAdapter(
     }
 }
 
-/** DiffUtil Callback comparing two ActionItem when updating the [EventListAdapter] list. */
-object EventDiffUtilCallback: DiffUtil.ItemCallback<ImageEvent>() {
+/** DiffUtil Callback comparing two ActionItem when updating the [ImageEventListAdapter] list. */
+object ImageEventDiffUtilCallback: DiffUtil.ItemCallback<ImageEvent>() {
     override fun areItemsTheSame(oldItem: ImageEvent, newItem: ImageEvent): Boolean =
         oldItem.id == newItem.id
 
@@ -85,10 +85,10 @@ object EventDiffUtilCallback: DiffUtil.ItemCallback<ImageEvent>() {
 }
 
 /**
- * View holder displaying a click in the [EventListAdapter].
+ * View holder displaying a click in the [ImageEventListAdapter].
  * @param holderViewBinding the view binding for this item.
  */
-class EventViewHolder(private val holderViewBinding: ItemEventBinding)
+class ImageEventViewHolder(private val holderViewBinding: ItemEventBinding)
     : RecyclerView.ViewHolder(holderViewBinding.root) {
 
     /**
@@ -103,7 +103,7 @@ class EventViewHolder(private val holderViewBinding: ItemEventBinding)
 }
 
 /** ItemTouchHelper attached to the adapter in order for the user to change the order of the events. */
-class EventReorderTouchHelper
+class ImageEventReorderTouchHelper
     : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
     /** Tells if the user is currently dragging an item. */
@@ -116,7 +116,7 @@ class EventReorderTouchHelper
     ): Boolean {
         isDragging = true
 
-        (recyclerView.adapter as EventListAdapter).moveEvents(
+        (recyclerView.adapter as ImageEventListAdapter).moveEvents(
             viewHolder.bindingAdapterPosition,
             target.bindingAdapterPosition
         )
@@ -131,7 +131,7 @@ class EventReorderTouchHelper
         super.clearView(recyclerView, viewHolder)
 
         if (isDragging) {
-            (recyclerView.adapter as EventListAdapter).notifyMoveFinished()
+            (recyclerView.adapter as ImageEventListAdapter).notifyMoveFinished()
             isDragging = false
         }
     }

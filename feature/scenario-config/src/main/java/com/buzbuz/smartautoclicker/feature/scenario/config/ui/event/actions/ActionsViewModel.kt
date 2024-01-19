@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,9 +120,9 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
 
     fun startActionEdition(action: Action) = editionRepository.startActionEdition(action)
 
-    fun upsertEditedAction(): Unit = editionRepository.upsertEditedAction()
+    fun upsertEditedAction() = editionRepository.upsertEditedAction()
 
-    fun removeEditedAction(): Unit = editionRepository.deleteEditedAction()
+    fun removeEditedAction() = editionRepository.deleteEditedAction()
 
     fun dismissEditedAction() = editionRepository.stopActionEdition()
 

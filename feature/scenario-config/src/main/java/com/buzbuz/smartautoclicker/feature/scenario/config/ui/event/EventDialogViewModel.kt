@@ -46,7 +46,7 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
      * Used to display the red badge if indicating if there is something missing.
      */
     val navItemsValidity: Flow<Map<Int, Boolean>> = combine(
-        editionRepository.editionState.editedImageEventState,
+        editionRepository.editionState.editedEventState,
         editionRepository.editionState.editedEventConditionsState,
         editionRepository.editionState.editedEventActionsState,
     ) { editedEvent, conditions, actions, ->

@@ -26,9 +26,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
@@ -49,7 +51,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured event. */
-    val configuredEventConditions: Flow<List<ImageCondition>> = editionRepository.editionState.editedEventImageConditionsState
+    val configuredEventConditions: Flow<List<Condition>> = editionRepository.editionState.editedEventConditionsState
         .mapNotNull { it.value }
 
     /** Tells if the limitation in conditions count have been reached. */
@@ -77,6 +79,8 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     /** Tells if the pro mode billing flow is being displayed. */
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
+    fun getEditedEvent(): Event? = editionRepository.editionState.getEditedEvent()
+
     /**
      * Create a new condition with the default values from configuration.
      *
@@ -91,10 +95,10 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * Get a new condition based on the provided one.
      * @param condition the condition to copy.
      */
-    fun createNewConditionFromCopy(condition: ImageCondition): ImageCondition =
+    fun createNewImageConditionFromCopy(condition: ImageCondition): ImageCondition =
         editionRepository.editedItemsBuilder.createNewImageConditionFrom(condition)
 
-    fun startConditionEdition(condition: ImageCondition) = editionRepository.startConditionEdition(condition)
+    fun startConditionEdition(condition: Condition) = editionRepository.startConditionEdition(condition)
 
     /** Insert/update a new condition to the event. */
     fun upsertEditedCondition() =
