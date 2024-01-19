@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -36,7 +37,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 class EventCopyDialog(
-    private val onEventSelected: (ImageEvent) -> Unit,
+    private val onEventSelected: (Event) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */

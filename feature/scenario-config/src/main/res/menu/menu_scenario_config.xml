@@ -17,10 +17,15 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/page_events"
+        android:id="@+id/page_image_events"
         android:enabled="true"
-        android:icon="@drawable/ic_click_list"
-        android:title="@string/menu_item_title_events"/>
+        android:icon="@drawable/ic_condition"
+        android:title="@string/menu_item_title_image_events"/>
+    <item
+        android:id="@+id/page_trigger_events"
+        android:enabled="true"
+        android:icon="@drawable/ic_trigger_event"
+        android:title="@string/menu_item_title_trigger_events"/>
     <item
         android:id="@+id/page_config"
         android:enabled="true"

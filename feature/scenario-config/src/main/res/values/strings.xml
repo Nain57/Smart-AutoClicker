@@ -301,5 +301,7 @@
     <string name="item_error_action_invalid_change_counter">Counter is invalid</string>
     <string name="item_desc_change_counter_details">%1$s %2$s %3$d</string>
     <string name="message_empty_secondary_counter_name_list">Counters are created with a Change Counter Action or a Counter Reached Condition</string>
+    <string name="menu_item_title_image_events">Image events</string>
+    <string name="menu_item_title_trigger_events">Trigger events</string>
 
 </resources>

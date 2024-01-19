@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlist
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.triggereventlist
 
 import android.app.Application
 import android.content.Context
-import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
 
@@ -26,15 +25,14 @@ import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.Repository
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
 
-class EventListViewModel(application: Application) : AndroidViewModel(application) {
+class TriggerListViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The repository of the application. */
     private val repository: Repository = Repository.getRepository(application)
@@ -42,16 +40,14 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
     private val billingRepository = IBillingRepository.getRepository(application)
-    /** Monitors the views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured events. */
-    val eventsItems = editionRepository.editionState.editedImageEventsState
+    val triggerEvents = editionRepository.editionState.editedTriggerEventsState
         .mapNotNull { it.value }
 
     /** Tells if the limitation in event count have been reached. */
     val isEventLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
-        .combine(eventsItems) { isProModePurchased, events ->
+        .combine(triggerEvents) { isProModePurchased, events ->
             !isProModePurchased && events.size >= ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT.limit
         }
     /** Tells if the pro mode billing flow is being displayed. */
@@ -68,12 +64,12 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
      * @param context the Android context.
      * @return the new event item.
      */
-    fun createNewEvent(context: Context, event: ImageEvent? = null): ImageEvent = with(editionRepository.editedItemsBuilder) {
-        if (event == null) createNewImageEvent(context)
-        else createNewImageEventFrom(event)
+    fun createNewEvent(context: Context, event: TriggerEvent? = null): TriggerEvent = with(editionRepository.editedItemsBuilder) {
+        if (event == null) createNewTriggerEvent(context)
+        else createNewTriggerEventFrom(from = event)
     }
 
-    fun startEventEdition(event: ImageEvent) = editionRepository.startEventEdition(event)
+    fun startEventEdition(event: TriggerEvent) = editionRepository.startEventEdition(event)
 
     /** Add or update an event. If the event id is unset, it will be added. If not, updated. */
     fun saveEventEdition() = editionRepository.upsertEditedEvent()
@@ -84,18 +80,7 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
     /** Drop all changes made to the currently edited event. */
     fun dismissEditedEvent() = editionRepository.stopEventEdition()
 
-    /** Update the priority of the events in the scenario. */
-    fun updateEventsPriority(events: List<ImageEvent>) = editionRepository.updateEventsOrder(events)
-
     fun onEventCountReachedAddCopyClicked(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT)
-    }
-
-    fun monitorFirstEventView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT, view)
-    }
-
-    fun stopViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT)
     }
 }

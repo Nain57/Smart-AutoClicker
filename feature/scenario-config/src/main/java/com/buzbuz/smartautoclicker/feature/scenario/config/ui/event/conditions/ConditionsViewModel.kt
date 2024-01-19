@@ -85,14 +85,14 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param bitmap the image for the condition to create.
      */
     fun createCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
-        editionRepository.editedItemsBuilder.createNewCondition(context, area, bitmap)
+        editionRepository.editedItemsBuilder.createNewImageCondition(context, area, bitmap)
 
     /**
      * Get a new condition based on the provided one.
      * @param condition the condition to copy.
      */
     fun createNewConditionFromCopy(condition: ImageCondition): ImageCondition =
-        editionRepository.editedItemsBuilder.createNewConditionFrom(condition)
+        editionRepository.editedItemsBuilder.createNewImageConditionFrom(condition)
 
     fun startConditionEdition(condition: ImageCondition) = editionRepository.startConditionEdition(condition)
 
