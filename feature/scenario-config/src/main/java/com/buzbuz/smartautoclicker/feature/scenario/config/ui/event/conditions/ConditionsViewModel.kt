@@ -30,10 +30,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.TriggerConditionTypeChoice
 
 import kotlinx.coroutines.*
 
@@ -88,7 +90,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param area the area of the condition to create.
      * @param bitmap the image for the condition to create.
      */
-    fun createCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
+    fun createImageCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
         editionRepository.editedItemsBuilder.createNewImageCondition(context, area, bitmap)
 
     /**
@@ -97,6 +99,22 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      */
     fun createNewImageConditionFromCopy(condition: ImageCondition): ImageCondition =
         editionRepository.editedItemsBuilder.createNewImageConditionFrom(condition)
+
+    /**
+     * Create a new condition with the default values from configuration.
+     *
+     * @param context the Android Context.
+     * @param type the type of condition to create.
+     */
+    fun createNewTriggerCondition(context: Context, type: TriggerConditionTypeChoice): TriggerCondition =
+        when (type) {
+            TriggerConditionTypeChoice.OnBroadcastReceived ->
+                editionRepository.editedItemsBuilder.createNewOnBroadcastReceived(context)
+            TriggerConditionTypeChoice.OnCounterReached ->
+                editionRepository.editedItemsBuilder.createNewOnCounterReached(context)
+            TriggerConditionTypeChoice.OnTimerReached ->
+                editionRepository.editedItemsBuilder.createNewOnTimerReached(context)
+        }
 
     fun startConditionEdition(condition: Condition) = editionRepository.startConditionEdition(condition)
 

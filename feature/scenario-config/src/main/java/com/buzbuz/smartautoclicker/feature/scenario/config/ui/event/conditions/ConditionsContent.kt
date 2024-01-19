@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
@@ -44,6 +45,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.copy.ConditionCopyDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.allTriggerConditionChoices
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
@@ -217,7 +219,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             context = context,
             newOverlay = CaptureMenu(
                 onConditionSelected = { area, bitmap ->
-                    showImageConditionConfigDialog(viewModel.createCondition(context, area, bitmap))
+                    showImageConditionConfigDialog(viewModel.createImageCondition(context, area, bitmap))
                 }
             ),
             hideCurrent = true,
@@ -239,7 +241,18 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun showTriggerConditionTypeSelectionDialog() {
-
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = MultiChoiceDialog(
+                theme = R.style.AppTheme,
+                dialogTitleText = R.string.dialog_overlay_title_trigger_condition_type,
+                choices = allTriggerConditionChoices(),
+                onChoiceSelected = { choice ->
+                    showTriggerConditionDialog(viewModel.createNewTriggerCondition(context, choice))
+                },
+            ),
+            hideCurrent = false,
+        )
     }
 
     private fun showTriggerConditionDialog(condition: TriggerCondition) {
