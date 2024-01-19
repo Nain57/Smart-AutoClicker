@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.eventlist
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.imageevents
 
 import android.app.Application
 import android.content.Context
@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
 
-class EventListViewModel(application: Application) : AndroidViewModel(application) {
+class ImageEventListViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The repository of the application. */
     private val repository: Repository = Repository.getRepository(application)

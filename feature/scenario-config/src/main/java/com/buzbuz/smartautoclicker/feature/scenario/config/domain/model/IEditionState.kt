@@ -40,6 +40,7 @@ interface IEditionState {
     val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>>
 
     // Edited Event
+    val editedEventState: Flow<EditedElementState<Event>>
     val editedImageEventState: Flow<EditedElementState<ImageEvent>>
     val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>>
 

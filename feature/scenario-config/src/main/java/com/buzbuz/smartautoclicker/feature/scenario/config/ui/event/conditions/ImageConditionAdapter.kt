@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,42 +39,42 @@ import kotlinx.coroutines.Job
  * @param bitmapProvider provides the conditions bitmaps to the items.
  * @param itemViewBound listener called when a view is bound to a Condition item.
  */
-class ConditionAdapter(
+class ImageConditionAdapter(
     private val conditionClickedListener: (ImageCondition) -> Unit,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val itemViewBound: ((Int, View?) -> Unit),
-    ) : ListAdapter<ImageCondition, ConditionViewHolder>(ConditionDiffUtilCallback) {
+    ) : ListAdapter<ImageCondition, ImageConditionViewHolder>(ImageConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ConditionViewHolder(
+        ImageConditionViewHolder(
             ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             bitmapProvider,
         )
 
-    override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ImageConditionViewHolder, position: Int) {
         holder.onBindCondition((getItem(position)), conditionClickedListener)
         itemViewBound(position, holder.itemView)
     }
 
-    override fun onViewRecycled(holder: ConditionViewHolder) {
+    override fun onViewRecycled(holder: ImageConditionViewHolder) {
         holder.onUnbind()
         itemViewBound(holder.bindingAdapterPosition, null)
         super.onViewRecycled(holder)
     }
 }
 
-/** DiffUtil Callback comparing two ActionItem when updating the [ConditionAdapter] list. */
-object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
+/** DiffUtil Callback comparing two ActionItem when updating the [ImageConditionAdapter] list. */
+object ImageConditionDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
     override fun areItemsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem.id == newItem.id
     override fun areContentsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem == newItem
 }
 
 /**
- * View holder displaying a condition in the [ConditionAdapter].
+ * View holder displaying a condition in the [ImageConditionAdapter].
  * @param viewBinding the view binding for this item.
  * @param bitmapProvider provides the conditions bitmaps to the items.
  */
-class ConditionViewHolder(
+class ImageConditionViewHolder(
     private val viewBinding: ItemConditionBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
 ) : RecyclerView.ViewHolder(viewBinding.root) {

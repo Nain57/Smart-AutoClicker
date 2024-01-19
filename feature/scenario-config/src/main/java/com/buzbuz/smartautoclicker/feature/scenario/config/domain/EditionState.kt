@@ -77,11 +77,17 @@ internal class EditionState internal constructor(
         editor.imageEventsEditor.listState.map { listState ->
             listState.copy(value = listState.value?.sortedBy { it.priority } ?: emptyList())
         }
-    override val editedImageEventState: Flow<EditedElementState<ImageEvent>> =
-        editor.imageEventsEditor.editedItemState
 
     override val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =
         editor.triggerEventsEditor.listState
+
+    override val editedEventState: Flow<EditedElementState<Event>> =
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor?.editedItemState ?: emptyFlow()
+        }
+
+    override val editedImageEventState: Flow<EditedElementState<ImageEvent>> =
+        editor.imageEventsEditor.editedItemState
 
     override val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> =
         editor.triggerEventsEditor.editedItemState

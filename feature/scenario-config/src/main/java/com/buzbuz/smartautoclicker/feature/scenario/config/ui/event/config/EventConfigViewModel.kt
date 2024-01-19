@@ -53,7 +53,7 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** Currently configured event. */
-    private val configuredEvent = editionRepository.editionState.editedImageEventState
+    private val configuredEvent = editionRepository.editionState.editedEventState
         .mapNotNull { it.value }
 
     private val enableEventItem = DropdownItem(

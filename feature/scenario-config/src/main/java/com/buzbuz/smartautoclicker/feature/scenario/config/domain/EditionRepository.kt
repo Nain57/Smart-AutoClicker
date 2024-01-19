@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
 import android.content.Context
@@ -22,14 +24,18 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.IEditionState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 
@@ -74,16 +80,20 @@ class EditionRepository private constructor(context: Context) {
     val isEditingScenario: Flow<Boolean> = scenarioEditor.editedScenario
         .map { it?.id != null }
     /** Tells if the user is currently editing an event. */
-    val isEditingEvent: Flow<Boolean> = scenarioEditor.imageEventsEditor.editedItem
+    val isEditingEvent: Flow<Boolean> = scenarioEditor.currentEventEditor
+        .flatMapLatest { eventsEditor -> eventsEditor?.editedItem ?: flowOf(null) }
         .map { it?.id != null }
     /** Tells if the user is currently editing a condition. */
-    val isEditingCondition: Flow<Boolean> = scenarioEditor.imageEventsEditor.conditionsEditor.editedItem
+    val isEditingCondition: Flow<Boolean> = scenarioEditor.currentEventEditor
+        .flatMapLatest { eventsEditor -> eventsEditor?.conditionsEditor?.editedItem ?: flowOf(null) }
         .map { it?.id != null }
     /** Tells if the user is currently editing an action. */
-    val isEditingAction: Flow<Boolean> = scenarioEditor.imageEventsEditor.actionsEditor.editedItem
+    val isEditingAction: Flow<Boolean> = scenarioEditor.currentEventEditor
+        .flatMapLatest { eventsEditor -> eventsEditor?.actionsEditor?.editedItem ?: flowOf(null) }
         .map { it?.id != null }
     /** Tells if the user is currently editing an Intent Extra. */
-    val isEditingIntentExtra: Flow<Boolean> = scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.editedItem
+    val isEditingIntentExtra: Flow<Boolean> = scenarioEditor.currentEventEditor
+        .flatMapLatest { eventsEditor -> eventsEditor?.actionsEditor?.intentExtraEditor?.editedItem ?: flowOf(null) }
         .map { it?.id != null }
 
     // --- SCENARIO
@@ -153,42 +163,42 @@ class EditionRepository private constructor(context: Context) {
 
     // --- CONDITION
 
-    fun startConditionEdition(condition: ImageCondition): Unit =
-        scenarioEditor.imageEventsEditor.conditionsEditor.startItemEdition(condition)
-    fun updateEditedCondition(condition: ImageCondition): Unit =
-        scenarioEditor.imageEventsEditor.conditionsEditor.updateEditedItem(condition)
-    fun upsertEditedCondition(): Unit =
-        scenarioEditor.imageEventsEditor.conditionsEditor.upsertEditedItem()
-    fun deleteEditedCondition(): Unit =
-        scenarioEditor.imageEventsEditor.conditionsEditor.deleteEditedItem()
-    fun stopConditionEdition(): Unit =
-        scenarioEditor.imageEventsEditor.conditionsEditor.stopItemEdition()
+    fun startConditionEdition(condition: Condition) =
+        scenarioEditor.currentEventEditor.value?.conditionsEditor?.startItemEdition(condition)
+    fun updateEditedCondition(condition: Condition) =
+        scenarioEditor.currentEventEditor.value?.conditionsEditor?.updateEditedItem(condition)
+    fun upsertEditedCondition() =
+        scenarioEditor.currentEventEditor.value?.conditionsEditor?.upsertEditedItem()
+    fun deleteEditedCondition() =
+        scenarioEditor.currentEventEditor.value?.conditionsEditor?.deleteEditedItem()
+    fun stopConditionEdition() =
+        scenarioEditor.currentEventEditor.value?.conditionsEditor?.stopItemEdition()
 
 
     // --- ACTION
 
-    fun startActionEdition(action: Action): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.startItemEdition(action)
-    fun updateEditedAction(action: Action): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.updateEditedItem(action)
-    fun upsertEditedAction(): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.upsertEditedItem()
-    fun deleteEditedAction(): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.deleteEditedItem()
-    fun stopActionEdition(): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.stopItemEdition()
+    fun startActionEdition(action: Action) =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.startItemEdition(action)
+    fun updateEditedAction(action: Action) =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.updateEditedItem(action)
+    fun upsertEditedAction() =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.upsertEditedItem()
+    fun deleteEditedAction() =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.deleteEditedItem()
+    fun stopActionEdition() =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.stopItemEdition()
 
 
     // --- INTENT EXTRA
 
-    fun startIntentExtraEdition(extra: IntentExtra<out Any>): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.startItemEdition(extra)
-    fun updateEditedIntentExtra(extra: IntentExtra<out Any>): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.updateEditedItem(extra)
-    fun upsertEditedIntentExtra(): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.upsertEditedItem()
-    fun deleteEditedIntentExtra(): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.deleteEditedItem()
-    fun stopIntentExtraEdition(): Unit =
-        scenarioEditor.imageEventsEditor.actionsEditor.intentExtraEditor.stopItemEdition()
+    fun startIntentExtraEdition(extra: IntentExtra<out Any>) =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.intentExtraEditor?.startItemEdition(extra)
+    fun updateEditedIntentExtra(extra: IntentExtra<out Any>) =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.intentExtraEditor?.updateEditedItem(extra)
+    fun upsertEditedIntentExtra() =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.intentExtraEditor?.upsertEditedItem()
+    fun deleteEditedIntentExtra() =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.intentExtraEditor?.deleteEditedItem()
+    fun stopIntentExtraEdition() =
+        scenarioEditor.currentEventEditor.value?.actionsEditor?.intentExtraEditor?.stopItemEdition()
 }
