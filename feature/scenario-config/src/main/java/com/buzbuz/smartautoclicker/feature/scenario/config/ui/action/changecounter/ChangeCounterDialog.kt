@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.changecounter
 
 import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,12 +32,14 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
@@ -70,11 +73,11 @@ class ChangeCounterDialog(
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { debounceUserInteraction { onConfirmClicked() } }
+                    setOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { debounceUserInteraction { onDeleteClicked() } }
+                    setOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -93,6 +96,7 @@ class ChangeCounterDialog(
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
+                setOnCheckboxClickedListener { showCounterSelectionDialog() }
             }
             hideSoftInputOnFocusLoss(editCounterNameLayout.textField)
 
@@ -127,14 +131,41 @@ class ChangeCounterDialog(
                 launch { viewModel.counterName.collect(viewBinding.editCounterNameLayout::setTextValue) }
                 launch { viewModel.counterNameError.collect(viewBinding.editCounterNameLayout::setError) }
                 launch { viewModel.counterOperationCheckedId.collect(viewBinding.buttonsCounterOperation::setChecked) }
-                launch { viewModel.valueText.collect(viewBinding.editCounterChangeValue::setText) }
+                launch { viewModel.valueText.collect(::updateCounterValue) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
     }
 
+    private fun onSaveButtonClicked() {
+        debounceUserInteraction {
+            onConfirmClicked()
+            back()
+        }
+    }
+
+    private fun onDeleteButtonClicked() {
+        debounceUserInteraction {
+            onDeleteClicked()
+            back()
+        }
+    }
+
+    private fun updateCounterValue(newValue: String?) {
+        viewBinding.editCounterChangeValue.setText(newValue, InputType.TYPE_CLASS_NUMBER)
+    }
+
     private fun updateSaveButton(isValidAction: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidAction)
+    }
+
+    private fun showCounterSelectionDialog() {
+        OverlayManager.getInstance(context)
+            .navigateTo(
+                context = context,
+                newOverlay = CounterNameSelectionDialog(viewModel::setCounterName),
+                hideCurrent = true,
+            )
     }
 
     private fun onActionEditingStateChanged(isEditingAction: Boolean) {

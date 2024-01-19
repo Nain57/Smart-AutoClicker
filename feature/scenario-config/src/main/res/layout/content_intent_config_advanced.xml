@@ -90,7 +90,7 @@
                     android:scrollbars="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="1"
-                    tools:listitem="@layout/item_end_condition_card"
+                    tools:listitem="@layout/item_intent_extra_card"
                     tools:visibility="visible"/>
 
             </LinearLayout>

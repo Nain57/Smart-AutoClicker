@@ -66,11 +66,12 @@ data class ActionDetails (
 
 /** @return the [ActionDetails] corresponding to this action. */
 fun Action.toActionDetails(context: Context, inError: Boolean = !isComplete()): ActionDetails = when (this) {
-    is Action.Click -> this.toClickDetails(context, inError)
-    is Action.Swipe -> this.toSwipeDetails(context, inError)
-    is Action.Pause -> this.toPauseDetails(context, inError)
-    is Action.Intent -> this.toIntentDetails(context, inError)
-    is Action.ToggleEvent -> this.toToggleEventDetails(context, inError)
+    is Action.Click -> toClickDetails(context, inError)
+    is Action.Swipe -> toSwipeDetails(context, inError)
+    is Action.Pause -> toPauseDetails(context, inError)
+    is Action.Intent -> toIntentDetails(context, inError)
+    is Action.ToggleEvent -> toToggleEventDetails(context, inError)
+    is Action.ChangeCounter -> toChangeCounterDetails(context, inError)
     else -> throw IllegalArgumentException("Not yet supported")
 }
 
@@ -146,6 +147,18 @@ private fun Action.ToggleEvent.toToggleEventDetails(context: Context, inError: B
         haveError = inError,
     )
 
+private fun Action.ChangeCounter.toChangeCounterDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
+        icon = R.drawable.ic_change_counter,
+        name = name!!,
+        details = when {
+            inError -> context.getString(R.string.item_error_action_invalid_change_counter)
+            else -> formatChangeCounter(this, context)
+        },
+        action = this,
+        haveError = inError,
+    )
+
 /**
  * Format a action intent into a human readable string.
  * @param intent the action intent to be formatted.
@@ -201,6 +214,19 @@ private fun formatToggleEventState(toggleEvent: Action.ToggleEvent, context: Con
             toggleEvent.eventToggles.size,
         )
     }
+
+private fun formatChangeCounter(changeCounter: Action.ChangeCounter, context: Context): String =
+    context.getString(
+        R.string.item_desc_change_counter_details,
+        changeCounter.counterName.trim(),
+        when (changeCounter.operation) {
+            Action.ChangeCounter.OperationType.ADD -> "+"
+            Action.ChangeCounter.OperationType.MINUS -> "-"
+            Action.ChangeCounter.OperationType.SET -> "="
+        },
+        changeCounter.operationValue,
+    )
+
 
 /** The maximal length of the displayed intent action string. */
 private const val INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT = 15

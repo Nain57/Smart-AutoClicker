@@ -263,4 +263,9 @@
     <string name="input_field_label_change_counter_name">Counter name</string>
     <string name="item_title_change_counter">Change counter</string>
     <string name="item_desc_change_counter">Change a value to check it later</string>
+    <string name="dialog_overlay_title_counter_name_selection">Counters</string>
+    <string name="message_empty_counter_name_list">No counter defined</string>
+    <string name="item_error_action_invalid_change_counter">Counter is invalid</string>
+    <string name="item_desc_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="message_empty_secondary_counter_name_list">Counters are created with a Change Counter Action or a Counter Reached Condition</string>
 </resources>

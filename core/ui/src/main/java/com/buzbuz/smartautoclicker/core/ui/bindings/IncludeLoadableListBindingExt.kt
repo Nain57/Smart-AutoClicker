@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ fun IncludeLoadableListBinding.setEmptyText(@StringRes id: Int, @StringRes secon
     }
 }
 
-fun IncludeLoadableListBinding.updateState(items: List<Any>?) {
+fun IncludeLoadableListBinding.updateState(items: Collection<Any>?) {
     when {
         items == null -> {
             loading.visibility = View.VISIBLE
