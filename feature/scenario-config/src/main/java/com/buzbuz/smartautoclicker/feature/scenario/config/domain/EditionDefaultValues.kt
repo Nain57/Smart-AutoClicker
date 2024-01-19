@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getClickPressDurationConfig
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
@@ -81,4 +82,7 @@ internal class EditionDefaultValues(context: Context) {
 
     fun changeCounterName(context: Context): String =
         context.getString(R.string.default_change_counter_name)
+
+    fun counterComparisonOperation(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
+        TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 }

@@ -306,5 +306,12 @@
     <string name="item_desc_on_broadcast_received">%1$s received since scenario start</string>
     <string name="item_desc_on_counter_reached">%1$s %2$s %3$d</string>
     <string name="item_desc_on_timer_reached">%1$s after event is enabled</string>
+    <string name="dialog_overlay_title_trigger_condition_type">Trigger type</string>
+    <string name="item_title_broadcast_received">On Broadcast received</string>
+    <string name="item_desc_broadcast_received">Fulfilled once a Broadcast has been received since scenario start</string>
+    <string name="item_title_counter_reached">On counter reached</string>
+    <string name="item_desc_counter_reached">Verify an operation on a counter modified by an Action</string>
+    <string name="item_title_timer_reached">On timer reached</string>
+    <string name="item_desc_timer_reached">Fulfilled once a certain time after scenario start</string>
 
 </resources>

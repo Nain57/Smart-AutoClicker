@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.TriggerConditionTypeChoice
 
 class EditedItemsBuilder internal constructor(
     context: Context,
@@ -140,14 +141,63 @@ class EditedItemsBuilder internal constructor(
             path = if (condition.path != null) "" + condition.path else null,
         )
 
+    fun createNewOnBroadcastReceived(context: Context): TriggerCondition.OnBroadcastReceived =
+        TriggerCondition.OnBroadcastReceived(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.conditionName(context),
+            intentAction = "",
+        )
+
+    fun createNewOnCounterReached(context: Context): TriggerCondition.OnCounterCountReached =
+        TriggerCondition.OnCounterCountReached(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.conditionName(context),
+            counterName = "",
+            counterValue = 0,
+            comparisonOperation = defaultValues.counterComparisonOperation()
+        )
+
+    fun createNewOnTimerReached(context: Context): TriggerCondition.OnTimerReached =
+        TriggerCondition.OnTimerReached(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.conditionName(context),
+            durationMs = 0,
+        )
+
     fun createNewTriggerConditionFrom(condition: TriggerCondition, eventId: Identifier = getEditedEventIdOrThrow()): TriggerCondition =
         when (condition) {
-            is TriggerCondition.OnBroadcastReceived -> TODO()
-            is TriggerCondition.OnCounterCountReached -> TODO()
+            is TriggerCondition.OnBroadcastReceived -> createNewOnBroadcastReceivedFrom(condition, eventId)
+            is TriggerCondition.OnCounterCountReached -> createNewOnCounterReachedFrom(condition, eventId)
+            is TriggerCondition.OnTimerReached -> createNewOnTimerReachedFrom(condition, eventId)
             is TriggerCondition.OnScenarioEnd -> TODO()
             is TriggerCondition.OnScenarioStart -> TODO()
-            is TriggerCondition.OnTimerReached -> TODO()
         }
+
+    private fun createNewOnBroadcastReceivedFrom(condition: TriggerCondition.OnBroadcastReceived, eventId: Identifier) =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
+            intentAction = "" + condition.intentAction,
+        )
+
+    private fun createNewOnCounterReachedFrom(condition: TriggerCondition.OnCounterCountReached, eventId: Identifier) =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
+            counterName = "" + condition.counterName,
+        )
+
+    private fun createNewOnTimerReachedFrom(condition: TriggerCondition.OnTimerReached, eventId: Identifier) =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
+        )
 
     fun createNewClick(context: Context): Action.Click =
         Action.Click(
@@ -321,20 +371,27 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
-    private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
-        editor.imageEventsEditor.editedList.value?.let { events ->
+    private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean {
+        val validImageEvent = editor.imageEventsEditor.editedList.value?.let { events ->
             events.find { eventId == it.id } != null
         } ?: false
+        if (validImageEvent) return true
+
+        val validTriggerEvent = editor.triggerEventsEditor.editedList.value?.let { events ->
+            events.find { eventId == it.id } != null
+        } ?: false
+        return validTriggerEvent
+    }
 
     private fun getEditedScenarioIdOrThrow(): Identifier = editor.editedScenario.value?.id
         ?: throw IllegalStateException("Can't create items without an edited scenario")
 
-    private fun getEditedEventsCountOrThrow(): Int = editor.imageEventsEditor.editedList.value?.size
+    private fun getEditedEventsCountOrThrow(): Int = editor.currentEventEditor.value?.editedList?.value?.size
         ?: throw IllegalStateException("Can't create items without an edited event list")
 
-    private fun getEditedEventIdOrThrow(): Identifier = editor.imageEventsEditor.editedItem.value?.id
+    private fun getEditedEventIdOrThrow(): Identifier = editor.currentEventEditor.value?.editedItem?.value?.id
         ?: throw IllegalStateException("Can't create items without an edited event")
 
-    private fun getEditedActionIdOrThrow(): Identifier = editor.imageEventsEditor.actionsEditor.editedItem.value?.id
+    private fun getEditedActionIdOrThrow(): Identifier = editor.currentEventEditor.value?.actionsEditor?.editedItem?.value?.id
         ?: throw IllegalStateException("Can't create items without an edited action")
 }
