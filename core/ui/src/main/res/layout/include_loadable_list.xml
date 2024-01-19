@@ -27,7 +27,8 @@
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:minHeight="@dimen/empty_list_height"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
