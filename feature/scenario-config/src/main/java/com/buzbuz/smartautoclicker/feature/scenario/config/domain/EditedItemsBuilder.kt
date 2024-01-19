@@ -29,6 +29,10 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 
 class EditedItemsBuilder internal constructor(
     context: Context,
@@ -57,7 +61,7 @@ class EditedItemsBuilder internal constructor(
         endConditionsIdCreator.resetIdCount()
     }
 
-    fun createNewEvent(context: Context): ImageEvent =
+    fun createNewImageEvent(context: Context): ImageEvent =
         ImageEvent(
             id = eventsIdCreator.generateNewIdentifier(),
             scenarioId = getEditedScenarioIdOrThrow(),
@@ -68,7 +72,23 @@ class EditedItemsBuilder internal constructor(
             actions = mutableListOf(),
         )
 
-    fun createNewEventFrom(from: ImageEvent, scenarioId: Identifier = getEditedScenarioIdOrThrow()): ImageEvent {
+    fun createNewTriggerEvent(context: Context): TriggerEvent =
+        TriggerEvent(
+            id = eventsIdCreator.generateNewIdentifier(),
+            scenarioId = getEditedScenarioIdOrThrow(),
+            name = defaultValues.eventName(context),
+            conditionOperator = defaultValues.eventConditionOperator(),
+            conditions = mutableListOf(),
+            actions = mutableListOf(),
+        )
+
+    fun createNewEventFrom(from: Event, scenarioId: Identifier = getEditedScenarioIdOrThrow()): Event =
+        when (from) {
+            is ImageEvent -> createNewImageEventFrom(from, scenarioId)
+            is TriggerEvent -> createNewTriggerEventFrom(from, scenarioId)
+        }
+
+    fun createNewImageEventFrom(from: ImageEvent, scenarioId: Identifier = getEditedScenarioIdOrThrow()): ImageEvent {
         val eventId = eventsIdCreator.generateNewIdentifier()
 
         return from.copy(
@@ -76,7 +96,7 @@ class EditedItemsBuilder internal constructor(
             scenarioId = scenarioId,
             name = "" + from.name,
             conditions = from.conditions.map { conditionOrig ->
-                val conditionCopy = createNewConditionFrom(conditionOrig, eventId)
+                val conditionCopy = createNewImageConditionFrom(conditionOrig, eventId)
                 eventCopyConditionIdMap[conditionOrig.id] = conditionCopy.id
                 conditionCopy
             },
@@ -84,7 +104,23 @@ class EditedItemsBuilder internal constructor(
         ).also { eventCopyConditionIdMap.clear() }
     }
 
-    fun createNewCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
+    fun createNewTriggerEventFrom(from: TriggerEvent, scenarioId: Identifier = getEditedScenarioIdOrThrow()): TriggerEvent {
+        val eventId = eventsIdCreator.generateNewIdentifier()
+
+        return from.copy(
+            id = eventId,
+            scenarioId = scenarioId,
+            name = "" + from.name,
+            conditions = from.conditions.map { conditionOrig ->
+                val conditionCopy = createNewTriggerConditionFrom(conditionOrig, eventId)
+                eventCopyConditionIdMap[conditionOrig.id] = conditionCopy.id
+                conditionCopy
+            },
+            actions = from.actions.map { createNewActionFrom(it, eventId) }
+        ).also { eventCopyConditionIdMap.clear() }
+    }
+
+    fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
         ImageCondition(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
@@ -96,13 +132,22 @@ class EditedItemsBuilder internal constructor(
             shouldBeDetected = defaultValues.conditionShouldBeDetected(),
         )
 
-    fun createNewConditionFrom(condition: ImageCondition, eventId: Identifier = getEditedEventIdOrThrow()) =
+    fun createNewImageConditionFrom(condition: ImageCondition, eventId: Identifier = getEditedEventIdOrThrow()): ImageCondition =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + condition.name,
             path = if (condition.path != null) "" + condition.path else null,
         )
+
+    fun createNewTriggerConditionFrom(condition: TriggerCondition, eventId: Identifier = getEditedEventIdOrThrow()): TriggerCondition =
+        when (condition) {
+            is TriggerCondition.OnBroadcastReceived -> TODO()
+            is TriggerCondition.OnCounterCountReached -> TODO()
+            is TriggerCondition.OnScenarioEnd -> TODO()
+            is TriggerCondition.OnScenarioStart -> TODO()
+            is TriggerCondition.OnTimerReached -> TODO()
+        }
 
     fun createNewClick(context: Context): Action.Click =
         Action.Click(
