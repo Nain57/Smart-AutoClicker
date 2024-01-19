@@ -41,8 +41,8 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionSelectorMenu
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.ImageConditionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
@@ -215,7 +215,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun showImageConditionCaptureOverlay() {
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = ConditionSelectorMenu(
+            newOverlay = CaptureMenu(
                 onConditionSelected = { area, bitmap ->
                     showImageConditionConfigDialog(viewModel.createCondition(context, area, bitmap))
                 }
@@ -229,7 +229,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = ConditionDialog(
+            newOverlay = ImageConditionDialog(
                 onConfirmClickedListener = viewModel::upsertEditedCondition,
                 onDeleteClickedListener = viewModel::removeEditedCondition,
                 onDismissClickedListener = viewModel::dismissEditedCondition
@@ -247,7 +247,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = ConditionDialog(
+            newOverlay = ImageConditionDialog(
                 onConfirmClickedListener = viewModel::upsertEditedCondition,
                 onDeleteClickedListener = viewModel::removeEditedCondition,
                 onDismissClickedListener = viewModel::dismissEditedCondition

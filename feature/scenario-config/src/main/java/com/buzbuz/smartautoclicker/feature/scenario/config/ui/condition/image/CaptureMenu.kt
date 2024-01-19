@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
 import android.graphics.Bitmap
 import android.graphics.Rect
@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayVa
  *
  * @param onConditionSelected listener upon confirmation of the area to be capture to create the event condition.
  */
-class ConditionSelectorMenu(
+class CaptureMenu(
     private val onConditionSelected: (Rect, Bitmap) -> Unit
 ) : OverlayMenu() {
 
@@ -59,8 +59,8 @@ class ConditionSelectorMenu(
     }
 
     /** The view model for this menu. */
-    private val viewModel: ConditionSelectorViewModel by lazy {
-        ViewModelProvider(this).get(ConditionSelectorViewModel::class.java)
+    private val viewModel: CaptureViewModel by lazy {
+        ViewModelProvider(this).get(CaptureViewModel::class.java)
     }
 
     /** The view binding for the overlay menu. */

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
@@ -41,7 +41,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.Job
 
-class ConditionSelectionDialog(
+class ImageConditionSelectionDialog(
     private val conditionList: List<ImageCondition>,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
@@ -53,7 +53,7 @@ class ConditionSelectionDialog(
     private lateinit var viewBinding: DialogBaseSelectionBinding
 
     /** Adapter for the list of condition. */
-    private val conditionsAdapter = ConditionsAdapter(
+    private val conditionsAdapter = ImageConditionsAdapter(
         bitmapProvider = bitmapProvider,
         onConditionSelected = ::onConditionClicked,
         itemViewBound = ::onConditionItemBound,
@@ -107,33 +107,33 @@ class ConditionSelectionDialog(
  * Adapter for the list of condition.
  * @param onConditionSelected listener on user click on a condition.
  */
-private class ConditionsAdapter(
+private class ImageConditionsAdapter(
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
-) : ListAdapter<ImageCondition, ConditionViewHolder>(ConditionsDiffUtilCallback) {
+) : ListAdapter<ImageCondition, ImageConditionViewHolder>(ImageConditionsDiffUtilCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConditionViewHolder =
-        ConditionViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageConditionViewHolder =
+        ImageConditionViewHolder(
             ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             bitmapProvider,
             onConditionSelected,
         )
 
-    override fun onBindViewHolder(holder: ConditionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ImageConditionViewHolder, position: Int) {
         holder.onBind(getItem(position))
         itemViewBound(position, holder.itemView)
     }
 
-    override fun onViewRecycled(holder: ConditionViewHolder) {
+    override fun onViewRecycled(holder: ImageConditionViewHolder) {
         holder.onUnbind()
         itemViewBound(holder.bindingAdapterPosition, null)
         super.onViewRecycled(holder)
     }
 }
 
-/** DiffUtil Callback comparing two items when updating the [ConditionsAdapter] list. */
-private object ConditionsDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
+/** DiffUtil Callback comparing two items when updating the [ImageConditionsAdapter] list. */
+private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
     override fun areItemsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem.id == newItem.id
     override fun areContentsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem == newItem
 }
@@ -145,7 +145,7 @@ private object ConditionsDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>
  * @param bitmapProvider provides the conditions bitmap.
  * @param onConditionSelected called when the user select a condition.
  */
-private class ConditionViewHolder(
+private class ImageConditionViewHolder(
     private val viewBinding: ItemConditionBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,

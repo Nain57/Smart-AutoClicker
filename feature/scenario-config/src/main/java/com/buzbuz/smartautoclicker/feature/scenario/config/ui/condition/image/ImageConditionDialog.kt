@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
 import android.content.DialogInterface
 import android.graphics.Bitmap
@@ -45,7 +45,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionImageBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -53,7 +53,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class ConditionDialog(
+class ImageConditionDialog(
     private val onConfirmClickedListener: () -> Unit,
     private val onDeleteClickedListener: () -> Unit,
     private val onDismissClickedListener: () -> Unit,
@@ -63,10 +63,10 @@ class ConditionDialog(
     private val viewModel: ConditionViewModel by viewModels()
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogConfigConditionBinding
+    private lateinit var viewBinding: DialogConfigConditionImageBinding
 
     override fun onCreateView(): ViewGroup {
-        viewBinding = DialogConfigConditionBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigConditionImageBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_condition_config)
 
@@ -229,7 +229,7 @@ class ConditionDialog(
         debounceUserInteraction {
             OverlayManager.getInstance(context).navigateTo(
                 context = context,
-                newOverlay = ConditionAreaSelectorMenu(
+                newOverlay = ImageConditionAreaSelectorMenu(
                     onAreaSelected = viewModel::setDetectionArea,
                 ),
                 hideCurrent = true,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
 import android.app.Application
 import android.graphics.Bitmap
@@ -31,7 +31,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ConditionSelectorViewModel(application: Application) : AndroidViewModel(application)  {
+class CaptureViewModel(application: Application) : AndroidViewModel(application)  {
 
     /** Provides screen images. */
     private val displayRecorder: DisplayRecorder = DisplayRecorder.getInstance()
