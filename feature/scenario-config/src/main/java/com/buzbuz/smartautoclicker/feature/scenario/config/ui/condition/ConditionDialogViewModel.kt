@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.SelectorState
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -57,7 +58,7 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** The condition being configured by the user. */
-    private val configuredCondition = editionRepository.editionState.editedConditionState
+    private val configuredCondition = editionRepository.editionState.editedImageConditionState
         .mapNotNull { it.value }
 
     /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
@@ -129,7 +130,7 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
     /** Tells if the configured condition is valid and can be saved. */
-    val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedConditionState.map { condition ->
+    val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageConditionState.map { condition ->
         condition.canBeSaved
     }
 
@@ -138,51 +139,41 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
      * @param name the new condition name.
      */
     fun setName(name: String) {
-        editionRepository.editionState.getEditedCondition()?.let { condition ->
-            editionRepository.updateEditedCondition(condition.copy(name = name))
-        }
+        updateEditedCondition { it.copy(name = name) }
     }
 
     /** Set the shouldBeDetected value of the condition. */
     fun setShouldBeDetected(newShouldBeDetected: DropdownItem) {
-        editionRepository.editionState.getEditedCondition()?.let { condition ->
-            val shouldBeDetected = when (newShouldBeDetected) {
-                shouldBeDetectedItem -> true
-                shouldNotBeDetectedItem -> false
-                else -> return
-            }
-
-            editionRepository.updateEditedCondition(condition.copy(shouldBeDetected = shouldBeDetected))
+        updateEditedCondition { oldCondition ->
+            oldCondition.copy(
+                shouldBeDetected = when (newShouldBeDetected) {
+                    shouldBeDetectedItem -> true
+                    shouldNotBeDetectedItem -> false
+                    else -> return@updateEditedCondition null
+                }
+            )
         }
     }
 
     /** Set the detection type. */
     fun setDetectionType(newType: DropdownItem) {
-        editionRepository.editionState.getEditedCondition()?.let { condition ->
+        updateEditedCondition { oldCondition ->
             when (newType) {
-                detectionTypeExact -> editionRepository.updateEditedCondition(
-                    condition.copy(detectionType = EXACT)
+                detectionTypeExact -> oldCondition.copy(detectionType = EXACT)
+                detectionTypeScreen -> oldCondition.copy(detectionType = WHOLE_SCREEN)
+                detectionTypeInArea -> oldCondition.copy(
+                    detectionType = IN_AREA,
+                    detectionArea = oldCondition.detectionArea ?: oldCondition.area,
                 )
-                detectionTypeScreen -> editionRepository.updateEditedCondition(
-                    condition.copy(detectionType = WHOLE_SCREEN)
-                )
-                detectionTypeInArea -> editionRepository.updateEditedCondition(
-                    condition.copy(
-                        detectionType = IN_AREA,
-                        detectionArea = condition.detectionArea ?: condition.area,
-                    )
-                )
-                else -> return
+                else -> return@updateEditedCondition null
             }
         }
     }
 
     /** Set the area to detect in. */
     fun setDetectionArea(area: Rect) {
-        editionRepository.editionState.getEditedCondition()?.let { condition ->
-            editionRepository.updateEditedCondition(
-                condition.copy(detectionArea = sanitizeAreaForCondition(area, condition.area))
-            )
+        updateEditedCondition { oldCondition ->
+            oldCondition.copy(detectionArea = sanitizeAreaForCondition(area, oldCondition.area))
         }
     }
 
@@ -191,8 +182,8 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
      * @param value the new threshold value.
      */
     fun setThreshold(value: Int) {
-        editionRepository.editionState.getEditedCondition()?.let { condition ->
-            editionRepository.updateEditedCondition(condition.copy(threshold = value))
+        updateEditedCondition { oldCondition ->
+            oldCondition.copy(threshold = value)
         }
     }
 
@@ -238,6 +229,14 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
             left + width,
             top + height,
         )
+    }
+
+    private fun updateEditedCondition(closure: (oldValue: ImageCondition) -> ImageCondition?) {
+        editionRepository.editionState.getEditedCondition<ImageCondition>()?.let { condition ->
+            closure(condition)?.let { newValue ->
+                editionRepository.updateEditedCondition(newValue)
+            }
+        }
     }
 
     private fun Context.getExactDetectionTypeState(area: Rect) = DetectionTypeState(

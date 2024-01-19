@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
 
     /** List of displayed condition items. */
     val conditionList: Flow<List<ConditionCopyItem>?> =
-        combine(repository.getAllImageConditions(), editionRepository.editionState.editedEventConditionsState, searchQuery) { dbCond, eventCond, query ->
+        combine(repository.getAllImageConditions(), editionRepository.editionState.editedEventImageConditionsState, searchQuery) { dbCond, eventCond, query ->
             val editedConditions = eventCond.value ?: return@combine null
             if (query.isNullOrEmpty()) getAllItems(dbCond, editedConditions) else dbCond.toCopyItemsFromSearch(query)
         }

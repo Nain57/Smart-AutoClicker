@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -31,21 +32,29 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.ScenarioEditionState
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedScenarioState
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.IEditionState
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.doesNotContainAction
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isClickOnCondition
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Suppress("UNCHECKED_CAST")
-class EditionState internal constructor(context: Context, private val editor: ScenarioEditor) {
+internal class EditionState internal constructor(
+    context: Context,
+    private val editor: ScenarioEditor,
+) : IEditionState {
 
     /** The repository providing access to the database. */
     private val repository: Repository = Repository.getRepository(context)
 
-    val scenarioCompleteState: Flow<EditedElementState<ScenarioEditionState>> =
+    override val scenarioCompleteState: Flow<EditedElementState<EditedScenarioState>> =
         combine(
             editor.editedScenarioState,
             editor.imageEventsEditor.listState,
@@ -55,78 +64,63 @@ class EditionState internal constructor(context: Context, private val editor: Sc
                 return@combine EditedElementState(value = null, hasChanged = false, canBeSaved = false)
 
             EditedElementState(
-                value = ScenarioEditionState(scenario.value, events.value),
+                value = EditedScenarioState(scenario.value, events.value),
                 hasChanged = scenario.hasChanged || events.hasChanged,
                 canBeSaved = scenario.canBeSaved && events.canBeSaved
             )
         }
-    val scenarioState: Flow<EditedElementState<Scenario>> =
-        editor.editedScenarioState
-    fun getScenario(): Scenario? = editor.editedScenario.value
 
-    val editedImageEventsState: Flow<EditedListState<ImageEvent>> =
+    override val scenarioState: Flow<EditedElementState<Scenario>> =
+        editor.editedScenarioState
+
+    override val editedImageEventsState: Flow<EditedListState<ImageEvent>> =
         editor.imageEventsEditor.listState.map { listState ->
             listState.copy(value = listState.value?.sortedBy { it.priority } ?: emptyList())
         }
-    val editedImageEventState: Flow<EditedElementState<ImageEvent>> =
+    override val editedImageEventState: Flow<EditedElementState<ImageEvent>> =
         editor.imageEventsEditor.editedItemState
-    val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =
+
+    override val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =
         editor.triggerEventsEditor.listState
-    val editedTriggerImageEventState: Flow<EditedElementState<TriggerEvent>> =
+
+    override val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> =
         editor.triggerEventsEditor.editedItemState
-    val allEditedEvents : Flow<List<Event>> =
+
+    override val allEditedEvents : Flow<List<Event>> =
         combine(editor.imageEventsEditor.allEditedItems, editor.triggerEventsEditor.allEditedItems) { imageEvent, triggerEvents ->
             buildList {
                 addAll(imageEvent)
                 addAll(triggerEvents)
             }
         }
-    fun getEditedEvent(): Event? =
-        editor.imageEventsEditor.editedItem.value ?: editor.triggerEventsEditor.editedItem.value
-    fun getEditedImageEvent(): ImageEvent? =
-        editor.imageEventsEditor.editedItem.value
 
-    fun getAllEditedEvents(): List<Event> =
-        buildList {
-            addAll(editor.imageEventsEditor.getAllEditedItems())
-            addAll(editor.triggerEventsEditor.getAllEditedItems())
-        }
-    fun getAllEditedEventsFlow(): Flow<List<Event>> =
-        combine(editor.imageEventsEditor.allEditedItems, editor.triggerEventsEditor.allEditedItems) { imageEvents, triggerEvents ->
-            buildList {
-                addAll(imageEvents)
-                addAll(triggerEvents)
-            }
+    override val editedEventConditionsState: Flow<EditedListState<Condition>> =
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor?.conditionsEditor?.listState ?: emptyFlow()
         }
 
-    val editedEventConditionsState: Flow<EditedListState<ImageCondition>> =
+    override val editedEventImageConditionsState: Flow<EditedListState<ImageCondition>> =
         editor.imageEventsEditor.conditionsEditor.listState
-    val editedConditionState: Flow<EditedElementState<ImageCondition>> =
+
+    override val editedImageConditionState: Flow<EditedElementState<ImageCondition>> =
         editor.imageEventsEditor.conditionsEditor.editedItemState
-    fun getEditedCondition(): ImageCondition? = editor.imageEventsEditor.conditionsEditor.editedItem.value
 
-    val editedEventActionsState: Flow<EditedListState<Action>> =
+    override val editedEventActionsState: Flow<EditedListState<Action>> =
         editor.imageEventsEditor.actionsEditor.listState
-    val editedActionState: Flow<EditedElementState<Action>> =
-        editor.imageEventsEditor.actionsEditor.editedItemState
-    fun <T : Action> getEditedAction(): T? =
-        editor.imageEventsEditor.actionsEditor.editedItem.value?.let { it as T }
 
-    val editedActionIntentExtrasState: Flow<EditedListState<IntentExtra<out Any>>> =
+    override val editedActionState: Flow<EditedElementState<Action>> =
+        editor.imageEventsEditor.actionsEditor.editedItemState
+
+    override val editedActionIntentExtrasState: Flow<EditedListState<IntentExtra<out Any>>> =
         editor.imageEventsEditor.actionsEditor.intentExtraEditor.listState
-    val editedIntentExtraState: Flow<EditedElementState<IntentExtra<out Any>>> =
+
+    override val editedIntentExtraState: Flow<EditedElementState<IntentExtra<out Any>>> =
         editor.imageEventsEditor.actionsEditor.intentExtraEditor.editedItemState
 
-    val editedActionEventTogglesState: Flow<EditedListState<EventToggle>> =
+    override val editedActionEventTogglesState: Flow<EditedListState<EventToggle>> =
         editor.imageEventsEditor.actionsEditor.eventToggleEditor.listState
 
-    fun getEditedEventToggles(): List<EventToggle>? =
-        editor.imageEventsEditor.actionsEditor.editedItem.value?.let { action ->
-            if (action is Action.ToggleEvent) action.eventToggles
-            else null
-        }
-
-    val eventsAvailableForToggleEventAction: Flow<List<ImageEvent>> =
+    override val eventsAvailableForToggleEventAction: Flow<List<ImageEvent>> =
         combine(editedImageEventsState, editedImageEventState) { scenarioEvents, editedEvent ->
             if (editedEvent.value == null || scenarioEvents.value == null) return@combine emptyList()
 
@@ -138,11 +132,59 @@ class EditionState internal constructor(context: Context, private val editor: Sc
                 addAll(availableEvents)
             }
         }
-    fun getEditedIntentExtra(): IntentExtra<out Any>? =
+
+    override val actionsAvailableForCopyFromEditedScenario: Flow<List<Action>> =
+        editor.imageEventsEditor.editedList
+            .map { events ->
+                events ?: return@map emptyList()
+                val editedEvent = getEditedEvent<Event>() ?: return@map emptyList()
+
+                buildList {
+                    events
+                        .filter { item -> item.id != editedEvent.id }
+                        .forEach { event -> addAll(event.actions.filter { !it.isClickOnCondition() }) }
+                }
+            }
+
+    override val actionsAvailableForCopyFromOtherScenario: Flow<List<Action>> =
+        combine(
+            editor.imageEventsEditor.editedItem,
+            actionsAvailableForCopyFromEditedScenario,
+            repository.getAllActions(),
+        ) { editedEvt, scenarioOthers, allOthers ->
+            allOthers.filter { item ->
+                !item.isClickOnCondition()
+                        && item !is Action.ToggleEvent
+                        && editedEvt?.actions?.doesNotContainAction(item) ?: true
+                        && scenarioOthers.doesNotContainAction(item)
+            }
+        }
+
+    override fun getAllEditedEvents(): List<Event> =
+        buildList {
+            addAll(editor.imageEventsEditor.getAllEditedItems())
+            addAll(editor.triggerEventsEditor.getAllEditedItems())
+        }
+
+    override fun <T : Event> getEditedEvent(): T? =
+        (editor.imageEventsEditor.editedItem.value ?: editor.triggerEventsEditor.editedItem.value)?.let { it as T }
+
+    override fun <T : Condition> getEditedCondition(): T? =
+        editor.imageEventsEditor.conditionsEditor.editedItem.value?.let { it as T }
+
+    override fun <T : Action> getEditedAction(): T? =
+        editor.imageEventsEditor.actionsEditor.editedItem.value?.let { it as T }
+
+    override fun getEditedIntentExtra(): IntentExtra<out Any>? =
         editor.imageEventsEditor.actionsEditor.intentExtraEditor.editedItem.value
 
-    /** Check if the edited Event is referenced by an Action in the edited scenario. */
-    fun isEditedEventReferencedByAction(): Boolean {
+    override fun getEditedActionEventToggles(): List<EventToggle>? =
+        editor.imageEventsEditor.actionsEditor.editedItem.value?.let { action ->
+            if (action is Action.ToggleEvent) action.eventToggles
+            else null
+        }
+
+    override fun isEditedEventReferencedByAction(): Boolean {
         val event = editor.imageEventsEditor.editedItem.value ?: return false
         val scenarioEvents = editor.imageEventsEditor.editedList.value ?: return false
 
@@ -155,11 +197,7 @@ class EditionState internal constructor(context: Context, private val editor: Sc
         } != null
     }
 
-    /**
-     * Check if the edited Condition is referenced by a Click Action in the edited event.
-     * If the edited event is set to OR, do not consider the reference as true.
-     */
-    fun isEditedConditionReferencedByClick(): Boolean {
+    override fun isEditedConditionReferencedByClick(): Boolean {
         val event = editor.imageEventsEditor.editedItem.value ?: return false
         if (event.conditionOperator == OR) return false
 
@@ -171,26 +209,5 @@ class EditionState internal constructor(context: Context, private val editor: Sc
         } != null
     }
 
-    val editedScenarioOtherActionsForCopy: Flow<List<Action>> =
-        editor.imageEventsEditor.editedList
-            .map { events ->
-                events ?: return@map emptyList()
-                val editedEvent = getEditedEvent() ?: return@map emptyList()
-
-                buildList {
-                    events
-                        .filter { item -> item.id != editedEvent.id }
-                        .forEach { event -> addAll(event.actions.filter { !it.isClickOnCondition() }) }
-                }
-            }
-
-    val allOtherScenarioActionsForCopy: Flow<List<Action>> =
-        combine(editor.imageEventsEditor.editedItem, editedScenarioOtherActionsForCopy, repository.getAllActions()) { editedEvt, scenarioOthers, allOthers ->
-            allOthers.filter { item ->
-                !item.isClickOnCondition()
-                        && item !is Action.ToggleEvent
-                        && editedEvt?.actions?.doesNotContainAction(item) ?: true
-                        && scenarioOthers.doesNotContainAction(item)
-            }
-        }
+    override fun getScenario(): Scenario? = editor.editedScenario.value
 }

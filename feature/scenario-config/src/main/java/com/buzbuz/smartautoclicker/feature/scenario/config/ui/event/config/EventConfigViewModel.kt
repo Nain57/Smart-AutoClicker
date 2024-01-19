@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
@@ -118,39 +119,41 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
 
     /** Set a new name for the configured event. */
     fun setEventName(newName: String) {
-        editionRepository.editionState.getEditedImageEvent()?.let { event ->
-            viewModelScope.launch {
-                editionRepository.updateEditedEvent(event.copy(name = newName))
-            }
-        }
+        updateEditedEvent { oldValue -> oldValue.copyBase(name = newName) }
     }
 
     /** Toggle the end condition operator between AND and OR. */
     fun setConditionOperator(operatorItem: DropdownItem) {
-        editionRepository.editionState.getEditedImageEvent()?.let { event ->
-            val operator = when (operatorItem) {
-                conditionAndItem -> AND
-                conditionOrItem -> OR
-                else -> return
-            }
-
-            viewModelScope.launch {
-                editionRepository.updateEditedEvent(event.copy(conditionOperator = operator))
-            }
+        updateEditedEvent { oldValue ->
+            oldValue.copyBase(
+                conditionOperator = when (operatorItem) {
+                    conditionAndItem -> AND
+                    conditionOrItem -> OR
+                    else -> return@updateEditedEvent null
+                }
+            )
         }
     }
 
     /** Toggle the event state between true and false. */
     fun setEventState(state: DropdownItem) {
-        editionRepository.editionState.getEditedImageEvent()?.let { conf ->
-            val value = when (state) {
-                enableEventItem -> true
-                disableEventItem -> false
-                else -> return
-            }
+        updateEditedEvent { oldValue ->
+            oldValue.copyBase(
+                enabledOnStart = when (state) {
+                    enableEventItem -> true
+                    disableEventItem -> false
+                    else -> return@updateEditedEvent null
+                }
+            )
+        }
+    }
 
+    private fun updateEditedEvent(closure: (oldValue: Event) -> Event?) {
+        editionRepository.editionState.getEditedEvent<Event>()?.let { oldValue ->
             viewModelScope.launch {
-                editionRepository.updateEditedEvent(conf.copy(enabledOnStart = value))
+                closure(oldValue)?.let { newValue ->
+                    editionRepository.updateEditedEvent(newValue)
+                }
             }
         }
     }

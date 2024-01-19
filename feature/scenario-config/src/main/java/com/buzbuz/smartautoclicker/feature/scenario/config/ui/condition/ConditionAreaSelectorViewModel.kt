@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ class ConditionAreaSelectorViewModel(application: Application) : AndroidViewMode
     private val editionRepository = EditionRepository.getInstance(application)
 
     /** The condition being configured by the user. */
-    private val configuredCondition = editionRepository.editionState.editedConditionState
+    private val configuredCondition = editionRepository.editionState.editedImageConditionState
         .mapNotNull { it.value }
 
     /** The position at which the selector should be initialized. */

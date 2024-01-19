@@ -43,7 +43,7 @@ class EventTogglesViewModel(application: Application) : AndroidViewModel(applica
     private val userModifications: MutableStateFlow<Map<Identifier, Pair<Identifier?, Action.ToggleEvent.ToggleType?>>> = MutableStateFlow(
         buildMap {
             val allEditedEvents = editionRepository.editionState.getAllEditedEvents()
-            val toggles = editionRepository.editionState.getEditedEventToggles() ?: emptyList()
+            val toggles = editionRepository.editionState.getEditedActionEventToggles() ?: emptyList()
 
             allEditedEvents.forEach { event ->
                 val eventToggle = toggles.find { eventToggle -> eventToggle.targetEventId == event.id }
@@ -81,7 +81,7 @@ class EventTogglesViewModel(application: Application) : AndroidViewModel(applica
                         }
                     }
 
-                when (editionRepository.editionState.getEditedEvent()) {
+                when (editionRepository.editionState.getEditedEvent<Event>()) {
                     is ImageEvent -> {
                         if (imageEvents.size > 1) addAll(imageEvents)
                         if (triggerEvents.size > 1) addAll(triggerEvents)
