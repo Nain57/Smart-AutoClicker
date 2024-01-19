@@ -48,7 +48,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.ConditionSelectionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.ImageConditionSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -242,7 +242,7 @@ class ClickDialog(
     private fun showConditionSelector() =
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = ConditionSelectionDialog(
+            newOverlay = ImageConditionSelectionDialog(
                 conditionList = viewModel.availableConditions.value,
                 bitmapProvider = viewModel::getConditionBitmap,
                 onConditionSelected = viewModel::setConditionToBeClicked,
