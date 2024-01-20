@@ -22,18 +22,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
@@ -100,19 +100,20 @@ class ChangeCounterDialog(
             }
             hideSoftInputOnFocusLoss(editCounterNameLayout.textField)
 
-            buttonsCounterOperation.apply {
-                setIcons(listOf(R.drawable.ic_add, R.drawable.ic_minus, R.drawable.ic_equals), selectionRequired = true)
-                setOnCheckedListener(viewModel::setOperationCheckedButtonId)
-            }
+            operatorField.setItems(
+                label = context.getString(R.string.dropdown_label_comparison_operator),
+                items = viewModel.operatorDropdownItems,
+                onItemSelected = viewModel::setOperationItem,
+            )
 
-            editCounterChangeValue.apply {
+            editValueLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
                 setLabel(R.string.input_field_label_change_counter_operation_value)
                 setOnTextChangedListener {
                     viewModel.setOperationValue(if (it.isNotEmpty()) it.toString().toInt() else null)
                 }
             }
-            hideSoftInputOnFocusLoss(editCounterChangeValue.textField)
+            hideSoftInputOnFocusLoss(editValueLayout.textField)
         }
 
         return viewBinding.root
@@ -130,7 +131,7 @@ class ChangeCounterDialog(
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
                 launch { viewModel.counterName.collect(viewBinding.editCounterNameLayout::setTextValue) }
                 launch { viewModel.counterNameError.collect(viewBinding.editCounterNameLayout::setError) }
-                launch { viewModel.counterOperationCheckedId.collect(viewBinding.buttonsCounterOperation::setChecked) }
+                launch { viewModel.operatorDropdownState.collect(viewBinding.operatorField::setSelectedItem) }
                 launch { viewModel.valueText.collect(::updateCounterValue) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
@@ -152,7 +153,7 @@ class ChangeCounterDialog(
     }
 
     private fun updateCounterValue(newValue: String?) {
-        viewBinding.editCounterChangeValue.setText(newValue, InputType.TYPE_CLASS_NUMBER)
+        viewBinding.editValueLayout.setText(newValue, InputType.TYPE_CLASS_NUMBER)
     }
 
     private fun updateSaveButton(isValidAction: Boolean) {
