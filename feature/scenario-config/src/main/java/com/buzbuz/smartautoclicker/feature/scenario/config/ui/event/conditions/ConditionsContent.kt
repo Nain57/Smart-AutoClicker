@@ -42,10 +42,13 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.allTriggerConditionChoices
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.timer.TimerReachedConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
@@ -55,9 +58,16 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
     private val viewModel: ConditionsViewModel by viewModels()
-
     /** View binding for all views in this content. */
     private lateinit var viewBinding: IncludeLoadableListBinding
+
+    private val conditionConfigDialogListener: OnConditionConfigCompleteListener by lazy {
+        object : OnConditionConfigCompleteListener {
+            override fun onConfirmClicked() { viewModel.upsertEditedCondition() }
+            override fun onDeleteClicked() { viewModel.removeEditedCondition() }
+            override fun onDismissClicked() { viewModel.dismissEditedCondition() }
+        }
+    }
 
     /** Tells if the billing flow has been triggered by the condition count limit. */
     private var conditionLimitReachedClick: Boolean = false
@@ -231,11 +241,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = ImageConditionDialog(
-                onConfirmClickedListener = viewModel::upsertEditedCondition,
-                onDeleteClickedListener = viewModel::removeEditedCondition,
-                onDismissClickedListener = viewModel::dismissEditedCondition
-            ),
+            newOverlay = ImageConditionDialog(conditionConfigDialogListener),
             hideCurrent = true,
         )
     }
@@ -258,13 +264,21 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun showTriggerConditionDialog(condition: TriggerCondition) {
         viewModel.startConditionEdition(condition)
 
+        val configOverlay = when (condition) {
+            is TriggerCondition.OnBroadcastReceived ->
+                TODO()
+            is TriggerCondition.OnCounterCountReached ->
+                TODO()
+            is TriggerCondition.OnTimerReached ->
+                TimerReachedConditionDialog(conditionConfigDialogListener)
+
+            is TriggerCondition.OnScenarioEnd,
+            is TriggerCondition.OnScenarioStart -> return
+        }
+
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = ImageConditionDialog(
-                onConfirmClickedListener = viewModel::upsertEditedCondition,
-                onDeleteClickedListener = viewModel::removeEditedCondition,
-                onDismissClickedListener = viewModel::dismissEditedCondition
-            ),
+            newOverlay = configOverlay,
             hideCurrent = true,
         )
     }

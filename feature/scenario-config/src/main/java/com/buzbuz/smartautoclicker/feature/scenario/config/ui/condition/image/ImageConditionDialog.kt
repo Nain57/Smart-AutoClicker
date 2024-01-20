@@ -46,6 +46,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionImageBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -54,9 +55,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class ImageConditionDialog(
-    private val onConfirmClickedListener: () -> Unit,
-    private val onDeleteClickedListener: () -> Unit,
-    private val onDismissClickedListener: () -> Unit,
+    private val listener: OnConditionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -72,7 +71,7 @@ class ImageConditionDialog(
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
-                        onDismissClickedListener()
+                        listener.onDismissClicked()
                         back()
                     }
                 }
@@ -80,7 +79,7 @@ class ImageConditionDialog(
                     visibility = View.VISIBLE
                     setOnClickListener {
                         debounceUserInteraction {
-                            onConfirmClickedListener()
+                            listener.onConfirmClicked()
                             back()
                         }
                     }
@@ -238,7 +237,7 @@ class ImageConditionDialog(
     }
 
     private fun confirmDelete() {
-        onDeleteClickedListener()
+        listener.onDeleteClicked()
         back()
     }
 
