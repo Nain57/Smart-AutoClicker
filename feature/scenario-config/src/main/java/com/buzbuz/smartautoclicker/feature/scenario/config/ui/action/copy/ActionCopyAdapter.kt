@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.copy.ActionCopyModel.ActionCopyItem
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 /**
  * Adapter displaying all actions in a list.

@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemConditionBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 import kotlinx.coroutines.Job
 

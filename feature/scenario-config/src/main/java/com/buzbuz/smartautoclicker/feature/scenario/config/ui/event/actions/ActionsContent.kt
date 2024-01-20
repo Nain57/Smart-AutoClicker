@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.Inte
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.pause.PauseDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.toggleevent.ToggleEventDialog
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
