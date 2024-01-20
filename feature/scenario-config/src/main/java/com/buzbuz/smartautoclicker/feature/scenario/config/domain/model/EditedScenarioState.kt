@@ -21,5 +21,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
 data class EditedScenarioState(
     val scenario: Scenario,
-    val events: List<Event>,
+    val imageEvents: List<Event>,
+    val triggerEvents: List<Event>,
 )

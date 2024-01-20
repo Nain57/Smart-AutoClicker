@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 internal class ImageEventsEditor(
     onDeleteEvent: (ImageEvent) -> Unit,
     parentItem: StateFlow<Scenario?>,
-) : EventsEditor<ImageEvent, ImageCondition>(onDeleteEvent, parentItem) {
+) : EventsEditor<ImageEvent, ImageCondition>(onDeleteEvent, canBeEmpty = false, parentItem) {
 
     override fun onEditedEventConditionsUpdated(conditions: List<ImageCondition>) {
         val editedEvent = editedItem.value ?: return

@@ -85,8 +85,7 @@ internal class RepositoryImpl internal constructor(
         dataSource.getAllActions().mapList { it.toDomain() }
 
     override fun getAllImageConditions(): Flow<List<ImageCondition>> =
-        dataSource.getAllConditions().mapList { it.toDomainImageCondition() }
-
+        dataSource.getAllImageConditions().mapList { it.toDomainImageCondition() }
 
     override suspend fun addScenario(scenario: Scenario): Long =
         dataSource.addScenario(scenario)

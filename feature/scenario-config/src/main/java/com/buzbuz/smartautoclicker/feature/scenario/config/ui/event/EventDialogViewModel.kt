@@ -59,7 +59,7 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /** Tells if the configured event is valid and can be saved. */
-    val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageEventState
+    val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState
         .map { it.canBeSaved }
 
     /** Tells if the user is currently editing an event. If that's not the case, dialog should be closed. */

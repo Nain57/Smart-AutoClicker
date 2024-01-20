@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 internal class TriggerEventsEditor(
     onDeleteEvent: (TriggerEvent) -> Unit,
     parentItem: StateFlow<Scenario?>,
-) : EventsEditor<TriggerEvent, TriggerCondition>(onDeleteEvent, parentItem) {
+) : EventsEditor<TriggerEvent, TriggerCondition>(onDeleteEvent, canBeEmpty = true, parentItem) {
 
     override fun onEditedEventConditionsUpdated(conditions: List<TriggerCondition>) {
         editedItem.value?.let { event ->

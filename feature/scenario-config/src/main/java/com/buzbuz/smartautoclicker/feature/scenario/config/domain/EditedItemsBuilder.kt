@@ -21,19 +21,17 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
-import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.TriggerConditionTypeChoice
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 
 class EditedItemsBuilder internal constructor(
     context: Context,
@@ -68,7 +66,7 @@ class EditedItemsBuilder internal constructor(
             scenarioId = getEditedScenarioIdOrThrow(),
             name = defaultValues.eventName(context),
             conditionOperator = defaultValues.eventConditionOperator(),
-            priority = getEditedEventsCountOrThrow(),
+            priority = getEditedImageEventsCountOrThrow(),
             conditions = mutableListOf(),
             actions = mutableListOf(),
         )
@@ -371,27 +369,20 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
-    private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean {
-        val validImageEvent = editor.imageEventsEditor.editedList.value?.let { events ->
-            events.find { eventId == it.id } != null
-        } ?: false
-        if (validImageEvent) return true
+    private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
+        editor.getAllEditedEvents().find { eventId == it.id } != null
 
-        val validTriggerEvent = editor.triggerEventsEditor.editedList.value?.let { events ->
-            events.find { eventId == it.id } != null
-        } ?: false
-        return validTriggerEvent
-    }
+    private fun getEditedScenarioIdOrThrow(): Identifier =
+        editor.editedScenario.value?.id
+            ?: throw IllegalStateException("Can't create items without an edited scenario")
 
-    private fun getEditedScenarioIdOrThrow(): Identifier = editor.editedScenario.value?.id
-        ?: throw IllegalStateException("Can't create items without an edited scenario")
+    private fun getEditedEventIdOrThrow(): Identifier =
+        editor.currentEventEditor.value?.editedItem?.value?.id
+            ?: throw IllegalStateException("Can't create items without an edited event")
 
-    private fun getEditedEventsCountOrThrow(): Int = editor.currentEventEditor.value?.editedList?.value?.size
-        ?: throw IllegalStateException("Can't create items without an edited event list")
+    private fun getEditedActionIdOrThrow(): Identifier =
+        editor.currentEventEditor.value?.actionsEditor?.editedItem?.value?.id
+            ?: throw IllegalStateException("Can't create items without an edited action")
 
-    private fun getEditedEventIdOrThrow(): Identifier = editor.currentEventEditor.value?.editedItem?.value?.id
-        ?: throw IllegalStateException("Can't create items without an edited event")
-
-    private fun getEditedActionIdOrThrow(): Identifier = editor.currentEventEditor.value?.actionsEditor?.editedItem?.value?.id
-        ?: throw IllegalStateException("Can't create items without an edited action")
+    private fun getEditedImageEventsCountOrThrow(): Int = editor.getEditedImageEventsCount()
 }

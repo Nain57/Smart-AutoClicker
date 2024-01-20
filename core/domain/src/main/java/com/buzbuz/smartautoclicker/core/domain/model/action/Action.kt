@@ -41,6 +41,21 @@ sealed class Action : Identifiable, Completable {
     /** @return creates a deep copy of this action. */
     abstract fun deepCopy(): Action
 
+    fun copyBase(
+        id: Identifier = this.id,
+        eventId: Identifier = this.eventId,
+        name: String? = this.name,
+        priority: Int = this.priority,
+    ): Action =
+        when (this) {
+            is Click -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is ChangeCounter -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is Intent -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is Pause -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is Swipe -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is ToggleEvent -> copy(id = id, eventId = eventId, name = name, priority = priority)
+        }
+
     /**
      * Click action.
      *
