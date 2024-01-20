@@ -66,9 +66,12 @@ class BroadcastReceivedConditionViewModel(application: Application) : AndroidVie
         updateEditedCondition { it.copy(name = name) }
     }
 
-    fun setIntentAction(action: String) {
-        updateEditedCondition { it.copy(intentAction = action) }
+    fun setIntentAction(action: String?) {
+        updateEditedCondition { it.copy(intentAction = action ?: "") }
     }
+
+    fun getIntentAction(): String =
+        editionRepository.editionState.getEditedCondition<TriggerCondition.OnBroadcastReceived>()?.intentAction ?: ""
 
     private fun updateEditedCondition(
         closure: (oldValue: TriggerCondition.OnBroadcastReceived) -> TriggerCondition.OnBroadcastReceived?,

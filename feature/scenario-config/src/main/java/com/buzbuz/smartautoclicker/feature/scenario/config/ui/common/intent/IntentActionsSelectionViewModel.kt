@@ -18,25 +18,43 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentApi
+import com.buzbuz.smartautoclicker.core.android.intent.getBroadcastReceptionIntentActions
 import com.buzbuz.smartautoclicker.core.android.intent.getStartActivityIntentActions
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ActionsSelectionViewModel(application: Application) : AndroidViewModel(application) {
 
     private val selectedAction: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val getBroadcastActions: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
-    private val allAndroidActions: Flow<List<AndroidIntentApi<String>>> = flow {
+    private val startActivityActions: Flow<List<AndroidIntentApi<String>>> = flow {
         emit(getStartActivityIntentActions().sortedBy { flag -> flag.displayName })
     }
+    private val receiveBroadcastActions: Flow<List<AndroidIntentApi<String>>> = flow {
+        emit(getBroadcastReceptionIntentActions().sortedBy { flag -> flag.displayName })
+    }
+
+    private val requestedActions: Flow<List<AndroidIntentApi<String>>> = getBroadcastActions
+        .filterNotNull()
+        .flatMapLatest { getBroadcast ->
+            if (getBroadcast) receiveBroadcastActions
+            else startActivityActions
+        }
 
     val actionsItems: Flow<List<ItemAction>> =
-        combine(allAndroidActions, selectedAction) { allActions, selection ->
+        combine(requestedActions, selectedAction) { allActions, selection ->
             allActions.map { androidAction ->
                 ItemAction(
                     action = androidAction,
@@ -44,6 +62,10 @@ class ActionsSelectionViewModel(application: Application) : AndroidViewModel(app
                 )
             }
         }
+
+    fun setRequestedActionsType(requestBroadcast: Boolean) {
+        viewModelScope.launch { getBroadcastActions.emit(requestBroadcast) }
+    }
 
     fun getSelectedAction(): String? =
         selectedAction.value

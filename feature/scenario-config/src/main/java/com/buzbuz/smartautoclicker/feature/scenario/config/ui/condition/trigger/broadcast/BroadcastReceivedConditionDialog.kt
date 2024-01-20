@@ -35,9 +35,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionBroadcastBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent.IntentActionsSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -125,7 +127,18 @@ class BroadcastReceivedConditionDialog(
     }
 
     private fun showBroadcastActionSelectionDialog() {
-
+        OverlayManager.getInstance(context).navigateTo(
+            context = context,
+            newOverlay = IntentActionsSelectionDialog(
+                currentAction = viewModel.getIntentAction(),
+                onConfigComplete = { newAction ->
+                    viewModel.setIntentAction(newAction ?: "")
+                    viewBinding.editBroadcastAction.textField.setText(newAction)
+                },
+                forBroadcastReception = true,
+            ),
+            hideCurrent = true,
+        )
     }
 
     private fun onConditionEditingStateChanged(isEditing: Boolean) {
