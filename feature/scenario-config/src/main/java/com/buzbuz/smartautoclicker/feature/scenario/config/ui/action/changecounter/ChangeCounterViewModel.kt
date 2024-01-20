@@ -21,6 +21,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
 import kotlinx.coroutines.FlowPreview
@@ -37,6 +40,10 @@ import kotlinx.coroutines.flow.take
 
 @OptIn(FlowPreview::class)
 class ChangeCounterViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val plusItem = DropdownItem(R.string.item_title_add)
+    private val setItem = DropdownItem(R.string.item_title_set)
+    private val minusItem = DropdownItem(R.string.item_title_minus)
 
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
@@ -70,12 +77,13 @@ class ChangeCounterViewModel(application: Application) : AndroidViewModel(applic
         .map { it.operationValue.toString() }
         .take(1)
 
-    val counterOperationCheckedId: Flow<Int> = configuredChangeCounter
-        .map { action ->
-            when (action.operation) {
-                Action.ChangeCounter.OperationType.ADD -> BUTTON_ADD
-                Action.ChangeCounter.OperationType.MINUS -> BUTTON_MINUS
-                Action.ChangeCounter.OperationType.SET -> BUTTON_SET
+    val operatorDropdownItems = listOf(plusItem, setItem, minusItem)
+    val operatorDropdownState: Flow<DropdownItem> = configuredChangeCounter
+        .map { condition ->
+            when (condition.operation) {
+                Action.ChangeCounter.OperationType.ADD -> plusItem
+                Action.ChangeCounter.OperationType.MINUS -> minusItem
+                Action.ChangeCounter.OperationType.SET -> setItem
             }
         }
 
@@ -91,13 +99,13 @@ class ChangeCounterViewModel(application: Application) : AndroidViewModel(applic
         updateEditedChangeCounter { old -> old.copy(counterName = "" + counterName) }
     }
 
-    fun setOperationCheckedButtonId(checkedButton: Int?) {
+    fun setOperationItem(item: DropdownItem) {
         updateEditedChangeCounter { old ->
             old.copy(
-                operation = when (checkedButton) {
-                    BUTTON_ADD -> Action.ChangeCounter.OperationType.ADD
-                    BUTTON_MINUS -> Action.ChangeCounter.OperationType.MINUS
-                    BUTTON_SET -> Action.ChangeCounter.OperationType.SET
+                operation = when (item) {
+                    plusItem -> Action.ChangeCounter.OperationType.ADD
+                    minusItem -> Action.ChangeCounter.OperationType.MINUS
+                    setItem -> Action.ChangeCounter.OperationType.SET
                     else -> Action.ChangeCounter.OperationType.ADD
                 }
             )
