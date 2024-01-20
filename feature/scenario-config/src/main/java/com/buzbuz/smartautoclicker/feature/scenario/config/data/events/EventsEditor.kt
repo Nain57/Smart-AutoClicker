@@ -27,8 +27,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 internal abstract class EventsEditor<Item : Event, ChildCondition : Condition>(
     private val onDeleteEvent: (Item) -> Unit,
+    canBeEmpty: Boolean,
     parentItem: StateFlow<Scenario?>,
-): ListEditor<Item, Scenario>(parentItem = parentItem) {
+): ListEditor<Item, Scenario>(canBeEmpty = canBeEmpty, parentItem = parentItem) {
 
     val conditionsEditor: ListEditor<ChildCondition, Item> = ListEditor(
         onListUpdated = ::onEditedEventConditionsUpdated,

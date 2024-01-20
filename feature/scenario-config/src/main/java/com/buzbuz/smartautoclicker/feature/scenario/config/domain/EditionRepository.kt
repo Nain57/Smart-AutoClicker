@@ -25,7 +25,6 @@ import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -121,7 +120,7 @@ class EditionRepository private constructor(context: Context) {
 
         val updateResult = repository.updateScenario(
             scenario = scenarioEditor.editedScenario.value ?: return false,
-            events = scenarioEditor.imageEventsEditor.editedList.value ?: return false,
+            events = scenarioEditor.getAllEditedEvents(),
         )
 
         // In case of error, do not stop the edition
@@ -142,8 +141,11 @@ class EditionRepository private constructor(context: Context) {
     /** Update the currently edited scenario. */
     fun updateEditedScenario(scenario: Scenario): Unit = scenarioEditor.updateEditedScenario(scenario)
     /** Update the priority of the events in the scenario. */
-    fun updateEventsOrder(newEvents: List<ImageEvent>): Unit = scenarioEditor.imageEventsEditor.updateList(newEvents)
-
+    fun updateImageEventsOrder(newEvents: List<ImageEvent>) {
+        scenarioEditor.updateImageEventsOrder(
+            newEvents.mapIndexed { index, event -> event.copy(priority = index) }
+        )
+    }
 
     // --- EVENT
 
@@ -151,8 +153,12 @@ class EditionRepository private constructor(context: Context) {
         scenarioEditor.startEventEdition(event)
     fun updateEditedEvent(event: Event) =
         scenarioEditor.updateEditedEvent(event)
-    fun updateActionsOrder(actions: List<Action>) =
-        scenarioEditor.updateActionsOrder(actions)
+    fun updateActionsOrder(actions: List<Action>) {
+        scenarioEditor.updateActionsOrder(
+            actions.mapIndexed { index, action -> action.copyBase(priority = index) }
+        )
+    }
+
     fun upsertEditedEvent() =
         scenarioEditor.upsertEditedEvent()
     fun deleteEditedEvent() =

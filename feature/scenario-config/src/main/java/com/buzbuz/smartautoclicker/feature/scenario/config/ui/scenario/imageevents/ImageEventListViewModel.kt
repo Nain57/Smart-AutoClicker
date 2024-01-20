@@ -85,7 +85,7 @@ class ImageEventListViewModel(application: Application) : AndroidViewModel(appli
     fun dismissEditedEvent() = editionRepository.stopEventEdition()
 
     /** Update the priority of the events in the scenario. */
-    fun updateEventsPriority(events: List<ImageEvent>) = editionRepository.updateEventsOrder(events)
+    fun updateEventsPriority(events: List<ImageEvent>) = editionRepository.updateImageEventsOrder(events)
 
     fun onEventCountReachedAddCopyClicked(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT)

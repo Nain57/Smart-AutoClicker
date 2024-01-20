@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain.model
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
@@ -74,13 +75,16 @@ interface IEditionState {
 
 
     /** Get the events selectable as target for the currently edited Toggle Event Action. */
-    val eventsAvailableForToggleEventAction: Flow<List<ImageEvent>>
+    val eventsAvailableForToggleEventAction: Flow<List<Event>>
 
     /** Get Action that can be copied from the edited scenario. */
     val actionsAvailableForCopyFromEditedScenario: Flow<List<Action>>
 
     /** Get Action that can be copied from all scenario besides the edited one. */
     val actionsAvailableForCopyFromOtherScenario: Flow<List<Action>>
+
+    /** Check if this event id is set for one of the edited events. */
+    fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean
 
     /** Check if the edited Event is referenced by an Action in the edited scenario. */
     fun isEditedEventReferencedByAction(): Boolean

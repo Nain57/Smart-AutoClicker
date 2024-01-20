@@ -22,6 +22,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 
@@ -36,8 +37,16 @@ abstract class ConditionDao {
      *
      * @return the list containing all conditions.
      */
-    @Query("SELECT * FROM condition_table")
+    @Query("SELECT * FROM $CONDITION_TABLE")
     abstract fun getAllConditions(): Flow<List<ConditionEntity>>
+
+    /**
+     * Get all image conditions from all events.
+     *
+     * @return the list containing all image conditions.
+     */
+    @Query("SELECT * FROM $CONDITION_TABLE WHERE type='ON_IMAGE_DETECTED'")
+    abstract fun getAllImageConditions(): Flow<List<ConditionEntity>>
 
     /**
      * Get the list of conditions for a given event.
@@ -45,7 +54,7 @@ abstract class ConditionDao {
      * @param eventId the identifier of the event to get the conditions from.
      * @return the list of conditions for the event.
      */
-    @Query("SELECT * FROM condition_table WHERE eventId=:eventId ORDER BY id")
+    @Query("SELECT * FROM $CONDITION_TABLE WHERE eventId=:eventId ORDER BY id")
     abstract suspend fun getConditions(eventId: Long): List<ConditionEntity>
 
     /**
@@ -54,7 +63,7 @@ abstract class ConditionDao {
      * @param eventId the identifier of the event to get the conditions path from.
      * @return the list of path for the event.
      */
-    @Query("SELECT path FROM condition_table WHERE eventId=:eventId")
+    @Query("SELECT path FROM $CONDITION_TABLE WHERE eventId=:eventId")
     abstract suspend fun getConditionsPath(eventId: Long): List<String>
 
     /**
@@ -63,7 +72,7 @@ abstract class ConditionDao {
      * @param path the value to be searched in the path column.
      * @return the number of conditions using this path.
      */
-    @Query("SELECT COUNT(path) FROM condition_table WHERE path=:path")
+    @Query("SELECT COUNT(path) FROM $CONDITION_TABLE WHERE path=:path")
     abstract suspend fun getValidPathCount(path: String): Int
 
     /**

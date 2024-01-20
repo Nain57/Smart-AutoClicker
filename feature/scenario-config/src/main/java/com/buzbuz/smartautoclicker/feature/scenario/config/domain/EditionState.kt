@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
 import android.content.Context
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -31,6 +32,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.events.EventsEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.events.ImageEventsEditor
+import com.buzbuz.smartautoclicker.feature.scenario.config.data.events.TriggerEventsEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedScenarioState
@@ -58,16 +62,17 @@ internal class EditionState internal constructor(
     override val scenarioCompleteState: Flow<EditedElementState<EditedScenarioState>> =
         combine(
             editor.editedScenarioState,
-            editor.imageEventsEditor.listState,
-        ) { scenario, events ->
+            editor.editedImageEventListState,
+            editor.editedTriggerEventListState,
+        ) { scenario, imageEvents, triggerEvents ->
 
-            if (scenario.value == null || events.value == null)
+            if (scenario.value == null || imageEvents.value == null || triggerEvents.value == null)
                 return@combine EditedElementState(value = null, hasChanged = false, canBeSaved = false)
 
             EditedElementState(
-                value = EditedScenarioState(scenario.value, events.value),
-                hasChanged = scenario.hasChanged || events.hasChanged,
-                canBeSaved = scenario.canBeSaved && events.canBeSaved
+                value = EditedScenarioState(scenario.value, imageEvents.value, triggerEvents.value),
+                hasChanged = scenario.hasChanged || imageEvents.hasChanged || triggerEvents.hasChanged,
+                canBeSaved = scenario.canBeSaved && imageEvents.canBeSaved && triggerEvents.canBeSaved,
             )
         }
 
@@ -75,30 +80,25 @@ internal class EditionState internal constructor(
         editor.editedScenarioState
 
     override val editedImageEventsState: Flow<EditedListState<ImageEvent>> =
-        editor.imageEventsEditor.listState.map { listState ->
+        editor.editedImageEventListState.map { listState ->
             listState.copy(value = listState.value?.sortedBy { it.priority } ?: emptyList())
         }
 
     override val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =
-        editor.triggerEventsEditor.listState
+        editor.editedTriggerEventListState
+
+    override val editedImageEventState: Flow<EditedElementState<ImageEvent>> =
+        editor.editedImageEventState
+
+    override val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> =
+        editor.editedTriggerEventState
+
+    override val allEditedEvents : Flow<List<Event>> =
+        editor.allEditedEvents
 
     override val editedEventState: Flow<EditedElementState<Event>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
             eventEditor?.editedItemState ?: emptyFlow()
-        }
-
-    override val editedImageEventState: Flow<EditedElementState<ImageEvent>> =
-        editor.imageEventsEditor.editedItemState
-
-    override val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> =
-        editor.triggerEventsEditor.editedItemState
-
-    override val allEditedEvents : Flow<List<Event>> =
-        combine(editor.imageEventsEditor.allEditedItems, editor.triggerEventsEditor.allEditedItems) { imageEvent, triggerEvents ->
-            buildList {
-                addAll(imageEvent)
-                addAll(triggerEvents)
-            }
         }
 
     override val editedEventConditionsState: Flow<EditedListState<Condition>> =
@@ -107,38 +107,68 @@ internal class EditionState internal constructor(
         }
 
     override val editedEventImageConditionsState: Flow<EditedListState<ImageCondition>> =
-        editor.imageEventsEditor.conditionsEditor.listState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            val editor = (eventEditor as EventsEditor<*, *>)
+            if (editor is ImageEventsEditor)
+                editor.conditionsEditor.listState
+            else emptyFlow()
+        }
 
     override val editedImageConditionState: Flow<EditedElementState<ImageCondition>> =
-        editor.imageEventsEditor.conditionsEditor.editedItemState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            val editor = (eventEditor as EventsEditor<*, *>)
+            if (editor is ImageEventsEditor)
+                editor.conditionsEditor.editedItemState
+            else emptyFlow()
+        }
 
     override val editedEventTriggerConditionsState: Flow<EditedListState<TriggerCondition>> =
-        editor.triggerEventsEditor.conditionsEditor.listState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            val editor = (eventEditor as EventsEditor<*, *>)
+            if (editor is TriggerEventsEditor)
+                editor.conditionsEditor.listState
+            else emptyFlow()
+        }
 
     override val editedTriggerConditionState: Flow<EditedElementState<TriggerCondition>> =
-        editor.triggerEventsEditor.conditionsEditor.editedItemState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            val editor = (eventEditor as EventsEditor<*, *>)
+            if (editor is TriggerEventsEditor)
+                editor.conditionsEditor.editedItemState
+            else emptyFlow()
+        }
 
     override val editedEventActionsState: Flow<EditedListState<Action>> =
-        editor.imageEventsEditor.actionsEditor.listState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor?.actionsEditor?.listState ?: emptyFlow()
+        }
 
     override val editedActionState: Flow<EditedElementState<Action>> =
-        editor.imageEventsEditor.actionsEditor.editedItemState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor?.actionsEditor?.editedItemState ?: emptyFlow()
+        }
 
     override val editedActionIntentExtrasState: Flow<EditedListState<IntentExtra<out Any>>> =
-        editor.imageEventsEditor.actionsEditor.intentExtraEditor.listState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor?.actionsEditor?.intentExtraEditor?.listState  ?: emptyFlow()
+        }
 
     override val editedIntentExtraState: Flow<EditedElementState<IntentExtra<out Any>>> =
-        editor.imageEventsEditor.actionsEditor.intentExtraEditor.editedItemState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor?.actionsEditor?.intentExtraEditor?.editedItemState  ?: emptyFlow()
+        }
 
     override val editedActionEventTogglesState: Flow<EditedListState<EventToggle>> =
-        editor.imageEventsEditor.actionsEditor.eventToggleEditor.listState
+        editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor?.actionsEditor?.eventToggleEditor?.listState  ?: emptyFlow()
+        }
 
-    override val eventsAvailableForToggleEventAction: Flow<List<ImageEvent>> =
-        combine(editedImageEventsState, editedImageEventState) { scenarioEvents, editedEvent ->
-            if (editedEvent.value == null || scenarioEvents.value == null) return@combine emptyList()
+    override val eventsAvailableForToggleEventAction: Flow<List<Event>> =
+        combine(allEditedEvents, editedEventState) { scenarioEvents, editedEvent ->
+            if (editedEvent.value == null || scenarioEvents.isEmpty()) return@combine emptyList()
 
             buildList {
-                val availableEvents = scenarioEvents.value
+                val availableEvents = scenarioEvents
                     .filter { event -> event.id != editedEvent.value.id }
 
                 add(editedEvent.value)
@@ -147,9 +177,8 @@ internal class EditionState internal constructor(
         }
 
     override val actionsAvailableForCopyFromEditedScenario: Flow<List<Action>> =
-        editor.imageEventsEditor.editedList
+        editor.allEditedEvents
             .map { events ->
-                events ?: return@map emptyList()
                 val editedEvent = getEditedEvent<Event>() ?: return@map emptyList()
 
                 buildList {
@@ -161,7 +190,7 @@ internal class EditionState internal constructor(
 
     override val actionsAvailableForCopyFromOtherScenario: Flow<List<Action>> =
         combine(
-            editor.imageEventsEditor.editedItem,
+            editor.editedEvent,
             actionsAvailableForCopyFromEditedScenario,
             repository.getAllActions(),
         ) { editedEvt, scenarioOthers, allOthers ->
@@ -173,14 +202,14 @@ internal class EditionState internal constructor(
             }
         }
 
+    override fun getScenario(): Scenario? =
+        editor.editedScenario.value
+
     override fun getAllEditedEvents(): List<Event> =
-        buildList {
-            addAll(editor.imageEventsEditor.getAllEditedItems())
-            addAll(editor.triggerEventsEditor.getAllEditedItems())
-        }
+        editor.getAllEditedEvents()
 
     override fun <T : Event> getEditedEvent(): T? =
-        editor.currentEventEditor.value?.editedItem?.value as T?
+        editor.currentEventEditor.value?.editedItem?.value as? T
 
     override fun <T : Condition> getEditedCondition(): T? =
         editor.currentEventEditor.value?.conditionsEditor?.editedItem?.value as T?
@@ -197,9 +226,12 @@ internal class EditionState internal constructor(
             else null
         }
 
+    override fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
+        getAllEditedEvents().find { eventId == it.id } != null
+
     override fun isEditedEventReferencedByAction(): Boolean {
-        val event = editor.imageEventsEditor.editedItem.value ?: return false
-        val scenarioEvents = editor.imageEventsEditor.editedList.value ?: return false
+        val event = getEditedEvent<Event>() ?: return false
+        val scenarioEvents = getAllEditedEvents()
 
         return scenarioEvents.find { scenarioEvent ->
             if (scenarioEvent.id == event.id) return@find false
@@ -211,16 +243,14 @@ internal class EditionState internal constructor(
     }
 
     override fun isEditedConditionReferencedByClick(): Boolean {
-        val event = editor.imageEventsEditor.editedItem.value ?: return false
+        val event = getEditedEvent<Event>() ?: return false
         if (event.conditionOperator == OR) return false
 
-        val condition = editor.imageEventsEditor.conditionsEditor.editedItem.value ?: return false
-        val actions = editor.imageEventsEditor.actionsEditor.editedList.value ?: return false
+        val condition = getEditedCondition<Condition>() ?: return false
+        val actions = editor.currentEventEditor.value?.actionsEditor?.editedList?.value ?: return false
 
         return actions.find { action ->
             action is Action.Click && action.clickOnConditionId == condition.id
         } != null
     }
-
-    override fun getScenario(): Scenario? = editor.editedScenario.value
 }
