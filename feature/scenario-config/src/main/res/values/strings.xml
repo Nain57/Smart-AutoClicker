@@ -316,4 +316,12 @@
     <string name="dialog_overlay_title_timer_reached">Timer Condition</string>
     <string name="input_field_label_timer_duration">After (ms)</string>
 
+    <string name="item_title_greater_or_equals" translatable="false"><![CDATA[>=]]></string>
+    <string name="item_title_greater" translatable="false"><![CDATA[>]]></string>
+    <string name="item_title_equals" translatable="false">=</string>
+    <string name="item_title_lower_or_equals" translatable="false"><![CDATA[<=]]></string>
+    <string name="item_title_lower" translatable="false"><![CDATA[<]]></string>
+    <string name="dropdown_label_comparison_operator">Operator</string>
+    <string name="input_field_label_comparison_value">Value</string>
+
 </resources>

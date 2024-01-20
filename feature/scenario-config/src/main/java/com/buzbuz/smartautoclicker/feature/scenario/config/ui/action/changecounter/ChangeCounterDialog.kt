@@ -45,6 +45,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionChangeCounterBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.counter.CounterNameSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

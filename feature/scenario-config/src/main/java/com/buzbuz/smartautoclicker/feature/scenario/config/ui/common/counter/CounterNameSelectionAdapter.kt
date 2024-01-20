@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.changecounter
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.counter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
