@@ -44,15 +44,14 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionChangeCounterBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
 class ChangeCounterDialog(
-    private val onConfirmClicked: () -> Unit,
-    private val onDeleteClicked: () -> Unit,
-    private val onDismissClicked: () -> Unit,
+    private val listener: OnActionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -67,7 +66,7 @@ class ChangeCounterDialog(
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
-                        onDismissClicked()
+                        listener.onDismissClicked()
                         back()
                     }
                 }
@@ -139,14 +138,14 @@ class ChangeCounterDialog(
 
     private fun onSaveButtonClicked() {
         debounceUserInteraction {
-            onConfirmClicked()
+            listener.onConfirmClicked()
             back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         debounceUserInteraction {
-            onDeleteClicked()
+            listener.onDeleteClicked()
             back()
         }
     }

@@ -45,6 +45,7 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBindin
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.ActionTypeSelectionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.changecounter.ChangeCounterDialog
 
 import kotlinx.coroutines.launch
@@ -56,6 +57,14 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** TouchHelper applied to [actionAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(ActionReorderTouchHelper())
+
+    private val actionConfigDialogListener: OnActionConfigCompleteListener by lazy {
+        object : OnActionConfigCompleteListener {
+            override fun onConfirmClicked() { viewModel.upsertEditedAction() }
+            override fun onDeleteClicked() { viewModel.removeEditedAction() }
+            override fun onDismissClicked() { viewModel.dismissEditedAction() }
+        }
+    }
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: IncludeLoadableListBinding
@@ -214,42 +223,12 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         viewModel.startActionEdition(action)
 
         val overlay = when (action) {
-            is Action.Click -> ClickDialog(
-                onConfirmClicked = viewModel::upsertEditedAction,
-                onDeleteClicked = viewModel::removeEditedAction,
-                onDismissClicked = viewModel::dismissEditedAction,
-            )
-
-            is Action.Swipe -> SwipeDialog(
-                onConfirmClicked = viewModel::upsertEditedAction,
-                onDeleteClicked = viewModel::removeEditedAction,
-                onDismissClicked = viewModel::dismissEditedAction,
-            )
-
-            is Action.Pause -> PauseDialog(
-                onConfirmClicked = viewModel::upsertEditedAction,
-                onDeleteClicked = viewModel::removeEditedAction,
-                onDismissClicked = viewModel::dismissEditedAction,
-            )
-
-            is Action.Intent -> IntentDialog(
-                onConfirmClicked = viewModel::upsertEditedAction,
-                onDeleteClicked = viewModel::removeEditedAction,
-                onDismissClicked = viewModel::dismissEditedAction,
-            )
-
-            is Action.ToggleEvent -> ToggleEventDialog(
-                onConfirmClicked = viewModel::upsertEditedAction,
-                onDeleteClicked = viewModel::removeEditedAction,
-                onDismissClicked = viewModel::dismissEditedAction,
-            )
-
-            is Action.ChangeCounter -> ChangeCounterDialog(
-                onConfirmClicked = viewModel::upsertEditedAction,
-                onDeleteClicked = viewModel::removeEditedAction,
-                onDismissClicked = viewModel::dismissEditedAction,
-            )
-
+            is Action.Click -> ClickDialog(actionConfigDialogListener)
+            is Action.Swipe -> SwipeDialog(actionConfigDialogListener)
+            is Action.Pause -> PauseDialog(actionConfigDialogListener)
+            is Action.Intent -> IntentDialog(actionConfigDialogListener)
+            is Action.ToggleEvent -> ToggleEventDialog(actionConfigDialogListener)
+            is Action.ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
             else -> throw IllegalArgumentException("Not yet supported")
         }
 
