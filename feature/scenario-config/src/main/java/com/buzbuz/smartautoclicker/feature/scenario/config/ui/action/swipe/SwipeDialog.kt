@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,21 +38,20 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionSwipeBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
 class SwipeDialog(
-    private val onConfirmClicked: () -> Unit,
-    private val onDeleteClicked: () -> Unit,
-    private val onDismissClicked: () -> Unit,
+    private val listener: OnActionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -70,7 +69,7 @@ class SwipeDialog(
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
-                        onDismissClicked()
+                        listener.onDismissClicked()
                         back()
                     }
                 }
@@ -129,14 +128,14 @@ class SwipeDialog(
     private fun onSaveButtonClicked() {
         debounceUserInteraction {
             viewModel.saveLastConfig()
-            onConfirmClicked()
+            listener.onConfirmClicked()
             back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         debounceUserInteraction {
-            onDeleteClicked()
+            listener.onDeleteClicked()
             back()
         }
     }

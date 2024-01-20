@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionToggleEventBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
@@ -48,9 +49,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 class ToggleEventDialog(
-    private val onConfirmClicked: () -> Unit,
-    private val onDeleteClicked: () -> Unit,
-    private val onDismissClicked: () -> Unit,
+    private val listener: OnActionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -66,7 +65,7 @@ class ToggleEventDialog(
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
-                        onDismissClicked()
+                        listener.onDismissClicked()
                         back()
                     }
                 }
@@ -119,14 +118,14 @@ class ToggleEventDialog(
 
     private fun onSaveButtonClicked() {
         debounceUserInteraction {
-            onConfirmClicked()
+            listener.onConfirmClicked()
             back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         debounceUserInteraction {
-            onDeleteClicked()
+            listener.onDeleteClicked()
             back()
         }
     }

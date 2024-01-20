@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,15 +31,14 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
 class IntentDialog(
-    private val onConfirmClicked: () -> Unit,
-    private val onDeleteClicked: () -> Unit,
-    private val onDismissClicked: () -> Unit,
+    private val listener: OnActionConfigCompleteListener,
 ) : NavBarDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -96,10 +95,10 @@ class IntentDialog(
         when (buttonType) {
             DialogNavigationButton.SAVE -> {
                 viewModel.saveLastConfig()
-                onConfirmClicked()
+                listener.onConfirmClicked()
             }
-            DialogNavigationButton.DELETE -> onDeleteClicked()
-            DialogNavigationButton.DISMISS -> onDismissClicked()
+            DialogNavigationButton.DELETE -> listener.onDeleteClicked()
+            DialogNavigationButton.DISMISS -> listener.onDismissClicked()
             else -> {}
         }
 
