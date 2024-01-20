@@ -27,8 +27,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemActionBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.ActionDetails
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 import java.util.Collections
 

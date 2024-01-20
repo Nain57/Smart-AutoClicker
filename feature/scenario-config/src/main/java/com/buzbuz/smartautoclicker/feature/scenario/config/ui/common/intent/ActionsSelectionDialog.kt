@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.action
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

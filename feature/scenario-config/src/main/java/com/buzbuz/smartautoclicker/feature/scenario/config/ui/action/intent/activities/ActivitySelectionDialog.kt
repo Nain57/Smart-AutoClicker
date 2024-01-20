@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemApplicationBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.bind
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

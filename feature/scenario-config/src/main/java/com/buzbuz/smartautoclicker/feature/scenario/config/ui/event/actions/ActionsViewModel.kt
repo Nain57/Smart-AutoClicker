@@ -31,8 +31,8 @@ import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.ActionDetails
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.bindings.toActionDetails
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.ActionDetails
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.toActionDetails
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
