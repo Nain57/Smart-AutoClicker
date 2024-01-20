@@ -20,8 +20,10 @@ import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.*
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
 import kotlinx.coroutines.FlowPreview
@@ -36,57 +38,86 @@ import kotlinx.coroutines.flow.take
 @OptIn(FlowPreview::class)
 class CounterReachedConditionViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val greaterItem = DropdownItem(R.string.item_title_greater)
+    private val greaterOrEqualsItem = DropdownItem(R.string.item_title_greater_or_equals)
+    private val equalsItem = DropdownItem(R.string.item_title_equals)
+    private val lowerOrEqualsItem = DropdownItem(R.string.item_title_lower_or_equals)
+    private val lowerItem = DropdownItem(R.string.item_title_lower)
+
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
 
     /** The condition being configured by the user. */
-    private val configuredCondition: Flow<TriggerCondition.OnTimerReached> =
+    private val configuredCondition: Flow<TriggerCondition.OnCounterCountReached> =
         editionRepository.editionState.editedTriggerConditionState
             .mapNotNull { it.value }
-            .filterIsInstance<TriggerCondition.OnTimerReached>()
+            .filterIsInstance<TriggerCondition.OnCounterCountReached>()
 
     /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
     val isEditingCondition: Flow<Boolean> = editionRepository.isEditingCondition
         .distinctUntilChanged()
         .debounce(1000)
 
-    /** The type of detection currently selected by the user. */
     val name: Flow<String?> = configuredCondition.map { it.name }.take(1)
-    /** Tells if the condition name is valid or not. */
     val nameError: Flow<Boolean> = configuredCondition.map { it.name.isEmpty() }
 
-    /** The duration of the pause in milliseconds. */
-    val duration: Flow<String?> = configuredCondition
-        .map { it.durationMs.toString() }
+    val counterName: Flow<String?> = configuredCondition
+        .map { it.counterName }
         .take(1)
-    /** Tells if the pause duration value is valid or not. */
-    val durationError: Flow<Boolean> = configuredCondition.map { it.durationMs <= 0 }
+    val counterNameError: Flow<Boolean> = configuredCondition.map { it.counterName.isEmpty() }
+
+    val comparisonValueText: Flow<String?> = configuredCondition
+        .map { it.counterValue.toString() }
+        .take(1)
+
+    val operatorDropdownItems = listOf(greaterItem, greaterOrEqualsItem, equalsItem, lowerOrEqualsItem, lowerItem)
+    val operatorDropdownState: Flow<DropdownItem> = configuredCondition
+        .map { condition ->
+            when (condition.comparisonOperation) {
+                GREATER -> greaterItem
+                GREATER_OR_EQUALS -> greaterOrEqualsItem
+                EQUALS -> equalsItem
+                LOWER_OR_EQUALS -> lowerOrEqualsItem
+                LOWER -> lowerItem
+            }
+        }
 
     /** Tells if the configured condition is valid and can be saved. */
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedTriggerConditionState.map { condition ->
         condition.canBeSaved
     }
 
-    /**
-     * Set the configured condition name.
-     * @param name the new condition name.
-     */
     fun setName(name: String) {
         updateEditedCondition { it.copy(name = name) }
     }
 
-    /**
-     * Set the duration of the pause.
-     * @param durationMs the new duration in milliseconds.
-     */
-    fun setDuration(durationMs: Long?) {
-        updateEditedCondition { it.copy(durationMs = durationMs ?: -1) }
+    fun setCounterName(counterName: String) {
+        updateEditedCondition { old -> old.copy(counterName = "" + counterName) }
+    }
+
+    fun setComparisonOperator(item: DropdownItem) {
+        updateEditedCondition { old ->
+            old.copy(
+                comparisonOperation = when (item) {
+                    greaterItem -> GREATER
+                    greaterOrEqualsItem -> GREATER_OR_EQUALS
+                    equalsItem -> EQUALS
+                    lowerOrEqualsItem -> LOWER_OR_EQUALS
+                    lowerItem -> LOWER
+                    else -> return@updateEditedCondition null
+                }
+            )
+        }
+    }
+
+    fun setComparisonValue(value: Int?) {
+        updateEditedCondition { old -> old.copy(counterValue = value ?: -1) }
     }
 
     private fun updateEditedCondition(
-        closure: (oldValue: TriggerCondition.OnTimerReached) -> TriggerCondition.OnTimerReached?,
+        closure: (oldValue: TriggerCondition.OnCounterCountReached) -> TriggerCondition.OnCounterCountReached?,
     ) {
-        editionRepository.editionState.getEditedCondition<TriggerCondition.OnTimerReached>()?.let { condition ->
+        editionRepository.editionState.getEditedCondition<TriggerCondition.OnCounterCountReached>()?.let { condition ->
             closure(condition)?.let { newValue ->
                 editionRepository.updateEditedCondition(newValue)
             }

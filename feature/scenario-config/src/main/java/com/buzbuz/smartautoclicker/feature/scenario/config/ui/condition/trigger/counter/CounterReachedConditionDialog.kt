@@ -27,16 +27,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionTimerBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionCounterBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -50,10 +57,10 @@ class CounterReachedConditionDialog(
     /** The view model for this dialog. */
     private val viewModel: CounterReachedConditionViewModel by viewModels()
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogConfigConditionTimerBinding
+    private lateinit var viewBinding: DialogConfigConditionCounterBinding
 
     override fun onCreateView(): ViewGroup {
-        viewBinding = DialogConfigConditionTimerBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigConditionCounterBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_overlay_title_timer_reached)
 
@@ -65,11 +72,17 @@ class CounterReachedConditionDialog(
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { listener.onConfirmClicked() }
+                    setOnClickListener {
+                        listener.onConfirmClicked()
+                        back()
+                    }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { listener.onDeleteClicked() }
+                    setOnClickListener {
+                        listener.onDeleteClicked()
+                        back()
+                    }
                 }
             }
 
@@ -82,14 +95,30 @@ class CounterReachedConditionDialog(
             }
             hideSoftInputOnFocusLoss(editNameLayout.textField)
 
-            editDurationLayout.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(min = 1))
-                setLabel(R.string.input_field_label_timer_duration)
+            editCounterNameLayout.apply {
+                setup(R.string.input_field_label_change_counter_name, R.drawable.ic_search, false)
+                setOnTextChangedListener { viewModel.setCounterName(it.toString()) }
+                textField.filters = arrayOf<InputFilter>(
+                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                )
+                setOnCheckboxClickedListener { showCounterSelectionDialog() }
+            }
+            hideSoftInputOnFocusLoss(editCounterNameLayout.textField)
+
+            comparisonOperatorField.setItems(
+                label = context.getString(R.string.dropdown_label_comparison_operator),
+                items = viewModel.operatorDropdownItems,
+                onItemSelected = viewModel::setComparisonOperator,
+            )
+
+            editValueLayout.apply {
+                textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
+                setLabel(R.string.input_field_label_comparison_value)
                 setOnTextChangedListener {
-                    viewModel.setDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
+                    viewModel.setComparisonValue(if (it.isNotEmpty()) it.toString().toInt() else null)
                 }
             }
-            hideSoftInputOnFocusLoss(editDurationLayout.textField)
+            hideSoftInputOnFocusLoss(editValueLayout.textField)
         }
 
         return viewBinding.root
@@ -105,19 +134,30 @@ class CounterReachedConditionDialog(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
-                launch { viewModel.duration.collect(::updateDuration) }
-                launch { viewModel.durationError.collect(viewBinding.editDurationLayout::setError)}
+                launch { viewModel.counterName.collect(viewBinding.editCounterNameLayout::setTextValue) }
+                launch { viewModel.counterNameError.collect(viewBinding.editCounterNameLayout::setError) }
+                launch { viewModel.operatorDropdownState.collect(viewBinding.comparisonOperatorField::setSelectedItem) }
+                launch { viewModel.comparisonValueText.collect(::updateComparisonValue) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
             }
         }
     }
 
-    private fun updateDuration(newDuration: String?) {
-        viewBinding.editDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
-    }
-
     private fun updateSaveButton(canBeSaved: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, canBeSaved)
+    }
+
+    private fun updateComparisonValue(newValue: String?) {
+        viewBinding.editValueLayout.setText(newValue, InputType.TYPE_CLASS_NUMBER)
+    }
+
+    private fun showCounterSelectionDialog() {
+        OverlayManager.getInstance(context)
+            .navigateTo(
+                context = context,
+                newOverlay = CounterNameSelectionDialog(viewModel::setCounterName),
+                hideCurrent = true,
+            )
     }
 
     private fun onConditionEditingStateChanged(isEditing: Boolean) {

@@ -48,6 +48,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.Im
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.allTriggerConditionChoices
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.counter.CounterReachedConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.timer.TimerReachedConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
@@ -268,7 +269,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             is TriggerCondition.OnBroadcastReceived ->
                 TODO()
             is TriggerCondition.OnCounterCountReached ->
-                TODO()
+                CounterReachedConditionDialog(conditionConfigDialogListener)
             is TriggerCondition.OnTimerReached ->
                 TimerReachedConditionDialog(conditionConfigDialogListener)
 
