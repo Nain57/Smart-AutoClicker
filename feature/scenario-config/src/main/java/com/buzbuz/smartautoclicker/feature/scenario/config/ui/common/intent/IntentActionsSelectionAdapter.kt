@@ -26,25 +26,25 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemIntentActionBinding
 
-class ActionsSelectionAdapter(
+class IntentActionsSelectionAdapter(
     private val onActionCheckClicked: (String, Boolean) -> Unit,
     private val onActionHelpClicked: (Uri) -> Unit,
-) : ListAdapter<ItemAction, ItemActionViewHolder>(ItemActionDiffUtilCallback) {
+) : ListAdapter<ItemAction, ItemIntentActionViewHolder>(ItemItentActionDiffUtilCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemActionViewHolder =
-        ItemActionViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemIntentActionViewHolder =
+        ItemIntentActionViewHolder(
             viewBinding = ItemIntentActionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onActionCheckClicked = onActionCheckClicked,
             onActionHelpClicked = onActionHelpClicked,
         )
 
-    override fun onBindViewHolder(holder: ItemActionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemIntentActionViewHolder, position: Int) {
         holder.onBind(getItem(position))
     }
 }
 
-/** DiffUtil Callback comparing two ActionItem when updating the [ActionsSelectionAdapter] list. */
-object ItemActionDiffUtilCallback: DiffUtil.ItemCallback<ItemAction>() {
+/** DiffUtil Callback comparing two ActionItem when updating the [IntentActionsSelectionAdapter] list. */
+object ItemItentActionDiffUtilCallback: DiffUtil.ItemCallback<ItemAction>() {
     override fun areItemsTheSame(oldItem: ItemAction, newItem: ItemAction): Boolean =
         oldItem.action.value == newItem.action.value
     override fun areContentsTheSame(oldItem: ItemAction, newItem: ItemAction): Boolean =
@@ -52,10 +52,10 @@ object ItemActionDiffUtilCallback: DiffUtil.ItemCallback<ItemAction>() {
 }
 
 /**
- * View holder displaying an action in the [ActionsSelectionAdapter].
+ * View holder displaying an action in the [IntentActionsSelectionAdapter].
  * @param viewBinding the view binding for this item.
  */
-class ItemActionViewHolder(
+class ItemIntentActionViewHolder(
     private val viewBinding: ItemIntentActionBinding,
     private val onActionCheckClicked: (String, Boolean) -> Unit,
     private val onActionHelpClicked: (Uri) -> Unit,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,76 +20,76 @@ import android.content.Intent
 import kotlin.reflect.KProperty0
 
 internal fun getAllBroadcastActions(): List<KProperty0<String>> = buildList {
-    add(Intent::ACTION_AIRPLANE_MODE_CHANGED) //s
-    add(Intent::ACTION_APPLICATION_LOCALE_CHANGED) //s
-    add(Intent::ACTION_APPLICATION_RESTRICTIONS_CHANGED) //s
-    add(Intent::ACTION_BOOT_COMPLETED) //s
-    add(Intent::ACTION_BATTERY_CHANGED) //s
-    add(Intent::ACTION_BATTERY_LOW) //s
-    add(Intent::ACTION_BATTERY_OKAY) //s
+    add(Intent::ACTION_AIRPLANE_MODE_CHANGED)
+    add(Intent::ACTION_APPLICATION_LOCALE_CHANGED)
+    add(Intent::ACTION_APPLICATION_RESTRICTIONS_CHANGED)
+    add(Intent::ACTION_BOOT_COMPLETED)
+    add(Intent::ACTION_BATTERY_CHANGED)
+    add(Intent::ACTION_BATTERY_LOW)
+    add(Intent::ACTION_BATTERY_OKAY)
     add(Intent::ACTION_CAMERA_BUTTON)
-    add(Intent::ACTION_CONFIGURATION_CHANGED)//s
-    add(Intent::ACTION_DATE_CHANGED)//s
-    add(Intent::ACTION_DOCK_EVENT)//s
-    add(Intent::ACTION_DREAMING_STARTED)//s
-    add(Intent::ACTION_DREAMING_STOPPED)//s
-    add(Intent::ACTION_EXTERNAL_APPLICATIONS_AVAILABLE)//s
-    add(Intent::ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)//s
+    add(Intent::ACTION_CONFIGURATION_CHANGED)
+    add(Intent::ACTION_DATE_CHANGED)
+    add(Intent::ACTION_DOCK_EVENT)
+    add(Intent::ACTION_DREAMING_STARTED)
+    add(Intent::ACTION_DREAMING_STOPPED)
+    add(Intent::ACTION_EXTERNAL_APPLICATIONS_AVAILABLE)
+    add(Intent::ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)
     add(Intent::ACTION_GET_RESTRICTION_ENTRIES)
-    add(Intent::ACTION_HEADSET_PLUG)//s
-    add(Intent::ACTION_INPUT_METHOD_CHANGED)//s
-    add(Intent::ACTION_LOCALE_CHANGED)//s
-    add(Intent::ACTION_LOCKED_BOOT_COMPLETED)//s
-    add(Intent::ACTION_MANAGE_PACKAGE_STORAGE)//s
-    add(Intent::ACTION_MANAGED_PROFILE_ADDED)//s
-    add(Intent::ACTION_MANAGED_PROFILE_AVAILABLE)//s
-    add(Intent::ACTION_MANAGED_PROFILE_REMOVED)//s
-    add(Intent::ACTION_MANAGED_PROFILE_UNAVAILABLE)//s
-    add(Intent::ACTION_MANAGED_PROFILE_UNLOCKED)//s
-    add(Intent::ACTION_MEDIA_BAD_REMOVAL)//s
+    add(Intent::ACTION_HEADSET_PLUG)
+    add(Intent::ACTION_INPUT_METHOD_CHANGED)
+    add(Intent::ACTION_LOCALE_CHANGED)
+    add(Intent::ACTION_LOCKED_BOOT_COMPLETED)
+    add(Intent::ACTION_MANAGE_PACKAGE_STORAGE)
+    add(Intent::ACTION_MANAGED_PROFILE_ADDED)
+    add(Intent::ACTION_MANAGED_PROFILE_AVAILABLE)
+    add(Intent::ACTION_MANAGED_PROFILE_REMOVED)
+    add(Intent::ACTION_MANAGED_PROFILE_UNAVAILABLE)
+    add(Intent::ACTION_MANAGED_PROFILE_UNLOCKED)
+    add(Intent::ACTION_MEDIA_BAD_REMOVAL)
     add(Intent::ACTION_MEDIA_BUTTON)
-    add(Intent::ACTION_MEDIA_CHECKING)//s
+    add(Intent::ACTION_MEDIA_CHECKING)
     add(Intent::ACTION_MEDIA_EJECT)
-    add(Intent::ACTION_MEDIA_MOUNTED)//s
-    add(Intent::ACTION_MEDIA_NOFS)//s
-    add(Intent::ACTION_MEDIA_REMOVED)//s
-    add(Intent::ACTION_MEDIA_SCANNER_FINISHED)//s
-    add(Intent::ACTION_MEDIA_SCANNER_STARTED)//s
-    add(Intent::ACTION_MEDIA_SHARED)//s
-    add(Intent::ACTION_MEDIA_UNMOUNTABLE)//s
-    add(Intent::ACTION_MEDIA_UNMOUNTED)//s
-    add(Intent::ACTION_MY_PACKAGE_REPLACED)//s
-    add(Intent::ACTION_MY_PACKAGE_SUSPENDED)//s
-    add(Intent::ACTION_MY_PACKAGE_UNSUSPENDED)//s
-    add(Intent::ACTION_PACKAGE_ADDED)//s
-    add(Intent::ACTION_PACKAGE_CHANGED)//s
-    add(Intent::ACTION_PACKAGE_DATA_CLEARED)//s
-    add(Intent::ACTION_PACKAGE_FIRST_LAUNCH)//s
-    add(Intent::ACTION_PACKAGE_FULLY_REMOVED)//s
-    add(Intent::ACTION_PACKAGE_NEEDS_VERIFICATION)//s
-    add(Intent::ACTION_PACKAGE_REMOVED)//s
-    add(Intent::ACTION_PACKAGE_REPLACED)//s
-    add(Intent::ACTION_PACKAGE_RESTARTED)//s
-    add(Intent::ACTION_PACKAGE_VERIFIED)//s
-    add(Intent::ACTION_PACKAGES_SUSPENDED)//s
-    add(Intent::ACTION_PACKAGES_UNSUSPENDED)//s
-    add(Intent::ACTION_POWER_CONNECTED)//s
-    add(Intent::ACTION_POWER_DISCONNECTED)//s
-    add(Intent::ACTION_PROFILE_ACCESSIBLE)//s
-    add(Intent::ACTION_PROFILE_ADDED)//s
-    add(Intent::ACTION_PROFILE_INACCESSIBLE)//s
-    add(Intent::ACTION_PROFILE_REMOVED)//s
-    add(Intent::ACTION_PROVIDER_CHANGED)//s
-    add(Intent::ACTION_REBOOT)//s
-    add(Intent::ACTION_SCREEN_OFF)//s
-    add(Intent::ACTION_SCREEN_ON)//s
-    add(Intent::ACTION_TIMEZONE_CHANGED)//s
-    add(Intent::ACTION_TIME_CHANGED)//s
-    add(Intent::ACTION_TIME_TICK)//s
-    add(Intent::ACTION_UID_REMOVED)//s
-    add(Intent::ACTION_USER_BACKGROUND)//s
-    add(Intent::ACTION_USER_FOREGROUND)//s
-    add(Intent::ACTION_USER_PRESENT)//s
-    add(Intent::ACTION_USER_INITIALIZE)//s
-    add(Intent::ACTION_USER_UNLOCKED)//s
+    add(Intent::ACTION_MEDIA_MOUNTED)
+    add(Intent::ACTION_MEDIA_NOFS)
+    add(Intent::ACTION_MEDIA_REMOVED)
+    add(Intent::ACTION_MEDIA_SCANNER_FINISHED)
+    add(Intent::ACTION_MEDIA_SCANNER_STARTED)
+    add(Intent::ACTION_MEDIA_SHARED)
+    add(Intent::ACTION_MEDIA_UNMOUNTABLE)
+    add(Intent::ACTION_MEDIA_UNMOUNTED)
+    add(Intent::ACTION_MY_PACKAGE_REPLACED)
+    add(Intent::ACTION_MY_PACKAGE_SUSPENDED)
+    add(Intent::ACTION_MY_PACKAGE_UNSUSPENDED)
+    add(Intent::ACTION_PACKAGE_ADDED)
+    add(Intent::ACTION_PACKAGE_CHANGED)
+    add(Intent::ACTION_PACKAGE_DATA_CLEARED)
+    add(Intent::ACTION_PACKAGE_FIRST_LAUNCH)
+    add(Intent::ACTION_PACKAGE_FULLY_REMOVED)
+    add(Intent::ACTION_PACKAGE_NEEDS_VERIFICATION)
+    add(Intent::ACTION_PACKAGE_REMOVED)
+    add(Intent::ACTION_PACKAGE_REPLACED)
+    add(Intent::ACTION_PACKAGE_RESTARTED)
+    add(Intent::ACTION_PACKAGE_VERIFIED)
+    add(Intent::ACTION_PACKAGES_SUSPENDED)
+    add(Intent::ACTION_PACKAGES_UNSUSPENDED)
+    add(Intent::ACTION_POWER_CONNECTED)
+    add(Intent::ACTION_POWER_DISCONNECTED)
+    add(Intent::ACTION_PROFILE_ACCESSIBLE)
+    add(Intent::ACTION_PROFILE_ADDED)
+    add(Intent::ACTION_PROFILE_INACCESSIBLE)
+    add(Intent::ACTION_PROFILE_REMOVED)
+    add(Intent::ACTION_PROVIDER_CHANGED)
+    add(Intent::ACTION_REBOOT)
+    add(Intent::ACTION_SCREEN_OFF)
+    add(Intent::ACTION_SCREEN_ON)
+    add(Intent::ACTION_TIMEZONE_CHANGED)
+    add(Intent::ACTION_TIME_CHANGED)
+    add(Intent::ACTION_TIME_TICK)
+    add(Intent::ACTION_UID_REMOVED)
+    add(Intent::ACTION_USER_BACKGROUND)
+    add(Intent::ACTION_USER_FOREGROUND)
+    add(Intent::ACTION_USER_PRESENT)
+    add(Intent::ACTION_USER_INITIALIZE)
+    add(Intent::ACTION_USER_UNLOCKED)
 }

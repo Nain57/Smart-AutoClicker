@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigAdvancedBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent.ActionsSelectionDialog
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent.IntentActionsSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.component.ComponentSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras.ExtraConfigDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.flags.FlagsSelectionDialog
@@ -150,7 +150,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     private fun showActionsDialog() {
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = ActionsSelectionDialog(
+            newOverlay = IntentActionsSelectionDialog(
                 currentAction = dialogViewModel.getConfiguredIntentAction(),
                 onConfigComplete = { newAction ->
                     dialogViewModel.setIntentAction(newAction ?: "")

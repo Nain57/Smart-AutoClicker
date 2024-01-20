@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.android.intent
 
 import android.net.Uri
+import com.buzbuz.smartautoclicker.core.android.intent.actions.getAllBroadcastActions
 
 import com.buzbuz.smartautoclicker.core.android.intent.actions.getAndroidAPIStartActivityIntentActions
 import com.buzbuz.smartautoclicker.core.android.intent.actions.toAndroidIntentActions
@@ -29,6 +30,9 @@ data class AndroidIntentApi<Value>(
     val displayName: String,
     val helpUri: Uri,
 )
+
+fun getBroadcastReceptionIntentActions(): List<AndroidIntentApi<String>> =
+    getAllBroadcastActions().toAndroidIntentActions()
 
 fun getStartActivityIntentActions(): List<AndroidIntentApi<String>> =
     getAndroidAPIStartActivityIntentActions().toAndroidIntentActions()

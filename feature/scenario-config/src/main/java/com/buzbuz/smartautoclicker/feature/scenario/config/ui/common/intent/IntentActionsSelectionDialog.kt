@@ -42,19 +42,22 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 
-class ActionsSelectionDialog (
+class IntentActionsSelectionDialog (
     private val currentAction: String?,
     private val onConfigComplete: (action: String?) -> Unit,
+    private val forBroadcastReception: Boolean = false,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: ActionsSelectionViewModel by viewModels()
 
     private lateinit var viewBinding: DialogConfigActionIntentActionsBinding
-    private lateinit var flagsAdapter: ActionsSelectionAdapter
+    private lateinit var flagsAdapter: IntentActionsSelectionAdapter
 
     override fun onCreateView(): ViewGroup {
-        flagsAdapter = ActionsSelectionAdapter(
+        viewModel.setRequestedActionsType(forBroadcastReception)
+
+        flagsAdapter = IntentActionsSelectionAdapter(
             onActionCheckClicked = viewModel::setActionSelectionState,
             onActionHelpClicked = ::onActionHelpClicked,
         )
