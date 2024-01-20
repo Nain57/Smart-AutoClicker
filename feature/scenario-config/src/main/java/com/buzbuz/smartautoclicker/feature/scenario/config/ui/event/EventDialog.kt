@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialog
@@ -40,6 +42,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.config.Event
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationBarView
 
 import kotlinx.coroutines.launch
 
@@ -52,16 +55,35 @@ class EventDialog(
     /** View model for this dialog. */
     private val viewModel: EventDialogViewModel by viewModels()
 
-    override val navigationMenuId: Int = R.menu.menu_event_config
-
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
             topBarBinding.apply {
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
-                dialogTitle.setText(R.string.dialog_overlay_title_event_config)
+
+                viewModel.getEditedEvent()?.let { event ->
+                    dialogTitle.setText(
+                        when (event) {
+                            is ImageEvent -> R.string.dialog_overlay_title_image_event_config
+                            is TriggerEvent -> R.string.dialog_overlay_title_trigger_event_config
+                        }
+                    )
+                }
             }
         }
+    }
+
+    override fun inflateMenu(navBarView: NavigationBarView) {
+        val menuId = when (viewModel.getEditedEvent()) {
+            is ImageEvent -> R.menu.menu_image_event_config
+            is TriggerEvent -> R.menu.menu_trigger_event_config
+            null -> {
+                finish()
+                return
+            }
+        }
+
+        navBarView.inflateMenu(menuId)
     }
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent {

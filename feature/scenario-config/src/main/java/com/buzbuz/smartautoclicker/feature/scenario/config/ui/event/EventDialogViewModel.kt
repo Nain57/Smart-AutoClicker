@@ -20,6 +20,7 @@ import android.app.Application
 import android.view.View
 
 import androidx.lifecycle.AndroidViewModel
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -65,6 +66,9 @@ class EventDialogViewModel(application: Application) : AndroidViewModel(applicat
     val isEditingEvent: Flow<Boolean> = editionRepository.isEditingEvent
         .distinctUntilChanged()
         .debounce(1000)
+
+    fun getEditedEvent(): Event? =
+        editionRepository.editionState.getEditedEvent<Event>()
 
     /** Tells if this event have associated actions. */
     fun isEventHaveRelatedActions(): Boolean =

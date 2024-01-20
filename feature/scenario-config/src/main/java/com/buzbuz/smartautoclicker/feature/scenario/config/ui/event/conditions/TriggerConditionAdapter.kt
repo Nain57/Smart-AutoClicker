@@ -75,6 +75,14 @@ class TriggerConditionViewHolder(
             conditionName.text = condition.name
             conditionDetails.text = conditionDetails.context.getTriggerConditionDescription(condition)
 
+            conditionTypeIcon.setImageResource(
+                when (condition) {
+                    is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
+                    is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
+                    is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
+                    else -> throw UnsupportedOperationException("Unsupported condition type")
+                }
+            )
             root.setOnClickListener { conditionClickedListener(condition) }
         }
     }
@@ -101,7 +109,8 @@ class TriggerConditionViewHolder(
     private fun TriggerCondition.OnBroadcastReceived.toBroadcastActionDisplayName(): String {
         val lastDotIndex = intentAction.lastIndexOf('.')
 
-        return if (lastDotIndex != -1) intentAction.substring(lastDotIndex - 1)
+        return if (lastDotIndex != -1 && lastDotIndex != intentAction.lastIndex)
+            intentAction.substring(lastDotIndex + 1)
         else intentAction
     }
 

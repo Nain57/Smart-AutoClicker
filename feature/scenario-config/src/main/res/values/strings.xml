@@ -325,5 +325,8 @@
     <string name="input_field_label_comparison_value">Value</string>
     <string name="input_field_label_broadcast_action">Broadcast action</string>
     <string name="dialog_overlay_title_broadcast_received">Broadcast received</string>
+    <string name="dialog_overlay_title_counter_reached">Counter Condition</string>
+    <string name="dialog_overlay_title_image_event_config">Image Event</string>
+    <string name="dialog_overlay_title_trigger_event_config">Trigger event</string>
 
 </resources>

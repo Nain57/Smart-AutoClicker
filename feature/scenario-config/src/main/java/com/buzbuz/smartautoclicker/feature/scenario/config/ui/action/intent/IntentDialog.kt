@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.navigation.NavigationBarView
 
 import kotlinx.coroutines.launch
 
@@ -43,8 +44,6 @@ class IntentDialog(
 
     /** The view model for this dialog. */
     private val viewModel: IntentViewModel by viewModels()
-
-    override val navigationMenuId: Int = R.menu.menu_intent_config
 
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
@@ -74,6 +73,10 @@ class IntentDialog(
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
+    }
+
+    override fun inflateMenu(navBarView: NavigationBarView) {
+        navBarView.inflateMenu(R.menu.menu_intent_config)
     }
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,23 +41,17 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()
 
-    /** */
     private lateinit var baseViewBinding: DialogBaseNavBarBinding
-
-    /** */
     protected lateinit var navBarView: NavigationBarView
-    /** */
     lateinit var createCopyButtons: IncludeCreateCopyButtonsBinding
-    /** */
     lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
 
-    /** */
-    abstract val navigationMenuId: Int
-    /** */
+    abstract fun inflateMenu(navBarView: NavigationBarView)
+
     abstract fun onCreateContent(navItemId: Int): NavBarDialogContent
-    /** */
+
     abstract fun onDialogButtonPressed(buttonType: DialogNavigationButton)
-    /** */
+
     open fun onContentViewChanged(navItemId: Int) = Unit
 
     override fun onCreateView(): ViewGroup {
@@ -86,7 +80,7 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
         // Generic setup of the navigation
         navBarView.apply {
-            inflateMenu(navigationMenuId)
+            inflateMenu(this)
             setOnItemSelectedListener { item ->
                 updateContentView(item.itemId)
                 true
@@ -163,9 +157,6 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
             create(this@NavBarDialog, baseViewBinding.dialogContent, itemId)
         }
 
-    /**
-     *
-     */
     private fun updateContentView(itemId: Int, forceUpdate: Boolean = false) {
         if (!forceUpdate && navBarView.selectedItemId == itemId) return
 
