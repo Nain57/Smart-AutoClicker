@@ -289,4 +289,5 @@
     <string name="input_field_label_timer_duration">After (ms)</string>
     <string name="dropdown_label_comparison_operator">Operator</string>
     <string name="input_field_label_comparison_value">Value</string>
+    <string name="dialog_overlay_title_broadcast_received">Broadcast received</string>
 </resources>

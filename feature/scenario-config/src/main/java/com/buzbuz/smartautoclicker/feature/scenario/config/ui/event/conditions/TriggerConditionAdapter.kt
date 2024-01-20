@@ -98,8 +98,12 @@ class TriggerConditionViewHolder(
             else -> throw UnsupportedOperationException("Scenario Start and End Conditions are not supported here")
         }
 
-    private fun TriggerCondition.OnBroadcastReceived.toBroadcastActionDisplayName(): String =
-        intentAction.substring(intentAction.lastIndexOf('.') - 1)
+    private fun TriggerCondition.OnBroadcastReceived.toBroadcastActionDisplayName(): String {
+        val lastDotIndex = intentAction.lastIndexOf('.')
+
+        return if (lastDotIndex != -1) intentAction.substring(lastDotIndex - 1)
+        else intentAction
+    }
 
     private fun TriggerCondition.OnCounterCountReached.ComparisonOperation.toDisplayName(): String =
         when (this) {

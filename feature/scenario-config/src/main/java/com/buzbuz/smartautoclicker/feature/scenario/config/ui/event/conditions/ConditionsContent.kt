@@ -42,12 +42,12 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.allTriggerConditionChoices
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.counter.CounterReachedConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.timer.TimerReachedConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
@@ -267,7 +267,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         val configOverlay = when (condition) {
             is TriggerCondition.OnBroadcastReceived ->
-                TODO()
+                BroadcastReceivedConditionDialog(conditionConfigDialogListener)
             is TriggerCondition.OnCounterCountReached ->
                 CounterReachedConditionDialog(conditionConfigDialogListener)
             is TriggerCondition.OnTimerReached ->
