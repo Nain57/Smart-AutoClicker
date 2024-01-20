@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.acti
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.config.DumbScenarioConfigContent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.navigation.NavigationBarView
 
 import kotlinx.coroutines.launch
 
@@ -45,13 +46,15 @@ class DumbScenarioDialog(
     /** View model for this dialog. */
     private val viewModel: DumbScenarioViewModel by viewModels()
 
-    override val navigationMenuId: Int = R.menu.menu_dumb_scenario_config
-
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
             topBarBinding.setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
             topBarBinding.dialogTitle.setText(R.string.dialog_overlay_title_dumb_scenario_config)
         }
+    }
+
+    override fun inflateMenu(navBarView: NavigationBarView) {
+        navBarView.inflateMenu(R.menu.menu_dumb_scenario_config)
     }
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent = when (navItemId) {

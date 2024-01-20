@@ -62,7 +62,7 @@ class CounterReachedConditionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigConditionCounterBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_timer_reached)
+                dialogTitle.setText(R.string.dialog_overlay_title_counter_reached)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
