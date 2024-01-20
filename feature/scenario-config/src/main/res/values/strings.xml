@@ -313,5 +313,7 @@
     <string name="item_desc_counter_reached">Verify an operation on a counter modified by an Action</string>
     <string name="item_title_timer_reached">On timer reached</string>
     <string name="item_desc_timer_reached">Fulfilled once a certain time after scenario start</string>
+    <string name="dialog_overlay_title_timer_reached">Timer Condition</string>
+    <string name="input_field_label_timer_duration">After (ms)</string>
 
 </resources>

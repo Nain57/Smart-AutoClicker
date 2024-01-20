@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -111,6 +112,12 @@ internal class EditionState internal constructor(
     override val editedImageConditionState: Flow<EditedElementState<ImageCondition>> =
         editor.imageEventsEditor.conditionsEditor.editedItemState
 
+    override val editedEventTriggerConditionsState: Flow<EditedListState<TriggerCondition>> =
+        editor.triggerEventsEditor.conditionsEditor.listState
+
+    override val editedTriggerConditionState: Flow<EditedElementState<TriggerCondition>> =
+        editor.triggerEventsEditor.conditionsEditor.editedItemState
+
     override val editedEventActionsState: Flow<EditedListState<Action>> =
         editor.imageEventsEditor.actionsEditor.listState
 
@@ -173,19 +180,19 @@ internal class EditionState internal constructor(
         }
 
     override fun <T : Event> getEditedEvent(): T? =
-        (editor.imageEventsEditor.editedItem.value ?: editor.triggerEventsEditor.editedItem.value)?.let { it as T }
+        editor.currentEventEditor.value?.editedItem?.value as T?
 
     override fun <T : Condition> getEditedCondition(): T? =
-        editor.imageEventsEditor.conditionsEditor.editedItem.value?.let { it as T }
+        editor.currentEventEditor.value?.conditionsEditor?.editedItem?.value as T?
 
     override fun <T : Action> getEditedAction(): T? =
-        editor.imageEventsEditor.actionsEditor.editedItem.value?.let { it as T }
+        editor.currentEventEditor.value?.actionsEditor?.editedItem?.value as T?
 
     override fun getEditedIntentExtra(): IntentExtra<out Any>? =
-        editor.imageEventsEditor.actionsEditor.intentExtraEditor.editedItem.value
+        editor.currentEventEditor.value?.actionsEditor?.intentExtraEditor?.editedItem?.value
 
     override fun getEditedActionEventToggles(): List<EventToggle>? =
-        editor.imageEventsEditor.actionsEditor.editedItem.value?.let { action ->
+        editor.currentEventEditor.value?.actionsEditor?.editedItem?.value?.let { action ->
             if (action is Action.ToggleEvent) action.eventToggles
             else null
         }

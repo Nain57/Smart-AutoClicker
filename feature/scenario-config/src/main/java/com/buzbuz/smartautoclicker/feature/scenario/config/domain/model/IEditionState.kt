@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -48,6 +49,8 @@ interface IEditionState {
     val editedEventConditionsState: Flow<EditedListState<Condition>>
     val editedEventImageConditionsState: Flow<EditedListState<ImageCondition>>
     val editedImageConditionState: Flow<EditedElementState<ImageCondition>>
+    val editedEventTriggerConditionsState: Flow<EditedListState<TriggerCondition>>
+    val editedTriggerConditionState: Flow<EditedElementState<TriggerCondition>>
 
     // Edited Event child Actions
     val editedEventActionsState: Flow<EditedListState<Action>>
