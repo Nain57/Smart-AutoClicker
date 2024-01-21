@@ -31,4 +31,6 @@ sealed class Condition : Identifiable, Completable {
     override fun isComplete(): Boolean =
         name.isNotEmpty()
 
+    abstract fun hashCodeNoIds(): Int
+
 }

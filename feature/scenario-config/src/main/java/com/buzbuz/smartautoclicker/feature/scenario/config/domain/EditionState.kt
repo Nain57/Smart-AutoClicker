@@ -39,7 +39,6 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedEl
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedScenarioState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.IEditionState
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isClickOnCondition
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -169,107 +168,52 @@ internal class EditionState internal constructor(
             eventEditor?.actionsEditor?.eventToggleEditor?.listState  ?: emptyFlow()
         }
 
-
-    override val copyImageEventsFromEditedScenario: Flow<List<ImageEvent>> =
-        editedImageEventsState.map { it.value ?: emptyList() }
-
-    override val copyImageEventsFromOtherScenarios: Flow<List<ImageEvent>> =
-        combine(copyImageEventsFromEditedScenario, repository.allImageEvents) { editedEvents, allEvents ->
-            allEvents.toMutableList().let { allEventList ->
-                allEventList.removeAll(editedEvents)
-                allEventList.filter { event -> event.isComplete() }
-            }
-        }
-
-    override val copyTriggerEventsFromEditedScenario: Flow<List<TriggerEvent>> =
-        editedTriggerEventsState.map { it.value ?: emptyList() }
-
-    override val copyTriggerEventsFromOtherScenarios: Flow<List<TriggerEvent>> =
-        combine(copyTriggerEventsFromEditedScenario, repository.allTriggerEvents) { editedEvents, allEvents ->
-            allEvents.toMutableList().let { allEventList ->
-                allEventList.removeAll(editedEvents)
-                allEventList.filter { event -> event.isComplete() }
-            }
-        }
-
-    override val copyConditionsFromEditedScenario: Flow<List<Condition>> =
-        combine(allEditedEvents, editor.editedEvent) { editedEvents, editedEvent ->
-            if (editedEvent == null) return@combine emptyList<Condition>()
-
+    override val imageEventsForCopy: Flow<List<ImageEvent>> =
+        combine(editedImageEventsState, repository.allImageEvents) { allEditedEvents, dbEvents ->
             buildList {
-                editedEvents.forEach { event ->
-                    if (event::class != editedEvent::class) return@forEach
-                    addAll(event.conditions.filter {
-                        it.isComplete() && it !is TriggerCondition.OnScenarioStart && it !is TriggerCondition.OnScenarioEnd
-                    })
-                }
+                addAll(allEditedEvents.value?.filterForImageCopy() ?: emptyList())
+                addAll(dbEvents.filterForImageCopy())
             }
         }
 
-    override val copyConditionsFromOtherScenarios: Flow<List<Condition>> =
-        combine(
-            copyConditionsFromEditedScenario,
-            repository.allConditions,
-            editor.editedEvent
-        ) { scenarioConditions, allConditions, editedEvent ->
-            if (editedEvent == null) return@combine emptyList<Condition>()
-
-            allConditions.toMutableList().let { allConditionList ->
-                allConditionList.removeAll(scenarioConditions)
-                allConditionList.filter { condition ->
-                    condition.isComplete() &&
-                            condition !is TriggerCondition.OnScenarioStart &&
-                            condition !is TriggerCondition.OnScenarioEnd &&
-                            editedEvent.isConditionCompatible(condition)
-                }
-            }
-        }
-
-    override val copyActionsFromEditedScenario: Flow<List<Action>> =
-        combine(allEditedEvents, editor.editedEvent) { editedEvents, editedEvent ->
+    override val triggerEventsForCopy: Flow<List<TriggerEvent>> =
+        combine(editedTriggerEventsState, repository.allTriggerEvents) { allEditedEvents, dbEvents ->
             buildList {
-                val editedEventId = editedEvent?.id ?: return@buildList
-
-                editedEvents.forEach { event ->
-                    if (!event.isComplete()) return@forEach
-                    addAll(
-                        event.actions.filter { action ->
-                            action.isComplete() && (editedEventId == event.id || !action.isClickOnCondition())
-                        }
-                    )
-                }
+                addAll(allEditedEvents.value?.filterForTriggerCopy() ?: emptyList())
+                addAll(dbEvents.filterForTriggerCopy())
             }
         }
 
-    override val copyActionsFromOtherScenarios: Flow<List<Action>> =
-        combine(copyActionsFromEditedScenario, repository.allActions) { scenarioActions, allActions ->
-            allActions.toMutableList().let { allActionList ->
-                allActionList.removeAll(scenarioActions)
-                allActions.filter { action ->
-                    action.isComplete() && !action.isClickOnCondition() && action !is Action.ToggleEvent
-                }
-            }
+    override val conditionsForCopy: Flow<List<Condition>> =
+        combine(editor.editedEvent, allEditedEvents, repository.allConditions) { editedEvent, allEditedEvents, dbConditions ->
+            if (editedEvent == null) return@combine emptyList<Condition>()
+            buildList {
+                val editedConditions = allEditedEvents.getEditedConditionsForCopy(editedEvent)
+                addAll(editedConditions)
+                addAll(dbConditions.filterForCopy(editedEvent, editedConditions))
+            }.distinctBy { item -> item.hashCodeNoIds() }
+        }
+
+    override val actionsForCopy: Flow<List<Action>> =
+        combine(allEditedEvents, repository.allActions) { allEditedEvents, dbActions ->
+            buildList {
+                val editedActions = allEditedEvents.getEditedActionsForCopy()
+                addAll(editedActions)
+                addAll(dbActions.filterForCopy(editedActions))
+            }.distinctBy { item -> item.hashCodeNoIds() }
         }
 
     override val canCopyImageEvents: Flow<Boolean> =
-        combine(copyImageEventsFromEditedScenario, copyImageEventsFromOtherScenarios) { editedEvents, allEvents ->
-            editedEvents.size + allEvents.size > 0
-        }
+        imageEventsForCopy.map { it.isNotEmpty() }
 
     override val canCopyTriggerEvents: Flow<Boolean> =
-        combine(copyTriggerEventsFromEditedScenario, copyTriggerEventsFromOtherScenarios) { editedEvents, otherEvents ->
-            editedEvents.size + otherEvents.size > 0
-        }
+        triggerEventsForCopy.map { it.isNotEmpty() }
 
     override val canCopyConditions: Flow<Boolean> =
-        combine(copyConditionsFromEditedScenario, copyConditionsFromOtherScenarios) { editedConditions, otherConditions ->
-            editedConditions.size + otherConditions.size > 0
-        }
+        conditionsForCopy.map { it.isNotEmpty() }
 
     override val canCopyActions: Flow<Boolean> =
-        combine(copyActionsFromEditedScenario, copyActionsFromOtherScenarios) { editedActions, otherActions ->
-            editedActions.size + otherActions.size > 0
-        }
+        actionsForCopy.map { it.isNotEmpty() }
 
     override fun getScenario(): Scenario? =
         editor.editedScenario.value

@@ -32,6 +32,9 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
         is OnTimerReached -> (this as OnTimerReached).copy(eventId = evtId)
     }
 
+    override fun hashCodeNoIds(): Int =
+        name.hashCode()
+
     data class OnScenarioStart(
         override val id: Identifier,
         override val eventId: Identifier,
@@ -53,6 +56,9 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
 
         override fun isComplete(): Boolean =
             super.isComplete() && intentAction.isNotEmpty()
+
+        override fun hashCodeNoIds(): Int =
+            super.hashCode() + intentAction.hashCode()
     }
 
     data class OnCounterCountReached(
@@ -85,6 +91,9 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
 
         override fun isComplete(): Boolean =
             super.isComplete() && counterName.isNotEmpty()
+
+        override fun hashCodeNoIds(): Int =
+            super.hashCode() + counterName.hashCode() + comparisonOperation.hashCode() + counterValue.hashCode()
     }
 
     data class OnTimerReached(
@@ -96,5 +105,8 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
 
         override fun isComplete(): Boolean =
             super.isComplete() && durationMs > 0
+
+        override fun hashCodeNoIds(): Int =
+            super.hashCode() + durationMs.hashCode()
     }
 }

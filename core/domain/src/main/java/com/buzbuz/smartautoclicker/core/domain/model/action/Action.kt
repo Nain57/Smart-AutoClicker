@@ -38,6 +38,8 @@ sealed class Action : Identifiable, Completable {
     /** @return true if this action is complete and can be transformed into its entity. */
     override fun isComplete(): Boolean = name != null
 
+    abstract fun hashCodeNoIds(): Int
+
     /** @return creates a deep copy of this action. */
     abstract fun deepCopy(): Action
 
@@ -98,6 +100,10 @@ sealed class Action : Identifiable, Completable {
         override fun isComplete(): Boolean =
             super.isComplete() && pressDuration != null && isPositionValid()
 
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + pressDuration.hashCode() + positionType.hashCode() + x.hashCode() + y.hashCode() +
+                    clickOnConditionId.hashCode()
+
 
         override fun deepCopy(): Click = copy(name = "" + name)
 
@@ -135,6 +141,10 @@ sealed class Action : Identifiable, Completable {
         override fun isComplete(): Boolean =
             super.isComplete() && swipeDuration != null && fromX != null && fromY != null && toX != null && toY != null
 
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + swipeDuration.hashCode() + fromX.hashCode() + fromY.hashCode() + toX.hashCode() +
+                    toY.hashCode()
+
         override fun deepCopy(): Swipe = copy(name = "" + name)
     }
 
@@ -155,6 +165,10 @@ sealed class Action : Identifiable, Completable {
     ) : Action() {
 
         override fun isComplete(): Boolean = super.isComplete() && pauseDuration != null
+
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + pauseDuration.hashCode()
+
 
         override fun deepCopy(): Pause = copy(name = "" + name)
     }
@@ -194,6 +208,9 @@ sealed class Action : Identifiable, Completable {
             return true
         }
 
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + isAdvanced.hashCode() + isBroadcast.hashCode() + intentAction.hashCode() +
+                    componentName.hashCode() + flags.hashCode() + extras.hashCode()
 
         override fun deepCopy(): Intent = copy(name = "" + name)
     }
@@ -242,6 +259,9 @@ sealed class Action : Identifiable, Completable {
             }
         }
 
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + toggleAll.hashCode() + toggleAllType.hashCode() + eventToggles.hashCode()
+
         override fun deepCopy(): ToggleEvent = copy(name = "" + name)
     }
 
@@ -272,6 +292,9 @@ sealed class Action : Identifiable, Completable {
 
         override fun isComplete(): Boolean =
             super.isComplete() && counterName.isNotEmpty() && operationValue >= 0
+
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + counterName.hashCode() + operation.hashCode() + operationValue.hashCode()
 
         override fun deepCopy(): ChangeCounter = copy(
             name = "" + name,
