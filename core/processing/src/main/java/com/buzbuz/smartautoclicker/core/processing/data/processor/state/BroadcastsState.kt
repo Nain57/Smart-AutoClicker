@@ -24,6 +24,8 @@ import android.content.IntentFilter
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 
+import java.util.concurrent.ConcurrentHashMap
+
 interface IBroadcastsState {
     fun isBroadcastReceived(condition: TriggerCondition.OnBroadcastReceived): Boolean
 }
@@ -32,7 +34,7 @@ internal class BroadcastsState(
     triggerEvents: List<TriggerEvent>,
 ): IBroadcastsState {
 
-    private val broadcastsState: MutableMap<String, Boolean> = mutableMapOf<String, Boolean>().apply {
+    private val broadcastsState: ConcurrentHashMap<String, Boolean> = ConcurrentHashMap<String, Boolean>().apply {
         triggerEvents.forEach { triggerEvent ->
             triggerEvent.conditions.forEach { triggerCondition ->
                 if (triggerCondition is TriggerCondition.OnBroadcastReceived) {
@@ -70,4 +72,10 @@ internal class BroadcastsState(
 
     override fun isBroadcastReceived(condition: TriggerCondition.OnBroadcastReceived): Boolean =
         broadcastsState[condition.intentAction] ?: false
+
+    fun clearReceivedBroadcast() {
+        broadcastsState.keys.forEach { key ->
+            broadcastsState[key] = false
+        }
+    }
 }

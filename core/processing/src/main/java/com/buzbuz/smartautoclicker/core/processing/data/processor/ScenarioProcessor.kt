@@ -95,12 +95,18 @@ internal class ScenarioProcessor(
             return
         }
 
+        // Handle all trigger events enabled during previous processing
         if (!processingState.areAllTriggerEventsDisabled()) {
             processTriggerEvents(processingState.getEnabledTriggerEvents())?.let { (triggerEvent, results) ->
                 actionExecutor.executeActions(triggerEvent, results)
             }
         }
 
+        // Reset any values that needs to be reset for each iteration
+        // After the triggers to let them handle changes, before the image processing to start capturing values before
+        processingState.clearIterationState()
+
+        // Handle the image detection
         if (!processingState.areAllImageEventsDisabled()) {
             processImageEvents(screenFrame, processingState.getEnabledImageEvents())?.let { (imageEvent, results) ->
                 actionExecutor.executeActions(imageEvent, results)
