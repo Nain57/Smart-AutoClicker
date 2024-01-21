@@ -106,7 +106,9 @@ internal class EditionState internal constructor(
 
     override val editedEventImageConditionsState: Flow<EditedListState<ImageCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
+
             if (editor is ImageEventsEditor)
                 editor.conditionsEditor.listState
             else emptyFlow()
@@ -114,7 +116,9 @@ internal class EditionState internal constructor(
 
     override val editedImageConditionState: Flow<EditedElementState<ImageCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
+
             if (editor is ImageEventsEditor)
                 editor.conditionsEditor.editedItemState
             else emptyFlow()
@@ -122,7 +126,9 @@ internal class EditionState internal constructor(
 
     override val editedEventTriggerConditionsState: Flow<EditedListState<TriggerCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
+
             if (editor is TriggerEventsEditor)
                 editor.conditionsEditor.listState
             else emptyFlow()
@@ -130,7 +136,9 @@ internal class EditionState internal constructor(
 
     override val editedTriggerConditionState: Flow<EditedElementState<TriggerCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
+            eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
+
             if (editor is TriggerEventsEditor)
                 editor.conditionsEditor.editedItemState
             else emptyFlow()

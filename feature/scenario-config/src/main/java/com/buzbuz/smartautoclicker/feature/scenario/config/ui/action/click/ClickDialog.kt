@@ -202,6 +202,14 @@ class ClickDialog(
 
             clickSelectorChevron.visibility = if (state.chevronIsVisible) View.VISIBLE else View.GONE
 
+            if (state.forTriggerEvent) {
+                clickPositionField.root.visibility = View.GONE
+                separatorClickType.visibility = View.GONE
+            } else {
+                clickPositionField.root.visibility = View.VISIBLE
+                separatorClickType.visibility = View.VISIBLE
+            }
+
             layoutClickSelector.setOnClickListener {
                 debounceUserInteraction {
                     when (state.action) {

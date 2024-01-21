@@ -73,6 +73,7 @@
                         android:layout_marginBottom="@dimen/margin_vertical_large"/>
 
                     <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/separator_click_type"
                         style="@style/AppTheme.Widget.DividerSecondaryH"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout

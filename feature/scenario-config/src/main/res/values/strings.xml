@@ -332,6 +332,6 @@
     <string name="dialog_overlay_title_image_event_config">Image Event</string>
     <string name="dialog_overlay_title_trigger_event_config">Trigger event</string>
     <string name="list_header_copy_action_this">Actions from this scenario</string>
-    <string name="list_header_copy_action_all">Actions from all scenarios</string>
+    <string name="list_header_copy_action_all">Actions from other scenarios</string>
 
 </resources>
