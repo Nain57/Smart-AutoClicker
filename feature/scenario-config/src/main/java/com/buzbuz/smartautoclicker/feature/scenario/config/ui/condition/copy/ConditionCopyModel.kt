@@ -22,6 +22,7 @@ import android.graphics.Bitmap
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.base.interfaces.containsIdentifiable
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.Repository
@@ -53,32 +54,30 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
 
-    /** List of all condition available for copy */
-    private val allCopyItems: Flow<List<ConditionCopyItem>> = combine(
-        editionRepository.editionState.copyConditionsFromEditedScenario,
-        editionRepository.editionState.copyConditionsFromOtherScenarios,
-    ) { conditionsFromThisScenario, conditionsFromOtherScenario ->
-        buildList {
-            // First, add the actions from the current scenario
-            if (conditionsFromThisScenario.isNotEmpty()) {
-                add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
-                addAll(conditionsFromThisScenario
-                    .toCopyItems()
-                    .sortedBy { it.condition.name }
-                    .distinctByUiDisplay()
-                )
+    private val allCopyItems: Flow<List<ConditionCopyItem>> =
+        combine(
+            editionRepository.editionState.allEditedEvents,
+            editionRepository.editionState.conditionsForCopy,
+        ) { editedEvents, conditions ->
+
+            val editedConditions = mutableListOf<Condition>()
+            val otherConditions = mutableListOf<Condition>()
+            conditions.forEach { condition ->
+                if (editedEvents.containsIdentifiable(condition.eventId)) editedConditions.add(condition)
+                else otherConditions.add(condition)
             }
 
-            if (conditionsFromOtherScenario.isNotEmpty()) {
-                add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
-                addAll(conditionsFromOtherScenario
-                    .toCopyItems()
-                    .sortedBy { it.condition.name }
-                    .distinctByUiDisplay()
-                )
+            buildList {
+                if (editedConditions.isNotEmpty()) {
+                    add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_this))
+                    addAll(editedConditions.toCopyItems().sortedBy { it.condition.name })
+                }
+                if (otherConditions.isNotEmpty()) {
+                    add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_all))
+                    addAll(otherConditions.toCopyItems().sortedBy { it.condition.name })
+                }
             }
         }
-    }
 
     /** List of displayed condition items. */
     val conditionList: Flow<List<ConditionCopyItem>?> = allCopyItems.combine(searchQuery) { allItems, query ->

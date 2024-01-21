@@ -69,14 +69,10 @@ interface IEditionState {
     val canCopyActions: Flow<Boolean>
 
     // Possible items for copy depending on current edition state
-    val copyImageEventsFromEditedScenario: Flow<List<ImageEvent>>
-    val copyImageEventsFromOtherScenarios: Flow<List<ImageEvent>>
-    val copyTriggerEventsFromEditedScenario: Flow<List<TriggerEvent>>
-    val copyTriggerEventsFromOtherScenarios: Flow<List<TriggerEvent>>
-    val copyConditionsFromEditedScenario: Flow<List<Condition>>
-    val copyConditionsFromOtherScenarios: Flow<List<Condition>>
-    val copyActionsFromEditedScenario: Flow<List<Action>>
-    val copyActionsFromOtherScenarios: Flow<List<Action>>
+    val imageEventsForCopy: Flow<List<ImageEvent>>
+    val triggerEventsForCopy: Flow<List<TriggerEvent>>
+    val conditionsForCopy: Flow<List<Condition>>
+    val actionsForCopy: Flow<List<Action>>
 
     // Edited items getters
     fun getScenario(): Scenario?

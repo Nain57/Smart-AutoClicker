@@ -21,8 +21,8 @@ import android.app.Application
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -51,53 +51,41 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
     private val requestTriggerEvents: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private val searchQuery = MutableStateFlow<String?>(null)
 
-    private val allImageEventsCopyItems: Flow<List<EventCopyItem>> = combine(
-        editionRepository.editionState.copyImageEventsFromEditedScenario,
-        editionRepository.editionState.copyImageEventsFromOtherScenarios,
-    ) { eventsFromThisScenario, eventsFromOtherScenario ->
-        buildCopyItemsList(eventsFromThisScenario, eventsFromOtherScenario)
-    }
-
-    private val allTriggerEventsCopyItems: Flow<List<EventCopyItem>> = combine(
-        editionRepository.editionState.copyTriggerEventsFromEditedScenario,
-        editionRepository.editionState.copyTriggerEventsFromOtherScenarios,
-    ) { eventsFromThisScenario, eventsFromOtherScenario ->
-        buildCopyItemsList(eventsFromThisScenario, eventsFromOtherScenario)
-    }
-
-    private val requestedCopyItems: Flow<List<EventCopyItem>> = requestTriggerEvents
+    private val requestedCopyItems: Flow<List<Event>> = requestTriggerEvents
         .flatMapLatest { isRequestingTriggerEvents ->
-            if (isRequestingTriggerEvents == true) allTriggerEventsCopyItems
-            else allImageEventsCopyItems
+            if (isRequestingTriggerEvents == true) editionRepository.editionState.triggerEventsForCopy
+            else editionRepository.editionState.imageEventsForCopy
         }
 
-    val eventList: Flow<List<EventCopyItem>?> = requestedCopyItems.combine(searchQuery) { allItems, query ->
+    private val allCopyItems: Flow<List<EventCopyItem>> =
+        combine(editionRepository.editionState.scenarioState, requestedCopyItems) { scenario, events ->
+            val editedScenarioId = scenario.value?.id ?: return@combine emptyList()
+
+            val editedEvents = mutableListOf<Event>()
+            val otherEvents = mutableListOf<Event>()
+            events.forEach { event ->
+                if (event.scenarioId == editedScenarioId) editedEvents.add(event)
+                else otherEvents.add(event)
+            }
+
+            buildList {
+                if (editedEvents.isNotEmpty()) {
+                    add(EventCopyItem.Header(R.string.list_header_copy_event_this))
+                    addAll(editedEvents.toCopyItems().sortedBy { it.name })
+                }
+                if (otherEvents.isNotEmpty()) {
+                    add(EventCopyItem.Header(R.string.list_header_copy_event_all))
+                    addAll(otherEvents.toCopyItems().sortedBy { it.name })
+                }
+            }
+        }
+
+    val eventList: Flow<List<EventCopyItem>?> = allCopyItems.combine(searchQuery) { allItems, query ->
             if (query.isNullOrEmpty()) allItems
             else allItems
                 .filterIsInstance<EventCopyItem.EventItem>()
                 .filter { item -> item.name.contains(query, true) }
         }
-
-    private fun buildCopyItemsList(editedEvents: List<Event>, allOtherEvents: List<Event>): List<EventCopyItem> =
-        buildList {
-            // First, add the actions from the current scenario
-            if (editedEvents.isNotEmpty()) {
-                add(EventCopyItem.Header(R.string.list_header_copy_event_this))
-                addAll(editedEvents
-                    .toCopyItems()
-                    .sortedBy { it.name }
-                )
-            }
-
-            if (allOtherEvents.isNotEmpty()) {
-                add(EventCopyItem.Header(R.string.list_header_copy_event_all))
-                addAll(allOtherEvents
-                    .toCopyItems()
-                    .sortedBy { it.name }
-                )
-            }
-        }
-
     fun setCopyListType(triggerEvents: Boolean) {
         viewModelScope.launch {
             requestTriggerEvents.emit(triggerEvents)

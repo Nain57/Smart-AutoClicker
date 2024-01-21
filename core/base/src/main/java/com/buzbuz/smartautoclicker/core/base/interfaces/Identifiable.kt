@@ -25,3 +25,6 @@ interface Identifiable {
     fun getDomainId(): Long? = id.tempId
     fun isInDatabase(): Boolean = id.isInDatabase()
 }
+
+fun List<Identifiable>.containsIdentifiable(id: Identifier): Boolean =
+    find { it.id == id } != null

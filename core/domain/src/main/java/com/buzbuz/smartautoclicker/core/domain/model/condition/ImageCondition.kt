@@ -60,4 +60,8 @@ data class ImageCondition(
         super.isComplete()
                 && (path != null || bitmap != null)
                 && (detectionType == IN_AREA && detectionArea != null || detectionType != IN_AREA)
+
+    override fun hashCodeNoIds(): Int =
+        name.hashCode() + path.hashCode() + area.hashCode() + threshold.hashCode() + detectionType.hashCode() +
+                shouldBeDetected.hashCode() + bitmap.hashCode() + detectionArea.hashCode()
 }
