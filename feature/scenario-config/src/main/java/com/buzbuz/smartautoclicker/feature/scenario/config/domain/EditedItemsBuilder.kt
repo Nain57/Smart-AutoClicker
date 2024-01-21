@@ -81,12 +81,6 @@ class EditedItemsBuilder internal constructor(
             actions = mutableListOf(),
         )
 
-    fun createNewEventFrom(from: Event, scenarioId: Identifier = getEditedScenarioIdOrThrow()): Event =
-        when (from) {
-            is ImageEvent -> createNewImageEventFrom(from, scenarioId)
-            is TriggerEvent -> createNewTriggerEventFrom(from, scenarioId)
-        }
-
     fun createNewImageEventFrom(from: ImageEvent, scenarioId: Identifier = getEditedScenarioIdOrThrow()): ImageEvent {
         val eventId = eventsIdCreator.generateNewIdentifier()
 

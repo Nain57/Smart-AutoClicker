@@ -21,6 +21,7 @@ import android.app.Application
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -108,6 +109,14 @@ class EventCopyModel(application: Application) : AndroidViewModel(application) {
             searchQuery.emit(query)
         }
     }
+
+    fun eventCopyShouldWarnUser(event: Event): Boolean =
+        !event.isFromEditedScenario() && event.actions.find { action ->
+            action is Action.ToggleEvent && !action.toggleAll
+        } != null
+
+    private fun Event.isFromEditedScenario(): Boolean =
+        editionRepository.editionState.getScenario()?.id == scenarioId
 
     private fun List<Event>.toCopyItems(): List<EventCopyItem.EventItem> = map { event ->
         when (event) {

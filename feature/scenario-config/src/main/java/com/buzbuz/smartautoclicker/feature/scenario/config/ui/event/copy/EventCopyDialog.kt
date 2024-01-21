@@ -16,18 +16,22 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy
 
+import android.content.DialogInterface
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
@@ -67,13 +71,37 @@ class EventCopyDialog(
 
     private fun onEventClicked(event: Event) {
         debounceUserInteraction {
-            back()
-            onEventSelected(event)
+            if (viewModel.eventCopyShouldWarnUser(event)) {
+                showToggleEventCopyWarning(event)
+            } else {
+                notifySelectionAndDestroy(event)
+            }
         }
     }
 
     private fun updateEventList(newItems: List<EventCopyModel.EventCopyItem>?) {
         viewBinding.layoutLoadableList.updateState(newItems)
         eventCopyAdapter.submitList(newItems)
+    }
+
+    /** Show the copy event with toggle event action warning. */
+    private fun showToggleEventCopyWarning(event: Event) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.dialog_overlay_title_warning)
+            .setMessage(R.string.message_event_copy_with_toggle_action_from_another_scenario)
+            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
+                notifySelectionAndDestroy(event)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .apply {
+                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
+            }
+            .show()
+    }
+
+    private fun notifySelectionAndDestroy(event: Event) {
+        back()
+        onEventSelected(event)
     }
 }
