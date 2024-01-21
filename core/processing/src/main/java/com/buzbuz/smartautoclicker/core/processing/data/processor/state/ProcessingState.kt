@@ -41,4 +41,8 @@ internal class ProcessingState(
         broadcastsState.onProcessingStopped()
         processingStartTsMs = -1
     }
+
+    fun clearIterationState() {
+        broadcastsState.clearReceivedBroadcast()
+    }
 }

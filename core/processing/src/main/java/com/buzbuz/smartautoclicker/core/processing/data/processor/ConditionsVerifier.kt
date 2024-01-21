@@ -55,7 +55,7 @@ internal class ConditionsVerifier(
     private var currentVerificationTsMs: Long? = null
 
     suspend fun verifyConditions(@ConditionOperator operator: Int, conditions: List<Condition>): ConditionsResult {
-        verificationResults.reset(operator)
+        verificationResults.reset()
         currentVerificationTsMs = System.currentTimeMillis()
 
         var verificationResult: ConditionResult

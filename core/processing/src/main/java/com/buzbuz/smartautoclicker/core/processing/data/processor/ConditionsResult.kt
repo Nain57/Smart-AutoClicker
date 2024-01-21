@@ -28,7 +28,6 @@ import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
 internal class ConditionsResult : IConditionsResult {
 
     private val results: MutableMap<Long, ConditionResult> = mutableMapOf()
-    @ConditionOperator private var conditionOperator: Int? = null
 
     override var fulfilled: Boolean? = null
         private set
@@ -42,9 +41,8 @@ internal class ConditionsResult : IConditionsResult {
         results.values.find { it is ImageResult && it.isFulfilled && it.condition.shouldBeDetected }
                 as ImageResult?
 
-    fun reset(@ConditionOperator operator: Int) {
+    fun reset() {
         results.clear()
-        conditionOperator = operator
         fulfilled = null
     }
 
