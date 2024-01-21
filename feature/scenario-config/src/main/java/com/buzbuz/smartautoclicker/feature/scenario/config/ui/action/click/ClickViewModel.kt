@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
@@ -100,16 +101,22 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val positionStateUi: Flow<ClickPositionUiState?> =
-        combine(editionRepository.editionState.editedImageEventState, configuredClick) { event, click ->
+        combine(editionRepository.editionState.editedEventState, configuredClick) { event, click ->
             val evt = event.value ?: return@combine null
 
             when {
-                click.positionType == Action.Click.PositionType.USER_SELECTED ->
-                    application.getUserSelectedClickPositionState(click)
-                click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
+                evt is TriggerEvent ->
+                    application.getUserSelectedClickPositionState(click, forced = true)
+
+                evt is ImageEvent && click.positionType == Action.Click.PositionType.USER_SELECTED ->
+                    application.getUserSelectedClickPositionState(click, forced = false)
+
+                evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
                     application.getOnConditionWithOrPositionState()
-                click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
+
+                evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
                     application.getOnConditionWithAndPositionState(evt, click)
+
                 else -> null
             }
         }.distinctUntilChanged()
@@ -251,7 +258,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun Context.getUserSelectedClickPositionState(click: Action.Click): ClickPositionUiState {
+    private fun Context.getUserSelectedClickPositionState(click: Action.Click, forced: Boolean): ClickPositionUiState {
         val positionText =
             if (click.x == null || click.y == null) getString(R.string.item_desc_position_select)
             else getString(R.string.item_desc_click_on_position, click.x!!, click.y!!)
@@ -263,6 +270,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
             selectorIcon = null,
             chevronIsVisible = true,
             action = ClickPositionSelectorAction.SELECT_POSITION,
+            forTriggerEvent = forced,
         )
     }
 
@@ -274,6 +282,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
             selectorIcon = null,
             chevronIsVisible = false,
             action = ClickPositionSelectorAction.NONE,
+            forTriggerEvent = false,
         )
 
     private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Action.Click): ClickPositionUiState {
@@ -297,6 +306,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
             selectorIcon = conditionBitmap,
             chevronIsVisible = atLeastOneCondition,
             action = if (atLeastOneCondition) ClickPositionSelectorAction.SELECT_CONDITION else ClickPositionSelectorAction.NONE,
+            forTriggerEvent = false,
         )
     }
 }
@@ -308,6 +318,7 @@ data class ClickPositionUiState(
     val selectorIcon: Bitmap?,
     val chevronIsVisible: Boolean,
     val action: ClickPositionSelectorAction,
+    val forTriggerEvent: Boolean,
 )
 
 enum class ClickPositionSelectorAction {
