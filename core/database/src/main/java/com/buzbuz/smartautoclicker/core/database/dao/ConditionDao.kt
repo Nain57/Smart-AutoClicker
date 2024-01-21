@@ -41,14 +41,6 @@ abstract class ConditionDao {
     abstract fun getAllConditions(): Flow<List<ConditionEntity>>
 
     /**
-     * Get all image conditions from all events.
-     *
-     * @return the list containing all image conditions.
-     */
-    @Query("SELECT * FROM $CONDITION_TABLE WHERE type='ON_IMAGE_DETECTED'")
-    abstract fun getAllImageConditions(): Flow<List<ConditionEntity>>
-
-    /**
      * Get the list of conditions for a given event.
      *
      * @param eventId the identifier of the event to get the conditions from.

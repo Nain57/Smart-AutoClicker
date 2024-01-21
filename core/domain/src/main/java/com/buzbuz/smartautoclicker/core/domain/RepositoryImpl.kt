@@ -26,9 +26,9 @@ import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.data.ScenarioDataSource
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.action.toDomain
-import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomainImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -65,6 +65,11 @@ internal class RepositoryImpl internal constructor(
     override val allTriggerEvents: Flow<List<TriggerEvent>> =
         dataSource.allTriggerEvents.mapList { it.toDomainTriggerEvent() }
 
+    override val allConditions: Flow<List<Condition>> =
+        dataSource.getAllConditions().mapList { it.toDomain() }
+
+    override val allActions: Flow<List<Action>> =
+        dataSource.getAllActions().mapList { it.toDomain() }
 
     override suspend fun getScenario(scenarioId: Long): Scenario? =
         dataSource.getScenario(scenarioId)?.toDomain()
@@ -80,12 +85,6 @@ internal class RepositoryImpl internal constructor(
 
     override fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>> =
         dataSource.getTriggerEventsFlow(scenarioId).mapList { it.toDomainTriggerEvent() }
-
-    override fun getAllActions(): Flow<List<Action>> =
-        dataSource.getAllActions().mapList { it.toDomain() }
-
-    override fun getAllImageConditions(): Flow<List<ImageCondition>> =
-        dataSource.getAllImageConditions().mapList { it.toDomainImageCondition() }
 
     override suspend fun addScenario(scenario: Scenario): Long =
         dataSource.addScenario(scenario)

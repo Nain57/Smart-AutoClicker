@@ -31,10 +31,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
 
-class TriggerListViewModel(application: Application) : AndroidViewModel(application) {
+class TriggerEventListViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The repository of the application. */
-    private val repository: Repository = Repository.getRepository(application)
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
@@ -53,10 +51,7 @@ class TriggerListViewModel(application: Application) : AndroidViewModel(applicat
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** Tells if the copy button should be visible or not. */
-    val copyButtonIsVisible: Flow<Boolean> =
-        combine(repository.allImageEvents, editionRepository.editionState.editedImageEventsState) { allEvts, scenarioEvts ->
-            allEvts.isNotEmpty() || !scenarioEvts.value.isNullOrEmpty()
-        }
+    val copyButtonIsVisible: Flow<Boolean> = editionRepository.editionState.canCopyTriggerEvents
 
     /**
      * Creates a new event item.

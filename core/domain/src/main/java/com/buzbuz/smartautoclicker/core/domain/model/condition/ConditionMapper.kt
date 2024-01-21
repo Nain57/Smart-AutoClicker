@@ -16,11 +16,32 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.condition
 
+import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 
+
+/** @return the entity equivalent of this condition. */
+internal fun ImageCondition.toEntity() = ConditionEntity(
+    id = id.databaseId,
+    eventId = eventId.databaseId,
+    name = name,
+    type = ConditionType.ON_IMAGE_DETECTED,
+    path = path!!,
+    areaLeft = area.left,
+    areaTop = area.top,
+    areaRight = area.right,
+    areaBottom = area.bottom,
+    threshold = threshold,
+    detectionType = detectionType,
+    shouldBeDetected = shouldBeDetected,
+    detectionAreaLeft = detectionArea?.left,
+    detectionAreaTop = detectionArea?.top,
+    detectionAreaRight = detectionArea?.right,
+    detectionAreaBottom = detectionArea?.bottom,
+)
 
 internal fun TriggerCondition.toEntity(): ConditionEntity = when (this) {
     is TriggerCondition.OnScenarioStart -> toScenarioStartEntity()
@@ -75,8 +96,10 @@ private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEnt
         timerValueMs = durationMs,
     )
 
-internal fun ConditionEntity.toDomainTriggerCondition(cleanIds: Boolean = false): TriggerCondition =
+
+internal fun ConditionEntity.toDomain(cleanIds: Boolean = false): Condition =
     when (type) {
+        ConditionType.ON_IMAGE_DETECTED -> toDomainImageCondition(cleanIds)
         ConditionType.ON_SCENARIO_START -> toDomainScenarioStart(cleanIds)
         ConditionType.ON_SCENARIO_END -> toDomainScenarioEnd(cleanIds)
         ConditionType.ON_BROADCAST_RECEIVED -> toDomainBroadcastReceived(cleanIds)
@@ -84,6 +107,20 @@ internal fun ConditionEntity.toDomainTriggerCondition(cleanIds: Boolean = false)
         ConditionType.ON_TIMER_REACHED -> toDomainTimerReached(cleanIds)
         else -> throw IllegalArgumentException("Unsupported condition type for a TriggerCondition")
     }
+
+/** @return the condition for this entity. */
+private fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): ImageCondition =
+    ImageCondition(
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
+        name = name,
+        path = path,
+        area = Rect(areaLeft!!, areaTop!!, areaRight!!, areaBottom!!),
+        threshold = threshold!!,
+        detectionType = detectionType!!,
+        detectionArea = getDetectionArea(),
+        shouldBeDetected = shouldBeDetected ?: true,
+    )
 
 private fun ConditionEntity.toDomainScenarioStart(cleanIds: Boolean = false): TriggerCondition =
     TriggerCondition.OnScenarioStart(
@@ -117,6 +154,7 @@ private fun ConditionEntity.toDomainCounterReached(cleanIds: Boolean = false): T
         counterValue = counterValue!!,
     )
 
+
 private fun ConditionEntity.toDomainTimerReached(cleanIds: Boolean = false): TriggerCondition =
     TriggerCondition.OnTimerReached(
         id = Identifier(id = id, asTemporary = cleanIds),
@@ -127,3 +165,9 @@ private fun ConditionEntity.toDomainTimerReached(cleanIds: Boolean = false): Tri
 
 private fun CounterComparisonOperation.toDomain(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
     TriggerCondition.OnCounterCountReached.ComparisonOperation.valueOf(name)
+
+private fun ConditionEntity.getDetectionArea(): Rect? =
+    if (detectionAreaLeft != null && detectionAreaTop != null && detectionAreaRight != null && detectionAreaBottom != null)
+        Rect(detectionAreaLeft!!, detectionAreaTop!!, detectionAreaRight!!, detectionAreaBottom!!)
+    else
+        null

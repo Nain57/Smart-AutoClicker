@@ -62,7 +62,21 @@ interface IEditionState {
     val editedIntentExtraState: Flow<EditedElementState<IntentExtra<out Any>>>
     val editedActionEventTogglesState: Flow<EditedListState<EventToggle>>
 
+    // Copy possibility state depending on current edition state
+    val canCopyImageEvents: Flow<Boolean>
+    val canCopyTriggerEvents: Flow<Boolean>
+    val canCopyConditions: Flow<Boolean>
+    val canCopyActions: Flow<Boolean>
 
+    // Possible items for copy depending on current edition state
+    val copyImageEventsFromEditedScenario: Flow<List<ImageEvent>>
+    val copyImageEventsFromOtherScenarios: Flow<List<ImageEvent>>
+    val copyTriggerEventsFromEditedScenario: Flow<List<TriggerEvent>>
+    val copyTriggerEventsFromOtherScenarios: Flow<List<TriggerEvent>>
+    val copyConditionsFromEditedScenario: Flow<List<Condition>>
+    val copyConditionsFromOtherScenarios: Flow<List<Condition>>
+    val copyActionsFromEditedScenario: Flow<List<Action>>
+    val copyActionsFromOtherScenarios: Flow<List<Action>>
 
     // Edited items getters
     fun getScenario(): Scenario?
@@ -74,14 +88,6 @@ interface IEditionState {
     fun getEditedActionEventToggles(): List<EventToggle>?
 
 
-    /** Get the events selectable as target for the currently edited Toggle Event Action. */
-    val eventsAvailableForToggleEventAction: Flow<List<Event>>
-
-    /** Get Action that can be copied from the edited scenario. */
-    val actionsAvailableForCopyFromEditedScenario: Flow<List<Action>>
-
-    /** Get Action that can be copied from all scenario besides the edited one. */
-    val actionsAvailableForCopyFromOtherScenario: Flow<List<Action>>
 
     /** Check if this event id is set for one of the edited events. */
     fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean

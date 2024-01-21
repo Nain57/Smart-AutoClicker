@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,36 +46,29 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
 
     /** List of all actions available for copy */
     private val allCopyItems: Flow<List<ActionCopyItem>> = combine(
-        editionRepository.editionState.editedImageEventState,
-        editionRepository.editionState.actionsAvailableForCopyFromEditedScenario,
-        editionRepository.editionState.actionsAvailableForCopyFromOtherScenario,
-    ) { editedEvent, otherActionsFromEditedScenario, otherActionsFromOtherScenario ->
+        editionRepository.editionState.copyActionsFromEditedScenario,
+        editionRepository.editionState.copyActionsFromOtherScenarios,
+    ) { actionsFromThisScenario, actionsFromOtherScenario ->
         buildList {
-            val editedEvt = editedEvent.value ?: return@combine emptyList()
-
-            // First, add the actions from the current event
-            if (editedEvt.actions.isNotEmpty()) {
+            // First, add the actions from the current scenario
+            if (actionsFromThisScenario.isNotEmpty()) {
                 add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
-                addAll(
-                    editedEvt.actions
-                        .toCopyItemsFromEditedEvents()
-                        .sortedBy { it.actionDetails.name }
+                addAll(actionsFromThisScenario
+                    .toCopyItems()
+                    .sortedBy { it.actionDetails.name }
+                    .distinctByUiDisplay()
                 )
             }
 
-            val allOtherActions = mutableListOf<Action>().apply {
-                addAll(otherActionsFromEditedScenario)
-                addAll(otherActionsFromOtherScenario)
-            }
-            if (allOtherActions.isNotEmpty()) {
+            if (actionsFromOtherScenario.isNotEmpty()) {
                 add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
-                addAll(
-                    allOtherActions
-                        .toCopyItemsFromOtherScenarios()
-                        .sortedBy { it.actionDetails.name }
+                addAll(actionsFromOtherScenario
+                    .toCopyItems()
+                    .sortedBy { it.actionDetails.name }
+                    .distinctByUiDisplay()
                 )
             }
-        }.distinctByUiDisplay()
+        }
     }
 
     /**
@@ -87,8 +80,6 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
         else allItems
             .filterIsInstance<ActionCopyItem.ActionItem>()
             .filter { item -> item.actionDetails.name.contains(query, true) }
-            .sortedBy { it.actionDetails.name }
-            .distinctByUiDisplay()
     }
 
     /**
@@ -100,16 +91,9 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
     }
 
     /** Creates copy items from a list of edited actions from this scenario. */
-    private fun List<Action>.toCopyItemsFromEditedEvents() = map { action ->
+    private fun List<Action>.toCopyItems() = map { action ->
         ActionCopyItem.ActionItem(
             actionDetails = action.toActionDetails(getApplication()),
-        )
-    }
-
-    /** Creates copy items from a list of actions from another scenario. */
-    private fun List<Action>.toCopyItemsFromOtherScenarios() = map {
-        ActionCopyItem.ActionItem(
-            actionDetails = it.toActionDetails(getApplication()),
         )
     }
 

@@ -142,8 +142,6 @@
     <string name="list_header_copy_event_all">Events from all scenarios</string>
     <string name="list_header_copy_conditions_this">Conditions from this event</string>
     <string name="list_header_copy_conditions_all">Conditions from all events</string>
-    <string name="list_header_copy_action_this">Actions from this event</string>
-    <string name="list_header_copy_action_all">Actions from all events</string>
 
     <!--
       - SearchView hint
@@ -275,6 +273,17 @@
     <string name="dropdown_item_intent_extra_type_short" translatable="false">Short</string>
     <string name="dropdown_item_intent_extra_type_string" translatable="false">String</string>
 
+
+    <string name="item_title_greater_or_equals" translatable="false">≥</string>
+    <string name="item_title_greater" translatable="false"><![CDATA[>]]></string>
+    <string name="item_title_equals" translatable="false">=</string>
+    <string name="item_title_lower_or_equals" translatable="false">≤</string>
+    <string name="item_title_lower" translatable="false"><![CDATA[<]]></string>
+    <string name="item_title_add" translatable="false">+</string>
+    <string name="item_title_set" translatable="false">=</string>
+    <string name="item_title_minus" translatable="false">-</string>
+
+
     <string name="dialog_overlay_title_intent_flags">Flags</string>
     <string name="dialog_overlay_title_intent_actions">Intent Actions</string>
     <string name="dialog_overlay_title_intent_component_name">Component name</string>
@@ -315,12 +324,6 @@
     <string name="item_desc_timer_reached">Fulfilled once a certain time after scenario start</string>
     <string name="dialog_overlay_title_timer_reached">Timer Condition</string>
     <string name="input_field_label_timer_duration">After (ms)</string>
-
-    <string name="item_title_greater_or_equals" translatable="false">≥</string>
-    <string name="item_title_greater" translatable="false"><![CDATA[>]]></string>
-    <string name="item_title_equals" translatable="false">=</string>
-    <string name="item_title_lower_or_equals" translatable="false">≤</string>
-    <string name="item_title_lower" translatable="false"><![CDATA[<]]></string>
     <string name="dropdown_label_comparison_operator">Operator</string>
     <string name="input_field_label_comparison_value">Value</string>
     <string name="input_field_label_broadcast_action">Broadcast action</string>
@@ -328,8 +331,7 @@
     <string name="dialog_overlay_title_counter_reached">Counter Condition</string>
     <string name="dialog_overlay_title_image_event_config">Image Event</string>
     <string name="dialog_overlay_title_trigger_event_config">Trigger event</string>
-    <string name="item_title_add">+</string>
-    <string name="item_title_set">=</string>
-    <string name="item_title_minus">-</string>
+    <string name="list_header_copy_action_this">Actions from this scenario</string>
+    <string name="list_header_copy_action_all">Actions from all scenarios</string>
 
 </resources>

@@ -289,7 +289,14 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             context = context,
             newOverlay = ConditionCopyDialog(
                 onConditionSelected = { conditionSelected ->
-                    showImageConditionConfigDialog(viewModel.createNewImageConditionFromCopy(conditionSelected))
+                    when (conditionSelected) {
+                        is ImageCondition -> showImageConditionConfigDialog(
+                            viewModel.createNewImageConditionFromCopy(conditionSelected)
+                        )
+                        is TriggerCondition -> showTriggerConditionDialog(
+                            viewModel.createNewTriggerConditionFromCopy(conditionSelected)
+                        )
+                    }
                 },
             ),
         )

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,15 +26,15 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemConditionBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemImageConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setIconTint
 
 import kotlinx.coroutines.Job
 
 /**
- * Bind the [ItemConditionBinding] to a condition.
+ * Bind the [ItemImageConditionBinding] to a condition.
  */
-fun ItemConditionBinding.bind(
+fun ItemImageConditionBinding.bind(
     condition: ImageCondition,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     conditionClickedListener: (ImageCondition) -> Unit

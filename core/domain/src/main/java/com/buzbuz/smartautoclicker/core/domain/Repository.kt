@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -72,6 +73,10 @@ interface Repository {
     val allImageEvents: Flow<List<ImageEvent>>
     /** All trigger events from all scenarios. */
     val allTriggerEvents: Flow<List<TriggerEvent>>
+    /** All conditions from all events. */
+    val allConditions: Flow<List<Condition>>
+    /** All actions from all events. */
+    val allActions: Flow<List<Action>>
 
     /**
      * Add a new scenario.
@@ -145,20 +150,6 @@ interface Repository {
      * @return the list of trigger events.
      */
     fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>>
-
-    /**
-     * Get all actions from all events.
-     *
-     * @return the list containing all actions.
-     */
-    fun getAllActions(): Flow<List<Action>>
-
-    /**
-     * Get all conditions from all events.
-     *
-     * @return the list containing all conditions.
-     */
-    fun getAllImageConditions(): Flow<List<ImageCondition>>
 
     /**
      * Get the bitmap for the given path.
