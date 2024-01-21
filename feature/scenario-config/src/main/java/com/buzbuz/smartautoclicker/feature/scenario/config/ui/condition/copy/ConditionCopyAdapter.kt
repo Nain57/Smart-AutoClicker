@@ -51,7 +51,7 @@ class ConditionCopyAdapter(
         override fun getSpanSize(position: Int): Int =
             when (getItem(position)) {
                 is ConditionCopyModel.ConditionCopyItem.HeaderItem -> 2
-                is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> 1
+                is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> 2
                 is ConditionCopyModel.ConditionCopyItem.ConditionItem.Image -> 1
             }
     }
