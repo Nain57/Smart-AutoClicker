@@ -175,6 +175,7 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
         OverlayManager.getInstance(context).navigateTo(
             context = context,
             newOverlay = EventCopyDialog(
+                requestTriggerEvents = false,
                 onEventSelected = { event -> showEventConfigDialog(viewModel.createNewEvent(context, event as ImageEvent)) },
             ),
         )

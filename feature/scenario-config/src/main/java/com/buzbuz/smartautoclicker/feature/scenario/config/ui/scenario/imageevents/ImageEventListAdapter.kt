@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemImageEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 import java.util.Collections
@@ -45,7 +45,7 @@ class ImageEventListAdapter(
 ) : ListAdapter<ImageEvent, ImageEventViewHolder>(ImageEventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageEventViewHolder =
-        ImageEventViewHolder(ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ImageEventViewHolder(ItemImageEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ImageEventViewHolder, position: Int) {
         holder.bindEvent(getItem(position), itemClickedListener)
@@ -88,7 +88,7 @@ object ImageEventDiffUtilCallback: DiffUtil.ItemCallback<ImageEvent>() {
  * View holder displaying a click in the [ImageEventListAdapter].
  * @param holderViewBinding the view binding for this item.
  */
-class ImageEventViewHolder(private val holderViewBinding: ItemEventBinding)
+class ImageEventViewHolder(private val holderViewBinding: ItemImageEventBinding)
     : RecyclerView.ViewHolder(holderViewBinding.root) {
 
     /**

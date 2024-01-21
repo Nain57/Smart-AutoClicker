@@ -22,8 +22,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
  * @param onConditionSelected the listener called when the user select a Condition.
  */
 class ConditionCopyDialog(
-    private val onConditionSelected: (ImageCondition) -> Unit,
+    private val onConditionSelected: (Condition) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme)  {
 
     /** View model for this content. */

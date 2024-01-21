@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: TriggerListViewModel by viewModels()
+    private val viewModel: TriggerEventListViewModel by viewModels()
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: IncludeLoadableListBinding
@@ -155,6 +155,7 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
         OverlayManager.getInstance(context).navigateTo(
             context = context,
             newOverlay = EventCopyDialog(
+                requestTriggerEvents = true,
                 onEventSelected = { event ->
                     showTriggerEventConfigDialog(viewModel.createNewEvent(context, event as? TriggerEvent))
                 },

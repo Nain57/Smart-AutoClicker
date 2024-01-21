@@ -23,10 +23,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemImageEventBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemTriggerEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCopyModel.EventCopyItem
 
@@ -35,28 +38,32 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCo
  * @param onEventSelected Called when the user presses an event.
  */
 class EventCopyAdapter(
-    private val onEventSelected: (ImageEvent) -> Unit
+    private val onEventSelected: (Event) -> Unit
 ) : ListAdapter<EventCopyItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
-            is EventCopyItem.HeaderItem -> R.layout.item_list_header
-            is EventCopyItem.EventItem -> R.layout.item_event
+            is EventCopyItem.Header -> R.layout.item_list_header
+            is EventCopyItem.EventItem.Image -> R.layout.item_image_event
+            is EventCopyItem.EventItem.Trigger -> R.layout.item_trigger_event
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.item_list_header -> HeaderViewHolder(
                 ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            R.layout.item_event -> EventViewHolder(
-                ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_image_event -> ImageEventViewHolder(
+                ItemImageEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_trigger_event -> TriggerEventViewHolder(
+                ItemTriggerEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw IllegalArgumentException("Unsupported view type !")
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder -> holder.onBind(getItem(position) as EventCopyItem.HeaderItem)
-            is EventViewHolder -> holder.onBind(getItem(position) as EventCopyItem.EventItem, onEventSelected)
+            is HeaderViewHolder -> holder.onBind(getItem(position) as EventCopyItem.Header)
+            is ImageEventViewHolder -> holder.onBind(getItem(position) as EventCopyItem.EventItem.Image, onEventSelected)
+            is TriggerEventViewHolder -> holder.onBind(getItem(position) as EventCopyItem.EventItem.Trigger, onEventSelected)
         }
     }
 }
@@ -65,7 +72,7 @@ class EventCopyAdapter(
 private object DiffUtilCallback: DiffUtil.ItemCallback<EventCopyItem>() {
     override fun areItemsTheSame(oldItem: EventCopyItem, newItem: EventCopyItem): Boolean =
         when {
-            oldItem is EventCopyItem.HeaderItem && newItem is EventCopyItem.HeaderItem -> true
+            oldItem is EventCopyItem.Header && newItem is EventCopyItem.Header -> true
             oldItem is EventCopyItem.EventItem && newItem is EventCopyItem.EventItem ->
                 oldItem.event.id == newItem.event.id
             else -> false
@@ -82,25 +89,22 @@ class HeaderViewHolder(
     private val viewBinding: ItemListHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(header: EventCopyItem.HeaderItem) {
+    fun onBind(header: EventCopyItem.Header) {
         viewBinding.textHeader.setText(header.title)
     }
 }
 
 
-/**
- * View holder displaying an event in the [EventCopyAdapter].
- * @param viewBinding the view binding for this item.
- */
-class EventViewHolder(private val viewBinding: ItemEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
+class ImageEventViewHolder(private val viewBinding: ItemImageEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    /**
-     * Bind this view holder as a event item.
-     *
-     * @param item the item to be represented by this view holder.
-     * @param eventClickedListener listener notified upon user click on this item.
-     */
-    fun onBind(item: EventCopyItem.EventItem, eventClickedListener: (ImageEvent) -> Unit) {
+    fun onBind(item: EventCopyItem.EventItem.Image, eventClickedListener: (ImageEvent) -> Unit) {
         viewBinding.bind(item.event, false, eventClickedListener)
+    }
+}
+
+class TriggerEventViewHolder(private val viewBinding: ItemTriggerEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
+
+    fun onBind(item: EventCopyItem.EventItem.Trigger, eventClickedListener: (TriggerEvent) -> Unit) {
+        viewBinding.bind(item.event, eventClickedListener)
     }
 }

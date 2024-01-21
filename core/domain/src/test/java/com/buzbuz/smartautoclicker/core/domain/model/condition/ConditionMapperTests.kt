@@ -42,7 +42,7 @@ class ConditionMapperTests {
     fun imageCondition_toDomain() {
         assertEquals(
             ConditionTestsData.getNewImageCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewImageConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomainImageCondition()
+            ConditionTestsData.getNewImageConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
         )
     }
 
@@ -58,7 +58,7 @@ class ConditionMapperTests {
     fun triggerCondition_onScenarioStart_toDomain() {
         assertEquals(
             ConditionTestsData.getNewScenarioStartCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewScenarioStartConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomainTriggerCondition()
+            ConditionTestsData.getNewScenarioStartConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
         )
     }
 
@@ -74,7 +74,7 @@ class ConditionMapperTests {
     fun triggerCondition_onScenarioEnd_toDomain() {
         assertEquals(
             ConditionTestsData.getNewScenarioEndCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewScenarioEndConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomainTriggerCondition()
+            ConditionTestsData.getNewScenarioEndConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
         )
     }
 
@@ -90,7 +90,7 @@ class ConditionMapperTests {
     fun triggerCondition_onBroadcastReceived_toDomain() {
         assertEquals(
             ConditionTestsData.getNewBroadcastReceivedCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewBroadcastReceivedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomainTriggerCondition()
+            ConditionTestsData.getNewBroadcastReceivedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
         )
     }
 
@@ -106,7 +106,7 @@ class ConditionMapperTests {
     fun triggerCondition_onCounterReached_toDomain() {
         assertEquals(
             ConditionTestsData.getNewCounterReachedCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewCounterReachedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomainTriggerCondition()
+            ConditionTestsData.getNewCounterReachedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
         )
     }
 
@@ -122,7 +122,7 @@ class ConditionMapperTests {
     fun triggerCondition_onTimerReached_toDomain() {
         assertEquals(
             ConditionTestsData.getNewTimerReachedCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewTimerReachedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomainTriggerCondition()
+            ConditionTestsData.getNewTimerReachedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
         )
     }
 }

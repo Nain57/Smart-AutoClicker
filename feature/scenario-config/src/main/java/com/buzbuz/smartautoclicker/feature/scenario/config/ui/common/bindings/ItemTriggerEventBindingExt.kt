@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,36 +17,29 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings
 
 import android.util.TypedValue
-import android.view.View
-
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemEventBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemTriggerEventBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.setIconTintColor
 
 /**
- * Bind the [ItemEventBinding] to an event.
+ * Bind this view holder to an event.
  *
- * @param event the event represented by this view binding.
- * @param canDrag true to show the drag handle, false to hide it.
- * @param itemClickedListener called when the user clicks on the item.
+ * @param item the item providing the binding data.
+ * @param itemClickedListener listener called when an event is clicked.
  */
-fun ItemEventBinding.bind(
-    event: ImageEvent,
-    canDrag: Boolean,
-    itemClickedListener: (ImageEvent) -> Unit,
-) {
-    textName.text = event.name
-    textConditionsCount.text = event.conditions.size.toString()
-    textActionsCount.text = event.actions.size.toString()
+fun ItemTriggerEventBinding.bind(item: TriggerEvent, itemClickedListener: (TriggerEvent) -> Unit) {
+    textName.text = item.name
+    textConditionsCount.text = item.conditions.size.toString()
+    textActionsCount.text = item.actions.size.toString()
 
     val typedValue = TypedValue()
-    val actionColorAttr = if (!event.isComplete()) R.attr.colorError else R.attr.colorOnSurface
+    val actionColorAttr = if (!item.isComplete()) R.attr.colorError else R.attr.colorOnSurface
     root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
     textActionsCount.setTextColor(typedValue.data)
     imageAction.setIconTintColor(typedValue.data)
 
-    if (event.enabledOnStart) {
+    if (item.enabledOnStart) {
         textEnabled.setText(R.string.dropdown_item_title_event_state_enabled)
         iconEnabled.setImageResource(R.drawable.ic_confirm)
     } else {
@@ -54,7 +47,5 @@ fun ItemEventBinding.bind(
         iconEnabled.setImageResource(R.drawable.ic_cancel)
     }
 
-    root.setOnClickListener { itemClickedListener(event) }
-
-    btnReorder.visibility = if (canDrag) View.VISIBLE else View.GONE
+    root.setOnClickListener { itemClickedListener(item) }
 }

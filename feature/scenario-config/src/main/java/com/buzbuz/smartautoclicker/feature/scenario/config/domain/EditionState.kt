@@ -39,7 +39,6 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedEl
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.EditedScenarioState
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.IEditionState
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.doesNotContainAction
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isClickOnCondition
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,7 +49,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@Suppress("UNCHECKED_CAST")
 internal class EditionState internal constructor(
     context: Context,
     private val editor: ScenarioEditor,
@@ -163,43 +161,106 @@ internal class EditionState internal constructor(
             eventEditor?.actionsEditor?.eventToggleEditor?.listState  ?: emptyFlow()
         }
 
-    override val eventsAvailableForToggleEventAction: Flow<List<Event>> =
-        combine(allEditedEvents, editedEventState) { scenarioEvents, editedEvent ->
-            if (editedEvent.value == null || scenarioEvents.isEmpty()) return@combine emptyList()
 
-            buildList {
-                val availableEvents = scenarioEvents
-                    .filter { event -> event.id != editedEvent.value.id }
+    override val copyImageEventsFromEditedScenario: Flow<List<ImageEvent>> =
+        editedImageEventsState.map { it.value ?: emptyList() }
 
-                add(editedEvent.value)
-                addAll(availableEvents)
+    override val copyImageEventsFromOtherScenarios: Flow<List<ImageEvent>> =
+        combine(copyImageEventsFromEditedScenario, repository.allImageEvents) { editedEvents, allEvents ->
+            allEvents.toMutableList().let { allEventList ->
+                allEventList.removeAll(editedEvents)
+                allEventList.filter { event -> event.isComplete() }
             }
         }
 
-    override val actionsAvailableForCopyFromEditedScenario: Flow<List<Action>> =
-        editor.allEditedEvents
-            .map { events ->
-                val editedEvent = getEditedEvent<Event>() ?: return@map emptyList()
+    override val copyTriggerEventsFromEditedScenario: Flow<List<TriggerEvent>> =
+        editedTriggerEventsState.map { it.value ?: emptyList() }
 
-                buildList {
-                    events
-                        .filter { item -> item.id != editedEvent.id }
-                        .forEach { event -> addAll(event.actions.filter { !it.isClickOnCondition() }) }
+    override val copyTriggerEventsFromOtherScenarios: Flow<List<TriggerEvent>> =
+        combine(copyTriggerEventsFromEditedScenario, repository.allTriggerEvents) { editedEvents, allEvents ->
+            allEvents.toMutableList().let { allEventList ->
+                allEventList.removeAll(editedEvents)
+                allEventList.filter { event -> event.isComplete() }
+            }
+        }
+
+    override val copyConditionsFromEditedScenario: Flow<List<Condition>> =
+        combine(allEditedEvents, editor.editedEvent) { editedEvents, editedEvent ->
+            if (editedEvent == null) return@combine emptyList<Condition>()
+
+            buildList {
+                editedEvents.forEach { event ->
+                    if (event::class != editedEvent::class) return@forEach
+                    addAll(event.conditions.filter {
+                        it.isComplete() && it !is TriggerCondition.OnScenarioStart && it !is TriggerCondition.OnScenarioEnd
+                    })
                 }
             }
+        }
 
-    override val actionsAvailableForCopyFromOtherScenario: Flow<List<Action>> =
+    override val copyConditionsFromOtherScenarios: Flow<List<Condition>> =
         combine(
-            editor.editedEvent,
-            actionsAvailableForCopyFromEditedScenario,
-            repository.getAllActions(),
-        ) { editedEvt, scenarioOthers, allOthers ->
-            allOthers.filter { item ->
-                !item.isClickOnCondition()
-                        && item !is Action.ToggleEvent
-                        && editedEvt?.actions?.doesNotContainAction(item) ?: true
-                        && scenarioOthers.doesNotContainAction(item)
+            copyConditionsFromEditedScenario,
+            repository.allConditions,
+            editor.editedEvent
+        ) { scenarioConditions, allConditions, editedEvent ->
+            if (editedEvent == null) return@combine emptyList<Condition>()
+
+            allConditions.toMutableList().let { allConditionList ->
+                allConditionList.removeAll(scenarioConditions)
+                allConditionList.filter { condition ->
+                    condition.isComplete() &&
+                            condition !is TriggerCondition.OnScenarioStart &&
+                            condition !is TriggerCondition.OnScenarioEnd &&
+                            editedEvent.isConditionCompatible(condition)
+                }
             }
+        }
+
+    override val copyActionsFromEditedScenario: Flow<List<Action>> =
+        combine(allEditedEvents, editor.editedEvent) { editedEvents, editedEvent ->
+            buildList {
+                val editedEventId = editedEvent?.id ?: return@buildList
+
+                editedEvents.forEach { event ->
+                    if (!event.isComplete()) return@forEach
+                    addAll(
+                        event.actions.filter { action ->
+                            action.isComplete() && (editedEventId == event.id || !action.isClickOnCondition())
+                        }
+                    )
+                }
+            }
+        }
+
+    override val copyActionsFromOtherScenarios: Flow<List<Action>> =
+        combine(copyActionsFromEditedScenario, repository.allActions) { scenarioActions, allActions ->
+            allActions.toMutableList().let { allActionList ->
+                allActionList.removeAll(scenarioActions)
+                allActions.filter { action ->
+                    action.isComplete() && !action.isClickOnCondition() && action !is Action.ToggleEvent
+                }
+            }
+        }
+
+    override val canCopyImageEvents: Flow<Boolean> =
+        combine(copyImageEventsFromEditedScenario, copyImageEventsFromOtherScenarios) { editedEvents, allEvents ->
+            editedEvents.size + allEvents.size > 0
+        }
+
+    override val canCopyTriggerEvents: Flow<Boolean> =
+        combine(copyTriggerEventsFromEditedScenario, copyTriggerEventsFromOtherScenarios) { editedEvents, otherEvents ->
+            editedEvents.size + otherEvents.size > 0
+        }
+
+    override val canCopyConditions: Flow<Boolean> =
+        combine(copyConditionsFromEditedScenario, copyConditionsFromOtherScenarios) { editedConditions, otherConditions ->
+            editedConditions.size + otherConditions.size > 0
+        }
+
+    override val canCopyActions: Flow<Boolean> =
+        combine(copyActionsFromEditedScenario, copyActionsFromOtherScenarios) { editedActions, otherActions ->
+            editedActions.size + otherActions.size > 0
         }
 
     override fun getScenario(): Scenario? =
@@ -208,11 +269,17 @@ internal class EditionState internal constructor(
     override fun getAllEditedEvents(): List<Event> =
         editor.getAllEditedEvents()
 
+    @Suppress("UNCHECKED_CAST")
+
     override fun <T : Event> getEditedEvent(): T? =
         editor.currentEventEditor.value?.editedItem?.value as? T
 
+    @Suppress("UNCHECKED_CAST")
+
     override fun <T : Condition> getEditedCondition(): T? =
         editor.currentEventEditor.value?.conditionsEditor?.editedItem?.value as T?
+
+    @Suppress("UNCHECKED_CAST")
 
     override fun <T : Action> getEditedAction(): T? =
         editor.currentEventEditor.value?.actionsEditor?.editedItem?.value as T?
@@ -253,4 +320,7 @@ internal class EditionState internal constructor(
             action is Action.Click && action.clickOnConditionId == condition.id
         } != null
     }
+
+    private fun Event.isConditionCompatible(condition: Condition): Boolean =
+        (this is ImageEvent && condition is ImageCondition) || (this is TriggerEvent && condition is TriggerCondition)
 }

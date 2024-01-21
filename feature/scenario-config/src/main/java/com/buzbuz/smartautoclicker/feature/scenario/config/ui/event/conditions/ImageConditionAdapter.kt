@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemConditionBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemImageConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 import kotlinx.coroutines.Job
@@ -47,7 +47,7 @@ class ImageConditionAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ImageConditionViewHolder(
-            ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemImageConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             bitmapProvider,
         )
 
@@ -75,7 +75,7 @@ object ImageConditionDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
  * @param bitmapProvider provides the conditions bitmaps to the items.
  */
 class ImageConditionViewHolder(
-    private val viewBinding: ItemConditionBinding,
+    private val viewBinding: ItemImageConditionBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 

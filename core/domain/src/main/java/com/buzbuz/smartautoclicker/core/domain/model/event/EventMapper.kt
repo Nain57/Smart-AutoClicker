@@ -21,8 +21,9 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
 import com.buzbuz.smartautoclicker.core.domain.model.action.toDomain
-import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomainImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomainTriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 
 internal fun Event.toEntity(): EventEntity =
     when (this) {
@@ -70,7 +71,7 @@ internal fun CompleteEventEntity.toDomainImageEvent(cleanIds: Boolean = false): 
         priority = event.priority,
         enabledOnStart = event.enabledOnStart,
         actions = actions.sortedBy { it.action.priority }.map { it.toDomain(cleanIds) }.toMutableList(),
-        conditions = conditions.map { it.toDomainImageCondition(cleanIds) }.toMutableList(),
+        conditions = conditions.map { it.toDomain(cleanIds) as ImageCondition }.toMutableList(),
     )
 
 /** @return the complete trigger event for this entity. */
@@ -82,5 +83,5 @@ internal fun CompleteEventEntity.toDomainTriggerEvent(cleanIds: Boolean = false)
         conditionOperator = event.conditionOperator,
         enabledOnStart = event.enabledOnStart,
         actions = actions.sortedBy { it.action.priority }.map { it.toDomain(cleanIds) }.toMutableList(),
-        conditions = conditions.map { it.toDomainTriggerCondition(cleanIds) }.toMutableList(),
+        conditions = conditions.map { it.toDomain(cleanIds) as TriggerCondition }.toMutableList(),
     )

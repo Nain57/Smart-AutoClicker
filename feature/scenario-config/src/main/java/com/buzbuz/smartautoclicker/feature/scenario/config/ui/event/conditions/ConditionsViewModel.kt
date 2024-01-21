@@ -63,20 +63,7 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
         }
 
     /** Tells if there is at least one condition to copy. */
-    val canCopyCondition: Flow<Boolean> = combine(
-        repository.getAllImageConditions(),
-        configuredEventConditions,
-        editionRepository.editionState.editedImageEventsState
-    ) { dbConds, editedConds, scenarioEvents ->
-
-        if (dbConds.isNotEmpty()) return@combine true
-        if (editedConds.isNotEmpty()) return@combine true
-
-        scenarioEvents.value?.forEach { event ->
-            if (event.conditions.isNotEmpty()) return@combine true
-        }
-        false
-    }
+    val canCopyCondition: Flow<Boolean> = editionRepository.editionState.canCopyConditions
 
     /** Tells if the pro mode billing flow is being displayed. */
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
@@ -115,6 +102,13 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
             TriggerConditionTypeChoice.OnTimerReached ->
                 editionRepository.editedItemsBuilder.createNewOnTimerReached(context)
         }
+
+    /**
+     * Get a new condition based on the provided one.
+     * @param condition the condition to copy.
+     */
+    fun createNewTriggerConditionFromCopy(condition: TriggerCondition): TriggerCondition =
+        editionRepository.editedItemsBuilder.createNewTriggerConditionFrom(condition)
 
     fun startConditionEdition(condition: Condition) = editionRepository.startConditionEdition(condition)
 

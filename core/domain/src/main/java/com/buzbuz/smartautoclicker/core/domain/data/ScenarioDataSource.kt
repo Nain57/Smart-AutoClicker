@@ -106,11 +106,11 @@ internal class ScenarioDataSource(
     fun getTriggerEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
         eventDaoFlow.flatMapLatest { it.getCompleteTriggerEventsFlow(scenarioId) }
 
+    fun getAllConditions(): Flow<List<ConditionEntity>> =
+        conditionsDaoFlow.flatMapLatest { it.getAllConditions() }
+
     fun getAllActions(): Flow<List<CompleteActionEntity>> =
         actionDaoFlow.flatMapLatest { it.getAllActions() }
-
-    fun getAllImageConditions(): Flow<List<ConditionEntity>> =
-        conditionsDaoFlow.flatMapLatest { it.getAllImageConditions() }
 
     suspend fun addScenario(scenario: Scenario): Long {
         Log.d(TAG, "Add scenario to the database: ${scenario.id}")

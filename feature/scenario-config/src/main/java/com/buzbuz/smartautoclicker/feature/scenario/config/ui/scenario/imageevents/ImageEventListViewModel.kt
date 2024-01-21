@@ -25,7 +25,6 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
-import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -36,8 +35,6 @@ import kotlinx.coroutines.flow.mapNotNull
 
 class ImageEventListViewModel(application: Application) : AndroidViewModel(application) {
 
-    /** The repository of the application. */
-    private val repository: Repository = Repository.getRepository(application)
     /** Maintains the currently configured scenario state. */
     private val editionRepository = EditionRepository.getInstance(application)
     /** The repository for the pro mode billing. */
@@ -58,10 +55,7 @@ class ImageEventListViewModel(application: Application) : AndroidViewModel(appli
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** Tells if the copy button should be visible or not. */
-    val copyButtonIsVisible: Flow<Boolean> =
-        combine(repository.allImageEvents, editionRepository.editionState.editedImageEventsState) { allEvts, scenarioEvts ->
-            allEvts.isNotEmpty() || !scenarioEvts.value.isNullOrEmpty()
-        }
+    val copyButtonIsVisible: Flow<Boolean> = editionRepository.editionState.canCopyImageEvents
 
     /**
      * Creates a new event item.

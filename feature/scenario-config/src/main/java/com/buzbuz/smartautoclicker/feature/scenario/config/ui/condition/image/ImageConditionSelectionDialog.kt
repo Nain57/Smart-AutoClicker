@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemConditionBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemImageConditionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -115,7 +115,7 @@ private class ImageConditionsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageConditionViewHolder =
         ImageConditionViewHolder(
-            ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemImageConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             bitmapProvider,
             onConditionSelected,
         )
@@ -146,7 +146,7 @@ private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<ImageCondi
  * @param onConditionSelected called when the user select a condition.
  */
 private class ImageConditionViewHolder(
-    private val viewBinding: ItemConditionBinding,
+    private val viewBinding: ItemImageConditionBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {
