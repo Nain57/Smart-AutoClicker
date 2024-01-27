@@ -189,6 +189,7 @@ internal class DetectorEngine(context: Context) {
                 onStopRequested = { stopDetection() },
                 progressListener  = progressListener,
             )
+            scenarioProcessor?.onScenarioStart(context)
 
             scenarioProcessor?.onScenarioStart(context)
             processScreenImages()

@@ -65,13 +65,13 @@ internal class ScenarioProcessor(
     suspend fun onScenarioStart(context: Context) {
         processingState.onProcessingStarted(context)
         processingState.startEvent?.let { startEvent ->
-            if (processingState.isEventEnabled(startEvent)) actionExecutor.executeActions(startEvent)
+            if (processingState.isEventEnabled(startEvent.getDatabaseId())) actionExecutor.executeActions(startEvent)
         }
     }
 
     suspend fun onScenarioEnd() {
         processingState.endEvent?.let { endEvent ->
-            if (processingState.isEventEnabled(endEvent)) actionExecutor.executeActions(endEvent)
+            if (processingState.isEventEnabled(endEvent.getDatabaseId())) actionExecutor.executeActions(endEvent)
         }
         processingState.onProcessingStopped()
     }

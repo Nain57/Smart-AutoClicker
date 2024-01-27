@@ -26,7 +26,7 @@ interface IEventsState {
     val startEvent: TriggerEvent?
     val endEvent: TriggerEvent?
 
-    fun isEventEnabled(event: Event): Boolean
+    fun isEventEnabled(eventId: Long): Boolean
     fun areAllEventsDisabled(): Boolean
     fun areAllImageEventsDisabled(): Boolean
     fun areAllTriggerEventsDisabled(): Boolean
@@ -40,6 +40,12 @@ interface IEventsState {
     fun disableEvent(eventId: Long)
     fun toggleAll()
     fun toggleEvent(eventId: Long)
+    fun setEventStateListener(listener: EventStateListener)
+}
+
+interface EventStateListener {
+    fun onEventEnabled(event: Event)
+    fun onEventDisabled(event: Event)
 }
 
 /**
@@ -65,8 +71,13 @@ internal class EventsState(
     override val endEvent: TriggerEvent? =
         triggerEvents.find { event -> event.conditions.find { it is TriggerCondition.OnScenarioEnd } != null }
 
-    override fun isEventEnabled(event: Event): Boolean =
-        triggerEventList.isEventEnabled(event) || imageEventList.isEventEnabled(event)
+    override fun setEventStateListener(listener: EventStateListener) {
+        triggerEventList.eventEnabledListener = listener
+        imageEventList.eventEnabledListener = listener
+    }
+
+    override fun isEventEnabled(eventId: Long): Boolean =
+        triggerEventList.isEventEnabled(eventId) || imageEventList.isEventEnabled(eventId)
 
     override fun areAllEventsDisabled(): Boolean =
         imageEventList.areAllEventsDisabled() && triggerEventList.areAllEventsDisabled()
@@ -126,8 +137,10 @@ private class EventList<T : Event>(events: List<T>) {
         }
     }
 
-    fun isEventEnabled(event: Event): Boolean =
-        enabledEventsMap.containsKey(event.getDatabaseId())
+    var eventEnabledListener: EventStateListener? = null
+
+    fun isEventEnabled(eventDbId: Long): Boolean =
+        enabledEventsMap.containsKey(eventDbId)
 
     fun areAllEventsDisabled(): Boolean =
         enabledEventsMap.isEmpty()
@@ -136,28 +149,32 @@ private class EventList<T : Event>(events: List<T>) {
         enabledEventsMap.values
 
     fun enableEvent(eventId: Long) {
+        if (enabledEventsMap.containsKey(eventId)) return
         val event = eventsMap[eventId] ?: return
+
         enabledEventsMap[eventId] = event
+        eventEnabledListener?.onEventEnabled(event)
     }
 
     fun disableEvent(eventId: Long) {
-        if (!eventsMap.containsKey(eventId)) return
+        if (!enabledEventsMap.containsKey(eventId)) return
+        val event = eventsMap[eventId] ?: return
+
         enabledEventsMap.remove(eventId)
+        eventEnabledListener?.onEventDisabled(event)
     }
 
     fun toggleEvent(eventId: Long) {
-        val event = eventsMap[eventId] ?: return
-
-        if (enabledEventsMap.containsKey(eventId)) enabledEventsMap.remove(eventId)
-        else enabledEventsMap[eventId] = event
+        if (enabledEventsMap.containsKey(eventId)) disableEvent(eventId)
+        else enableEvent(eventId)
     }
 
     fun enableAll() {
-        enabledEventsMap.putAll(eventsMap)
+        eventsMap.keys.forEach(::enableEvent)
     }
 
     fun disableAll() {
-        enabledEventsMap.clear()
+        eventsMap.keys.forEach(::disableEvent)
     }
 
     fun toggleAll() {
