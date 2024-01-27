@@ -42,8 +42,8 @@ android {
         applicationId "com.buzbuz.smartautoclicker"
         minSdk rootProject.ext.minSdkVersion
         targetSdk rootProject.ext.compileSdkVersion
-        versionCode 40
-        versionName "2.4.1"
+        versionCode 41
+        versionName "2.4.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
