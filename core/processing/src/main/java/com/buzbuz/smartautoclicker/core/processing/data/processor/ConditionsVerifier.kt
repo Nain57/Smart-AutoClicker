@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
 import kotlinx.coroutines.yield
+import kotlin.math.max
 
 internal class ConditionsVerifier(
     private val state: ProcessingState,
@@ -119,8 +120,11 @@ internal class ConditionsVerifier(
         } ?: false
 
     private fun verifyOnTimerReached(condition: TriggerCondition.OnTimerReached): Boolean =
-        currentVerificationTsMs?.let { currentTimeMs ->
-            currentTimeMs > state.processingStartTsMs + condition.durationMs
+        state.getTimerValue(condition.getDatabaseId())?.let { timerValueMs ->
+            if ((currentVerificationTsMs ?: 0) > max(timerValueMs + condition.durationMs, timerValueMs) ) {
+                state.setTimerToDisabled(condition.getDatabaseId())
+                true
+            } else false
         } ?: false
 
     private fun verifyOnScenarioStart() : Boolean = false
