@@ -53,7 +53,7 @@ internal class TutorialStateDataSource(context: Context) {
                     Scenario(
                         id = Identifier(databaseId = DATABASE_ID_INSERTION, domainId = 0L),
                         name = "Tutorial",
-                        detectionQuality = 600,
+                        detectionQuality = 1200,
                         endConditionOperator = OR,
                     )
                 )
