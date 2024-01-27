@@ -85,6 +85,9 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
     fun createNewDumbPause(): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
 
+    fun createDumbActionCopy(actionToCopy: DumbAction): DumbAction =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbActionFrom(actionToCopy)
+
     fun addNewDumbAction(dumbAction: DumbAction, index: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             dumbEditionRepository.addNewDumbAction(
