@@ -133,10 +133,7 @@ class ConditionSelectorMenu(
         when (state) {
             SELECTION -> {
                 state = CAPTURE
-
-                val screenSize = displayMetrics.screenSize
-                val screenRect = Rect(0, 0, screenSize.x, screenSize.y)
-                viewModel.takeScreenshot(screenRect) { screenshot ->
+                viewModel.takeScreenshot { screenshot ->
                     selectorView.showCapture(screenshot)
                     state = ADJUST
                 }

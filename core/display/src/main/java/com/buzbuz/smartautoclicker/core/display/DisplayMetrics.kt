@@ -25,7 +25,6 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.hardware.display.DisplayManager
 import android.os.Build
-import android.view.DisplayCutout
 import android.view.Surface
 import android.view.WindowManager
 

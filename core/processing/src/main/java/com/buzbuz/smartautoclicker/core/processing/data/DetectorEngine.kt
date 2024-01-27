@@ -204,14 +204,14 @@ internal class DetectorEngine(context: Context) {
     private fun onOrientationChanged(context: Context) {
         if (_state.value != DetectorState.DETECTING && _state.value != DetectorState.RECORDING) return
 
+        Log.d(TAG, "onOrientationChanged")
+
         processingScope?.launch {
             if (_state.value == DetectorState.DETECTING) {
                 processingJob?.cancelAndJoin()
             }
 
-            displayRecorder.stopScreenRecord()
-            detectionProgressListener?.cancelCurrentProcessing()
-            displayRecorder.startScreenRecord(context, displayMetrics.screenSize)
+            displayRecorder.resizeDisplay(context, displayMetrics.screenSize)
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {

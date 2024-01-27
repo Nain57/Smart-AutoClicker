@@ -22,7 +22,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.graphics.Point
-import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.Image
@@ -57,7 +56,7 @@ class DisplayRecorder internal constructor() {
 
     companion object {
         /** Tag for logs. */
-        private const val TAG = "ScreenRecorder"
+        private const val TAG = "DisplayRecorder"
         /** Name of the virtual display generating [Image]. */
         internal const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"
 
@@ -148,7 +147,7 @@ class DisplayRecorder internal constructor() {
             return
         }
 
-        Log.d(TAG, "Start screen record")
+        Log.d(TAG, "Start screen record with display size $displaySize")
 
         @SuppressLint("WrongConstant")
         imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2)
@@ -158,8 +157,26 @@ class DisplayRecorder internal constructor() {
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, imageReader!!.surface, null,
                 null)
         } catch (sEx: SecurityException) {
-            Log.w(TAG, "Screencast permission is no longer valid, stopping Smart AutoClicker...")
+            Log.w(TAG, "Screencast permission is no longer valid, stopping Smart AutoClicker...", sEx)
             stopListener?.invoke()
+        }
+    }
+
+    suspend fun resizeDisplay(context: Context, displaySize: Point): Unit = mutex.withLock {
+        if (virtualDisplay == null || imageReader == null) return
+
+        Log.d(TAG, "Resizing virtual display to $displaySize")
+
+        virtualDisplay?.let { vDisplay ->
+            imageReader?.close()
+            imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2)
+
+            vDisplay.surface = imageReader?.surface
+            vDisplay.resize(
+                displaySize.x,
+                displaySize.y,
+                context.resources.configuration.densityDpi,
+            )
         }
     }
 
@@ -171,22 +188,23 @@ class DisplayRecorder internal constructor() {
         }
     }
 
-    suspend fun takeScreenshot(area: Rect, completion: suspend (Bitmap) -> Unit) {
-        var screenFrame: Bitmap?
+    suspend fun takeScreenshot(completion: suspend (Bitmap) -> Unit) {
+        var finished = false
         do {
-            screenFrame = acquireLatestBitmap()
-            screenFrame?.let {
-                val bitmap = Bitmap.createBitmap(
-                    it,
-                    area.left,
-                    area.top,
-                    area.width(),
-                    area.height()
+            imageReader?.acquireLatestImage()?.use { image ->
+                completion(
+                    Bitmap.createBitmap(
+                        image.toBitmap(latestAcquiredFrameBitmap),
+                        0,
+                        0,
+                        image.width,
+                        image.height,
+                    )
                 )
-
-                completion(bitmap)
+                finished = true
             }
-        } while (screenFrame == null)
+
+        } while (!finished)
     }
 
     /**
