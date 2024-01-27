@@ -59,8 +59,12 @@ internal class TutorialStateDataSource(context: Context) {
                 )
             } else {
                 getTutorialScenarioDatabaseId(tutorialIndex - 1)?.databaseId?.let { id ->
-                    tutorialDatabase.scenarioDao().getCompleteScenario(id)?.let { scenario ->
-                        scenarioRepository.addScenarioCopy(scenario)
+                    tutorialDatabase.scenarioDao().getCompleteScenario(id)?.let { completeScenario ->
+                        scenarioRepository.addScenarioCopy(
+                            completeScenario.copy(
+                                scenario = completeScenario.scenario.copy(detectionQuality = 1200)
+                            )
+                        )
                     }
                 }
             }
