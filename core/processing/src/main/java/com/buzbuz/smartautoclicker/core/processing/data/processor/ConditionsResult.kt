@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.graphics.Point
 
-import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.IConditionsResult
