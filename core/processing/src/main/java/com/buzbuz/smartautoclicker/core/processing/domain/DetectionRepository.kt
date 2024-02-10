@@ -22,7 +22,15 @@ import android.content.Intent
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionProcessingTryListener
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionTry
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventProcessingTryListener
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventTry
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScenarioTry
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -132,6 +140,40 @@ class DetectionRepository private constructor(context: Context) {
         }
         detectorEngine.value = null
         _scenarioId.value = null
+    }
+
+    fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent, listener: (IConditionsResult) -> Unit) {
+        val triedElement = ImageEventTry(scenario, event)
+        tryElement(
+            context,
+            triedElement,
+            ImageEventProcessingTryListener(triedElement, listener)
+        )
+    }
+
+    fun tryImageCondition(
+        context: Context,
+        scenario: Scenario,
+        condition: ImageCondition,
+        listener: (ConditionResult) -> Unit,
+    ) {
+        val triedElement = ImageConditionTry(scenario, condition)
+        tryElement(
+            context = context,
+            elementTry = triedElement,
+            listener = ImageConditionProcessingTryListener(triedElement, listener)
+        )
+    }
+
+    private fun tryElement(context: Context, elementTry: ScenarioTry, listener: ScenarioProcessingListener) {
+        detectorEngine.value?.startDetection(
+            context = context,
+            scenario = elementTry.scenario,
+            imageEvents = elementTry.imageEvents,
+            triggerEvents = elementTry.triggerEvents,
+            bitmapSupplier = scenarioRepository::getBitmap,
+            progressListener = listener,
+        )
     }
 }
 

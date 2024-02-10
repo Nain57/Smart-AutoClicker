@@ -30,20 +30,20 @@ interface ScenarioProcessingListener {
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
-    )
+    ) = Unit
 
-    suspend fun onImageEventsProcessingStarted()
+    suspend fun onImageEventsProcessingStarted() = Unit
 
-    suspend fun onImageEventProcessingStarted(event: ImageEvent)
+    suspend fun onImageEventProcessingStarted(event: ImageEvent) = Unit
 
-    suspend fun onImageConditionProcessingStarted(condition: ImageCondition)
-    suspend fun onImageConditionProcessingCompleted(result: ConditionResult)
-    suspend fun onImageConditionProcessingCancelled()
+    suspend fun onImageConditionProcessingStarted(condition: ImageCondition) = Unit
+    suspend fun onImageConditionProcessingCompleted(result: ConditionResult) = Unit
+    suspend fun onImageConditionProcessingCancelled() = Unit
 
-    suspend fun onImageEventProcessingCompleted(event: ImageEvent, results: IConditionsResult)
-    suspend fun onImageEventProcessingCancelled()
+    suspend fun onImageEventProcessingCompleted(event: ImageEvent, results: IConditionsResult) = Unit
+    suspend fun onImageEventProcessingCancelled() = Unit
 
-    suspend fun onImageEventsProcessingCompleted()
+    suspend fun onImageEventsProcessingCompleted() = Unit
 
-    suspend fun onSessionEnded()
+    suspend fun onSessionEnded() = Unit
 }
