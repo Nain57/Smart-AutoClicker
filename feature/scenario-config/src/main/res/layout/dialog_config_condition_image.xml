@@ -104,7 +104,8 @@
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default">
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                android:layout_marginBottom="@dimen/margin_vertical_large">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -131,6 +132,12 @@
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
+            <include layout="@layout/include_try_element_card"
+                android:id="@+id/try_condition_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
 
         </LinearLayout>
 

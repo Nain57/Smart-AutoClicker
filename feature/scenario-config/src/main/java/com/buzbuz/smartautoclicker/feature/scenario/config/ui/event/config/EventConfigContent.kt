@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,12 +31,17 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.setElementTypeName
+import com.buzbuz.smartautoclicker.core.ui.bindings.setEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentEventConfigBinding
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.TryElementOverlayMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
@@ -69,6 +74,11 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
                 onItemSelected = viewModel::setConditionOperator,
                 onItemBound = ::onConditionOperatorDropdownItemBound,
             )
+
+            tryEventCard.apply {
+                setElementTypeName(context.getString(R.string.dialog_overlay_title_image_event_config))
+                setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
+            }
         }
 
         return viewBinding.root
@@ -91,11 +101,13 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.eventName.collect(viewBinding.eventNameInputLayout::setText) }
                 launch { viewModel.eventNameError.collect(viewBinding.eventNameInputLayout::setError) }
-                launch { viewModel.eventName.collect(::updateEventName) }
-                launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
+                launch { viewModel.conditionOperator.collect(viewBinding.conditionsOperatorField::setSelectedItem) }
                 launch { viewModel.eventStateDropdownState.collect(::updateEventStateDropdown) }
-                launch { viewModel.eventStateItem.collect(::updateEventState) }
+                launch { viewModel.eventStateItem.collect(viewBinding.enabledOnStartField::setSelectedItem) }
+                launch { viewModel.shouldShowTryCard.collect(::updateTryCardVisibility) }
+                launch { viewModel.canTryEvent.collect(viewBinding.tryEventCard::setEnabledState) }
             }
         }
     }
@@ -117,14 +129,6 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
         }
     }
 
-    private fun updateEventName(name: String?) {
-        viewBinding.eventNameInputLayout.setText(name)
-    }
-
-    private fun updateConditionOperator(operatorItem: DropdownItem) {
-        viewBinding.conditionsOperatorField.setSelectedItem(operatorItem)
-    }
-
     private fun updateEventStateDropdown(dropdownState: EventStateDropdownUiState) {
         viewBinding.enabledOnStartField.setItems(
             label = context.resources.getString(R.string.input_field_label_event_state),
@@ -144,7 +148,19 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
             else ALPHA_DISABLED_ITEM
     }
 
-    private fun updateEventState(stateItem: DropdownItem) {
-        viewBinding.enabledOnStartField.setSelectedItem(stateItem)
+    private fun updateTryCardVisibility(isVisible: Boolean) {
+        viewBinding.tryEventCard.root.visibility =
+            if (isVisible) View.VISIBLE
+            else View.GONE
+    }
+
+    private fun showTryElementMenu() {
+        viewModel.getTryInfo()?.let { (scenario, imageEvent) ->
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = TryElementOverlayMenu(scenario, imageEvent),
+                hideCurrent = true,
+            )
+        }
     }
 }

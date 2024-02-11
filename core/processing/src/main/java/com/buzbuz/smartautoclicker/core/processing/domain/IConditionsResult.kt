@@ -25,6 +25,7 @@ interface IConditionsResult {
 
     fun getImageConditionResult(conditionId: Long): ImageConditionResult?
     fun getFirstImageDetectedResult(): ImageConditionResult?
+    fun getAllResults(): List<ConditionResult>
 }
 
 interface ConditionResult {

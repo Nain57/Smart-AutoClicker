@@ -78,13 +78,13 @@ class DebugOverlayView(context: Context) : View(context) {
             results.clear()
             results.addAll(newResults)
         }
+        displayedResults.clear()
 
         // No condition matched ? Nothing to display
         if (results.isEmpty()) {
             return
         }
 
-        displayedResults.clear()
         results.forEach { result -> displayedResults.add(result.toDisplayResult()) }
     }
 

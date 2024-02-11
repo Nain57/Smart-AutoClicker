@@ -95,4 +95,5 @@
     <string name="content_desc_stop_clicker">停止自动点击器</string>
     <string name="content_desc_confirm">确认</string>
     <string name="content_desc_go_back">返回到对话框</string>
+    <string name="item_title_try_element">Test your %1$s</string>
 </resources>

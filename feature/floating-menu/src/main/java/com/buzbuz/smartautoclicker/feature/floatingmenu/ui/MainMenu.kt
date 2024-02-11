@@ -316,7 +316,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
             launch {
                 debuggingViewModel.debugLastPositiveCoordinates.collect { coordinates ->
-                    (screenOverlayView as DebugOverlayView).setPositiveResult(coordinates)
+                    //(screenOverlayView as DebugOverlayView).setPositiveResult(coordinates)
                 }
             }
         }

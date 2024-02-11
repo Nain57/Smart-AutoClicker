@@ -17,6 +17,7 @@
 -->
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_vertical_large"
@@ -48,7 +49,15 @@
         <include layout="@layout/include_input_field_dropdown"
             android:id="@+id/enabled_on_start_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_horizontal_small"/>
+
+        <include layout="@layout/include_try_element_card"
+            android:id="@+id/try_event_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
