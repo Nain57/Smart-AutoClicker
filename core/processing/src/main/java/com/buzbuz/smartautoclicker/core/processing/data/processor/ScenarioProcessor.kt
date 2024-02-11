@@ -21,6 +21,7 @@ import android.graphics.Bitmap
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
@@ -46,7 +47,7 @@ internal class ScenarioProcessor(
     randomize: Boolean,
     imageEvents: List<ImageEvent>,
     triggerEvents: List<TriggerEvent>,
-    private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
+    private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
     androidExecutor: AndroidExecutor,
     private val onStopRequested: () -> Unit,
     private val progressListener: ScenarioProcessingListener? = null,

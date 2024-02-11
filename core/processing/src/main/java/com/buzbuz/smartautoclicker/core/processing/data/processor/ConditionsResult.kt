@@ -26,28 +26,32 @@ import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
 
 internal class ConditionsResult : IConditionsResult {
 
-    private val results: MutableMap<Long, ConditionResult> = mutableMapOf()
+    private val _results: MutableMap<Long, ConditionResult> = mutableMapOf()
 
     override var fulfilled: Boolean? = null
         private set
 
     override fun getImageConditionResult(conditionId: Long): ImageConditionResult? =
-        results[conditionId]?.let { result ->
+        _results[conditionId]?.let { result ->
             if (result is ImageResult) result else null
         }
 
     override fun getFirstImageDetectedResult(): ImageResult? =
-        results.values.find { it is ImageResult && it.isFulfilled && it.condition.shouldBeDetected }
+        _results.values.find { it is ImageResult && it.isFulfilled && it.condition.shouldBeDetected }
                 as ImageResult?
 
+    override fun getAllResults(): List<ConditionResult> = buildList {
+        _results.forEach { (_, result) -> add(result) }
+    }
+
     fun reset() {
-        results.clear()
+        _results.clear()
         fulfilled = null
     }
 
     fun addResult(conditionId: Long, result: ConditionResult) {
         if (fulfilled != null) return
-        results[conditionId] = result
+        _results[conditionId] = result
     }
     fun setFulfilledState(state: Boolean) {
         fulfilled = state

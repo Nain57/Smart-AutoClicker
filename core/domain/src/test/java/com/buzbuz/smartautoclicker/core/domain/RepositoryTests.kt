@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Build
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -27,8 +28,10 @@ import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
+import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.action.ActionTestsData
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ConditionTestsData
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.ScenarioTestsData
 
@@ -173,7 +176,18 @@ class RepositoryTests {
 
     @Test
     fun getBitmap() = runTest {
-        repository.getBitmap("toto", 20, 100)
+        repository.getConditionBitmap(
+            ImageCondition(
+                id = Identifier(databaseId = 1L),
+                eventId = Identifier(databaseId = 2L),
+                name = "tata",
+                threshold = 10,
+                detectionType = EXACT,
+                shouldBeDetected = true,
+                area = Rect(0, 0, 20, 100),
+                path = "toto",
+            )
+        )
         verify(mockBitmapManager).loadBitmap("toto", 20, 100)
         Unit
     }

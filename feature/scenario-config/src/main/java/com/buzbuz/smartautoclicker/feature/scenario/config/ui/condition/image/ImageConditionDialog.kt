@@ -39,13 +39,17 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectorState
+import com.buzbuz.smartautoclicker.core.ui.bindings.setElementTypeName
+import com.buzbuz.smartautoclicker.core.ui.bindings.setEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionImageBinding
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.TryElementOverlayMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -119,6 +123,12 @@ class ImageConditionDialog(
                     if (fromUser) viewModel.setThreshold(value.roundToInt())
                 }
             }
+
+
+            tryConditionCard.apply {
+                setElementTypeName(context.getString(R.string.dialog_overlay_title_condition_config))
+                setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
+            }
         }
 
         return viewBinding.root
@@ -139,6 +149,7 @@ class ImageConditionDialog(
                 launch { viewModel.detectionType.collect(::updateConditionType) }
                 launch { viewModel.threshold.collect(::updateThreshold) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
+                launch { viewModel.canTryCondition.collect(viewBinding.tryConditionCard::setEnabledState) }
             }
         }
     }
@@ -245,6 +256,16 @@ class ImageConditionDialog(
         if (!isEditingCondition) {
             Log.e(TAG, "Closing ConditionDialog because there is no condition edited")
             finish()
+        }
+    }
+
+    private fun showTryElementMenu() {
+        viewModel.getTryInfo()?.let { (scenario, imageCondition) ->
+            OverlayManager.getInstance(context).navigateTo(
+                context = context,
+                newOverlay = TryElementOverlayMenu(scenario, imageCondition),
+                hideCurrent = true,
+            )
         }
     }
 }

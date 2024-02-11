@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putClickPressDurationConfig
 
 import kotlinx.coroutines.Dispatchers
@@ -54,11 +55,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(FlowPreview::class)
 class ClickViewModel(application: Application) : AndroidViewModel(application) {
@@ -119,7 +118,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
                 else -> null
             }
-        }.distinctUntilChanged()
+        }.flowOn(Dispatchers.IO).distinctUntilChanged()
 
     val clickTypeItemOnCondition = DropdownItem(
         title = R.string.dropdown_item_title_click_position_type_on_condition,
@@ -189,27 +188,8 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
-        if (condition.bitmap != null) {
-            onBitmapLoaded.invoke(condition.bitmap)
-            return null
-        }
-
-        if (condition.path != null) {
-            return viewModelScope.launch(Dispatchers.IO) {
-                val bitmap = repository.getBitmap(condition.path!!, condition.area.width(), condition.area.height())
-
-                if (isActive) {
-                    withContext(Dispatchers.Main) {
-                        onBitmapLoaded.invoke(bitmap)
-                    }
-                }
-            }
-        }
-
-        onBitmapLoaded.invoke(null)
-        return null
-    }
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
+        getImageConditionBitmap(repository, condition, onBitmapLoaded)
 
     /** Set the condition to click on when the events conditions are fulfilled. */
     fun setConditionToBeClicked(condition: ImageCondition) {
@@ -287,11 +267,7 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Action.Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
-        val conditionBitmap = conditionToClick?.let { condition ->
-            condition.bitmap ?: condition.path?.let { path ->
-                repository.getBitmap(path, condition.area.width(), condition.area.height())
-            }
-        }
+        val conditionBitmap = conditionToClick?.let { condition -> repository.getConditionBitmap(condition) }
 
         val subText: String =
             if (conditionToClick == null || conditionBitmap == null) getString(R.string.item_desc_click_on_condition_and_operator_not_found)

@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
-import android.graphics.Bitmap
-import android.graphics.Rect
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +23,7 @@ import android.view.ViewGroup
 
 import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.views.conditionselector.ConditionSelectorView
@@ -38,7 +37,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayVa
  * @param onConditionSelected listener upon confirmation of the area to be capture to create the event condition.
  */
 class CaptureMenu(
-    private val onConditionSelected: (Rect, Bitmap) -> Unit
+    private val onConditionSelected: (ImageCondition) -> Unit
 ) : OverlayMenu() {
 
     private companion object {
@@ -47,7 +46,7 @@ class CaptureMenu(
         private const val TAG = "ConditionSelectorMenu"
 
         /** Describe the state of the capture. */
-        @IntDef(SELECTION, CAPTURE, ADJUST)
+        @IntDef(SELECTION, CAPTURE, ADJUST, SAVE)
         @Retention(AnnotationRetention.SOURCE)
         private annotation class ConditionCaptureState
         /** User is selecting the screenshot to take. */
@@ -56,6 +55,8 @@ class CaptureMenu(
         private const val CAPTURE = 2
         /** User is selecting a part of the capture for the event condition. */
         private const val ADJUST = 3
+        /** User is selecting a part of the capture for the event condition. */
+        private const val SAVE = 4
     }
 
     /** The view model for this menu. */
@@ -88,6 +89,11 @@ class CaptureMenu(
                 ADJUST -> {
                     viewBinding.btnConfirm.setImageResource(R.drawable.ic_confirm)
                     setMenuVisibility(View.VISIBLE)
+                    selectorView.hide = false
+                }
+                SAVE -> {
+                    setMenuItemViewEnabled(viewBinding.btnConfirm, false)
+                    setMenuItemViewEnabled(viewBinding.btnCancel, false)
                     selectorView.hide = false
                 }
             }
@@ -140,12 +146,16 @@ class CaptureMenu(
             }
 
             ADJUST -> {
-                back()
+                state = SAVE
                 try {
                     val selection = selectorView.getSelection()
-                    onConditionSelected(selection.first, selection.second)
+                    viewModel.createImageCondition(context, selection.first, selection.second) { imageCondition ->
+                        back()
+                        onConditionSelected(imageCondition)
+                    }
                 } catch (ex: IllegalStateException) {
                     Log.e(TAG, "Condition selection failed", ex)
+                    state = ADJUST
                 }
             }
         }

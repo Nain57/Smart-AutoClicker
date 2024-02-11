@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.OverlayMenuBackToPreviousBinding
 
-class BackToPreviousOverlayMenu() : OverlayMenu() {
+class BackToPreviousOverlayMenu : OverlayMenu() {
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup =
         OverlayMenuBackToPreviousBinding.inflate(layoutInflater).root
 

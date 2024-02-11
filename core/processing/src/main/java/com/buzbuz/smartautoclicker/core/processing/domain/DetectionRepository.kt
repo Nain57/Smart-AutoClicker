@@ -124,7 +124,7 @@ class DetectionRepository private constructor(context: Context) {
             scenario = scenario,
             imageEvents = events,
             triggerEvents = triggerEvents,
-            bitmapSupplier = scenarioRepository::getBitmap,
+            bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = progressListener,
         )
     }
@@ -155,7 +155,7 @@ class DetectionRepository private constructor(context: Context) {
         context: Context,
         scenario: Scenario,
         condition: ImageCondition,
-        listener: (ConditionResult) -> Unit,
+        listener: (ImageConditionResult) -> Unit,
     ) {
         val triedElement = ImageConditionTry(scenario, condition)
         tryElement(
@@ -171,7 +171,7 @@ class DetectionRepository private constructor(context: Context) {
             scenario = elementTry.scenario,
             imageEvents = elementTry.imageEvents,
             triggerEvents = elementTry.triggerEvents,
-            bitmapSupplier = scenarioRepository::getBitmap,
+            bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = listener,
         )
     }

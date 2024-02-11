@@ -228,11 +228,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun showImageConditionCaptureOverlay() {
         OverlayManager.getInstance(context).navigateTo(
             context = context,
-            newOverlay = CaptureMenu(
-                onConditionSelected = { area, bitmap ->
-                    showImageConditionConfigDialog(viewModel.createImageCondition(context, area, bitmap))
-                }
-            ),
+            newOverlay = CaptureMenu(onConditionSelected = ::showImageConditionConfigDialog),
             hideCurrent = true,
         )
     }

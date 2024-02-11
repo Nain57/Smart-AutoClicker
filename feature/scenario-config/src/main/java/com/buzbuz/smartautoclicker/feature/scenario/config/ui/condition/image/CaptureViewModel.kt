@@ -17,14 +17,18 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Rect
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -35,6 +39,8 @@ class CaptureViewModel(application: Application) : AndroidViewModel(application)
 
     /** Provides screen images. */
     private val displayRecorder: DisplayRecorder = DisplayRecorder.getInstance()
+    /** Maintains the currently configured scenario state. */
+    private val editionRepository = EditionRepository.getInstance(application)
     /** Monitors views for the tutorial. */
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
@@ -47,6 +53,20 @@ class CaptureViewModel(application: Application) : AndroidViewModel(application)
                     monitoredViewsManager.notifyClick(MonitoredViewType.CONDITION_CAPTURE_BUTTON_CAPTURE)
                 }
             }
+        }
+    }
+
+    /**
+     * Create a new condition with the default values from configuration.
+     *
+     * @param context the Android Context.
+     * @param area the area of the condition to create.
+     * @param bitmap the image for the condition to create.
+     */
+    fun createImageCondition(context: Context, area: Rect, bitmap: Bitmap, completed: (ImageCondition) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val condition = editionRepository.editedItemsBuilder.createNewImageCondition(context, area, bitmap)
+            withContext(Dispatchers.Main) { completed(condition) }
         }
     }
 }

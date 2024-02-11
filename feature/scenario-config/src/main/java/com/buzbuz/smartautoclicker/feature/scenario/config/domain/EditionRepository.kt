@@ -127,15 +127,18 @@ class EditionRepository private constructor(context: Context) {
         if (!updateResult) return false
 
         scenarioEditor.stopEdition()
-        editedItemsBuilder.resetGeneratedIdsCount()
+        repository.cleanupUnusedBitmaps(editedItemsBuilder.newImageConditionsPaths)
+        editedItemsBuilder.resetBuilder()
 
         return true
     }
 
     /** Cancel all changes made during the edition. */
-    fun stopEdition() {
+    suspend fun stopEdition() {
         Log.d(TAG, "Stop edition")
         scenarioEditor.stopEdition()
+        repository.cleanupUnusedBitmaps(editedItemsBuilder.newImageConditionsPaths)
+        editedItemsBuilder.resetBuilder()
     }
 
     /** Update the currently edited scenario. */

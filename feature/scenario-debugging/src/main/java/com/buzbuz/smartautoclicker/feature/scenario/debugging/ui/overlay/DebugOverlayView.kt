@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,69 +29,77 @@ import android.view.View
  */
 class DebugOverlayView(context: Context) : View(context) {
 
-    /** The paint for the condition border. */
-    private val conditionBordersPaint = Paint().apply {
+    private val positiveResultPaint = Paint().apply {
         color = Color.GREEN
+        style = Paint.Style.STROKE
+        strokeWidth = 10f
+    }
+    private val negativeResultPaint = Paint().apply {
+        color = Color.RED
         style = Paint.Style.STROKE
         strokeWidth = 10f
     }
 
     /** The margin between the actual condition position and the displayed borders. */
     private val conditionBordersMargin = 10
-    /** The position of the borders. */
-    private val conditionBorders = Rect()
 
-    /**
-     * Set the position of a new positive detection result.
-     * @param position the position of the detected condition.
-     */
-    fun setPositiveResult(position: Rect) {
-        updatePositiveResult(position)
+    private val results: MutableList<DetectionResultInfo> = mutableListOf()
+    private val displayedResults: MutableList<Pair<Paint, Rect>> = mutableListOf()
+
+    fun setResults(newResults: List<DetectionResultInfo>) {
+        updateResults(newResults)
         postInvalidate()
     }
 
-    /** Clear all values and display nothing. */
     fun clear() {
-        updatePositiveResult(Rect(), true)
+        updateResults(emptyList())
         postInvalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        updatePositiveResult(forceUpdate = true)
+        updateResults(results)
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
-    /**
-     * Update the position of the displayed borders.
-     * @param newConditionPosition the new coordinates of the borders.
-     * @param forceUpdate true to force the refresh of the positions, false to skip it if not necessary.
-     */
-    private fun updatePositiveResult(newConditionPosition: Rect = conditionBorders, forceUpdate: Boolean = false) {
-        // Same values ? Skip update, unless forced.
-        if (!forceUpdate && newConditionPosition == conditionBorders) return
-
-        // No condition matched ? Nothing to display
-        if (newConditionPosition == Rect()) {
-            conditionBorders.set(0, 0, 0, 0)
-            return
-        }
-
-        // Condition borders update
-        if (forceUpdate || newConditionPosition != conditionBorders) {
-            conditionBorders.left = newConditionPosition.left - conditionBordersMargin
-            conditionBorders.top = newConditionPosition.top - conditionBordersMargin
-            conditionBorders.right = newConditionPosition.right + conditionBordersMargin
-            conditionBorders.bottom = newConditionPosition.bottom + conditionBordersMargin
-        }
-    }
-
-    // SDK 34 defines MotionEvents as NonNull. But previous bad experiences with the same case on
-    // SDK 33 gave me trust issues
+    // SDK 34 defines MotionEvents as NonNull. But previous bad experiences with the same case on SDK 33 gave me trust
+    // issues
     @Suppress("NOTHING_TO_OVERRIDE", "ACCIDENTAL_OVERRIDE")
     override fun onDraw(canvas: Canvas?) {
         canvas ?: return
         super.onDraw(canvas)
 
-        canvas.drawRect(conditionBorders, conditionBordersPaint)
+        displayedResults.forEach { (paint, coordinates) ->
+            canvas.drawRect(coordinates, paint)
+        }
     }
+
+    private fun updateResults(newResults: List<DetectionResultInfo>) {
+        if (results != newResults) {
+            results.clear()
+            results.addAll(newResults)
+        }
+
+        // No condition matched ? Nothing to display
+        if (results.isEmpty()) {
+            return
+        }
+
+        displayedResults.clear()
+        results.forEach { result -> displayedResults.add(result.toDisplayResult()) }
+    }
+
+    private fun DetectionResultInfo.toDisplayResult(): Pair<Paint, Rect> = Pair(
+        if (positive) positiveResultPaint else negativeResultPaint,
+        Rect(
+            coordinates.left - conditionBordersMargin,
+            coordinates.top - conditionBordersMargin,
+            coordinates.right + conditionBordersMargin,
+            coordinates.bottom + conditionBordersMargin,
+        )
+    )
 }
+
+data class DetectionResultInfo(
+    val positive: Boolean,
+    val coordinates: Rect,
+)

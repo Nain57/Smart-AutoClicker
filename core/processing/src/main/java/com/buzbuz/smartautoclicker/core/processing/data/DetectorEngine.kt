@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -152,7 +153,7 @@ internal class DetectorEngine(context: Context) {
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
-        bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
+        bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
         progressListener: ScenarioProcessingListener? = null,
     ) {
         val executor = androidExecutor
