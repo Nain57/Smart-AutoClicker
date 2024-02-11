@@ -56,7 +56,7 @@ internal class ScenarioProcessor(
     /** Handle the processing state of the scenario. */
     private val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
     /** Check conditions and tell if they are fulfilled. */
-    private val conditionsVerifier = ConditionsVerifier(processingState, imageDetector, bitmapSupplier)
+    private val conditionsVerifier = ConditionsVerifier(processingState, imageDetector, bitmapSupplier, progressListener)
     /** Execute the detected event actions. */
     private val actionExecutor = ActionExecutor(androidExecutor, processingState, randomize)
 

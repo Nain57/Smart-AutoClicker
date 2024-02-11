@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.domain
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -166,6 +167,7 @@ class DetectionRepository private constructor(context: Context) {
     }
 
     private fun tryElement(context: Context, elementTry: ScenarioTry, listener: ScenarioProcessingListener) {
+        Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.imageEvents}")
         detectorEngine.value?.startDetection(
             context = context,
             scenario = elementTry.scenario,
@@ -176,6 +178,8 @@ class DetectionRepository private constructor(context: Context) {
         )
     }
 }
+
+private const val TAG = "DetectionRepository"
 
 /** The maximum detection quality for the algorithm. */
 const val DETECTION_QUALITY_MAX = com.buzbuz.smartautoclicker.core.detection.DETECTION_QUALITY_MAX

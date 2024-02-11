@@ -1,0 +1,144 @@
+/*
+ * Copyright (C) 2024 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay
+
+import android.app.Application
+import android.content.Context
+import android.graphics.Rect
+
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
+import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
+
+class TryElementViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(application)
+
+    private val triedElement: MutableStateFlow<Pair<Scenario, Element>?> = MutableStateFlow(null)
+    private var resetJob: Job? = null
+
+    val canPlay: Flow<Boolean> = detectionRepository.detectionState
+        .combine(triedElement) { state, element ->
+            (state == DetectionState.RECORDING || state == DetectionState.DETECTING) && element != null
+        }
+
+    val isPlaying: StateFlow<Boolean> = detectionRepository.detectionState
+        .map { it == DetectionState.DETECTING }
+        .distinctUntilChanged()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = false)
+
+    private val _detectionResults: MutableStateFlow<List<DetectionResultInfo>> = MutableStateFlow(emptyList())
+    val detectionResults: Flow<List<DetectionResultInfo>> = _detectionResults
+        .combine(isPlaying) { results, playing -> if (playing) results else emptyList() }
+        .onEach { results ->
+            resetJob?.cancel()
+            resetJob = null
+            if (results.isEmpty()) return@onEach
+
+            resetJob = viewModelScope.launch {
+                delay(3.seconds)
+                _detectionResults.emit(emptyList())
+            }
+        }
+
+    fun setTriedElement(scenario: Scenario, element: Any) {
+        viewModelScope.launch {
+            triedElement.emit(
+                scenario to when (element) {
+                    is ImageEvent -> Element.ImageEventTry(element)
+                    is ImageCondition -> Element.ImageConditionTry(element)
+                    else -> throw UnsupportedOperationException("Can't try $element")
+                }
+            )
+        }
+    }
+
+    fun toggleTryState(context: Context) {
+        if (isPlaying.value) stopTry()
+        else startTry(context)
+    }
+
+    private fun startTry(context: Context) {
+        viewModelScope.launch {
+            triedElement.value?.let { (scenario, element) ->
+
+                when (element) {
+                    is Element.ImageEventTry ->
+                        detectionRepository.tryEvent(context, scenario, element.imageEvent) { results ->
+                            _detectionResults.value = results.getAllResults().mapNotNull { result ->
+                                if (result is ImageConditionResult) result.toDetectionResultInfo()
+                                else null
+                            }
+                        }
+
+                    is Element.ImageConditionTry ->
+                        detectionRepository.tryImageCondition(context, scenario, element.imageCondition) { result ->
+                            _detectionResults.value = listOf(result.toDetectionResultInfo())
+                        }
+                }
+            }
+        }
+    }
+
+    fun stopTry() {
+        viewModelScope.launch {
+            detectionRepository.stopDetection()
+        }
+    }
+
+    private fun ImageConditionResult.toDetectionResultInfo(): DetectionResultInfo {
+        val halfWidth = condition.area.width() / 2
+        val halfHeight = condition.area.height() / 2
+
+        return DetectionResultInfo(
+            positive = haveBeenDetected,
+            coordinates =
+                if (position.x == 0 && position.y == 0) Rect()
+                else Rect(
+                    position.x - halfWidth,
+                    position.y - halfHeight,
+                    position.x + halfWidth,
+                    position.y + halfHeight,
+                ),
+        )
+    }
+}
+
+sealed class Element {
+    data class ImageEventTry(val imageEvent: ImageEvent) : Element()
+    data class ImageConditionTry(val imageCondition: ImageCondition) : Element()
+}

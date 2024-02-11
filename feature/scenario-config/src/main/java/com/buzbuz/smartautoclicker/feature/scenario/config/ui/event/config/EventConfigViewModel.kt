@@ -31,6 +31,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
@@ -114,8 +116,22 @@ class EventConfigViewModel(application: Application) : AndroidViewModel(applicat
     val eventNameError: Flow<Boolean> = configuredEvent
         .map { it.name.isEmpty() }
 
+    val shouldShowTryCard: Flow<Boolean> = configuredEvent
+        .map { it is ImageEvent }
+
+    val canTryEvent: Flow<Boolean> = configuredEvent
+        .map { it.isComplete() }
+
     /** Tells if the pro mode billing flow is being displayed. */
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
+
+    fun getTryInfo(): Pair<Scenario, ImageEvent>? {
+        val scenario = editionRepository.editionState.getScenario() ?: return null
+        val event = editionRepository.editionState.getEditedEvent<ImageEvent>() ?: return null
+
+        return scenario to event
+    }
+
 
     /** Set a new name for the configured event. */
     fun setEventName(newName: String) {

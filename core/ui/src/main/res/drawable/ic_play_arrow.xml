@@ -17,7 +17,7 @@
       <path
           android:name="iconPath"
           android:pathData="@string/path_play"
-          android:fillColor="@android:color/black"
+          android:fillColor="@android:color/white"
           android:strokeLineCap="butt"
           android:strokeLineJoin="miter"
           android:strokeMiterLimit="10"/>
