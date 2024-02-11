@@ -102,4 +102,5 @@ class DebugOverlayView(context: Context) : View(context) {
 data class DetectionResultInfo(
     val positive: Boolean,
     val coordinates: Rect,
+    val confidenceRate: Double,
 )

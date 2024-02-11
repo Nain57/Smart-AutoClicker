@@ -16,6 +16,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <dimen name="overlay_debug_text_width">150dp</dimen>
     <dimen name="dialog_debug_condition_icons_height">30dp</dimen>
     <dimen name="dialog_debug_condition_bitmap_size">100dp</dimen>
 </resources>

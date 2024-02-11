@@ -313,12 +313,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                     viewBinding.debugConfidenceRate.text = debugInfo.confidenceRateText
                 }
             }
-
-            launch {
-                debuggingViewModel.debugLastPositiveCoordinates.collect { coordinates ->
-                    //(screenOverlayView as DebugOverlayView).setPositiveResult(coordinates)
-                }
-            }
         }
     }
 
