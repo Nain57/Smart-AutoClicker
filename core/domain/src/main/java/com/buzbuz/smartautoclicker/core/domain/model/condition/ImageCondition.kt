@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.condition
 
-import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
@@ -33,19 +32,17 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * @param area the area of the screen to detect.
  * @param threshold the accepted difference between the conditions and the screen content, in percent (0-100%).
  * @param detectionType the type of detection for this condition. Must be one of [DetectionType].
- * @param bitmap the bitmap for the condition. Not set when fetched from the repository.
  * @param detectionArea the area to detect the condition in if [detectionType] is IN_AREA.
  */
 data class ImageCondition(
     override val id: Identifier,
     override val eventId: Identifier,
     override val name: String,
-    val path: String? = null,
+    val path: String,
     val area: Rect,
     val threshold: Int,
     @DetectionType val detectionType: Int,
     val shouldBeDetected: Boolean,
-    val bitmap: Bitmap? = null,
     val detectionArea: Rect? = null,
 ): Condition() {
 
@@ -57,11 +54,9 @@ data class ImageCondition(
 
     /** Tells if this condition is complete and valid to be saved. */
     override fun isComplete(): Boolean =
-        super.isComplete()
-                && (path != null || bitmap != null)
-                && (detectionType == IN_AREA && detectionArea != null || detectionType != IN_AREA)
+        super.isComplete() && (detectionType == IN_AREA && detectionArea != null || detectionType != IN_AREA)
 
     override fun hashCodeNoIds(): Int =
         name.hashCode() + path.hashCode() + area.hashCode() + threshold.hashCode() + detectionType.hashCode() +
-                shouldBeDetected.hashCode() + bitmap.hashCode() + detectionArea.hashCode()
+                shouldBeDetected.hashCode() + detectionArea.hashCode()
 }

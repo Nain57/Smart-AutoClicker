@@ -29,13 +29,13 @@ import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebugReport
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.ProcessingDebugInfo
 
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
 
 /** ViewModel for the [DebugReportDialog]. */
@@ -76,26 +76,17 @@ class DebugReportModel(application: Application) : AndroidViewModel(application)
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
-        if (condition.bitmap != null) {
-            onBitmapLoaded.invoke(condition.bitmap)
-            return null
-        }
-
-        if (condition.path != null) {
-            return viewModelScope.launch(Dispatchers.IO) {
-                val bitmap = repository.getBitmap(condition.path!!, condition.area.width(), condition.area.height())
-
-                if (isActive) {
-                    withContext(Dispatchers.Main) {
-                        onBitmapLoaded.invoke(bitmap)
-                    }
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val bitmap = repository.getConditionBitmap(condition)
+                withContext(Dispatchers.Main) {
+                    onBitmapLoaded.invoke(bitmap)
                 }
+            } catch (cEx: CancellationException) {
+                onBitmapLoaded.invoke(null)
             }
         }
-
-        onBitmapLoaded.invoke(null)
-        return null
     }
 
     private fun newScenarioItem(debugInfo: DebugReport, averageImageProcessingTime: Long) =

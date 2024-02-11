@@ -39,7 +39,7 @@ import kotlin.math.max
 internal class ConditionsVerifier(
     private val state: ProcessingState,
     private val imageDetector: ImageDetector,
-    private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
+    private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
     private val progressListener: ScenarioProcessingListener? = null,
 ) {
 
@@ -130,36 +130,35 @@ internal class ConditionsVerifier(
     private fun verifyOnScenarioStart() : Boolean = false
     private fun verifyOnScenarioEnd() : Boolean = false
 
-    private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult =
-        condition.path?.let { path ->
-            progressListener?.onImageConditionProcessingStarted(condition)
+    private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult {
+        progressListener?.onImageConditionProcessingStarted(condition)
 
-            val result = bitmapSupplier(path, condition.area.width(), condition.area.height())?.let { conditionBitmap ->
-                val detectionResult = when (condition.detectionType) {
-                    EXACT ->
-                        imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
+        val result = bitmapSupplier(condition)?.let { conditionBitmap ->
+            val detectionResult = when (condition.detectionType) {
+                EXACT ->
+                    imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
 
-                    WHOLE_SCREEN ->
-                        imageDetector.detectCondition(conditionBitmap, condition.threshold)
+                WHOLE_SCREEN ->
+                    imageDetector.detectCondition(conditionBitmap, condition.threshold)
 
-                    IN_AREA ->
-                        condition.detectionArea?.let { area ->
-                            imageDetector.detectCondition(conditionBitmap, area, condition.threshold)
-                        } ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
+                IN_AREA ->
+                    condition.detectionArea?.let { area ->
+                        imageDetector.detectCondition(conditionBitmap, area, condition.threshold)
+                    } ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
 
-                    else -> throw IllegalArgumentException("Unexpected detection type")
-                }
+                else -> throw IllegalArgumentException("Unexpected detection type")
+            }
 
-                ImageResult(
-                    isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
-                    haveBeenDetected = detectionResult.isDetected,
-                    condition = condition,
-                    position = Point(detectionResult.position.x, detectionResult.position.y),
-                    confidenceRate = detectionResult.confidenceRate,
-                )
-            } ?: NEGATIVE_RESULT
-
-            progressListener?.onImageConditionProcessingCompleted(result)
-            result
+            ImageResult(
+                isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
+                haveBeenDetected = detectionResult.isDetected,
+                condition = condition,
+                position = Point(detectionResult.position.x, detectionResult.position.y),
+                confidenceRate = detectionResult.confidenceRate,
+            )
         } ?: NEGATIVE_RESULT
+
+        progressListener?.onImageConditionProcessingCompleted(result)
+        return result
+    }
 }

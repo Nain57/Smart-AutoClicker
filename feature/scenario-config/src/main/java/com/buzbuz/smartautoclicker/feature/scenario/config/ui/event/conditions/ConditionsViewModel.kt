@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.TriggerConditionTypeChoice
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getImageConditionBitmap
 
 import kotlinx.coroutines.*
 
@@ -69,16 +70,6 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
     val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     fun getEditedEvent(): Event? = editionRepository.editionState.getEditedEvent()
-
-    /**
-     * Create a new condition with the default values from configuration.
-     *
-     * @param context the Android Context.
-     * @param area the area of the condition to create.
-     * @param bitmap the image for the condition to create.
-     */
-    fun createImageCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
-        editionRepository.editedItemsBuilder.createNewImageCondition(context, area, bitmap)
 
     /**
      * Get a new condition based on the provided one.
@@ -130,27 +121,8 @@ class ConditionsViewModel(application: Application) : AndroidViewModel(applicati
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job? {
-        if (condition.bitmap != null) {
-            onBitmapLoaded.invoke(condition.bitmap)
-            return null
-        }
-
-        if (condition.path != null) {
-            return viewModelScope.launch(Dispatchers.IO) {
-                val bitmap = repository.getBitmap(condition.path!!, condition.area.width(), condition.area.height())
-
-                if (isActive) {
-                    withContext(Dispatchers.Main) {
-                        onBitmapLoaded.invoke(bitmap)
-                    }
-                }
-            }
-        }
-
-        onBitmapLoaded.invoke(null)
-        return null
-    }
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
+        getImageConditionBitmap(repository, condition, onBitmapLoaded)
 
     fun onConditionCountReachedAddCopyClicked(context: Context) {
         billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT)

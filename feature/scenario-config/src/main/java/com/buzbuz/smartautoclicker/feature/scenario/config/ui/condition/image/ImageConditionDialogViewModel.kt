@@ -30,18 +30,21 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.SelectorState
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -123,16 +126,23 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
     val threshold: Flow<Int> = configuredCondition.mapNotNull { it.threshold }
     /** The bitmap for the configured condition. */
     val conditionBitmap: Flow<Bitmap?> = configuredCondition.map { condition ->
-        if (condition.bitmap != null) return@map condition.bitmap
-
-        condition.path?.let { path ->
-            repository.getBitmap(path, condition.area.width(), condition.area.height())
-        }
-    }
+        repository.getConditionBitmap(condition)
+    }.flowOn(Dispatchers.IO)
     /** Tells if the configured condition is valid and can be saved. */
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageConditionState.map { condition ->
         condition.canBeSaved
     }
+
+    val canTryCondition: Flow<Boolean> = configuredCondition
+        .map { it.isComplete() }
+
+    fun getTryInfo(): Pair<Scenario, ImageCondition>? {
+        val scenario = editionRepository.editionState.getScenario() ?: return null
+        val condition = editionRepository.editionState.getEditedCondition<ImageCondition>() ?: return null
+
+        return scenario to condition
+    }
+
 
     /**
      * Set the configured condition name.

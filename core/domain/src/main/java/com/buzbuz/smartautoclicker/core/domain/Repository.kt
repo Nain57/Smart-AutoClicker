@@ -151,17 +151,28 @@ interface Repository {
      */
     fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>>
 
+
     /**
-     * Get the bitmap for the given path.
+     * Save the provided bitmap into the persistent memory.
+     * If the bitmap is already saved, does nothing.
+     *
+     * @param bitmap the bitmap to be saved on the persistent memory.
+     *
+     * @return the path of the bitmap.
+     */
+    suspend fun saveConditionBitmap(bitmap: Bitmap): String
+
+    /**
+     * Get the bitmap for the given image condition.
      * Bitmaps are automatically cached by the bitmap manager.
      *
-     * @param path the path of the bitmap on the application data folder.
-     * @param width the width of the bitmap, in pixels.
-     * @param height the height of the bitmap, in pixels.
+     * @param condition the condition to get the bitmap from.
      *
      * @return the bitmap, or null if the path can't be found.
      */
-    suspend fun getBitmap(path: String, width: Int, height: Int): Bitmap?
+    suspend fun getConditionBitmap(condition: ImageCondition): Bitmap?
+
+    suspend fun cleanupUnusedBitmaps(removedPath: List<String>)
 
     /** Clean the cache of this repository. */
     fun cleanCache()

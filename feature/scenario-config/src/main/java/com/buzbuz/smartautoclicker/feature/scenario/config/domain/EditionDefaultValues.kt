@@ -35,7 +35,7 @@ internal class EditionDefaultValues(context: Context) {
 
     private val scenarioRepository: Repository = Repository.getRepository(context)
 
-    private fun isTutorialModeEnabled(): Boolean = scenarioRepository.isTutorialModeEnabled()
+    internal fun isTutorialModeEnabled(): Boolean = scenarioRepository.isTutorialModeEnabled()
 
     fun eventName(context: Context): String =
         context.getString(R.string.default_event_name)

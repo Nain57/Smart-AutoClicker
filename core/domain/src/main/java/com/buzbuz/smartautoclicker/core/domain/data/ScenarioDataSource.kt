@@ -22,9 +22,6 @@ import androidx.room.withTransaction
 import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
-import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
-import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
-import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
@@ -248,11 +245,7 @@ internal class ScenarioDataSource(
             mappingClosure = { condition ->
                 when (condition) {
                     is ImageCondition ->
-                        condition.copy(
-                            eventId = Identifier(databaseId = eventDbId),
-                            path = saveBitmapIfNeeded(condition),
-                        ).toEntity()
-
+                        condition.copy(eventId = Identifier(databaseId = eventDbId)).toEntity()
                     is TriggerCondition ->
                         condition.copy(evtId = Identifier(databaseId = eventDbId)).toEntity()
                 }
@@ -404,7 +397,7 @@ internal class ScenarioDataSource(
      * Remove bitmaps from the application data folder.
      * @param removedPath the list of path for the bitmaps to be removed.
      */
-    private suspend fun clearRemovedConditionsBitmaps(removedPath: List<String>) {
+    internal suspend fun clearRemovedConditionsBitmaps(removedPath: List<String>) {
         val deletedPaths = removedPath.filter { path ->
             currentDatabase.value.conditionDao().getValidPathCount(path) == 0
         }
@@ -412,18 +405,6 @@ internal class ScenarioDataSource(
         Log.d(TAG, "Removed conditions count: ${removedPath.size}; Unused bitmaps after removal: ${deletedPaths.size}")
         bitmapManager.deleteBitmaps(deletedPaths)
     }
-
-    private suspend fun saveBitmapIfNeeded(condition: ImageCondition): String =
-        if (condition.path.isNullOrEmpty()) {
-            condition.bitmap?.let { bitmapManager.saveBitmap(it, getBitmapFilePrefix()) }
-                ?: throw IllegalArgumentException("Can't insert condition, bitmap and path are both null.")
-        } else {
-            condition.path
-        }
-
-    private fun getBitmapFilePrefix(): String =
-        if (currentDatabase.value is ClickDatabase) CONDITION_FILE_PREFIX
-        else TUTORIAL_CONDITION_FILE_PREFIX
 }
 
 /** Tag for logs. */

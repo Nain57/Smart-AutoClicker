@@ -22,6 +22,7 @@ import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
+import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
@@ -37,6 +38,8 @@ class EditedItemsBuilder internal constructor(
     private val editor: ScenarioEditor,
 ) {
 
+    private val repository: Repository = Repository.getRepository(context)
+
     private val defaultValues = EditionDefaultValues(context)
     private val eventsIdCreator = IdentifierCreator()
     private val conditionsIdCreator = IdentifierCreator()
@@ -51,12 +54,18 @@ class EditedItemsBuilder internal constructor(
      */
     private val eventCopyConditionIdMap =  mutableMapOf<Identifier, Identifier>()
 
-    internal fun resetGeneratedIdsCount() {
+    /** Keep track of new images created during the edition session. */
+    private val _newImageConditionsPaths: MutableList<String> = mutableListOf()
+    internal val newImageConditionsPaths: List<String> = _newImageConditionsPaths
+
+    internal fun resetBuilder() {
         eventsIdCreator.resetIdCount()
         conditionsIdCreator.resetIdCount()
         actionsIdCreator.resetIdCount()
         intentExtrasIdCreator.resetIdCount()
         endConditionsIdCreator.resetIdCount()
+        eventCopyConditionIdMap.clear()
+        _newImageConditionsPaths.clear()
     }
 
     fun createNewImageEvent(context: Context): ImageEvent =
@@ -112,24 +121,29 @@ class EditedItemsBuilder internal constructor(
         ).also { eventCopyConditionIdMap.clear() }
     }
 
-    fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition =
-        ImageCondition(
-            id = conditionsIdCreator.generateNewIdentifier(),
+    suspend fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition {
+        val id = conditionsIdCreator.generateNewIdentifier()
+        val newPath = repository.saveConditionBitmap(bitmap)
+        _newImageConditionsPaths.add(newPath)
+
+        return ImageCondition(
+            id = id,
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.conditionName(context),
-            bitmap = bitmap,
             area = area,
             threshold = defaultValues.conditionThreshold(context),
             detectionType = defaultValues.conditionDetectionType(),
             shouldBeDetected = defaultValues.conditionShouldBeDetected(),
+            path = newPath,
         )
+    }
 
     fun createNewImageConditionFrom(condition: ImageCondition, eventId: Identifier = getEditedEventIdOrThrow()): ImageCondition =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + condition.name,
-            path = if (condition.path != null) "" + condition.path else null,
+            path = "" + condition.path,
         )
 
     fun createNewOnBroadcastReceived(context: Context): TriggerCondition.OnBroadcastReceived =
