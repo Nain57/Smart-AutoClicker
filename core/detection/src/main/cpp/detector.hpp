@@ -36,7 +36,7 @@ namespace smartautoclicker {
 
         static std::unique_ptr<cv::Mat> matchTemplate(const cv::Mat& image, const cv::Mat& condition);
         static void locateMinMax(const cv::Mat& matchingResult, DetectionResult& results);
-        static bool isValidMatching(const DetectionResult& results, const int threshold);
+        static bool isResultAboveThreshold(const DetectionResult& results, const int threshold);
         static double getColorDiff(const cv::Mat& image, const cv::Mat& condition);
 
         cv::Rect getDetectionResultFullSizeRoi(const cv::Rect& detectionRoi, int fullSizeWidth, int fullSizeHeight) const;

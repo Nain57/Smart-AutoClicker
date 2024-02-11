@@ -16,7 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay
 
+import android.util.Size
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -67,7 +69,7 @@ class TryElementOverlayMenu(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canPlay.collect(::updatePlayPauseEnabledState) }
                 launch { viewModel.isPlaying.collect(::updateDetectionState) }
-                launch { viewModel.detectionResults.collect(::updateDetectionResults) }
+                launch { viewModel.displayResults.collect(::updateDetectionResults) }
             }
         }
     }
@@ -77,7 +79,16 @@ class TryElementOverlayMenu(
         playPauseButtonController.detachView()
     }
 
+    override fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
+        val bgSize = super.getWindowMaximumSize(backgroundView)
+        return Size(
+            bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_text_width),
+            bgSize.height,
+        )
+    }
+
     override fun onMenuItemClicked(viewId: Int) {
+        println("TOTO: onCLick")
         when (viewId) {
             R.id.btn_play ->
                 viewModel.toggleTryState(context)
@@ -98,11 +109,27 @@ class TryElementOverlayMenu(
         if (currentState == isDetecting) return
         viewBinding.btnPlay.tag = isDetecting
 
-        if (!isDetecting) playPauseButtonController.toState1(currentState != null)
-        else playPauseButtonController.toState2(currentState != null)
+        if (!isDetecting) {
+            if (currentState == null) playPauseButtonController.toState1(false)
+            else animateLayoutChanges {
+                viewBinding.layoutResult.visibility = View.GONE
+                setMenuItemVisibility(viewBinding.btnBack, true)
+                setMenuItemVisibility(viewBinding.btnHideOverlay, true)
+                playPauseButtonController.toState1(true)
+            }
+        } else {
+            if (currentState == null) playPauseButtonController.toState2(false)
+            else animateLayoutChanges {
+                viewBinding.layoutResult.visibility = View.VISIBLE
+                setMenuItemVisibility(viewBinding.btnBack, false)
+                setMenuItemVisibility(viewBinding.btnHideOverlay, false)
+                playPauseButtonController.toState2(true)
+            }
+        }
     }
 
-    private fun updateDetectionResults(results: List<DetectionResultInfo>) {
-        (screenOverlayView as? DebugOverlayView)?.setResults(results)
+    private fun updateDetectionResults(results: ResultsDisplay?) {
+        (screenOverlayView as? DebugOverlayView)?.setResults(results?.detectionResults ?: emptyList())
+        viewBinding.textResult.text = results?.resultText
     }
 }

@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.formatConfidenceRate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
@@ -48,7 +49,7 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
 
     private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(application)
 
-    private val triedElement: MutableStateFlow<Pair<Scenario, Element>?> = MutableStateFlow(null)
+    private val triedElement: MutableStateFlow<Element?> = MutableStateFlow(null)
     private var resetJob: Job? = null
 
     val canPlay: Flow<Boolean> = detectionRepository.detectionState
@@ -62,7 +63,7 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
         .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = false)
 
     private val _detectionResults: MutableStateFlow<List<DetectionResultInfo>> = MutableStateFlow(emptyList())
-    val detectionResults: Flow<List<DetectionResultInfo>> = _detectionResults
+    private val detectionResults: Flow<List<DetectionResultInfo>> = _detectionResults
         .combine(isPlaying) { results, playing -> if (playing) results else emptyList() }
         .onEach { results ->
             resetJob?.cancel()
@@ -75,12 +76,33 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
 
+    val displayResults: Flow<ResultsDisplay?> = triedElement.combine(detectionResults) { element, results ->
+        if (element == null || results.isEmpty()) return@combine null
+
+        val text = when (element) {
+            is Element.ImageEventTry -> {
+                if (element.imageEvent.conditions.size == 1) {
+                    results.first().confidenceRate.formatConfidenceRate()
+                } else {
+                    val detected = results.fold(0) { acc, detectionResultInfo ->
+                        acc + (if (detectionResultInfo.positive) 1 else 0)
+                    }
+                    "$detected/${element.imageEvent.conditions.size}"
+                }
+            }
+
+            is Element.ImageConditionTry -> results.first().confidenceRate.formatConfidenceRate()
+        }
+
+        ResultsDisplay(text, results)
+    }
+
     fun setTriedElement(scenario: Scenario, element: Any) {
         viewModelScope.launch {
             triedElement.emit(
-                scenario to when (element) {
-                    is ImageEvent -> Element.ImageEventTry(element)
-                    is ImageCondition -> Element.ImageConditionTry(element)
+                when (element) {
+                    is ImageEvent -> Element.ImageEventTry(scenario, element)
+                    is ImageCondition -> Element.ImageConditionTry(scenario, element)
                     else -> throw UnsupportedOperationException("Can't try $element")
                 }
             )
@@ -94,11 +116,11 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun startTry(context: Context) {
         viewModelScope.launch {
-            triedElement.value?.let { (scenario, element) ->
+            triedElement.value?.let { element ->
 
                 when (element) {
                     is Element.ImageEventTry ->
-                        detectionRepository.tryEvent(context, scenario, element.imageEvent) { results ->
+                        detectionRepository.tryEvent(context, element.scenario, element.imageEvent) { results ->
                             _detectionResults.value = results.getAllResults().mapNotNull { result ->
                                 if (result is ImageConditionResult) result.toDetectionResultInfo()
                                 else null
@@ -106,7 +128,7 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
                         }
 
                     is Element.ImageConditionTry ->
-                        detectionRepository.tryImageCondition(context, scenario, element.imageCondition) { result ->
+                        detectionRepository.tryImageCondition(context, element.scenario, element.imageCondition) { result ->
                             _detectionResults.value = listOf(result.toDetectionResultInfo())
                         }
                 }
@@ -134,11 +156,27 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
                     position.x + halfWidth,
                     position.y + halfHeight,
                 ),
+            confidenceRate = confidenceRate,
         )
     }
 }
 
-sealed class Element {
-    data class ImageEventTry(val imageEvent: ImageEvent) : Element()
-    data class ImageConditionTry(val imageCondition: ImageCondition) : Element()
+data class ResultsDisplay(
+    val resultText: String,
+    val detectionResults: List<DetectionResultInfo>,
+)
+
+private sealed class Element {
+
+    abstract val scenario: Scenario
+
+    data class ImageEventTry(
+        override val scenario: Scenario,
+        val imageEvent: ImageEvent,
+    ) : Element()
+
+    data class ImageConditionTry(
+        override val scenario: Scenario,
+        val imageCondition: ImageCondition,
+    ) : Element()
 }

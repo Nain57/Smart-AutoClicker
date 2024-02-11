@@ -115,8 +115,6 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
     while (!detectionResult.isDetected) {
         // Find the max value and its position in the result
         locateMinMax(*matchingResults, detectionResult);
-        // If the maximum for the whole picture is below the threshold, we will never find.
-        if (!isValidMatching(detectionResult, threshold)) break;
 
         // Calculate the ROI based on the maximum location
         scaledMatchingRoi = getRoiForResult(detectionResult.maxLoc, *scaledGrayCondition);
@@ -124,9 +122,17 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
         if (isRoiContainedInImage(scaledMatchingRoi, *scaledGrayCurrentImage) ||
             isRoiContainedInImage(fullSizeMatchingRoi, *fullSizeColorCurrentImage)) {
             // Roi is out of bounds, invalid match
+            detectionResult.centerX = 0;
+            detectionResult.centerY = 0;
             markRoiAsInvalidInResults(scaledMatchingRoi, *matchingResults);
             continue;
         }
+
+        detectionResult.centerX = fullSizeMatchingRoi.x + ((int) (fullSizeMatchingRoi.width / 2));
+        detectionResult.centerY = fullSizeMatchingRoi.y + ((int) (fullSizeMatchingRoi.height / 2));
+
+        // If the maximum for the whole picture is below the threshold, we will never find.
+        if (!isResultAboveThreshold(detectionResult, threshold)) break;
 
         // Check if the colors are matching in the candidate area.
         auto fullSizeColorCroppedCurrentImage = Mat(*fullSizeColorCurrentImage, fullSizeMatchingRoi);
@@ -137,15 +143,6 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
             // Colors are invalid, modify the matching result to indicate that.
             markRoiAsInvalidInResults(scaledMatchingRoi, *matchingResults);
         }
-    }
-
-    // If the condition is detected, compute the position of the detection and add it to the results.
-    if (detectionResult.isDetected) {
-        detectionResult.centerX = fullSizeMatchingRoi.x + ((int) (fullSizeMatchingRoi.width / 2));
-        detectionResult.centerY = fullSizeMatchingRoi.y + ((int) (fullSizeMatchingRoi.height / 2));
-    } else {
-        detectionResult.centerX = 0;
-        detectionResult.centerY = 0;
     }
 
     return detectionResult;
@@ -178,7 +175,7 @@ void Detector::locateMinMax(const Mat& matchingResult, DetectionResult& results)
     minMaxLoc(matchingResult, &results.minVal, &results.maxVal, &results.minLoc, &results.maxLoc, Mat());
 }
 
-bool Detector::isValidMatching(const DetectionResult& results, const int threshold) {
+bool Detector::isResultAboveThreshold(const DetectionResult& results, const int threshold) {
     return results.maxVal > ((double) (100 - threshold) / 100);
 }
 
