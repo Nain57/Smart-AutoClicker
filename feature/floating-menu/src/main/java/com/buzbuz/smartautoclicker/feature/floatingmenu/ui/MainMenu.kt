@@ -24,7 +24,6 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
-import android.view.WindowManager
 
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
@@ -40,7 +39,6 @@ import com.buzbuz.smartautoclicker.feature.floatingmenu.R
 import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
-import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugOverlayView
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -80,8 +78,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
      */
     private var keyDownHandled: Boolean = false
 
-    override fun animateOverlayView(): Boolean = false
-
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         playPauseButtonController = AnimatedStatesImageButtonController(
             context = context,
@@ -96,16 +92,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         return viewBinding.root
     }
-
-    override fun onCreateOverlayView(): DebugOverlayView = DebugOverlayView(context)
-
-    override fun onCreateOverlayViewLayoutParams(): WindowManager.LayoutParams =
-        super.onCreateOverlayViewLayoutParams().apply {
-            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-        }
 
     override fun onCreate() {
         super.onCreate()
@@ -250,6 +236,42 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         }
     }
 
+    /**
+     * Change the debug state of this UI.
+     * @param isVisible true when the debug view should be shown, false to hide it.
+     */
+    private fun updateDebugOverlayViewVisibility(isVisible: Boolean) {
+        if (isVisible && debugObservableJob == null) {
+            viewBinding.layoutDebug.visibility = View.VISIBLE
+            debugObservableJob = observeDebugValues()
+
+        } else if (!isVisible && debugObservableJob != null) {
+            debugObservableJob?.cancel()
+            debugObservableJob = null
+
+            viewBinding.debugEventName.text = null
+            viewBinding.debugConditionName.text = null
+            viewBinding.debugConfidenceRate.text = null
+            viewBinding.layoutDebug.visibility = View.GONE
+        }
+    }
+
+    /**
+     * Observe the values for the debug and update the debug views.
+     * @return the coroutine job for the observable. Can be cancelled to stop the observation.
+     */
+    private fun observeDebugValues() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            launch {
+                debuggingViewModel.debugLastPositive.collect { debugInfo ->
+                    viewBinding.debugEventName.text = debugInfo.eventName
+                    viewBinding.debugConditionName.text = debugInfo.conditionName
+                    viewBinding.debugConfidenceRate.text = debugInfo.confidenceRateText
+                }
+            }
+        }
+    }
+
     private fun showScenarioConfigDialog() =
         OverlayManager.getInstance(context).navigateTo(
             context = context,
@@ -275,45 +297,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
             }
             .show()
-    }
-
-    /**
-     * Change the debug state of this UI.
-     * @param isVisible true when the debug view should be shown, false to hide it.
-     */
-    private fun updateDebugOverlayViewVisibility(isVisible: Boolean) {
-        if (isVisible && debugObservableJob == null) {
-            viewBinding.layoutDebug.visibility = View.VISIBLE
-            setOverlayViewVisibility(true)
-            debugObservableJob = observeDebugValues()
-
-        } else if (!isVisible && debugObservableJob != null) {
-            debugObservableJob?.cancel()
-            debugObservableJob = null
-
-            viewBinding.debugEventName.text = null
-            viewBinding.debugConditionName.text = null
-            viewBinding.debugConfidenceRate.text = null
-            viewBinding.layoutDebug.visibility = View.GONE
-            setOverlayViewVisibility(false)
-            (screenOverlayView as DebugOverlayView).clear()
-        }
-    }
-
-    /**
-     * Observe the values for the debug and update the debug views.
-     * @return the coroutine job for the observable. Can be cancelled to stop the observation.
-     */
-    private fun observeDebugValues() = lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            launch {
-                debuggingViewModel.debugLastPositive.collect { debugInfo ->
-                    viewBinding.debugEventName.text = debugInfo.eventName
-                    viewBinding.debugConditionName.text = debugInfo.conditionName
-                    viewBinding.debugConfidenceRate.text = debugInfo.confidenceRateText
-                }
-            }
-        }
     }
 
     private fun showFirstTimeTutorialDialog() {
