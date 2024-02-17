@@ -69,7 +69,8 @@ internal class EditionState internal constructor(
             EditedElementState(
                 value = EditedScenarioState(scenario.value, imageEvents.value, triggerEvents.value),
                 hasChanged = scenario.hasChanged || imageEvents.hasChanged || triggerEvents.hasChanged,
-                canBeSaved = scenario.canBeSaved && imageEvents.canBeSaved && triggerEvents.canBeSaved,
+                canBeSaved = scenario.canBeSaved && imageEvents.canBeSaved && triggerEvents.canBeSaved
+                        && (imageEvents.value.isNotEmpty() || triggerEvents.value.isNotEmpty()),
             )
         }
 
