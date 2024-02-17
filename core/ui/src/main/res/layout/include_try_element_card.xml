@@ -32,11 +32,13 @@
             android:id="@+id/test_title_text"
             style="@style/AppTheme.List.ItemTitle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="0dp"
+            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/button_test"
-            app:layout_constraintTop_toTopOf="@id/button_test"
-            app:layout_constraintBottom_toBottomOf="@id/button_test"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/item_title_try_element"/>
 
         <com.google.android.material.button.MaterialButton
