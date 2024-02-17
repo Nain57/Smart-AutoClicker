@@ -49,8 +49,10 @@ class ScenarioDialogViewModel(application: Application): AndroidViewModel(applic
         editionRepository.editionState.editedTriggerEventsState.filterNotNull(),
     ) { scenarioState, imageEventsState, triggerEventsState ->
         buildMap {
-            put(R.id.page_image_events, imageEventsState.canBeSaved)
-            put(R.id.page_trigger_events, triggerEventsState.canBeSaved)
+            put(R.id.page_image_events, imageEventsState.canBeSaved &&
+                    (!imageEventsState.value.isNullOrEmpty() || !triggerEventsState.value.isNullOrEmpty()))
+            put(R.id.page_trigger_events, triggerEventsState.canBeSaved &&
+                    (!imageEventsState.value.isNullOrEmpty() || !triggerEventsState.value.isNullOrEmpty()))
             put(R.id.page_config, scenarioState.canBeSaved)
             put(R.id.page_more, true)
         }
