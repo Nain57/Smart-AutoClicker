@@ -87,11 +87,12 @@ class DetectionRepository private constructor(context: Context) {
      */
     val canStartDetection: Flow<Boolean> = scenarioId
         .filterNotNull()
-        .combine(detectionState) { id, state ->
+        .flatMapLatest { scenarioRepository.getEventsFlow(it.databaseId) }
+        .combine(detectionState) { events, state ->
             if (state == DetectionState.INACTIVE || state == DetectionState.ERROR_NO_NATIVE_LIB)
                 return@combine false
 
-            scenarioRepository.getImageEvents(id.databaseId).forEach {
+            events.forEach {
                 event -> if (event.enabledOnStart) return@combine true
             }
             false

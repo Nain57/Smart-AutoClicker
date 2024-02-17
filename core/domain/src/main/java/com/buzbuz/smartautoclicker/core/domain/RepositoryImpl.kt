@@ -42,6 +42,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 /**
  * Repository for the database and bitmap manager.
@@ -77,6 +78,14 @@ internal class RepositoryImpl internal constructor(
 
     override suspend fun getScenario(scenarioId: Long): Scenario? =
         dataSource.getScenario(scenarioId)?.toDomain()
+
+    override fun getEventsFlow(scenarioId: Long): Flow<List<Event>> =
+        getImageEventsFlow(scenarioId).combine(getTriggerEventsFlow(scenarioId)) { imgEvts, trigEvts ->
+            buildList {
+                addAll(imgEvts)
+                addAll(trigEvts)
+            }
+        }
 
     override suspend fun getImageEvents(scenarioId: Long): List<ImageEvent> =
         dataSource.getImageEvents(scenarioId).map { it.toDomainImageEvent() }
