@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenuPositionDataSource
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
 
 import kotlinx.coroutines.flow.Flow

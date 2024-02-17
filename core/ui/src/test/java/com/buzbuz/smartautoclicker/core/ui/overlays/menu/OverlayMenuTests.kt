@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedMenuView
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedViews
 import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 
 import org.junit.After
 import org.junit.Assert.assertEquals
