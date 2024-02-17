@@ -120,6 +120,14 @@ interface Repository {
     suspend fun getScenario(scenarioId: Long): Scenario?
 
     /**
+     * Get the list of events for a given scenario.
+     *
+     * @param scenarioId the identifier of the scenario.
+     * @return the list of image events.
+     */
+    fun getEventsFlow(scenarioId: Long): Flow<List<Event>>
+
+    /**
      * Get the list of image events for a given scenario.
      *
      * @param scenarioId the identifier of the scenario.
