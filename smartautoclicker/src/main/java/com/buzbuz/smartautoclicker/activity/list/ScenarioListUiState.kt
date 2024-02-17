@@ -155,6 +155,8 @@ data class ScenarioListUiState(
                 override val showExportCheckbox: Boolean = false,
                 override val checkedForExport: Boolean = false,
                 val eventsItems: List<EventItem>,
+                val triggerEventCount: Int,
+                val detectionQuality: Int,
             ) : Valid(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart) {
 
                 data class EventItem(
