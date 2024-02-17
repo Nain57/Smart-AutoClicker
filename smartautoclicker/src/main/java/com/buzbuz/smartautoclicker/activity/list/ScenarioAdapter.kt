@@ -180,7 +180,17 @@ class SmartScenarioViewHolder(
 
     fun onBind(scenarioItem: ScenarioListUiState.Item.Valid.Smart) = viewBinding.apply {
         scenarioName.text = scenarioItem.displayName
+        detectionQuality.text = scenarioItem.detectionQuality.toString()
+        triggerEventCount.text = scenarioItem.triggerEventCount.toString()
+
         eventsAdapter.submitList(scenarioItem.eventsItems)
+        if (scenarioItem.eventsItems.isEmpty()) {
+            listEvent.visibility = View.GONE
+            noImageEvents.visibility = View.VISIBLE
+        } else {
+            listEvent.visibility = View.VISIBLE
+            noImageEvents.visibility = View.GONE
+        }
 
         if (scenarioItem.showExportCheckbox) {
             buttonDelete.visibility = View.GONE

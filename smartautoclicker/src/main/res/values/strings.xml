@@ -119,5 +119,6 @@
 
     <!-- Default name when creating a new scenario -->
     <string name="default_scenario_name">Default name</string>
+    <string name="message_empty_image_events_scenario_list">No image events</string>
 
 </resources>

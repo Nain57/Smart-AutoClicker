@@ -204,6 +204,8 @@ class ScenarioListViewModel(application: Application) : AndroidViewModel(applica
                     firstCondition = if (event.conditions.isNotEmpty()) event.conditions.first() else null,
                 )
             },
+            triggerEventCount = smartRepository.getTriggerEvents(id.databaseId).size,
+            detectionQuality = detectionQuality,
         )
 
     private fun DumbScenario.toItem(context: Context): ScenarioListUiState.Item =

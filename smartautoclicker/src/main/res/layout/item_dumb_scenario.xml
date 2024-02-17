@@ -51,8 +51,7 @@
             style="@style/AppTheme.Widget.IconButton"
             app:layout_constraintStart_toEndOf="@id/scenario_name"
             app:layout_constraintEnd_toStartOf="@id/button_export"
-            app:layout_constraintTop_toTopOf="@id/scenario_name"
-            app:layout_constraintBottom_toBottomOf="@id/scenario_name"
+            app:layout_constraintTop_toTopOf="parent"
             app:icon="@drawable/ic_delete"
             tools:visibility="visible"/>
 

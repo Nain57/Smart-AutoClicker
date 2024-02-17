@@ -46,13 +46,38 @@
             android:drawablePadding="@dimen/margin_horizontal_small"
             tools:text="My cool scenario " />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/detection_quality"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            android:layout_marginBottom="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scenario_name"
+            android:drawablePadding="@dimen/margin_horizontal_mini"
+            app:drawableLeftCompat="@drawable/ic_detection_quality"
+            tools:text="1865" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/trigger_event_count"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@id/detection_quality"
+            app:layout_constraintTop_toTopOf="@id/detection_quality"
+            app:layout_constraintBottom_toBottomOf="@id/detection_quality"
+            android:drawablePadding="@dimen/margin_horizontal_mini"
+            app:drawableLeftCompat="@drawable/ic_trigger_event"
+            tools:text="3" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_delete"
             style="@style/AppTheme.Widget.IconButton"
             app:layout_constraintStart_toEndOf="@id/scenario_name"
             app:layout_constraintEnd_toStartOf="@id/button_export"
-            app:layout_constraintTop_toTopOf="@id/scenario_name"
-            app:layout_constraintBottom_toBottomOf="@id/scenario_name"
+            app:layout_constraintTop_toTopOf="parent"
             app:icon="@drawable/ic_delete"
             tools:visibility="visible"/>
 
@@ -73,16 +98,27 @@
             android:id="@+id/list_event"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_default"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scenario_name"
+            app:layout_constraintTop_toBottomOf="@id/detection_quality"
             app:layout_constraintBottom_toBottomOf="parent"
             android:orientation="horizontal"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_event_card"/>
+            tools:listitem="@layout/item_event_card"
+            tools:visibility="gone"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/no_image_events"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detection_quality"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/message_empty_image_events_scenario_list" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_start"
