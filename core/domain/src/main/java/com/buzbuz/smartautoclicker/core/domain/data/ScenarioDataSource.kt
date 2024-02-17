@@ -398,6 +398,7 @@ internal class ScenarioDataSource(
      * @param removedPath the list of path for the bitmaps to be removed.
      */
     internal suspend fun clearRemovedConditionsBitmaps(removedPath: List<String>) {
+        Log.d(TAG, "Clearing removed conditions bitmaps: $removedPath")
         val deletedPaths = removedPath.filter { path ->
             currentDatabase.value.conditionDao().getValidPathCount(path) == 0
         }

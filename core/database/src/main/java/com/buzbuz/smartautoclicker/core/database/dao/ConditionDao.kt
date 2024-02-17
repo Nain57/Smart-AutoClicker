@@ -55,7 +55,7 @@ abstract class ConditionDao {
      * @param eventId the identifier of the event to get the conditions path from.
      * @return the list of path for the event.
      */
-    @Query("SELECT path FROM $CONDITION_TABLE WHERE eventId=:eventId")
+    @Query("SELECT path FROM $CONDITION_TABLE WHERE eventId=:eventId AND type='ON_IMAGE_DETECTED'")
     abstract suspend fun getConditionsPath(eventId: Long): List<String>
 
     /**
@@ -64,7 +64,7 @@ abstract class ConditionDao {
      * @param path the value to be searched in the path column.
      * @return the number of conditions using this path.
      */
-    @Query("SELECT COUNT(path) FROM $CONDITION_TABLE WHERE path=:path")
+    @Query("SELECT COUNT(path) FROM $CONDITION_TABLE WHERE path=:path AND type='ON_IMAGE_DETECTED'")
     abstract suspend fun getValidPathCount(path: String): Int
 
     /**
