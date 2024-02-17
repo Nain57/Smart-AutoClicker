@@ -41,6 +41,10 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuAnimations
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuMoveTouchEventHandler
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuResizeController
 
 /**
  * Controller for a menu displayed as an overlay shown from a service.
