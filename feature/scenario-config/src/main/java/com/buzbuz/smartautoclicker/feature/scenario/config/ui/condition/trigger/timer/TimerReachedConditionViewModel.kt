@@ -22,8 +22,11 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.findAppropriateTimeUnit
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.formatDuration
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.msItem
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.toDurationMs
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -36,17 +39,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class TimerReachedConditionViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val msItem = DropdownItem(R.string.item_title_time_unit_ms)
-    private val sItem = DropdownItem(R.string.item_title_time_unit_s)
-    private val minItem = DropdownItem(R.string.item_title_time_unit_min)
-    private val hItem = DropdownItem(R.string.item_title_time_unit_h)
 
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
@@ -67,10 +62,12 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
     /** Tells if the condition name is valid or not. */
     val nameError: Flow<Boolean> = configuredCondition.map { it.name.isEmpty() }
 
-    private val _selectedUnitItem: MutableStateFlow<DropdownItem> =
-        MutableStateFlow(findAppropriateTimeUnit())
+    private val _selectedUnitItem: MutableStateFlow<DropdownItem> = MutableStateFlow(
+        editionRepository.editionState.getEditedCondition<TriggerCondition.OnTimerReached>()?.let { condition ->
+            condition.durationMs.findAppropriateTimeUnit()
+        } ?: msItem
+    )
     val selectedUnitItem: Flow<DropdownItem> = _selectedUnitItem
-    val unitDropdownItems = listOf(msItem, sItem, minItem, hItem)
 
     /** The display duration of the pause. */
     val duration: Flow<String> = _selectedUnitItem
@@ -102,13 +99,7 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
      */
     fun setDuration(duration: Long?) {
         updateEditedCondition { oldValue ->
-            val newDurationMs = when {
-                duration == null -> -1
-                _selectedUnitItem.value == sItem -> duration * 1.seconds.inWholeMilliseconds
-                _selectedUnitItem.value == minItem -> duration * 1.minutes.inWholeMilliseconds
-                _selectedUnitItem.value == hItem -> duration * 1.hours.inWholeMilliseconds
-                else -> duration
-            }
+            val newDurationMs = duration.toDurationMs(_selectedUnitItem.value)
 
             if (oldValue.durationMs == newDurationMs) null
             else oldValue.copy(
@@ -130,23 +121,4 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
             }
         }
     }
-
-    private fun findAppropriateTimeUnit(): DropdownItem =
-        editionRepository.editionState.getEditedCondition<TriggerCondition.OnTimerReached>()?.let { condition ->
-            when {
-                condition.durationMs <= 0L -> msItem
-                condition.durationMs % 1.hours.inWholeMilliseconds == 0L -> hItem
-                condition.durationMs % 1.minutes.inWholeMilliseconds == 0L -> minItem
-                condition.durationMs % 1.seconds.inWholeMilliseconds == 0L -> sItem
-                else -> msItem
-            }
-        } ?: msItem
-
-    private fun DropdownItem.formatDuration(durationMs: Long): String =
-        when (this) {
-            sItem -> durationMs / 1.seconds.inWholeMilliseconds
-            minItem -> durationMs / 1.minutes.inWholeMilliseconds
-            hItem -> durationMs / 1.hours.inWholeMilliseconds
-            else -> durationMs
-        }.toString()
 }

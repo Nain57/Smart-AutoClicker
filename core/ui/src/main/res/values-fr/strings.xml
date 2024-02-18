@@ -55,7 +55,7 @@
     <string name="input_field_label_anti_detection">Anti détection</string>
     <string name="input_field_label_click_press_duration">Durée d\'appui (ms)</string>
     <string name="input_field_label_name">Nom</string>
-    <string name="input_field_label_pause_duration">Durée de la pause (ms)</string>
+    <string name="input_field_label_pause_duration">Durée de la pause</string>
     <string name="input_field_label_scenario_name">Nom du scénario</string>
     <string name="input_field_label_swipe_duration">Durée du swipe (ms)</string>
     <string name="input_field_error_required">Requis</string>

@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionTimerBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.timeUnitDropdownItems
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -101,7 +102,7 @@ class TimerReachedConditionDialog(
 
             timeUnitField.setItems(
                 label = context.getString(R.string.dropdown_label_time_unit),
-                items = viewModel.unitDropdownItems,
+                items = timeUnitDropdownItems,
                 onItemSelected = viewModel::setTimeUnit,
             )
         }

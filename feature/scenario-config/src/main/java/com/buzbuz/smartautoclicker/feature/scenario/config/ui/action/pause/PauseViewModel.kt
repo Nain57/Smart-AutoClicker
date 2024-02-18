@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,20 +22,28 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.findAppropriateTimeUnit
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.formatDuration
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.msItem
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.toDurationMs
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putPauseDurationConfig
-import kotlinx.coroutines.FlowPreview
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class PauseViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the edited items. */
@@ -59,10 +67,20 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
     /** Tells if the action name is valid or not. */
     val nameError: Flow<Boolean> = configuredPause.map { it.name?.isEmpty() ?: true }
 
+    private val _selectedUnitItem: MutableStateFlow<DropdownItem> = MutableStateFlow(
+        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { action ->
+            action.pauseDuration.findAppropriateTimeUnit()
+        } ?: msItem
+    )
+    val selectedUnitItem: Flow<DropdownItem> = _selectedUnitItem
+
     /** The duration of the pause in milliseconds. */
-    val pauseDuration: Flow<String?> = configuredPause
-        .map { it.pauseDuration?.toString() }
-        .take(1)
+    val pauseDuration: Flow<String?> = _selectedUnitItem
+        .flatMapLatest { unitItem ->
+            configuredPause
+                .map { unitItem.formatDuration(it.pauseDuration ?: 0) }
+                .take(1)
+        }
     /** Tells if the pause duration value is valid or not. */
     val pauseDurationError: Flow<Boolean> = configuredPause.map { (it.pauseDuration ?: -1) <= 0 }
 
@@ -82,12 +100,20 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
 
     /**
      * Set the duration of the pause.
-     * @param durationMs the new duration in milliseconds.
+     * @param duration the new duration.
      */
-    fun setPauseDuration(durationMs: Long?) {
-        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { pause ->
-            editionRepository.updateEditedAction(pause.copy(pauseDuration = durationMs))
+    fun setPauseDuration(duration: Long?) {
+        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { oldPause ->
+            val newDurationMs = duration.toDurationMs(_selectedUnitItem.value)
+
+            if (oldPause.pauseDuration != newDurationMs) {
+                editionRepository.updateEditedAction(oldPause.copy(pauseDuration = newDurationMs))
+            }
         }
+    }
+
+    fun setTimeUnit(unit: DropdownItem) {
+        _selectedUnitItem.value = unit
     }
 
     fun saveLastConfig() {
