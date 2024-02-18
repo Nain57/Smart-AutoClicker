@@ -27,6 +27,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
@@ -90,12 +92,18 @@ class TimerReachedConditionDialog(
 
             editDurationLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(min = 1))
-                setLabel(R.string.input_field_label_timer_duration)
+                setLabel(R.string.input_field_label_timer_duration_no_unit)
                 setOnTextChangedListener {
                     viewModel.setDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
             }
             hideSoftInputOnFocusLoss(editDurationLayout.textField)
+
+            timeUnitField.setItems(
+                label = context.getString(R.string.dropdown_label_time_unit),
+                items = viewModel.unitDropdownItems,
+                onItemSelected = viewModel::setTimeUnit,
+            )
         }
 
         return viewBinding.root
@@ -113,6 +121,7 @@ class TimerReachedConditionDialog(
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { viewModel.duration.collect(::updateDuration) }
                 launch { viewModel.durationError.collect(viewBinding.editDurationLayout::setError)}
+                launch { viewModel.selectedUnitItem.collect(viewBinding.timeUnitField::setSelectedItem) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
             }
         }
