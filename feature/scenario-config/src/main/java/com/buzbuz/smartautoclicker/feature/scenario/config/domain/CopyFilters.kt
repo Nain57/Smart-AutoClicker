@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isClickOnCondition
 
 
 internal fun List<ImageEvent>.filterForImageCopy(): List<ImageEvent> = filter { event ->
@@ -64,11 +65,16 @@ internal fun List<Condition>.filterForCopy(editedEvent: Event, editedConditions:
     }
 }
 
-internal fun List<Event>.getEditedActionsForCopy(): List<Action> = buildList {
-    this@getEditedActionsForCopy.forEach { editedEvent ->
-        if (!editedEvent.isComplete()) return@forEach
-        editedEvent.actions.forEach { editedAction ->
-            if (editedAction.isComplete()) add(editedAction)
+internal fun List<Event>.getEditedActionsForCopy(editedEvent: Event): List<Action> = buildList {
+    this@getEditedActionsForCopy.forEach { editedScenarioEvent ->
+        if (!editedScenarioEvent.isComplete()) return@forEach
+        editedScenarioEvent.actions.forEach actions@{ editedAction ->
+            when {
+                !editedAction.isComplete() -> return@actions
+                editedEvent is TriggerEvent && editedAction is Action.Click && editedAction.isClickOnCondition() -> return@actions
+                editedEvent is ImageEvent && editedAction is Action.Click && !editedAction.isClickOnConditionValid() -> return@actions
+                else -> add(editedAction)
+            }
         }
     }
 }

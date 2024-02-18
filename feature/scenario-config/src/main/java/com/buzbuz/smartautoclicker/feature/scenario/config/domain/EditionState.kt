@@ -196,9 +196,10 @@ internal class EditionState internal constructor(
         }
 
     override val actionsForCopy: Flow<List<Action>> =
-        combine(allEditedEvents, repository.allActions) { allEditedEvents, dbActions ->
+        combine(editor.editedEvent, allEditedEvents, repository.allActions) { editedEvent, allEditedEvents, dbActions ->
             buildList {
-                val editedActions = allEditedEvents.getEditedActionsForCopy()
+                editedEvent ?: return@buildList
+                val editedActions = allEditedEvents.getEditedActionsForCopy(editedEvent)
                 addAll(editedActions)
                 addAll(dbActions.filterForCopy(editedActions))
             }.distinctBy { item -> item.hashCodeNoIds() }
