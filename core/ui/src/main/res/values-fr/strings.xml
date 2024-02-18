@@ -32,6 +32,7 @@
       -->
     <string name="item_title_click_position">Position du clic</string>
     <string name="item_title_swipe_positions">Positions du swipe</string>
+    <string name="item_title_try_element">Testez votre %1$s</string>
     <string name="item_error_action_invalid_generic">Cette action est invalide</string>
 
     <!--
@@ -95,5 +96,4 @@
     <string name="content_desc_stop_clicker">Quitter Smart AutoClicker</string>
     <string name="content_desc_confirm">Confirmer</string>
     <string name="content_desc_go_back">Retour au dialog</string>
-    <string name="item_title_try_element">Test your %1$s</string>
 </resources>
