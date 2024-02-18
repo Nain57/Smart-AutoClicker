@@ -137,7 +137,7 @@ class ScenarioListFragment : Fragment() {
         uiState ?: return
 
         updateMenu(uiState.menuUiState)
-        updateScenarioList(uiState.listContent)
+        updateScenarioList(uiState)
     }
 
     /**
@@ -180,9 +180,9 @@ class ScenarioListFragment : Fragment() {
      * Observer upon the list of click scenarios.
      * Will update the list/empty view according to the current click scenarios
      */
-    private fun updateScenarioList(scenarios: List<ScenarioListUiState.Item>) {
+    private fun updateScenarioList(uiState: ScenarioListUiState) {
         viewBinding.apply {
-            if (scenarios.isEmpty()) {
+            if (uiState.listContent.isEmpty() && uiState.type == ScenarioListUiState.Type.SELECTION) {
                 list.visibility = View.GONE
                 add.visibility = View.GONE
                 layoutEmpty.visibility = View.VISIBLE
@@ -193,7 +193,7 @@ class ScenarioListFragment : Fragment() {
             }
         }
 
-        scenariosAdapter.submitList(scenarios)
+        scenariosAdapter.submitList(uiState.listContent)
     }
 
     /**
