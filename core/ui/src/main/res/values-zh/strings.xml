@@ -54,7 +54,7 @@
     <string name="input_field_label_anti_detection">反作弊</string>
     <string name="input_field_label_click_press_duration">单击持续时间 (ms)</string>
     <string name="input_field_label_name">名称</string>
-    <string name="input_field_label_pause_duration">延迟 (ms)</string>
+    <string name="input_field_label_pause_duration">延迟</string>
     <string name="input_field_label_scenario_name">脚本名</string>
     <string name="input_field_label_swipe_duration">滑动持续时间 (ms)</string>
     <string name="input_field_error_required">不能为空</string>
