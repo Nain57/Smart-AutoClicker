@@ -52,12 +52,12 @@ class IntentActionsSelectionDialog (
     private val viewModel: ActionsSelectionViewModel by viewModels()
 
     private lateinit var viewBinding: DialogConfigActionIntentActionsBinding
-    private lateinit var flagsAdapter: IntentActionsSelectionAdapter
+    private lateinit var actionsAdapter: IntentActionsSelectionAdapter
 
     override fun onCreateView(): ViewGroup {
         viewModel.setRequestedActionsType(forBroadcastReception)
 
-        flagsAdapter = IntentActionsSelectionAdapter(
+        actionsAdapter = IntentActionsSelectionAdapter(
             onActionCheckClicked = viewModel::setActionSelectionState,
             onActionHelpClicked = ::onActionHelpClicked,
         )
@@ -78,7 +78,7 @@ class IntentActionsSelectionDialog (
 
             actionsList.apply {
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-                adapter = flagsAdapter
+                adapter = actionsAdapter
             }
         }
 
@@ -90,7 +90,7 @@ class IntentActionsSelectionDialog (
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.actionsItems.collect(flagsAdapter::submitList) }
+                launch { viewModel.actionsItems.collect(actionsAdapter::submitList) }
             }
         }
     }

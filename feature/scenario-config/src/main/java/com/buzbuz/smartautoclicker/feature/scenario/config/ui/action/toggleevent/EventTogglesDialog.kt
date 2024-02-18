@@ -23,10 +23,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.getDividerWithoutHeader
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
@@ -77,7 +77,7 @@ class EventTogglesDialog(
                 setEmptyText(R.string.message_empty_event_list)
 
                 list.apply {
-                    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                    addItemDecoration(getDividerWithoutHeader(context))
                     adapter = eventToggleAdapter
                 }
             }

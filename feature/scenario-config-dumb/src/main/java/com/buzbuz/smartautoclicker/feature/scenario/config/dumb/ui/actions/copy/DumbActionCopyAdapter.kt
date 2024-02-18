@@ -38,13 +38,13 @@ class DumbActionCopyAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
-            is DumbActionCopyItem.HeaderItem -> R.layout.item_copy_header
+            is DumbActionCopyItem.HeaderItem -> R.layout.item_list_header
             is DumbActionCopyItem.DumbActionItem -> R.layout.item_dumb_action
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_copy_header -> HeaderViewHolder(
+            R.layout.item_list_header -> HeaderViewHolder(
                 ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.item_dumb_action -> DumbActionViewHolder(
                 ItemDumbActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
