@@ -32,6 +32,7 @@
       -->
     <string name="item_title_click_position">Click position</string>
     <string name="item_title_swipe_positions">Swipe positions</string>
+    <string name="item_title_try_element">Test your %1$s</string>
     <string name="item_error_action_invalid_generic">This action is invalid</string>
 
     <!--
@@ -97,5 +98,4 @@
     <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_go_back">Back to dialog</string>
-    <string name="item_title_try_element">Test your %1$s</string>
 </resources>
