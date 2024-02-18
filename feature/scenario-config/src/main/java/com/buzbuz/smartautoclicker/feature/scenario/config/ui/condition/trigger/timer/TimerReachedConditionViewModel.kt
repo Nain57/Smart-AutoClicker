@@ -20,21 +20,33 @@ import android.app.Application
 
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class TimerReachedConditionViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val msItem = DropdownItem(R.string.item_title_time_unit_ms)
+    private val sItem = DropdownItem(R.string.item_title_time_unit_s)
+    private val minItem = DropdownItem(R.string.item_title_time_unit_min)
+    private val hItem = DropdownItem(R.string.item_title_time_unit_h)
 
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
@@ -55,10 +67,19 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
     /** Tells if the condition name is valid or not. */
     val nameError: Flow<Boolean> = configuredCondition.map { it.name.isEmpty() }
 
-    /** The duration of the pause in milliseconds. */
-    val duration: Flow<String?> = configuredCondition
-        .map { it.durationMs.toString() }
-        .take(1)
+    private val _selectedUnitItem: MutableStateFlow<DropdownItem> =
+        MutableStateFlow(findAppropriateTimeUnit())
+    val selectedUnitItem: Flow<DropdownItem> = _selectedUnitItem
+    val unitDropdownItems = listOf(msItem, sItem, minItem, hItem)
+
+    /** The display duration of the pause. */
+    val duration: Flow<String> = _selectedUnitItem
+        .flatMapLatest { unitItem ->
+            configuredCondition
+                .map { unitItem.formatDuration(it.durationMs) }
+                .take(1)
+        }
+
     /** Tells if the pause duration value is valid or not. */
     val durationError: Flow<Boolean> = configuredCondition.map { it.durationMs <= 0 }
 
@@ -77,10 +98,27 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
 
     /**
      * Set the duration of the pause.
-     * @param durationMs the new duration in milliseconds.
+     * @param duration the new duration in milliseconds.
      */
-    fun setDuration(durationMs: Long?) {
-        updateEditedCondition { it.copy(durationMs = durationMs ?: -1) }
+    fun setDuration(duration: Long?) {
+        updateEditedCondition { oldValue ->
+            val newDurationMs = when {
+                duration == null -> -1
+                _selectedUnitItem.value == sItem -> duration * 1.seconds.inWholeMilliseconds
+                _selectedUnitItem.value == minItem -> duration * 1.minutes.inWholeMilliseconds
+                _selectedUnitItem.value == hItem -> duration * 1.hours.inWholeMilliseconds
+                else -> duration
+            }
+
+            if (oldValue.durationMs == newDurationMs) null
+            else oldValue.copy(
+                durationMs = newDurationMs
+            )
+        }
+    }
+
+    fun setTimeUnit(unit: DropdownItem) {
+        _selectedUnitItem.value = unit
     }
 
     private fun updateEditedCondition(
@@ -92,4 +130,23 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
             }
         }
     }
+
+    private fun findAppropriateTimeUnit(): DropdownItem =
+        editionRepository.editionState.getEditedCondition<TriggerCondition.OnTimerReached>()?.let { condition ->
+            when {
+                condition.durationMs <= 0L -> msItem
+                condition.durationMs % 1.hours.inWholeMilliseconds == 0L -> hItem
+                condition.durationMs % 1.minutes.inWholeMilliseconds == 0L -> minItem
+                condition.durationMs % 1.seconds.inWholeMilliseconds == 0L -> sItem
+                else -> msItem
+            }
+        } ?: msItem
+
+    private fun DropdownItem.formatDuration(durationMs: Long): String =
+        when (this) {
+            sItem -> durationMs / 1.seconds.inWholeMilliseconds
+            minItem -> durationMs / 1.minutes.inWholeMilliseconds
+            hItem -> durationMs / 1.hours.inWholeMilliseconds
+            else -> durationMs
+        }.toString()
 }
