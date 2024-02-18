@@ -49,7 +49,7 @@ internal open class ListEditor<Item , Parent>(
             edit.isEmpty() -> canBeSaved = canBeEmpty
             else -> {
                 edit.forEach { item ->
-                    if (!item.isComplete()) {
+                    if (!itemCanBeSaved(item, parent)) {
                         canBeSaved = false
                         itemValidity.add(false)
                     } else {
@@ -70,7 +70,7 @@ internal open class ListEditor<Item , Parent>(
             if (ref == null || edit == null) false
             else ref != edit
 
-        val canBeSaved = edit?.isComplete() ?: false
+        val canBeSaved = itemCanBeSaved(edit, parent)
 
         EditedElementState(edit, hasChanged, canBeSaved)
     }
@@ -154,6 +154,9 @@ internal open class ListEditor<Item , Parent>(
         _editedList.value = newList
         onListUpdated?.invoke(newList)
     }
+
+    open fun itemCanBeSaved(item: Item?, parent: Parent?): Boolean =
+        item?.isComplete() ?: false
 
     private fun List<Item>.indexOfItem(item: Item): Int =
         indexOfFirst { it.id == item.id }

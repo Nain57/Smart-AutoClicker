@@ -110,7 +110,7 @@ sealed class Action : Identifiable, Completable {
         private fun isPositionValid(): Boolean =
             (positionType == PositionType.USER_SELECTED && x != null && y != null) || positionType == PositionType.ON_DETECTED_CONDITION
 
-        internal fun isClickOnConditionValid(): Boolean =
+        fun isClickOnConditionValid(): Boolean =
             (positionType == PositionType.ON_DETECTED_CONDITION && clickOnConditionId != null) || positionType == PositionType.USER_SELECTED
     }
 

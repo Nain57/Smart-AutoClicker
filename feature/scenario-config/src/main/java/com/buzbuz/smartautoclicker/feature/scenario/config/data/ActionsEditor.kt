@@ -16,9 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.data
 
+import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.base.ListEditor
 
 import kotlinx.coroutines.flow.StateFlow
@@ -54,6 +57,20 @@ internal class ActionsEditor<Parent>(
         intentExtraEditor.stopEdition()
         super.stopItemEdition()
     }
+
+    override fun itemCanBeSaved(item: Action?, parent: Parent?): Boolean =
+        if (item is Action.Click) {
+            when (parent) {
+                is TriggerEvent ->
+                    item.isComplete() && item.positionType != Action.Click.PositionType.ON_DETECTED_CONDITION
+
+                is ImageEvent ->
+                    if (item.isComplete()) !(parent.conditionOperator == AND && !item.isClickOnConditionValid())
+                    else false
+
+                else -> item.isComplete()
+            }
+        } else item?.isComplete() ?: false
 
     private fun onEditedActionIntentExtraUpdated(extras: List<IntentExtra<out Any>>) {
         val action = editedItem.value
