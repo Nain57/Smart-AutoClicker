@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemInten
 class IntentActionsSelectionAdapter(
     private val onActionCheckClicked: (String, Boolean) -> Unit,
     private val onActionHelpClicked: (Uri) -> Unit,
-) : ListAdapter<ItemAction, ItemIntentActionViewHolder>(ItemItentActionDiffUtilCallback) {
+) : ListAdapter<ItemAction, ItemIntentActionViewHolder>(ItemIntentActionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemIntentActionViewHolder =
         ItemIntentActionViewHolder(
@@ -44,7 +44,7 @@ class IntentActionsSelectionAdapter(
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [IntentActionsSelectionAdapter] list. */
-object ItemItentActionDiffUtilCallback: DiffUtil.ItemCallback<ItemAction>() {
+object ItemIntentActionDiffUtilCallback: DiffUtil.ItemCallback<ItemAction>() {
     override fun areItemsTheSame(oldItem: ItemAction, newItem: ItemAction): Boolean =
         oldItem.action.value == newItem.action.value
     override fun areContentsTheSame(oldItem: ItemAction, newItem: ItemAction): Boolean =

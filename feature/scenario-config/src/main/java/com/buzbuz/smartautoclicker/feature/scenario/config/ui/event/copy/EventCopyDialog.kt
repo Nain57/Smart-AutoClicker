@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.ui.bindings.getDividerWithoutHeader
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -54,7 +55,7 @@ class EventCopyDialog(
         eventCopyAdapter = EventCopyAdapter(::onEventClicked)
 
         viewBinding.layoutLoadableList.list.apply {
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            addItemDecoration(getDividerWithoutHeader(context))
             adapter = eventCopyAdapter
         }
 
