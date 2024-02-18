@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,14 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.ItemDumbActionBinding
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
 
-fun ItemDumbActionBinding.onBind(details: DumbActionDetails, actionClickedListener: (DumbActionDetails) -> Unit) {
+fun ItemDumbActionBinding.onBind(
+    details: DumbActionDetails,
+    showHandles: Boolean,
+    actionClickedListener: (DumbActionDetails) -> Unit,
+) {
     root.setOnClickListener { actionClickedListener(details) }
 
+    btnReorder.visibility = if (showHandles) View.VISIBLE else View.GONE
     actionName.visibility = View.VISIBLE
     actionTypeIcon.setImageResource(details.icon)
     actionName.text = details.name

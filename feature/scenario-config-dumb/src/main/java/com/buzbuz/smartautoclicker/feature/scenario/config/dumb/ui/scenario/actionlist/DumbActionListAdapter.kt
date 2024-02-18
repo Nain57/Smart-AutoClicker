@@ -71,7 +71,7 @@ class DumbActionViewHolder(private val viewBinding: ItemDumbActionBinding) : Rec
      * @param actionClickedListener listener notified upon user click on this item.
      */
     fun onBind(details: DumbActionDetails, actionClickedListener: (DumbActionDetails) -> Unit) {
-        viewBinding.onBind(details, actionClickedListener)
+        viewBinding.onBind(details, true, actionClickedListener)
     }
 }
 
