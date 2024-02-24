@@ -62,8 +62,8 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
             setEmptyText(
-                id = R.string.message_empty_event_list,
-                secondaryId = R.string.message_empty_secondary_event_list,
+                id = R.string.message_empty_trigger_event_list,
+                secondaryId = R.string.message_empty_secondary_trigger_event_list,
             )
             list.apply {
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))

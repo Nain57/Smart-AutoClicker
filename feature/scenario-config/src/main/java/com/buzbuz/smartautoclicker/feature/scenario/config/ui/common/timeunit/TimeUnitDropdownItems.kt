@@ -24,10 +24,10 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 
-val msItem = DropdownItem(R.string.item_title_time_unit_ms)
-val sItem = DropdownItem(R.string.item_title_time_unit_s)
-val minItem = DropdownItem(R.string.item_title_time_unit_min)
-val hItem = DropdownItem(R.string.item_title_time_unit_h)
+val msItem = DropdownItem(R.string.dropdown_label_time_unit_ms)
+val sItem = DropdownItem(R.string.dropdown_label_time_unit_s)
+val minItem = DropdownItem(R.string.dropdown_label_time_unit_min)
+val hItem = DropdownItem(R.string.dropdown_label_time_unit_h)
 
 val timeUnitDropdownItems = listOf(msItem, sItem, minItem, hItem)
 

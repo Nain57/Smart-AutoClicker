@@ -36,4 +36,6 @@
 
     <string name="default_condition_name">Condition</string>
     <integer name="default_condition_threshold">4</integer>
+
+    <string name="default_change_counter_name">Change counter</string>
 </resources>

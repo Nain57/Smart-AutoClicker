@@ -22,6 +22,7 @@
     <string name="default_pause_name">Attendi</string>
     <string name="default_intent_name">Intento</string>
     <string name="default_toggle_event_name">Cambia Evento</string>
+    <string name="default_change_counter_name">Modificare contatore</string>
     <string name="default_condition_name">Condizione</string>
 
 </resources>
