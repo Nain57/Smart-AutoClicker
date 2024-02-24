@@ -29,12 +29,19 @@
     <string name="dialog_overlay_title_end_condition_config">Condition de fin</string>
     <string name="dialog_overlay_title_event_config">Évènement</string>
     <string name="dialog_overlay_title_event_selection">Choisir un évènement</string>
-    <string name="dialog_overlay_title_intent">Intent</string>
     <string name="dialog_overlay_title_pause">Pause</string>
     <string name="dialog_overlay_title_scenario_config">Scénario</string>
     <string name="dialog_overlay_title_swipe">Swipe</string>
     <string name="dialog_overlay_title_toggle_event">État d\'évènement</string>
-
+    <string name="dialog_overlay_title_events_toggle">Changements d\'états</string>
+    <string name="dialog_overlay_title_change_counter">Changer compteur</string>
+    <string name="dialog_overlay_title_counter_name_selection">Compteurs</string>
+    <string name="dialog_overlay_title_trigger_condition_type">Type de déclencheur</string>
+    <string name="dialog_overlay_title_timer_reached">Timer atteint</string>
+    <string name="dialog_overlay_title_broadcast_received">Broadcast reçu</string>
+    <string name="dialog_overlay_title_counter_reached">Valeur du compteur</string>
+    <string name="dialog_overlay_title_image_event_config">Évènement d\'écran</string>
+    <string name="dialog_overlay_title_trigger_event_config">Évènement</string>
 
     <!--
       - Text for menu items.
@@ -49,6 +56,8 @@
     <string name="menu_item_title_more">Plus</string>
     <string name="menu_item_title_actions">Actions</string>
     <string name="menu_item_title_conditions">Conditions</string>
+    <string name="menu_item_title_image_events">Évènements d\'écran</string>
+    <string name="menu_item_title_trigger_events">Évènements</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -75,7 +84,25 @@
     <string name="item_desc_swipe_positions">Swiper de %1$d, %2$d à %3$d, %4$d</string>
     <string name="item_desc_toggle_event">Changer l\'état d\'activation d\'un évènement</string>
     <string name="item_desc_toggle_event_details">Changer l\'état avec le type %1$s</string>
+    <string name="item_desc_toggle_event_manual">Choisissez manuellement les évènements à changer</string>
+    <string name="item_desc_toggle_event_enable_all">Activer tous les évènements de ce scénario</string>
+    <string name="item_desc_toggle_event_invert_all">Inverser l\'état de tout les évènements de ce scénario</string>
+    <string name="item_desc_toggle_event_disable_all">Désactiver tous les évènements de ce scénario. Quand tous les évènements sont désactivés, le scénario s\'arrête automatiquement</string>
+    <string name="item_desc_event_toggles_empty">Selectionnez au moins un évènement</string>
+    <string name="item_desc_toggle_event_state_enable_all">Tout activer</string>
+    <string name="item_desc_toggle_event_state_disable_all">Tout désactiver</string>
+    <string name="item_desc_toggle_event_state_invert_all">Tout inverser</string>
+    <string name="item_desc_toggle_event_state_manual">Changer %1$d évènements</string>
+    <string name="item_desc_change_counter">Modifier une valeur pour la vérifier plus tard</string>
+    <string name="item_desc_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="item_desc_on_broadcast_received">%1$s reçu</string>
+    <string name="item_desc_on_counter_reached">%1$s %2$s %3$d</string>
+    <string name="item_desc_on_timer_reached">%1$s après l\'activation de l\'évènement</string>
+    <string name="item_desc_broadcast_received">Remplie quand un Broadcast est reçu</string>
+    <string name="item_desc_counter_reached">Vérifie la valeur d\'un compteur modifié par une Action</string>
+    <string name="item_desc_timer_reached">Remplie après un temps défini depuis l\'activation de cet évènement</string>
     <string name="item_error_action_invalid_toggle_event_target">Évènement cible non trouvé</string>
+    <string name="item_error_action_invalid_change_counter">Le compteur est invalid</string>
     <string name="item_title_click">Clic</string>
     <string name="item_title_click_on_condition_and_operator">Cliquer sur une condition</string>
     <string name="item_title_click_on_condition_or_operator">Cliquer sur la première condition détectée</string>
@@ -90,6 +117,12 @@
     <string name="item_title_pause">Pause</string>
     <string name="item_title_swipe">Swipe</string>
     <string name="item_title_toggle_event">État d\'évènement</string>
+    <string name="item_title_counter_reached">Compteur atteint</string>
+    <string name="item_title_timer_reached">Timer atteint</string>
+    <string name="item_title_broadcast_received">Broadcast reçu</string>
+    <string name="item_title_empty_event_toggles">Aucun changement</string>
+    <string name="item_title_event_toggles">%1$d changements</string>
+    <string name="item_title_change_counter">Modifier compteur</string>
 
     <!--
       - Empty list messages.
@@ -99,17 +132,20 @@
     <string name="message_empty_conditions">Aucune condition !</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
-    <string name="message_empty_event_list">Aucun évènement !</string>
+    <string name="message_empty_image_event_list">Aucun évènement d\'écran !</string>
+    <string name="message_empty_trigger_event_list">Aucun évènement !</string>
+    <string name="message_empty_counter_name_list">Pas de compteurs définis</string>
 
     <!--
       - Secondary empty list messages.
       - Views handles any length here, you can use more verbosity than the regular empty text.
       -->
     <string name="message_empty_secondary_end_condition_no_events">Vous avez besoin d\'au moins un évènement pour créer une condition de fin pour votre scénario</string>
-    <string name="message_empty_secondary_event_list">Un évènement est un ensemble d\'actions exécutées lorsque qu\'une condition spécifique est détectée sur l\'écran.\nVous avez besoin d\'au moins un évènement dans votre scénario pour l\'exécuter.</string>
+    <string name="message_empty_secondary_screen_event_list">Un évènement d\'écran est un ensemble d\'actions exécutées lorsque qu\'une condition spécifique est détectée sur l\'écran.  Vous avez besoin d\'au moins un évènement ou évènement d\'écran dans votre scénario pour l\'exécuter.</string>
+    <string name="message_empty_secondary_trigger_event_list">Un évènement est un ensemble d\'actions exécutées lorsque que des conditions personnalisées sont remplies.  Vous avez besoin d\'au moins un évènement ou évènement d\'écran dans votre scénario pour l\'exécuter.</string>
     <string name="message_empty_secondary_condition_list">Une condition est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
     <string name="message_empty_secondary_action_list">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.\nVous avez besoin d\'au moins une action dans votre évènement.</string>
-
+    <string name="message_empty_secondary_counter_name_list">Les compteur sont créés avec une Action Modifier Compteur ou une condition Compteur atteint</string>
 
     <!--
       - Messages.
@@ -139,12 +175,12 @@
       - List header.
       - Displayed on one line.
       -->
+    <string name="list_header_copy_action_this">Actions de cet évènement</string>
+    <string name="list_header_copy_action_all">Actions de tous les évènements</string>
     <string name="list_header_copy_event_this">Évènements de ce scenario</string>
     <string name="list_header_copy_event_all">Évènements de tous les scenarios</string>
     <string name="list_header_copy_conditions_this">Condition de cet évènement</string>
     <string name="list_header_copy_conditions_all">Conditions de tous les évènements</string>
-    <string name="list_header_copy_action_this">Actions de cet évènement</string>
-    <string name="list_header_copy_action_all">Actions de tous les évènements</string>
 
     <!--
       - SearchView hint
@@ -173,6 +209,12 @@
     <string name="input_field_label_intent_extra_key">Clé</string>
     <string name="input_field_label_event_state">État</string>
     <string name="input_field_toggle_event_type">Nouvel état d\'évènement</string>
+    <string name="input_field_label_change_counter_operation_value">Valeur</string>
+    <string name="input_field_label_comparison_value">Valeur</string>
+    <string name="input_field_label_change_counter_name">Nom du compteur</string>
+    <string name="input_field_label_timer_duration">Après (ms)</string>
+    <string name="input_field_label_timer_duration_no_unit">Après</string>
+
 
     <!--
       - Dropdown input fields texts.
@@ -237,6 +279,9 @@
       -->
     <string name="dropdown_label_intent_extra_value_type">Type de la valeur</string>
 
+    <string name="dropdown_label_comparison_operator">Opérateur</string>
+    <string name="dropdown_label_time_unit">Unité de temps</string>
+
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
@@ -247,57 +292,4 @@
     <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
-    <string name="dialog_overlay_title_intent_flags">Flags</string>
-    <string name="dialog_overlay_title_intent_actions">Intent Actions</string>
-    <string name="dialog_overlay_title_intent_component_name">Component name</string>
-    <string name="dialog_overlay_title_events_toggle">Events toggles</string>
-    <string name="item_desc_toggle_event_manual">Define the events to change manually</string>
-    <string name="item_desc_toggle_event_enable_all">Enable all events in this scenario</string>
-    <string name="item_desc_toggle_event_invert_all">Invert the state of all events in this scenario</string>
-    <string name="item_desc_toggle_event_disable_all">Disable all events in this scenario. When all events are disabled, the scenario is stopped automatically.</string>
-    <string name="item_title_empty_event_toggles">No changes</string>
-    <string name="item_title_event_toggles">%1$d changes</string>
-    <string name="item_desc_event_toggles_empty">Select at least one event to change to state of</string>
-    <string name="item_desc_toggle_event_state_enable_all">Enable all events</string>
-    <string name="item_desc_toggle_event_state_disable_all">Disable all items and stop scenario</string>
-    <string name="item_desc_toggle_event_state_invert_all">Invert all events state</string>
-    <string name="item_desc_toggle_event_state_manual">Change %1$d events</string>
-    <string name="dialog_overlay_title_change_counter">Change counter</string>
-    <string name="default_change_counter_name">Change counter</string>
-    <string name="input_field_label_change_counter_operation_value">Operation value</string>
-    <string name="input_field_label_change_counter_name">Counter name</string>
-    <string name="item_title_change_counter">Change counter</string>
-    <string name="item_desc_change_counter">Change a value to check it later</string>
-    <string name="dialog_overlay_title_counter_name_selection">Counters</string>
-    <string name="message_empty_counter_name_list">No counter defined</string>
-    <string name="item_error_action_invalid_change_counter">Counter is invalid</string>
-    <string name="item_desc_change_counter_details">%1$s %2$s %3$d</string>
-    <string name="message_empty_secondary_counter_name_list">Counters are created with a Change Counter Action or a Counter Reached Condition</string>
-    <string name="menu_item_title_image_events">Image events</string>
-    <string name="menu_item_title_trigger_events">Trigger events</string>
-    <string name="item_desc_on_broadcast_received">%1$s received since scenario start</string>
-    <string name="item_desc_on_counter_reached">%1$s %2$s %3$d</string>
-    <string name="item_desc_on_timer_reached">%1$s after event is enabled</string>
-    <string name="dialog_overlay_title_trigger_condition_type">Trigger type</string>
-    <string name="item_title_broadcast_received">On Broadcast received</string>
-    <string name="item_desc_broadcast_received">Fulfilled once a Broadcast has been received since scenario start</string>
-    <string name="item_title_counter_reached">On counter reached</string>
-    <string name="item_desc_counter_reached">Verify an operation on a counter modified by an Action</string>
-    <string name="item_title_timer_reached">On timer reached</string>
-    <string name="item_desc_timer_reached">Fulfilled once a certain time after scenario start</string>
-    <string name="dialog_overlay_title_timer_reached">Timer Condition</string>
-    <string name="input_field_label_timer_duration">After (ms)</string>
-    <string name="dropdown_label_comparison_operator">Operator</string>
-    <string name="input_field_label_comparison_value">Value</string>
-    <string name="input_field_label_broadcast_action">Broadcast action</string>
-    <string name="dialog_overlay_title_broadcast_received">Broadcast received</string>
-    <string name="dialog_overlay_title_counter_reached">Counter Condition</string>
-    <string name="dialog_overlay_title_image_event_config">Image Event</string>
-    <string name="dialog_overlay_title_trigger_event_config">Trigger event</string>
-    <string name="item_title_time_unit_ms">ms</string>
-    <string name="item_title_time_unit_s">s</string>
-    <string name="item_title_time_unit_min">min</string>
-    <string name="item_title_time_unit_h">h</string>
-    <string name="dropdown_label_time_unit">Time Unit</string>
-    <string name="input_field_label_timer_duration_no_unit">After</string>
 </resources>

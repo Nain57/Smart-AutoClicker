@@ -69,8 +69,8 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
             setEmptyText(
-                id = R.string.message_empty_event_list,
-                secondaryId = R.string.message_empty_secondary_event_list,
+                id = R.string.message_empty_image_event_list,
+                secondaryId = R.string.message_empty_secondary_screen_event_list,
             )
             list.apply {
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))

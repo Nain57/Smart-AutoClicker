@@ -74,7 +74,7 @@ class EventTogglesDialog(
             eventToggleAdapter = EventToggleAdapter(onEventToggleStateChanged = viewModel::changeEventToggleState)
 
             layoutLoadableList.apply {
-                setEmptyText(R.string.message_empty_event_list)
+                setEmptyText(R.string.message_empty_image_event_list)
 
                 list.apply {
                     addItemDecoration(getDividerWithoutHeader(context))
