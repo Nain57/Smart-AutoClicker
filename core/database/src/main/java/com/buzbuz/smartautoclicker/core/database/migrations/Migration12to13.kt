@@ -122,6 +122,7 @@ object Migration12to13 : Migration(12, 13) {
                 SQLiteColumn.Text("counter_comparison_operation", isNotNull = false),
                 SQLiteColumn.Int("counter_value", isNotNull = false),
                 SQLiteColumn.Long("timer_value_ms", isNotNull = false),
+                SQLiteColumn.Long("timer_restart_when_reached", isNotNull = false),
             ) + changedColumns
         )
         // Copy columns content from table to temp_table
