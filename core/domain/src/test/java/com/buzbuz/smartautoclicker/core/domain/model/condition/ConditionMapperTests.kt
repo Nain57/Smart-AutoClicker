@@ -47,38 +47,6 @@ class ConditionMapperTests {
     }
 
     @Test
-    fun triggerCondition_onScenarioStart_toEntity() {
-        assertEquals(
-            ConditionTestsData.getNewScenarioStartConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewScenarioStartCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID).toEntity()
-        )
-    }
-
-    @Test
-    fun triggerCondition_onScenarioStart_toDomain() {
-        assertEquals(
-            ConditionTestsData.getNewScenarioStartCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewScenarioStartConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
-        )
-    }
-
-    @Test
-    fun triggerCondition_onScenarioEnd_toEntity() {
-        assertEquals(
-            ConditionTestsData.getNewScenarioEndConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewScenarioEndCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID).toEntity()
-        )
-    }
-
-    @Test
-    fun triggerCondition_onScenarioEnd_toDomain() {
-        assertEquals(
-            ConditionTestsData.getNewScenarioEndCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
-            ConditionTestsData.getNewScenarioEndConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
-        )
-    }
-
-    @Test
     fun triggerCondition_onBroadcastReceived_toEntity() {
         assertEquals(
             ConditionTestsData.getNewBroadcastReceivedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID),
