@@ -102,14 +102,14 @@ class EventMapperTests {
         val triggerEvent = CompleteEventEntity(
             event = EventTestsData.getNewTriggerEventEntity(scenarioId = EventTestsData.EVENT_SCENARIO_ID),
             actions = listOf(ActionTestsData.getNewPauseEntity(eventId = EventTestsData.EVENT_ID)),
-            conditions = listOf(ConditionTestsData.getNewScenarioStartConditionEntity(eventId = EventTestsData.EVENT_ID)),
+            conditions = listOf(ConditionTestsData.getNewTimerReachedConditionEntity(eventId = EventTestsData.EVENT_ID)),
         ).toDomainTriggerEvent()
 
         assertEquals(
             EventTestsData.getNewTriggerEvent(
                 scenarioId = EventTestsData.EVENT_SCENARIO_ID,
                 actions = listOf(ActionTestsData.getNewPause(eventId = EventTestsData.EVENT_ID)),
-                conditions = listOf(ConditionTestsData.getNewScenarioStartCondition(eventId = EventTestsData.EVENT_ID)),
+                conditions = listOf(ConditionTestsData.getNewTimerReachedCondition(eventId = EventTestsData.EVENT_ID)),
             ),
             triggerEvent,
         )

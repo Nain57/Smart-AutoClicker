@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.condition
 
-import android.graphics.Bitmap
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
@@ -64,15 +63,14 @@ internal object ConditionTestsData {
     fun getNewImageCondition(
         id: Long = CONDITION_ID,
         name: String = CONDITION_NAME,
-        path: String? = CONDITION_PATH,
+        path: String = CONDITION_PATH,
         area: Rect = Rect(CONDITION_LEFT, CONDITION_TOP, CONDITION_RIGHT, CONDITION_BOTTOM),
         detectionArea: Rect? = null,
         threshold: Int = CONDITION_THRESHOLD,
         detectionType: Int = CONDITION_DETECTION_TYPE,
         shouldBeDetected: Boolean = true,
-        bitmap: Bitmap? = null,
         eventId: Long
-    ) = ImageCondition(id.asIdentifier(), eventId.asIdentifier(), name, path, area, threshold, detectionType, shouldBeDetected, bitmap, detectionArea)
+    ) = ImageCondition(id.asIdentifier(), eventId.asIdentifier(), name, path, area, threshold, detectionType, shouldBeDetected, detectionArea)
 
     fun getNewBroadcastReceivedConditionEntity(
         id: Long = CONDITION_ID,
@@ -112,37 +110,15 @@ internal object ConditionTestsData {
         id: Long = CONDITION_ID,
         name: String = CONDITION_NAME,
         timerValueMs: Long = CONDITION_TIMER_MS,
+        restartWhenReached: Boolean = true,
         eventId: Long
-    ) = ConditionEntity(id, eventId, name, ConditionType.ON_TIMER_REACHED, timerValueMs = timerValueMs)
+    ) = ConditionEntity(id, eventId, name, ConditionType.ON_TIMER_REACHED, timerValueMs = timerValueMs, restartWhenReached = restartWhenReached)
 
     fun getNewTimerReachedCondition(
         id: Long = CONDITION_ID,
         name: String = CONDITION_NAME,
         timerValueMs: Long = CONDITION_TIMER_MS,
+        restartWhenReached: Boolean = true,
         eventId: Long
-    ) = TriggerCondition.OnTimerReached(id.asIdentifier(), eventId.asIdentifier(), name, timerValueMs)
-
-    fun getNewScenarioStartConditionEntity(
-        id: Long = CONDITION_ID,
-        name: String = CONDITION_NAME,
-        eventId: Long
-    ) = ConditionEntity(id, eventId, name, ConditionType.ON_SCENARIO_START)
-
-    fun getNewScenarioStartCondition(
-        id: Long = CONDITION_ID,
-        name: String = CONDITION_NAME,
-        eventId: Long
-    ) = TriggerCondition.OnScenarioStart(id.asIdentifier(), eventId.asIdentifier(), name)
-
-    fun getNewScenarioEndConditionEntity(
-        id: Long = CONDITION_ID,
-        name: String = CONDITION_NAME,
-        eventId: Long
-    ) = ConditionEntity(id, eventId, name, ConditionType.ON_SCENARIO_END)
-
-    fun getNewScenarioEndCondition(
-        id: Long = CONDITION_ID,
-        name: String = CONDITION_NAME,
-        eventId: Long
-    ) = TriggerCondition.OnScenarioEnd(id.asIdentifier(), eventId.asIdentifier(), name)
+    ) = TriggerCondition.OnTimerReached(id.asIdentifier(), eventId.asIdentifier(), name, timerValueMs, restartWhenReached)
 }

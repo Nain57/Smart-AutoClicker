@@ -155,7 +155,7 @@ class RepositoryTests {
                     CompleteEventEntity(
                         event = EventTestsData.getNewTriggerEventEntity(id = EventTestsData.EVENT_ID, scenarioId = EventTestsData.EVENT_SCENARIO_ID),
                         actions = listOf(ActionTestsData.getNewPauseEntity(eventId = EventTestsData.EVENT_ID, priority = 0)),
-                        conditions = listOf(ConditionTestsData.getNewScenarioStartConditionEntity(eventId = EventTestsData.EVENT_ID)),
+                        conditions = listOf(ConditionTestsData.getNewTimerReachedConditionEntity(eventId = EventTestsData.EVENT_ID)),
                     )
                 ))
             }
@@ -167,7 +167,7 @@ class RepositoryTests {
                     id = EventTestsData.EVENT_ID,
                     scenarioId = EventTestsData.EVENT_SCENARIO_ID,
                     actions = mutableListOf(ActionTestsData.getNewPause(eventId = EventTestsData.EVENT_ID)),
-                    conditions = mutableListOf(ConditionTestsData.getNewScenarioStartCondition(eventId = EventTestsData.EVENT_ID)),
+                    conditions = mutableListOf(ConditionTestsData.getNewTimerReachedCondition(eventId = EventTestsData.EVENT_ID)),
                 ),
             ),
             repository.getTriggerEventsFlow(ScenarioTestsData.SCENARIO_ID).first(),
