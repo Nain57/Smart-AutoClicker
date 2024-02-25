@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
@@ -126,11 +127,6 @@ class LocalService(
         }
     }
 
-    override fun onKeyEvent(event: KeyEvent?): Boolean {
-        event ?: return false
-        return overlayManager?.propagateKeyEvent(event) ?: false
-    }
-
     override fun stop() {
         if (!isStarted) return
         isStarted = false
@@ -154,6 +150,24 @@ class LocalService(
 
     override fun release() {
         serviceScope.cancel()
+    }
+
+    fun onKeyEvent(event: KeyEvent?): Boolean {
+        event ?: return false
+        return overlayManager?.propagateKeyEvent(event) ?: false
+    }
+
+    fun isOverlayHidden(): Boolean =
+        overlayManager?.isStackHidden() ?: true
+
+    fun toggleOverlaysVisibility() {
+        overlayManager?.apply {
+            if (isStackHidden()) {
+                restoreVisibility()
+            } else {
+                hideAll()
+            }
+        }
     }
 
     private fun initDisplayMetrics(context: Context) {
