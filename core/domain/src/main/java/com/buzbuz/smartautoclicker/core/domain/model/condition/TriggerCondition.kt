@@ -87,6 +87,7 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
         override val eventId: Identifier,
         override val name: String,
         val durationMs: Long,
+        val restartWhenReached: Boolean,
     ) : TriggerCondition() {
 
         override fun isComplete(): Boolean =

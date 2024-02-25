@@ -94,7 +94,8 @@ data class ConditionEntity(
     @ColumnInfo(name = "counter_value") val counterValue: Int? = null,
 
     // ConditionType.ON_TIMER_REACHED
-    @ColumnInfo(name = "timer_value_ms") val timerValueMs: Long? = null
+    @ColumnInfo(name = "timer_value_ms") val timerValueMs: Long? = null,
+    @ColumnInfo(name = "timer_restart_when_reached") val restartWhenReached: Boolean? = null,
 ) : EntityWithId
 
 /**
