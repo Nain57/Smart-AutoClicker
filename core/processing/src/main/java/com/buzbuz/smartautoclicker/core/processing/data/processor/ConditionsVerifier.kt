@@ -122,7 +122,8 @@ internal class ConditionsVerifier(
         val timerEndMs = state.getTimerEndMs(condition.getDatabaseId()) ?: return false
 
         return if (currentTsMs > timerEndMs) {
-            state.setTimerToDisabled(condition.getDatabaseId())
+            if (condition.restartWhenReached) state.setTimerStartToNow(condition)
+            else state.setTimerToDisabled(condition.getDatabaseId())
             true
         } else false
     }

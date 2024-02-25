@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 13,
-    "identityHash": "94d98f89245a160978ad3730e49b2f50",
+    "identityHash": "4f51808ca3474eb4d487f7fb6cf54115",
     "entities": [
       {
         "tableName": "action_table",
@@ -336,7 +336,7 @@
       },
       {
         "tableName": "condition_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `path` TEXT, `area_left` INTEGER, `area_top` INTEGER, `area_right` INTEGER, `area_bottom` INTEGER, `threshold` INTEGER, `detection_type` INTEGER, `shouldBeDetected` INTEGER, `detection_area_left` INTEGER, `detection_area_top` INTEGER, `detection_area_right` INTEGER, `detection_area_bottom` INTEGER, `broadcast_action` TEXT, `counter_name` TEXT, `counter_comparison_operation` TEXT, `counter_value` INTEGER, `timer_value_ms` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `path` TEXT, `area_left` INTEGER, `area_top` INTEGER, `area_right` INTEGER, `area_bottom` INTEGER, `threshold` INTEGER, `detection_type` INTEGER, `shouldBeDetected` INTEGER, `detection_area_left` INTEGER, `detection_area_top` INTEGER, `detection_area_right` INTEGER, `detection_area_bottom` INTEGER, `broadcast_action` TEXT, `counter_name` TEXT, `counter_comparison_operation` TEXT, `counter_value` INTEGER, `timer_value_ms` INTEGER, `timer_restart_when_reached` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -461,6 +461,12 @@
           {
             "fieldPath": "timerValueMs",
             "columnName": "timer_value_ms",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "restartWhenReached",
+            "columnName": "timer_restart_when_reached",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -694,7 +700,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '94d98f89245a160978ad3730e49b2f50')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4f51808ca3474eb4d487f7fb6cf54115')"
     ]
   }
 }

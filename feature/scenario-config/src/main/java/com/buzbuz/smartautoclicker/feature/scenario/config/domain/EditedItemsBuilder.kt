@@ -170,6 +170,7 @@ class EditedItemsBuilder internal constructor(
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.conditionName(context),
             durationMs = 0,
+            restartWhenReached = false,
         )
 
     fun createNewTriggerConditionFrom(condition: TriggerCondition, eventId: Identifier = getEditedEventIdOrThrow()): TriggerCondition =

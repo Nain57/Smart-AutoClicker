@@ -76,6 +76,7 @@ private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEnt
         name = name,
         type = ConditionType.ON_TIMER_REACHED,
         timerValueMs = durationMs,
+        restartWhenReached = restartWhenReached,
     )
 
 
@@ -127,6 +128,7 @@ private fun ConditionEntity.toDomainTimerReached(cleanIds: Boolean = false): Tri
         eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,
         durationMs = timerValueMs!!,
+        restartWhenReached = restartWhenReached!!,
     )
 
 private fun CounterComparisonOperation.toDomain(): TriggerCondition.OnCounterCountReached.ComparisonOperation =

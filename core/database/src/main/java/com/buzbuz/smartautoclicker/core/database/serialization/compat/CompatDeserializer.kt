@@ -308,6 +308,7 @@ internal abstract class CompatDeserializer : Deserializer {
         val id = jsonCondition.getLong("id", true) ?: return null
         val eventId = jsonCondition.getLong("eventId", true) ?: return null
         val timerValueMs = jsonCondition.getLong("timerValueMs") ?: return null
+        val restartWhenReached = jsonCondition.getBoolean("restartWhenReached") ?: return null
 
         return ConditionEntity(
             id = id,
@@ -315,6 +316,7 @@ internal abstract class CompatDeserializer : Deserializer {
             name = jsonCondition.getString("name") ?: "",
             type = ConditionType.ON_TIMER_REACHED,
             timerValueMs = timerValueMs,
+            restartWhenReached = restartWhenReached,
         )
     }
 
