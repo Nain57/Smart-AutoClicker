@@ -111,8 +111,8 @@ class RepositoryTests {
     @Test
     fun deleteScenario_removedConditions() = runTest {
         mockWhen(mockEventDao.getEventsIds(ScenarioTestsData.SCENARIO_ID)).thenReturn(listOf(2L, 4L))
-        mockWhen(mockConditionDao.getConditionsPath(2L)).thenReturn(listOf("toto", "tutu"))
-        mockWhen(mockConditionDao.getConditionsPath(4L)).thenReturn(listOf("tutu"))
+        mockWhen(mockConditionDao.getConditionsPaths(2L)).thenReturn(listOf("toto", "tutu"))
+        mockWhen(mockConditionDao.getConditionsPaths(4L)).thenReturn(listOf("tutu"))
         mockWhen(mockConditionDao.getValidPathCount("toto")).thenReturn(1)
         mockWhen(mockConditionDao.getValidPathCount("tutu")).thenReturn(0)
         repository.deleteScenario(Identifier(databaseId = ScenarioTestsData.SCENARIO_ID))

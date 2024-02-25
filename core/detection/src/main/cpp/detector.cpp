@@ -21,12 +21,13 @@
 
 #include "utils/androidBitmap.hpp"
 #include "utils/roi.hpp"
+#include "utils/scaling.hpp"
 #include "detector.hpp"
 
 using namespace cv;
 using namespace smartautoclicker;
 
-void Detector::setScreenMetrics(JNIEnv *env, jobject screenImage, double detectionQuality) {
+void Detector::setScreenMetrics(JNIEnv *env, jstring metricsTag, jobject screenImage, double detectionQuality) {
     // Initial the current image mat. When the size of the image change (e.g. rotation), this method should be called
     // to update it.
     fullSizeColorCurrentImage = createColorMatFromARGB8888BitmapData(env, screenImage);
@@ -34,12 +35,9 @@ void Detector::setScreenMetrics(JNIEnv *env, jobject screenImage, double detecti
     // Select the scale ratio depending on the screen size.
     // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
     // the performance of the detection.
-    auto maxImageDim = max(fullSizeColorCurrentImage->rows, fullSizeColorCurrentImage->cols);
-    if (maxImageDim <= detectionQuality) {
-        scaleRatio = 1;
-    } else {
-        scaleRatio = detectionQuality / maxImageDim;
-    }
+    const char *tag = env->GetStringUTFChars(metricsTag, 0);
+    scaleRatio = findBestScaleRatio(*fullSizeColorCurrentImage, detectionQuality, tag);
+    env->ReleaseStringUTFChars(metricsTag, tag);
 }
 
 void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
@@ -51,7 +49,7 @@ void Detector::setScreenImage(JNIEnv *env, jobject screenImage) {
     cv::cvtColor(*fullSizeColorCurrentImage, fullSizeGrayCurrentImage, cv::COLOR_RGBA2GRAY);
 
     // Scale down the image and store it apart (the cache image is not resized)
-    resize(fullSizeGrayCurrentImage, *scaledGrayCurrentImage, Size(), scaleRatio, scaleRatio, INTER_AREA);
+    scaleMat(fullSizeGrayCurrentImage, scaleRatio, *scaledGrayCurrentImage);
 }
 
 DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, int threshold) {
@@ -157,7 +155,7 @@ std::unique_ptr<Mat> Detector::scaleAndChangeToGray(const cv::Mat& fullSizeColor
     auto scaledGrayCondition = Mat(max((int) (fullSizeGrayCondition.rows * scaleRatio), 1),
                                    max((int) (fullSizeGrayCondition.cols * scaleRatio), 1),
                                    CV_8UC1);
-    resize(fullSizeGrayCondition, scaledGrayCondition, Size(), scaleRatio, scaleRatio, INTER_AREA);
+    scaleMat(fullSizeGrayCondition, scaleRatio, scaledGrayCondition);
 
     return std::make_unique<cv::Mat>(scaledGrayCondition);
 }
