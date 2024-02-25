@@ -123,6 +123,7 @@
     <string name="item_title_empty_event_toggles">Nessuna modifica</string>
     <string name="item_title_event_toggles">%1$d modifiche</string>
     <string name="item_title_change_counter">Modificare contatore</string>
+    <string name="item_title_restart_when_reached">Riavviare quando viene raggiunto</string>
 
     <!--
       - Empty list messages.

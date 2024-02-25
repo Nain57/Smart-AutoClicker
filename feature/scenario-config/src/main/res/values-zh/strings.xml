@@ -122,7 +122,8 @@
     <string name="item_title_change_counter">更改计数器</string>
     <string name="item_title_timer_reached">达到计时器时</string>
     <string name="item_title_counter_reached">在柜台上达到</string>
-    <string name="item_title_broadcast_received">"收到Broadcast "</string>
+    <string name="item_title_broadcast_received">收到Broadcast</string>
+    <string name="item_title_restart_when_reached">达到后重新启动</string>
 
     <!--
       - Empty list messages.
