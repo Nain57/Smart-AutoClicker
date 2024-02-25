@@ -92,8 +92,6 @@ internal class ConditionsVerifier(
             is TriggerCondition.OnBroadcastReceived -> verifyOnBroadcastReceived(condition)
             is TriggerCondition.OnCounterCountReached -> verifyOnCounterReached(condition)
             is TriggerCondition.OnTimerReached -> verifyOnTimerReached(condition)
-            is TriggerCondition.OnScenarioStart -> verifyOnScenarioStart()
-            is TriggerCondition.OnScenarioEnd -> verifyOnScenarioEnd()
         }
 
     private fun verifyOnBroadcastReceived(condition: TriggerCondition.OnBroadcastReceived): Boolean =
@@ -128,10 +126,6 @@ internal class ConditionsVerifier(
             true
         } else false
     }
-
-
-    private fun verifyOnScenarioStart() : Boolean = false
-    private fun verifyOnScenarioEnd() : Boolean = false
 
     private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult {
         progressListener?.onImageConditionProcessingStarted(condition)

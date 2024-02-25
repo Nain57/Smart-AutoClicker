@@ -231,8 +231,6 @@ internal abstract class CompatDeserializer : Deserializer {
             ConditionType.ON_BROADCAST_RECEIVED -> deserializeConditionBroadcastReceived(jsonCondition)
             ConditionType.ON_COUNTER_REACHED -> deserializeConditionCounterReached(jsonCondition)
             ConditionType.ON_IMAGE_DETECTED -> deserializeConditionImageDetected(jsonCondition)
-            ConditionType.ON_SCENARIO_END -> deserializeConditionScenarioEnd(jsonCondition)
-            ConditionType.ON_SCENARIO_START -> deserializeConditionScenarioStart(jsonCondition)
             ConditionType.ON_TIMER_REACHED -> deserializeConditionTimerReached(jsonCondition)
             null -> null
         }
@@ -317,32 +315,6 @@ internal abstract class CompatDeserializer : Deserializer {
             name = jsonCondition.getString("name") ?: "",
             type = ConditionType.ON_TIMER_REACHED,
             timerValueMs = timerValueMs,
-        )
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-    open fun deserializeConditionScenarioStart(jsonCondition: JsonObject): ConditionEntity? {
-        val id = jsonCondition.getLong("id", true) ?: return null
-        val eventId = jsonCondition.getLong("eventId", true) ?: return null
-
-        return ConditionEntity(
-            id = id,
-            eventId = eventId,
-            name = jsonCondition.getString("name") ?: "",
-            type = ConditionType.ON_SCENARIO_START,
-        )
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-    open fun deserializeConditionScenarioEnd(jsonCondition: JsonObject): ConditionEntity? {
-        val id = jsonCondition.getLong("id", true) ?: return null
-        val eventId = jsonCondition.getLong("eventId", true) ?: return null
-
-        return ConditionEntity(
-            id = id,
-            eventId = eventId,
-            name = jsonCondition.getString("name") ?: "",
-            type = ConditionType.ON_SCENARIO_END,
         )
     }
 

@@ -268,9 +268,6 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
                 CounterReachedConditionDialog(conditionConfigDialogListener)
             is TriggerCondition.OnTimerReached ->
                 TimerReachedConditionDialog(conditionConfigDialogListener)
-
-            is TriggerCondition.OnScenarioEnd,
-            is TriggerCondition.OnScenarioStart -> return
         }
 
         OverlayManager.getInstance(context).navigateTo(

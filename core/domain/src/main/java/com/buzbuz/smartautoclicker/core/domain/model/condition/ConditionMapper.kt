@@ -44,28 +44,10 @@ internal fun ImageCondition.toEntity() = ConditionEntity(
 )
 
 internal fun TriggerCondition.toEntity(): ConditionEntity = when (this) {
-    is TriggerCondition.OnScenarioStart -> toScenarioStartEntity()
-    is TriggerCondition.OnScenarioEnd -> toScenarioEndEntity()
     is TriggerCondition.OnBroadcastReceived -> toBroadcastReceivedEntity()
     is TriggerCondition.OnCounterCountReached -> toCounterReachedEntity()
     is TriggerCondition.OnTimerReached -> toTimerReachedEntity()
 }
-
-private fun TriggerCondition.OnScenarioStart.toScenarioStartEntity(): ConditionEntity =
-    ConditionEntity(
-        id = id.databaseId,
-        eventId = eventId.databaseId,
-        name = name,
-        type = ConditionType.ON_SCENARIO_START,
-    )
-
-private fun TriggerCondition.OnScenarioEnd.toScenarioEndEntity(): ConditionEntity =
-    ConditionEntity(
-        id = id.databaseId,
-        eventId = eventId.databaseId,
-        name = name,
-        type = ConditionType.ON_SCENARIO_END,
-    )
 
 private fun TriggerCondition.OnBroadcastReceived.toBroadcastReceivedEntity(): ConditionEntity =
     ConditionEntity(
@@ -100,8 +82,6 @@ private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEnt
 internal fun ConditionEntity.toDomain(cleanIds: Boolean = false): Condition =
     when (type) {
         ConditionType.ON_IMAGE_DETECTED -> toDomainImageCondition(cleanIds)
-        ConditionType.ON_SCENARIO_START -> toDomainScenarioStart(cleanIds)
-        ConditionType.ON_SCENARIO_END -> toDomainScenarioEnd(cleanIds)
         ConditionType.ON_BROADCAST_RECEIVED -> toDomainBroadcastReceived(cleanIds)
         ConditionType.ON_COUNTER_REACHED -> toDomainCounterReached(cleanIds)
         ConditionType.ON_TIMER_REACHED -> toDomainTimerReached(cleanIds)
@@ -120,20 +100,6 @@ private fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): I
         detectionType = detectionType!!,
         detectionArea = getDetectionArea(),
         shouldBeDetected = shouldBeDetected ?: true,
-    )
-
-private fun ConditionEntity.toDomainScenarioStart(cleanIds: Boolean = false): TriggerCondition =
-    TriggerCondition.OnScenarioStart(
-        id = Identifier(id = id, asTemporary = cleanIds),
-        eventId = Identifier(id = eventId, asTemporary = cleanIds),
-        name = name,
-    )
-
-private fun ConditionEntity.toDomainScenarioEnd(cleanIds: Boolean = false): TriggerCondition =
-    TriggerCondition.OnScenarioEnd(
-        id = Identifier(id = id, asTemporary = cleanIds),
-        eventId = Identifier(id = eventId, asTemporary = cleanIds),
-        name = name,
     )
 
 private fun ConditionEntity.toDomainBroadcastReceived(cleanIds: Boolean = false): TriggerCondition =

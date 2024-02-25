@@ -25,8 +25,6 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
 
     @Suppress("USELESS_CAST") // Yet it is required by Android Studio
     fun copy(evtId: Identifier) = when (this) {
-        is OnScenarioStart -> (this as OnScenarioStart).copy(eventId = evtId)
-        is OnScenarioEnd -> (this as OnScenarioEnd).copy(eventId = evtId)
         is OnBroadcastReceived -> (this as OnBroadcastReceived).copy(eventId = evtId)
         is OnCounterCountReached -> (this as OnCounterCountReached).copy(eventId = evtId)
         is OnTimerReached -> (this as OnTimerReached).copy(eventId = evtId)
@@ -34,18 +32,6 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
 
     override fun hashCodeNoIds(): Int =
         name.hashCode()
-
-    data class OnScenarioStart(
-        override val id: Identifier,
-        override val eventId: Identifier,
-        override val name: String,
-    ) : TriggerCondition()
-
-    data class OnScenarioEnd(
-        override val id: Identifier,
-        override val eventId: Identifier,
-        override val name: String,
-    ) : TriggerCondition()
 
     data class OnBroadcastReceived(
         override val id: Identifier,

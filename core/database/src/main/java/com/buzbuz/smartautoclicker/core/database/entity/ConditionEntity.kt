@@ -113,10 +113,6 @@ enum class ConditionType {
     ON_IMAGE_DETECTED,
     /** Toggle the enabled state of an event. */
     ON_TIMER_REACHED,
-    /** Condition fulfilled at scenario start. */
-    ON_SCENARIO_START,
-    /** Condition fulfilled at scenario end (once all events/trigger events are disabled). */
-    ON_SCENARIO_END,
 }
 
 /**

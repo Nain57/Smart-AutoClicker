@@ -16,15 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 
 interface IEventsState {
-
-    val startEvent: TriggerEvent?
-    val endEvent: TriggerEvent?
 
     fun isEventEnabled(eventId: Long): Boolean
     fun areAllEventsDisabled(): Boolean
@@ -65,11 +61,6 @@ internal class EventsState(
     private val imageEventList: EventList<ImageEvent> = EventList(imageEvents)
     /** Monitor the state of all trigger events. */
     private val triggerEventList: EventList<TriggerEvent> = EventList(triggerEvents)
-
-    override val startEvent: TriggerEvent? =
-        triggerEvents.find { event -> event.conditions.find { it is TriggerCondition.OnScenarioStart } != null }
-    override val endEvent: TriggerEvent? =
-        triggerEvents.find { event -> event.conditions.find { it is TriggerCondition.OnScenarioEnd } != null }
 
     override fun setEventStateListener(listener: EventStateListener) {
         triggerEventList.eventEnabledListener = listener
