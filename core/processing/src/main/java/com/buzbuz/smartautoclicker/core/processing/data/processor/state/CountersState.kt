@@ -64,9 +64,4 @@ internal class CountersState(
         if (!counterMap.containsKey(counterName)) return
         counterMap[counterName] = value
     }
-    fun executeCounterOperation(changeCounter: Action.ChangeCounter) {
-        val counterValue = counterMap[changeCounter.counterName] ?: return
-
-
-    }
 }

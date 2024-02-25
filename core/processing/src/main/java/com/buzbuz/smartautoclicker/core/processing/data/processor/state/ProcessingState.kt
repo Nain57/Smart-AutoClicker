@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
 import android.content.Context
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -54,13 +55,13 @@ internal class ProcessingState(
 
     private fun onEventEnabled(event: Event) {
         event.conditions.forEach { condition ->
-            timersState.setTimerToNow(condition.getDatabaseId())
+            if (condition is TriggerCondition.OnTimerReached) timersState.setTimerStartToNow(condition)
         }
     }
 
     private fun onEventDisabled(event: Event) {
         event.conditions.forEach { condition ->
-            timersState.setTimerToDisabled(condition.getDatabaseId())
+            if (condition is TriggerCondition.OnTimerReached) timersState.setTimerToDisabled(condition.getDatabaseId())
         }
     }
 }

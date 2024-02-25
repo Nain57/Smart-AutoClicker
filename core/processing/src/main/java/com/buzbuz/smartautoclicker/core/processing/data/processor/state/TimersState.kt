@@ -18,51 +18,51 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import kotlin.math.max
 
 interface ITimersState {
 
-    fun getTimerValue(conditionId: Long): Long?
-    fun setTimerToNow(conditionId: Long)
+    fun getTimerEndMs(conditionId: Long): Long?
+    fun setTimerStartToNow(condition: TriggerCondition.OnTimerReached)
 
     fun setTimerToDisabled(conditionId: Long)
 }
 
 internal class TimersState(
-    triggerEvents: List<TriggerEvent>,
+    private val triggerEvents: List<TriggerEvent>,
 ): ITimersState {
 
-    private val idToTimerStart: MutableMap<Long, Long> = mutableMapOf<Long, Long>().apply {
+    private val idToTimerEnd: MutableMap<Long, Long> = mutableMapOf()
+
+    fun onProcessingStarted() {
+        val startTimeMs = System.currentTimeMillis()
+
         triggerEvents.forEach { triggerEvent ->
+            if (!triggerEvent.enabledOnStart) return@forEach
+
             triggerEvent.conditions.forEach { triggerCondition ->
                 if (triggerCondition is TriggerCondition.OnTimerReached) {
-                    put(triggerCondition.getDatabaseId(), Long.MAX_VALUE)
+                    idToTimerEnd[triggerCondition.getDatabaseId()] = triggerCondition.getEndTimeMs(startTimeMs)
                 }
             }
         }
     }
 
-    fun onProcessingStarted() {
-        if (idToTimerStart.isEmpty()) return
-
-        val timerValueMs = System.currentTimeMillis()
-        idToTimerStart.keys.forEach { identifier ->
-            idToTimerStart[identifier] = timerValueMs
-        }
-    }
-
     fun onProcessingStopped() {
-        if (idToTimerStart.isEmpty()) return
-        idToTimerStart.keys.forEach(::setTimerToDisabled)
+        idToTimerEnd.clear()
     }
 
-    override fun getTimerValue(conditionId: Long): Long? =
-        idToTimerStart[conditionId]
+    override fun getTimerEndMs(conditionId: Long): Long? =
+        idToTimerEnd[conditionId]
 
-    override fun setTimerToNow(conditionId: Long) {
-        idToTimerStart[conditionId] = System.currentTimeMillis()
+    override fun setTimerStartToNow(condition: TriggerCondition.OnTimerReached) {
+        idToTimerEnd[condition.getDatabaseId()] = condition.getEndTimeMs(System.currentTimeMillis())
     }
 
     override fun setTimerToDisabled(conditionId: Long) {
-        idToTimerStart[conditionId] = Long.MAX_VALUE
+        idToTimerEnd.remove(conditionId)
     }
+
+    private fun TriggerCondition.OnTimerReached.getEndTimeMs(startTimeMs: Long): Long =
+        max(startTimeMs + durationMs, Long.MAX_VALUE)
 }
