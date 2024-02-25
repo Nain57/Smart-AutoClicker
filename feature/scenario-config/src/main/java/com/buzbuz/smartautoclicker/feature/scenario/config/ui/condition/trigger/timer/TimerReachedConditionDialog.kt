@@ -105,6 +105,10 @@ class TimerReachedConditionDialog(
                 items = timeUnitDropdownItems,
                 onItemSelected = viewModel::setTimeUnit,
             )
+
+            checkboxResetWhenReached.setOnClickListener {
+                viewModel.toggleRestartWhenReached()
+            }
         }
 
         return viewBinding.root
@@ -123,6 +127,7 @@ class TimerReachedConditionDialog(
                 launch { viewModel.duration.collect(::updateDuration) }
                 launch { viewModel.durationError.collect(viewBinding.editDurationLayout::setError)}
                 launch { viewModel.selectedUnitItem.collect(viewBinding.timeUnitField::setSelectedItem) }
+                launch { viewModel.restartWhenReached.collect(viewBinding.checkboxResetWhenReached::setChecked) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
             }
         }

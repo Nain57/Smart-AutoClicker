@@ -128,6 +128,7 @@
     <string name="item_title_empty_event_toggles">No changes</string>
     <string name="item_title_event_toggles">%1$d changes</string>
     <string name="item_title_change_counter">Change counter</string>
+    <string name="item_title_restart_when_reached">Restart when reached</string>
 
     <!--
       - Empty list messages.

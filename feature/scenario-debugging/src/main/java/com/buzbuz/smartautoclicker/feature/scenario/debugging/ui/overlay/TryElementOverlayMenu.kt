@@ -88,7 +88,6 @@ class TryElementOverlayMenu(
     }
 
     override fun onMenuItemClicked(viewId: Int) {
-        println("TOTO: onCLick")
         when (viewId) {
             R.id.btn_play ->
                 viewModel.toggleTryState(context)

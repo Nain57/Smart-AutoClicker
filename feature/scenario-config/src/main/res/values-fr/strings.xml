@@ -123,6 +123,7 @@
     <string name="item_title_empty_event_toggles">Aucun changement</string>
     <string name="item_title_event_toggles">%1$d changements</string>
     <string name="item_title_change_counter">Modifier compteur</string>
+    <string name="item_title_restart_when_reached">Relancer quand atteint</string>
 
     <!--
       - Empty list messages.

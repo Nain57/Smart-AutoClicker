@@ -64,5 +64,6 @@ internal class TimersState(
     }
 
     private fun TriggerCondition.OnTimerReached.getEndTimeMs(startTimeMs: Long): Long =
-        max(startTimeMs + durationMs, Long.MAX_VALUE)
+        if (Long.MAX_VALUE - durationMs < startTimeMs) Long.MAX_VALUE
+        else startTimeMs + durationMs
 }

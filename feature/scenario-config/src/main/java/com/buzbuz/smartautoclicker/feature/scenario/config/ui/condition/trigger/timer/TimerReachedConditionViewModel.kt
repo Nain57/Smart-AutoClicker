@@ -80,6 +80,8 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
     /** Tells if the pause duration value is valid or not. */
     val durationError: Flow<Boolean> = configuredCondition.map { it.durationMs <= 0 }
 
+    val restartWhenReached: Flow<Boolean> = configuredCondition.map { it.restartWhenReached }
+
     /** Tells if the configured condition is valid and can be saved. */
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedTriggerConditionState.map { condition ->
         condition.canBeSaved
@@ -110,6 +112,12 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
 
     fun setTimeUnit(unit: DropdownItem) {
         _selectedUnitItem.value = unit
+    }
+
+    fun toggleRestartWhenReached() {
+        updateEditedCondition { oldValue ->
+            oldValue.copy(restartWhenReached = !oldValue.restartWhenReached)
+        }
     }
 
     private fun updateEditedCondition(
