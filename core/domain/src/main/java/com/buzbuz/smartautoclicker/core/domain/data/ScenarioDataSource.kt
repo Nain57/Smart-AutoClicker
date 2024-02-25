@@ -119,7 +119,7 @@ internal class ScenarioDataSource(
 
         val removedConditionsPath = mutableListOf<String>()
         currentDatabase.value.eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
-            currentDatabase.value.conditionDao().getConditionsPath(eventId).forEach { path ->
+            currentDatabase.value.conditionDao().getConditionsPaths(eventId).forEach { path ->
                 if (!removedConditionsPath.contains(path)) removedConditionsPath.add(path)
             }
         }
@@ -384,7 +384,7 @@ internal class ScenarioDataSource(
     private suspend fun clearRemovedEventsBitmaps(removedEvents: List<EventEntity>) {
         val deletedPaths = buildSet {
             removedEvents.forEach { event ->
-                currentDatabase.value.conditionDao().getConditionsPath(event.id).forEach { path ->
+                currentDatabase.value.conditionDao().getConditionsPaths(event.id).forEach { path ->
                     add(path)
                 }
             }
@@ -400,11 +400,11 @@ internal class ScenarioDataSource(
     internal suspend fun clearRemovedConditionsBitmaps(removedPath: List<String>) {
         Log.d(TAG, "Clearing removed conditions bitmaps: $removedPath")
         val deletedPaths = removedPath.filter { path ->
-            currentDatabase.value.conditionDao().getValidPathCount(path) == 0
+            path.isNotEmpty() && currentDatabase.value.conditionDao().getValidPathCount(path) == 0
         }
 
         Log.d(TAG, "Removed conditions count: ${removedPath.size}; Unused bitmaps after removal: ${deletedPaths.size}")
-        bitmapManager.deleteBitmaps(deletedPaths)
+        if (deletedPaths.isNotEmpty()) bitmapManager.deleteBitmaps(deletedPaths)
     }
 }
 

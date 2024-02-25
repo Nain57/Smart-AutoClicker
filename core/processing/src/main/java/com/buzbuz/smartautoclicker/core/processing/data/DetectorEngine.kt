@@ -180,6 +180,7 @@ internal class DetectorEngine(context: Context) {
             progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
 
             scenarioProcessor = ScenarioProcessor(
+                processingTag = context.packageName,
                 imageDetector = detector,
                 detectionQuality = scenario.detectionQuality,
                 randomize = scenario.randomize,

@@ -101,7 +101,7 @@ internal class TutorialStateDataSource(context: Context) {
 
             val removedConditionsPath = mutableListOf<String>()
             tutorialDatabase.eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
-                tutorialDatabase.conditionDao().getConditionsPath(eventId).forEach { path ->
+                tutorialDatabase.conditionDao().getConditionsPaths(eventId).forEach { path ->
                     if (!removedConditionsPath.contains(path)) removedConditionsPath.add(path)
                 }
             }

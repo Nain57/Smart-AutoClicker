@@ -47,7 +47,7 @@ namespace smartautoclicker {
 
         Detector() = default;
 
-        void setScreenMetrics(JNIEnv *env, jobject screenImage, double detectionQuality);
+        void setScreenMetrics(JNIEnv *env, jstring metricsTag, jobject screenImage, double detectionQuality);
 
         void setScreenImage(JNIEnv *env, jobject screenImage);
 

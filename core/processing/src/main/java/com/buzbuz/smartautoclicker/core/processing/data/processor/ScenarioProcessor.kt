@@ -42,6 +42,7 @@ import kotlinx.coroutines.yield
  * @param progressListener the object to notify for detection progress. Can be null if not required.
  */
 internal class ScenarioProcessor(
+    private val processingTag: String,
     private val imageDetector: ImageDetector,
     private val detectionQuality: Int,
     randomize: Boolean,
@@ -138,7 +139,7 @@ internal class ScenarioProcessor(
 
         // Set the current screen image
         if (invalidateScreenMetrics) {
-            imageDetector.setScreenMetrics(screenFrame, detectionQuality.toDouble())
+            imageDetector.setScreenMetrics(processingTag, screenFrame, detectionQuality.toDouble())
             invalidateScreenMetrics = false
         }
         imageDetector.setupDetection(screenFrame)

@@ -37,7 +37,7 @@ interface ImageDetector : AutoCloseable {
      * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
      *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
      */
-    fun setScreenMetrics(screenBitmap: Bitmap, detectionQuality: Double)
+    fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double)
 
     /**
      * Set the bitmap for the screen.

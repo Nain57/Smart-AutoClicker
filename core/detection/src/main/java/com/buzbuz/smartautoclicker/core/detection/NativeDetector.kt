@@ -54,13 +54,13 @@ class NativeDetector private constructor() : ImageDetector {
         deleteDetector()
     }
 
-    override fun setScreenMetrics(screenBitmap: Bitmap, detectionQuality: Double) {
+    override fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double) {
         if (isClosed) return
 
         if (detectionQuality < DETECTION_QUALITY_MIN || detectionQuality > DETECTION_QUALITY_MAX)
             throw IllegalArgumentException("Invalid detection quality")
 
-        updateScreenMetrics(screenBitmap, detectionQuality)
+        updateScreenMetrics(metricsKey, screenBitmap, detectionQuality)
     }
 
     override fun setupDetection(screenBitmap: Bitmap) {
@@ -104,7 +104,7 @@ class NativeDetector private constructor() : ImageDetector {
      * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
      *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
      */
-    private external fun updateScreenMetrics(screenBitmap: Bitmap, detectionQuality: Double)
+    private external fun updateScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double)
 
     /**
      * Native method for detection setup.
