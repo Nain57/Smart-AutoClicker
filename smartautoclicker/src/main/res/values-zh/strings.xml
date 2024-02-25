@@ -21,6 +21,8 @@
     <string name="activity_title">场景列表</string>
     <string name="notification_title">场景: %1$s</string>
     <string name="notification_message">点击停止运行</string>
+    <string name="notification_button_toggle_menu">显示/隐藏</string>
+    <string name="notification_button_stop">停止</string>
     <string name="accessibility_service_description">该应用需要无障碍服务来实现自动点击。
         一旦条件被检测到，便会执行由您创建的，位于其他应用上的点击列表。\n\n 该应用没有收集任何数据。 您可以自行访问我们的GitHub，代码是开源的!</string>
 

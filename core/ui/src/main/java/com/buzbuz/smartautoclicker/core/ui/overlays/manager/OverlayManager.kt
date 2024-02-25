@@ -205,7 +205,7 @@ class OverlayManager internal constructor(context: Context) {
     }
 
     /** @return true if the overlay stack has been hidden via [hideAll], false if not. */
-    private fun isStackHidden(): Boolean =
+    fun isStackHidden(): Boolean =
         lifecyclesRegistry.haveStates()
 
     fun isOverlayStackVisible(): Boolean =

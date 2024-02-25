@@ -20,7 +20,10 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.app.*
 import android.content.ActivityNotFoundException
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.util.AndroidRuntimeException
 import android.util.Log
@@ -28,6 +31,7 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
@@ -65,6 +69,11 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         private const val NOTIFICATION_ID = 42
         /** The channel identifier for the foreground notification of this service. */
         private const val NOTIFICATION_CHANNEL_ID = "SmartAutoClickerService"
+
+        /** Actions from the notification. */
+        private const val INTENT_ACTION_TOGGLE_OVERLAY = "com.buzbuz.smartautoclicker.ACTION_TOGGLE_OVERLAY_VISIBILITY"
+        private const val INTENT_ACTION_STOP_SCENARIO = "com.buzbuz.smartautoclicker.ACTION_STOP_SCENARIO"
+
         /** The instance of the [ILocalService], providing access for this service to the Activity. */
         private var LOCAL_SERVICE_INSTANCE: ILocalService? = null
             set(value) {
@@ -96,9 +105,26 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
         fun startDumbScenario(dumbScenario: DumbScenario)
         fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
-        fun onKeyEvent(event: KeyEvent?): Boolean
         fun stop()
         fun release()
+    }
+
+    private val localService: LocalService?
+        get() = LOCAL_SERVICE_INSTANCE as? LocalService
+
+    private var currentScenarioName: String? = null
+
+    /** Receives commands from the notification. */
+    private val notificationActionsReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent ?: return
+            val service = localService ?: return
+
+            when (intent.action) {
+                INTENT_ACTION_TOGGLE_OVERLAY -> service.toggleOverlaysVisibility()
+                INTENT_ACTION_STOP_SCENARIO -> service.stop()
+            }
+        }
     }
 
     override fun onServiceConnected() {
@@ -108,17 +134,34 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             context = this,
             androidExecutor = this,
             onStart = { isSmart, name ->
-                if (isSmart) startForegroundMediaProjectionServiceCompat(NOTIFICATION_ID, createNotification(name))
+                currentScenarioName = name
+                if (isSmart) {
+                    createNotificationChannel()
+                    startForegroundMediaProjectionServiceCompat(NOTIFICATION_ID, createNotification())
+                }
                 requestFilterKeyEvents(true)
             },
             onStop = {
+                currentScenarioName = null
                 requestFilterKeyEvents(false)
                 stopForeground(Service.STOP_FOREGROUND_REMOVE)
             },
         )
+
+        ContextCompat.registerReceiver(
+            this,
+            notificationActionsReceiver,
+            IntentFilter().apply {
+                addAction(INTENT_ACTION_TOGGLE_OVERLAY)
+                addAction(INTENT_ACTION_STOP_SCENARIO)
+            },
+            ContextCompat.RECEIVER_EXPORTED,
+        )
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
+        unregisterReceiver(notificationActionsReceiver)
+
         LOCAL_SERVICE_INSTANCE?.stop()
         LOCAL_SERVICE_INSTANCE?.release()
         LOCAL_SERVICE_INSTANCE = null
@@ -127,16 +170,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean =
-        LOCAL_SERVICE_INSTANCE?.onKeyEvent(event) ?: super.onKeyEvent(event)
+        localService?.onKeyEvent(event) ?: super.onKeyEvent(event)
 
-    /**
-     * Create the notification for this service allowing it to be set as foreground service.
-     *
-     * @param scenarioName the name to de displayed in the notification title
-     *
-     * @return the newly created notification.
-     */
-    private fun createNotification(scenarioName: String): Notification {
+    private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(
                 NotificationChannel(
@@ -146,21 +182,42 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 )
             )
         }
+    }
 
+    /**
+     * Create the notification for this service allowing it to be set as foreground service.
+     *
+     * @return the newly created notification.
+     */
+    private fun createNotification(): Notification {
         val intent = Intent(this, ScenarioActivity::class.java)
         val icon =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) R.drawable.ic_notification_vector
             else R.drawable.ic_notification
 
-        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(getString(R.string.notification_title, scenarioName))
+        val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(getString(R.string.notification_title, currentScenarioName ?: ""))
             .setContentText(getString(R.string.notification_message))
             .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .setSmallIcon(icon)
             .setCategory(Notification.CATEGORY_SERVICE)
             .setOngoing(true)
             .setLocalOnly(true)
-            .build()
+
+        localService?.let {
+            builder.addAction(
+                R.drawable.ic_visible_on,
+                getString(R.string.notification_button_toggle_menu),
+                PendingIntent.getBroadcast(this, 0, Intent(INTENT_ACTION_TOGGLE_OVERLAY), PendingIntent.FLAG_IMMUTABLE,),
+            )
+            builder.addAction(
+                R.drawable.ic_stop,
+                getString(R.string.notification_button_stop),
+                PendingIntent.getBroadcast(this, 0, Intent(INTENT_ACTION_STOP_SCENARIO), PendingIntent.FLAG_IMMUTABLE),
+            )
+        }
+
+        return builder.build()
     }
 
     override suspend fun executeGesture(gestureDescription: GestureDescription) {

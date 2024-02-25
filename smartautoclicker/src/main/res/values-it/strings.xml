@@ -20,6 +20,8 @@
     <!-- Application wide texts. -->
     <string name="notification_title">Scenario: %1$s</string>
     <string name="notification_message">Premi per cambiare scenario</string>
+    <string name="notification_button_toggle_menu">Mostra/Nascondi</string>
+    <string name="notification_button_stop">Stop</string>
     <string name="activity_title">Scenari</string>
     <string name="accessibility_service_description">Questa applicazione ha bisogno di questo servizio per inserire i clic che hai
          creato nelle altre applicazioni una volta che le condizioni sono state rilevate.\n\nNon verranno raccolti dati da
