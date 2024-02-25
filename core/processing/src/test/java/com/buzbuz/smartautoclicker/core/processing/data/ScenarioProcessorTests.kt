@@ -44,6 +44,7 @@ import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newEvent
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -101,7 +102,7 @@ class ScenarioProcessorTests {
 
     /** Interface to be mocked in order to verify the calls to the bitmap supplier. */
     interface BitmapSupplier {
-        fun getBitmap(path: String, width: Int, height: Int): Bitmap
+        suspend fun getBitmap(condition: ImageCondition): Bitmap
     }
     /** Interface to be mocked in order to verify the calls to the stop listener. */
     interface StopRequestListener {
@@ -126,16 +127,19 @@ class ScenarioProcessorTests {
         @DetectionType detectionType: Int,
         shouldBeOnScreen: Boolean,
         isDetected: Boolean,
-    ) : ImageCondition {
+    ) : ImageCondition = runBlocking {
+        val condition = newCondition(path, area, threshold, detectionType, shouldBeOnScreen)
         val conditionBitmap = mock(Bitmap::class.java)
-        mockWhen(mockBitmapSupplier.getBitmap(path, area.width(), area.height())).thenReturn(conditionBitmap)
+
+        mockWhen(mockBitmapSupplier.getBitmap(condition)).thenReturn(conditionBitmap)
 
         val pass = if (isDetected) TEST_DETECTION_OK else TEST_DETECTION_KO
         when (detectionType) {
             EXACT -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, area, threshold)).thenReturn(pass)
             WHOLE_SCREEN -> mockWhen(mockImageDetector.detectCondition(conditionBitmap, threshold)).thenReturn(pass)
         }
-        return newCondition(path, area, threshold, detectionType, shouldBeOnScreen)
+
+        condition
     }
 
     /** */
@@ -156,6 +160,7 @@ class ScenarioProcessorTests {
         events: List<ImageEvent>,
         triggerEvent: List<TriggerEvent>,
     ) = ScenarioProcessor(
+        "",
         mockImageDetector,
         TEST_DATA_DETECTION_QUALITY.toInt(),
         false,
