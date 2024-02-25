@@ -130,7 +130,8 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_empty_actions">Aucune action !</string>
-    <string name="message_empty_conditions">Aucune condition !</string>
+    <string name="message_empty_trigger_conditions">Aucune condition !</string>
+    <string name="message_empty_image_conditions">Aucune condition d\'écran !</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
     <string name="message_empty_image_event_list">Aucun évènement d\'écran !</string>
@@ -143,8 +144,9 @@
       -->
     <string name="message_empty_secondary_end_condition_no_events">Vous avez besoin d\'au moins un évènement pour créer une condition de fin pour votre scénario</string>
     <string name="message_empty_secondary_screen_event_list">Un évènement d\'écran est un ensemble d\'actions exécutées lorsque qu\'une condition spécifique est détectée sur l\'écran.  Vous avez besoin d\'au moins un évènement ou évènement d\'écran dans votre scénario pour l\'exécuter.</string>
-    <string name="message_empty_secondary_trigger_event_list">Un évènement est un ensemble d\'actions exécutées lorsque que des conditions personnalisées sont remplies.  Vous avez besoin d\'au moins un évènement ou évènement d\'écran dans votre scénario pour l\'exécuter.</string>
-    <string name="message_empty_secondary_condition_list">Une condition est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
+    <string name="message_empty_secondary_trigger_event_list">Un évènement est un ensemble d\'actions exécutées lorsque que des conditions personnalisées sont remplies.\nVous avez besoin d\'au moins un évènement ou évènement d\'écran dans votre scénario pour l\'exécuter.</string>
+    <string name="message_empty_secondary_trigger_condition_list">Une condition est un critère personnalisé pour lancer une action.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
+    <string name="message_empty_secondary_image_condition_list">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
     <string name="message_empty_secondary_action_list">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.\nVous avez besoin d\'au moins une action dans votre évènement.</string>
     <string name="message_empty_secondary_counter_name_list">Les compteur sont créés avec une Action Modifier Compteur ou une condition Compteur atteint</string>
 
