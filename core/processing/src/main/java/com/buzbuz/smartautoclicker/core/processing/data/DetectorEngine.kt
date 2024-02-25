@@ -193,7 +193,6 @@ internal class DetectorEngine(context: Context) {
             )
             scenarioProcessor?.onScenarioStart(context)
 
-            scenarioProcessor?.onScenarioStart(context)
             processScreenImages()
         }
     }

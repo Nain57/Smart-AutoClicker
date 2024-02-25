@@ -119,13 +119,16 @@ internal class ConditionsVerifier(
             }
         } ?: false
 
-    private fun verifyOnTimerReached(condition: TriggerCondition.OnTimerReached): Boolean =
-        state.getTimerValue(condition.getDatabaseId())?.let { timerValueMs ->
-            if ((currentVerificationTsMs ?: 0) > max(timerValueMs + condition.durationMs, timerValueMs) ) {
-                state.setTimerToDisabled(condition.getDatabaseId())
-                true
-            } else false
-        } ?: false
+    private fun verifyOnTimerReached(condition: TriggerCondition.OnTimerReached): Boolean {
+        val currentTsMs = currentVerificationTsMs ?: return false
+        val timerEndMs = state.getTimerEndMs(condition.getDatabaseId()) ?: return false
+
+        return if (currentTsMs > timerEndMs) {
+            state.setTimerToDisabled(condition.getDatabaseId())
+            true
+        } else false
+    }
+
 
     private fun verifyOnScenarioStart() : Boolean = false
     private fun verifyOnScenarioEnd() : Boolean = false
