@@ -64,17 +64,11 @@ internal class ScenarioProcessor(
     /** Tells if the screen metrics have been invalidated and should be updated. */
     private var invalidateScreenMetrics = true
 
-    suspend fun onScenarioStart(context: Context) {
+    fun onScenarioStart(context: Context) {
         processingState.onProcessingStarted(context)
-        processingState.startEvent?.let { startEvent ->
-            if (processingState.isEventEnabled(startEvent.getDatabaseId())) actionExecutor.executeActions(startEvent)
-        }
     }
 
-    suspend fun onScenarioEnd() {
-        processingState.endEvent?.let { endEvent ->
-            if (processingState.isEventEnabled(endEvent.getDatabaseId())) actionExecutor.executeActions(endEvent)
-        }
+    fun onScenarioEnd() {
         processingState.onProcessingStopped()
     }
 

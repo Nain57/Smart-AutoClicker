@@ -276,8 +276,6 @@ internal open class CompatV13Deserializer : CompatDeserializer() {
     // ===== The following structures were not possible yet:
     override fun deserializeConditionBroadcastReceived(jsonCondition: JsonObject): ConditionEntity? = null
     override fun deserializeConditionCounterReached(jsonCondition: JsonObject): ConditionEntity? = null
-    override fun deserializeConditionScenarioStart(jsonCondition: JsonObject): ConditionEntity? = null
-    override fun deserializeConditionScenarioEnd(jsonCondition: JsonObject): ConditionEntity? = null
     override fun deserializeConditionTimerReached(jsonCondition: JsonObject): ConditionEntity? = null
     override fun deserializeActionChangeCounter(jsonChangeCounter: JsonObject): ActionEntity? = null
 }

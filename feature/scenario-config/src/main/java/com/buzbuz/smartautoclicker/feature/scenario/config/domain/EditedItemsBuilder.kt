@@ -177,8 +177,6 @@ class EditedItemsBuilder internal constructor(
             is TriggerCondition.OnBroadcastReceived -> createNewOnBroadcastReceivedFrom(condition, eventId)
             is TriggerCondition.OnCounterCountReached -> createNewOnCounterReachedFrom(condition, eventId)
             is TriggerCondition.OnTimerReached -> createNewOnTimerReachedFrom(condition, eventId)
-            is TriggerCondition.OnScenarioEnd -> TODO()
-            is TriggerCondition.OnScenarioStart -> TODO()
         }
 
     private fun createNewOnBroadcastReceivedFrom(condition: TriggerCondition.OnBroadcastReceived, eventId: Identifier) =

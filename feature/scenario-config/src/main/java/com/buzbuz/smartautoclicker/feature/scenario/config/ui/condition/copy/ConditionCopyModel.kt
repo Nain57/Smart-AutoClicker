@@ -21,7 +21,6 @@ import android.graphics.Bitmap
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.interfaces.containsIdentifiable
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -32,15 +31,10 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getImageConditionBitmap
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * View model for the [ConditionCopyDialog].
@@ -72,11 +66,11 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
             buildList {
                 if (editedConditions.isNotEmpty()) {
                     add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_this))
-                    addAll(editedConditions.toCopyItems().sortedBy { it.condition.name })
+                    addAll(editedConditions.toCopyItems().distinctByUiDisplay().sortedBy { it.condition.name })
                 }
                 if (otherConditions.isNotEmpty()) {
                     add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_all))
-                    addAll(otherConditions.toCopyItems().sortedBy { it.condition.name })
+                    addAll(otherConditions.toCopyItems().distinctByUiDisplay().sortedBy { it.condition.name })
                 }
             }
         }
@@ -111,14 +105,11 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private fun List<ConditionCopyItem>.distinctByUiDisplay() =
+    private fun List<ConditionCopyItem.ConditionItem>.distinctByUiDisplay() =
         distinctBy { item ->
             when (item) {
-                is ConditionCopyItem.HeaderItem ->
-                    item.title.hashCode()
-
                 is ConditionCopyItem.ConditionItem.Image ->
-                    item.condition.name.hashCode() + (item.condition.path?.hashCode() ?: 0)
+                    item.condition.hashCodeNoIds()
 
                 is ConditionCopyItem.ConditionItem.Trigger ->
                     when (item.condition) {

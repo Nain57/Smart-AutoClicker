@@ -39,9 +39,7 @@ internal fun List<Event>.getEditedConditionsForCopy(editedEvent: Event): List<Co
     this@getEditedConditionsForCopy.forEach { event ->
         if (event::class != editedEvent::class || !editedEvent.isComplete()) return@forEach
         event.conditions.forEach { editedCondition ->
-            if (editedCondition.isComplete() &&
-                editedCondition !is TriggerCondition.OnScenarioStart &&
-                editedCondition !is TriggerCondition.OnScenarioEnd) {
+            if (editedCondition.isComplete()) {
                 add(editedCondition)
             }
         }
@@ -54,10 +52,6 @@ internal fun List<Condition>.filterForCopy(editedEvent: Event, editedConditions:
         !condition.isComplete() -> false
         // Remove currently edited events, called should use the up to date values from edition
         editedConditions.containsIdentifiable(condition.id) -> false
-        // Remove click on conditions.
-        condition is TriggerCondition.OnScenarioStart -> false
-        // Remove toggle event that specifies the events toggles.
-        condition is TriggerCondition.OnScenarioEnd -> false
         // Remove conditions not suitable for current event
         !editedEvent.isConditionCompatibleForCopy(condition) -> false
         // Ok for copy
