@@ -69,7 +69,7 @@ class ImageConditionSelectionDialog(
         }
 
         viewBinding.layoutLoadableList.apply {
-            setEmptyText(R.string.message_empty_conditions)
+            setEmptyText(R.string.message_empty_image_conditions)
             list.apply {
                 adapter = conditionsAdapter
                 layoutManager = GridLayoutManager(

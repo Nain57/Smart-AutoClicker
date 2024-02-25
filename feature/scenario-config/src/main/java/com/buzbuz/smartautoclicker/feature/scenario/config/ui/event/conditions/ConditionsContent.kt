@@ -90,8 +90,8 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun setupImageEventView() {
         viewBinding.apply {
             setEmptyText(
-                id = R.string.message_empty_conditions,
-                secondaryId = R.string.message_empty_secondary_condition_list,
+                id = R.string.message_empty_image_conditions,
+                secondaryId = R.string.message_empty_secondary_image_condition_list,
             )
             list.apply {
                 adapter = ImageConditionAdapter(
@@ -107,8 +107,8 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun setupTriggerEventView() {
         viewBinding.apply {
             setEmptyText(
-                id = R.string.message_empty_conditions,
-                secondaryId = R.string.message_empty_secondary_condition_list,
+                id = R.string.message_empty_trigger_conditions,
+                secondaryId = R.string.message_empty_secondary_trigger_condition_list,
             )
             list.apply {
                 adapter = TriggerConditionAdapter(

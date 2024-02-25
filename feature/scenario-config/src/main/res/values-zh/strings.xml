@@ -130,7 +130,8 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_empty_actions">未创建动作！</string>
-    <string name="message_empty_conditions">未创建条件！</string>
+    <string name="message_empty_trigger_conditions">无条件！</string>
+    <string name="message_empty_image_conditions">未创建条件！</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">没有在脚本中创建场景</string>
     <string name="message_empty_end_condition_config_event_no_selection">没有场景被选择</string>
     <string name="message_empty_image_event_list">无屏幕事件 ！</string>
@@ -144,7 +145,8 @@
     <string name="message_empty_secondary_end_condition_no_events">您需要至少创建一个场景才能使用结束条件</string>
     <string name="message_empty_secondary_screen_event_list">屏幕事件包含一组在屏幕上检测到特定条件时执行的操作。您需要在场景中至少有一个事件或屏幕事件才能执行。</string>
     <string name="message_empty_secondary_trigger_event_list">事件包含一组在满足自定义条件时执行的操作。\n您需要在场景中至少有一个事件或屏幕事件才能执行它。</string>
-    <string name="message_empty_secondary_condition_list">按照指定条件在屏幕每一帧的截图上进行搜索。\n您的场景中需要至少存在一个条件。</string>
+    <string name="message_empty_secondary_trigger_condition_list">条件是启动操作的自定义标准。</string>
+    <string name="message_empty_secondary_image_condition_list">屏幕条件是屏幕截图的一部分，将在手机屏幕显示的每个帧上进行搜索。</string>
     <string name="message_empty_secondary_action_list">当条件满足时，创建的动作将被执行（点击、滑动……）\n您的场景中需要至少存在一个动作。</string>
     <string name="message_empty_secondary_counter_name_list">使用更改计数器操作或计数器达到条件创建计数器</string>
 

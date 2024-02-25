@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import kotlin.math.max
 
 interface ITimersState {
 

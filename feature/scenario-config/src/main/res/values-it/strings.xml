@@ -130,7 +130,8 @@
       - Views handles any length here, but try to be concise.
       -->
     <string name="message_empty_actions">Nessuna azione !</string>
-    <string name="message_empty_conditions">Nessuna condizione !</string>
+    <string name="message_empty_trigger_conditions">Nessuna condizione !</string>
+    <string name="message_empty_image_conditions">Nessuna condizione di schermo!</string>
     <string name="message_empty_end_condition_config_event_none_in_scenario">Nessun evento creato nello scenario</string>
     <string name="message_empty_end_condition_config_event_no_selection">Nessun evento selezionato</string>
     <string name="message_empty_image_event_list">Nessun evento sullo schermo!</string>
@@ -144,7 +145,8 @@
     <string name="message_empty_secondary_end_condition_no_events">Hai bisogno di almeno un evento per creare una condizione di fine per il tuo scenario</string>
     <string name="message_empty_secondary_screen_event_list">Un evento contiene una serie di azioni eseguite quando una specifica condizione viene rilevata sullo schermo.\nHai bisogno di almeno un evento nel tuo scenario per eseguirlo.</string>
     <string name="message_empty_secondary_trigger_event_list">Un evento contiene un insieme di azioni eseguite quando vengono soddisfatte una serie di condizioni personalizzate.\nPer poterlo eseguire, è necessario che lo scenario contenga almeno un evento o una schermata.</string>
-    <string name="message_empty_secondary_condition_list">Una condizione è una porzione di schermo che verrà cercata su ogni frame generato dal tuo telefono.\nHai bisogno di almeno una condizione nel tuo evento.</string>
+    <string name="message_empty_secondary_trigger_condition_list">Una condizione è un criterio personalizzato per l\'avvio di un\'azione.</string>
+    <string name="message_empty_secondary_image_condition_list">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.\nÈ necessaria almeno una condizione nell\'evento.</string>
     <string name="message_empty_secondary_action_list">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.\nHai bisogno di almeno un\'azione nel tuo evento.</string>
     <string name="message_empty_secondary_counter_name_list">I contatori vengono creati con un\'azione di modifica del contatore o con una condizione di raggiungimento del contatore.</string>
 
