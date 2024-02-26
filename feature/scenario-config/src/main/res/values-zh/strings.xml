@@ -56,8 +56,8 @@
     <string name="menu_item_title_more">更多</string>
     <string name="menu_item_title_conditions">条件</string>
     <string name="menu_item_title_actions">动作</string>
-    <string name="menu_item_title_image_events">屏幕事件</string>
-    <string name="menu_item_title_trigger_events">活动</string>
+    <string name="menu_item_title_image_events">屏幕</string>
+    <string name="menu_item_title_trigger_events">触发器</string>
 
     <!--
       - Text for items in a list or vertical layout.

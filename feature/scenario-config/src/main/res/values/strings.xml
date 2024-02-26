@@ -60,8 +60,8 @@
     <string name="menu_item_title_more">More</string>
     <string name="menu_item_title_conditions">Conditions</string>
     <string name="menu_item_title_actions">Actions</string>
-    <string name="menu_item_title_image_events">Screen events</string>
-    <string name="menu_item_title_trigger_events">Events</string>
+    <string name="menu_item_title_image_events">Screen</string>
+    <string name="menu_item_title_trigger_events">Triggers</string>
 
     <!--
       - Text for items in a list or vertical layout.
