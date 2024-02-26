@@ -56,8 +56,8 @@
     <string name="menu_item_title_more">Plus</string>
     <string name="menu_item_title_actions">Actions</string>
     <string name="menu_item_title_conditions">Conditions</string>
-    <string name="menu_item_title_image_events">Évènements d\'écran</string>
-    <string name="menu_item_title_trigger_events">Évènements</string>
+    <string name="menu_item_title_image_events">Écran</string>
+    <string name="menu_item_title_trigger_events">Déclencheurs</string>
 
     <!--
       - Text for items in a list or vertical layout.

@@ -56,8 +56,8 @@
     <string name="menu_item_title_more">Altro</string>
     <string name="menu_item_title_conditions">Condizioni</string>
     <string name="menu_item_title_actions">Azioni</string>
-    <string name="menu_item_title_image_events">Eventi dello schermo</string>
-    <string name="menu_item_title_trigger_events">Eventi</string>
+    <string name="menu_item_title_image_events">Schermo</string>
+    <string name="menu_item_title_trigger_events">Trigger</string>
 
     <!--
       - Text for items in a list or vertical layout.
