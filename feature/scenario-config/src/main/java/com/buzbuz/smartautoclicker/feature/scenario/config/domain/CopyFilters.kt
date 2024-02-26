@@ -27,66 +27,87 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.isClickOnCondition
 
 
-internal fun List<ImageEvent>.filterForImageCopy(): List<ImageEvent> = filter { event ->
+internal fun List<ImageEvent>.getEditedImageEventsForCopy(): List<ImageEvent> = filter { event ->
     event.isComplete()
 }
 
-internal fun List<TriggerEvent>.filterForTriggerCopy(): List<TriggerEvent> = filter { event ->
+internal fun List<ImageEvent>.filterForImageEventCopy(editedEvents: List<ImageEvent>): List<ImageEvent> = filter { event ->
+    event.isComplete() && (editedEvents.find { it.id == event.id } == null)
+}
+
+internal fun List<TriggerEvent>.getEditedTriggerEventsForCopy(): List<TriggerEvent> = filter { event ->
     event.isComplete()
+}
+
+internal fun List<TriggerEvent>.filterForTriggerEventCopy(editedEvents: List<TriggerEvent>): List<TriggerEvent> = filter { event ->
+    event.isComplete() && (editedEvents.find { it.id == event.id } == null)
 }
 
 internal fun List<Event>.getEditedConditionsForCopy(editedEvent: Event): List<Condition> = buildList {
+    editedEvent.conditions.forEach { editedCondition ->
+        if (editedCondition.isComplete()) add(editedCondition)
+    }
+
     this@getEditedConditionsForCopy.forEach { event ->
-        if (event::class != editedEvent::class || !editedEvent.isComplete()) return@forEach
+        if (event.id == editedEvent.id || event::class != editedEvent::class || !editedEvent.isComplete()) return@forEach
+
         event.conditions.forEach { editedCondition ->
-            if (editedCondition.isComplete()) {
-                add(editedCondition)
-            }
+            if (editedCondition.isComplete()) add(editedCondition)
         }
     }
 }
 
-internal fun List<Condition>.filterForCopy(editedEvent: Event, editedConditions: List<Condition>): List<Condition> = filter { condition ->
-    when {
-        // Remove invalid actions
-        !condition.isComplete() -> false
-        // Remove currently edited events, called should use the up to date values from edition
-        editedConditions.containsIdentifiable(condition.id) -> false
-        // Remove conditions not suitable for current event
-        !editedEvent.isConditionCompatibleForCopy(condition) -> false
-        // Ok for copy
-        else -> true
+internal fun List<Condition>.filterConditionsForCopy(editedEvent: Event, editedConditions: List<Condition>): List<Condition> =
+    filter { condition ->
+        when {
+            // Remove invalid actions
+            !condition.isComplete() -> false
+            // Remove currently edited events, called should use the up to date values from edition
+            condition.eventId == editedEvent.id || editedConditions.containsIdentifiable(condition.id) -> false
+            // Remove conditions not suitable for current event
+            !editedEvent.isConditionCompatibleForCopy(condition) -> false
+            // Ok for copy
+            else -> true
+        }
     }
-}
 
 internal fun List<Event>.getEditedActionsForCopy(editedEvent: Event): List<Action> = buildList {
-    this@getEditedActionsForCopy.forEach { editedScenarioEvent ->
-        if (!editedScenarioEvent.isComplete()) return@forEach
-        editedScenarioEvent.actions.forEach actions@{ editedAction ->
-            when {
-                !editedAction.isComplete() -> return@actions
-                editedEvent is TriggerEvent && editedAction is Action.Click && editedAction.isClickOnCondition() -> return@actions
-                editedEvent is ImageEvent && editedAction is Action.Click && !editedAction.isClickOnConditionValid() -> return@actions
-                else -> add(editedAction)
-            }
+    editedEvent.actions.forEach { action ->
+        if (editedEvent.shouldAddAction(action)) add(action)
+    }
+
+    this@getEditedActionsForCopy.forEach { event ->
+        if (event.id == editedEvent.id || !event.isComplete()) return@forEach
+
+        event.actions.forEach actions@{ editedAction ->
+            if (editedEvent.shouldAddAction(editedAction)) add(editedAction)
         }
     }
 }
 
-internal fun List<Action>.filterForCopy(editedActions: List<Action>): List<Action> = filter { action ->
+private fun Event.shouldAddAction(action: Action): Boolean =
     when {
-        // Remove invalid
         !action.isComplete() -> false
-        // Remove currently edited events, called should use the up to date values from edition
-        editedActions.containsIdentifiable(action.id) -> false
-        // Remove click on conditions.
-        action is Action.Click && action.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION -> false
-        // Remove toggle event that specifies the events toggles.
-        action is Action.ToggleEvent && !action.toggleAll -> false
-        // Ok for copy
+        this is TriggerEvent && action is Action.Click && action.isClickOnCondition() -> false
+        this is ImageEvent && action is Action.Click && !action.isClickOnConditionValid() -> false
         else -> true
     }
-}
+
+internal fun List<Action>.filterActionsForCopy(editedEvent: Event, editedActions: List<Action>): List<Action> =
+    filter { action ->
+        when {
+            // Remove invalid
+            !action.isComplete() -> false
+            // Remove currently edited events, called should use the up to date values from edition
+            action.eventId == editedEvent.id || editedActions.containsIdentifiable(action.id) -> false
+            // Remove click on conditions.
+            action is Action.Click && action.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION -> false
+            // Remove toggle event that specifies the events toggles.
+            action is Action.ToggleEvent && !action.toggleAll -> false
+            // Ok for copy
+            else -> true
+        }
+    }
 
 private fun Event.isConditionCompatibleForCopy(condition: Condition): Boolean =
     (this is ImageEvent && condition is ImageCondition) || (this is TriggerEvent && condition is TriggerCondition)

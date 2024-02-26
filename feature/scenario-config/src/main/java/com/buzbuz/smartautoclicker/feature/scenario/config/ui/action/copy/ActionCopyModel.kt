@@ -21,7 +21,6 @@ import android.app.Application
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 
-import com.buzbuz.smartautoclicker.core.base.interfaces.containsIdentifiable
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -48,14 +47,15 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
     /** List of all actions available for copy */
     private val allCopyItems: Flow<List<ActionCopyItem>> =
         combine(
-            editionRepository.editionState.allEditedEvents,
+            editionRepository.editionState.editedEventState,
             editionRepository.editionState.actionsForCopy,
-        ) { editedEvents, actions ->
+        ) { editedEventState, actions ->
 
+            val editedEvent = editedEventState.value ?: return@combine emptyList()
             val editedActions = mutableListOf<Action>()
             val otherActions = mutableListOf<Action>()
             actions.forEach { action ->
-                if (editedEvents.containsIdentifiable(action.eventId)) editedActions.add(action)
+                if (editedEvent.id == action.eventId) editedActions.add(action)
                 else otherActions.add(action)
             }
 
