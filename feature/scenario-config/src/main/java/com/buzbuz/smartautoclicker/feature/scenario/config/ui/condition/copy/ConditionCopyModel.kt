@@ -21,7 +21,6 @@ import android.graphics.Bitmap
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
-import com.buzbuz.smartautoclicker.core.base.interfaces.containsIdentifiable
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.Repository
@@ -52,14 +51,15 @@ class ConditionCopyModel(application: Application) : AndroidViewModel(applicatio
 
     private val allCopyItems: Flow<List<ConditionCopyItem>> =
         combine(
-            editionRepository.editionState.allEditedEvents,
+            editionRepository.editionState.editedEventState,
             editionRepository.editionState.conditionsForCopy,
-        ) { editedEvents, conditions ->
+        ) { editedEventState, conditions ->
 
+            val editedEvent = editedEventState.value ?: return@combine emptyList()
             val editedConditions = mutableListOf<Condition>()
             val otherConditions = mutableListOf<Condition>()
             conditions.forEach { condition ->
-                if (editedEvents.containsIdentifiable(condition.eventId)) editedConditions.add(condition)
+                if (editedEvent.id == condition.eventId) editedConditions.add(condition)
                 else otherConditions.add(condition)
             }
 

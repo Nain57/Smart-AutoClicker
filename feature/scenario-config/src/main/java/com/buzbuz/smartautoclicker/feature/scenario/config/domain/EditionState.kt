@@ -172,16 +172,18 @@ internal class EditionState internal constructor(
     override val imageEventsForCopy: Flow<List<ImageEvent>> =
         combine(editedImageEventsState, repository.allImageEvents) { allEditedEvents, dbEvents ->
             buildList {
-                addAll(allEditedEvents.value?.filterForImageCopy() ?: emptyList())
-                addAll(dbEvents.filterForImageCopy())
+                val scenarioEvents = allEditedEvents.value?.getEditedImageEventsForCopy() ?: emptyList()
+                addAll(scenarioEvents)
+                addAll(dbEvents.filterForImageEventCopy(scenarioEvents))
             }
         }
 
     override val triggerEventsForCopy: Flow<List<TriggerEvent>> =
         combine(editedTriggerEventsState, repository.allTriggerEvents) { allEditedEvents, dbEvents ->
             buildList {
-                addAll(allEditedEvents.value?.filterForTriggerCopy() ?: emptyList())
-                addAll(dbEvents.filterForTriggerCopy())
+                val scenarioEvents = allEditedEvents.value?.getEditedTriggerEventsForCopy() ?: emptyList()
+                addAll(scenarioEvents)
+                addAll(dbEvents.filterForTriggerEventCopy(scenarioEvents))
             }
         }
 
@@ -191,7 +193,7 @@ internal class EditionState internal constructor(
             buildList {
                 val editedConditions = allEditedEvents.getEditedConditionsForCopy(editedEvent)
                 addAll(editedConditions)
-                addAll(dbConditions.filterForCopy(editedEvent, editedConditions))
+                addAll(dbConditions.filterConditionsForCopy(editedEvent, editedConditions))
             }.distinctBy { item -> item.hashCodeNoIds() }
         }
 
@@ -201,7 +203,7 @@ internal class EditionState internal constructor(
                 editedEvent ?: return@buildList
                 val editedActions = allEditedEvents.getEditedActionsForCopy(editedEvent)
                 addAll(editedActions)
-                addAll(dbActions.filterForCopy(editedActions))
+                addAll(dbActions.filterActionsForCopy(editedEvent, editedActions))
             }.distinctBy { item -> item.hashCodeNoIds() }
         }
 
@@ -274,7 +276,4 @@ internal class EditionState internal constructor(
             action is Action.Click && action.clickOnConditionId == condition.id
         } != null
     }
-
-    private fun Event.isConditionCompatible(condition: Condition): Boolean =
-        (this is ImageEvent && condition is ImageCondition) || (this is TriggerEvent && condition is TriggerCondition)
 }
