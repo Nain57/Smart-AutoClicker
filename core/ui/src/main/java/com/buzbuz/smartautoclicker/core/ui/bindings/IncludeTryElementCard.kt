@@ -29,7 +29,7 @@ fun IncludeTryElementCardBinding.setOnClickListener(listener: () -> Unit) {
 
 fun IncludeTryElementCardBinding.setEnabledState(enabledState: Boolean) {
     buttonTest.apply {
-        alpha = if (isEnabled) ENABLED_ITEM_ALPHA else DISABLED_ITEM_ALPHA
+        alpha = if (enabledState) ENABLED_ITEM_ALPHA else DISABLED_ITEM_ALPHA
         isEnabled = enabledState
     }
 }
