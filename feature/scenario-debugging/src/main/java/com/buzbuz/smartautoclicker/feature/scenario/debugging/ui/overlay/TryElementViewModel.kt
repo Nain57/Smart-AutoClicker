@@ -57,7 +57,7 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
             (state == DetectionState.RECORDING || state == DetectionState.DETECTING) && element != null
         }
 
-    val isPlaying: StateFlow<Boolean> = detectionRepository.detectionState
+    private val isPlaying: StateFlow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.DETECTING }
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = false)
@@ -109,12 +109,9 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun toggleTryState(context: Context) {
-        if (isPlaying.value) stopTry()
-        else startTry(context)
-    }
+    fun startTry(context: Context) {
+        if (isPlaying.value) return
 
-    private fun startTry(context: Context) {
         viewModelScope.launch {
             triedElement.value?.let { element ->
 
@@ -137,6 +134,8 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun stopTry() {
+        if (!isPlaying.value) return
+
         viewModelScope.launch {
             detectionRepository.stopDetection()
         }
