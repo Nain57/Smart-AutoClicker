@@ -44,12 +44,6 @@
                 android:animateLayoutChanges="true">
 
                 <ImageButton
-                    android:id="@+id/btn_play"
-                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                    android:src="@drawable/ic_play_arrow"
-                    android:contentDescription="@string/content_desc_play_pause_scenario" />
-
-                <ImageButton
                     android:id="@+id/btn_back"
                     style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                     android:src="@drawable/ic_back"
@@ -78,12 +72,10 @@
             android:maxLines="1"
             android:gravity="center"
             android:textColor="@color/textTitle"
-            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/menu_items"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:visibility="visible">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
                 android:id="@+id/text_result"

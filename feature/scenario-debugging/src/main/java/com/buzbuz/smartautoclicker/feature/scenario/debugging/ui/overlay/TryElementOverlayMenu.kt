@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay
 
 import android.util.Size
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -28,7 +27,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
-import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.R
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.OverlayTryElementMenuBinding
 
@@ -43,21 +41,11 @@ class TryElementOverlayMenu(
     private val viewModel: TryElementViewModel by viewModels()
 
     private lateinit var viewBinding: OverlayTryElementMenuBinding
-    /** Controls the animations of the play/pause button. */
-    private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewModel.setTriedElement(scenario, triedElement)
 
         viewBinding = OverlayTryElementMenuBinding.inflate(LayoutInflater.from(context))
-        playPauseButtonController = AnimatedStatesImageButtonController(
-            context = context,
-            state1StaticRes = R.drawable.ic_play_arrow,
-            state2StaticRes = R.drawable.ic_pause,
-            state1to2AnimationRes = R.drawable.anim_play_pause,
-            state2to1AnimationRes = R.drawable.anim_pause_play,
-        )
-        playPauseButtonController.attachView(viewBinding.btnPlay)
 
         return viewBinding.root
     }
@@ -67,16 +55,15 @@ class TryElementOverlayMenu(
     override fun onStart() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.canPlay.collect(::updatePlayPauseEnabledState) }
-                launch { viewModel.isPlaying.collect(::updateDetectionState) }
                 launch { viewModel.displayResults.collect(::updateDetectionResults) }
             }
         }
+
+        viewModel.startTry(context)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        playPauseButtonController.detachView()
+    override fun onStop() {
+        viewModel.stopTry()
     }
 
     override fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
@@ -89,40 +76,9 @@ class TryElementOverlayMenu(
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_play ->
-                viewModel.toggleTryState(context)
-
             R.id.btn_back -> {
                 viewModel.stopTry()
                 back()
-            }
-        }
-    }
-
-    private fun updatePlayPauseEnabledState(isEnabled: Boolean) {
-        setMenuItemViewEnabled(viewBinding.btnPlay, isEnabled)
-    }
-
-    private fun updateDetectionState(isDetecting: Boolean) {
-        val currentState = viewBinding.btnPlay.tag
-        if (currentState == isDetecting) return
-        viewBinding.btnPlay.tag = isDetecting
-
-        if (!isDetecting) {
-            if (currentState == null) playPauseButtonController.toState1(false)
-            else animateLayoutChanges {
-                viewBinding.layoutResult.visibility = View.GONE
-                setMenuItemVisibility(viewBinding.btnBack, true)
-                setMenuItemVisibility(viewBinding.btnHideOverlay, true)
-                playPauseButtonController.toState1(true)
-            }
-        } else {
-            if (currentState == null) playPauseButtonController.toState2(false)
-            else animateLayoutChanges {
-                viewBinding.layoutResult.visibility = View.VISIBLE
-                setMenuItemVisibility(viewBinding.btnBack, false)
-                setMenuItemVisibility(viewBinding.btnHideOverlay, false)
-                playPauseButtonController.toState2(true)
             }
         }
     }
