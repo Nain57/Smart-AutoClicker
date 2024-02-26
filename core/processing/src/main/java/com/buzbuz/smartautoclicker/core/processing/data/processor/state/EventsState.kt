@@ -123,8 +123,8 @@ private class EventList<T : Event>(events: List<T>) {
     /** Map of the all events. */
     private val eventsMap: Map<Long, T> = buildMap {
         events.forEach { event ->
-            if (event.enabledOnStart) enabledEventsMap[event.getDatabaseId()] = event
-            put(event.getDatabaseId(), event)
+            if (event.enabledOnStart) enabledEventsMap[event.getValidId()] = event
+            put(event.getValidId(), event)
         }
     }
 

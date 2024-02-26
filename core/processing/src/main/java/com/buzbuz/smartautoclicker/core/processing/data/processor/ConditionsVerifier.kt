@@ -63,7 +63,7 @@ internal class ConditionsVerifier(
 
         for (condition in conditions) {
             verificationResult = verifyCondition(condition)
-            verificationResults.addResult(condition.getDatabaseId(), verificationResult)
+            verificationResults.addResult(condition.getValidId(), verificationResult)
 
             if (operator == OR && verificationResult.isFulfilled) {
                 verificationResults.setFulfilledState(true)
@@ -119,11 +119,11 @@ internal class ConditionsVerifier(
 
     private fun verifyOnTimerReached(condition: TriggerCondition.OnTimerReached): Boolean {
         val currentTsMs = currentVerificationTsMs ?: return false
-        val timerEndMs = state.getTimerEndMs(condition.getDatabaseId()) ?: return false
+        val timerEndMs = state.getTimerEndMs(condition.getValidId()) ?: return false
 
         return if (currentTsMs > timerEndMs) {
             if (condition.restartWhenReached) state.setTimerStartToNow(condition)
-            else state.setTimerToDisabled(condition.getDatabaseId())
+            else state.setTimerToDisabled(condition.getValidId())
             true
         } else false
     }

@@ -30,15 +30,6 @@ internal sealed class ScenarioTry {
     internal abstract val imageEvents: List<ImageEvent>
     internal abstract val triggerEvents: List<TriggerEvent>
 
-    protected fun getTestPauseAction(eventId: Identifier): Action.Pause =
-        Action.Pause(
-            id = Identifier(databaseId = 1L),
-            eventId = eventId,
-            name = "Test Pause",
-            pauseDuration = 1000L,
-            priority = 0,
-        )
-
 }
 
 internal class ImageEventTry(
@@ -71,4 +62,13 @@ internal class ImageConditionTry(
             actions = listOf(getTestPauseAction(tryEventId)),
         )
     }
+
+    private fun getTestPauseAction(eventId: Identifier): Action.Pause =
+        Action.Pause(
+            id = Identifier(databaseId = 1L),
+            eventId = eventId,
+            name = "Test Pause",
+            pauseDuration = 1000L,
+            priority = 0,
+        )
 }

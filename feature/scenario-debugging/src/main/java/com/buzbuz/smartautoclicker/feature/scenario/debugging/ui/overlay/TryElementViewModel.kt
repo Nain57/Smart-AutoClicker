@@ -30,9 +30,9 @@ import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.formatConfidenceRate
+
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -51,11 +51,6 @@ class TryElementViewModel(application: Application) : AndroidViewModel(applicati
 
     private val triedElement: MutableStateFlow<Element?> = MutableStateFlow(null)
     private var resetJob: Job? = null
-
-    val canPlay: Flow<Boolean> = detectionRepository.detectionState
-        .combine(triedElement) { state, element ->
-            (state == DetectionState.RECORDING || state == DetectionState.DETECTING) && element != null
-        }
 
     private val isPlaying: StateFlow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.DETECTING }
