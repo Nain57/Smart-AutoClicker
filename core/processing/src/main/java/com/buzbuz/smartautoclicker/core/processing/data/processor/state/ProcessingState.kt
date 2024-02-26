@@ -61,7 +61,7 @@ internal class ProcessingState(
 
     private fun onEventDisabled(event: Event) {
         event.conditions.forEach { condition ->
-            if (condition is TriggerCondition.OnTimerReached) timersState.setTimerToDisabled(condition.getDatabaseId())
+            if (condition is TriggerCondition.OnTimerReached) timersState.setTimerToDisabled(condition.getValidId())
         }
     }
 }

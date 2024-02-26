@@ -41,7 +41,7 @@ internal class TimersState(
 
             triggerEvent.conditions.forEach { triggerCondition ->
                 if (triggerCondition is TriggerCondition.OnTimerReached) {
-                    idToTimerEnd[triggerCondition.getDatabaseId()] = triggerCondition.getEndTimeMs(startTimeMs)
+                    idToTimerEnd[triggerCondition.getValidId()] = triggerCondition.getEndTimeMs(startTimeMs)
                 }
             }
         }
@@ -55,7 +55,7 @@ internal class TimersState(
         idToTimerEnd[conditionId]
 
     override fun setTimerStartToNow(condition: TriggerCondition.OnTimerReached) {
-        idToTimerEnd[condition.getDatabaseId()] = condition.getEndTimeMs(System.currentTimeMillis())
+        idToTimerEnd[condition.getValidId()] = condition.getEndTimeMs(System.currentTimeMillis())
     }
 
     override fun setTimerToDisabled(conditionId: Long) {
