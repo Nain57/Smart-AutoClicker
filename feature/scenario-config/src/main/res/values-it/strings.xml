@@ -124,6 +124,8 @@
     <string name="item_title_event_toggles">%1$d modifiche</string>
     <string name="item_title_change_counter">Modificare contatore</string>
     <string name="item_title_restart_when_reached">Riavviare quando viene raggiunto</string>
+    <string name="item_title_toggle_type">Tipo di levetta</string>
+    <string name="item_title_toggle_change_all">Cambiare tutti</string>
 
     <!--
       - Empty list messages.

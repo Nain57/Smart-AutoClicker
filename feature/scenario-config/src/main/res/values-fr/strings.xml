@@ -124,6 +124,8 @@
     <string name="item_title_event_toggles">%1$d changements</string>
     <string name="item_title_change_counter">Modifier compteur</string>
     <string name="item_title_restart_when_reached">Relancer quand atteint</string>
+    <string name="item_title_toggle_type">Type de changements</string>
+    <string name="item_title_toggle_change_all">Changer tous</string>
 
     <!--
       - Empty list messages.

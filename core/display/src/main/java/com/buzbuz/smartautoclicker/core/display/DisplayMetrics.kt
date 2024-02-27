@@ -27,6 +27,7 @@ import android.hardware.display.DisplayManager
 import android.os.Build
 import android.view.Surface
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 
 /**
  * Provides metrics for the screen such as orientation or display size.
@@ -100,7 +101,12 @@ class DisplayMetrics internal constructor(context: Context) {
 
     /** Start the monitoring of the screen metrics. */
     fun startMonitoring(context: Context) {
-        context.registerReceiver(configChangedReceiver, IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED))
+        ContextCompat.registerReceiver(
+            context,
+            configChangedReceiver,
+            IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED),
+            ContextCompat.RECEIVER_EXPORTED,
+        )
     }
 
     /** Stop the monitoring of the screen metrics. All listeners will be unregistered. */

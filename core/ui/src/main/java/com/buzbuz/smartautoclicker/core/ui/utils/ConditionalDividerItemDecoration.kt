@@ -24,6 +24,7 @@ import android.util.Log
 import android.view.View
 
 import androidx.core.view.children
+import androidx.core.content.res.use
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration

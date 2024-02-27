@@ -40,6 +40,8 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 
 import org.mockito.Mockito
+import org.mockito.Mockito.eq
+import org.mockito.Mockito.isNull
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
@@ -73,7 +75,7 @@ class DisplayMetricsTests {
     /** @return the broadcast receiver registered upon orientation listener registration */
     private fun getBroadcastOrientationReceiver(): BroadcastReceiver {
         val receiverCaptor = ArgumentCaptor.forClass(BroadcastReceiver::class.java)
-        verify(mockContext).registerReceiver(receiverCaptor.capture(), any())
+        verify(mockContext).registerReceiver(receiverCaptor.capture(), any(), isNull(), isNull(), eq(0))
 
         return receiverCaptor.value
     }

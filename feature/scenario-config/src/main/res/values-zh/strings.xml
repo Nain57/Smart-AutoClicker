@@ -124,6 +124,8 @@
     <string name="item_title_counter_reached">在柜台上达到</string>
     <string name="item_title_broadcast_received">收到Broadcast</string>
     <string name="item_title_restart_when_reached">达到后重新启动</string>
+    <string name="item_title_toggle_type">切换类型</string>
+    <string name="item_title_toggle_change_all">全部更改</string>
 
     <!--
       - Empty list messages.

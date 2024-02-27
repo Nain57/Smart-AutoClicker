@@ -16,12 +16,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="default_dumb_click_name">Click</string>
+    <string name="default_dumb_click_name" translatable="false">Click</string>
     <integer name="default_dumb_click_press_duration">1</integer>
 
-    <string name="default_dumb_swipe_name">Swipe</string>
+    <string name="default_dumb_swipe_name" translatable="false">Swipe</string>
     <integer name="default_dumb_swipe_duration">500</integer>
 
-    <string name="default_dumb_pause_name">Wait</string>
+    <string name="default_dumb_pause_name" translatable="false">Wait</string>
     <integer name="default_dumb_pause_duration">50</integer>
 </resources>

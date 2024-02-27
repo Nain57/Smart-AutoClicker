@@ -129,6 +129,8 @@
     <string name="item_title_event_toggles">%1$d changes</string>
     <string name="item_title_change_counter">Change counter</string>
     <string name="item_title_restart_when_reached">Restart when reached</string>
+    <string name="item_title_toggle_type">Toggle type</string>
+    <string name="item_title_toggle_change_all">Change all</string>
 
     <!--
       - Empty list messages.

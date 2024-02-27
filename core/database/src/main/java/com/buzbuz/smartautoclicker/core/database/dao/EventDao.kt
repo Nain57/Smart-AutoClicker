@@ -57,6 +57,7 @@ abstract class EventDao {
      * Get the list of image events from all scenarios.
      * @return the flow on the list of events.
      */
+    @Transaction
     @Query("SELECT * FROM $EVENT_TABLE WHERE type='IMAGE_EVENT' ORDER BY name")
     abstract fun getAllImageEventsFlow(): Flow<List<CompleteEventEntity>>
 

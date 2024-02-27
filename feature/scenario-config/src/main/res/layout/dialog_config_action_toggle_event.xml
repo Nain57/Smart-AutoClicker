@@ -64,7 +64,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:text="Toggle type" />
+                        android:text="@string/item_title_toggle_type" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/enable_all_text"
@@ -75,7 +75,7 @@
                         app:layout_constraintEnd_toStartOf="@id/toggle_all_button"
                         app:layout_constraintTop_toTopOf="@id/toggle_all_button"
                         app:layout_constraintBottom_toBottomOf="@id/toggle_all_button"
-                        android:text="Change all " />
+                        android:text="@string/item_title_toggle_change_all" />
 
                     <include layout="@layout/include_tri_state_button"
                         android:id="@+id/toggle_all_button"
