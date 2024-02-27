@@ -38,7 +38,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
         info = twoStillTargetsPressWhenBothVisibleTutorialInfo,
         game = TutorialGameData(
             instructionsResId = R.string.message_tutorial_3_game_instructions,
-            gameRules = TwoStillTargetsPressWhenBothVisibleRules(50),
+            gameRules = TwoStillTargetsPressWhenBothVisibleRules(30),
         ),
         steps = listOf(
             // Start screen, before first play
