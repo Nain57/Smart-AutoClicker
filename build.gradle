@@ -68,7 +68,7 @@ ext {
     androidxVectorDrawableVersion = '1.1.0'
 
     // Other dependencies
-    googleMaterialVersion = '1.11.0'
+    googleMaterialVersion = '1.10.0'
     kotlinSerializationVersion = '1.6.0'
     lottieVersion = '6.1.0'
 

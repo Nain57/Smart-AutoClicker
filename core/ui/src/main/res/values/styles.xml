@@ -23,7 +23,7 @@
     <style name="AppTheme.Dialog.TopBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dialog_top_bar_height</item>
-        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:background">?attr/colorSurfaceContainerLowest</item>
         <item name="android:elevation">3dp</item>
     </style>
     <!-- Style for the dialog top bar title. -->
@@ -62,9 +62,7 @@
         <item name="dividerInsetEnd">@dimen/margin_horizontal_default</item>
     </style>
     <!-- Style for the card views. -->
-    <style name="AppTheme.Widget.Card" parent="@style/Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">?attr/colorSurfaceContainerHigh</item>
-    </style>
+    <style name="AppTheme.Widget.Card" parent="@style/Widget.Material3.CardView.Filled" />
     <!-- Style for the card views. -->
     <style name="AppTheme.Widget.CardFilled" parent="@style/Widget.Material3.CardView.Filled" />
     <!-- Style for the outlined card views. -->
@@ -139,6 +137,14 @@
     <!-- Style for the collapsible search view. -->
     <style name="AppTheme.Widget.SearchView" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <!-- Style for the bottom sheets dialogs search view. -->
+    <style name="AppTheme.Widget.BottomSheetDialog" parent="@style/ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppTheme.Widget.BottomSheet</item>
+    </style>
+    <!-- Style for the bottom sheets dialogs search view. -->
+    <style name="AppTheme.Widget.BottomSheet" parent="@style/Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">?android:attr/colorBackground</item>
     </style>
 
     <!-- Base overlays theme. -->
