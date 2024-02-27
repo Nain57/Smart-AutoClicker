@@ -32,6 +32,10 @@ android {
     namespace 'com.buzbuz.smartautoclicker.feature.billing'
     compileSdk rootProject.ext.compileSdkVersion
 
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         minSdk rootProject.ext.minSdkVersion
         targetSdk rootProject.ext.compileSdkVersion
