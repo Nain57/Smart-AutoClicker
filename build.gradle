@@ -33,7 +33,7 @@ buildscript {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_plugin_version"
 
         // Google Mobile Services, only used for releaseGms build type
-        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.gms:google-services:4.4.1'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
     }
 }
@@ -60,11 +60,11 @@ ext {
     androidxConstraintLayoutVersion = '2.1.4'
     androidxCoreVersion = '1.12.0'
     androidxFragmentVersion = '1.6.2'
-    androidxLifecycleVersion = '2.6.2'
+    androidxLifecycleVersion = '2.7.0'
     androidxLifecycleExtensionVersion = '2.2.0'
-    androidxNavigationVersion = '2.7.5'
+    androidxNavigationVersion = '2.7.7'
     androidxRecyclerViewVersion = '1.3.2'
-    androidxRoomVersion = '2.6.0'
+    androidxRoomVersion = '2.6.1'
     androidxVectorDrawableVersion = '1.1.0'
 
     // Other dependencies
