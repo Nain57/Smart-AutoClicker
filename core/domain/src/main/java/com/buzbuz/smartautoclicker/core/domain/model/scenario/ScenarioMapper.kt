@@ -43,7 +43,7 @@ internal fun ScenarioWithEvents.toDomain(asDomain: Boolean = false) = Scenario(
 /** @return the scenario for this entity. */
 internal fun CompleteScenario.toDomain(cleanIds: Boolean = false): Pair<Scenario, List<Event>> =
     scenario.toDomain(cleanIds) to events.map { completeEventEntity ->
-        completeEventEntity.toDomain()
+        completeEventEntity.toDomain(cleanIds)
     }
 
 
