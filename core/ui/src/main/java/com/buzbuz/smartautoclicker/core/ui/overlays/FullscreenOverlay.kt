@@ -27,7 +27,7 @@ import android.view.animation.LinearInterpolator
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 
 /** BaseOverlay class for an overlay displayed as full screen. */
 abstract class FullscreenOverlay(@StyleRes theme: Int? = null) : BaseOverlay(theme) {
@@ -36,7 +36,7 @@ abstract class FullscreenOverlay(@StyleRes theme: Int? = null) : BaseOverlay(the
     private val viewLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.MATCH_PARENT,
-        DisplayMetrics.TYPE_COMPAT_OVERLAY,
+        WindowManagerCompat.TYPE_COMPAT_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or

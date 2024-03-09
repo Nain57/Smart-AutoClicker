@@ -26,8 +26,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
@@ -202,8 +202,7 @@ class DumbMainMenu(
                 onPlayPauseClicked()
             }
             .create()
-            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
-            .show()
+            .showAsOverlay()
 
         viewModel.onStopVolumeDownTutorialDialogShown()
     }

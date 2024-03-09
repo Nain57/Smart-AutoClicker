@@ -30,7 +30,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
@@ -229,10 +229,7 @@ class ImageConditionDialog(
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create()
-            .apply {
-                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
-            }
-            .show()
+            .showAsOverlay()
     }
 
     private fun showDetectionAreaSelector() {

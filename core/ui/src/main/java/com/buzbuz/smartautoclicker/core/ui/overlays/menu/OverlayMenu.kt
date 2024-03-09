@@ -38,8 +38,9 @@ import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
+import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
+import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.animations.HideMenuAnimation
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.animations.OverlayMenuAnimationsController
@@ -82,13 +83,15 @@ abstract class OverlayMenu(
     private val baseLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
-        DisplayMetrics.TYPE_COMPAT_OVERLAY,
+        WindowManagerCompat.TYPE_COMPAT_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
         PixelFormat.TRANSLUCENT,
-    )
+    ).apply {
+        disableMoveAnimations()
+    }
 
     /** The layout parameters of the menu layout. */
     private val menuLayoutParams: WindowManager.LayoutParams =

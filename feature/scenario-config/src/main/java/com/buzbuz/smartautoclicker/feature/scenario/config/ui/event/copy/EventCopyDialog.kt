@@ -21,13 +21,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DividerItemDecoration
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
+import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.getDividerWithoutHeader
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 
@@ -95,10 +93,7 @@ class EventCopyDialog(
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create()
-            .apply {
-                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
-            }
-            .show()
+            .showAsOverlay()
     }
 
     private fun notifySelectionAndDestroy(event: Event) {

@@ -30,7 +30,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
@@ -293,10 +293,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 viewModel.cancelScenarioChanges()
             }
             .create()
-            .apply {
-                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
-            }
-            .show()
+            .showAsOverlay()
     }
 
     private fun showFirstTimeTutorialDialog() {
@@ -312,8 +309,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .create()
-            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
-            .show()
+            .showAsOverlay()
 
         viewModel.onFirstTimeTutorialDialogShown()
     }
@@ -326,8 +322,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 onPlayPauseClicked()
             }
             .create()
-            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
-            .show()
+            .showAsOverlay()
 
         viewModel.onStopVolumeDownTutorialDialogShown()
     }
@@ -342,7 +337,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 onStopClicked()
             }
             .create()
-            .apply { window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY) }
-            .show()
+            .showAsOverlay()
     }
 }

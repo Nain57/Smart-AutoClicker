@@ -25,6 +25,7 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.hardware.display.DisplayManager
 import android.os.Build
+import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
@@ -39,13 +40,6 @@ import androidx.core.content.ContextCompat
 class DisplayMetrics internal constructor(context: Context) {
 
     companion object {
-        /** WindowManager LayoutParams type for a window over applications. */
-        @JvmField
-        val TYPE_COMPAT_OVERLAY =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-            else WindowManager.LayoutParams.TYPE_PHONE
-
-
         /** Singleton preventing multiple instances at the same time. */
         @Volatile
         private var INSTANCE: DisplayMetrics? = null
@@ -79,6 +73,7 @@ class DisplayMetrics internal constructor(context: Context) {
     /** Listen to the configuration changes and calls [orientationListeners] when needed. */
     private val configChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            Log.i(TAG, "onConfigurationChanged")
             if (updateScreenConfig()) {
                 orientationListeners.forEach { it.invoke(context) }
             }
@@ -151,6 +146,8 @@ class DisplayMetrics internal constructor(context: Context) {
             newSize
         }
 
+        Log.i(TAG, "Screen config updated: ScreenSize=$screenSize Orientation=$orientation")
+
         return true
     }
 
@@ -161,3 +158,6 @@ class DisplayMetrics internal constructor(context: Context) {
         else -> Configuration.ORIENTATION_UNDEFINED
     }
 }
+
+/** Tag for logs */
+private const val TAG = "DisplayMetrics"

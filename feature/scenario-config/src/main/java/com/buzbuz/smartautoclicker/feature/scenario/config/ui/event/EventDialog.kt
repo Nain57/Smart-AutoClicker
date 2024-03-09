@@ -25,6 +25,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
@@ -183,10 +184,7 @@ class EventDialog(
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create()
-            .apply {
-                window?.setType(DisplayMetrics.TYPE_COMPAT_OVERLAY)
-            }
-            .show()
+            .showAsOverlay()
     }
 
     private fun onEventEditingStateChanged(isEditingScenario: Boolean) {
