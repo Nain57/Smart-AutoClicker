@@ -75,6 +75,8 @@
     <string name="dropdown_helper_text_anti_detection_enabled">在单击、滑动和等待中，增加一个很小的随机值，使点击、滑动的坐标以及延迟时间有一定的差异。</string>
     <string name="dropdown_helper_text_anti_detection_disabled">不启用防作弊，按照设置的值执行</string>
 
+    <string name="dropdown_label_time_unit">时间单位</string>
+
     <!--
       - Toast messages.
       - Can be pretty long (2 lines).

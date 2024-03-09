@@ -282,8 +282,6 @@
 
     <string name="dropdown_label_comparison_operator">操作员</string>
 
-    <string name="dropdown_label_time_unit">时间单位</string>
-
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.

@@ -75,6 +75,8 @@
     <string name="dropdown_helper_text_anti_detection_enabled">Ajoute une petite part de hasard dans les positions et durées des clics, swipes et pauses</string>
     <string name="dropdown_helper_text_anti_detection_disabled">Exécute les actions comme elles sont déclarées</string>
 
+    <string name="dropdown_label_time_unit">Unité de temps</string>
+
     <!--
       - Toast messages.
       - Can be pretty long (2 lines).

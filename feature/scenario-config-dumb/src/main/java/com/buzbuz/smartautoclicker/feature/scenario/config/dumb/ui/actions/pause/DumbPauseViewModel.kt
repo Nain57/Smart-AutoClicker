@@ -22,15 +22,19 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.findAppropriateTimeUnit
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.formatDuration
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.toDurationMs
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDumbConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putPauseDurationConfig
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeDurationConfig
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatCountConfig
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatDelayConfig
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 
@@ -51,15 +55,24 @@ class DumbPauseViewModel(application: Application) : AndroidViewModel(applicatio
     val nameError: Flow<Boolean> = editedDumbPause
         .map { it.name.isEmpty() }
 
+    private val _selectedUnitItem: MutableStateFlow<TimeUnitDropDownItem> =
+        MutableStateFlow(TimeUnitDropDownItem.Milliseconds)
+    val selectedUnitItem: Flow<TimeUnitDropDownItem> = _selectedUnitItem
+
     /** The duration of the pause. */
-    val pauseDuration: Flow<String> = editedDumbPause
-        .map { it.pauseDurationMs.toString() }
-        .take(1)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pauseDuration: Flow<String> = selectedUnitItem
+        .flatMapLatest { unitItem ->
+            editedDumbPause
+                .map { unitItem.formatDuration(it.pauseDurationMs) }
+                .take(1)
+        }
     /** Tells if the press duration value is valid or not. */
     val pauseDurationError: Flow<Boolean> = editedDumbPause
         .map { it.pauseDurationMs <= 0 }
 
     fun setEditedDumbPause(pause: DumbAction.DumbPause) {
+        _selectedUnitItem.value = pause.pauseDurationMs.findAppropriateTimeUnit()
         _editedDumbPause.value = pause.copy()
     }
 
@@ -70,8 +83,17 @@ class DumbPauseViewModel(application: Application) : AndroidViewModel(applicatio
         _editedDumbPause.value = _editedDumbPause.value?.copy(name = newName)
     }
 
-    fun setPauseDurationMs(durationMs: Long) {
-        _editedDumbPause.value = _editedDumbPause.value?.copy(pauseDurationMs = durationMs)
+    fun setPauseDurationMs(duration: Long) {
+        _editedDumbPause.value = _editedDumbPause.value?.let { oldValue ->
+            val newDurationMs = duration.toDurationMs(_selectedUnitItem.value)
+
+            if (oldValue.pauseDurationMs == newDurationMs) return
+            oldValue.copy(pauseDurationMs = newDurationMs)
+        }
+    }
+
+    fun setTimeUnit(unit: DropdownItem) {
+        _selectedUnitItem.value = unit as? TimeUnitDropDownItem ?: TimeUnitDropDownItem.Milliseconds
     }
 
     fun saveLastConfig(context: Context) {

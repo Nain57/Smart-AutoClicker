@@ -77,6 +77,8 @@
     <string name="dropdown_helper_text_anti_detection_enabled">Rendi la durata e posizione dei clic e scorrimenti casuali rispetto ad un piccolo intervallo</string>
     <string name="dropdown_helper_text_anti_detection_disabled">Esegui tutte le azioni come dichiarate</string>
 
+    <string name="dropdown_label_time_unit">Unità di tempo</string>
+
     <!--
       - Toast messages.
       - Can be pretty long (2 lines).

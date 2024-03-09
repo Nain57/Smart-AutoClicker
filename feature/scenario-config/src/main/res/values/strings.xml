@@ -290,11 +290,6 @@
     <string name="dropdown_label_intent_extra_value_type">Value type</string>
 
     <string name="dropdown_label_comparison_operator">Operator</string>
-    <string name="dropdown_label_time_unit_ms" translatable="false">ms</string>
-    <string name="dropdown_label_time_unit_s" translatable="false">s</string>
-    <string name="dropdown_label_time_unit_min" translatable="false">min</string>
-    <string name="dropdown_label_time_unit_h" translatable="false">h</string>
-    <string name="dropdown_label_time_unit">Time Unit</string>
 
 
     <!--

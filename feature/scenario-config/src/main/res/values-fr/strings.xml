@@ -285,7 +285,6 @@
     <string name="dropdown_label_intent_extra_value_type">Type de la valeur</string>
 
     <string name="dropdown_label_comparison_operator">Opérateur</string>
-    <string name="dropdown_label_time_unit">Unité de temps</string>
 
     <!--
       - Content description texts.

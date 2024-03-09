@@ -28,6 +28,9 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.timeUnitDropdownItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
@@ -90,6 +93,12 @@ class DumbPauseDialog(
                 }
             }
             hideSoftInputOnFocusLoss(editPauseDurationLayout.textField)
+
+            timeUnitField.setItems(
+                label = context.getString(R.string.dropdown_label_time_unit),
+                items = timeUnitDropdownItems,
+                onItemSelected = viewModel::setTimeUnit,
+            )
         }
 
         return viewBinding.root
@@ -103,6 +112,7 @@ class DumbPauseDialog(
                 launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
                 launch { viewModel.pauseDuration.collect(::updateDumbPauseDuration) }
                 launch { viewModel.pauseDurationError.collect(viewBinding.editPauseDurationLayout::setError)}
+                launch { viewModel.selectedUnitItem.collect(viewBinding.timeUnitField::setSelectedItem) }
             }
         }
     }

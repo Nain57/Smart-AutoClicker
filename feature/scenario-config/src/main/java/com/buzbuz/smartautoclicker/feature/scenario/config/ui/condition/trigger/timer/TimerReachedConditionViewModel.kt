@@ -22,11 +22,11 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.findAppropriateTimeUnit
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.formatDuration
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.toDurationMs
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.findAppropriateTimeUnit
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.formatDuration
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.msItem
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.toDurationMs
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -62,12 +62,12 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
     /** Tells if the condition name is valid or not. */
     val nameError: Flow<Boolean> = configuredCondition.map { it.name.isEmpty() }
 
-    private val _selectedUnitItem: MutableStateFlow<DropdownItem> = MutableStateFlow(
+    private val _selectedUnitItem: MutableStateFlow<TimeUnitDropDownItem> = MutableStateFlow(
         editionRepository.editionState.getEditedCondition<TriggerCondition.OnTimerReached>()?.let { condition ->
             condition.durationMs.findAppropriateTimeUnit()
-        } ?: msItem
+        } ?: TimeUnitDropDownItem.Milliseconds
     )
-    val selectedUnitItem: Flow<DropdownItem> = _selectedUnitItem
+    val selectedUnitItem: Flow<TimeUnitDropDownItem> = _selectedUnitItem
 
     /** The display duration of the pause. */
     val duration: Flow<String> = _selectedUnitItem
@@ -111,7 +111,7 @@ class TimerReachedConditionViewModel(application: Application) : AndroidViewMode
     }
 
     fun setTimeUnit(unit: DropdownItem) {
-        _selectedUnitItem.value = unit
+        _selectedUnitItem.value = unit as? TimeUnitDropDownItem ?: TimeUnitDropDownItem.Milliseconds
     }
 
     fun toggleRestartWhenReached() {

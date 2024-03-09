@@ -23,11 +23,11 @@ import androidx.lifecycle.AndroidViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.findAppropriateTimeUnit
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.formatDuration
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.toDurationMs
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.findAppropriateTimeUnit
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.formatDuration
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.msItem
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.timeunit.toDurationMs
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putPauseDurationConfig
 
@@ -67,12 +67,12 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
     /** Tells if the action name is valid or not. */
     val nameError: Flow<Boolean> = configuredPause.map { it.name?.isEmpty() ?: true }
 
-    private val _selectedUnitItem: MutableStateFlow<DropdownItem> = MutableStateFlow(
+    private val _selectedUnitItem: MutableStateFlow<TimeUnitDropDownItem> = MutableStateFlow(
         editionRepository.editionState.getEditedAction<Action.Pause>()?.let { action ->
             action.pauseDuration.findAppropriateTimeUnit()
-        } ?: msItem
+        } ?: TimeUnitDropDownItem.Milliseconds
     )
-    val selectedUnitItem: Flow<DropdownItem> = _selectedUnitItem
+    val selectedUnitItem: Flow<TimeUnitDropDownItem> = _selectedUnitItem
 
     /** The duration of the pause in milliseconds. */
     val pauseDuration: Flow<String?> = _selectedUnitItem
@@ -113,7 +113,7 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setTimeUnit(unit: DropdownItem) {
-        _selectedUnitItem.value = unit
+        _selectedUnitItem.value = unit as? TimeUnitDropDownItem ?: TimeUnitDropDownItem.Milliseconds
     }
 
     fun saveLastConfig() {
