@@ -42,9 +42,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.ui.R
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.animations.HideMenuAnimation
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.animations.OverlayMenuAnimationsController
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.animations.ShowMenuAnimation
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuAnimations
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuMoveTouchEventHandler
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuResizeController
@@ -97,6 +95,8 @@ abstract class OverlayMenu(
     private val menuLayoutParams: WindowManager.LayoutParams =
         WindowManager.LayoutParams().apply { copyFrom(baseLayoutParams) }
 
+    private val animations: OverlayMenuAnimations = OverlayMenuAnimations()
+
     internal var resumeOnceShown: Boolean = false
         private set
     internal var destroyOnceHidden: Boolean = false
@@ -104,8 +104,6 @@ abstract class OverlayMenu(
 
     /** The Android window manager. Used to add/remove the overlay menu and view. */
     private lateinit var windowManager: WindowManager
-    /** Controls all animation for the menu */
-    private lateinit var animationsController: OverlayMenuAnimationsController
 
     /** The root view of the menu overlay. Retrieved from [onCreateMenu] implementation. */
     private lateinit var menuLayout: ViewGroup
@@ -201,8 +199,6 @@ abstract class OverlayMenu(
         positionDataSource.addOnLockedPositionChangedListener(onLockedPositionChangedListener)
         loadMenuPosition(displayMetrics.orientation)
 
-        animationsController = OverlayMenuAnimationsController(menuLayout, menuLayoutParams)
-
         // Handle window resize animations
         resizeController = OverlayMenuResizeController(
             backgroundViewGroup = menuBackground,
@@ -245,6 +241,7 @@ abstract class OverlayMenu(
 
     final override fun start() {
         if (lifecycle.currentState != Lifecycle.State.CREATED) return
+        if (animations.showAnimationIsRunning) return
 
         super.start()
         loadMenuPosition(displayMetrics.orientation)
@@ -255,7 +252,7 @@ abstract class OverlayMenu(
         val animatedOverlayView = if (animateOverlayView()) screenOverlayView else null
         menuBackground.visibility = View.VISIBLE
         animatedOverlayView?.visibility = View.VISIBLE
-        animationsController.startAnimation(ShowMenuAnimation(menuBackground, animatedOverlayView)) {
+        animations.startShowAnimation(menuBackground, animatedOverlayView) {
             Log.d(TAG, "Show overlay ${hashCode()} animation ended")
 
             if (resumeOnceShown) {
@@ -269,7 +266,7 @@ abstract class OverlayMenu(
         if (lifecycle.currentState == Lifecycle.State.CREATED) start()
         if (lifecycle.currentState != Lifecycle.State.STARTED) return
 
-        if (animationsController.isAnimationRunning()) {
+        if (animations.showAnimationIsRunning) {
             Log.d(TAG, "Show overlay ${hashCode()} animation is running, delaying resume...")
             resumeOnceShown = true
             return
@@ -282,38 +279,34 @@ abstract class OverlayMenu(
 
     final override fun stop() {
         if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
+        if (animations.hideAnimationIsRunning) return
         if (lifecycle.currentState == Lifecycle.State.RESUMED) pause()
 
         saveMenuPosition(displayMetrics.orientation)
 
         // Start the hide animation for the menu
         Log.d(TAG, "Start overlay ${hashCode()} hide animation...")
-        animationsController.startAnimation(
-            animation = HideMenuAnimation(
-                menuBackground,
-                if (animateOverlayView()) screenOverlayView else null,
-            ),
-            onAnimationEnd =  {
-                Log.d(TAG, "Hide overlay ${hashCode()} animation ended")
+        val animatedOverlayView = if (animateOverlayView()) screenOverlayView else null
+        animations.startHideAnimation(menuBackground, animatedOverlayView) {
+            Log.d(TAG, "Hide overlay ${hashCode()} animation ended")
 
-                menuBackground.visibility = View.GONE
-                screenOverlayView?.visibility = View.GONE
+            menuBackground.visibility = View.GONE
+            screenOverlayView?.visibility = View.GONE
 
-                super.stop()
+            super.stop()
 
-                if (destroyOnceHidden) {
-                    destroyOnceHidden = false
-                    destroy()
-                }
+            if (destroyOnceHidden) {
+                destroyOnceHidden = false
+                destroy()
             }
-        )
+        }
     }
 
     final override fun destroy() {
         if (!lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) return
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) stop()
 
-        if (animationsController.isAnimationRunning()) {
+        if (animations.hideAnimationIsRunning) {
             Log.d(TAG, "Hide overlay ${hashCode()} animation is running, delaying destroy...")
             destroyOnceHidden = true
             return
