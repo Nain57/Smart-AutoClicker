@@ -85,8 +85,8 @@ ext {
     robolectricVersion = '4.10.3'
 
     // Google PlayStore version dependencies
-    firebaseBomVersion = '32.3.1'
-    billingVersion = '6.0.1'
+    firebaseBomVersion = '32.7.4'
+    billingVersion = '6.2.0'
 }
 
 tasks.register('clean', Delete) {
