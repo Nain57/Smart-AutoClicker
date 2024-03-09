@@ -68,14 +68,14 @@ class ScenarioCreationViewModel(application: Application) : AndroidViewModel(app
             when {
                 limitIsReached -> ScenarioTypeSelectionState(
                     dumbItem = ScenarioTypeItem.Dumb,
-                    smartItem = ScenarioTypeItem.Smart(isProModeEnabled = isProMode),
+                    smartItem = ScenarioTypeItem.Smart(isProMode),
                     smartItemEnabled = false,
                     selectedItem = ScenarioTypeSelection.DUMB,
                 )
 
                 else -> ScenarioTypeSelectionState(
                     dumbItem = ScenarioTypeItem.Dumb,
-                    smartItem = ScenarioTypeItem.Smart(isProModeEnabled = isProMode),
+                    smartItem = ScenarioTypeItem.Smart(isProMode),
                     smartItemEnabled = true,
                     selectedItem = selectedType,
                 )
@@ -167,7 +167,7 @@ sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descripti
         iconRes = R.drawable.ic_smart,
         descriptionText =
             if (isProModeEnabled) R.string.item_desc_smart_scenario_pro_mode
-            else R.string.item_desc_dumb_scenario,
+            else R.string.item_desc_smart_scenario,
     )
 }
 enum class ScenarioTypeSelection {

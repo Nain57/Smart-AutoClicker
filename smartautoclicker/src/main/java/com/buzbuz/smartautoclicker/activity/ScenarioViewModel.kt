@@ -22,7 +22,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.provider.Settings
 
 import androidx.core.content.PermissionChecker
 import androidx.lifecycle.AndroidViewModel
@@ -30,8 +29,6 @@ import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-
-import kotlinx.coroutines.flow.MutableStateFlow
 
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
 class ScenarioViewModel(application: Application) : AndroidViewModel(application) {
@@ -46,9 +43,6 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
      * Will be not null only if the Accessibility Service is enabled.
      */
     private var clickerService: SmartAutoClickerService.ILocalService? = null
-
-    /** Set of scenario identifier selected for a backup. */
-    private val selectedForBackup = MutableStateFlow(emptySet<Long>())
     /** The Android notification manager. Initialized only if needed.*/
     private val notificationManager: NotificationManager?
 
@@ -65,31 +59,6 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
         SmartAutoClickerService.getLocalService(null)
         super.onCleared()
     }
-
-    /**
-     * Tells if the overlay permission is granted for this application.
-     *
-     * @return true if the permission is granted, false if not.
-     */
-    fun isOverlayPermissionValid(): Boolean = Settings.canDrawOverlays(getApplication())
-
-    /**
-     * Tells if the Accessibility Service of this application is started.
-     *
-     * @return true if the service is started, false if not.
-     */
-    fun isAccessibilityPermissionValid(): Boolean = clickerService != null
-
-    /**
-     * Tells if all application permission are granted.
-     * This only concerns the mandatory permissions.
-     *
-     * @return true if they are all granted, false if at least one is not.
-     */
-    fun arePermissionsGranted(): Boolean = isOverlayPermissionValid() && isAccessibilityPermissionValid()
-
-    /** Tells if the optional notification permission is granted or not. */
-    fun isNotificationPermissionGranted(): Boolean = notificationManager?.areNotificationsEnabled() ?: true
 
     /**
      * Start the overlay UI and instantiates the detection objects for a given scenario.

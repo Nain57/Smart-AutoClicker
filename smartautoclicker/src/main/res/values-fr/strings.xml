@@ -53,8 +53,8 @@
     <string name="item_desc_dumb_scenario_max_duration_infinite">Pas de durée maximum</string>
     <string name="item_desc_dumb_scenario_repeat_count">Répéter %1$d fois</string>
     <string name="item_desc_dumb_scenario_repeat_infinite">Répéter à l\'infini</string>
-    <string name="item_desc_smart_scenario">Utilise la détéction d\'image pour créer des scnérios complexes.\nContient des limitations payantes.</string>
-    <string name="item_desc_smart_scenario_pro_mode">Utilise la détéction d\'image pour créer des scnérios complexes.</string>
+    <string name="item_desc_smart_scenario">Utilise la détéction d\'image pour créer des scénarios complexes.\nContient des limitations payantes.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Utilise la détéction d\'image pour créer des scénarios complexes.</string>
     <string name="item_title_dumb_scenario">Simple</string>
     <string name="item_title_smart_scenario">Intelligente</string>
 
