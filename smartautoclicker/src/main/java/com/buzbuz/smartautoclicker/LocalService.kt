@@ -112,17 +112,21 @@ class LocalService(
 
             detectionRepository = DetectionRepository.getDetectionRepository(context).apply {
                 setScenarioId(scenario.id)
-                startScreenRecord(
-                    context = context,
-                    resultCode = resultCode,
-                    data = data,
-                    androidExecutor = androidExecutor,
-                )
             }
 
             initOverlayManager(
                 context = context,
                 rootOverlay = MainMenu { stop() }
+            )
+
+            // If we start too quickly, there is a chance of crash because the service isn't in foreground state yet
+            // That's not really an issue as the user just clicked the permission button and the activity is closing
+            delay(500)
+            detectionRepository?.startScreenRecord(
+                context = context,
+                resultCode = resultCode,
+                data = data,
+                androidExecutor = androidExecutor,
             )
         }
     }
