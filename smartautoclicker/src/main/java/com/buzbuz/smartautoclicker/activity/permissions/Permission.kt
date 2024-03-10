@@ -18,12 +18,14 @@ package com.buzbuz.smartautoclicker.activity.permissions
 
 import android.Manifest
 import android.app.NotificationManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -80,7 +82,11 @@ sealed class Permission {
                 intent.putExtra(EXTRA_ACCESSIBILITY_FRAGMENT_ARG_KEY, showArgs)
                 intent.putExtra(EXTRA_SHOW_ACCESSIBILITY_FRAGMENT_ARGUMENTS, bundle)
 
-                context.startActivity(intent)
+                try {
+                    context.startActivity(intent)
+                } catch (ex: ActivityNotFoundException) {
+                    Log.e(TAG, "Can't find device accessibility service settings menu.")
+                }
             }
         }
 
@@ -99,7 +105,11 @@ sealed class Permission {
                 )
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY)
 
-                context.startActivity(intent)
+                try {
+                    context.startActivity(intent)
+                } catch (ex: ActivityNotFoundException) {
+                    Log.e(TAG, "Can't find device overlay settings menu.")
+                }
             }
         }
     }
@@ -144,3 +154,6 @@ private fun Context.getPermissionSharedPrefs() =
 private const val EXTRA_ACCESSIBILITY_FRAGMENT_ARG_KEY = ":settings:fragment_args_key"
 /** Intent extra bundle key for the Android settings app. */
 private const val EXTRA_SHOW_ACCESSIBILITY_FRAGMENT_ARGUMENTS = ":settings:show_fragment_args"
+
+/** Tag for logs */
+private const val TAG = "Permission"
