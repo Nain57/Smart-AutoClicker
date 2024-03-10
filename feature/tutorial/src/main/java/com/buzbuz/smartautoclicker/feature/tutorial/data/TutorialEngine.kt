@@ -63,8 +63,7 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         val step = getCurrentStep() ?: return
         val index = stepState.value?.index ?: return
 
-        val newIndex = index + 1
-        setStepIndex(newIndex)
+        setStepIndex(index + 1)
 
         // If step end condition is a click on the monitored view, execute it now
         if (step is TutorialStepData.TutorialOverlay && step.stepEndCondition is StepEndCondition.MonitoredViewClicked) {
@@ -79,6 +78,8 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
     }
 
     private fun setStepIndex(newIndex: Int) {
+        val step = getStep(newIndex) ?: return
+
         Log.d(TAG, "Set step index to $newIndex")
 
         // Get step state initial values
@@ -87,12 +88,10 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         val stackTop = overlayManager.getBackStackTop()
 
         // If the new step needs to monitor a view, do it here
-        getNextStep()?.let { nextStep ->
-            val startCondition = nextStep.stepStartCondition
-            if (nextStep is TutorialStepData.TutorialOverlay && startCondition is StepStartCondition.MonitoredViewClicked) {
-                monitoredViewsManager.monitorNextClick(startCondition.type) {
-                    stepState.value = stepState.value?.copy(isMonitoredViewClicked = true)
-                }
+        val startCondition = step.stepStartCondition
+        if (step is TutorialStepData.TutorialOverlay && startCondition is StepStartCondition.MonitoredViewClicked) {
+            monitoredViewsManager.monitorNextClick(startCondition.type) {
+                stepState.value = stepState.value?.copy(isMonitoredViewClicked = true)
             }
         }
 
@@ -132,12 +131,11 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         return _tutorial.value?.steps?.get(index)
     }
 
-    private fun getNextStep(): TutorialStepData? {
-        val index = stepState.value?.index ?: return null
+    private fun getStep(index: Int): TutorialStepData? {
         val steps = _tutorial.value?.steps ?: return null
-        if (index + 1 > steps.lastIndex) return null
+        if (index !in 0..steps.lastIndex) return null
 
-        return steps[index + 1]
+        return steps[index]
     }
 
     private fun setTutorialExpectedViews(tutorial: TutorialData) {
