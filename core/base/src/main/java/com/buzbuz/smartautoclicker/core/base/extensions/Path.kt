@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,10 @@
 package com.buzbuz.smartautoclicker.core.base.extensions
 
 import android.graphics.Path
-import kotlin.random.Random
+import kotlin.math.max
 
-fun Path.moveTo(x: Int, y: Int, randomize: Random?) {
-    if (randomize == null) moveTo(x.toFloat(), y.toFloat())
-    else moveTo(randomize.getRandomizedPosition(x), randomize.getRandomizedPosition(y))
-}
+fun Path.safeMoveTo(x: Int, y: Int): Unit =
+    moveTo(max(0, x).toFloat(), max(0, y).toFloat())
 
-fun Path.lineTo(x: Int, y: Int, randomize: Random?) {
-    if (randomize == null) lineTo(x.toFloat(), y.toFloat())
-    else lineTo(randomize.getRandomizedPosition(x), randomize.getRandomizedPosition(y))
-}
+fun Path.safeLineTo(x: Int, y: Int): Unit =
+    lineTo(max(0, x).toFloat(), max(0, y).toFloat())

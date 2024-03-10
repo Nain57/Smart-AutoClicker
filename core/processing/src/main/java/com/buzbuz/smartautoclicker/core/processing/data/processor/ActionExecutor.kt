@@ -22,10 +22,11 @@ import android.graphics.Path
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
-import com.buzbuz.smartautoclicker.core.base.extensions.getRandomizedDuration
-import com.buzbuz.smartautoclicker.core.base.extensions.getRandomizedGestureDuration
-import com.buzbuz.smartautoclicker.core.base.extensions.lineTo
-import com.buzbuz.smartautoclicker.core.base.extensions.moveTo
+import com.buzbuz.smartautoclicker.core.base.extensions.buildSingleStroke
+import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
+import com.buzbuz.smartautoclicker.core.base.extensions.nextLongInOffset
+import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
+import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click
@@ -72,26 +73,21 @@ internal class ActionExecutor(
     }
 
     private suspend fun executeClick(event: Event, click: Click, results: ConditionsResult?) {
-        val clickBuilder = GestureDescription.Builder()
         val clickPath = when (click.positionType) {
             Click.PositionType.USER_SELECTED -> Path().apply {
-                moveTo(click.x!!, click.y!!, random)
+                moveTo(click.x!!, click.y!!)
             }
 
             Click.PositionType.ON_DETECTED_CONDITION ->
                 getOnConditionClickPath(event, click, results)
         } ?: return
 
-        clickBuilder.addStroke(
-            GestureDescription.StrokeDescription(
-                clickPath,
-                0,
-                random?.getRandomizedGestureDuration(click.pressDuration!!) ?: click.pressDuration!!,
-            )
+        val clickGesture = GestureDescription.Builder().buildSingleStroke(
+            clickPath, random.nextLongInOffsetIfNeeded(click.pressDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS)
         )
 
         withContext(Dispatchers.Main) {
-            androidExecutor.executeGesture(clickBuilder.build())
+            androidExecutor.executeGesture(clickGesture)
         }
     }
 
@@ -110,7 +106,7 @@ internal class ActionExecutor(
         }
 
         return Path().apply {
-            moveTo(result.position.x, result.position.y, random)
+            moveTo(result.position.x, result.position.y)
         }
     }
 
@@ -119,21 +115,16 @@ internal class ActionExecutor(
      * @param swipe the swipe to be executed.
      */
     private suspend fun executeSwipe(swipe: Swipe) {
-        val swipePath = Path()
-        val swipeBuilder = GestureDescription.Builder()
-
-        swipePath.moveTo(swipe.fromX!!, swipe.fromY!!, random)
-        swipePath.lineTo(swipe.toX!!, swipe.toY!!, random)
-        swipeBuilder.addStroke(
-            GestureDescription.StrokeDescription(
-                swipePath,
-                0,
-                random?.getRandomizedGestureDuration(swipe.swipeDuration!!) ?: swipe.swipeDuration!!,
-            )
+        val swipeGesture = GestureDescription.Builder().buildSingleStroke(
+            path = Path().apply {
+                moveTo(swipe.fromX!!, swipe.fromY!!)
+                lineTo(swipe.toX!!, swipe.toY!!)
+            },
+            durationMs = random.nextLongInOffsetIfNeeded(swipe.swipeDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS),
         )
 
         withContext(Dispatchers.Main) {
-            androidExecutor.executeGesture(swipeBuilder.build())
+            androidExecutor.executeGesture(swipeGesture)
         }
     }
 
@@ -142,7 +133,7 @@ internal class ActionExecutor(
      * @param pause the pause to be executed.
      */
     private suspend fun executePause(pause: Pause) {
-        delay(random?.getRandomizedDuration(pause.pauseDuration!!) ?: pause.pauseDuration!!)
+        delay(random.nextLongInOffsetIfNeeded(pause.pauseDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS))
     }
 
     /**
@@ -215,6 +206,26 @@ internal class ActionExecutor(
             }
         )
     }
+
+
+    private fun Path.moveTo(x: Int, y: Int) {
+        if (random == null) safeMoveTo(x, y)
+        else safeMoveTo(
+            random.nextIntInOffset(x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+            random.nextIntInOffset(y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+        )
+    }
+
+    private fun Path.lineTo(x: Int, y: Int) {
+        if (random == null) safeLineTo(x, y)
+        else safeLineTo(
+            random.nextIntInOffset(x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+            random.nextIntInOffset(y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+        )
+    }
+
+    private fun Random?.nextLongInOffsetIfNeeded(value: Long, offset: Long): Long =
+        this?.nextLongInOffset(value, offset) ?: value
 }
 
 /** Tag for logs. */
@@ -223,3 +234,6 @@ private const val TAG = "ActionExecutor"
 private const val INTENT_START_ACTIVITY_DELAY = 1000L
 /** Waiting delay after a broadcast to avoid overflowing the system. */
 private const val INTENT_BROADCAST_DELAY = 100L
+
+private const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
+private const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5L

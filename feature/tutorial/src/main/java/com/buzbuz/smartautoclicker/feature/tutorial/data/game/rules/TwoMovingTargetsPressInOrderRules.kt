@@ -20,7 +20,7 @@ import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.RectF
 
-import com.buzbuz.smartautoclicker.core.base.extensions.getNextPositionIn
+import com.buzbuz.smartautoclicker.core.base.extensions.nextPositionIn
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlin.random.Random
@@ -65,10 +65,10 @@ internal class TwoMovingTargetsPressInOrderRules(highScore: Int) : BaseGameRules
         val targetHalfSize = targetHalfSize ?: return
 
         // Find two positions and ensure the target will not overlaps
-        val bluePosition = random.getNextPositionIn(area)
+        val bluePosition = random.nextPositionIn(area)
         var redPosition: PointF
         do {
-            redPosition = random.getNextPositionIn(area)
+            redPosition = random.nextPositionIn(area)
         } while (bluePosition.enclosingRectIntersects(redPosition, targetHalfSize))
 
         _targets.value = mapOf(
