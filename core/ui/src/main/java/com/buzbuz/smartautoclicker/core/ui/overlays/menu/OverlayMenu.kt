@@ -40,6 +40,7 @@ import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
+import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuAnimations
@@ -210,12 +211,18 @@ abstract class OverlayMenu(
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
         screenOverlayView?.let {
             if (animateOverlayView()) it.visibility = View.GONE
-            windowManager.addView(it, overlayLayoutParams)
+            if (!windowManager.safeAddView(it, overlayLayoutParams)) {
+                finish()
+                return
+            }
         }
 
         // Add the menu view to the window manager, but hidden
         if (animateOverlayView()) menuBackground.visibility = View.GONE
-        windowManager.addView(menuLayout, menuLayoutParams)
+        if (!windowManager.safeAddView(menuLayout, menuLayoutParams)) {
+            finish()
+            return
+        }
     }
 
     private fun setupButtons(buttonsContainer: ViewGroup) {
@@ -372,8 +379,17 @@ abstract class OverlayMenu(
         windowManager.apply {
             removeView(oldOverlayView)
             removeView(menuLayout)
-            addView(screenOverlayView, overlayLayoutParams)
-            addView(menuLayout, menuLayoutParams)
+            screenOverlayView?.let { overlayView ->
+                if (!safeAddView(overlayView, overlayLayoutParams)) {
+                    finish()
+                    return
+                }
+            }
+
+            if (!safeAddView(menuLayout, menuLayoutParams)) {
+                finish()
+                return
+            }
         }
 
         lifecycleRegistry.currentState = previousState

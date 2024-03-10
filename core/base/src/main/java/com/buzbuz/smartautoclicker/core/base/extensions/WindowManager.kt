@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.base.extensions
 
 import android.os.Build
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 
 import java.lang.reflect.Field
@@ -34,6 +35,18 @@ object WindowManagerCompat {
 
 }
 
+fun WindowManager.safeAddView(view: View?, params: WindowManager.LayoutParams?): Boolean {
+    if (view == null || params == null) return false
+
+    return try {
+        addView(view, params)
+        true
+    } catch (ex: WindowManager.BadTokenException) {
+        Log.e(TAG, "Can't add view to window manager, permission is denied !")
+        false
+    }
+}
+
 fun WindowManager.LayoutParams.disableMoveAnimations() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         setCanPlayMoveAnimation(false)
@@ -47,7 +60,9 @@ fun WindowManager.LayoutParams.disableMoveAnimations() {
                 setInt(wp, getInt(wp) or noAnimFlagField.getInt(wp))
             }
         } catch (e: Exception) {
-            Log.e("WindowManager", "Can't disable move animations !")
+            Log.e(TAG, "Can't disable move animations !")
         }
     }
 }
+
+private const val TAG = "WindowManagerExt"

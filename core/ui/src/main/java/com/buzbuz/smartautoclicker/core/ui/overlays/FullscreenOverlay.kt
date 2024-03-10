@@ -28,6 +28,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
 
 import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
+import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
 
 /** BaseOverlay class for an overlay displayed as full screen. */
 abstract class FullscreenOverlay(@StyleRes theme: Int? = null) : BaseOverlay(theme) {
@@ -72,8 +73,12 @@ abstract class FullscreenOverlay(@StyleRes theme: Int? = null) : BaseOverlay(the
     @CallSuper
     override fun onStart() {
         view.alpha = 0f
-        windowManager.addView(view, viewLayoutParams)
-        showAnimator.start()
+
+        if (windowManager.safeAddView(view, viewLayoutParams)) {
+            showAnimator.start()
+        } else {
+            finish()
+        }
     }
 
     @CallSuper
