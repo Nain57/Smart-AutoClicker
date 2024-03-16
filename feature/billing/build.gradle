@@ -14,40 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'com.google.devtools.ksp'
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+apply plugin: "com.google.devtools.ksp"
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
 def billingKey
 if (localPropertiesFile.exists()) {
     localProperties.load(new FileInputStream(localPropertiesFile))
-    billingKey = localProperties['billingPublicKey']
-} else if (rootProject.hasProperty('billingPublicKey')) {
+    billingKey = localProperties["billingPublicKey"]
+} else if (rootProject.hasProperty("billingPublicKey")) {
     billingKey = rootProject.billingPublicKey
 }
 
 android {
-    namespace 'com.buzbuz.smartautoclicker.feature.billing'
-    compileSdk rootProject.ext.compileSdkVersion
+    namespace = "com.buzbuz.smartautoclicker.feature.billing"
+    compileSdk = rootProject.ext.compileSdkVersion
 
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 
     defaultConfig {
-        minSdk rootProject.ext.minSdkVersion
-        targetSdk rootProject.ext.compileSdkVersion
+        minSdk = rootProject.ext.minSdkVersion
+        targetSdk = rootProject.ext.compileSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -57,8 +57,8 @@ android {
                 freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
             }
         }
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     // Specifies one flavor dimension.
@@ -71,24 +71,24 @@ android {
             dimension = "version"
             buildConfigField("String", "BILLING_PUBLIC_KEY", "\"" + billingKey + "\"")
             buildFeatures {
-                viewBinding true
+                viewBinding = true
             }
         }
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version")
 
-    implementation project(path: ':core:ui')
+    implementation(project(path: ":core:ui"))
 
-    playStoreImplementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
-    playStoreImplementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
-    playStoreImplementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
-    playStoreImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
+    playStoreImplementation("androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}")
+    playStoreImplementation("androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}")
+    playStoreImplementation("androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}")
+    playStoreImplementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}")
 
-    playStoreImplementation "com.android.billingclient:billing:${rootProject.ext.billingVersion}"
-    playStoreImplementation "com.android.billingclient:billing-ktx:${rootProject.ext.billingVersion}"
+    playStoreImplementation("com.android.billingclient:billing:${rootProject.ext.billingVersion}")
+    playStoreImplementation("com.android.billingclient:billing-ktx:${rootProject.ext.billingVersion}")
 
-    playStoreImplementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+    playStoreImplementation("com.google.android.material:material:${rootProject.ext.googleMaterialVersion}")
 }

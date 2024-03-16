@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.devtools.ksp'
-apply plugin: 'kotlin-android'
+apply plugin: "com.android.application"
+apply plugin: "com.google.devtools.ksp"
+apply plugin: "kotlin-android"
 
 // Only apply gms/firebase plugins if we are building for the play store
 def isPlayStoreBuild = getGradle().getStartParameter().getTaskRequests().toString().contains("PlayStore")
@@ -28,24 +28,24 @@ if (isPlayStoreBuild) {
 
 // Read signing.properties file to find signing configuration
 def signingProperties = new Properties()
-def signingStoreFile = file('./smartautoclicker.jks')
+def signingStoreFile = file("./smartautoclicker.jks")
 def signingPropertiesFile = rootProject.file("signing.properties")
 if (signingPropertiesFile.exists()) {
     signingProperties.load(new FileInputStream(signingPropertiesFile))
 }
 
 android {
-    namespace 'com.buzbuz.smartautoclicker'
-    compileSdk rootProject.ext.compileSdkVersion
+    namespace = "com.buzbuz.smartautoclicker"
+    compileSdk = rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.buzbuz.smartautoclicker"
-        minSdk rootProject.ext.minSdkVersion
-        targetSdk rootProject.ext.compileSdkVersion
-        versionCode 41
-        versionName "2.4.2"
+        applicationId = "com.buzbuz.smartautoclicker"
+        minSdk = rootProject.ext.minSdkVersion
+        targetSdk = rootProject.ext.compileSdkVersion
+        versionCode = 41
+        versionName = "2.4.2"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -55,17 +55,17 @@ android {
             }
         }
 
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     if (signingStoreFile.exists()) {
         signingConfigs {
             release {
-                storeFile signingStoreFile
-                storePassword signingProperties['signingStorePassword'] ?: rootProject.signingStorePassword
-                keyAlias signingProperties['signingKeyAlias'] ?: rootProject.signingKeyAlias
-                keyPassword signingProperties['signingKeyPassword'] ?: rootProject.signingKeyPassword
+                storeFile = signingStoreFile
+                storePassword = signingProperties["signingStorePassword"] ?: rootProject.signingStorePassword
+                keyAlias = signingProperties["signingKeyAlias"] ?: rootProject.signingKeyAlias
+                keyPassword = signingProperties["signingKeyPassword"] ?: rootProject.signingKeyPassword
             }
         }
     }
@@ -73,22 +73,22 @@ android {
     buildTypes {
         release {
             if (signingStoreFile.exists()) {
-                signingConfig signingConfigs.release
+                signingConfig = signingConfigs.release
             }
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
             if (isPlayStoreBuild) {
                 firebaseCrashlytics {
-                    nativeSymbolUploadEnabled true
-                    unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/playStoreRelease/out/lib'
+                    nativeSymbolUploadEnabled = true
+                    unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/out/lib"
                 }
             }
         }
 
         debug {
-            applicationIdSuffix '.debug'
+            applicationIdSuffix = ".debug"
         }
     }
 
@@ -104,51 +104,51 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
+        viewBinding = true
     }
     packagingOptions {
         resources {
-            excludes += ['META-INF/atomicfu.kotlin_module']
+            excludes += ["META-INF/atomicfu.kotlin_module"]
         }
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version")
 
-    implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
-    implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
-    implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
-    implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
+    implementation("androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}")
+    implementation("androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}")
+    implementation("androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}")
+    implementation("androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}")
 
-    implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleExtensionVersion}"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.androidxLifecycleVersion}"
-    implementation "androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}"
+    implementation("androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleExtensionVersion}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.androidxLifecycleVersion}")
+    implementation("androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}")
 
-    implementation "com.airbnb.android:lottie:$lottieVersion"
-    implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+    implementation("com.airbnb.android:lottie:$lottieVersion")
+    implementation("com.google.android.material:material:${rootProject.ext.googleMaterialVersion}")
 
     // Google Play Store version dependencies only
-    playStoreImplementation platform("com.google.firebase:firebase-bom:${rootProject.ext.firebaseBomVersion}")
-    playStoreImplementation 'com.google.firebase:firebase-crashlytics-ktx'
-    playStoreImplementation 'com.google.firebase:firebase-crashlytics-ndk'
+    playStoreImplementation(platform("com.google.firebase:firebase-bom:${rootProject.ext.firebaseBomVersion}"))
+    playStoreImplementation("com.google.firebase:firebase-crashlytics-ktx")
+    playStoreImplementation("com.google.firebase:firebase-crashlytics-ndk")
 
-    implementation project(path: ':core:base')
-    implementation project(path: ':core:detection')
-    implementation project(path: ':core:display')
-    implementation project(path: ':core:domain')
-    implementation project(path: ':core:dumb')
-    implementation project(path: ':core:processing')
-    implementation project(path: ':core:ui')
-    implementation project(path: ':feature:backup')
-    implementation project(path: ':feature:billing')
-    implementation project(path: ':feature:floating-menu')
-    implementation project(path: ':feature:scenario-config')
-    implementation project(path: ':feature:scenario-config-dumb')
-    implementation project(path: ':feature:scenario-debugging')
-    implementation project(path: ':feature:tutorial')
+    implementation(project(path: ":core:base"))
+    implementation(project(path: ":core:detection"))
+    implementation(project(path: ":core:display"))
+    implementation(project(path: ":core:domain"))
+    implementation(project(path: ":core:dumb"))
+    implementation(project(path: ":core:processing"))
+    implementation(project(path: ":core:ui"))
+    implementation(project(path: ":feature:backup"))
+    implementation(project(path: ":feature:billing"))
+    implementation(project(path: ":feature:floating-menu"))
+    implementation(project(path: ":feature:scenario-config"))
+    implementation(project(path: ":feature:scenario-config-dumb"))
+    implementation(project(path: ":feature:scenario-debugging"))
+    implementation(project(path: ":feature:tutorial"))
 }
 
 project.afterEvaluate {

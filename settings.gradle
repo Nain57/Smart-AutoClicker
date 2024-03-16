@@ -1,19 +1,20 @@
-rootProject.name='Smart Auto Clicker'
-include ':core:bitmaps'
-include ':core:database'
-include ':core:detection'
-include ':core:display'
-include ':core:domain'
-include ':core:base'
-include ':core:processing'
-include ':core:ui'
-include ':feature:backup'
-include ':feature:billing'
-include ':feature:floating-menu'
-include ':feature:scenario-config'
-include ':feature:scenario-config-dumb'
-include ':feature:scenario-debugging'
-include ':feature:tutorial'
-include ':smartautoclicker'
-include ':core:dumb'
-include ':core:android'
+rootProject.name = "Smart Auto Clicker"
+
+include(":core:bitmaps")
+include(":core:database")
+include(":core:detection")
+include(":core:display")
+include(":core:domain")
+include(":core:base")
+include(":core:processing")
+include(":core:ui")
+include(":feature:backup")
+include(":feature:billing")
+include(":feature:floating-menu")
+include(":feature:scenario-config")
+include(":feature:scenario-config-dumb")
+include(":feature:scenario-debugging")
+include(":feature:tutorial")
+include(":smartautoclicker")
+include(":core:dumb")
+include(":core:android")
