@@ -21,43 +21,47 @@ plugins {
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.domain"
-    compileSdk = libs.versions.androidCompileSdk.get() as Integer
+    namespace = "com.buzbuz.smartautoclicker.core.processing"
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        release {
-            minifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-
     compileOptions {
+        kotlin {
+            kotlinOptions {
+                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+            }
+        }
+
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    
+    @Suppress("UnstableApiUsage")
     testOptions {
-        unitTests.includeAndroidResources = true
+        unitTests.isIncludeAndroidResources = true
     }
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.room.ktx)
-
-    implementation(project(path: ":core:bitmaps"))
-    implementation(project(path: ":core:database"))
-    implementation(project(path: ":core:base"))
+    implementation(project(":core:base"))
+    implementation(project(":core:detection"))
+    implementation(project(":core:display"))
+    implementation(project(":core:domain"))
 
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.core)

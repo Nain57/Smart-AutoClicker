@@ -18,16 +18,14 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.androidxNavigationSafeArgs)
 }
 
 android {
-    namespace "com.buzbuz.smartautoclicker.feature.tutorial"
-    compileSdk = libs.versions.androidCompileSdk.get() as Integer
+    namespace = "com.buzbuz.smartautoclicker.core.capture"
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -35,7 +33,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled = false
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -45,29 +43,21 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    buildFeatures {
-        viewBinding = true
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
     }
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
-    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.annotation)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.recyclerView)
-    implementation(libs.androidx.room.ktx)
 
-    implementation(libs.google.material)
-
-    implementation(project(path: ":core:base"))
-    implementation(project(path: ":core:display"))
-    implementation(project(path: ":core:domain"))
-    implementation(project(path: ":core:processing"))
-    implementation(project(path: ":core:ui"))
-    implementation(project(path: ":core:database"))
-    implementation(project(path: ":core:bitmaps"))
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.robolectric)
 }

@@ -20,12 +20,11 @@ plugins {
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.feature.scenario.config"
-    compileSdk = libs.versions.androidCompileSdk.get() as Integer
+    namespace = "com.buzbuz.smartautoclicker.feature.floatingmenu"
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -33,7 +32,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled = false
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -49,32 +48,35 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    buildFeatures {
-        viewBinding = true
-    }
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-
-    implementation(libs.androidx.appCompat)
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.cardView)
+    implementation(libs.androidx.constraintLayout)
     implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.recyclerView)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.vectorDrawable)
 
     implementation(libs.google.material)
 
-    implementation(project(path: ":core:android"))
-    implementation(project(path: ":core:display"))
-    implementation(project(path: ":core:domain"))
-    implementation(project(path: ":core:base"))
-    implementation(project(path: ":core:processing"))
-    implementation(project(path: ":core:ui"))
-    implementation(project(path: ":feature:billing"))
-    implementation(project(path: ":feature:scenario-debugging"))
+    implementation(project(":core:base"))
+    implementation(project(":core:display"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:processing"))
+    implementation(project(":core:ui"))
+    implementation(project(":feature:billing"))
+    implementation(project(":feature:scenario-debugging"))
+    implementation(project(":feature:scenario-config"))
+    implementation(project(":feature:tutorial"))
 }
