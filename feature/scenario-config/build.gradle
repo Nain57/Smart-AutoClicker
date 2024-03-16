@@ -1,24 +1,24 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
 }
 
 android {
-    namespace 'com.buzbuz.smartautoclicker.feature.scenario.config'
-    compileSdk rootProject.ext.compileSdkVersion
+    namespace = "com.buzbuz.smartautoclicker.feature.scenario.config"
+    compileSdk = rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdk rootProject.ext.minSdkVersion
-        targetSdk rootProject.ext.compileSdkVersion
+        minSdk = rootProject.ext.minSdkVersion
+        targetSdk = rootProject.ext.compileSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -34,31 +34,31 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
-        viewBinding true
+        viewBinding = true
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version")
 
-    implementation "androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}"
-    implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
-    implementation "androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}"
-    implementation "androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}"
+    implementation("androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}")
+    implementation("androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}")
+    implementation("androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}")
+    implementation("androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}")
 
-    implementation "com.google.android.material:material:${rootProject.ext.googleMaterialVersion}"
+    implementation("com.google.android.material:material:${rootProject.ext.googleMaterialVersion}")
 
-    implementation project(path: ':core:android')
-    implementation project(path: ':core:display')
-    implementation project(path: ':core:domain')
-    implementation project(path: ':core:base')
-    implementation project(path: ':core:processing')
-    implementation project(path: ':core:ui')
-    implementation project(path: ':feature:billing')
-    implementation project(path: ':feature:scenario-debugging')
+    implementation(project(path: ":core:android"))
+    implementation(project(path: ":core:display"))
+    implementation(project(path: ":core:domain"))
+    implementation(project(path: ":core:base"))
+    implementation(project(path: ":core:processing"))
+    implementation(project(path: ":core:ui"))
+    implementation(project(path: ":feature:billing"))
+    implementation(project(path: ":feature:scenario-debugging"))
 }

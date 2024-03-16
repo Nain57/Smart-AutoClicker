@@ -16,22 +16,22 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
 }
 
-apply from: 'fetchSources.gradle'
+apply from: "fetchSources.gradle"
 
 android {
-    namespace 'com.buzbuz.smartautoclicker.core.detection'
-    compileSdk rootProject.ext.compileSdkVersion
+    namespace = "com.buzbuz.smartautoclicker.core.detection"
+    compileSdk = rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdk rootProject.ext.minSdkVersion
-        targetSdk rootProject.ext.compileSdkVersion
+        minSdk = rootProject.ext.minSdkVersion
+        targetSdk = rootProject.ext.compileSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
         externalNativeBuild {
             cmake {
 
@@ -43,16 +43,17 @@ android {
         debug {
             externalNativeBuild {
                 cmake {
-                    cppFlags "-Wl,--build-id"
-                    arguments "-DCMAKE_BUILD_TYPE=Debug"
+                    cppFlags("-Wl,--build-id")
+                    arguments("-DCMAKE_BUILD_TYPE=Debug")
                 }
             }
         }
         release {
             externalNativeBuild {
                 cmake {
-                    cppFlags "-Wl,--build-id"
-                    arguments "-DANDROID_SDK_ROOT=${project.android.sdkDirectory}",
+                    cppFlags("-Wl,--build-id")
+                    arguments(
+                            "-DANDROID_SDK_ROOT=${project.android.sdkDirectory}",
                             "-DCMAKE_BUILD_TYPE=Release",
                             "-DOPENCV_ENABLE_NONFREE=OFF",
                             "-DBUILD_opencv_ittnotify=OFF",
@@ -97,25 +98,26 @@ android {
                             "-DBUILD_ANDROID_EXAMPLES=OFF",
                             "-DBUILD_ANDROID_PROJECTS=OFF",
                             "-DBUILD_SHARED_LIBS=ON"
+                    )
                 }
             }
 
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     externalNativeBuild {
         cmake {
-            path "src/CMakeLists.txt"
-            version "3.22.1"
+            path = "src/CMakeLists.txt"
+            version = "3.22.1"
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}"
+    implementation("androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}")
 }
