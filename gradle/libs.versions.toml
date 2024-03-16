@@ -1,0 +1,106 @@
+[versions]
+
+# Android SDK
+androidCompileSdk = "34"
+androidMinSdk = "24"
+
+# Build script
+googleFirebaseCrashlyticsGradle = "2.9.9"
+googleServices = "4.4.1"
+androidGradlePlugin = "8.3.0"
+kotlin = "1.9.23"
+kotlinxCoroutines = "1.7.3"
+ksp = "1.9.23-1.0.19"
+
+# Androidx
+androidxAnnotation = "1.7.1"
+androidxAppCompat = "1.6.1"
+androidxCardView = "1.0.0"
+androidxConstraintLayout = "2.1.4"
+androidxCoreKtx = "1.12.0"
+androidxFragmentKtx = "1.6.2"
+androidxLifecycle = "2.7.0"
+androidxLifecycleExtension = "2.2.0"
+androidxNavigation = "2.7.7"
+androidxRecyclerView = "1.3.2"
+androidxRoom = "2.6.1"
+androidxVectorDrawable = "1.1.0"
+
+# Other
+airbnbLottie = "6.1.0"
+googleMaterial = "1.10.0"
+kotlinSerializationJson = "1.6.3"
+openCv = "4.8.1"
+
+# PlayStore only
+androidBillingClient = "6.2.0"
+googleFirebaseBom = "32.7.4"
+googleFirebaseCrashlytics = "18.6.2"
+
+# Tests only
+androidxArchCoreTesting = "2.2.0"
+androidxTestCore = "1.5.0"
+androidxTestExtJunit = "1.1.5"
+junit = "4.13.2"
+mockitoCore = "5.5.0"
+mockitoKotlin = "5.1.0"
+robolectric = "4.10.3"
+
+
+[libraries]
+
+# Androidx
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidxAnnotation" }
+androidx-appCompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
+androidx-cardView = { group = "androidx.cardview", name = "cardview", version.ref = "androidxCardView" }
+androidx-constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintLayout" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCoreKtx" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragmentKtx" }
+androidx-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
+androidx-lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "androidxLifecycle" }
+androidx-lifecycle-extensions = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "androidxLifecycleExtension" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigation" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidxNavigation" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidxRoom" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
+androidx-vectorDrawable = { group = "androidx.vectordrawable", name = "vectordrawable-animated", version.ref = "androidxVectorDrawable" }
+
+# Other
+airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "airbnbLottie" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerializationJson" }
+
+# PlayStore only
+android-billingClient = { group = "com.android.billingclient", name = "billing", version.ref = "androidBillingClient" }
+android-billingClient-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "androidBillingClient" }
+google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "googleFirebaseBom" }
+google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "googleFirebaseCrashlytics" }
+google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk", version.ref = "googleFirebaseCrashlytics" }
+
+# Tests only
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreTesting" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "androidxRoom" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+androidxNavigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
+googleKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+googleGms = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+googleCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlyticsGradle" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrainsKotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

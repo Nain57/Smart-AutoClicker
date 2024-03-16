@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,18 @@
  */
 
 plugins {
-    id "com.android.library"
-    id "org.jetbrains.kotlin.android"
-    id "kotlinx-serialization"
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.jetbrainsKotlinSerialization)
 }
 
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.backup"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk = libs.versions.androidCompileSdk.get() as Integer
 
     defaultConfig {
-        minSdk = rootProject.ext.minSdkVersion
-        targetSdk = rootProject.ext.compileSdkVersion
+        minSdk = libs.versions.androidMinSdk.get() as Integer
+        targetSdk = libs.versions.androidCompileSdk.get() as Integer
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -61,19 +61,18 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}")
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation("androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}")
-    implementation("androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}")
-    implementation("androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}")
-    implementation("androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}")
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
 
-    implementation("androidx.room:room-runtime:${rootProject.ext.androidxRoomVersion}")
-    implementation("androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}")
-
-    implementation("com.google.android.material:material:${rootProject.ext.googleMaterialVersion}")
+    implementation(libs.google.material)
 
     implementation(project(path: ":core:base"))
     implementation(project(path: ":core:bitmaps"))
@@ -83,11 +82,11 @@ dependencies {
     implementation(project(path: ":core:dumb"))
     implementation(project(path: ":core:ui"))
 
-    testImplementation "junit:junit:${rootProject.ext.jUnitVersion}"
-    testImplementation "androidx.test:core:${rootProject.ext.androidxTestCoreVersion}"
-    testImplementation "androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_version"
-    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:${rootProject.ext.mockitoKotlinVersion}"
-    testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.robolectric)
 }

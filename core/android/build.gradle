@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id "com.android.library"
-    id "org.jetbrains.kotlin.android"
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.android"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk = libs.versions.androidCompileSdk.get() as Integer
 
     defaultConfig {
-        minSdk = rootProject.ext.minSdkVersion
-        targetSdk = rootProject.ext.compileSdkVersion
+        minSdk = libs.versions.androidMinSdk.get() as Integer
+        targetSdk = libs.versions.androidCompileSdk.get() as Integer
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
