@@ -15,16 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+plugins {
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+}
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.extensions"
-    compileSdk= rootProject.ext.compileSdkVersion
+    compileSdk= libs.versions.androidCompileSdk.get() as Integer
 
     defaultConfig {
-        minSdk = rootProject.ext.minSdkVersion
-        targetSdk = rootProject.ext.compileSdkVersion
+        minSdk = libs.versions.androidMinSdk.get() as Integer
+        targetSdk = libs.versions.androidCompileSdk.get() as Integer
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -48,18 +50,18 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlin.reflect)
 
-    implementation("androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}")
-    implementation("androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}")
-    implementation("androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}")
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.room.ktx)
 
-    testImplementation("junit:junit:${rootProject.ext.jUnitVersion}")
-    testImplementation("androidx.test:core:${rootProject.ext.androidxTestCoreVersion}")
-    testImplementation("androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_version")
-    testImplementation("org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}")
-    testImplementation("org.robolectric:robolectric:${rootProject.ext.robolectricVersion}")
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.robolectric)
 }

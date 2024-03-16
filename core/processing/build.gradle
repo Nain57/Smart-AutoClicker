@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+plugins {
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+}
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.processing"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk = libs.versions.androidCompileSdk.get() as Integer
 
     defaultConfig {
-        minSdk = rootProject.ext.minSdkVersion
-        targetSdk = rootProject.ext.compileSdkVersion
+        minSdk = libs.versions.androidMinSdk.get() as Integer
+        targetSdk = libs.versions.androidCompileSdk.get() as Integer
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -54,18 +56,18 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version")
+    implementation(libs.kotlinx.coroutines.core)
 
     implementation(project(path: ":core:base"))
     implementation(project(path: ":core:detection"))
     implementation(project(path: ":core:display"))
     implementation(project(path: ":core:domain"))
 
-    testImplementation("junit:junit:${rootProject.ext.jUnitVersion}")
-    testImplementation("androidx.test:core:${rootProject.ext.androidxTestCoreVersion}")
-    testImplementation("androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_version")
-    testImplementation("org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:${rootProject.ext.mockitoKotlinVersion}")
-    testImplementation("org.robolectric:robolectric:${rootProject.ext.robolectricVersion}")
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.robolectric)
 }

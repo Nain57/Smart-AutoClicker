@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
-apply plugin: "kotlinx-serialization"
-apply plugin: "com.google.devtools.ksp"
+plugins {
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.jetbrainsKotlinSerialization)
+    alias(libs.plugins.googleKsp)
+}
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.database"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk = libs.versions.androidCompileSdk.get() as Integer
 
     defaultConfig {
-        minSdk = rootProject.ext.minSdkVersion
-        targetSdk = rootProject.ext.compileSdkVersion
+        minSdk = libs.versions.androidMinSdk.get() as Integer
+        targetSdk = libs.versions.androidCompileSdk.get() as Integer
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -64,23 +66,19 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${rootProject.ext.kotlinSerializationVersion}")
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}")
-    implementation("androidx.room:room-ktx:${rootProject.ext.androidxRoomVersion}")
-    ksp("androidx.room:room-compiler:${rootProject.ext.androidxRoomVersion}")
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     implementation(project(path: ":core:base"))
 
-
-    testImplementation("junit:junit:${rootProject.ext.jUnitVersion}")
-    testImplementation("androidx.arch.core:core-testing:${rootProject.ext.androidxArchCoreTestingVersion}")
-    testImplementation("androidx.room:room-testing:${rootProject.ext.androidxRoomVersion}")
-    testImplementation("androidx.test:core:${rootProject.ext.androidxTestCoreVersion}")
-    testImplementation("androidx.test.ext:junit:${rootProject.ext.androidxTestExtVersion}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_version")
-    testImplementation("org.mockito:mockito-core:${rootProject.ext.mockitoCoreVersion}")
-    testImplementation("org.robolectric:robolectric:${rootProject.ext.robolectricVersion}")
-
-    // The following dependency is required to compile using JDK as Room needs javax.annotation.Generated
-    compileOnly("javax.annotation:javax.annotation-api:1.3.2")
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.robolectric)
 }

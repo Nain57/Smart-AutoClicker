@@ -85,6 +85,7 @@ abstract class EventDao {
      * Get the list of trigger events from all scenarios.
      * @return the flow on the list of events.
      */
+    @Transaction
     @Query("SELECT * FROM $EVENT_TABLE WHERE type='TRIGGER_EVENT' ORDER BY name")
     abstract fun getAllTriggerEventsFlow(): Flow<List<CompleteEventEntity>>
 

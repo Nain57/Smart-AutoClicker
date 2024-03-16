@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 /** Path of the intermediate directory within the module build folder. */
 def intermediateDirPath = "${buildDir.toPath()}/intermediates/$name"
 /** Path of the OpenCV source code zip file in the intermediate build folder. */
-def zipFilePath = "$intermediateDirPath/OpenCV-${rootProject.ext.openCvVersion}.zip"
+def zipFilePath = "$intermediateDirPath/OpenCV-${libs.versions.openCv}.zip"
 /** Path where the OpenCV source code is unzipped. */
 def sourceCodePath = "${project.projectDir}/src/release/opencv"
 /** Path of the OpenCV source code version. */
@@ -37,7 +37,7 @@ tasks.register("downloadZip") {
         mkdir intermediateDir
 
         if (!zipFile.exists()) {
-            new URL("https://github.com/opencv/opencv/archive/refs/tags/${rootProject.ext.openCvVersion}.zip")
+            new URL("https://github.com/opencv/opencv/archive/refs/tags/${libs.versions.openCv}.zip")
                     .withInputStream { i ->
                         zipFile.withOutputStream { it << i }
                     }
@@ -51,7 +51,7 @@ tasks.register("extractZip", Sync) {
 
     def sourceCodeVersionFile = file(sourceCodeVersionPath)
     if (sourceCodeVersionFile.exists()) {
-        if (sourceCodeVersionFile.text != "${rootProject.ext.openCvVersion}") {
+        if (sourceCodeVersionFile.text != "${libs.versions.openCv}") {
             delete sourceCodePath
         }
     }
@@ -67,7 +67,7 @@ tasks.register("extractZip", Sync) {
     into file(sourceCodePath)
 
     doLast {
-        file(sourceCodeVersionPath).text = "${rootProject.ext.openCvVersion}"
+        file(sourceCodeVersionPath).text = "${libs.versions.openCv}"
     }
 }
 

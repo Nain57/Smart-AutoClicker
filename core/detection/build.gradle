@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,19 @@
  */
 
 plugins {
-    id "com.android.library"
-    id "org.jetbrains.kotlin.android"
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
 apply from: "fetchSources.gradle"
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.detection"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk = libs.versions.androidCompileSdk.get() as Integer
 
     defaultConfig {
-        minSdk = rootProject.ext.minSdkVersion
-        targetSdk = rootProject.ext.compileSdkVersion
+        minSdk = libs.versions.androidMinSdk.get() as Integer
+        targetSdk = libs.versions.androidCompileSdk.get() as Integer
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -119,5 +119,5 @@ android {
 }
 
 dependencies {
-    implementation("androidx.annotation:annotation:${rootProject.ext.androidxAnnotationVersion}")
+    implementation(libs.androidx.annotation)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: "com.android.application"
-apply plugin: "com.google.devtools.ksp"
-apply plugin: "kotlin-android"
+plugins {
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.googleKsp)
+}
 
 // Only apply gms/firebase plugins if we are building for the play store
 def isPlayStoreBuild = getGradle().getStartParameter().getTaskRequests().toString().contains("PlayStore")
 if (isPlayStoreBuild) {
-    apply plugin: "com.google.gms.google-services"
-    apply plugin: "com.google.firebase.crashlytics"
+    alias(libs.plugins.googleGms)
+    alias(libs.plugins.googleCrashlytics)
 }
 
 // Read signing.properties file to find signing configuration
@@ -36,12 +38,12 @@ if (signingPropertiesFile.exists()) {
 
 android {
     namespace = "com.buzbuz.smartautoclicker"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk = libs.versions.androidCompileSdk.get() as Integer
 
     defaultConfig {
         applicationId = "com.buzbuz.smartautoclicker"
-        minSdk = rootProject.ext.minSdkVersion
-        targetSdk = rootProject.ext.compileSdkVersion
+        minSdk = libs.versions.androidMinSdk.get() as Integer
+        targetSdk = libs.versions.androidCompileSdk.get() as Integer
         versionCode = 41
         versionName = "2.4.2"
 
@@ -114,26 +116,26 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version")
+    implementation(libs.kotlinx.coroutines.core)
 
-    implementation("androidx.core:core-ktx:${rootProject.ext.androidxCoreVersion}")
-    implementation("androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}")
-    implementation("androidx.recyclerview:recyclerview:${rootProject.ext.androidxRecyclerViewVersion}")
-    implementation("androidx.fragment:fragment-ktx:${rootProject.androidxFragmentVersion}")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.recyclerView)
+    implementation(libs.androidx.fragment.ktx)
 
-    implementation("androidx.lifecycle:lifecycle-extensions:${rootProject.ext.androidxLifecycleExtensionVersion}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.androidxLifecycleVersion}")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.androidxLifecycleVersion}")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.androidxLifecycleVersion}")
-    implementation("androidx.lifecycle:lifecycle-common-java8:${rootProject.ext.androidxLifecycleVersion}")
+    implementation(libs.androidx.lifecycle.extensions)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.common.java8)
 
-    implementation("com.airbnb.android:lottie:$lottieVersion")
-    implementation("com.google.android.material:material:${rootProject.ext.googleMaterialVersion}")
+    implementation(libs.airbnb.lottie)
+    implementation(libs.google.material)
 
     // Google Play Store version dependencies only
-    playStoreImplementation(platform("com.google.firebase:firebase-bom:${rootProject.ext.firebaseBomVersion}"))
-    playStoreImplementation("com.google.firebase:firebase-crashlytics-ktx")
-    playStoreImplementation("com.google.firebase:firebase-crashlytics-ndk")
+    playStoreImplementation(platform(libs.google.firebase.bom))
+    playStoreImplementation(libs.google.firebase.crashlytics.ktx)
+    playStoreImplementation(libs.google.firebase.crashlytics.ndk)
 
     implementation(project(path: ":core:base"))
     implementation(project(path: ":core:detection"))
