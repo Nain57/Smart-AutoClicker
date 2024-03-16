@@ -21,12 +21,11 @@ plugins {
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.extensions"
-    compileSdk= libs.versions.androidCompileSdk.get() as Integer
+    namespace = "com.buzbuz.smartautoclicker.core.ui"
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -34,7 +33,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled = true
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -44,24 +43,32 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
+    @Suppress("UnstableApiUsage")
     testOptions {
-        unitTests.includeAndroidResources = true
+        unitTests.isIncludeAndroidResources = true
     }
 }
 
 dependencies {
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlin.reflect)
 
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.recyclerView)
+
+    implementation(libs.google.material)
+
+    implementation(project(":core:display"))
+    implementation(project(":core:base"))
 
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.test.ext.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.core)
     testImplementation(libs.robolectric)
 }

@@ -14,61 +14,73 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.jetbrainsKotlinSerialization)
+    alias(libs.plugins.googleKsp)
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.ui"
-    compileSdk = libs.versions.androidCompileSdk.get() as Integer
+    namespace = "com.buzbuz.smartautoclicker.core.database"
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-    }
 
-    buildTypes {
-        release {
-            minifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
     compileOptions {
+        kotlin {
+            kotlinOptions {
+                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+            }
+        }
+
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    buildFeatures {
-        viewBinding = true
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
-        unitTests.includeAndroidResources = true
+        unitTests.isIncludeAndroidResources = true
+    }
+
+    sourceSets {
+        getByName("test") {
+            // Adds exported schema location as test app assets.
+            assets.srcDirs("$projectDir/schemas")
+        }
     }
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.androidx.appCompat)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.recyclerView)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
-    implementation(libs.google.material)
-
-    implementation(project(path: ":core:display"))
-    implementation(project(path: ":core:base"))
+    implementation(project(":core:base"))
 
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.androidx.room.testing)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.core)
     testImplementation(libs.robolectric)
 }

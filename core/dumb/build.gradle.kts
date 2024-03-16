@@ -22,12 +22,11 @@ plugins {
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.database"
-    compileSdk = libs.versions.androidCompileSdk.get() as Integer
+    namespace = "com.smartautoclicker.core.dumb"
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -50,18 +49,21 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled = true
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
-        unitTests.includeAndroidResources = true
+        unitTests.isIncludeAndroidResources = true
     }
 
     sourceSets {
-        // Adds exported schema location as test app assets.
-        test.assets.srcDirs += "$projectDir/schemas".toString()
+        getByName("test") {
+            // Adds exported schema location as test app assets.
+            assets.srcDirs("$projectDir/schemas")
+        }
     }
 }
 
@@ -71,14 +73,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    implementation(project(path: ":core:base"))
-
-    testImplementation(libs.junit)
-    testImplementation(libs.androidx.arch.core.testing)
-    testImplementation(libs.androidx.room.testing)
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.androidx.test.ext.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.robolectric)
+    implementation(project(":core:base"))
 }
