@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -22,28 +24,25 @@ plugins {
 }
 
 // Only apply gms/firebase plugins if we are building for the play store
-def isPlayStoreBuild = getGradle().getStartParameter().getTaskRequests().toString().contains("PlayStore")
+val isPlayStoreBuild = rootProject.isBuildForFlavour("playStore")
 if (isPlayStoreBuild) {
-    alias(libs.plugins.googleGms)
-    alias(libs.plugins.googleCrashlytics)
+    apply {
+        plugin(libs.plugins.googleGms.get().pluginId)
+        plugin(libs.plugins.googleCrashlytics.get().pluginId)
+    }
 }
 
-// Read signing.properties file to find signing configuration
-def signingProperties = new Properties()
-def signingStoreFile = file("./smartautoclicker.jks")
-def signingPropertiesFile = rootProject.file("signing.properties")
-if (signingPropertiesFile.exists()) {
-    signingProperties.load(new FileInputStream(signingPropertiesFile))
-}
+val signingStoreFile = file("./smartautoclicker.jks")
+val signingProperties = Properties()
 
 android {
     namespace = "com.buzbuz.smartautoclicker"
-    compileSdk = libs.versions.androidCompileSdk.get() as Integer
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.buzbuz.smartautoclicker"
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
+
         versionCode = 41
         versionName = "2.4.2"
 
@@ -63,39 +62,40 @@ android {
 
     if (signingStoreFile.exists()) {
         signingConfigs {
-            release {
+            getByName("release") {
                 storeFile = signingStoreFile
-                storePassword = signingProperties["signingStorePassword"] ?: rootProject.signingStorePassword
-                keyAlias = signingProperties["signingKeyAlias"] ?: rootProject.signingKeyAlias
-                keyPassword = signingProperties["signingKeyPassword"] ?: rootProject.signingKeyPassword
+                storePassword = rootProject.buildProperty("signingStorePassword")
+                keyAlias = rootProject.buildProperty("signingKeyAlias")
+                keyPassword = rootProject.buildProperty("signingKeyPassword")
             }
         }
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             if (signingStoreFile.exists()) {
-                signingConfig = signingConfigs.release
+                signingConfig = signingConfigs.getByName("release")
             }
-            minifyEnabled = true
-            shrinkResources = true
+
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
             if (isPlayStoreBuild) {
-                firebaseCrashlytics {
+                configure<CrashlyticsExtension> {
                     nativeSymbolUploadEnabled = true
                     unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/out/lib"
                 }
             }
         }
 
-        debug {
+        getByName("debug") {
             applicationIdSuffix = ".debug"
         }
     }
 
     // Specifies one flavor dimension.
-    flavorDimensions += "version"
+    flavorDimensions += listOf("version")
     productFlavors {
         create("fDroid") {
             dimension = "version"
@@ -107,11 +107,6 @@ android {
 
     buildFeatures {
         viewBinding = true
-    }
-    packagingOptions {
-        resources {
-            excludes += ["META-INF/atomicfu.kotlin_module"]
-        }
     }
 }
 
@@ -133,28 +128,28 @@ dependencies {
     implementation(libs.google.material)
 
     // Google Play Store version dependencies only
-    playStoreImplementation(platform(libs.google.firebase.bom))
-    playStoreImplementation(libs.google.firebase.crashlytics.ktx)
-    playStoreImplementation(libs.google.firebase.crashlytics.ndk)
+    "playStoreImplementation"(platform(libs.google.firebase.bom))
+    "playStoreImplementation"(libs.google.firebase.crashlytics.ktx)
+    "playStoreImplementation"(libs.google.firebase.crashlytics.ndk)
 
-    implementation(project(path: ":core:base"))
-    implementation(project(path: ":core:detection"))
-    implementation(project(path: ":core:display"))
-    implementation(project(path: ":core:domain"))
-    implementation(project(path: ":core:dumb"))
-    implementation(project(path: ":core:processing"))
-    implementation(project(path: ":core:ui"))
-    implementation(project(path: ":feature:backup"))
-    implementation(project(path: ":feature:billing"))
-    implementation(project(path: ":feature:floating-menu"))
-    implementation(project(path: ":feature:scenario-config"))
-    implementation(project(path: ":feature:scenario-config-dumb"))
-    implementation(project(path: ":feature:scenario-debugging"))
-    implementation(project(path: ":feature:tutorial"))
+    implementation(project(":core:base"))
+    implementation(project(":core:detection"))
+    implementation(project(":core:display"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:dumb"))
+    implementation(project(":core:processing"))
+    implementation(project(":core:ui"))
+    implementation(project(":feature:backup"))
+    implementation(project(":feature:billing"))
+    implementation(project(":feature:floating-menu"))
+    implementation(project(":feature:scenario-config"))
+    implementation(project(":feature:scenario-config-dumb"))
+    implementation(project(":feature:scenario-debugging"))
+    implementation(project(":feature:tutorial"))
 }
 
 project.afterEvaluate {
-    tasks.findAll { task ->
+    tasks.filter { task ->
         task.name.startsWith("generateCrashlyticsSymbolFilePlayStoreRelease")
     }.forEach {task ->
         task.dependsOn("mergePlayStoreReleaseNativeLibs")

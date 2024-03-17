@@ -20,37 +20,19 @@ plugins {
     alias(libs.plugins.googleKsp)
 }
 
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file("local.properties")
-def billingKey
-if (localPropertiesFile.exists()) {
-    localProperties.load(new FileInputStream(localPropertiesFile))
-    billingKey = localProperties["billingPublicKey"]
-} else if (rootProject.hasProperty("billingPublicKey")) {
-    billingKey = rootProject.billingPublicKey
-}
-
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.billing"
-    compileSdk = libs.versions.androidCompileSdk.get() as Integer
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     buildFeatures {
         buildConfig = true
     }
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get() as Integer
-        targetSdk = libs.versions.androidCompileSdk.get() as Integer
+        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
     }
 
     compileOptions {
@@ -63,6 +45,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+
     // Specifies one flavor dimension.
     flavorDimensions += "version"
     productFlavors {
@@ -71,7 +60,10 @@ android {
         }
         create("playStore") {
             dimension = "version"
-            buildConfigField("String", "BILLING_PUBLIC_KEY", "\"" + billingKey + "\"")
+            buildConfigField(
+                "String",
+                "BILLING_PUBLIC_KEY", "\"" + rootProject.buildProperty("billingPublicKey") + "\"",
+            )
             buildFeatures {
                 viewBinding = true
             }
@@ -82,15 +74,15 @@ android {
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
-    implementation(project(path: ":core:ui"))
+    implementation(project(":core:ui"))
 
-    playStoreImplementation(libs.androidx.appCompat)
-    playStoreImplementation(libs.androidx.core.ktx)
-    playStoreImplementation(libs.androidx.fragment.ktx)
-    playStoreImplementation(libs.androidx.lifecycle.viewmodel.ktx)
+    "playStoreImplementation"(libs.androidx.appCompat)
+    "playStoreImplementation"(libs.androidx.core.ktx)
+    "playStoreImplementation"(libs.androidx.fragment.ktx)
+    "playStoreImplementation"(libs.androidx.lifecycle.viewmodel.ktx)
 
-    playStoreImplementation(libs.android.billingClient)
-    playStoreImplementation(libs.android.billingClient.ktx)
+    "playStoreImplementation"(libs.android.billingClient)
+    "playStoreImplementation"(libs.android.billingClient.ktx)
 
-    playStoreImplementation(libs.google.material)
+    "playStoreImplementation"(libs.google.material)
 }
