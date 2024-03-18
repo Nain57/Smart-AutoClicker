@@ -1,5 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.buzbuz.smartautoclicker.GitHubFetchPlugin
+import com.buzbuz.smartautoclicker.GithubFetchPluginExtension
+
+
 /*
 * Copyright (C) 2024 Kevin Buzeau
 *
@@ -22,8 +26,18 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
-apply {
-    from("fetchSources.gradle")
+apply<GitHubFetchPlugin>()
+configure<GithubFetchPluginExtension> {
+    projects {
+        register("openCv") {
+            projectAccount = "opencv"
+            projectName = "opencv"
+            projectVersion = libs.versions.openCv.get()
+
+            unzipPath = project.layout.projectDirectory.dir("/src/release/opencv")
+            fetchForTask = tasks.findByName("preReleaseBuild")
+        }
+    }
 }
 
 android {
@@ -43,7 +57,7 @@ android {
     }
 
     buildTypes {
-        debug {
+        getByName("debug") {
             externalNativeBuild {
                 cmake {
                     cppFlags("-Wl,--build-id")
@@ -51,7 +65,8 @@ android {
                 }
             }
         }
-        release {
+
+        getByName("release") {
             externalNativeBuild {
                 cmake {
                     cppFlags("-Wl,--build-id")

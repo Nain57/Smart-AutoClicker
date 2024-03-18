@@ -71,7 +71,8 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
             smartautoclicker
             PUBLIC
             ${PREBUILT_OPENCV_PATH}/include )
-ELSE()
+ELSEIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
+    message(WARNING "include dir: ${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
 
     set(SOURCE_OPENCV_PATH "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
 
@@ -88,7 +89,6 @@ ELSE()
 
     # Required to get opencv2/open_modules.hpp generated at build time
     include_directories (${CMAKE_BINARY_DIR})
-
 ENDIF()
 
 # Specifies libraries CMake should link to your target library. You
