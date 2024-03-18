@@ -30,7 +30,7 @@ androidxVectorDrawable = "1.1.0"
 airbnbLottie = "6.1.0"
 googleMaterial = "1.10.0"
 kotlinSerializationJson = "1.6.3"
-openCv = "4.8.1"
+openCv = "4.9.0"
 
 # PlayStore only
 androidBillingClient = "6.2.0"
