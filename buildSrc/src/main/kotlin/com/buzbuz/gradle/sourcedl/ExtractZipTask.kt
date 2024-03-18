@@ -31,7 +31,6 @@ abstract class ExtractZipTask : DefaultTask() {
 
     @get:Input
     abstract val sourceVersion: Property<String>
-
     @get:Input
     abstract val inputZipFile: Property<File>
 
@@ -40,9 +39,10 @@ abstract class ExtractZipTask : DefaultTask() {
 
     @TaskAction
     fun extract() {
-        val outputDir = outputDirectory.get().asFile
+        val outputDir = outputDirectory.get()
 
-        val sourceCodeVersionFile = project.file("${outputDir.path}/version.txt")
+        val sourceCodeVersionFile = project.file("${outputDir.asFile.path}/version.txt")
+        logger.warn("Creating source code file in ${sourceCodeVersionFile.path}")
         if (sourceCodeVersionFile.exists()) {
             if (sourceCodeVersionFile.readText() != sourceVersion.get()) {
                 project.delete(outputDir)
@@ -51,11 +51,12 @@ abstract class ExtractZipTask : DefaultTask() {
             }
         }
 
+        logger.warn("Creating output dir ${outputDir.asFile.path}")
         project.mkdir(outputDir)
 
         ZipFile(inputZipFile.get()).use { zipFile ->
             zipFile.entries().asSequence().forEach { entry ->
-                zipFile.copyZipEntry(entry, outputDir)
+                zipFile.copyZipEntry(entry, outputDir.asFile)
             }
         }
 
