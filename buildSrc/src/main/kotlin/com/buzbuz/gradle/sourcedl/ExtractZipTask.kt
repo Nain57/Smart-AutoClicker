@@ -42,7 +42,6 @@ abstract class ExtractZipTask : DefaultTask() {
         val outputDir = outputDirectory.get()
 
         val sourceCodeVersionFile = project.file("${outputDir.asFile.path}/version.txt")
-        logger.warn("WARNING Creating source code file in ${sourceCodeVersionFile.path}")
         if (sourceCodeVersionFile.exists()) {
             if (sourceCodeVersionFile.readText() != sourceVersion.get()) {
                 project.delete(outputDir)
@@ -51,7 +50,6 @@ abstract class ExtractZipTask : DefaultTask() {
             }
         }
 
-        logger.warn("WARNING Creating output dir ${outputDir.asFile.path}")
         project.mkdir(outputDir)
 
         ZipFile(inputZipFile.get()).use { zipFile ->
