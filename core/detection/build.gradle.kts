@@ -32,7 +32,7 @@ configure<SourceDownloadPluginExtension> {
             projectName = "opencv"
             projectVersion = libs.versions.openCv.get()
 
-            unzipPath = File("/src/release/opencv")
+            unzipPath = File("src/release/opencv")
             requiredForTask = "configureCMakeRelease"
         }
     }

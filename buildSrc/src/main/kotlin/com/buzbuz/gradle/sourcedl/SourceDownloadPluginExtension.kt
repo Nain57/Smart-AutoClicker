@@ -17,8 +17,8 @@
 package com.buzbuz.gradle.sourcedl
 
 import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
+import java.io.File
 
 abstract class SourceDownloadPluginExtension {
     abstract val projects: NamedDomainObjectContainer<GitHubProject>
@@ -32,5 +32,5 @@ abstract class GitHubProject {
     abstract val projectVersion: Property<String>
 
     abstract val requiredForTask: Property<String>
-    abstract val unzipPath: DirectoryProperty
+    abstract val unzipPath: Property<File>
 }

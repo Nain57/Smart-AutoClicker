@@ -71,7 +71,11 @@ class SourceDownloadPlugin : Plugin<Project> {
 
             inputZipFile.set(downloadTask.flatMap { it.outputFile })
             sourceVersion.set(gitHubProject.projectVersion)
-            outputDirectory.set(gitHubProject.unzipPath)
+            outputDirectory.set(
+                gitHubProject.unzipPath.map { path ->
+                    layout.projectDirectory.dir(path.path)
+                }
+            )
         }
 
     private fun GitHubProject.getSourceZipFileName(): Provider<String> =
