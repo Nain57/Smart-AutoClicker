@@ -72,7 +72,6 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
             PUBLIC
             ${PREBUILT_OPENCV_PATH}/include )
 ELSEIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
-    message(WARNING "include dir: ${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
 
     set(SOURCE_OPENCV_PATH "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
 
