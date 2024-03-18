@@ -14,7 +14,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.buzbuz.smartautoclicker
+package com.buzbuz.gradle.sourcedl
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -24,10 +24,10 @@ import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.register
 import java.io.File
 
-class GitHubFetchPlugin : Plugin<Project> {
+class SourceDownloadPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
-        val extension = target.extensions.create<GithubFetchPluginExtension>(PLUGIN_EXTENSION_NAME)
+        val extension = target.extensions.create<SourceDownloadPluginExtension>(PLUGIN_EXTENSION_NAME)
 
         target.afterEvaluate {
             extension.projects.forEach { gitHubProject ->
@@ -44,8 +44,8 @@ class GitHubFetchPlugin : Plugin<Project> {
     private fun Project.registerDownloadTask(
         gitHubProject: GitHubProject,
         taskNameSuffix: String,
-    ): TaskProvider<GitHubDownloadZipTask> =
-        tasks.register<GitHubDownloadZipTask>(TASK_NAME_DOWNLOAD_ZIP + taskNameSuffix) {
+    ): TaskProvider<DownloadZipTask> =
+        tasks.register<DownloadZipTask>(TASK_NAME_DOWNLOAD_ZIP + taskNameSuffix) {
             group = TASKS_GROUP_NAME
 
             projectAccount.set(gitHubProject.projectAccount)
@@ -59,11 +59,11 @@ class GitHubFetchPlugin : Plugin<Project> {
         }
 
     private fun Project.registerExtractTask(
-        downloadTask: TaskProvider<GitHubDownloadZipTask>,
+        downloadTask: TaskProvider<DownloadZipTask>,
         gitHubProject: GitHubProject,
         taskNameSuffix: String,
-    ): TaskProvider<GitHubExtractZipTask> =
-        tasks.register<GitHubExtractZipTask>(TASK_NAME_EXTRACT_ZIP + taskNameSuffix) {
+    ): TaskProvider<ExtractZipTask> =
+        tasks.register<ExtractZipTask>(TASK_NAME_EXTRACT_ZIP + taskNameSuffix) {
             dependsOn(downloadTask)
             group = TASKS_GROUP_NAME
 

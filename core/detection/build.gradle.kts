@@ -1,9 +1,4 @@
 @file:Suppress("UnstableApiUsage")
-
-import com.buzbuz.smartautoclicker.GitHubFetchPlugin
-import com.buzbuz.smartautoclicker.GithubFetchPluginExtension
-
-
 /*
 * Copyright (C) 2024 Kevin Buzeau
 *
@@ -21,13 +16,16 @@ import com.buzbuz.smartautoclicker.GithubFetchPluginExtension
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import com.buzbuz.gradle.sourcedl.SourceDownloadPlugin
+import com.buzbuz.gradle.sourcedl.SourceDownloadPluginExtension
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
-apply<GitHubFetchPlugin>()
-configure<GithubFetchPluginExtension> {
+apply<SourceDownloadPlugin>()
+configure<SourceDownloadPluginExtension> {
     projects {
         register("openCv") {
             projectAccount = "opencv"

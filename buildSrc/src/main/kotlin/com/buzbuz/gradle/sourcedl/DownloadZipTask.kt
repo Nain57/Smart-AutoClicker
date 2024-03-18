@@ -14,7 +14,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.buzbuz.smartautoclicker
+package com.buzbuz.gradle.sourcedl
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
@@ -26,7 +26,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 
-abstract class GitHubDownloadZipTask : DefaultTask() {
+abstract class DownloadZipTask : DefaultTask() {
 
     @get:Input
     abstract val projectAccount: Property<String>
