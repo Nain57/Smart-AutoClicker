@@ -36,7 +36,9 @@ class SourceDownloadPlugin : Plugin<Project> {
                 val downloadZipTask = target.registerDownloadTask(gitHubProject, taskNameSuffix)
                 val extractZipTask = target.registerExtractTask(downloadZipTask, gitHubProject, taskNameSuffix)
 
-                gitHubProject.fetchForTask.get().dependsOn(extractZipTask)
+                project.tasks
+                    .filter { it.name.startsWith(gitHubProject.requiredForTask.get()) }
+                    .forEach { requiredTask -> requiredTask.dependsOn(extractZipTask) }
             }
         }
     }

@@ -51,7 +51,7 @@ abstract class ExtractZipTask : DefaultTask() {
             }
         }
 
-        outputDir.mkdirs()
+        project.mkdir(outputDir)
 
         ZipFile(inputZipFile.get()).use { zipFile ->
             zipFile.entries().asSequence().forEach { entry ->

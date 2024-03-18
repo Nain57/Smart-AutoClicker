@@ -17,7 +17,6 @@
 package com.buzbuz.gradle.sourcedl
 
 import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.Task
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 
@@ -32,6 +31,6 @@ abstract class GitHubProject {
     abstract val projectName: Property<String>
     abstract val projectVersion: Property<String>
 
-    abstract val fetchForTask: Property<Task>
+    abstract val requiredForTask: Property<String>
     abstract val unzipPath: DirectoryProperty
 }
