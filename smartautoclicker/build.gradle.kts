@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
@@ -41,14 +40,6 @@ android {
 
         versionCode = 41
         versionName = "2.4.2"
-    }
-
-    compileOptions {
-        kotlin {
-            kotlinOptions {
-                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-            }
-        }
     }
 
     signingConfigs {

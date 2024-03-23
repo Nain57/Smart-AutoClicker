@@ -23,14 +23,6 @@ plugins {
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.billing"
 
-    compileOptions {
-        kotlin {
-            kotlinOptions {
-                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-            }
-        }
-    }
-
     // Specifies one flavor dimension.
     flavorDimensions += "version"
     productFlavors {

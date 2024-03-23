@@ -22,14 +22,6 @@ plugins {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.processing"
-
-    compileOptions {
-        kotlin {
-            kotlinOptions {
-                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-            }
-        }
-    }
 }
 
 dependencies {

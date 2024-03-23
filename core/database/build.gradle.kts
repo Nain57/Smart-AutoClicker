@@ -24,14 +24,6 @@ plugins {
 android {
     namespace = "com.buzbuz.smartautoclicker.core.database"
 
-    compileOptions {
-        kotlin {
-            kotlinOptions {
-                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-            }
-        }
-    }
-
     sourceSets {
         getByName("test") {
             // Adds exported schema location as test app assets.

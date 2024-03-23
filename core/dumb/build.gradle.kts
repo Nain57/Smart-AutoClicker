@@ -23,14 +23,6 @@ plugins {
 android {
     namespace = "com.smartautoclicker.core.dumb"
 
-    compileOptions {
-        kotlin {
-            kotlinOptions {
-                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-            }
-        }
-    }
-
     sourceSets {
         getByName("test") {
             // Adds exported schema location as test app assets.

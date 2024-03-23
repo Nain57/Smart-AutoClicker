@@ -24,14 +24,6 @@ plugins {
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.backup"
     buildFeatures.viewBinding = true
-
-    compileOptions {
-        kotlin {
-            kotlinOptions {
-                freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-            }
-        }
-    }
 }
 
 dependencies {
