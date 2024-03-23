@@ -16,15 +16,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.buzbuz.gradle.sourcedl.SourceDownloadPlugin
-import com.buzbuz.gradle.sourcedl.SourceDownloadPluginExtension
-
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.sourceDownload)
 }
 
-apply<SourceDownloadPlugin>()
-configure<SourceDownloadPluginExtension> {
+sourceDownload {
     projects {
         register("openCv") {
             projectAccount = "opencv"

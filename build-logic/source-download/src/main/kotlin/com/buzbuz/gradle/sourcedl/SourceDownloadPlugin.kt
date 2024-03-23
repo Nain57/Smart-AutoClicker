@@ -44,25 +44,25 @@ class SourceDownloadPlugin : Plugin<Project> {
     }
 
     private fun Project.registerDownloadTask(
-        gitHubProject: GitHubProject,
+        sourceProject: SourceProject,
         taskNameSuffix: String,
     ): TaskProvider<DownloadZipTask> =
         tasks.register<DownloadZipTask>(TASK_NAME_DOWNLOAD_ZIP + taskNameSuffix) {
             group = TASKS_GROUP_NAME
 
-            projectAccount.set(gitHubProject.projectAccount)
-            projectName.set(gitHubProject.projectName)
-            projectVersion.set(gitHubProject.projectVersion)
+            projectAccount.set(sourceProject.projectAccount)
+            projectName.set(sourceProject.projectName)
+            projectVersion.set(sourceProject.projectVersion)
             outputFile.set(
                 layout.buildDirectory.dir("$PLUGIN_INTERMEDIATES_FOLDER/$TASK_NAME_DOWNLOAD_ZIP").map { directory ->
-                    File(directory.asFile, gitHubProject.getSourceZipFileName().get())
+                    File(directory.asFile, sourceProject.getSourceZipFileName().get())
                 }
             )
         }
 
     private fun Project.registerExtractTask(
         downloadTask: TaskProvider<DownloadZipTask>,
-        gitHubProject: GitHubProject,
+        sourceProject: SourceProject,
         taskNameSuffix: String,
     ): TaskProvider<ExtractZipTask> =
         tasks.register<ExtractZipTask>(TASK_NAME_EXTRACT_ZIP + taskNameSuffix) {
@@ -70,15 +70,15 @@ class SourceDownloadPlugin : Plugin<Project> {
             group = TASKS_GROUP_NAME
 
             inputZipFile.set(downloadTask.flatMap { it.outputFile })
-            sourceVersion.set(gitHubProject.projectVersion)
+            sourceVersion.set(sourceProject.projectVersion)
             outputDirectory.set(
-                gitHubProject.unzipPath.map { path ->
+                sourceProject.unzipPath.map { path ->
                     layout.projectDirectory.dir(path.path)
                 }
             )
         }
 
-    private fun GitHubProject.getSourceZipFileName(): Provider<String> =
+    private fun SourceProject.getSourceZipFileName(): Provider<String> =
         projectName.zip(projectVersion) { name, version ->
             "$name-$version.zip"
         }
@@ -87,10 +87,10 @@ class SourceDownloadPlugin : Plugin<Project> {
         replaceFirstChar { it.uppercaseChar() }
 
     internal companion object {
-        const val PLUGIN_EXTENSION_NAME = "gitHubFetch"
-        const val PLUGIN_INTERMEDIATES_FOLDER = "intermediates/gitHubFetch"
+        const val PLUGIN_EXTENSION_NAME = "sourceDownload"
+        const val PLUGIN_INTERMEDIATES_FOLDER = "intermediates/sourceDownload"
 
-        const val TASKS_GROUP_NAME = "github fetch"
+        const val TASKS_GROUP_NAME = "source download"
         const val TASK_NAME_DOWNLOAD_ZIP = "downloadZip"
         const val TASK_NAME_EXTRACT_ZIP = "extractZip"
     }

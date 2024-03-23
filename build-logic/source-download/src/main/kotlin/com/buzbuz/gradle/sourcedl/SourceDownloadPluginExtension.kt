@@ -21,10 +21,10 @@ import org.gradle.api.provider.Property
 import java.io.File
 
 abstract class SourceDownloadPluginExtension {
-    abstract val projects: NamedDomainObjectContainer<GitHubProject>
+    abstract val projects: NamedDomainObjectContainer<SourceProject>
 }
 
-abstract class GitHubProject {
+abstract class SourceProject {
     abstract val name: String
 
     abstract val projectAccount: Property<String>

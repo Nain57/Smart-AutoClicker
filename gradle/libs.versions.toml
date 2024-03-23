@@ -45,6 +45,7 @@ junit = "4.13.2"
 mockitoCore = "5.5.0"
 mockitoKotlin = "5.1.0"
 robolectric = "4.10.3"
+jetbrainsKotlinJvm = "1.9.0"
 
 
 [libraries]
@@ -121,3 +122,4 @@ buzbuz-androidRoom = { id = "com.buzbuz.gradle.android.room", version = "unspeci
 buzbuz-androidUnitTest = { id = "com.buzbuz.gradle.android.unittest", version = "unspecified" }
 buzbuz-kotlinSerialization = { id = "com.buzbuz.gradle.android.kotlin.serialization", version = "unspecified" }
 buzbuz-buildParameters = { id = "com.buzbuz.gradle.build.parameters", version = "unspecified" }
+buzbuz-sourceDownload = { id = "com.buzbuz.gradle.build.sourcedl", version = "unspecified" }

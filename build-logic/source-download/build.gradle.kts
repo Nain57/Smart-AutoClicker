@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 /*
  * Copyright (C) 2024 Kevin Buzeau
  *
@@ -14,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
@@ -36,9 +36,7 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-    compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly(libs.androidx.room.gradlePlugin)
 }
 
 tasks {
@@ -48,31 +46,12 @@ tasks {
     }
 }
 
+
 gradlePlugin {
     plugins {
-        register("androidLibrary") {
-            id = "com.buzbuz.gradle.android.library"
-            implementationClass = "com.buzbuz.gradle.buildlogic.AndroidLibraryConventionPlugin"
-        }
-
-        register("androidRoom") {
-            id = "com.buzbuz.gradle.android.room"
-            implementationClass = "com.buzbuz.gradle.buildlogic.AndroidRoomConventionPlugin"
-        }
-
-        register("androidUnitTest") {
-            id = "com.buzbuz.gradle.android.unittest"
-            implementationClass = "com.buzbuz.gradle.buildlogic.AndroidUnitTestConventionPlugin"
-        }
-
-        register("kotlinSerialization") {
-            id = "com.buzbuz.gradle.android.kotlin.serialization"
-            implementationClass = "com.buzbuz.gradle.buildlogic.KotlinSerializationConventionPlugin"
-        }
-
-        register("buildParameters") {
-            id = "com.buzbuz.gradle.build.parameters"
-            implementationClass = "com.buzbuz.gradle.buildlogic.params.BuildParametersPlugin"
+        register("sourceDownload") {
+            id = "com.buzbuz.gradle.build.sourcedl"
+            implementationClass = "com.buzbuz.gradle.sourcedl.SourceDownloadPlugin"
         }
     }
 }
