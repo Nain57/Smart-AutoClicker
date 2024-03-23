@@ -14,26 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.buildlogic
+package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.buildlogic.extensions.androidLib
-import com.buzbuz.gradle.buildlogic.extensions.getPlugin
-import com.buzbuz.gradle.buildlogic.extensions.getVersion
-import com.buzbuz.gradle.buildlogic.extensions.libs
-import com.buzbuz.gradle.buildlogic.extensions.plugins
+import com.buzbuz.gradle.convention.utils.androidApp
+import com.buzbuz.gradle.convention.utils.getPlugin
+import com.buzbuz.gradle.convention.utils.getVersion
+import com.buzbuz.gradle.convention.utils.libs
+import com.buzbuz.gradle.convention.utils.plugins
 
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class AndroidLibraryConventionPlugin : Plugin<Project> {
+class AndroidApplicationConventionPlugin : Plugin<Project> {
+
     override fun apply(target: Project): Unit = with(target) {
         plugins {
-            apply(libs.getPlugin("androidLibrary"))
+            apply(libs.getPlugin("androidApplication"))
             apply(libs.getPlugin("jetbrainsKotlinAndroid"))
         }
 
-        androidLib {
+        androidApp {
             compileSdk = libs.getVersion("androidCompileSdk")
 
             defaultConfig.apply {
@@ -44,6 +45,31 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             compileOptions.apply {
                 sourceCompatibility = JavaVersion.VERSION_17
                 targetCompatibility = JavaVersion.VERSION_17
+            }
+
+            buildTypes {
+                release {
+                    isMinifyEnabled = true
+                    isShrinkResources = true
+                    proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+                }
+            }
+        }
+
+        applySigningConfig()
+    }
+
+    private fun Project.applySigningConfig() = afterEvaluate {
+        androidApp {
+            buildTypes {
+                release {
+                    val signConfig = signingConfigs.getByName("release")
+                    if (signConfig.isSigningReady) {
+                        signingConfig = signConfig
+                    } else {
+                        logger.warn("WARNING: Signing config is incomplete, release apk will not be signed")
+                    }
+                }
             }
         }
     }

@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.buildlogic
+package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.buildlogic.extensions.android
+import com.buzbuz.gradle.convention.utils.android
 
-import com.buzbuz.gradle.buildlogic.extensions.getLibrary
-import com.buzbuz.gradle.buildlogic.extensions.getPlugin
-import com.buzbuz.gradle.buildlogic.extensions.libs
-import com.buzbuz.gradle.buildlogic.extensions.plugins
-import com.buzbuz.gradle.buildlogic.extensions.testImplementation
+import com.buzbuz.gradle.convention.utils.getLibrary
+import com.buzbuz.gradle.convention.utils.getPlugin
+import com.buzbuz.gradle.convention.utils.libs
+import com.buzbuz.gradle.convention.utils.plugins
+import com.buzbuz.gradle.convention.utils.testImplementation
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

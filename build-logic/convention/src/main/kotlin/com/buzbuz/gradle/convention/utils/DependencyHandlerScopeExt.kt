@@ -14,24 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.gradle.convention.utils
 
-package com.buzbuz.gradle.buildlogic.extensions
-
-import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
-import org.gradle.api.artifacts.VersionCatalog
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
-import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.DependencyHandlerScope
 
-internal val Project.libs
-    get(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+internal fun DependencyHandlerScope.implementation(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("implementation", dependency)
 
-internal fun VersionCatalog.getPlugin(alias: String): String =
-    findPlugin(alias).get().get().pluginId
+internal fun DependencyHandlerScope.ksp(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("ksp", dependency)
 
-internal fun VersionCatalog.getLibrary(alias: String): Provider<MinimalExternalModuleDependency> =
-    findLibrary(alias).get()
-
-internal fun VersionCatalog.getVersion(alias: String): Int =
-    findVersion(alias).get().requiredVersion.toInt()
+internal fun DependencyHandlerScope.testImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("testImplementation", dependency)

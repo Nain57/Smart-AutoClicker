@@ -14,27 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.buildlogic
+package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.buildlogic.extensions.getLibrary
-import com.buzbuz.gradle.buildlogic.extensions.getPlugin
-import com.buzbuz.gradle.buildlogic.extensions.implementation
-import com.buzbuz.gradle.buildlogic.extensions.libs
-import com.buzbuz.gradle.buildlogic.extensions.plugins
+import androidx.room.gradle.RoomExtension
+
+import com.buzbuz.gradle.convention.utils.getLibrary
+import com.buzbuz.gradle.convention.utils.getPlugin
+import com.buzbuz.gradle.convention.utils.implementation
+import com.buzbuz.gradle.convention.utils.ksp
+import com.buzbuz.gradle.convention.utils.libs
+import com.buzbuz.gradle.convention.utils.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
-class KotlinSerializationConventionPlugin : Plugin<Project> {
+class AndroidRoomConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
         plugins {
-            apply(libs.getPlugin("jetbrainsKotlinSerialization"))
+            apply(libs.getPlugin("androidxRoom"))
+            apply(libs.getPlugin("googleKsp"))
+        }
+
+        extensions.configure<RoomExtension> {
+            schemaDirectory("$projectDir/schemas")
         }
 
         dependencies {
-            implementation(libs.getLibrary("kotlinx.serialization.json"))
+            implementation(libs.getLibrary("androidx.room.runtime"))
+            implementation(libs.getLibrary("androidx.room.ktx"))
+            ksp(libs.getLibrary("androidx.room.compiler"))
         }
     }
 }
