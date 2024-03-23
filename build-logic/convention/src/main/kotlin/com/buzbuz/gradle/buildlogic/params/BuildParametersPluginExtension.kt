@@ -27,8 +27,12 @@ abstract class BuildParametersPluginExtension {
     abstract val project: Property<Project>
 
     @Suppress("UNNECESSARY_SAFE_CALL")
+    private val rootProject: Project?
+        get() = project.get()?.rootProject
+
+
     operator fun get(propertyName: String): String? =
-        project.get()?.rootProject?.let { project ->
+        rootProject?.let { project ->
             val localPropertiesValue: String? =
                 project.file("local.properties").let { localPropertiesFile ->
                     if (localPropertiesFile.exists()) {
@@ -53,4 +57,12 @@ abstract class BuildParametersPluginExtension {
             value = "\"${get(paramName)}\""
         )
     }
+
+    fun isBuildForFlavour(flavourName: String): Boolean =
+        rootProject?.let { project ->
+            project.gradle.startParameter.taskRequests.toString().contains(
+                flavourName.replaceFirstChar { it.uppercaseChar() }
+            )
+        } ?: false
+
 }

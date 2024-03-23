@@ -25,7 +25,7 @@ plugins {
 }
 
 // Only apply gms/firebase plugins if we are building for the play store
-val isPlayStoreBuild = rootProject.isBuildForFlavour("playStore")
+val isPlayStoreBuild = buildParameters.isBuildForFlavour("playStore")
 if (isPlayStoreBuild) {
     apply {
         plugin(libs.plugins.googleGms.get().pluginId)
