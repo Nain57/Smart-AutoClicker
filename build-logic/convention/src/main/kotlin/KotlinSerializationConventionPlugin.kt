@@ -15,29 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
-}
+import com.buzbuz.gradle.buildlogic.getLibrary
+import com.buzbuz.gradle.buildlogic.getPlugin
+import com.buzbuz.gradle.buildlogic.implementation
+import com.buzbuz.gradle.buildlogic.libs
+import com.buzbuz.gradle.buildlogic.plugins
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.core.capture"
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
 
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
+class KotlinSerializationConventionPlugin : Plugin<Project> {
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    override fun apply(target: Project): Unit = with(target) {
+        plugins {
+            apply(libs.getPlugin("jetbrainsKotlinSerialization"))
+        }
+
+        dependencies {
+            implementation(libs.getLibrary("kotlinx.serialization.json"))
         }
     }
-}
-
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.core.ktx)
 }

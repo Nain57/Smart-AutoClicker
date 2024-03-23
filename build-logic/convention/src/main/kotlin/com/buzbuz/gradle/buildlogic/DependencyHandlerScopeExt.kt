@@ -14,30 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.gradle.buildlogic
 
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
-}
+import org.gradle.api.artifacts.MinimalExternalModuleDependency
+import org.gradle.api.provider.Provider
+import org.gradle.kotlin.dsl.DependencyHandlerScope
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.core.capture"
+internal fun DependencyHandlerScope.implementation(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("implementation", dependency)
 
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
+internal fun DependencyHandlerScope.ksp(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("ksp", dependency)
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-}
-
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.core.ktx)
-}
+internal fun DependencyHandlerScope.testImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("testImplementation", dependency)

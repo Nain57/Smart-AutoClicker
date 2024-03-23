@@ -20,8 +20,7 @@ import com.buzbuz.gradle.sourcedl.SourceDownloadPlugin
 import com.buzbuz.gradle.sourcedl.SourceDownloadPluginExtension
 
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.buzbuz.androidLibrary)
 }
 
 apply<SourceDownloadPlugin>()
@@ -40,12 +39,8 @@ configure<SourceDownloadPluginExtension> {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.detection"
-    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get().toInt()
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
         externalNativeBuild {
             cmake {
@@ -127,10 +122,6 @@ android {
             path = File("src/CMakeLists.txt")
             version = "3.22.1"
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

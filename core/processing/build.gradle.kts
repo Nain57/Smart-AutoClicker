@@ -16,18 +16,14 @@
  */
 
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.androidUnitTest)
 }
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.processing"
-    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get().toInt()
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -37,9 +33,6 @@ android {
                 freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
             }
         }
-
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildTypes {
@@ -47,11 +40,6 @@ android {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-    }
-    
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
     }
 }
 
@@ -63,11 +51,5 @@ dependencies {
     implementation(project(":core:display"))
     implementation(project(":core:domain"))
 
-    testImplementation(libs.junit)
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.robolectric)
 }

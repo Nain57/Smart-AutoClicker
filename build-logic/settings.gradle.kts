@@ -15,29 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
-}
-
-android {
-    namespace = "com.buzbuz.smartautoclicker.core.capture"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
     }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
         }
     }
 }
 
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.core.ktx)
-}
+rootProject.name = "build-logic"
+include(":convention")

@@ -16,18 +16,14 @@
  */
 
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.androidUnitTest)
 }
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.ui"
-    compileSdk = libs.versions.androidCompileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get().toInt()
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -38,18 +34,8 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
     buildFeatures {
         viewBinding = true
-    }
-
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
     }
 }
 
@@ -65,10 +51,4 @@ dependencies {
 
     implementation(project(":core:display"))
     implementation(project(":core:base"))
-
-    testImplementation(libs.junit)
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.androidx.test.ext.junit)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.robolectric)
 }

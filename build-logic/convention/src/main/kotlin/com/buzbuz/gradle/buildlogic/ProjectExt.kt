@@ -14,30 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.gradle.buildlogic
 
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
-}
+import com.android.build.gradle.LibraryExtension
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.core.capture"
+import org.gradle.api.Project
+import org.gradle.api.plugins.PluginManager
+import org.gradle.kotlin.dsl.configure
 
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
+internal inline fun Project.plugins(closure: PluginManager.() -> Unit) =
+    closure(pluginManager)
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-}
-
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.core.ktx)
-}
+internal inline fun Project.android(crossinline closure: LibraryExtension.() -> Unit) =
+    extensions.configure<LibraryExtension> { closure() }
