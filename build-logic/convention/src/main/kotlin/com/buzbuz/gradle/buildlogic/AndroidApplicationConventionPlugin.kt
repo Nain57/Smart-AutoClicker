@@ -27,6 +27,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
+
     override fun apply(target: Project): Unit = with(target) {
         plugins {
             apply(libs.getPlugin("androidApplication"))
@@ -44,6 +45,31 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             compileOptions.apply {
                 sourceCompatibility = JavaVersion.VERSION_17
                 targetCompatibility = JavaVersion.VERSION_17
+            }
+
+            buildTypes {
+                release {
+                    isMinifyEnabled = true
+                    isShrinkResources = true
+                    proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+                }
+            }
+        }
+
+        afterEvaluate(project)
+    }
+
+    private fun afterEvaluate(project: Project) = project.afterEvaluate {
+        androidApp {
+            buildTypes {
+                release {
+                    val signConfig = signingConfigs.getByName("release")
+                    if (signConfig.isSigningReady) {
+                        signingConfig = signConfig
+                    } else {
+                        logger.warn("WARNING: Signing config is incomplete, release apk will not be signed")
+                    }
+                }
             }
         }
     }

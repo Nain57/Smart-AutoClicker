@@ -45,7 +45,7 @@ abstract class BuildParametersPluginExtension {
             if (project.hasProperty(propertyName)) {
                 project.properties[propertyName] as? String
             } else {
-                project.logger.warn("WARNING: Build property $propertyName was not found !")
+                project.logger.warn("WARNING: Build property $propertyName was not found")
                 null
             }
         }

@@ -32,9 +32,6 @@ if (isPlayStoreBuild) {
     }
 }
 
-val signingStoreFile = file("./smartautoclicker.jks")
-val signingProperties = Properties()
-
 android {
     namespace = "com.buzbuz.smartautoclicker"
     buildFeatures.viewBinding = true
@@ -54,26 +51,17 @@ android {
         }
     }
 
-    if (signingStoreFile.exists()) {
-        signingConfigs {
-            create("release") {
-                storeFile = signingStoreFile
-                storePassword = buildParameters["signingStorePassword"]
-                keyAlias = buildParameters["signingKeyAlias"]
-                keyPassword = buildParameters["signingKeyPassword"]
-            }
+    signingConfigs {
+        create("release") {
+            storeFile = file("./smartautoclicker.jks")
+            storePassword = buildParameters["signingStorePassword"]
+            keyAlias = buildParameters["signingKeyAlias"]
+            keyPassword = buildParameters["signingKeyPassword"]
         }
     }
 
     buildTypes {
         getByName("release") {
-            if (signingStoreFile.exists()) {
-                signingConfig = signingConfigs.getByName("release")
-            }
-
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
             if (isPlayStoreBuild) {
                 configure<CrashlyticsExtension> {
