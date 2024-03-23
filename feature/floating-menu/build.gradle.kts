@@ -20,17 +20,7 @@ plugins {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.floatingmenu"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
+    buildFeatures.viewBinding = true
 
     // Specifies one flavor dimension.
     flavorDimensions += "version"
@@ -43,9 +33,7 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
+
 }
 
 dependencies {

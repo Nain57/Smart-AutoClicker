@@ -23,22 +23,11 @@ plugins {
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.billing"
 
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
     compileOptions {
         kotlin {
             kotlinOptions {
                 freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
             }
-        }
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 

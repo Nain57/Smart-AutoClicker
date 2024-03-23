@@ -23,17 +23,6 @@ plugins {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.extensions"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
 }
 
 dependencies {

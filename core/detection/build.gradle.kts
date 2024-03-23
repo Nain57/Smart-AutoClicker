@@ -41,7 +41,6 @@ android {
     namespace = "com.buzbuz.smartautoclicker.core.detection"
 
     defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
         externalNativeBuild {
             cmake {
 
@@ -112,9 +111,6 @@ android {
                     )
                 }
             }
-
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     externalNativeBuild {

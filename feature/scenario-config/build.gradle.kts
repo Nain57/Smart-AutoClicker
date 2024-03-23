@@ -20,17 +20,7 @@ plugins {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.scenario.config"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
+    buildFeatures.viewBinding = true
 
     // Specifies one flavor dimension.
     flavorDimensions += "version"
@@ -41,10 +31,6 @@ android {
         create("playStore") {
             dimension = "version"
         }
-    }
-
-    buildFeatures {
-        viewBinding = true
     }
 }
 

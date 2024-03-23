@@ -22,17 +22,6 @@ plugins {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.capture"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
 }
 
 dependencies {

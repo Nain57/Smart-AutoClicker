@@ -23,22 +23,11 @@ plugins {
 android {
     namespace = "com.smartautoclicker.core.dumb"
 
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
     compileOptions {
         kotlin {
             kotlinOptions {
                 freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
             }
-        }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
