@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.buildlogic.params
+package com.buzbuz.gradle.parameters
 
 import com.android.build.api.dsl.LibraryProductFlavor
 import org.gradle.api.Project

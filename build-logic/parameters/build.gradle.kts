@@ -20,7 +20,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.buzbuz.gradle.buildlogic.convention"
+group = "com.buzbuz.gradle.buildlogic.parameters"
 
 // Configure the build-logic plugins to target JDK 17
 // This matches the JDK used to build the project, and is not related to what is running on device.
@@ -36,6 +36,7 @@ tasks.withType<KotlinCompile>().configureEach {
 
 dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.android.gradlePlugin)
 }
 
 tasks {
@@ -45,12 +46,11 @@ tasks {
     }
 }
 
-
 gradlePlugin {
     plugins {
-        register("sourceDownload") {
-            id = "com.buzbuz.gradle.build.sourcedl"
-            implementationClass = "com.buzbuz.gradle.sourcedl.SourceDownloadPlugin"
+        register("buildParameters") {
+            id = "com.buzbuz.gradle.build.parameters"
+            implementationClass = "com.buzbuz.gradle.parameters.BuildParametersPlugin"
         }
     }
 }

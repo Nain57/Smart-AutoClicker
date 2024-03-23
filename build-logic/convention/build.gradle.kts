@@ -69,10 +69,5 @@ gradlePlugin {
             id = "com.buzbuz.gradle.android.kotlin.serialization"
             implementationClass = "com.buzbuz.gradle.buildlogic.KotlinSerializationConventionPlugin"
         }
-
-        register("buildParameters") {
-            id = "com.buzbuz.gradle.build.parameters"
-            implementationClass = "com.buzbuz.gradle.buildlogic.params.BuildParametersPlugin"
-        }
     }
 }
