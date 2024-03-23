@@ -117,6 +117,7 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 jetbrainsKotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # Plugins defined by this project
+buzbuz-androidApplication = { id = "com.buzbuz.gradle.android.application", version = "unspecified" }
 buzbuz-androidLibrary = { id = "com.buzbuz.gradle.android.library", version = "unspecified" }
 buzbuz-androidRoom = { id = "com.buzbuz.gradle.android.room", version = "unspecified" }
 buzbuz-androidUnitTest = { id = "com.buzbuz.gradle.android.unittest", version = "unspecified" }

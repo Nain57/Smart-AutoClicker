@@ -50,6 +50,11 @@ tasks {
 
 gradlePlugin {
     plugins {
+        register("androidApplication") {
+            id = "com.buzbuz.gradle.android.application"
+            implementationClass = "com.buzbuz.gradle.buildlogic.AndroidApplicationConventionPlugin"
+        }
+
         register("androidLibrary") {
             id = "com.buzbuz.gradle.android.library"
             implementationClass = "com.buzbuz.gradle.buildlogic.AndroidLibraryConventionPlugin"

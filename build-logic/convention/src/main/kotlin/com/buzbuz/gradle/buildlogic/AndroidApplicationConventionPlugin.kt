@@ -16,7 +16,7 @@
  */
 package com.buzbuz.gradle.buildlogic
 
-import com.buzbuz.gradle.buildlogic.extensions.androidLib
+import com.buzbuz.gradle.buildlogic.extensions.androidApp
 import com.buzbuz.gradle.buildlogic.extensions.getPlugin
 import com.buzbuz.gradle.buildlogic.extensions.getVersion
 import com.buzbuz.gradle.buildlogic.extensions.libs
@@ -26,14 +26,14 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class AndroidLibraryConventionPlugin : Plugin<Project> {
+class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project): Unit = with(target) {
         plugins {
-            apply(libs.getPlugin("androidLibrary"))
+            apply(libs.getPlugin("androidApplication"))
             apply(libs.getPlugin("jetbrainsKotlinAndroid"))
         }
 
-        androidLib {
+        androidApp {
             compileSdk = libs.getVersion("androidCompileSdk")
 
             defaultConfig.apply {

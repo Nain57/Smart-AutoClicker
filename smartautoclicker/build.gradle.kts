@@ -18,10 +18,9 @@ import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.googleKsp)
+    alias(libs.plugins.buzbuz.androidApplication)
     alias(libs.plugins.buzbuz.buildParameters)
+    alias(libs.plugins.googleKsp)
 }
 
 // Only apply gms/firebase plugins if we are building for the play store
@@ -38,17 +37,13 @@ val signingProperties = Properties()
 
 android {
     namespace = "com.buzbuz.smartautoclicker"
-    compileSdk = libs.versions.androidCompileSdk.get().toInt()
+    buildFeatures.viewBinding = true
 
     defaultConfig {
         applicationId = "com.buzbuz.smartautoclicker"
-        targetSdk = libs.versions.androidCompileSdk.get().toInt()
-        minSdk = libs.versions.androidMinSdk.get().toInt()
 
         versionCode = 41
         versionName = "2.4.2"
-
-        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -57,9 +52,6 @@ android {
                 freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
             }
         }
-
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 
     if (signingStoreFile.exists()) {
@@ -105,10 +97,6 @@ android {
         create("playStore") {
             dimension = "version"
         }
-    }
-
-    buildFeatures {
-        viewBinding = true
     }
 }
 
