@@ -52,22 +52,27 @@ gradlePlugin {
     plugins {
         register("androidLibrary") {
             id = "com.buzbuz.gradle.android.library"
-            implementationClass = "AndroidLibraryConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.buildlogic.AndroidLibraryConventionPlugin"
         }
 
         register("androidRoom") {
             id = "com.buzbuz.gradle.android.room"
-            implementationClass = "AndroidRoomConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.buildlogic.AndroidRoomConventionPlugin"
         }
 
         register("androidUnitTest") {
             id = "com.buzbuz.gradle.android.unittest"
-            implementationClass = "AndroidUnitTestConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.buildlogic.AndroidUnitTestConventionPlugin"
         }
 
         register("kotlinSerialization") {
             id = "com.buzbuz.gradle.android.kotlin.serialization"
-            implementationClass = "KotlinSerializationConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.buildlogic.KotlinSerializationConventionPlugin"
+        }
+
+        register("buildParameters") {
+            id = "com.buzbuz.gradle.build.parameters"
+            implementationClass = "com.buzbuz.gradle.buildlogic.params.BuildParametersPlugin"
         }
     }
 }

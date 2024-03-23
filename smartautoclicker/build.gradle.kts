@@ -21,6 +21,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleKsp)
+    alias(libs.plugins.buzbuz.buildParameters)
 }
 
 // Only apply gms/firebase plugins if we are building for the play store
@@ -65,9 +66,9 @@ android {
         signingConfigs {
             create("release") {
                 storeFile = signingStoreFile
-                storePassword = rootProject.buildProperty("signingStorePassword")
-                keyAlias = rootProject.buildProperty("signingKeyAlias")
-                keyPassword = rootProject.buildProperty("signingKeyPassword")
+                storePassword = buildParameters["signingStorePassword"]
+                keyAlias = buildParameters["signingKeyAlias"]
+                keyPassword = buildParameters["signingKeyPassword"]
             }
         }
     }

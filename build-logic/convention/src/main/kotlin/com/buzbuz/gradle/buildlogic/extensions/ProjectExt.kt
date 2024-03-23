@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.buildlogic
+package com.buzbuz.gradle.buildlogic.extensions
 
 import com.android.build.gradle.LibraryExtension
 

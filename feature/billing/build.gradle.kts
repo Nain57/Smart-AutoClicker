@@ -16,15 +16,12 @@
  */
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.googleKsp)
 }
 
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.billing"
-
-    buildFeatures {
-        buildConfig = true
-    }
 
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
@@ -53,13 +50,17 @@ android {
         }
         create("playStore") {
             dimension = "version"
-            buildConfigField(
-                "String",
-                "BILLING_PUBLIC_KEY", "\"" + rootProject.buildProperty("billingPublicKey") + "\"",
-            )
+
             buildFeatures {
+                buildConfig = true
                 viewBinding = true
             }
+
+            buildParameters.setAsStringBuildConfigField(
+                flavor = this,
+                configName = "BILLING_PUBLIC_KEY",
+                paramName = "billingPublicKey",
+            )
         }
     }
 }
