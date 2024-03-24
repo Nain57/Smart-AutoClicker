@@ -17,7 +17,7 @@
 package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.androidApp
-import com.buzbuz.gradle.convention.utils.getPlugin
+import com.buzbuz.gradle.convention.utils.getPluginId
 import com.buzbuz.gradle.convention.utils.getVersion
 import com.buzbuz.gradle.convention.utils.libs
 import com.buzbuz.gradle.convention.utils.plugins
@@ -30,8 +30,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
         plugins {
-            apply(libs.getPlugin("androidApplication"))
-            apply(libs.getPlugin("jetbrainsKotlinAndroid"))
+            apply(libs.getPluginId("androidApplication"))
+            apply(libs.getPluginId("jetbrainsKotlinAndroid"))
         }
 
         androidApp {

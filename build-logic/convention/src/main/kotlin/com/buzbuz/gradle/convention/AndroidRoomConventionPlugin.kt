@@ -19,7 +19,7 @@ package com.buzbuz.gradle.convention
 import androidx.room.gradle.RoomExtension
 
 import com.buzbuz.gradle.convention.utils.getLibrary
-import com.buzbuz.gradle.convention.utils.getPlugin
+import com.buzbuz.gradle.convention.utils.getPluginId
 import com.buzbuz.gradle.convention.utils.implementation
 import com.buzbuz.gradle.convention.utils.ksp
 import com.buzbuz.gradle.convention.utils.libs
@@ -34,8 +34,8 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
         plugins {
-            apply(libs.getPlugin("androidxRoom"))
-            apply(libs.getPlugin("googleKsp"))
+            apply(libs.getPluginId("androidxRoom"))
+            apply(libs.getPluginId("googleKsp"))
         }
 
         extensions.configure<RoomExtension> {

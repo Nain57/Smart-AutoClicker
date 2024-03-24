@@ -19,6 +19,7 @@ package com.buzbuz.gradle.parameters
 import com.android.build.api.dsl.LibraryProductFlavor
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -58,11 +59,12 @@ abstract class BuildParametersPluginExtension {
         )
     }
 
-    fun isBuildForFlavour(flavourName: String): Boolean =
+    fun isBuildForVariant(variantName: String): Boolean =
         rootProject?.let { project ->
-            project.gradle.startParameter.taskRequests.toString().contains(
-                flavourName.replaceFirstChar { it.uppercaseChar() }
-            )
-        } ?: false
+            val normalizedName = variantName.uppercaseFirstChar()
 
+            return project.gradle.startParameter.taskRequests.find { taskExecRequest ->
+                taskExecRequest.args.find { taskName -> taskName.contains(normalizedName) } != null
+            } != null
+        } ?: false
 }

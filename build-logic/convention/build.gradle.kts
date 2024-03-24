@@ -39,6 +39,8 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.androidx.room.gradlePlugin)
+    compileOnly(libs.google.firebase.crashlytics.gradlePlugin)
+    compileOnly(libs.google.gms.gradlePlugin)
 }
 
 tasks {
@@ -68,6 +70,11 @@ gradlePlugin {
         register("androidUnitTest") {
             id = "com.buzbuz.gradle.android.unittest"
             implementationClass = "com.buzbuz.gradle.convention.AndroidUnitTestConventionPlugin"
+        }
+
+        register("crashlytics") {
+            id = "com.buzbuz.gradle.crashlytics"
+            implementationClass = "com.buzbuz.gradle.convention.CrashlyticsConventionPlugin"
         }
 
         register("kotlinSerialization") {

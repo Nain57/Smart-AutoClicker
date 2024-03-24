@@ -23,6 +23,9 @@ import org.gradle.kotlin.dsl.DependencyHandlerScope
 internal fun DependencyHandlerScope.implementation(dependency: Provider<MinimalExternalModuleDependency>) =
     add("implementation", dependency)
 
+internal fun DependencyHandlerScope.playStoreImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("playStoreImplementation", dependency)
+
 internal fun DependencyHandlerScope.ksp(dependency: Provider<MinimalExternalModuleDependency>) =
     add("ksp", dependency)
 

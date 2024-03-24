@@ -14,21 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.googleKsp)
-}
-
-// Only apply gms/firebase plugins if we are building for the play store
-val isPlayStoreBuild = buildParameters.isBuildForFlavour("playStore")
-if (isPlayStoreBuild) {
-    apply {
-        plugin(libs.plugins.googleGms.get().pluginId)
-        plugin(libs.plugins.googleCrashlytics.get().pluginId)
-    }
 }
 
 android {
@@ -52,17 +42,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
-
-            if (isPlayStoreBuild) {
-                configure<CrashlyticsExtension> {
-                    nativeSymbolUploadEnabled = true
-                    unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/out/lib"
-                }
-            }
-        }
-
-        getByName("debug") {
+        debug {
             applicationIdSuffix = ".debug"
         }
     }
@@ -77,6 +57,11 @@ android {
             dimension = "version"
         }
     }
+}
+
+// Only apply gms/firebase plugins if we are building for the play store
+if (buildParameters.isBuildForVariant("playStoreRelease")) {
+    apply { plugin(libs.plugins.buzbuz.crashlytics.get().pluginId) }
 }
 
 dependencies {
@@ -96,11 +81,6 @@ dependencies {
     implementation(libs.airbnb.lottie)
     implementation(libs.google.material)
 
-    // Google Play Store version dependencies only
-    "playStoreImplementation"(platform(libs.google.firebase.bom))
-    "playStoreImplementation"(libs.google.firebase.crashlytics.ktx)
-    "playStoreImplementation"(libs.google.firebase.crashlytics.ndk)
-
     implementation(project(":core:base"))
     implementation(project(":core:detection"))
     implementation(project(":core:display"))
@@ -115,12 +95,4 @@ dependencies {
     implementation(project(":feature:scenario-config-dumb"))
     implementation(project(":feature:scenario-debugging"))
     implementation(project(":feature:tutorial"))
-}
-
-project.afterEvaluate {
-    tasks.filter { task ->
-        task.name.startsWith("generateCrashlyticsSymbolFilePlayStoreRelease")
-    }.forEach {task ->
-        task.dependsOn("mergePlayStoreReleaseNativeLibs")
-    }
 }

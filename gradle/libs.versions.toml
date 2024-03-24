@@ -45,7 +45,6 @@ junit = "4.13.2"
 mockitoCore = "5.5.0"
 mockitoKotlin = "5.1.0"
 robolectric = "4.10.3"
-jetbrainsKotlinJvm = "1.9.0"
 
 
 [libraries]
@@ -54,6 +53,9 @@ jetbrainsKotlinJvm = "1.9.0"
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 androidx-room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidxRoom" }
+google-firebase-crashlytics-gradlePlugin = { group = "com.google.firebase.crashlytics", name = "com.google.firebase.crashlytics.gradle.plugin", version.ref = "googleFirebaseCrashlyticsGradle" }
+google-gms-gradlePlugin = { group = "com.google.gms.google-services", name = "com.google.gms.google-services.gradle.plugin", version.ref = "googleServices" }
+
 
 # Dependencies used in build-logic. Might seem unused but check in files if that is the case
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -90,7 +92,7 @@ google-material = { group = "com.google.android.material", name = "material", ve
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 
-# PlayStore only
+# PlayStore only. Might seem unused but check in files if that is the case
 android-billingClient = { group = "com.android.billingclient", name = "billing", version.ref = "androidBillingClient" }
 android-billingClient-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "androidBillingClient" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "googleFirebaseBom" }
@@ -121,6 +123,7 @@ buzbuz-androidApplication = { id = "com.buzbuz.gradle.android.application", vers
 buzbuz-androidLibrary = { id = "com.buzbuz.gradle.android.library", version = "unspecified" }
 buzbuz-androidRoom = { id = "com.buzbuz.gradle.android.room", version = "unspecified" }
 buzbuz-androidUnitTest = { id = "com.buzbuz.gradle.android.unittest", version = "unspecified" }
-buzbuz-kotlinSerialization = { id = "com.buzbuz.gradle.android.kotlin.serialization", version = "unspecified" }
 buzbuz-buildParameters = { id = "com.buzbuz.gradle.build.parameters", version = "unspecified" }
+buzbuz-crashlytics = { id = "com.buzbuz.gradle.crashlytics", version = "unspecified" }
+buzbuz-kotlinSerialization = { id = "com.buzbuz.gradle.android.kotlin.serialization", version = "unspecified" }
 buzbuz-sourceDownload = { id = "com.buzbuz.gradle.build.sourcedl", version = "unspecified" }

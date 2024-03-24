@@ -17,36 +17,50 @@
 package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.android
-
 import com.buzbuz.gradle.convention.utils.getLibrary
 import com.buzbuz.gradle.convention.utils.getPluginId
 import com.buzbuz.gradle.convention.utils.libs
+import com.buzbuz.gradle.convention.utils.playStoreImplementation
 import com.buzbuz.gradle.convention.utils.plugins
-import com.buzbuz.gradle.convention.utils.testImplementation
+
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
-class AndroidUnitTestConventionPlugin : Plugin<Project> {
+class CrashlyticsConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
         plugins {
-            apply(libs.getPluginId("jetbrainsKotlinAndroid"))
+            apply(libs.getPluginId("googleCrashlytics"))
+            apply(libs.getPluginId("googleGms"))
         }
 
         android {
-            defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-            testOptions.unitTests.isIncludeAndroidResources = true
+            buildTypes {
+                getByName("release") {
+                    configure<CrashlyticsExtension> {
+                        nativeSymbolUploadEnabled = true
+                        unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/out/lib"
+                    }
+                }
+            }
         }
 
         dependencies {
-            testImplementation(libs.getLibrary("junit"))
-            testImplementation(libs.getLibrary("androidx.test.core"))
-            testImplementation(libs.getLibrary("androidx.test.ext.junit"))
-            testImplementation(libs.getLibrary("mockito.core"))
-            testImplementation(libs.getLibrary("mockito.kotlin"))
-            testImplementation(libs.getLibrary("robolectric"))
+            playStoreImplementation(platform(libs.getLibrary("google.firebase.bom")))
+            playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ktx"))
+            playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ndk"))
+        }
+
+        afterEvaluate {
+            tasks.filter { task ->
+                task.name.startsWith("uploadCrashlyticsSymbolFilePlayStoreRelease")
+            }.forEach { task ->
+                task.shouldRunAfter("assemblePlayStoreRelease")
+            }
         }
     }
 }
