@@ -35,6 +35,7 @@ include(":core:domain")
 include(":core:dumb")
 include(":core:processing")
 include(":core:ui")
+
 include(":feature:backup")
 include(":feature:billing")
 include(":feature:floating-menu")
@@ -42,4 +43,5 @@ include(":feature:scenario-config")
 include(":feature:scenario-config-dumb")
 include(":feature:scenario-debugging")
 include(":feature:tutorial")
+
 include(":smartautoclicker")

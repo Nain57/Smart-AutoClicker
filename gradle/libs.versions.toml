@@ -9,7 +9,7 @@ googleFirebaseCrashlyticsGradle = "2.9.9"
 googleServices = "4.4.1"
 androidGradlePlugin = "8.3.1"
 kotlin = "1.9.23"
-kotlinxCoroutines = "1.7.3"
+kotlinxCoroutines = "1.8.0"
 ksp = "1.9.23-1.0.19"
 
 # Androidx
@@ -34,8 +34,8 @@ openCv = "4.9.0"
 
 # PlayStore only
 androidBillingClient = "6.2.0"
-googleFirebaseBom = "32.7.4"
-googleFirebaseCrashlytics = "18.6.2"
+googleFirebaseBom = "32.8.0"
+googleFirebaseCrashlytics = "18.6.3"
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"

@@ -22,7 +22,6 @@ import com.buzbuz.gradle.convention.utils.getPluginId
 import com.buzbuz.gradle.convention.utils.libs
 import com.buzbuz.gradle.convention.utils.playStoreImplementation
 import com.buzbuz.gradle.convention.utils.plugins
-
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 import org.gradle.api.Plugin
@@ -43,7 +42,7 @@ class CrashlyticsConventionPlugin : Plugin<Project> {
                 getByName("release") {
                     configure<CrashlyticsExtension> {
                         nativeSymbolUploadEnabled = true
-                        unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/out/lib"
+                        unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/mergePlayStoreReleaseNativeLibs/out/lib"
                     }
                 }
             }

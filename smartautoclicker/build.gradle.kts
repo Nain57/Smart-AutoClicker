@@ -47,7 +47,6 @@ android {
         }
     }
 
-    // Specifies one flavor dimension.
     flavorDimensions += listOf("version")
     productFlavors {
         create("fDroid") {
