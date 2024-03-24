@@ -35,9 +35,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("./smartautoclicker.jks")
-            storePassword = buildParameters["signingStorePassword"]
-            keyAlias = buildParameters["signingKeyAlias"]
-            keyPassword = buildParameters["signingKeyPassword"]
+            storePassword = buildParameters["signingStorePassword"].value
+            keyAlias = buildParameters["signingKeyAlias"].value
+            keyPassword = buildParameters["signingKeyPassword"].value
         }
     }
 

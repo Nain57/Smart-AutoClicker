@@ -26,9 +26,11 @@ android {
     // Specifies one flavor dimension.
     flavorDimensions += "version"
     productFlavors {
+
         create("fDroid") {
             dimension = "version"
         }
+
         create("playStore") {
             dimension = "version"
 
@@ -37,11 +39,7 @@ android {
                 viewBinding = true
             }
 
-            buildParameters.setAsStringBuildConfigField(
-                flavor = this,
-                configName = "BILLING_PUBLIC_KEY",
-                paramName = "billingPublicKey",
-            )
+            buildParameters["billingPublicKey"].asStringBuildConfigField(this)
         }
     }
 }

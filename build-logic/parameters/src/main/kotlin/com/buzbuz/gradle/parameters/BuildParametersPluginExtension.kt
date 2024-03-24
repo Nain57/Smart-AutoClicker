@@ -20,6 +20,7 @@ import com.android.build.api.dsl.LibraryProductFlavor
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
+
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -27,44 +28,45 @@ abstract class BuildParametersPluginExtension {
 
     abstract val project: Property<Project>
 
-    @Suppress("UNNECESSARY_SAFE_CALL")
-    private val rootProject: Project?
+    @Suppress("UNNECESSARY_SAFE_CALL", "USELESS_ELVIS", "KotlinRedundantDiagnosticSuppress")
+    private val rootProject: Project
         get() = project.get()?.rootProject
+            ?: throw IllegalStateException("Accessing project before plugin apply")
 
+    private val properties: MutableMap<String, Any> = mutableMapOf()
 
-    operator fun get(propertyName: String): String? =
-        rootProject?.let { project ->
-            val localPropertiesValue: String? =
-                project.file("local.properties").let { localPropertiesFile ->
+    operator fun get(parameterName: String): BuildParameter {
+        properties[parameterName]?.let { return BuildParameter(parameterName, it as String) }
+
+        val parameterValue =
+            if (rootProject.hasProperty(parameterName)) rootProject.properties[parameterName]
+            else {
+                rootProject.file(LOCAL_PROPERTIES_FILE).let { localPropertiesFile ->
                     if (localPropertiesFile.exists()) {
                         val localProperties = Properties().apply { load(FileInputStream(localPropertiesFile)) }
-                        localProperties[propertyName] as? String
+                        localProperties[parameterName]
                     } else null
                 }
-            if (!localPropertiesValue.isNullOrBlank()) return localPropertiesValue
-
-            if (project.hasProperty(propertyName)) {
-                project.properties[propertyName] as? String
-            } else {
-                project.logger.warn("WARNING: Build property $propertyName was not found")
-                null
             }
+
+        if (parameterValue == null) {
+            rootProject.logger.warn("WARNING: Build property $parameterName was not found")
+            return BuildParameter(parameterName, null)
         }
 
-    fun setAsStringBuildConfigField(flavor: LibraryProductFlavor, configName: String, paramName: String) {
-        flavor.buildConfigField(
-            type = "String",
-            name = configName,
-            value = "\"${get(paramName)}\""
-        )
+        return BuildParameter(parameterName, parameterValue as String)
     }
 
     fun isBuildForVariant(variantName: String): Boolean =
-        rootProject?.let { project ->
+        rootProject.let { project ->
             val normalizedName = variantName.uppercaseFirstChar()
 
             return project.gradle.startParameter.taskRequests.find { taskExecRequest ->
                 taskExecRequest.args.find { taskName -> taskName.contains(normalizedName) } != null
             } != null
-        } ?: false
+        }
+
+    private companion object {
+        const val LOCAL_PROPERTIES_FILE = "local.properties"
+    }
 }
