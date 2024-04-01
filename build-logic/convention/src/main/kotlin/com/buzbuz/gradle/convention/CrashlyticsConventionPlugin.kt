@@ -17,11 +17,10 @@
 package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.android
-import com.buzbuz.gradle.convention.utils.getLibrary
-import com.buzbuz.gradle.convention.utils.getPluginId
-import com.buzbuz.gradle.convention.utils.libs
+import com.buzbuz.gradle.convention.utils.getLibs
 import com.buzbuz.gradle.convention.utils.playStoreImplementation
 import com.buzbuz.gradle.convention.utils.plugins
+
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 import org.gradle.api.Plugin
@@ -32,9 +31,11 @@ import org.gradle.kotlin.dsl.dependencies
 class CrashlyticsConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
+        val libs = getLibs()
+
         plugins {
-            apply(libs.getPluginId("googleCrashlytics"))
-            apply(libs.getPluginId("googleGms"))
+            apply(libs.plugins.googleCrashlytics)
+            apply(libs.plugins.googleGms)
         }
 
         android {

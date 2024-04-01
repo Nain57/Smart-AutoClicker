@@ -17,9 +17,7 @@
 package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.androidLib
-import com.buzbuz.gradle.convention.utils.getPluginId
-import com.buzbuz.gradle.convention.utils.getVersion
-import com.buzbuz.gradle.convention.utils.libs
+import com.buzbuz.gradle.convention.utils.getLibs
 import com.buzbuz.gradle.convention.utils.plugins
 
 import org.gradle.api.JavaVersion
@@ -28,17 +26,19 @@ import org.gradle.api.Project
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project): Unit = with(target) {
+        val libs = getLibs()
+
         plugins {
-            apply(libs.getPluginId("androidLibrary"))
-            apply(libs.getPluginId("jetbrainsKotlinAndroid"))
+            apply(libs.plugins.androidLibrary)
+            apply(libs.plugins.jetbrainsKotlinAndroid)
         }
 
         androidLib {
-            compileSdk = libs.getVersion("androidCompileSdk")
+            compileSdk = libs.versions.androidCompileSdk
 
             defaultConfig.apply {
-                targetSdk = libs.getVersion("androidCompileSdk")
-                minSdk = libs.getVersion("androidMinSdk")
+                targetSdk = libs.versions.androidCompileSdk
+                minSdk = libs.versions.androidMinSdk
             }
 
             compileOptions.apply {

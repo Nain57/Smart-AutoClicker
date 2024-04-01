@@ -24,14 +24,57 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 
-internal val Project.libs
-    get(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+internal fun Project.getLibs(): VersionCatalogWrapper =
+    VersionCatalogWrapper(extensions.getByType<VersionCatalogsExtension>().named("libs"))
 
-internal fun VersionCatalog.getPluginId(alias: String): String =
-    findPlugin(alias).get().get().pluginId
+internal class VersionCatalogWrapper(private val libs: VersionCatalog) {
 
-internal fun VersionCatalog.getLibrary(alias: String): Provider<MinimalExternalModuleDependency> =
-    findLibrary(alias).get()
+    val plugins = Plugins()
+    val versions = Versions()
 
-internal fun VersionCatalog.getVersion(alias: String): Int =
-    findVersion(alias).get().requiredVersion.toInt()
+    internal inner class Plugins {
+        val androidApplication: String
+            get() = libs.getPluginId("androidApplication")
+        val androidLibrary: String
+            get() = libs.getPluginId("androidLibrary")
+        val androidxRoom: String
+            get() = libs.getPluginId("androidxRoom")
+        val jetbrainsKotlinAndroid: String
+            get() = libs.getPluginId("jetbrainsKotlinAndroid")
+        val jetbrainsKotlinSerialization: String
+            get() = libs.getPluginId("jetbrainsKotlinSerialization")
+        val googleKsp: String
+            get() = libs.getPluginId("googleKsp")
+        val googleCrashlytics: String
+            get() = libs.getPluginId("googleCrashlytics")
+        val googleGms: String
+            get() = libs.getPluginId("googleGms")
+
+        private fun VersionCatalog.getPluginId(alias: String): String =
+            findPlugin(alias).get().get().pluginId
+    }
+
+    internal inner class Versions {
+        val androidCompileSdk: Int
+            get() = libs.getVersion("androidCompileSdk")
+        val androidMinSdk: Int
+            get() = libs.getVersion("androidMinSdk")
+
+        private fun VersionCatalog.getVersion(alias: String): Int =
+            findVersion(alias).get().requiredVersion.toInt()
+    }
+
+    fun getLibrary(alias: String): Provider<MinimalExternalModuleDependency> =
+        libs.findLibrary(alias).get()
+}
+
+
+
+
+
+
+
+
+
+
+
