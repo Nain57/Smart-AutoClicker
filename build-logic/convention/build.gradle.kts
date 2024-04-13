@@ -77,6 +77,11 @@ gradlePlugin {
             implementationClass = "com.buzbuz.gradle.convention.CrashlyticsConventionPlugin"
         }
 
+        register("androidHilt") {
+            id = "com.buzbuz.gradle.android.hilt"
+            implementationClass = "com.buzbuz.gradle.convention.HiltConventionPlugin"
+        }
+
         register("kotlinSerialization") {
             id = "com.buzbuz.gradle.android.kotlin.serialization"
             implementationClass = "com.buzbuz.gradle.convention.KotlinSerializationConventionPlugin"

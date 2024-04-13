@@ -16,8 +16,7 @@
  */
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.googleKsp)
-    alias(libs.plugins.googleDaggerHiltAndroid)
+    alias(libs.plugins.buzbuz.hilt)
 }
 
 android {
@@ -34,14 +33,9 @@ android {
             dimension = "version"
         }
     }
-
-
 }
 
 dependencies {
-    implementation(libs.google.dagger.hilt)
-    ksp(libs.google.dagger.hilt.compiler)
-
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.cardView)
     implementation(libs.androidx.constraintLayout)
