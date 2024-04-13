@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.backup.data.smart
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.extensions.getInt
+import com.buzbuz.smartautoclicker.core.base.extensions.getJsonObject
 import com.buzbuz.smartautoclicker.core.database.serialization.DeserializerFactory
 import com.buzbuz.smartautoclicker.feature.backup.data.base.ScenarioBackupSerializer
 
@@ -60,7 +61,10 @@ internal class ScenarioSerializer : ScenarioBackupSerializer<ScenarioBackup> {
         val jsonBackup = Json.parseToJsonElement(json.readBytes().toString(Charsets.UTF_8)).jsonObject
         val version = jsonBackup.getInt("version", true) ?: -1
 
-        val scenario = DeserializerFactory.create(version)?.deserializeCompleteScenario(jsonBackup)?:let {
+        val scenario = jsonBackup.getJsonObject("scenario", true)?.let { scenario ->
+            DeserializerFactory.create(version)
+                ?.deserializeCompleteScenario(scenario)
+        } ?:let {
             Log.w(TAG, "Can't deserialize scenario.")
             return null
         }
