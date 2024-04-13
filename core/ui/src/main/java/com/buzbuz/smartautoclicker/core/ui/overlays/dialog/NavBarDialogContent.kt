@@ -31,6 +31,12 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponentBuilderEntryPoint
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.ViewModelEntryPoint
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.createHiltViewModelFactory
+import dagger.hilt.EntryPoints
 
 abstract class NavBarDialogContent(
     appContext: Context,
@@ -47,6 +53,13 @@ abstract class NavBarDialogContent(
 
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
         ViewModelProvider.AndroidViewModelFactory.getInstance((appContext as Application))
+    }
+
+    val hiltComponent: OverlayComponent by lazy {
+        EntryPoints.get(context.applicationContext, OverlayComponentBuilderEntryPoint::class.java)
+            .overlayComponentBuilder()
+            .overlay(dialogController)
+            .build()
     }
 
     /** The container for the dialog content. */
@@ -164,6 +177,22 @@ abstract class NavBarDialogContent(
 
     open fun createCopyButtonsAreAvailable(): Boolean = false
 }
+
+inline fun <reified VM : ViewModel, EP : ViewModelEntryPoint> NavBarDialogContent.viewModels(entryPoint: Class<EP>): Lazy<VM> =
+    ViewModelLazy(
+        VM::class,
+        { viewModelStore },
+        { hiltComponent.createHiltViewModelFactory(entryPoint) },
+        { defaultViewModelCreationExtras },
+    )
+
+inline fun <reified VM : ViewModel, EP : ViewModelEntryPoint> NavBarDialogContent.dialogViewModels(entryPoint: Class<EP>): Lazy<VM> =
+    ViewModelLazy(
+        VM::class,
+        { viewModelStore },
+        { dialogController.hiltComponent.createHiltViewModelFactory(entryPoint) },
+        { defaultViewModelCreationExtras },
+    )
 
 inline fun <reified VM : ViewModel> NavBarDialogContent.viewModels(): Lazy<VM> =
     ViewModelLazy(

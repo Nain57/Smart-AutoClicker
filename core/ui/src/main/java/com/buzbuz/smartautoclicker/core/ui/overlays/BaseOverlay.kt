@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,9 +34,15 @@ import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.lifecycleScope
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponentBuilderEntryPoint
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.ViewModelEntryPoint
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.createHiltViewModelFactory
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
 import com.google.android.material.color.DynamicColors
+
+import dagger.hilt.EntryPoints
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +69,13 @@ abstract class BaseOverlay internal constructor(
     /** The metrics of the device screen. */
     protected val displayMetrics: DisplayMetrics by lazy {
         DisplayMetrics.getInstance(context)
+    }
+
+    val hiltComponent: OverlayComponent by lazy {
+        EntryPoints.get(context.applicationContext, OverlayComponentBuilderEntryPoint::class.java)
+            .overlayComponentBuilder()
+            .overlay(this)
+            .build()
     }
 
     /** The lifecycle of the ui component controlled by this class */
@@ -305,6 +318,14 @@ abstract class BaseOverlay internal constructor(
     /** @return the dump representation of this OverlayController. */
     private fun toDumpString() = "${javaClass.simpleName}@${hashCode()}"
 }
+
+inline fun <reified VM : ViewModel, EP : ViewModelEntryPoint> BaseOverlay.viewModels(entryPoint: Class<EP>): Lazy<VM> =
+    ViewModelLazy(
+        VM::class,
+        { viewModelStore },
+        { hiltComponent.createHiltViewModelFactory(entryPoint) },
+        { defaultViewModelCreationExtras },
+    )
 
 inline fun <reified VM : ViewModel> BaseOverlay.viewModels(): Lazy<VM> =
     ViewModelLazy(
