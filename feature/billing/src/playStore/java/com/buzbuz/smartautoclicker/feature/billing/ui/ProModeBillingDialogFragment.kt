@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,8 +34,11 @@ import com.buzbuz.smartautoclicker.feature.billing.databinding.FragmentProModeBi
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
+import dagger.hilt.android.AndroidEntryPoint
+
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 internal class ProModeBillingDialogFragment : DialogFragment() {
 
     companion object {

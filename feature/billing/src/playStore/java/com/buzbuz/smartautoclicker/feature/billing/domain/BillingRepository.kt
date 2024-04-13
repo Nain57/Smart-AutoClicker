@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,17 @@ import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.billing.data.BillingDataSource
 import com.buzbuz.smartautoclicker.feature.billing.ui.ProModeBillingActivity
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class BillingRepository(applicationContext: Context): IBillingRepository {
+class BillingRepository(
+    @ApplicationContext applicationContext: Context,
+): IBillingRepository() {
 
     /** The scope for the flows declared for the billing. */
     private val billingScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -54,11 +58,11 @@ class BillingRepository(applicationContext: Context): IBillingRepository {
         context.startActivity(ProModeBillingActivity.getStartIntent(context, requestedAdvantage))
     }
 
-    internal fun launchPlayStoreBillingFlow(activity: Activity) {
+    override fun launchPlayStoreBillingFlow(activity: Activity) {
         dataSource.launchBillingFlow(activity)
     }
 
-    internal fun setBillingActivityState(created: Boolean) {
+    override fun setBillingActivityState(created: Boolean) {
         billingActivityState.value = created
     }
 }

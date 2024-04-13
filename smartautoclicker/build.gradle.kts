@@ -19,6 +19,7 @@ plugins {
     alias(libs.plugins.buzbuz.androidApplication)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.googleKsp)
+    alias(libs.plugins.googleDaggerHiltAndroid)
 }
 
 android {
@@ -65,6 +66,9 @@ if (buildParameters.isBuildForVariant("playStoreRelease")) {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+
+    implementation(libs.google.dagger.hilt)
+    ksp(libs.google.dagger.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appCompat)

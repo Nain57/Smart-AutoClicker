@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.billing.domain
 
+import android.app.Activity
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
@@ -26,7 +27,7 @@ import kotlinx.coroutines.flow.flowOf
 
 
 @Suppress("UNUSED_PARAMETER") // Required by other build variants
-class BillingRepository(applicationContext: Context): IBillingRepository {
+class BillingRepository(applicationContext: Context): IBillingRepository() {
 
     override val newPurchases: Flow<List<String>> = flowOf(emptyList())
 
@@ -39,4 +40,7 @@ class BillingRepository(applicationContext: Context): IBillingRepository {
 
     override val isBillingFlowInProcess: Flow<Boolean> = flowOf(false)
     override fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage) {}
+
+    override fun launchPlayStoreBillingFlow(activity: Activity) = Unit
+    override fun setBillingActivityState(created: Boolean) = Unit
 }

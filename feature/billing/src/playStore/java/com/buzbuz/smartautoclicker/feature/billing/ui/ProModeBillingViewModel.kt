@@ -17,18 +17,20 @@
 package com.buzbuz.smartautoclicker.feature.billing.ui
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.R
+
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,16 +38,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-/**
- * View model for the [ProModeBillingDialogFragment].
- *
- * @param application the Android application.
- */
-internal class ProModeBillingViewModel(application: Application) : AndroidViewModel(application), LifecycleEventObserver {
-
-    /** The repository providing access to the billing API. */
-    private val billingRepository = IBillingRepository.getRepository(application)
+/** View model for the [ProModeBillingDialogFragment]. */
+@HiltViewModel
+internal class ProModeBillingViewModel @Inject constructor(
+    @ApplicationContext appContext: Context,
+    private val billingRepository: IBillingRepository,
+) : ViewModel(), LifecycleEventObserver {
 
     private val proModeFeature = MutableStateFlow<ProModeAdvantage?>(null)
 
@@ -56,7 +56,7 @@ internal class ProModeBillingViewModel(application: Application) : AndroidViewMo
     ) { isPurchased, reason, price ->
         if (isPurchased) DialogState.Purchased
         else DialogState.NotPurchased(
-            reason.toDisplayString(application),
+            reason.toDisplayString(appContext),
             price,
         )
     }.stateIn(
@@ -84,9 +84,9 @@ internal sealed class DialogState {
         val acceptButtonText: String,
     ): DialogState()
 
-    internal object Purchased : DialogState()
+    internal data object Purchased : DialogState()
 
-    internal object Connecting : DialogState()
+    internal data object Connecting : DialogState()
 }
 
 

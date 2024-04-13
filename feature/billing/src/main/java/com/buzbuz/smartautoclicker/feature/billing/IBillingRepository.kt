@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.billing
 
+import android.app.Activity
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
 
 import kotlinx.coroutines.flow.Flow
 
-interface IBillingRepository {
+abstract class IBillingRepository {
 
     companion object {
 
@@ -46,33 +47,33 @@ interface IBillingRepository {
         }
     }
 
-    val newPurchases: Flow<List<String>>
+    abstract val newPurchases: Flow<List<String>>
 
     /**
      * Returns whether or not the user has purchased ProMode.
      * @return a Flow that observes the product purchase state
      */
-    val isProModePurchased: Flow<Boolean>
+    abstract val isProModePurchased: Flow<Boolean>
 
     /**
      * Returns whether or not the user can purchase a product.
      * @return a Flow that observes the ProMode purchase state
      */
-    val canPurchaseProMode: Flow<Boolean>
+    abstract val canPurchaseProMode: Flow<Boolean>
 
     /** @return the PlayStore name of the pro mode. */
-    val proModeTitle: Flow<String>
+    abstract val proModeTitle: Flow<String>
     /** @return the PlayStore price of the pro mode. */
-    val proModePrice: Flow<String>
+    abstract val proModePrice: Flow<String>
     /** @return the PlayStore description of the pro mode. */
-    val proModeDescription: Flow<String>
+    abstract val proModeDescription: Flow<String>
 
     /**
      * Returns a Flow that reports if a billing flow is in process.
      *
      * @return Flow that indicates the known state of the billing flow.
      */
-    val isBillingFlowInProcess: Flow<Boolean>
+    abstract val isBillingFlowInProcess: Flow<Boolean>
 
     /**
      * Launch the billing activity.
@@ -80,5 +81,10 @@ interface IBillingRepository {
      * @param context the Android context.
      * @param requestedAdvantage the pro mode advantage the user is trying to access.
      */
-    fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage)
+    abstract fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage)
+
+
+    internal abstract fun launchPlayStoreBillingFlow(activity: Activity)
+
+    internal abstract fun setBillingActivityState(created: Boolean)
 }
