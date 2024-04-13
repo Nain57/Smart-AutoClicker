@@ -45,6 +45,8 @@ internal class VersionCatalogWrapper(private val libs: VersionCatalog) {
             get() = libs.getPluginId("jetbrainsKotlinSerialization")
         val googleKsp: String
             get() = libs.getPluginId("googleKsp")
+        val googleDaggerHiltAndroid: String
+            get() = libs.getPluginId("googleDaggerHiltAndroid")
         val googleCrashlytics: String
             get() = libs.getPluginId("googleCrashlytics")
         val googleGms: String

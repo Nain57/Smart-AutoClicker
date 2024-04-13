@@ -18,8 +18,7 @@
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidUnitTest)
-    alias(libs.plugins.googleKsp)
-    alias(libs.plugins.googleDaggerHiltAndroid)
+    alias(libs.plugins.buzbuz.hilt)
 }
 
 android {
@@ -29,9 +28,6 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
-
-    implementation(libs.google.dagger.hilt)
-    ksp(libs.google.dagger.hilt.compiler)
 
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.core.ktx)
