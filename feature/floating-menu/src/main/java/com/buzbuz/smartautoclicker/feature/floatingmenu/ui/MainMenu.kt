@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,11 +37,13 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.floatingmenu.R
 import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuBinding
+import com.buzbuz.smartautoclicker.feature.floatingmenu.di.MainMenuEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.EntryPoints
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -59,7 +61,7 @@ import kotlinx.coroutines.launch
 class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     /** The view model for this menu. */
-    private val viewModel: MainMenuModel by viewModels()
+    private val viewModel: MainMenuModel by viewModels(entryPoint = MainMenuEntryPoint::class.java)
     /** The view model for the debugging features. */
     private val debuggingViewModel: DebugModel by viewModels()
 
@@ -86,7 +88,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             state1to2AnimationRes = R.drawable.anim_play_pause,
             state2to1AnimationRes = R.drawable.anim_pause_play,
         )
-
         viewBinding = OverlayMenuBinding.inflate(layoutInflater)
         playPauseButtonController.attachView(viewBinding.btnPlay)
 

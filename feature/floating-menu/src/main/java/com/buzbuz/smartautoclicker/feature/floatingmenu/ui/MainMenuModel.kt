@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
 
-import android.app.Application
 import android.content.Context
 import android.view.View
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.Repository
@@ -28,7 +27,6 @@ import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -36,36 +34,37 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
-/**
- * View model for the [MainMenu].
- * @param application the Android application.
- */
-class MainMenuModel(application: Application) : AndroidViewModel(application) {
+/** View model for the [MainMenu]. */
+class MainMenuModel @Inject constructor(
+    @ApplicationContext appContext: Context,
+    private val billingRepository: IBillingRepository,
+) : ViewModel() {
 
     /** Monitors views for the tutorial. */
     private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
 
     /** The repository for the scenarios. */
-    private val repository: Repository = Repository.getRepository(application)
+    private val repository: Repository = Repository.getRepository(appContext)
     /** The detection repository. */
-    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(application)
+    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(appContext)
 
     /** The currently loaded scenario info. */
-    private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
-    /** The repository for the pro mode billing. */
-    private val billingRepository: BillingRepository = IBillingRepository.getRepository(application.applicationContext)
+    private val editionRepository: EditionRepository = EditionRepository.getInstance(appContext)
     /** The repository for the scenario debugging info. */
-    private val debugRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)
+    private val debugRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(appContext)
     /** The repository for the tutorials data. */
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
+    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(appContext)
 
     /** Tells if the pro mode is purchased. */
     private val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased
@@ -203,8 +202,8 @@ class MainMenuModel(application: Application) : AndroidViewModel(application) {
         tutorialRepository.setIsTutorialStopVolumeDownPopupShown()
 
     override fun onCleared() {
-        super.onCleared()
         repository.cleanCache()
+        super.onCleared()
     }
 }
 
