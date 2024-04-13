@@ -31,6 +31,7 @@ airbnbLottie = "6.1.0"
 googleMaterial = "1.10.0"
 kotlinSerializationJson = "1.6.3"
 openCv = "4.9.0"
+googleDaggerHilt = "2.51"
 
 # PlayStore only
 androidBillingClient = "6.2.0"
@@ -98,6 +99,8 @@ android-billingClient-ktx = { group = "com.android.billingclient", name = "billi
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "googleFirebaseBom" }
 google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "googleFirebaseCrashlytics" }
 google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk", version.ref = "googleFirebaseCrashlytics" }
+google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleDaggerHilt" }
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "googleDaggerHilt" }
 
 # Tests only
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreTesting" }
@@ -112,6 +115,7 @@ androidApplication = { id = "com.android.application", version.ref = "androidGra
 androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 androidxNavigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 androidxRoom = { id = "androidx.room", version.ref = "androidxRoom" }
+googleDaggerHiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "googleDaggerHilt" }
 googleKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 googleGms = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 googleCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlyticsGradle" }
