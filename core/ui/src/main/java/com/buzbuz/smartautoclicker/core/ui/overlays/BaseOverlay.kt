@@ -142,9 +142,10 @@ abstract class BaseOverlay internal constructor(
         if (lifecycleRegistry.currentState != State.INITIALIZED) return
 
         Log.d(TAG, "create overlay ${hashCode()}")
+        if (!this::context.isInitialized) context = appContext
         context = newOverlayContext(appContext)
-        dismissListener?.let { listener -> onDestroyListener = { listener(appContext, this@BaseOverlay) } }
 
+        dismissListener?.let { listener -> onDestroyListener = { listener(appContext, this@BaseOverlay) } }
         onCreate()
         lifecycleRegistry.currentState = State.CREATED
     }
@@ -335,14 +336,6 @@ inline fun <reified VM : ViewModel, EP : Any> BaseOverlay.viewModels(
         VM::class,
         { viewModelStore },
         { hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
-        { defaultViewModelCreationExtras },
-    )
-
-inline fun <reified VM : ViewModel> BaseOverlay.viewModels(): Lazy<VM> =
-    ViewModelLazy(
-        VM::class,
-        { viewModelStore },
-        { defaultViewModelProviderFactory },
         { defaultViewModelCreationExtras },
     )
 
