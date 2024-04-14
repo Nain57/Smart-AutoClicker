@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,31 +26,17 @@ import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugReportEn
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugViewEnabled
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.putIsDebugReportEnabled
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.putIsDebugViewEnabled
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DebuggingRepository private constructor(context: Context) {
-
-    companion object {
-
-        /** Singleton preventing multiple instances of the DebuggingRepository at the same time. */
-        @Volatile
-        private var INSTANCE: DebuggingRepository? = null
-
-        /**
-         * Get the DebuggingRepository singleton, or instantiates it if it wasn't yet.
-         *
-         * @return the DebugEngine singleton.
-         */
-        fun getDebuggingRepository(context: Context): DebuggingRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = DebuggingRepository(context)
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
+@Singleton
+class DebuggingRepository @Inject constructor(
+    @ApplicationContext context: Context,
+) {
 
     /** Keep track of the scenario detection session. */
     private val debugEngine: DebugEngine = DebugEngine()

@@ -18,31 +18,16 @@ package com.buzbuz.smartautoclicker.core.ui.monitoring
 
 import android.graphics.Rect
 import android.view.View
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class MonitoredViewsManager @Inject constructor() {
-
-    companion object {
-
-        /** Singleton preventing multiple instances of the MonitoredViewsManager at the same time. */
-        @Volatile
-        private var INSTANCE: MonitoredViewsManager? = null
-
-        /**
-         * Get the MonitoredViewsManager singleton, or instantiates it if it wasn't yet.
-         *
-         * @return the MonitoredViewsManager singleton.
-         */
-        fun getInstance(): MonitoredViewsManager {
-            return INSTANCE ?: synchronized(this) {
-                val instance = MonitoredViewsManager()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
+@Singleton
+class MonitoredViewsManager @Inject constructor(
+    private val displayMetrics: DisplayMetrics,
+) {
 
     private val monitoredViews: MutableMap<MonitoredViewType, ViewMonitor> = mutableMapOf()
     private val monitoredClicks: MutableMap<MonitoredViewType, () -> Unit> = mutableMapOf()
@@ -52,7 +37,7 @@ class MonitoredViewsManager @Inject constructor() {
         monitoredView: View,
         positioningType: ViewPositioningType = ViewPositioningType.WINDOW,
     ) {
-        if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor()
+        if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayMetrics)
         monitoredViews[type]?.attachView(monitoredView, positioningType)
     }
 
@@ -66,7 +51,7 @@ class MonitoredViewsManager @Inject constructor() {
 
     fun setExpectedViews(types: Set<MonitoredViewType>) {
         types.forEach { type ->
-            if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor()
+            if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayMetrics)
         }
     }
 

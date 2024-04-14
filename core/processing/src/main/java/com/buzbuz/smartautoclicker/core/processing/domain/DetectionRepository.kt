@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
 
 import javax.inject.Inject
@@ -50,39 +49,16 @@ import javax.inject.Singleton
 @Singleton
 class DetectionRepository @Inject constructor(
     private val scenarioRepository: IRepository,
+    private val detectorEngine: DetectorEngine,
 ) {
 
-    companion object {
-
-        /** Singleton preventing multiple instances of the DebuggingRepository at the same time. */
-        @Volatile
-        private var INSTANCE: DetectionRepository? = null
-
-        /**
-         * Get the DetectionRepository singleton, or instantiates it if it wasn't yet.
-         *
-         * @return the DetectionRepository singleton.
-         */
-        fun getDetectionRepository(context: Context): DetectionRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = DetectionRepository(IRepository.getRepository(context))
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
-    /** Engine controlling the screen recording and the scenario processing. */
-    private val detectorEngine: MutableStateFlow<DetectorEngine?> = MutableStateFlow(null)
     /** The current scenario unique identifier. */
     private val _scenarioId: MutableStateFlow<Identifier?> = MutableStateFlow(null)
     val scenarioId: StateFlow<Identifier?> = _scenarioId
 
     /** The state of the scenario processing. */
-    val detectionState: Flow<DetectionState> = detectorEngine.flatMapLatest { engine ->
-        engine?.state?.mapNotNull { it.toDetectionState() }
-            ?: flowOf(DetectionState.INACTIVE)
-    }
+    val detectionState: Flow<DetectionState> = detectorEngine.state
+        .mapNotNull { it.toDetectionState() }
 
     /**
      * Tells if the detection can be started or not.
@@ -113,9 +89,7 @@ class DetectionRepository @Inject constructor(
         data: Intent,
         androidExecutor: AndroidExecutor,
     ) {
-        detectorEngine.value = DetectorEngine(context).also { newEngine ->
-            newEngine.startScreenRecord(context, resultCode, data, androidExecutor)
-        }
+        detectorEngine.startScreenRecord(context, resultCode, data, androidExecutor)
     }
 
     suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener) {
@@ -124,7 +98,7 @@ class DetectionRepository @Inject constructor(
         val events = scenarioRepository.getImageEvents(id)
         val triggerEvents = scenarioRepository.getTriggerEvents(id)
 
-        detectorEngine.value?.startDetection(
+        detectorEngine.startDetection(
             context = context,
             scenario = scenario,
             imageEvents = events,
@@ -135,15 +109,15 @@ class DetectionRepository @Inject constructor(
     }
 
     fun stopDetection() {
-        detectorEngine.value?.stopDetection()
+        detectorEngine.stopDetection()
     }
 
     fun stopScreenRecord() {
-        detectorEngine.value?.apply {
+        detectorEngine.apply {
             stopScreenRecord()
             clear()
         }
-        detectorEngine.value = null
+
         _scenarioId.value = null
     }
 
@@ -172,7 +146,7 @@ class DetectionRepository @Inject constructor(
 
     private fun tryElement(context: Context, elementTry: ScenarioTry, listener: ScenarioProcessingListener) {
         Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.imageEvents}")
-        detectorEngine.value?.startDetection(
+        detectorEngine.startDetection(
             context = context,
             scenario = elementTry.scenario,
             imageEvents = elementTry.imageEvents,

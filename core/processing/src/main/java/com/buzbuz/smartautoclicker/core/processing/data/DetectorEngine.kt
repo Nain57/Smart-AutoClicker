@@ -46,6 +46,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+import javax.inject.Inject
+import javax.inject.Singleton
+
 /**
  * Detects [ImageEvent] conditions on a display and execute its actions.
  *
@@ -53,18 +56,16 @@ import kotlinx.coroutines.flow.StateFlow
  * [startScreenRecord]. Or, you can start the detection of a list of [ImageEvent] by using [startDetection].
  * The states of the recording and the detection are available in [state].
  * Once you no longer needs to capture or detect, call [stopDetection] or [stopScreenRecord] to release all processing resources.
- *
- * @param context the Android context.
  */
-internal class DetectorEngine(context: Context) {
+@Singleton
+class DetectorEngine @Inject constructor(
+    private val displayMetrics: DisplayMetrics,
+    private val displayRecorder: DisplayRecorder,
+) {
 
-    /** Monitors the state of the screen. */
-    private val displayMetrics = DisplayMetrics.getInstance(context)
     /** Listener upon orientation changes. */
     private val orientationListener = ::onOrientationChanged
 
-    /** Record the screen and provide images via [DisplayRecorder.acquireLatestBitmap]. */
-    private val displayRecorder = DisplayRecorder.getInstance()
     /** Process the events conditions to detect them on the screen. */
     private var scenarioProcessor: ScenarioProcessor? = null
     /** Detect the condition images on the screen image. */
@@ -82,7 +83,7 @@ internal class DetectorEngine(context: Context) {
     /** Backing property for [state].*/
     private val _state = MutableStateFlow(DetectorState.CREATED)
     /** Current state of the detector. */
-    val state: StateFlow<DetectorState> = _state
+    internal val state: StateFlow<DetectorState> = _state
 
     /**
      * Object to notify upon start/completion of detections steps.
@@ -107,7 +108,7 @@ internal class DetectorEngine(context: Context) {
      * [android.app.Activity.onActivityResult]
      * @param androidExecutor the executor for the actions requiring an interaction with Android.
      */
-    fun startScreenRecord(
+    internal fun startScreenRecord(
         context: Context,
         resultCode: Int,
         data: Intent,
@@ -148,7 +149,7 @@ internal class DetectorEngine(context: Context) {
      * @param bitmapSupplier provides the conditions bitmaps.
      * @param progressListener object to notify upon start/completion of detections steps.
      */
-    fun startDetection(
+    internal fun startDetection(
         context: Context,
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
@@ -231,7 +232,7 @@ internal class DetectorEngine(context: Context) {
      * image. Note that this will not stop the screen recording, you should still call [stopScreenRecord] to completely
      * release the [DetectorEngine] resources.
      */
-    fun stopDetection() {
+    internal fun stopDetection() {
         if (_state.value != DetectorState.DETECTING) {
             Log.w(TAG, "stopDetection: detection is not started.")
             return
@@ -261,7 +262,7 @@ internal class DetectorEngine(context: Context) {
      * First, calls [stopDetection] if the detection was active. Then, stop the screen recording and release any related
      * resources.
      */
-    fun stopScreenRecord() {
+    internal fun stopScreenRecord() {
         if (_state.value == DetectorState.DETECTING) {
             stopDetection()
             stopRecording()
@@ -300,7 +301,7 @@ internal class DetectorEngine(context: Context) {
     }
 
     /** Clear this engine. It can't be used after this call. */
-    fun clear() {
+    internal fun clear() {
         if (_state.value != DetectorState.CREATED) {
             Log.w(TAG, "Clearing the detector but it was still started.")
             stopScreenRecord()

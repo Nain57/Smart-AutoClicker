@@ -16,44 +16,47 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay
 
-import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.getIsDebugViewEnabled
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.formatConfidenceRate
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 /** ViewModel for the debug features. */
 @OptIn(ExperimentalCoroutinesApi::class)
-class DebugModel(application: Application) : AndroidViewModel(application) {
+class DebugModel @Inject constructor(
+    @ApplicationContext context: Context,
+    debuggingRepository: DebuggingRepository
+) : ViewModel() {
 
     /** Debug configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = application.getDebugConfigPreferences()
-    /** The debugging engine. */
-    private var repository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)
+    private val sharedPreferences: SharedPreferences = context.getDebugConfigPreferences()
 
     /** Tells if the current detection is running in debug mode. */
-    val isDebugging = repository.isDebugging.map { debugging ->
-        debugging && sharedPreferences.getIsDebugViewEnabled(application)
+    val isDebugging = debuggingRepository.isDebugging.map { debugging ->
+        debugging && sharedPreferences.getIsDebugViewEnabled(context)
     }
 
     /** The coordinates of the last positive detection. */
-    val debugLastPositiveCoordinates: Flow<Rect> = repository.lastResult
+    val debugLastPositiveCoordinates: Flow<Rect> = debuggingRepository.lastResult
         .map { debugInfo ->
             if (debugInfo != null && debugInfo.isDetected) debugInfo.conditionArea
             else Rect()
         }
 
     /** The info on the last positive detection. */
-    val debugLastPositive: Flow<LastPositiveDebugInfo> = repository.lastPositiveInfo
+    val debugLastPositive: Flow<LastPositiveDebugInfo> = debuggingRepository.lastPositiveInfo
         .flatMapLatest { debugInfo ->
             flow {
                 if (debugInfo == null) {

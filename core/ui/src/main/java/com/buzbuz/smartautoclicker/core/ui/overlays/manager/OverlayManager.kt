@@ -31,7 +31,6 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNa
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,32 +48,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class OverlayManager @Inject internal constructor(
-    @ApplicationContext context: Context,
     private val displayMetrics: DisplayMetrics,
+    private val menuPositionDataSource: OverlayMenuPositionDataSource,
 ) {
-
-    companion object {
-
-        /** Singleton preventing multiple instances of the OverlayManager at the same time. */
-        @Volatile
-        private var INSTANCE: OverlayManager? = null
-
-        /**
-         * Get the OverlayManager singleton, or instantiates it if it wasn't yet.
-         *
-         * @return the OverlayManager singleton.
-         */
-        fun getInstance(context: Context): OverlayManager {
-            return INSTANCE ?: synchronized(this) {
-                val instance = OverlayManager(context, DisplayMetrics.getInstance(context))
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
-    /** Save/load and lock the position of the overlay menus. */
-    private val menuPositionDataSource = OverlayMenuPositionDataSource.getInstance(context)
     /** The listener upon screen rotation. */
     private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
 

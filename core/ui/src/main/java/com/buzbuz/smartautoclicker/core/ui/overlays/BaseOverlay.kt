@@ -301,7 +301,7 @@ abstract class BaseOverlay internal constructor(
             ContextThemeWrapper(appContext, theme).apply {
                 applyOverrideConfiguration(
                     Configuration(applicationContext.resources.configuration).apply {
-                        orientation = DisplayMetrics.getInstance(appContext).orientation
+                        orientation = displayMetrics.orientation
                     }
                 )
             }

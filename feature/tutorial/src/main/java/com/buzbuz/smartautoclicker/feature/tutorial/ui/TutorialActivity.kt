@@ -32,12 +32,15 @@ import com.buzbuz.smartautoclicker.feature.tutorial.R
 import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TutorialActivity : AppCompatActivity() {
 
     private val viewModel: TutorialViewModel by viewModels()
     private lateinit var navController: NavController
+
+    @Inject lateinit var overlayManager: OverlayManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +89,7 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun setFloatingUiVisibility(isVisible: Boolean) {
-        OverlayManager.getInstance(this).apply {
+        overlayManager.apply {
             if (isVisible) restoreVisibility()
             else hideAll()
         }

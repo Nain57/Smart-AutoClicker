@@ -43,27 +43,6 @@ class DisplayMetrics @Inject internal constructor(
     @ApplicationContext context: Context,
 ) {
 
-    companion object {
-        /** Singleton preventing multiple instances at the same time. */
-        @Volatile
-        private var INSTANCE: DisplayMetrics? = null
-
-        /**
-         * Get the ScreenMetrics singleton, or instantiates it if it wasn't yet.
-         *
-         * @param context the Android context.
-         *
-         * @return the ScreenMetrics singleton.
-         */
-        fun getInstance(context: Context): DisplayMetrics {
-            return INSTANCE ?: synchronized(this) {
-                val instance = DisplayMetrics(context)
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
     /** The Android window manager. */
     private val windowManager = context.getSystemService(WindowManager::class.java)
     /** The Android display manager. */

@@ -23,8 +23,14 @@ import android.graphics.Point
 import android.util.Log
 
 import androidx.annotation.VisibleForTesting
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class OverlayMenuPositionDataSource private constructor(context: Context) {
+@Singleton
+class OverlayMenuPositionDataSource @Inject constructor(
+    @ApplicationContext context: Context,
+) {
 
     internal companion object {
         /** Name of the preference file. */
@@ -37,23 +43,6 @@ internal class OverlayMenuPositionDataSource private constructor(context: Contex
         @VisibleForTesting const val PREFERENCE_MENU_X_PORTRAIT_KEY = "Menu_X_Portrait_Position"
         /** Preference key referring to the portrait Y position. */
         @VisibleForTesting const val PREFERENCE_MENU_Y_PORTRAIT_KEY = "Menu_Y_Portrait_Position"
-
-        /** Singleton preventing multiple instances of the OverlayMenuPositionDataSource at the same time. */
-        @Volatile
-        private var INSTANCE: OverlayMenuPositionDataSource? = null
-
-        /**
-         * Get the OverlayMenuPositionDataSource singleton, or instantiates it if it wasn't yet.
-         *
-         * @return the OverlayMenuPositionDataSource singleton.
-         */
-        fun getInstance(context: Context): OverlayMenuPositionDataSource {
-            return INSTANCE ?: synchronized(this) {
-                val instance = OverlayMenuPositionDataSource(context)
-                INSTANCE = instance
-                instance
-            }
-        }
     }
 
     /** The shared preference storing the position of the menu in order to save/restore the last user position. */
