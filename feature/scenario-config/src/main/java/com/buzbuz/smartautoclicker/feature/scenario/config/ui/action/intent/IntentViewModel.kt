@@ -273,7 +273,7 @@ data class ActivityDisplayInfo(
 /** Items displayed in the extra list. */
 sealed class ExtraListItem {
     /** The add extra item. */
-    object AddExtraItem : ExtraListItem()
+    data object AddExtraItem : ExtraListItem()
     /** Item representing an intent extra. */
     data class ExtraItem(val extra: IntentExtra<out Any>, val name: String, val value: String) : ExtraListItem()
 }

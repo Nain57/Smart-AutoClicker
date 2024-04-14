@@ -193,23 +193,7 @@ inline fun <reified VM : ViewModel, EP : Any> NavBarDialogContent.dialogViewMode
 ): Lazy<VM> =
     ViewModelLazy(
         VM::class,
-        { viewModelStore },
-        { dialogController.hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
-        { defaultViewModelCreationExtras },
-    )
-
-inline fun <reified VM : ViewModel> NavBarDialogContent.viewModels(): Lazy<VM> =
-    ViewModelLazy(
-        VM::class,
-        { viewModelStore },
-        { defaultViewModelProviderFactory },
-        { defaultViewModelCreationExtras },
-    )
-
-inline fun <reified VM : ViewModel> NavBarDialogContent.dialogViewModels(): Lazy<VM> =
-    ViewModelLazy(
-        VM::class,
         { dialogController.viewModelStore },
-        { dialogController.defaultViewModelProviderFactory },
+        { dialogController.hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
         { defaultViewModelCreationExtras },
     )
