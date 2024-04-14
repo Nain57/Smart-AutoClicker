@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.Dialog
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.di.DebuggingViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -40,7 +41,10 @@ import kotlinx.coroutines.launch
 class DebugReportDialog : OverlayDialog(R.style.AppTheme) {
 
     /** View model for this dialog. */
-    private val viewModel: DebugReportModel by viewModels()
+    private val viewModel: DebugReportModel by viewModels(
+        entryPoint = DebuggingViewModelsEntryPoint::class.java,
+        creator = { debugReportModel() },
+    )
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogDebugReportBinding

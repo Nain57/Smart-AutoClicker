@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.feature.floatingmenu.R
 import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.floatingmenu.di.MainMenuEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialog
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
 
 import com.google.android.material.color.DynamicColors
@@ -66,7 +67,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         creator = { mainMenuViewModel() },
     )
     /** The view model for the debugging features. */
-    private val debuggingViewModel: DebugModel by viewModels()
+    private val debuggingViewModel: DebugModel by viewModels(
+        entryPoint = DebuggingViewModelsEntryPoint::class.java,
+        creator = { debugModel() },
+    )
 
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayMenuBinding

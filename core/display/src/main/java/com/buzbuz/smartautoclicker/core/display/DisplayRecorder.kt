@@ -57,31 +57,6 @@ import javax.inject.Singleton
 @Singleton
 class DisplayRecorder @Inject internal constructor() {
 
-    companion object {
-        /** Tag for logs. */
-        private const val TAG = "DisplayRecorder"
-        /** Name of the virtual display generating [Image]. */
-        internal const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"
-
-        /** Singleton preventing multiple instances of the ScreenRecorder at the same time. */
-        @Volatile
-        private var INSTANCE: DisplayRecorder? = null
-
-        /**
-         * Get the engine singleton, or instantiates it if it wasn't yet.
-         *
-         * @return the engine singleton.
-         */
-        fun getInstance(): DisplayRecorder {
-            return INSTANCE ?: synchronized(this) {
-                Log.i(TAG, "Instantiates new ScreenRecorder")
-                val instance = DisplayRecorder()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
     /** Synchronization mutex. */
     private val mutex = Mutex()
     /**
@@ -283,3 +258,8 @@ private fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
     bitmap.copyPixelsFromBuffer(planes[0].buffer)
     return bitmap
 }
+
+/** Tag for logs. */
+private const val TAG = "DisplayRecorder"
+/** Name of the virtual display generating [Image]. */
+internal const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"

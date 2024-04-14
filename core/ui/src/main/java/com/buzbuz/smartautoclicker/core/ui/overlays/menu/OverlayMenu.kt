@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,10 +43,13 @@ import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
 import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuAnimations
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuMoveTouchEventHandler
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuResizeController
+
+import dagger.hilt.EntryPoints
 
 /**
  * Controller for a menu displayed as an overlay shown from a service.
@@ -196,7 +199,8 @@ abstract class OverlayMenu(
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
-        positionDataSource = OverlayMenuPositionDataSource.getInstance(context)
+        positionDataSource = EntryPoints.get(context.applicationContext, UiEntryPoint::class.java)
+            .overlayMenuPositionDataSource()
         positionDataSource.addOnLockedPositionChangedListener(onLockedPositionChangedListener)
         loadMenuPosition(displayMetrics.orientation)
 

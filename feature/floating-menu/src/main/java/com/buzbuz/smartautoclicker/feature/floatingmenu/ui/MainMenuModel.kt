@@ -34,8 +34,6 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
-import dagger.hilt.android.qualifiers.ApplicationContext
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -47,17 +45,14 @@ import kotlin.time.Duration.Companion.minutes
 
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
-    @ApplicationContext appContext: Context,
     private val repository: IRepository,
     private val detectionRepository: DetectionRepository,
     private val editionRepository: EditionRepository,
     private val billingRepository: IBillingRepository,
     private val tutorialRepository: TutorialRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
+    private val debugRepository: DebuggingRepository,
 ) : ViewModel() {
-
-    /** The repository for the scenario debugging info. */
-    private val debugRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(appContext)
 
     /** Tells if the pro mode is purchased. */
     private val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased

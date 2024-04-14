@@ -14,21 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.di
+package com.buzbuz.smartautoclicker.feature.scenario.debugging.di
 
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.TryElementViewModel
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportModel
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 
 @EntryPoint
-@InstallIn(SingletonComponent::class)
-interface UiEntryPoint {
-
-    fun monitoredViewManager(): MonitoredViewsManager
-    fun overlayManager(): OverlayManager
-    fun overlayMenuPositionDataSource(): OverlayMenuPositionDataSource
+@InstallIn(OverlayComponent::class)
+interface DebuggingViewModelsEntryPoint {
+    fun debugModel(): DebugModel
+    fun debugReportModel(): DebugReportModel
+    fun tryElementViewModel(): TryElementViewModel
 }

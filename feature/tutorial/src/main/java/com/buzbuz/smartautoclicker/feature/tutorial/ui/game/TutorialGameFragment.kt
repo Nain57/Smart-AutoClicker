@@ -47,6 +47,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscree
 import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TutorialGameFragment : Fragment() {
@@ -57,6 +58,8 @@ class TutorialGameFragment : Fragment() {
     private lateinit var viewBinding: FragmentTutorialGameBinding
     /** Start arguments for this fragment. */
     private val args: TutorialGameFragmentArgs by navArgs()
+
+    @Inject lateinit var overlayManager: OverlayManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +75,7 @@ class TutorialGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lockMenuPosition()
-        OverlayManager.getInstance(requireContext()).hideAll()
+        overlayManager.hideAll()
 
         viewBinding.apply {
             blueTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.BLUE) }
@@ -98,7 +101,6 @@ class TutorialGameFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
 
-        val overlayManager = OverlayManager.getInstance(requireContext())
         overlayManager.removeTopOverlay()
         overlayManager.navigateUpToRoot(requireContext()) {
             overlayManager.unlockMenuPosition()
@@ -146,13 +148,13 @@ class TutorialGameFragment : Fragment() {
     }
 
     private fun showHideStepOverlay(show: Boolean) {
-        if (OverlayManager.getInstance(requireContext()).isOverlayStackVisible()) {
+        if (overlayManager.isOverlayStackVisible()) {
             viewBinding.spaceOverlayMenu.visibility = View.INVISIBLE
         } else {
             viewBinding.spaceOverlayMenu.visibility = View.VISIBLE
         }
 
-        OverlayManager.getInstance(requireContext()).apply {
+        overlayManager.apply {
             if (show) setTopOverlay(TutorialFullscreenOverlay())
             else removeTopOverlay()
         }
@@ -162,13 +164,12 @@ class TutorialGameFragment : Fragment() {
         val location = IntArray(2)
         viewBinding.spaceOverlayMenu.getLocationInWindow(location)
 
-        OverlayManager.getInstance(requireContext())
-            .lockMenuPosition(
-                Point(
-                    viewBinding.spaceOverlayMenu.marginStart + location[0],
-                    viewBinding.spaceOverlayMenu.marginTop + location[1],
-                )
+        overlayManager.lockMenuPosition(
+            Point(
+                viewBinding.spaceOverlayMenu.marginStart + location[0],
+                viewBinding.spaceOverlayMenu.marginTop + location[1],
             )
+        )
     }
 }
 

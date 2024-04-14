@@ -48,28 +48,6 @@ class EditionRepository @Inject constructor(
     private val repository: IRepository,
 ) {
 
-    companion object {
-
-        /** Tag for logs */
-        private const val TAG = "EditionRepository"
-        /** Singleton preventing multiple instances of the EditionRepository at the same time. */
-        @Volatile
-        private var INSTANCE: EditionRepository? = null
-
-        /**
-         * Get the EditionRepository singleton, or instantiates it if it wasn't yet.
-         * @param context the Android context.
-         * @return the EditionRepository singleton.
-         */
-        fun getInstance(context: Context): EditionRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = EditionRepository(context, IRepository.getRepository(context))
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
     /** Keep tracks of all changes in the currently edited scenario. */
     private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
@@ -217,3 +195,7 @@ class EditionRepository @Inject constructor(
     fun stopIntentExtraEdition() =
         scenarioEditor.currentEventEditor.value?.actionsEditor?.intentExtraEditor?.stopItemEdition()
 }
+
+
+/** Tag for logs */
+private const val TAG = "EditionRepository"

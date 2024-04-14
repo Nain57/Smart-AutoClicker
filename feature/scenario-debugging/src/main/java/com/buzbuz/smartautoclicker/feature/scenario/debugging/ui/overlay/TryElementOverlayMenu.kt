@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.R
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.databinding.OverlayTryElementMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.debugging.di.DebuggingViewModelsEntryPoint
 
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,10 @@ class TryElementOverlayMenu(
 ) : OverlayMenu() {
 
     /** The view model for this dialog. */
-    private val viewModel: TryElementViewModel by viewModels()
+    private val viewModel: TryElementViewModel by viewModels(
+        entryPoint = DebuggingViewModelsEntryPoint::class.java,
+        creator = { tryElementViewModel() },
+    )
 
     private lateinit var viewBinding: OverlayTryElementMenuBinding
 

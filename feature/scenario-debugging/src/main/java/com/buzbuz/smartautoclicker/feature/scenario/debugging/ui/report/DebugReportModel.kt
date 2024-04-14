@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report
 
-import android.app.Application
 import android.graphics.Bitmap
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -35,16 +34,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
 
 /** ViewModel for the [DebugReportDialog]. */
-class DebugReportModel(application: Application) : AndroidViewModel(application) {
+class DebugReportModel @Inject constructor(
+    debuggingRepository: DebuggingRepository,
+    private val repository: IRepository,
+) : ViewModel() {
 
-    /** Repository providing access to the click database. */
-    private val repository = IRepository.getRepository(application.applicationContext)
-    /** Repository for the processing session debugging info. */
-    private val debuggingRepository = DebuggingRepository.getDebuggingRepository(application)
     /** The debug report of the last detection session. */
     private val debugReport: Flow<DebugReport?> = debuggingRepository.debugReport
 

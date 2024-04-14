@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Rect
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -43,11 +42,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
-class TryElementViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(application)
+class TryElementViewModel @Inject constructor(
+    private val detectionRepository: DetectionRepository
+) : ViewModel() {
 
     private val triedElement: MutableStateFlow<Element?> = MutableStateFlow(null)
     private var resetJob: Job? = null

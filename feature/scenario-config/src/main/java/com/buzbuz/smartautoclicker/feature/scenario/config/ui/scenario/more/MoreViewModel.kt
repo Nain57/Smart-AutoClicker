@@ -30,9 +30,8 @@ import javax.inject.Inject
 
 class MoreViewModel @Inject constructor(
     @ApplicationContext context: Context,
+    private val debuggingRepository: DebuggingRepository,
 ) : ViewModel() {
-
-    private val debuggingRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(context)
 
     /** Tells if the debug view is enabled or not. */
     private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled(context))
