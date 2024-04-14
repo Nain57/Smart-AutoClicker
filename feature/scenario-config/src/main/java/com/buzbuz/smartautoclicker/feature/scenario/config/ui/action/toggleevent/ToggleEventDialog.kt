@@ -36,10 +36,10 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionToggleEventBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
@@ -53,7 +53,10 @@ class ToggleEventDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ToggleEventViewModel by viewModels()
+    private val viewModel: ToggleEventViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { toggleEventViewModel() },
+    )
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionToggleEventBinding
@@ -169,7 +172,7 @@ class ToggleEventDialog(
 
     /** Show the event selection dialog. */
     private fun showEventTogglesDialog() =
-        OverlayManager.getInstance(context).navigateTo(
+        overlayManager.navigateTo(
             context = context,
             newOverlay = EventTogglesDialog(
                 onConfirmClicked = viewModel::setNewEventToggles,

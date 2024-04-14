@@ -16,16 +16,16 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.toggleevent
 
-import android.app.Application
 import android.content.Context
 import androidx.annotation.StringRes
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -36,13 +36,15 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 
 /** ViewModel for the [ToggleEventDialog].  */
 @OptIn(FlowPreview::class)
-class ToggleEventViewModel(application: Application) : AndroidViewModel(application) {
+class ToggleEventViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredToggleEvent = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
@@ -93,7 +95,7 @@ class ToggleEventViewModel(application: Application) : AndroidViewModel(applicat
 
             EventToggleSelectorState(
                 isEnabled = !toggleEventAction.toggleAll,
-                title = application.getEventToggleListName(toggleEventAction),
+                title = context.getEventToggleListName(toggleEventAction),
                 emptyText = if (toggleEventAction.eventToggles.isEmpty()) R.string.item_desc_event_toggles_empty else null,
                 enableCount = enableCount,
                 toggleCount = toggleCount,

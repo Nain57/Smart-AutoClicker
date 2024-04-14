@@ -16,37 +16,32 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.changecounter
 
-import android.app.Application
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 
+import javax.inject.Inject
+
 @OptIn(FlowPreview::class)
-class ChangeCounterViewModel(application: Application) : AndroidViewModel(application) {
+class ChangeCounterViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
     private val plusItem = DropdownItem(R.string.item_title_add)
     private val setItem = DropdownItem(R.string.item_title_set)
     private val minusItem = DropdownItem(R.string.item_title_minus)
-
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
 
     /** The action being configured by the user. */
     private val configuredChangeCounter = editionRepository.editionState.editedActionState

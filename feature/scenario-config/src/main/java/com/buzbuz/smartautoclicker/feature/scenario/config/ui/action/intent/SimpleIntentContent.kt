@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +31,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.dialogViewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigSimpleBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.activities.ActivitySelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
@@ -44,7 +44,10 @@ import kotlinx.coroutines.launch
 class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
-    private val dialogViewModel: IntentViewModel by dialogViewModels()
+    private val dialogViewModel: IntentViewModel by dialogViewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { intentViewModel() },
+    )
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentIntentConfigSimpleBinding
@@ -95,7 +98,7 @@ class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext)
     }
 
     private fun showApplicationSelectionDialog() =
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = ActivitySelectionDialog(
                 onApplicationSelected = { componentName ->

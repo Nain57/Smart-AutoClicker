@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
@@ -54,7 +54,7 @@ internal class EditionState internal constructor(
 ) : IEditionState {
 
     /** The repository providing access to the database. */
-    private val repository: Repository = Repository.getRepository(context)
+    private val repository: IRepository = IRepository.getRepository(context)
 
     override val scenarioCompleteState: Flow<EditedElementState<EditedScenarioState>> =
         combine(

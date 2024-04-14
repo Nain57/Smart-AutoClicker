@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.counter
 
-import android.app.Application
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.*
@@ -34,18 +32,18 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-class CounterReachedConditionViewModel(application: Application) : AndroidViewModel(application) {
+class CounterReachedConditionViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
     private val greaterItem = DropdownItem(R.string.item_title_greater)
     private val greaterOrEqualsItem = DropdownItem(R.string.item_title_greater_or_equals)
     private val equalsItem = DropdownItem(R.string.item_title_equals)
     private val lowerOrEqualsItem = DropdownItem(R.string.item_title_lower_or_equals)
     private val lowerItem = DropdownItem(R.string.item_title_lower)
-
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
 
     /** The condition being configured by the user. */
     private val configuredCondition: Flow<TriggerCondition.OnCounterCountReached> =

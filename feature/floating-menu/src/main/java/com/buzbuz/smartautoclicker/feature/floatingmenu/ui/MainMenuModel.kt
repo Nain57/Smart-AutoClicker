@@ -22,7 +22,7 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
@@ -48,19 +48,13 @@ import kotlin.time.Duration.Companion.minutes
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
     @ApplicationContext appContext: Context,
+    private val repository: IRepository,
+    private val detectionRepository: DetectionRepository,
+    private val editionRepository: EditionRepository,
     private val billingRepository: IBillingRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
-
-    /** The repository for the scenarios. */
-    private val repository: Repository = Repository.getRepository(appContext)
-    /** The detection repository. */
-    private val detectionRepository: DetectionRepository = DetectionRepository.getDetectionRepository(appContext)
-
-    /** The currently loaded scenario info. */
-    private val editionRepository: EditionRepository = EditionRepository.getInstance(appContext)
     /** The repository for the scenario debugging info. */
     private val debugRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(appContext)
     /** The repository for the tutorials data. */

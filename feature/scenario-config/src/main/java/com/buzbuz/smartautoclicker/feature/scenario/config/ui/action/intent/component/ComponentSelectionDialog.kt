@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogBaseSelectionBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -46,7 +47,10 @@ class ComponentSelectionDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ComponentSelectionModel by viewModels()
+    private val viewModel: ComponentSelectionModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { componentSelectionViewModel() },
+    )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseSelectionBinding
 

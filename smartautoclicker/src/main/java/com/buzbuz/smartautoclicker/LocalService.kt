@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
@@ -28,7 +27,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.floatingmenu.ui.MainMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.DumbMainMenu
@@ -44,6 +42,9 @@ import java.io.PrintWriter
 
 class LocalService(
     private val context: Context,
+    private val overlayManager: OverlayManager,
+    private val displayMetrics: DisplayMetrics,
+    private val detectionRepository: DetectionRepository,
     private val androidExecutor: AndroidExecutor,
     private val onStart: (isSmart: Boolean, name: String) -> Unit,
     private val onStop: () -> Unit,
@@ -54,15 +55,8 @@ class LocalService(
     /** Coroutine job for the delayed start of engine & ui. */
     private var startJob: Job? = null
 
-    /** Manages the overlays for the application. */
-    private var overlayManager: OverlayManager? = null
-    /** The metrics of the device screen. */
-    private var displayMetrics: DisplayMetrics? = null
-
     /** The dumb repository controlling the dumb engine. */
     private var dumbEngine: DumbEngine? = null
-    /** The smart engine for the detection. */
-    private var detectionRepository: DetectionRepository? = null
 
     /** True if the overlay is started, false if not. */
     private var isStarted: Boolean = false
@@ -72,7 +66,7 @@ class LocalService(
         isStarted = true
         onStart(false, dumbScenario.name)
 
-        initDisplayMetrics(context)
+        displayMetrics.startMonitoring(context)
         startJob = serviceScope.launch {
             delay(500)
 
@@ -80,9 +74,9 @@ class LocalService(
                 init(androidExecutor, dumbScenario)
             }
 
-            initOverlayManager(
+            overlayManager.navigateTo(
                 context = context,
-                rootOverlay = DumbMainMenu(dumbScenario.id) { stop() }
+                newOverlay = DumbMainMenu(dumbScenario.id) { stop() },
             )
         }
     }
@@ -106,23 +100,21 @@ class LocalService(
         isStarted = true
         onStart(true, scenario.name)
 
-        initDisplayMetrics(context)
+        displayMetrics.startMonitoring(context)
         startJob = serviceScope.launch {
             delay(500)
 
-            detectionRepository = DetectionRepository.getDetectionRepository(context).apply {
-                setScenarioId(scenario.id)
-            }
+            detectionRepository.setScenarioId(scenario.id)
 
-            initOverlayManager(
+            overlayManager.navigateTo(
                 context = context,
-                rootOverlay = MainMenu { stop() }
+                newOverlay = MainMenu { stop() },
             )
 
             // If we start too quickly, there is a chance of crash because the service isn't in foreground state yet
             // That's not really an issue as the user just clicked the permission button and the activity is closing
             delay(500)
-            detectionRepository?.startScreenRecord(
+            detectionRepository.startScreenRecord(
                 context = context,
                 resultCode = resultCode,
                 data = data,
@@ -139,14 +131,9 @@ class LocalService(
             startJob?.join()
             startJob = null
 
-            overlayManager?.closeAll(context)
-            overlayManager = null
-
-            detectionRepository?.stopScreenRecord()
-            detectionRepository = null
-
-            displayMetrics?.stopMonitoring(context)
-            displayMetrics = null
+            overlayManager.closeAll(context)
+            detectionRepository.stopScreenRecord()
+            displayMetrics.stopMonitoring(context)
 
             onStop()
         }
@@ -158,14 +145,11 @@ class LocalService(
 
     fun onKeyEvent(event: KeyEvent?): Boolean {
         event ?: return false
-        return overlayManager?.propagateKeyEvent(event) ?: false
+        return overlayManager.propagateKeyEvent(event)
     }
 
-    fun isOverlayHidden(): Boolean =
-        overlayManager?.isStackHidden() ?: true
-
     fun toggleOverlaysVisibility() {
-        overlayManager?.apply {
+        overlayManager.apply {
             if (isStackHidden()) {
                 restoreVisibility()
             } else {
@@ -174,26 +158,11 @@ class LocalService(
         }
     }
 
-    private fun initDisplayMetrics(context: Context) {
-        displayMetrics = DisplayMetrics.getInstance(context).apply {
-            startMonitoring(context)
-        }
-    }
-
-    private fun initOverlayManager(context: Context, rootOverlay: Overlay) {
-        overlayManager = OverlayManager.getInstance(context).apply {
-            navigateTo(
-                context = context,
-                newOverlay = rootOverlay,
-            )
-        }
-    }
-
     fun dump(writer: PrintWriter) {
         writer.apply {
             writer.println("* UI:")
             val prefix = "\t"
-            overlayManager?.dump(writer, prefix) ?: writer.println("$prefix None")
+            overlayManager.dump(writer, prefix)
         }
     }
 }

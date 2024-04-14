@@ -16,8 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.counter
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -25,11 +24,11 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
-class CounterNameSelectionViewModel (application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
+class CounterNameSelectionViewModel @Inject constructor(
+    editionRepository: EditionRepository,
+) : ViewModel() {
 
     val counterNames: Flow<Set<String>> = editionRepository.editionState.allEditedEvents
         .combine(editionRepository.editionState.editedEventActionsState) { allEditedEvents, currentActions ->

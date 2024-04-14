@@ -16,14 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.copy
 
-import android.app.Application
 import android.graphics.Bitmap
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
@@ -34,17 +33,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
-/**
- * View model for the [ConditionCopyDialog].
- * @param application the Android application.
- */
-class ConditionCopyModel(application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application)
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
+/** View model for the [ConditionCopyDialog]. */
+class ConditionCopyModel @Inject constructor(
+    private val repository: IRepository,
+    editionRepository: EditionRepository,
+) : ViewModel() {
 
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)

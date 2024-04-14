@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,30 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.more
 
-import android.app.Application
-import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
-import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import android.content.Context
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
+
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class MoreViewModel(application: Application) : AndroidViewModel(application) {
+class MoreViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+) : ViewModel() {
 
-    private val debuggingRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(application)
+    private val debuggingRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(context)
 
     /** Tells if the debug view is enabled or not. */
-    private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled(application))
+    private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled(context))
     val isDebugViewEnabled: Flow<Boolean> = _isDebugViewEnabled
 
     /** Tells if the debug report is enabled or not. */
-    private val _isDebugReportEnabled = MutableStateFlow(debuggingRepository.isDebugReportEnabled(application))
+    private val _isDebugReportEnabled = MutableStateFlow(debuggingRepository.isDebugReportEnabled(context))
     val isDebugReportEnabled: Flow<Boolean> = _isDebugReportEnabled
 
     /** Tells if a debug report is available. */

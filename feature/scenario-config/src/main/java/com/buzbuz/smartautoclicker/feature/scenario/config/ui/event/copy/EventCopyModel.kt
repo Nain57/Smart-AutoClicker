@@ -16,10 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy
 
-import android.app.Application
-
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -36,17 +34,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-/**
- * View model for the [EventCopyDialog].
- *
- * @param application the Android application.
- */
+/** View model for the [EventCopyDialog]. */
 @OptIn(ExperimentalCoroutinesApi::class)
-class EventCopyModel(application: Application) : AndroidViewModel(application) {
-
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
+class EventCopyModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
     private val requestTriggerEvents: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private val searchQuery = MutableStateFlow<String?>(null)

@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
 import android.content.Context
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getSwipeDuratio
 
 internal class EditionDefaultValues(context: Context) {
 
-    private val scenarioRepository: Repository = Repository.getRepository(context)
+    private val scenarioRepository: IRepository = IRepository.getRepository(context)
 
     internal fun isTutorialModeEnabled(): Boolean = scenarioRepository.isTutorialModeEnabled()
 

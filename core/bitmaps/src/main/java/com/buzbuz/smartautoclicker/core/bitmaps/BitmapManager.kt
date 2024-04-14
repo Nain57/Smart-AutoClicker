@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,68 +16,110 @@
  */
 package com.buzbuz.smartautoclicker.core.bitmaps
 
-import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
+import android.util.LruCache
 
-/** Manages the bitmaps for the click conditions. */
-interface BitmapManager {
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.nio.ByteBuffer
+import javax.inject.Inject
+
+/**
+ * Manages the bitmaps for the event conditions.
+ * Handle the save/load into the persistent memory, as well as the cache loading them in ram.
+ *
+ * @param appDataDir the directory where all bitmaps will be saved/loaded.
+ */
+internal class BitmapManager @Inject constructor(
+    private val appDataDir: File,
+) : IBitmapManager {
 
     companion object {
-        /** Singleton preventing multiple instances of the repository at the same time. */
-        @Volatile
-        private var INSTANCE: BitmapManager? = null
+        /** Tag for logs */
+        private const val TAG = "BitmapManager"
+        /** The ratio of the total application size for the size of the bitmap cache in the memory. */
+        private const val CACHE_SIZE_RATIO = 0.5
+    }
 
-        /**
-         * Get the repository singleton, or instantiates it if it wasn't yet.
-         *
-         * @param context the Android context.
-         *
-         * @return the repository singleton.
-         */
-        fun getBitmapManager(context: Context): BitmapManager {
-            return INSTANCE ?: synchronized(this) {
-                val instance = BitmapManagerImpl(context.filesDir)
-                INSTANCE = instance
-                instance
+    /** Cache for the bitmaps loaded in memory. */
+    private val memoryCache: LruCache<String, Bitmap> = object
+        : LruCache<String, Bitmap>(((Runtime.getRuntime().maxMemory() / 1024).toInt() * CACHE_SIZE_RATIO).toInt()) {
+
+        override fun sizeOf(key: String, bitmap: Bitmap): Int {
+            // The cache size will be measured in kilobytes rather than number of items.
+            return bitmap.byteCount / 1024
+        }
+    }
+
+    override suspend fun saveBitmap(bitmap: Bitmap, prefix: String) : String {
+        val uncompressedBuffer = ByteBuffer.allocateDirect(bitmap.byteCount)
+        bitmap.copyPixelsToBuffer(uncompressedBuffer)
+        uncompressedBuffer.position(0)
+
+        val path = "$prefix${uncompressedBuffer.hashCode()}"
+        val file = File(appDataDir, path)
+        if (!file.exists()) {
+            Log.d(TAG, "Saving $path")
+
+            withContext(Dispatchers.IO) {
+                FileOutputStream(file).use {
+                    it.channel.write(uncompressedBuffer)
+                }
+            }
+        }
+
+        memoryCache.put(path, bitmap)
+
+        return path
+    }
+
+    override suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap? {
+        var cachedBitmap = memoryCache.get(path)
+        if (cachedBitmap != null) {
+            return cachedBitmap
+        }
+
+        val file = File(appDataDir, path)
+        if (!file.exists()) {
+            Log.e(TAG, "Invalid path $path, bitmap file can't be found.")
+            return null
+        }
+
+        return withContext(context = Dispatchers.IO) {
+            FileInputStream(file).use {
+                Log.d(TAG, "Loading $path")
+
+                val buffer = ByteBuffer.allocateDirect(it.channel.size().toInt())
+                it.channel.read(buffer)
+                buffer.position(0)
+
+                cachedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                cachedBitmap.copyPixelsFromBuffer(buffer)
+
+                memoryCache.put(path, cachedBitmap)
+                cachedBitmap
             }
         }
     }
 
-    /**
-     * Save the provided bitmap into the persistent memory.
-     * If the bitmap is already saved, does nothing.
-     *
-     * @param bitmap the bitmap to be saved on the persistent memory.
-     *
-     * @return the path of the bitmap.
-     */
-    suspend fun saveBitmap(bitmap: Bitmap, prefix: String = CONDITION_FILE_PREFIX) : String
+    override fun deleteBitmaps(paths: List<String>) {
+        for (path in paths) {
+            val file = File(appDataDir, path)
+            if (!file.exists()) {
+                return
+            }
 
-    /**
-     * Load a bitmap.
-     * If it was already loaded, returns immediately with the value from the cache. If not, load it from the persistent
-     * memory.
-     *
-     * @param path the path of the bitmap.
-     * @param width the width of the bitmap.
-     * @param height the height of the bitmap.
-     *
-     * @return the loaded bitmap, or null if the path is invalid
-     */
-    suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap?
+            Log.d(TAG, "Deleting $path")
+            file.delete()
+        }
+    }
 
-    /**
-     * Delete the specified bitmaps from the persistent memory.
-     *
-     * @param paths the paths of the bitmaps to be deleted.
-     */
-    fun deleteBitmaps(paths: List<String>)
-
-    /** Release the cache of bitmaps. */
-    fun releaseCache()
+    override fun releaseCache() {
+        memoryCache.evictAll()
+    }
 }
-
-/** The prefix appended to all bitmap file names. */
-const val CONDITION_FILE_PREFIX = "Condition_"
-/** The prefix appended to all bitmap file names. */
-const val TUTORIAL_CONDITION_FILE_PREFIX = "Tutorial_Condition_"

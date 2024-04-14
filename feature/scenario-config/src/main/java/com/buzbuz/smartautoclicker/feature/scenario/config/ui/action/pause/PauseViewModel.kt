@@ -16,10 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.pause
 
-import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.toDurationMs
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putPauseDurationConfig
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -42,18 +43,20 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-class PauseViewModel(application: Application) : AndroidViewModel(application) {
+class PauseViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredPause = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Action.Pause>()
     /** Event configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
+    private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction

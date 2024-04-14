@@ -45,10 +45,10 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionImageBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.TryElementOverlayMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
@@ -63,7 +63,10 @@ class ImageConditionDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ConditionViewModel by viewModels()
+    private val viewModel: ImageConditionViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { imageConditionViewModel() },
+    )
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigConditionImageBinding
@@ -234,7 +237,7 @@ class ImageConditionDialog(
 
     private fun showDetectionAreaSelector() {
         debounceUserInteraction {
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = ImageConditionAreaSelectorMenu(
                     onAreaSelected = viewModel::setDetectionArea,
@@ -258,7 +261,7 @@ class ImageConditionDialog(
 
     private fun showTryElementMenu() {
         viewModel.getTryInfo()?.let { (scenario, imageCondition) ->
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = TryElementOverlayMenu(scenario, imageCondition),
                 hideCurrent = true,

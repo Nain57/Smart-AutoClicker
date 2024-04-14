@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.Ac
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.ActionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.changecounter.ChangeCounterDialog
@@ -53,7 +53,10 @@ import kotlinx.coroutines.launch
 class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: ActionsViewModel by viewModels()
+    private val viewModel: ActionsViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { actionsViewModel() },
+    )
 
     /** TouchHelper applied to [actionAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(ActionReorderTouchHelper())
@@ -152,7 +155,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             )
             actionTypeSelectionDialog = dialog
 
-            OverlayManager.getInstance(context).navigateTo(
+            dialogController.overlayManager.navigateTo(
                 context = context,
                 newOverlay = dialog,
             )
@@ -161,7 +164,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onCopyButtonClicked() {
         debounceUserInteraction {
-            OverlayManager.getInstance(context).navigateTo(
+            dialogController.overlayManager.navigateTo(
                 context = context,
                 newOverlay = ActionCopyDialog(
                     onActionSelected = { newCopyAction ->
@@ -232,7 +235,7 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             else -> throw IllegalArgumentException("Not yet supported")
         }
 
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = overlay,
             hideCurrent = true,

@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentScenarioConfigBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
 
@@ -51,7 +52,10 @@ import kotlin.math.roundToInt
 class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: ScenarioConfigViewModel by viewModels()
+    private val viewModel: ScenarioConfigViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { scenarioConfigViewModel() },
+    )
 
     private lateinit var viewBinding: ContentScenarioConfigBinding
 

@@ -16,12 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
@@ -34,15 +33,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CaptureViewModel(application: Application) : AndroidViewModel(application)  {
-
-    /** Provides screen images. */
-    private val displayRecorder: DisplayRecorder = DisplayRecorder.getInstance()
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class CaptureViewModel @Inject constructor(
+    private val displayRecorder: DisplayRecorder,
+    private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel()  {
 
     fun takeScreenshot(resultCallback: (Bitmap) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {

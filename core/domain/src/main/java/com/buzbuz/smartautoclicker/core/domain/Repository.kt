@@ -16,178 +16,135 @@
  */
 package com.buzbuz.smartautoclicker.core.domain
 
-import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
+import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.domain.data.ScenarioDataSource
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainTriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
 /**
- * Repository storing the information about the scenarios and their events.
+ * Repository for the database and bitmap manager.
  * Provide the access to the scenario, events, actions and conditions from the database and the conditions bitmap from
  * the application data folder.
+ *
+ * @param database the database containing the list of scenario.
+ * @param bitmapManager save and loads the bitmap for the conditions.
  */
-interface Repository {
+internal class Repository @Inject internal constructor(
+    private val database: ClickDatabase,
+    private val tutorialDatabase: TutorialDatabase,
+    private val bitmapManager: IBitmapManager,
+): IRepository {
 
-    companion object {
+    private val dataSource: ScenarioDataSource = ScenarioDataSource(database, bitmapManager)
 
-        /** Singleton preventing multiple instances of the repository at the same time. */
-        @Volatile
-        private var INSTANCE: Repository? = null
 
-        /**
-         * Get the repository singleton, or instantiates it if it wasn't yet.
-         *
-         * @param context the Android context.
-         *
-         * @return the repository singleton.
-         */
-        fun getRepository(context: Context): Repository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = RepositoryImpl(
-                    ClickDatabase.getDatabase(context),
-                    TutorialDatabase.getDatabase(context),
-                    BitmapManager.getBitmapManager(context),
-                )
-                INSTANCE = instance
-                instance
+    override val scenarios: Flow<List<Scenario>> =
+        dataSource.scenarios.mapList { it.toDomain() }
+
+    override val allImageEvents: Flow<List<ImageEvent>> =
+        dataSource.allImageEvents.mapList { it.toDomainImageEvent() }
+
+    override val allTriggerEvents: Flow<List<TriggerEvent>> =
+        dataSource.allTriggerEvents.mapList { it.toDomainTriggerEvent() }
+
+    override val allConditions: Flow<List<Condition>> =
+        dataSource.getAllConditions().mapList { it.toDomain() }
+
+    override val allActions: Flow<List<Action>> =
+        dataSource.getAllActions().mapList { it.toDomain() }
+
+    override suspend fun getScenario(scenarioId: Long): Scenario? =
+        dataSource.getScenario(scenarioId)?.toDomain()
+
+    override fun getEventsFlow(scenarioId: Long): Flow<List<Event>> =
+        getImageEventsFlow(scenarioId).combine(getTriggerEventsFlow(scenarioId)) { imgEvts, trigEvts ->
+            buildList {
+                addAll(imgEvts)
+                addAll(trigEvts)
             }
         }
+
+    override suspend fun getImageEvents(scenarioId: Long): List<ImageEvent> =
+        dataSource.getImageEvents(scenarioId).map { it.toDomainImageEvent() }
+
+    override fun getImageEventsFlow(scenarioId: Long): Flow<List<ImageEvent>> =
+        dataSource.getImageEventsFlow(scenarioId).mapList { it.toDomainImageEvent() }
+
+    override suspend fun getTriggerEvents(scenarioId: Long): List<TriggerEvent> =
+        dataSource.getTriggerEvents(scenarioId).map { it.toDomainTriggerEvent() }
+
+    override fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>> =
+        dataSource.getTriggerEventsFlow(scenarioId).mapList { it.toDomainTriggerEvent() }
+
+    override suspend fun addScenario(scenario: Scenario): Long =
+        dataSource.addScenario(scenario)
+
+    override suspend fun deleteScenario(scenarioId: Identifier): Unit =
+        dataSource.deleteScenario(scenarioId)
+
+    override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? =
+        dataSource.importScenario(completeScenario)
+
+    override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
+        dataSource.updateScenario(scenario, events)
+
+    override suspend fun saveConditionBitmap(bitmap: Bitmap): String {
+        return bitmapManager.saveBitmap(
+            bitmap,
+            if (dataSource.currentDatabase.value == tutorialDatabase) TUTORIAL_CONDITION_FILE_PREFIX
+            else CONDITION_FILE_PREFIX,
+        )
     }
 
-    /** The list of scenarios. */
-    val scenarios: Flow<List<Scenario>>
-    /** All image events from all scenarios.  */
-    val allImageEvents: Flow<List<ImageEvent>>
-    /** All trigger events from all scenarios. */
-    val allTriggerEvents: Flow<List<TriggerEvent>>
-    /** All conditions from all events. */
-    val allConditions: Flow<List<Condition>>
-    /** All actions from all events. */
-    val allActions: Flow<List<Action>>
+    override suspend fun getConditionBitmap(condition: ImageCondition): Bitmap? =
+        bitmapManager.loadBitmap(condition.path, condition.area.width(), condition.area.height())
 
-    /**
-     * Add a new scenario.
-     *
-     * @param scenario the scenario to add.
-     * @return the identifier for the newly add scenario.
-     */
-    suspend fun addScenario(scenario: Scenario): Long
+    override suspend fun cleanupUnusedBitmaps(removedPath: List<String>) {
+        dataSource.clearRemovedConditionsBitmaps(removedPath)
+    }
 
-    /**
-     * Create a copy of a scenario and insert it in the database.
-     *
-     * @param completeScenario the scenario to copy.
-     *
-     * @return the database id of the copy, or null if the copy has encountered an error.
-     */
-    suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long?
-
-    /**
-     * Update a scenario.
-     *
-     * @param scenario the scenario to update.
-     * @param events the list of event for the scenario.
-     */
-    suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean
-
-    /**
-     * Delete a scenario.
-     * This will delete all of its actions and conditions as well. All associated bitmaps will be removed in unused.
-     *
-     * @param scenarioId the identifier of the scenario to delete.
-     */
-    suspend fun deleteScenario(scenarioId: Identifier)
-
-    /**
-     * Get the requested scenario.
-     *
-     * @param scenarioId the identifier of the scenario.
-     * @return the scenario.
-     */
-    suspend fun getScenario(scenarioId: Long): Scenario?
-
-    /**
-     * Get the list of events for a given scenario.
-     *
-     * @param scenarioId the identifier of the scenario.
-     * @return the list of image events.
-     */
-    fun getEventsFlow(scenarioId: Long): Flow<List<Event>>
-
-    /**
-     * Get the list of image events for a given scenario.
-     *
-     * @param scenarioId the identifier of the scenario.
-     * @return the list of image events.
-     */
-    suspend fun getImageEvents(scenarioId: Long): List<ImageEvent>
-
-    /**
-     * Get the list of complete image events for a given scenario.
-     *
-     * @param scenarioId the identifier of the scenario to ge the events from.
-     * @return the list of image events, ordered by execution priority.
-     */
-    fun getImageEventsFlow(scenarioId: Long): Flow<List<ImageEvent>>
-
-    /**
-     * Get the list of trigger events for a given scenario.
-     *
-     * @param scenarioId the identifier of the scenario.
-     * @return the list of trigger events.
-     */
-    suspend fun getTriggerEvents(scenarioId: Long): List<TriggerEvent>
-
-    /**
-     * Get the list of complete trigger events for a given scenario.
-     *
-     * @param scenarioId the identifier of the scenario to ge the events from.
-     * @return the list of trigger events.
-     */
-    fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>>
+    override fun cleanCache(): Unit =
+        bitmapManager.releaseCache()
 
 
-    /**
-     * Save the provided bitmap into the persistent memory.
-     * If the bitmap is already saved, does nothing.
-     *
-     * @param bitmap the bitmap to be saved on the persistent memory.
-     *
-     * @return the path of the bitmap.
-     */
-    suspend fun saveConditionBitmap(bitmap: Bitmap): String
+    override fun startTutorialMode() {
+        Log.d(TAG, "Start tutorial mode, use tutorial database")
+        dataSource.currentDatabase.value = tutorialDatabase
+    }
 
-    /**
-     * Get the bitmap for the given image condition.
-     * Bitmaps are automatically cached by the bitmap manager.
-     *
-     * @param condition the condition to get the bitmap from.
-     *
-     * @return the bitmap, or null if the path can't be found.
-     */
-    suspend fun getConditionBitmap(condition: ImageCondition): Bitmap?
+    override fun stopTutorialMode() {
+        Log.d(TAG, "Stop tutorial mode, use regular database")
+        dataSource.currentDatabase.value = database
+    }
 
-    suspend fun cleanupUnusedBitmaps(removedPath: List<String>)
+    override fun isTutorialModeEnabled(): Boolean =
+        dataSource.currentDatabase.value == tutorialDatabase
 
-    /** Clean the cache of this repository. */
-    fun cleanCache()
-
-    fun startTutorialMode()
-
-    fun stopTutorialMode()
-
-    fun isTutorialModeEnabled(): Boolean
 }
+
+/** Tag for logs. */
+private const val TAG = "RepositoryImpl"

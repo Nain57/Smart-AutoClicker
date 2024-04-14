@@ -18,6 +18,7 @@
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.androidxNavigationSafeArgs)
+    alias(libs.plugins.buzbuz.hilt)
 }
 
 android {

@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.config
 
-import android.app.Application
 import android.content.Context
 
 import androidx.annotation.DrawableRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
@@ -37,20 +36,16 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 import kotlin.math.max
 import kotlin.math.min
 
-/**
- * View model for the [ScenarioConfigContent].
- *
- * @param application the Android application.
- */
-class ScenarioConfigViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** The repository for the pro mode billing. */
-    private val billingRepository = IBillingRepository.getRepository(application)
+/** View model for the [ScenarioConfigContent]. */
+class ScenarioConfigViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+    private val billingRepository: IBillingRepository,
+) : ViewModel() {
 
     /** Currently configured scenario. */
     private val configuredScenario = editionRepository.editionState.scenarioState

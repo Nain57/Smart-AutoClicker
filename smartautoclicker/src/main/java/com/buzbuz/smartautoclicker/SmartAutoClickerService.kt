@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,11 +39,16 @@ import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
+import dagger.hilt.android.AndroidEntryPoint
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
+import javax.inject.Inject
 
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -62,6 +67,7 @@ import kotlin.coroutines.suspendCoroutine
  * displayed activity. This injection is made by the [dispatchGesture] method, which is called everytime an event has
  * been detected.
  */
+@AndroidEntryPoint
 class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
     companion object {
@@ -112,6 +118,10 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     private val localService: LocalService?
         get() = LOCAL_SERVICE_INSTANCE as? LocalService
 
+    @Inject lateinit var overlayManager: OverlayManager
+    @Inject lateinit var displayMetrics: DisplayMetrics
+    @Inject lateinit var detectionRepository: DetectionRepository
+
     private var currentScenarioName: String? = null
 
     /** Receives commands from the notification. */
@@ -132,6 +142,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
         LOCAL_SERVICE_INSTANCE = LocalService(
             context = this,
+            overlayManager = overlayManager,
+            displayMetrics = displayMetrics,
+            detectionRepository = detectionRepository,
             androidExecutor = this,
             onStart = { isSmart, name ->
                 currentScenarioName = name

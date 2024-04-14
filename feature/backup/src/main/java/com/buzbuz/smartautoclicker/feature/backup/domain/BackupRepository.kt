@@ -21,7 +21,7 @@ import android.graphics.Point
 import android.net.Uri
 
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
@@ -56,7 +56,7 @@ internal class BackupRepository private constructor(context: Context) {
     private val smartDatabase: ClickDatabase = ClickDatabase.getDatabase(context)
 
     private val dumbRepository: DumbRepository = DumbRepository.getRepository(context)
-    private val smartRepository: Repository = Repository.getRepository(context)
+    private val smartRepository: IRepository = IRepository.getRepository(context)
 
     private val backupEngine: BackupEngine = BackupEngine(
         appDataDir = context.filesDir,

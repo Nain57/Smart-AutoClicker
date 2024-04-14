@@ -44,7 +44,9 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionSwipeBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -55,9 +57,10 @@ class SwipeDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: SwipeViewModel by lazy {
-        ViewModelProvider(this).get(SwipeViewModel::class.java)
-    }
+    private val viewModel: SwipeViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { swipeViewModel() },
+    )
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionSwipeBinding
@@ -169,7 +172,7 @@ class SwipeDialog(
 
     private fun showPositionSelector() {
         viewModel.getEditedSwipe()?.let { swipe ->
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
                     actionDescription = SwipeDescription(

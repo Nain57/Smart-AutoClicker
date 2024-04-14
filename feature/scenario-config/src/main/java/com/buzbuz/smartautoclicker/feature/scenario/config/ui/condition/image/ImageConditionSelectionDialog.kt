@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
@@ -38,6 +39,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ItemImage
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.bind
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.EntryPoints
 
 import kotlinx.coroutines.Job
 
@@ -48,7 +50,9 @@ class ImageConditionSelectionDialog(
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+    private val monitoredViewsManager: MonitoredViewsManager by lazy {
+        EntryPoints.get(context.applicationContext, UiEntryPoint::class.java).monitoredViewManager()
+    }
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseSelectionBinding
 

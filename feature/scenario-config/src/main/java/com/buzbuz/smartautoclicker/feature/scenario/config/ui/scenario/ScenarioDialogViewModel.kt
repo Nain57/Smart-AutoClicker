@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,28 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario
 
-import android.app.Application
 import android.view.View
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import kotlinx.coroutines.FlowPreview
 
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import javax.inject.Inject
 
 /** ViewModel for the [ScenarioDialog] and its content. */
 @OptIn(FlowPreview::class)
-class ScenarioDialogViewModel(application: Application): AndroidViewModel(application) {
-
-    private val editionRepository: EditionRepository = EditionRepository.getInstance(application)
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class ScenarioDialogViewModel @Inject constructor(
+    editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+): ViewModel() {
 
     /**
      * Tells if all content have their field correctly configured.

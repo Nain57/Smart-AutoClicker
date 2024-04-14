@@ -22,7 +22,7 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -43,8 +43,14 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
 
+import javax.inject.Inject
+import javax.inject.Singleton
+
 @OptIn(ExperimentalCoroutinesApi::class)
-class DetectionRepository private constructor(context: Context) {
+@Singleton
+class DetectionRepository @Inject constructor(
+    private val scenarioRepository: IRepository,
+) {
 
     companion object {
 
@@ -59,15 +65,12 @@ class DetectionRepository private constructor(context: Context) {
          */
         fun getDetectionRepository(context: Context): DetectionRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DetectionRepository(context)
+                val instance = DetectionRepository(IRepository.getRepository(context))
                 INSTANCE = instance
                 instance
             }
         }
     }
-
-    /** Repository providing data for the scenario. */
-    private val scenarioRepository = Repository.getRepository(context)
 
     /** Engine controlling the screen recording and the scenario processing. */
     private val detectorEngine: MutableStateFlow<DetectorEngine?> = MutableStateFlow(null)

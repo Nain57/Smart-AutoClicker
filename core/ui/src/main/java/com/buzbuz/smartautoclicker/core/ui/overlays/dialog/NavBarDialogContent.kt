@@ -31,11 +31,9 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponentBuilderEntryPoint
-import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.ViewModelEntryPoint
-import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.createHiltViewModelFactory
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.createHiltViewModelFactory
 import dagger.hilt.EntryPoints
 
 abstract class NavBarDialogContent(
@@ -178,19 +176,25 @@ abstract class NavBarDialogContent(
     open fun createCopyButtonsAreAvailable(): Boolean = false
 }
 
-inline fun <reified VM : ViewModel, EP : ViewModelEntryPoint> NavBarDialogContent.viewModels(entryPoint: Class<EP>): Lazy<VM> =
+inline fun <reified VM : ViewModel, EP : Any> NavBarDialogContent.viewModels(
+    entryPoint: Class<EP>,
+    crossinline creator: EP.() -> VM,
+): Lazy<VM> =
     ViewModelLazy(
         VM::class,
         { viewModelStore },
-        { hiltComponent.createHiltViewModelFactory(entryPoint) },
+        { hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
         { defaultViewModelCreationExtras },
     )
 
-inline fun <reified VM : ViewModel, EP : ViewModelEntryPoint> NavBarDialogContent.dialogViewModels(entryPoint: Class<EP>): Lazy<VM> =
+inline fun <reified VM : ViewModel, EP : Any> NavBarDialogContent.dialogViewModels(
+    entryPoint: Class<EP>,
+    crossinline creator: EP.() -> VM,
+): Lazy<VM> =
     ViewModelLazy(
         VM::class,
         { viewModelStore },
-        { dialogController.hiltComponent.createHiltViewModelFactory(entryPoint) },
+        { dialogController.hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
         { defaultViewModelCreationExtras },
     )
 

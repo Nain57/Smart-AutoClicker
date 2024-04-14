@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,9 @@ import android.graphics.Rect
 import android.view.View
 
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class MonitoredViewsManager private constructor() {
+class MonitoredViewsManager @Inject constructor() {
 
     companion object {
 

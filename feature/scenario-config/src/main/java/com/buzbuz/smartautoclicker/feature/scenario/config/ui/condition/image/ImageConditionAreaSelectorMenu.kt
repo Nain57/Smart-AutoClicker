@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.views.areaselector.AreaSelectorView
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayValidationMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,10 @@ class ImageConditionAreaSelectorMenu(
 ) : OverlayMenu() {
 
     /** The view model for this dialog. */
-    private val viewModel: ConditionAreaSelectorViewModel by viewModels()
+    private val viewModel: ImageConditionAreaSelectorViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { imageConditionAreaSelectorViewModel() },
+    )
 
     /** The view binding for the overlay menu. */
     private lateinit var viewBinding: OverlayValidationMenuBinding

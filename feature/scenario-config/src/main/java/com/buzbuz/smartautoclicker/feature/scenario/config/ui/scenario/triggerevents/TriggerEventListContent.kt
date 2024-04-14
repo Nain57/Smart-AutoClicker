@@ -30,9 +30,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy.EventCopyDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
@@ -43,7 +43,10 @@ import kotlinx.coroutines.launch
 class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: TriggerEventListViewModel by viewModels()
+    private val viewModel: TriggerEventListViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { triggerEventListViewModel() },
+    )
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: IncludeLoadableListBinding
@@ -152,7 +155,7 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
 
     /** Opens the dialog allowing the user to copy an event. */
     private fun showTriggerEventCopyDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = EventCopyDialog(
                 requestTriggerEvents = true,
@@ -167,7 +170,7 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
     private fun showTriggerEventConfigDialog(item: TriggerEvent) {
         viewModel.startEventEdition(item)
 
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = EventDialog(
                 onConfigComplete = viewModel::saveEventEdition,

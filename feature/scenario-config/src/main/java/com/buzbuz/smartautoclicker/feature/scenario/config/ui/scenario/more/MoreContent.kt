@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,15 +24,15 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentMoreBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.report.DebugReportDialog
 
 import kotlinx.coroutines.launch
@@ -40,7 +40,10 @@ import kotlinx.coroutines.launch
 class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: MoreViewModel by lazy { ViewModelProvider(this).get(MoreViewModel::class.java) }
+    private val viewModel: MoreViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { moreViewModel() },
+    )
     /** View binding for this content. */
     private lateinit var viewBinding: ContentMoreBinding
 
@@ -102,7 +105,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun showDebugReport() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = DebugReportDialog(),
         )

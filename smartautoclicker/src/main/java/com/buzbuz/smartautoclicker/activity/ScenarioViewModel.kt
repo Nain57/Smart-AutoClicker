@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,27 @@
 package com.buzbuz.smartautoclicker.activity
 
 import android.Manifest
-import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 
 import androidx.core.content.PermissionChecker
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
-class ScenarioViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class ScenarioViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+) : ViewModel() {
 
     /** Callback upon the availability of the [SmartAutoClickerService]. */
     private val serviceConnection: (SmartAutoClickerService.ILocalService?) -> Unit = { localService ->
@@ -51,7 +57,7 @@ class ScenarioViewModel(application: Application) : AndroidViewModel(application
 
         notificationManager =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                application.getSystemService(NotificationManager::class.java)
+                context.getSystemService(NotificationManager::class.java)
             else null
     }
 

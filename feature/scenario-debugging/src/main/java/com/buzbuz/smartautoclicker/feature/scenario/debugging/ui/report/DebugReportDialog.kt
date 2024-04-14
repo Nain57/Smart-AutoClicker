@@ -82,10 +82,9 @@ class DebugReportDialog : OverlayDialog(R.style.AppTheme) {
     }
 
     private fun showConditionReportDialog(conditionReport: ConditionReport) {
-        OverlayManager.getInstance(context)
-            .navigateTo(
-                context = context,
-                newOverlay = DebugReportConditionDialog(conditionReport),
-            )
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = DebugReportConditionDialog(conditionReport),
+        )
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentApi
@@ -32,9 +31,10 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ActionsSelectionViewModel(application: Application) : AndroidViewModel(application) {
+class IntentActionsSelectionViewModel @Inject constructor() : ViewModel() {
 
     private val selectedAction: MutableStateFlow<String?> = MutableStateFlow(null)
     private val getBroadcastActions: MutableStateFlow<Boolean?> = MutableStateFlow(null)

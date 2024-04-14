@@ -67,7 +67,7 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
     }
 
     private fun onSkipAllClicked() {
-        OverlayManager.getInstance(context).restoreVisibility()
+        overlayManager.restoreVisibility()
         viewModel.toLastTutorialStep()
     }
 

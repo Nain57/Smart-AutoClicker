@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,30 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.component
 
-import android.app.Application
+import android.content.Context
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
 import com.buzbuz.smartautoclicker.core.android.application.getAllAndroidApplicationsInfo
+
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 
-/**
- * View model for the [ComponentSelectionDialog].
- * @param application the Android application.
- */
-class ComponentSelectionModel(application: Application) : AndroidViewModel(application) {
+/** View model for the [ComponentSelectionDialog]. */
+class ComponentSelectionModel @Inject constructor(
+    @ApplicationContext context: Context,
+) : ViewModel() {
 
     /** Retrieves the list of activities visible on the Android launcher. */
     val activities: Flow<List<AndroidApplicationInfo>> = flow {
         emit(
-            getAllAndroidApplicationsInfo(application.packageManager)
+            getAllAndroidApplicationsInfo(context.packageManager)
             .sortedBy { it.name.lowercase() })
     }.flowOn(Dispatchers.IO)
 

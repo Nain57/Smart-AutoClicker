@@ -34,10 +34,11 @@ import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.lifecycleScope
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponentBuilderEntryPoint
-import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.ViewModelEntryPoint
-import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.createHiltViewModelFactory
+import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.createHiltViewModelFactory
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
 import com.google.android.material.color.DynamicColors
@@ -66,9 +67,16 @@ abstract class BaseOverlay internal constructor(
 
     /** The context for this overlay. */
     override lateinit var context: Context
+
     /** The metrics of the device screen. */
     protected val displayMetrics: DisplayMetrics by lazy {
-        DisplayMetrics.getInstance(context)
+        EntryPoints.get(context.applicationContext, DisplayEntryPoint::class.java)
+            .displayMetrics()
+    }
+
+    val overlayManager: OverlayManager by lazy {
+        EntryPoints.get(context.applicationContext, UiEntryPoint::class.java)
+            .overlayManager()
     }
 
     val hiltComponent: OverlayComponent by lazy {
@@ -112,7 +120,7 @@ abstract class BaseOverlay internal constructor(
     }
 
     override fun back() {
-        if (!OverlayManager.getInstance(context).navigateUp(context)) {
+        if (!overlayManager.navigateUp(context)) {
             Log.w(TAG, "Overlay ${hashCode()} can't be removed from back stack, destroying manually...")
             destroy()
         }
@@ -319,11 +327,14 @@ abstract class BaseOverlay internal constructor(
     private fun toDumpString() = "${javaClass.simpleName}@${hashCode()}"
 }
 
-inline fun <reified VM : ViewModel, EP : ViewModelEntryPoint> BaseOverlay.viewModels(entryPoint: Class<EP>): Lazy<VM> =
+inline fun <reified VM : ViewModel, EP : Any> BaseOverlay.viewModels(
+    entryPoint: Class<EP>,
+    crossinline creator: EP.() -> VM,
+): Lazy<VM> =
     ViewModelLazy(
         VM::class,
         { viewModelStore },
-        { hiltComponent.createHiltViewModelFactory(entryPoint) },
+        { hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
         { defaultViewModelCreationExtras },
     )
 

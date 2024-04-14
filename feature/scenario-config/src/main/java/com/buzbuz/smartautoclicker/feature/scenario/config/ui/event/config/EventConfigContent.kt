@@ -38,9 +38,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentEventConfigBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.TryElementOverlayMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
@@ -50,7 +50,10 @@ import kotlinx.coroutines.launch
 class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: EventConfigViewModel by viewModels()
+    private val viewModel: EventConfigViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { eventConfigViewModel() },
+    )
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentEventConfigBinding
@@ -156,7 +159,7 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
 
     private fun showTryElementMenu() {
         viewModel.getTryInfo()?.let { (scenario, imageEvent) ->
-            OverlayManager.getInstance(context).navigateTo(
+            dialogController.overlayManager.navigateTo(
                 context = context,
                 newOverlay = TryElementOverlayMenu(scenario, imageEvent),
                 hideCurrent = true,

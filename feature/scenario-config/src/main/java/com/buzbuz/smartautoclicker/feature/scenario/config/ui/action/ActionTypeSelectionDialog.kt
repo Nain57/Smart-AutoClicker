@@ -21,6 +21,7 @@ import android.view.View
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.actions.ActionTypeChoice
 
 class ActionTypeSelectionDialog(
@@ -36,7 +37,10 @@ class ActionTypeSelectionDialog(
 ) {
 
     /** View model for this content. */
-    private val viewModel: ActionTypeSelectionViewModel by viewModels()
+    private val viewModel: ActionTypeSelectionViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { actionTypeSelectionViewModel() },
+    )
 
     override fun onStop() {
         super.onStop()

@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.floatingmenu.di
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
-import com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel.ViewModelEntryPoint
 import com.buzbuz.smartautoclicker.feature.floatingmenu.ui.MainMenuModel
 
 import dagger.hilt.EntryPoint
@@ -25,7 +24,7 @@ import dagger.hilt.InstallIn
 
 @EntryPoint
 @InstallIn(OverlayComponent::class)
-interface MainMenuEntryPoint : ViewModelEntryPoint {
+interface MainMenuEntryPoint {
 
-    override fun viewModel(): MainMenuModel
+    fun mainMenuViewModel(): MainMenuModel
 }

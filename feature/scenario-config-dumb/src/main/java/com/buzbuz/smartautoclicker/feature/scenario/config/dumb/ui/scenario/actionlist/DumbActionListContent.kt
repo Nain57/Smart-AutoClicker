@@ -109,7 +109,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
 
     override fun onCreateButtonClicked() {
         debounceUserInteraction {
-            OverlayManager.getInstance(context).startDumbActionCreationUiFlow(
+            dialogController.overlayManager.startDumbActionCreationUiFlow(
                 context = context,
                 creator = dumbActionCreator,
                 listener = createCopyActionUiFlowListener,
@@ -119,7 +119,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
 
     override fun onCopyButtonClicked() {
         debounceUserInteraction {
-            OverlayManager.getInstance(context).startDumbActionCopyUiFlow(
+            dialogController.overlayManager.startDumbActionCopyUiFlow(
                 context = context,
                 creator = dumbActionCreator,
                 listener = createCopyActionUiFlowListener
@@ -129,7 +129,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
 
     private fun onDumbActionClicked(dumbActionDetails: DumbActionDetails) {
         debounceUserInteraction {
-            OverlayManager.getInstance(context).startDumbActionEditionUiFlow(
+            dialogController.overlayManager.startDumbActionEditionUiFlow(
                 context = context,
                 dumbAction = dumbActionDetails.action,
                 listener = updateActionUiFlowListener,

@@ -171,7 +171,7 @@ class DumbMainMenu(
 
     private fun onShowBriefClicked() {
         viewModel.startEdition(dumbScenarioId) {
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = DumbScenarioBriefMenu(
                     onConfigSaved = viewModel::saveEditions
@@ -183,7 +183,7 @@ class DumbMainMenu(
 
     private fun onDumbScenarioConfigClicked() {
         viewModel.startEdition(dumbScenarioId) {
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = DumbScenarioDialog(
                     onConfigSaved = viewModel::saveEditions,

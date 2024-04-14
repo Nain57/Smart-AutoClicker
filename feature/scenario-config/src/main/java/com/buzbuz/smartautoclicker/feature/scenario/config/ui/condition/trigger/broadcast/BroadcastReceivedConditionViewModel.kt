@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.broadcast
 
-import android.app.Application
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -31,12 +29,12 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-class BroadcastReceivedConditionViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
+class BroadcastReceivedConditionViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
     /** The condition being configured by the user. */
     private val configuredCondition: Flow<TriggerCondition.OnBroadcastReceived> =

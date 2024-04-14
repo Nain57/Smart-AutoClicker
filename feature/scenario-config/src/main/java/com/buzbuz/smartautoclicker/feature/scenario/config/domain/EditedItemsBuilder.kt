@@ -22,7 +22,7 @@ import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
@@ -38,7 +38,7 @@ class EditedItemsBuilder internal constructor(
     private val editor: ScenarioEditor,
 ) {
 
-    private val repository: Repository = Repository.getRepository(context)
+    private val repository: IRepository = IRepository.getRepository(context)
 
     private val defaultValues = EditionDefaultValues(context)
     private val eventsIdCreator = IdentifierCreator()

@@ -38,12 +38,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Entry point activity for the application.
  * Shown when the user clicks on the launcher icon for the application, this activity will displays the list of
  * available scenarios, if any.
  */
+@AndroidEntryPoint
 class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
 
     /** ViewModel providing the click scenarios data to the UI. */

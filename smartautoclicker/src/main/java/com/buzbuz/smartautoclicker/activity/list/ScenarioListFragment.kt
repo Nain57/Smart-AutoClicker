@@ -42,6 +42,7 @@ import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
+import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
 
@@ -49,6 +50,7 @@ import kotlinx.coroutines.launch
  * Fragment displaying the list of click scenario and the creation dialog.
  * If the list is empty, it will hide the list and displays the empty list view.
  */
+@AndroidEntryPoint
 class ScenarioListFragment : Fragment() {
 
     interface Listener {

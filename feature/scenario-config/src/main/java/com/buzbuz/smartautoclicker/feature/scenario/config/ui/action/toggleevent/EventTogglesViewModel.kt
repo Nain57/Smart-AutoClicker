@@ -16,8 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.toggleevent
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -30,11 +29,11 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
-class EventTogglesViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
+class EventTogglesViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
     /**
      * Contains the changes for the events toggle made by the user.

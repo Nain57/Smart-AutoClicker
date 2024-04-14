@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.copy
 
 import android.content.DialogInterface
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -27,7 +26,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.bindings.getDividerWithoutHeader
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -40,7 +41,10 @@ class EventCopyDialog(
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */
-    private val viewModel: EventCopyModel by lazy { ViewModelProvider(this)[EventCopyModel::class.java] }
+    private val viewModel: EventCopyModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { eventCopyModel() },
+    )
     /** Adapter displaying the list of events. */
     private lateinit var eventCopyAdapter: EventCopyAdapter
 

@@ -40,8 +40,8 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBindin
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.CaptureMenu
@@ -58,7 +58,10 @@ import kotlinx.coroutines.launch
 class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: ConditionsViewModel by viewModels()
+    private val viewModel: ConditionsViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { conditionsViewModel() },
+    )
     /** View binding for all views in this content. */
     private lateinit var viewBinding: IncludeLoadableListBinding
 
@@ -226,7 +229,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun showImageConditionCaptureOverlay() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = CaptureMenu(onConditionSelected = ::showImageConditionConfigDialog),
             hideCurrent = true,
@@ -236,7 +239,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun showImageConditionConfigDialog(condition: ImageCondition) {
         viewModel.startConditionEdition(condition)
 
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = ImageConditionDialog(conditionConfigDialogListener),
             hideCurrent = true,
@@ -244,7 +247,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun showTriggerConditionTypeSelectionDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = MultiChoiceDialog(
                 theme = R.style.AppTheme,
@@ -270,7 +273,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
                 TimerReachedConditionDialog(conditionConfigDialogListener)
         }
 
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = configOverlay,
             hideCurrent = true,
@@ -278,7 +281,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun showCopyDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionCopyDialog(
                 onConditionSelected = { conditionSelected ->

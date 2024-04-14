@@ -39,11 +39,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionChangeCounterBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.counter.CounterNameSelectionDialog
 
@@ -56,7 +56,10 @@ class ChangeCounterDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ChangeCounterViewModel by viewModels()
+    private val viewModel: ChangeCounterViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { changeCounterViewModel() }
+    )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionChangeCounterBinding
 
@@ -161,12 +164,11 @@ class ChangeCounterDialog(
     }
 
     private fun showCounterSelectionDialog() {
-        OverlayManager.getInstance(context)
-            .navigateTo(
-                context = context,
-                newOverlay = CounterNameSelectionDialog(viewModel::setCounterName),
-                hideCurrent = true,
-            )
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CounterNameSelectionDialog(viewModel::setCounterName),
+            hideCurrent = true,
+        )
     }
 
     private fun onActionEditingStateChanged(isEditingAction: Boolean) {
