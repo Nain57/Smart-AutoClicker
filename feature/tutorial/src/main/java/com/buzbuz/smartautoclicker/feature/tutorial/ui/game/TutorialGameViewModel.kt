@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
 
-import android.app.Application
 import android.graphics.PointF
 import android.graphics.Rect
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
@@ -34,11 +33,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TutorialGameViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
+class TutorialGameViewModel @Inject constructor(
+    private val tutorialRepository: TutorialRepository,
+) : ViewModel() {
 
     val currentGame: Flow<TutorialGame?> = tutorialRepository.activeGame
 

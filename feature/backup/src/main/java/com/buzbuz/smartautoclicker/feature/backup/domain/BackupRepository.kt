@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,40 +23,24 @@ import android.net.Uri
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
+import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupProgress
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class BackupRepository private constructor(context: Context) {
-
-    companion object {
-
-        /** Singleton preventing multiple instances of the BackupRepository at the same time. */
-        @Volatile
-        private var INSTANCE: BackupRepository? = null
-
-        /**
-         * Get the BackupRepository singleton, or instantiates it if it wasn't yet.
-         * @param context the Android context.
-         * @return the BackupRepository singleton.
-         */
-        fun getInstance(context: Context): BackupRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = BackupRepository(context)
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
-    private val dumbDatabase: DumbDatabase = DumbDatabase.getDatabase(context)
-    private val smartDatabase: ClickDatabase = ClickDatabase.getDatabase(context)
-
-    private val dumbRepository: DumbRepository = DumbRepository.getRepository(context)
-    private val smartRepository: IRepository = IRepository.getRepository(context)
+@Singleton
+class BackupRepository @Inject constructor(
+    @ApplicationContext context: Context,
+    private val dumbDatabase: DumbDatabase,
+    private val dumbRepository: IDumbRepository,
+    private val smartDatabase: ClickDatabase,
+    private val smartRepository: IRepository,
+) {
 
     private val backupEngine: BackupEngine = BackupEngine(
         appDataDir = context.filesDir,

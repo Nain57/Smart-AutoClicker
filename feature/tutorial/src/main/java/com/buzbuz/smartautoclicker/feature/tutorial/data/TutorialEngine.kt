@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.data
 
-import android.content.Context
 import android.graphics.Rect
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
+import kotlinx.coroutines.CoroutineDispatcher
+
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,23 +37,31 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.shareIn
 
-internal class TutorialEngine(context: Context, private val coroutineScope: CoroutineScope) {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    private val overlayManager: OverlayManager = OverlayManager.getInstance(context)
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+@Singleton
+class TutorialEngine @Inject constructor(
+    private val overlayManager: OverlayManager,
+    private val monitoredViewsManager: MonitoredViewsManager,
+    @Dispatcher(Main) private val dispatcherMain: CoroutineDispatcher,
+) {
+
+    private val coroutineScopeMain: CoroutineScope =
+        CoroutineScope(SupervisorJob() + dispatcherMain)
 
     private val _tutorial: MutableStateFlow<TutorialData?> = MutableStateFlow(null)
-    val tutorial: StateFlow<TutorialData?> = _tutorial
+    internal val tutorial: StateFlow<TutorialData?> = _tutorial
 
     private val stepState: MutableStateFlow<TutorialStepState?> = MutableStateFlow(null)
 
-    val currentStep: Flow<TutorialStepData?> = _tutorial
+    internal val currentStep: Flow<TutorialStepData?> = _tutorial
         .flowOnCurrentAndStartedStep()
-        .shareIn(coroutineScope, SharingStarted.WhileSubscribed(3_000), 1)
+        .shareIn(coroutineScopeMain, SharingStarted.WhileSubscribed(3_000), 1)
 
-    fun isStarted(): Boolean = _tutorial.value != null
+    internal fun isStarted(): Boolean = _tutorial.value != null
 
-    fun startTutorial(newTutorial: TutorialData) {
+    internal fun startTutorial(newTutorial: TutorialData) {
         Log.d(TAG, "Start tutorial")
 
         // Keep track of current top of back stack value and monitored views
@@ -59,7 +71,7 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         setStepIndex(0)
     }
 
-    fun nextStep() {
+    internal fun nextStep() {
         val step = getCurrentStep() ?: return
         val index = stepState.value?.index ?: return
 
@@ -71,7 +83,7 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         }
     }
 
-    fun lastStep() {
+    internal fun lastStep() {
         val lastStepIndex = _tutorial.value?.steps?.lastIndex ?: return
         Log.d(TAG, "Go to last step")
         setStepIndex(lastStepIndex)
@@ -104,20 +116,20 @@ internal class TutorialEngine(context: Context, private val coroutineScope: Coro
         )
     }
 
-    fun startGame(area: Rect, targetSize: Int) {
+    internal fun startGame(area: Rect, targetSize: Int) {
         Log.d(TAG, "Start game on area $area with target size $targetSize")
 
-        _tutorial.value?.game?.start(coroutineScope, area, targetSize) { isWon ->
+        _tutorial.value?.game?.start(coroutineScopeMain, area, targetSize) { isWon ->
             stepState.value = stepState.value?.copy(isGameWon = isWon)
         }
     }
 
-    fun onGameTargetHit(target: TutorialGameTargetType) {
+    internal fun onGameTargetHit(target: TutorialGameTargetType) {
         Log.d(TAG, "onTargetHit $target")
         _tutorial.value?.game?.onTargetHit(target)
     }
 
-    fun stopTutorial() {
+    internal fun stopTutorial() {
         Log.d(TAG, "Stop tutorial")
 
         _tutorial.value?.game?.stop()

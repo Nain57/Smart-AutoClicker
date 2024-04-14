@@ -52,13 +52,12 @@ class MainMenuModel @Inject constructor(
     private val detectionRepository: DetectionRepository,
     private val editionRepository: EditionRepository,
     private val billingRepository: IBillingRepository,
+    private val tutorialRepository: TutorialRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     /** The repository for the scenario debugging info. */
     private val debugRepository: DebuggingRepository = DebuggingRepository.getDebuggingRepository(appContext)
-    /** The repository for the tutorials data. */
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(appContext)
 
     /** Tells if the pro mode is purchased. */
     private val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased

@@ -16,11 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief
 
-import android.app.Application
+import android.content.Context
 import android.graphics.Point
 
 import androidx.core.graphics.toPointF
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.toDumbActionDetails
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,10 +39,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(application) {
+class DumbScenarioBriefViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val dumbEditionRepository: DumbEditionRepository,
+) : ViewModel() {
 
-    private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
 
     val canCopyAction: Flow<Boolean> = dumbEditionRepository.actionsToCopy
         .map { it.isNotEmpty() }
@@ -50,7 +54,7 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
         .map { scenario ->
             scenario?.dumbActions?.map { dumbAction ->
                 dumbAction.toDumbActionDetails(
-                    context = application,
+                    context = context,
                     withPositions = false,
                 )
             }
@@ -73,14 +77,14 @@ class DumbScenarioBriefViewModel(application: Application): AndroidViewModel(app
         _actionListSnapIndex.value = index
     }
 
-    fun createNewDumbClick(position: Point): DumbAction.DumbClick =
-        dumbEditionRepository.dumbActionBuilder.createNewDumbClick(getApplication(), position)
+    fun createNewDumbClick(context: Context, position: Point): DumbAction.DumbClick =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbClick(context, position)
 
-    fun createNewDumbSwipe(from: Point, to: Point): DumbAction.DumbSwipe =
-        dumbEditionRepository.dumbActionBuilder.createNewDumbSwipe(getApplication(), from, to)
+    fun createNewDumbSwipe(context: Context, from: Point, to: Point): DumbAction.DumbSwipe =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbSwipe(context, from, to)
 
-    fun createNewDumbPause(): DumbAction.DumbPause =
-        dumbEditionRepository.dumbActionBuilder.createNewDumbPause(getApplication())
+    fun createNewDumbPause(context: Context, ): DumbAction.DumbPause =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbPause(context)
 
     fun createDumbActionCopy(actionToCopy: DumbAction): DumbAction =
         dumbEditionRepository.dumbActionBuilder.createNewDumbActionFrom(actionToCopy)

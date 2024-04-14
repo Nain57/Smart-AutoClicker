@@ -14,25 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.smartautoclicker.feature.tutorial.di
 
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
-    alias(libs.plugins.buzbuz.kotlinSerialization)
-    alias(libs.plugins.buzbuz.hilt)
-}
+import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialOverlayViewModel
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.core.extensions"
-}
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlin.reflect)
-
-    implementation(libs.androidx.appCompat)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.room.ktx)
-
-    testImplementation(libs.kotlinx.coroutines.test)
+@EntryPoint
+@InstallIn(OverlayComponent::class)
+interface TutorialViewModelsEntryPoint {
+    fun tutorialOverlayViewModel(): TutorialOverlayViewModel
 }

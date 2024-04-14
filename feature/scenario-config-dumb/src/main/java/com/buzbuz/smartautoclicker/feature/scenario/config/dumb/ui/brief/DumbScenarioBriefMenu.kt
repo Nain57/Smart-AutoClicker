@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbScenarioBriefMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionUiFlowListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCopyUiFlow
@@ -49,7 +49,10 @@ class DumbScenarioBriefMenu(
 ) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme, recreateOverlayViewOnRotation = true) {
 
     /** The view model for this menu. */
-    private val viewModel: DumbScenarioBriefViewModel by viewModels()
+    private val viewModel: DumbScenarioBriefViewModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbScenarioBriefViewModel() },
+    )
 
     private val actionListSnapHelper: PositionPagerSnapHelper = PositionPagerSnapHelper()
 
@@ -84,9 +87,9 @@ class DumbScenarioBriefMenu(
         dumbActionsAdapter = DumbActionBriefAdapter(displayMetrics, ::onDumbActionCardClicked)
 
         dumbActionCreator = DumbActionCreator(
-            createNewDumbClick = viewModel::createNewDumbClick,
-            createNewDumbSwipe = viewModel::createNewDumbSwipe,
-            createNewDumbPause = viewModel::createNewDumbPause,
+            createNewDumbClick = { position -> viewModel.createNewDumbClick(context, position) },
+            createNewDumbSwipe = { from, to -> viewModel.createNewDumbSwipe(context, from, to) },
+            createNewDumbPause = { viewModel.createNewDumbPause(context) },
             createDumbActionCopy = viewModel::createDumbActionCopy,
         )
         createCopyActionUiFlowListener = DumbActionUiFlowListener(

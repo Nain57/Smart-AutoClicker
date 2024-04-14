@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,37 +16,36 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.copy
 
-import android.app.Application
+import android.content.Context
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.toDumbActionDetails
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-/**
- * View model for the [DumbActionCopyDialog].
- *
- * @param application the Android application.
- */
-class DumbActionCopyModel(application: Application) : AndroidViewModel(application) {
+/** View model for the [DumbActionCopyDialog]. */
+class DumbActionCopyModel @Inject constructor(
+    @ApplicationContext context: Context,
+    dumbEditionRepository: DumbEditionRepository,
+) : ViewModel() {
 
-    /** Maintains the currently configured scenario state. */
-    private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
 
     /** List of all actions available for copy */
     private val allCopyItems: Flow<List<DumbActionCopyItem>> = dumbEditionRepository.actionsToCopy
-        .mapList { dumbAction -> DumbActionCopyItem.DumbActionItem(dumbAction.toDumbActionDetails(application)) }
+        .mapList { dumbAction -> DumbActionCopyItem.DumbActionItem(dumbAction.toDumbActionDetails(context)) }
         .filterIdentical()
         .combine(dumbEditionRepository.editedDumbScenario) { actionsToCopy, scenario ->
             scenario ?: return@combine emptyList()

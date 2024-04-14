@@ -16,10 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.pause
 
-import android.app.Application
 import android.content.Context
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
@@ -37,8 +36,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 
-class DumbPauseViewModel(application: Application) : AndroidViewModel(application) {
+class DumbPauseViewModel @Inject constructor() : ViewModel() {
 
     private val _editedDumbPause: MutableStateFlow<DumbAction.DumbPause?> = MutableStateFlow(null)
     private val editedDumbPause: Flow<DumbAction.DumbPause> = _editedDumbPause.filterNotNull()

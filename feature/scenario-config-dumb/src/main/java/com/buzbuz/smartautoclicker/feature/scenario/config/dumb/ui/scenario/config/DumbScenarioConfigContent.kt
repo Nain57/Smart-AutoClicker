@@ -40,16 +40,21 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.ContentDumbScenarioConfigBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 
 import kotlinx.coroutines.launch
 
 class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
-    private val dialogViewModel: DumbScenarioConfigViewModel by viewModels()
+    private val dialogViewModel: DumbScenarioConfigViewModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbScenarioConfigViewModel() },
+    )
 
     private lateinit var viewBinding: ContentDumbScenarioConfigBinding
     override fun onCreateView(container: ViewGroup): ViewGroup {

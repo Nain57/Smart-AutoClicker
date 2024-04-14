@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.click
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Point
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
@@ -28,14 +27,18 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDumbConf
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putClickPressDurationConfig
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putClickRepeatCountConfig
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putClickRepeatDelayConfig
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 
-class DumbClickViewModel(application: Application) : AndroidViewModel(application) {
+class DumbClickViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+) : ViewModel() {
 
     private val _editedDumbClick: MutableStateFlow<DumbAction.DumbClick?> = MutableStateFlow(null)
     private val editedDumbClick: Flow<DumbAction.DumbClick> = _editedDumbClick.filterNotNull()
@@ -81,7 +84,7 @@ class DumbClickViewModel(application: Application) : AndroidViewModel(applicatio
     /** Subtext for the position selector. */
     val clickPositionText: Flow<String> = editedDumbClick
         .map { dumbClick ->
-            application.getString(
+            context.getString(
                 R.string.item_desc_dumb_click_on_position,
                 dumbClick.position.x,
                 dumbClick.position.y,

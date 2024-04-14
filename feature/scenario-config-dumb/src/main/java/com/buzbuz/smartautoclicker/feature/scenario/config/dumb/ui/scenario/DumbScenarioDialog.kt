@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.actionlist.DumbActionListContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.config.DumbScenarioConfigContent
 
@@ -44,7 +45,10 @@ class DumbScenarioDialog(
 ) : NavBarDialog(R.style.DumbScenarioConfigTheme) {
 
     /** View model for this dialog. */
-    private val viewModel: DumbScenarioViewModel by viewModels()
+    private val viewModel: DumbScenarioViewModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbScenarioViewModel() },
+    )
 
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {

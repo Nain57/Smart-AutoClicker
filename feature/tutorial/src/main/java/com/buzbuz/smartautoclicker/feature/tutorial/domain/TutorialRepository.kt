@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ import android.content.SharedPreferences
 import android.graphics.Rect
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
@@ -39,6 +41,8 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGa
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.toDomain
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.toDomain
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,42 +60,25 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TutorialRepository private constructor(
-    context: Context,
+@Singleton
+class TutorialRepository @Inject constructor(
+    @ApplicationContext context: Context,
+    private val scenarioRepository: IRepository,
+    private val detectionRepository: DetectionRepository,
     private val dataSource: TutorialDataSource,
     private val stateDataSource: TutorialStateDataSource,
+    private val tutorialEngine: TutorialEngine,
+    @Dispatcher(Main) private val dispatcherMain: CoroutineDispatcher,
 ) {
 
-    companion object {
-
-        /** Singleton preventing multiple instances of the TutorialRepository at the same time. */
-        @Volatile
-        private var INSTANCE: TutorialRepository? = null
-
-        /**
-         * Get the TutorialRepository singleton, or instantiates it if it wasn't yet.
-         *
-         * @return the TutorialRepository singleton.
-         */
-        fun getTutorialRepository(context: Context): TutorialRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = TutorialRepository(context, TutorialDataSource, TutorialStateDataSource(context))
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
-    private val coroutineScopeMain: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
-    private val scenarioRepository: IRepository = IRepository.getRepository(context)
-    private val detectionRepository: DetectionRepository =  DetectionRepository.getDetectionRepository(context)
+    private val coroutineScopeMain: CoroutineScope =
+        CoroutineScope(SupervisorJob() + dispatcherMain)
 
     private val sharedPrefs: SharedPreferences = context.getTutorialPreferences()
-
-    private val tutorialEngine: TutorialEngine = TutorialEngine(context, coroutineScopeMain)
 
     /**
      * The identifier of the user scenario when he enters the tutorial mode.

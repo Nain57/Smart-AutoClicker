@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionCreator
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.DumbActionUiFlowListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.startDumbActionCopyUiFlow
@@ -44,7 +44,10 @@ import kotlinx.coroutines.launch
 class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
-    private val viewModel: DumbActionListViewModel by viewModels()
+    private val viewModel: DumbActionListViewModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbActionListViewModel() },
+    )
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: IncludeLoadableListBinding
@@ -83,9 +86,9 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
 
     override fun onViewCreated() {
         dumbActionCreator = DumbActionCreator(
-            createNewDumbClick = viewModel::createNewDumbClick,
-            createNewDumbSwipe = viewModel::createNewDumbSwipe,
-            createNewDumbPause = viewModel::createNewDumbPause,
+            createNewDumbClick = { position -> viewModel.createNewDumbClick(context, position) },
+            createNewDumbSwipe = { from, to -> viewModel.createNewDumbSwipe(context, from, to) },
+            createNewDumbPause = { viewModel.createNewDumbPause(context) },
             createDumbActionCopy = viewModel::createDumbActionCopy,
         )
         createCopyActionUiFlowListener = DumbActionUiFlowListener(

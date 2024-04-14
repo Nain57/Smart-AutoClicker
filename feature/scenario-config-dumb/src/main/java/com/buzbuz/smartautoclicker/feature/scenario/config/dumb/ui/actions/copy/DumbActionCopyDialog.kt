@@ -25,7 +25,9 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.ui.bindings.getDividerWithoutHeader
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -41,7 +43,10 @@ class DumbActionCopyDialog(
 ) : CopyDialog(R.style.DumbScenarioConfigTheme) {
 
     /** View model for this content. */
-    private val viewModel: DumbActionCopyModel by lazy { ViewModelProvider(this)[DumbActionCopyModel::class.java] }
+    private val viewModel: DumbActionCopyModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbActionCopyModel() },
+    )
 
     /** Adapter displaying the list of events. */
     private lateinit var actionCopyAdapter: DumbActionCopyAdapter

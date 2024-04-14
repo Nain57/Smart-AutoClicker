@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,10 +37,12 @@ import com.buzbuz.smartautoclicker.feature.backup.R
 import com.buzbuz.smartautoclicker.feature.backup.databinding.DialogBackupBinding
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
 
 /** Fragment displaying the state of a backup (import or export). */
+@AndroidEntryPoint
 class BackupDialogFragment : DialogFragment() {
 
     companion object {
@@ -101,12 +103,12 @@ class BackupDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        backupViewModel.initialize(isImport)
+        backupViewModel.initialize(requireContext(), isImport)
 
         backupActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 result.data?.data?.also { uri ->
-                    backupViewModel.startBackup(uri, isImport, exportDumbScenarios, exportSmartScenarios)
+                    backupViewModel.startBackup(requireContext(), uri, isImport, exportDumbScenarios, exportSmartScenarios)
                 }
             }
         }

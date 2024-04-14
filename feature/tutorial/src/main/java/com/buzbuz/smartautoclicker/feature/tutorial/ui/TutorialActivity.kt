@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,10 +29,11 @@ import androidx.navigation.fragment.NavHostFragment
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.R
+import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class TutorialActivity : AppCompatActivity() {
 
     private val viewModel: TutorialViewModel by viewModels()

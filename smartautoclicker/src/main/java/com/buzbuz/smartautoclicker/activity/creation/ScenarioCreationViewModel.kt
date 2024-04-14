@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
+import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
@@ -48,9 +48,8 @@ class ScenarioCreationViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val smartRepository: IRepository,
     private val billingRepository: IBillingRepository,
+    private val dumbRepository: IDumbRepository,
 ) : ViewModel() {
-
-    private val dumbRepository = DumbRepository.getRepository(context)
 
     /** Tells if the limitation in smart scenario count have been reached. */
     private val isSmartScenarioLimitReached: Flow<Boolean> = billingRepository.isProModePurchased

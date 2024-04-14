@@ -54,6 +54,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.DialogConfigDumbActionSwipeBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -67,7 +68,10 @@ class DumbSwipeDialog(
 ) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: DumbSwipeViewModel by viewModels()
+    private val viewModel: DumbSwipeViewModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbSwipeViewModel() },
+    )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigDumbActionSwipeBinding
 

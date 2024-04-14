@@ -16,10 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain
 
-import android.content.Context
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
+import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
@@ -32,35 +31,14 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
+import javax.inject.Inject
+import javax.inject.Singleton
+
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class DumbEditionRepository private constructor(context: Context) {
-
-    companion object {
-
-        /** Tag for logs */
-        private const val TAG = "DumbEditionRepository"
-
-        /** Singleton preventing multiple instances of the DumbEditionRepository at the same time. */
-        @Volatile
-        private var INSTANCE: DumbEditionRepository? = null
-
-        /**
-         * Get the DumbEditionRepository singleton, or instantiates it if it wasn't yet.
-         * @param context the Android context.
-         * @return the DumbEditionRepository singleton.
-         */
-        fun getInstance(context: Context): DumbEditionRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = DumbEditionRepository(context)
-                INSTANCE = instance
-                instance
-
-            }
-        }
-    }
-
-    /** The repository providing access to the database. */
-    private val dumbRepository: DumbRepository = DumbRepository.getRepository(context)
+@Singleton
+class DumbEditionRepository @Inject constructor(
+    private val dumbRepository: IDumbRepository,
+) {
 
     private val _editedDumbScenario: MutableStateFlow<DumbScenario?> = MutableStateFlow(null)
     val editedDumbScenario: StateFlow<DumbScenario?> = _editedDumbScenario
@@ -187,3 +165,6 @@ internal class DumbEditionRepository private constructor(context: Context) {
             is DumbAction.DumbSwipe -> copy(priority = priority)
         }
 }
+
+/** Tag for logs */
+private const val TAG = "DumbEditionRepository"

@@ -42,6 +42,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProj
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -121,6 +122,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayMetrics: DisplayMetrics
     @Inject lateinit var detectionRepository: DetectionRepository
+    @Inject lateinit var dumbEngine: DumbEngine
 
     private var currentScenarioName: String? = null
 
@@ -145,6 +147,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             overlayManager = overlayManager,
             displayMetrics = displayMetrics,
             detectionRepository = detectionRepository,
+            dumbEngine = dumbEngine,
             androidExecutor = this,
             onStart = { isSmart, name ->
                 currentScenarioName = name
