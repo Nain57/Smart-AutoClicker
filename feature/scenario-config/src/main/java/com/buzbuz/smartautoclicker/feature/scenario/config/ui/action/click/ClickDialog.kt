@@ -41,13 +41,13 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionClickBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image.ImageConditionSelectionDialog
 
@@ -60,7 +60,10 @@ class ClickDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ClickViewModel by viewModels()
+    private val viewModel: ClickViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { clickViewModel() },
+    )
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionClickBinding
@@ -228,7 +231,7 @@ class ClickDialog(
 
     private fun showPositionSelector() {
         viewModel.getEditedClick()?.let { click ->
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
                     actionDescription = ClickDescription(
@@ -247,7 +250,7 @@ class ClickDialog(
     }
 
     private fun showConditionSelector() =
-        OverlayManager.getInstance(context).navigateTo(
+        overlayManager.navigateTo(
             context = context,
             newOverlay = ImageConditionSelectionDialog(
                 conditionList = viewModel.availableConditions.value,

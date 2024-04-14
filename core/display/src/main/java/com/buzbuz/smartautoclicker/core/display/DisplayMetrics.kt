@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,15 +29,19 @@ import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Provides metrics for the screen such as orientation or display size.
  * In order for the metrics to be updated upon screen rotation, you must call [startMonitoring] first. Once the metrics
  * are no longer needed, call [stopMonitoring] to release all resources.
- *
- * @param context the Android context.
  */
-class DisplayMetrics internal constructor(context: Context) {
+@Singleton
+class DisplayMetrics @Inject internal constructor(
+    @ApplicationContext context: Context,
+) {
 
     companion object {
         /** Singleton preventing multiple instances at the same time. */

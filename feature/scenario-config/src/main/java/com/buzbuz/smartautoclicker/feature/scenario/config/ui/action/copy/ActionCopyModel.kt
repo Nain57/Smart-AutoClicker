@@ -16,30 +16,30 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.copy
 
-import android.app.Application
 
+import android.content.Context
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.toActionDetails
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
 /**
  * View model for the [ActionCopyDialog].
- *
- * @param application the Android application.
  */
-class ActionCopyModel(application: Application) : AndroidViewModel(application) {
-
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
+class ActionCopyModel @Inject constructor(
+    @ApplicationContext context: Context,
+    editionRepository: EditionRepository,
+) : ViewModel() {
 
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
@@ -62,11 +62,11 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
             buildList {
                 if (editedActions.isNotEmpty()) {
                     add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
-                    addAll(editedActions.toCopyItems().sortedBy { it.actionDetails.name })
+                    addAll(editedActions.toCopyItems(context).sortedBy { it.actionDetails.name })
                 }
                 if (otherActions.isNotEmpty()) {
                     add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
-                    addAll(otherActions.toCopyItems().sortedBy { it.actionDetails.name })
+                    addAll(otherActions.toCopyItems(context).sortedBy { it.actionDetails.name })
                 }
             }
         }
@@ -91,9 +91,9 @@ class ActionCopyModel(application: Application) : AndroidViewModel(application) 
     }
 
     /** Creates copy items from a list of edited actions from this scenario. */
-    private fun List<Action>.toCopyItems() = map { action ->
+    private fun List<Action>.toCopyItems(context: Context) = map { action ->
         ActionCopyItem.ActionItem(
-            actionDetails = action.toActionDetails(getApplication()),
+            actionDetails = action.toActionDetails(context),
         )
     }
 

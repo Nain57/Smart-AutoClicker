@@ -35,10 +35,10 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionBroadcastBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent.IntentActionsSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
@@ -51,7 +51,10 @@ class BroadcastReceivedConditionDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: BroadcastReceivedConditionViewModel by viewModels()
+    private val viewModel: BroadcastReceivedConditionViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { broadcastReceivedConditionViewModel() },
+    )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigConditionBroadcastBinding
 
@@ -127,7 +130,7 @@ class BroadcastReceivedConditionDialog(
     }
 
     private fun showBroadcastActionSelectionDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        overlayManager.navigateTo(
             context = context,
             newOverlay = IntentActionsSelectionDialog(
                 currentAction = viewModel.getIntentAction(),

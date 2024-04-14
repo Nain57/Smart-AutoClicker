@@ -16,12 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.config
 
-import android.app.Application
 import android.content.Context
 import android.view.View
 
 import androidx.annotation.DrawableRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
@@ -44,15 +43,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EventConfigViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** The repository for the pro mode billing. */
-    private val billingRepository = IBillingRepository.getRepository(application)
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class EventConfigViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+    private val billingRepository: IBillingRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel() {
 
     /** Currently configured event. */
     private val configuredEvent = editionRepository.editionState.editedEventState

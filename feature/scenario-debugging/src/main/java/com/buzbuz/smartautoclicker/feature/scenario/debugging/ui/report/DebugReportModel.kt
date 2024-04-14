@@ -23,7 +23,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebugReport
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.domain.DebuggingRepository
@@ -42,7 +42,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class DebugReportModel(application: Application) : AndroidViewModel(application) {
 
     /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application.applicationContext)
+    private val repository = IRepository.getRepository(application.applicationContext)
     /** Repository for the processing session debugging info. */
     private val debuggingRepository = DebuggingRepository.getDebuggingRepository(application)
     /** The debug report of the last detection session. */

@@ -36,6 +36,8 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Record the screen and provide [Image] from it.
@@ -52,7 +54,8 @@ import kotlinx.coroutines.sync.withLock
  * [stopProjection] in order to release all resources associated with this object.
  */
 @MainThread
-class DisplayRecorder internal constructor() {
+@Singleton
+class DisplayRecorder @Inject internal constructor() {
 
     companion object {
         /** Tag for logs. */

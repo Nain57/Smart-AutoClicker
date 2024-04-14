@@ -32,11 +32,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.BackToPreviousOverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionIntentActionsBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -49,7 +49,10 @@ class IntentActionsSelectionDialog (
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ActionsSelectionViewModel by viewModels()
+    private val viewModel: IntentActionsSelectionViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { intentActionsSelectionViewModel() },
+    )
 
     private lateinit var viewBinding: DialogConfigActionIntentActionsBinding
     private lateinit var actionsAdapter: IntentActionsSelectionAdapter
@@ -106,7 +109,7 @@ class IntentActionsSelectionDialog (
                     }
                 )
 
-                OverlayManager.getInstance(context).navigateTo(
+                overlayManager.navigateTo(
                     context = context,
                     newOverlay = BackToPreviousOverlayMenu(),
                     hideCurrent = true,

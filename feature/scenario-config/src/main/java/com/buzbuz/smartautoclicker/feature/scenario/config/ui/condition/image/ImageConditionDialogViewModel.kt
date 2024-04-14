@@ -16,15 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.view.View
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
@@ -37,8 +36,9 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.qualifiers.ApplicationContext
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -48,17 +48,16 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 import kotlin.math.max
 
 @OptIn(FlowPreview::class)
-class ConditionViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the database. */
-    private val repository = Repository.getRepository(application)
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** Monitor the views fot the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class ImageConditionViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val repository: IRepository,
+    private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel() {
 
     /** The condition being configured by the user. */
     private val configuredCondition = editionRepository.editionState.editedImageConditionState
@@ -114,9 +113,9 @@ class ConditionViewModel(application: Application) : AndroidViewModel(applicatio
     val detectionType: Flow<DetectionTypeState> = configuredCondition
         .map { condition ->
             when (condition.detectionType) {
-                EXACT -> application.getExactDetectionTypeState(condition.area)
-                WHOLE_SCREEN -> application.getWholeScreenDetectionTypeState()
-                IN_AREA -> application.getInAreaDetectionTypeState(condition.detectionArea ?: condition.area)
+                EXACT -> context.getExactDetectionTypeState(condition.area)
+                WHOLE_SCREEN -> context.getWholeScreenDetectionTypeState()
+                IN_AREA -> context.getInAreaDetectionTypeState(condition.detectionArea ?: condition.area)
                 else -> null
             }
         }

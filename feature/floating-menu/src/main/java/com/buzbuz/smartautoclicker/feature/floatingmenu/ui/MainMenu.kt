@@ -61,7 +61,10 @@ import kotlinx.coroutines.launch
 class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     /** The view model for this menu. */
-    private val viewModel: MainMenuModel by viewModels(entryPoint = MainMenuEntryPoint::class.java)
+    private val viewModel: MainMenuModel by viewModels(
+        entryPoint = MainMenuEntryPoint::class.java,
+        creator = { mainMenuViewModel() },
+    )
     /** The view model for the debugging features. */
     private val debuggingViewModel: DebugModel by viewModels()
 
@@ -274,7 +277,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     }
 
     private fun showScenarioConfigDialog() =
-        OverlayManager.getInstance(context).navigateTo(
+        overlayManager.navigateTo(
             context = context,
             newOverlay = ScenarioDialog(
                 onConfigDiscarded = viewModel::cancelScenarioChanges,

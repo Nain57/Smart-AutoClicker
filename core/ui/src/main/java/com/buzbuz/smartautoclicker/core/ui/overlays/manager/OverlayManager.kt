@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNa
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,12 +40,18 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 
 import java.io.PrintWriter
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Manages the overlays navigation and backstack.
  * Can be seen as the equivalent of the Android FragmentManager, but for [Overlay].
  */
-class OverlayManager internal constructor(context: Context) {
+@Singleton
+class OverlayManager @Inject internal constructor(
+    @ApplicationContext context: Context,
+    private val displayMetrics: DisplayMetrics,
+) {
 
     companion object {
 
@@ -59,15 +66,13 @@ class OverlayManager internal constructor(context: Context) {
          */
         fun getInstance(context: Context): OverlayManager {
             return INSTANCE ?: synchronized(this) {
-                val instance = OverlayManager(context)
+                val instance = OverlayManager(context, DisplayMetrics.getInstance(context))
                 INSTANCE = instance
                 instance
             }
         }
     }
 
-    /** The metrics of the device screen. */
-    private val displayMetrics = DisplayMetrics.getInstance(context)
     /** Save/load and lock the position of the overlay menus. */
     private val menuPositionDataSource = OverlayMenuPositionDataSource.getInstance(context)
     /** The listener upon screen rotation. */

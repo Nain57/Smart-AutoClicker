@@ -184,7 +184,7 @@ class DumbClickDialog(
 
     private fun onPositionCardClicked() {
         viewModel.getEditedDumbClick()?.let { dumbClick ->
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
                     actionDescription = ClickDescription(

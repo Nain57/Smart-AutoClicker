@@ -16,17 +16,16 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.click
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.view.View
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -42,6 +41,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putClickPressDurationConfig
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -58,18 +58,18 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-class ClickViewModel(application: Application) : AndroidViewModel(application) {
+class ClickViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val repository: IRepository,
+    private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel() {
 
-    /** Repository providing access to the database. */
-    private val repository = Repository.getRepository(application)
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
     /** Event configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
+    private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
     /** The action being configured by the user. */
     private val configuredClick = editionRepository.editionState.editedActionState
@@ -105,16 +105,16 @@ class ClickViewModel(application: Application) : AndroidViewModel(application) {
 
             when {
                 evt is TriggerEvent ->
-                    application.getUserSelectedClickPositionState(click, forced = true)
+                    context.getUserSelectedClickPositionState(click, forced = true)
 
                 evt is ImageEvent && click.positionType == Action.Click.PositionType.USER_SELECTED ->
-                    application.getUserSelectedClickPositionState(click, forced = false)
+                    context.getUserSelectedClickPositionState(click, forced = false)
 
                 evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
-                    application.getOnConditionWithOrPositionState()
+                    context.getOnConditionWithOrPositionState()
 
                 evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
-                    application.getOnConditionWithAndPositionState(evt, click)
+                    context.getOnConditionWithAndPositionState(evt, click)
 
                 else -> null
             }

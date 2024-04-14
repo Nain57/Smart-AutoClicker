@@ -14,10 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.overlays.di.viewmodel
+package com.buzbuz.smartautoclicker.core.ui.di
 
-import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
-interface ViewModelEntryPoint {
-    fun viewModel(): ViewModel
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface UiEntryPoint {
+
+    fun monitoredViewManager(): MonitoredViewsManager
+    fun overlayManager(): OverlayManager
 }

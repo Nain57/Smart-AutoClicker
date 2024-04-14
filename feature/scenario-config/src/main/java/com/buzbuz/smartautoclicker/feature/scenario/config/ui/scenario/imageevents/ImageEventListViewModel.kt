@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.imageevents
 
-import android.app.Application
 import android.content.Context
 import android.view.View
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
@@ -32,15 +31,13 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
+import javax.inject.Inject
 
-class ImageEventListViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** The repository for the pro mode billing. */
-    private val billingRepository = IBillingRepository.getRepository(application)
-    /** Monitors the views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class ImageEventListViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+    private val billingRepository: IBillingRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel() {
 
     /** Currently configured events. */
     val eventsItems = editionRepository.editionState.editedImageEventsState

@@ -21,7 +21,7 @@ import android.graphics.Rect
 import android.os.Build
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
@@ -53,13 +53,13 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
 
-/** Tests for the [RepositoryImpl]. */
+/** Tests for the [Repository]. */
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class RepositoryTests {
 
-    @Mock private lateinit var mockBitmapManager: BitmapManager
+    @Mock private lateinit var mockBitmapManager: IBitmapManager
 
     @Mock private lateinit var mockDatabase: ClickDatabase
     @Mock private lateinit var mockScenarioDao: ScenarioDao
@@ -72,7 +72,7 @@ class RepositoryTests {
     @Mock private lateinit var mockTutoConditionDao: ConditionDao
 
     /** Object under tests. */
-    private lateinit var repository: RepositoryImpl
+    private lateinit var repository: Repository
 
     @Before
     fun setUp() {
@@ -89,7 +89,7 @@ class RepositoryTests {
         mockWhen(mockTutoDatabase.eventDao()).thenReturn(mockTutoEventDao)
         mockWhen(mockTutoDatabase.conditionDao()).thenReturn(mockTutoConditionDao)
 
-        repository = RepositoryImpl(mockDatabase, mockTutoDatabase, mockBitmapManager)
+        repository = Repository(mockDatabase, mockTutoDatabase, mockBitmapManager)
         clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao)
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras
 
-import android.app.Application
 import android.text.InputFilter
 import android.text.InputType
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
@@ -36,18 +35,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
-/**
- * View model for the [ExtraConfigDialog].
- *
- * @param application the Android application.
- */
+/** View model for the [ExtraConfigDialog]. */
 @OptIn(FlowPreview::class)
-class ExtraConfigModel(application: Application) : AndroidViewModel(application) {
+class ExtraConfigModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
     /** The extra currently configured. */
     private val configuredExtra = editionRepository.editionState.editedIntentExtraState
         .mapNotNull { it.value }

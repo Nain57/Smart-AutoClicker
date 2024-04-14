@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialog
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.actions.ActionsContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.conditions.ConditionsContent
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.config.EventConfigContent
@@ -54,7 +55,10 @@ class EventDialog(
 ): NavBarDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this dialog. */
-    private val viewModel: EventDialogViewModel by viewModels()
+    private val viewModel: EventDialogViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { eventDialogViewModel() },
+    )
 
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {

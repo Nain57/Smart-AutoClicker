@@ -21,7 +21,7 @@ import android.content.SharedPreferences
 import android.graphics.Rect
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
@@ -86,7 +86,7 @@ class TutorialRepository private constructor(
 
     private val coroutineScopeMain: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    private val scenarioRepository: Repository = Repository.getRepository(context)
+    private val scenarioRepository: IRepository = IRepository.getRepository(context)
     private val detectionRepository: DetectionRepository =  DetectionRepository.getDetectionRepository(context)
 
     private val sharedPrefs: SharedPreferences = context.getTutorialPreferences()

@@ -16,11 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.actions
 
-import android.app.Application
 import android.content.Context
 import android.view.View
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.DialogChoice
@@ -34,21 +32,22 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.bindings.toActionDetails
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class ActionsViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** The repository for the pro mode billing. */
-    private val billingRepository = IBillingRepository.getRepository(application)
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class ActionsViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val editionRepository: EditionRepository,
+    private val billingRepository: IBillingRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel() {
 
     /** Currently configured actions. */
     private val configuredActions = editionRepository.editionState.editedEventActionsState
@@ -66,7 +65,7 @@ class ActionsViewModel(application: Application) : AndroidViewModel(application)
     val actionDetails: Flow<List<Pair<Action, ActionDetails>>> = configuredActions
         .map { actions ->
             actions.value?.mapIndexed { index, action ->
-                action to action.toActionDetails(application, !actions.itemValidity[index])
+                action to action.toActionDetails(context, !actions.itemValidity[index])
             } ?: emptyList()
         }
     /** Type of actions to be displayed in the new action creation dialog. */

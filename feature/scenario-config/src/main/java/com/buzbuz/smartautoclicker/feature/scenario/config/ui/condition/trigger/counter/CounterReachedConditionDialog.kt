@@ -38,11 +38,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigConditionCounterBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.OnConditionConfigCompleteListener
 
@@ -55,7 +55,10 @@ class CounterReachedConditionDialog(
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: CounterReachedConditionViewModel by viewModels()
+    private val viewModel: CounterReachedConditionViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { counterReachedConditionViewModel() },
+    )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigConditionCounterBinding
 
@@ -152,12 +155,11 @@ class CounterReachedConditionDialog(
     }
 
     private fun showCounterSelectionDialog() {
-        OverlayManager.getInstance(context)
-            .navigateTo(
-                context = context,
-                newOverlay = CounterNameSelectionDialog(viewModel::setCounterName),
-                hideCurrent = true,
-            )
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CounterNameSelectionDialog(viewModel::setCounterName),
+            hideCurrent = true,
+        )
     }
 
     private fun onConditionEditingStateChanged(isEditing: Boolean) {

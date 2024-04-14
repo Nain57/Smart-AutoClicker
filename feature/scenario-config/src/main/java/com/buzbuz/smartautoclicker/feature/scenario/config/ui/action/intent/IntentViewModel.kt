@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent
 
-import android.app.Application
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
 import com.buzbuz.smartautoclicker.core.android.application.getAndroidApplicationInfo
@@ -35,23 +35,27 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putIntentIsAdvancedConfig
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-class IntentViewModel(application: Application) : AndroidViewModel(application) {
+class IntentViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredIntent = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Action.Intent>()
 
     /** Event configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
+    private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
     /** The Android package manager. */
-    private val packageManager: PackageManager = application.packageManager
+    private val packageManager: PackageManager = context.packageManager
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.swipe
 
-import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Point
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putSwipeDurationConfig
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.map
@@ -35,18 +36,20 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-class SwipeViewModel(application: Application) : AndroidViewModel(application) {
+class SwipeViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
     /** The action being configured by the user. */
     private val configuredSwipe = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Action.Swipe>()
     /** Event configuration shared preferences. */
-    private val sharedPreferences: SharedPreferences = application.getEventConfigPreferences()
+    private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction

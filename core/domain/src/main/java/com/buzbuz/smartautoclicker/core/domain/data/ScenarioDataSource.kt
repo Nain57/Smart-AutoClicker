@@ -21,7 +21,7 @@ import androidx.room.withTransaction
 
 import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
@@ -61,7 +61,7 @@ import java.lang.Exception
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ScenarioDataSource(
     defaultDatabase: ScenarioDatabase,
-    private val bitmapManager: BitmapManager,
+    private val bitmapManager: IBitmapManager,
 ) {
 
     /** The database currently in use. */

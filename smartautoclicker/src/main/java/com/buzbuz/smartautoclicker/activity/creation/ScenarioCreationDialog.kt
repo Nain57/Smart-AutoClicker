@@ -45,9 +45,11 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_I
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ScenarioCreationDialog : DialogFragment() {
 
     companion object {

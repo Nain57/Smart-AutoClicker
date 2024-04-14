@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
@@ -39,10 +38,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.setNumericValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.setup
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.dialogViewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.ContentIntentConfigAdvancedBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.common.intent.IntentActionsSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.component.ComponentSelectionDialog
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.extras.ExtraConfigDialog
@@ -53,9 +53,10 @@ import kotlinx.coroutines.launch
 class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for the container dialog. */
-    private val dialogViewModel: IntentViewModel by lazy {
-        ViewModelProvider(dialogController)[IntentViewModel::class.java]
-    }
+    private val dialogViewModel: IntentViewModel by dialogViewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { intentViewModel() },
+    )
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentIntentConfigAdvancedBinding
@@ -148,7 +149,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun showActionsDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = IntentActionsSelectionDialog(
                 currentAction = dialogViewModel.getConfiguredIntentAction(),
@@ -162,7 +163,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun showFlagsDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = FlagsSelectionDialog(
                 currentFlags = dialogViewModel.getConfiguredIntentFlags(),
@@ -177,7 +178,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun showComponentNameDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = ComponentSelectionDialog(
                 onApplicationSelected = { newCompName ->
@@ -192,7 +193,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     private fun showExtraDialog(extra: IntentExtra<out Any>) {
         dialogViewModel.startIntentExtraEdition(extra)
 
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = ExtraConfigDialog(
                 onConfigComplete = dialogViewModel::saveIntentExtraEdition,

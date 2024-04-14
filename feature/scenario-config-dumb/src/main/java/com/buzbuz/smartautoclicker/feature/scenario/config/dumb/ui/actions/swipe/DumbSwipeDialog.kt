@@ -183,7 +183,7 @@ class DumbSwipeDialog(
 
     private fun onPositionCardClicked() {
         viewModel.getEditedDumbSwipe()?.let { swipe ->
-            OverlayManager.getInstance(context).navigateTo(
+            overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
                     actionDescription = SwipeDescription(

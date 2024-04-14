@@ -16,27 +16,23 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.triggerevents
 
-import android.app.Application
 import android.content.Context
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.core.domain.Repository
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
+import javax.inject.Inject
 
-class TriggerEventListViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** The repository for the pro mode billing. */
-    private val billingRepository = IBillingRepository.getRepository(application)
+class TriggerEventListViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+    private val billingRepository: IBillingRepository,
+) : ViewModel() {
 
     /** Currently configured events. */
     val triggerEvents = editionRepository.editionState.editedTriggerEventsState

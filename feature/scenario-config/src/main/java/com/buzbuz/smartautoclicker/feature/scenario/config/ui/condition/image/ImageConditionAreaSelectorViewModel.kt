@@ -16,10 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.image
 
-import android.app.Application
 import android.graphics.Rect
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
@@ -27,10 +26,12 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionReposit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 
-class ConditionAreaSelectorViewModel(application: Application) : AndroidViewModel(application)  {
+import javax.inject.Inject
 
-    /** Repository providing access to the edited items. */
-    private val editionRepository = EditionRepository.getInstance(application)
+class ImageConditionAreaSelectorViewModel @Inject constructor(
+    editionRepository: EditionRepository,
+) : ViewModel()  {
+
 
     /** The condition being configured by the user. */
     private val configuredCondition = editionRepository.editionState.editedImageConditionState

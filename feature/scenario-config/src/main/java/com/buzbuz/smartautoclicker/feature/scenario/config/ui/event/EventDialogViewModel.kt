@@ -16,12 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event
 
-import android.app.Application
 import android.view.View
+import androidx.lifecycle.ViewModel
 
-import androidx.lifecycle.AndroidViewModel
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -33,14 +31,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-class EventDialogViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Repository containing the user editions. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class EventDialogViewModel @Inject constructor(
+    private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel() {
 
     /**
      * Tells if all content have their field correctly configured.

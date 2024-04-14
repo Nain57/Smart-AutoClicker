@@ -19,10 +19,10 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data
 import android.content.Context
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.TutorialSuccessState
@@ -37,8 +37,8 @@ import kotlinx.coroutines.withContext
 internal class TutorialStateDataSource(context: Context) {
 
     private val tutorialDatabase: TutorialDatabase = TutorialDatabase.getDatabase(context)
-    private val bitmapManager: BitmapManager = BitmapManager.getBitmapManager(context)
-    private val scenarioRepository: Repository = Repository.getRepository(context)
+    private val bitmapManager: IBitmapManager = IBitmapManager.getBitmapManager(context)
+    private val scenarioRepository: IRepository = IRepository.getRepository(context)
 
     /** The list of successes for the tutorials. */
     val tutorialSuccessList: Flow<List<TutorialSuccessState>> =

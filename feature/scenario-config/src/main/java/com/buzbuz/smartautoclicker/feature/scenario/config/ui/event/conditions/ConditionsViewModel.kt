@@ -16,16 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.event.conditions
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.view.View
 
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
@@ -39,19 +36,15 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.ui.condition.trigger.
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getImageConditionBitmap
 
 import kotlinx.coroutines.*
-
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
-class ConditionsViewModel(application: Application) : AndroidViewModel(application) {
-
-    /** Repository providing access to the click database. */
-    private val repository = Repository.getRepository(application.applicationContext)
-    /** Maintains the currently configured scenario state. */
-    private val editionRepository = EditionRepository.getInstance(application)
-    /** The repository for the pro mode billing. */
-    private val billingRepository = IBillingRepository.getRepository(application)
-    /** Monitors views for the tutorial. */
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
+class ConditionsViewModel @Inject constructor(
+     private val repository: IRepository,
+     private val editionRepository: EditionRepository,
+     private val billingRepository: IBillingRepository,
+     private val monitoredViewsManager: MonitoredViewsManager,
+) : ViewModel() {
 
     /** Currently configured event. */
     val configuredEventConditions: Flow<List<Condition>> = editionRepository.editionState.editedEventConditionsState

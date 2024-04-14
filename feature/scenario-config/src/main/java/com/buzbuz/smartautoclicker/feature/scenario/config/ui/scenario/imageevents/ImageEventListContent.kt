@@ -39,13 +39,17 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_I
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 
 import kotlinx.coroutines.launch
 
 class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     /** View model for this content. */
-    private val viewModel: ImageEventListViewModel by viewModels()
+    private val viewModel: ImageEventListViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { imageEventListViewModel() },
+    )
 
     /** TouchHelper applied to [eventAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(ImageEventReorderTouchHelper())
@@ -172,7 +176,7 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
 
     /** Opens the dialog allowing the user to copy an event. */
     private fun showEventCopyDialog() {
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = EventCopyDialog(
                 requestTriggerEvents = false,
@@ -185,7 +189,7 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
     private fun showEventConfigDialog(item: ImageEvent) {
         viewModel.startEventEdition(item)
 
-        OverlayManager.getInstance(context).navigateTo(
+        dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = EventDialog(
                 onConfigComplete = viewModel::saveEventEdition,

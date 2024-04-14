@@ -26,9 +26,11 @@ import androidx.lifecycle.ViewModelProvider
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.views.conditionselector.ConditionSelectorView
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayValidationMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 
 /**
  * [OverlayMenu] implementation for displaying the area selection menu and the area to be captured in order
@@ -60,9 +62,10 @@ class CaptureMenu(
     }
 
     /** The view model for this menu. */
-    private val viewModel: CaptureViewModel by lazy {
-        ViewModelProvider(this).get(CaptureViewModel::class.java)
-    }
+    private val viewModel: CaptureViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { captureViewModel() },
+    )
 
     /** The view binding for the overlay menu. */
     private lateinit var viewBinding: OverlayValidationMenuBinding

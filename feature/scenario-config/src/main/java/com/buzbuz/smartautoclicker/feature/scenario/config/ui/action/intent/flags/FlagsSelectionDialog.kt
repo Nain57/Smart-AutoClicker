@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.menu.BackToPreviousOverlayMe
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.scenario.config.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.DialogConfigActionIntentFlagsBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -49,7 +50,10 @@ class FlagsSelectionDialog (
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: FlagsSelectionViewModel by viewModels()
+    private val viewModel: FlagsSelectionViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { flagsSelectionViewModel() },
+    )
 
     private lateinit var viewBinding: DialogConfigActionIntentFlagsBinding
     private lateinit var flagsAdapter: FlagsSelectionAdapter
@@ -103,7 +107,7 @@ class FlagsSelectionDialog (
                     }
                 )
 
-                OverlayManager.getInstance(context).navigateTo(
+                overlayManager.navigateTo(
                     context = context,
                     newOverlay = BackToPreviousOverlayMenu(),
                     hideCurrent = true,

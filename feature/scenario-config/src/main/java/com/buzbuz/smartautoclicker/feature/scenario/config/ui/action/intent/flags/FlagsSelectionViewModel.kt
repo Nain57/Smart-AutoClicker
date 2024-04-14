@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.intent.flags
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.android.intent.AndroidIntentApi
 import com.buzbuz.smartautoclicker.core.android.intent.getBroadcastIntentFlags
@@ -27,8 +26,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
+import javax.inject.Inject
 
-class FlagsSelectionViewModel(application: Application) : AndroidViewModel(application) {
+class FlagsSelectionViewModel @Inject constructor() : ViewModel() {
 
     private val isStartActivitiesFlags: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private val selectedFlags: MutableStateFlow<Int> = MutableStateFlow(0)

@@ -21,7 +21,7 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 import android.content.Context
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -30,15 +30,23 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.IEditionState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import dagger.hilt.android.qualifiers.ApplicationContext
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class EditionRepository private constructor(context: Context) {
+
+@Singleton
+class EditionRepository @Inject constructor(
+    @ApplicationContext context: Context,
+    private val repository: IRepository,
+) {
 
     companion object {
 
@@ -55,15 +63,13 @@ class EditionRepository private constructor(context: Context) {
          */
         fun getInstance(context: Context): EditionRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = EditionRepository(context)
+                val instance = EditionRepository(context, IRepository.getRepository(context))
                 INSTANCE = instance
                 instance
             }
         }
     }
 
-    /** The repository providing access to the database. */
-    private val repository: Repository = Repository.getRepository(context)
     /** Keep tracks of all changes in the currently edited scenario. */
     private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
