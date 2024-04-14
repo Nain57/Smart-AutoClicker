@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,54 +16,43 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain
 
-import android.content.Context
-
-import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
+import com.buzbuz.smartautoclicker.core.dumb.data.DumbScenarioDataSource
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface DumbRepository {
+@Singleton
+class DumbRepository @Inject constructor(
+    private val dumbScenarioDataSource: DumbScenarioDataSource,
+) : IDumbRepository {
 
-    companion object {
+    override val dumbScenarios: Flow<List<DumbScenario>> =
+        dumbScenarioDataSource.getAllDumbScenarios
+    override suspend fun getDumbScenario(dbId: Long): DumbScenario? =
+        dumbScenarioDataSource.getDumbScenario(dbId)
 
-        /** Singleton preventing multiple instances of the repository at the same time. */
-        @Volatile
-        private var INSTANCE: DumbRepository? = null
+    override fun getDumbScenarioFlow(dbId: Long): Flow<DumbScenario?> =
+        dumbScenarioDataSource.getDumbScenarioFlow(dbId)
 
-        /**
-         * Get the repository singleton, or instantiates it if it wasn't yet.
-         *
-         * @param context the Android context.
-         *
-         * @return the repository singleton.
-         */
-        fun getRepository(context: Context): DumbRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = DumbRepositoryImpl(
-                    DumbDatabase.getDatabase(context),
-                )
-                INSTANCE = instance
-                instance
-            }
-        }
+    override fun getAllDumbActionsFlowExcept(scenarioDbId: Long): Flow<List<DumbAction>> =
+        dumbScenarioDataSource.getAllDumbActionsExcept(scenarioDbId)
+
+    override suspend fun addDumbScenario(scenario: DumbScenario) {
+        dumbScenarioDataSource.addDumbScenario(scenario)
     }
 
-    val dumbScenarios: Flow<List<DumbScenario>>
+    override suspend fun addDumbScenarioCopy(scenario: DumbScenarioWithActions): Long? =
+        dumbScenarioDataSource.addDumbScenarioCopy(scenario)
 
-    suspend fun getDumbScenario(dbId: Long): DumbScenario?
+    override suspend fun updateDumbScenario(scenario: DumbScenario) {
+        dumbScenarioDataSource.updateDumbScenario(scenario)
+    }
 
-    fun getDumbScenarioFlow(dbId: Long): Flow<DumbScenario?>
-
-    fun getAllDumbActionsFlowExcept(scenarioDbId: Long): Flow<List<DumbAction>>
-
-    suspend fun addDumbScenario(scenario: DumbScenario)
-
-    suspend fun addDumbScenarioCopy(scenario: DumbScenarioWithActions): Long?
-
-    suspend fun updateDumbScenario(scenario: DumbScenario)
-
-    suspend fun deleteDumbScenario(scenario: DumbScenario)
+    override suspend fun deleteDumbScenario(scenario: DumbScenario) {
+        dumbScenarioDataSource.deleteDumbScenario(scenario)
+    }
 }

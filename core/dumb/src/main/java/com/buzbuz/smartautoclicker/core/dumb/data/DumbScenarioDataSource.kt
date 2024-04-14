@@ -33,8 +33,13 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.lang.Exception
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class DumbScenarioDataSource(database: DumbDatabase,) {
+@Singleton
+class DumbScenarioDataSource @Inject constructor(
+    database: DumbDatabase,
+) {
 
     private val dumbScenarioDao: DumbScenarioDao = database.dumbScenarioDao()
 

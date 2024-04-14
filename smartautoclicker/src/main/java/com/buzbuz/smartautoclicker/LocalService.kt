@@ -45,6 +45,7 @@ class LocalService(
     private val overlayManager: OverlayManager,
     private val displayMetrics: DisplayMetrics,
     private val detectionRepository: DetectionRepository,
+    private val dumbEngine: DumbEngine,
     private val androidExecutor: AndroidExecutor,
     private val onStart: (isSmart: Boolean, name: String) -> Unit,
     private val onStop: () -> Unit,
@@ -54,10 +55,6 @@ class LocalService(
     private val serviceScope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     /** Coroutine job for the delayed start of engine & ui. */
     private var startJob: Job? = null
-
-    /** The dumb repository controlling the dumb engine. */
-    private var dumbEngine: DumbEngine? = null
-
     /** True if the overlay is started, false if not. */
     private var isStarted: Boolean = false
 
@@ -70,9 +67,7 @@ class LocalService(
         startJob = serviceScope.launch {
             delay(500)
 
-            dumbEngine = DumbEngine.getInstance(context).apply {
-                init(androidExecutor, dumbScenario)
-            }
+            dumbEngine.init(androidExecutor, dumbScenario)
 
             overlayManager.navigateTo(
                 context = context,
@@ -131,6 +126,7 @@ class LocalService(
             startJob?.join()
             startJob = null
 
+            dumbEngine.release()
             overlayManager.closeAll(context)
             detectionRepository.stopScreenRecord()
             displayMetrics.stopMonitoring(context)

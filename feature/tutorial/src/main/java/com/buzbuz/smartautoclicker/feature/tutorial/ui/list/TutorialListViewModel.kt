@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.list
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TutorialListViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
+@HiltViewModel
+class TutorialListViewModel @Inject constructor(
+    private val tutorialRepository: TutorialRepository
+) : ViewModel() {
 
     val items: Flow<List<TutorialItem>> = tutorialRepository.tutorials
         .map { tutorials ->

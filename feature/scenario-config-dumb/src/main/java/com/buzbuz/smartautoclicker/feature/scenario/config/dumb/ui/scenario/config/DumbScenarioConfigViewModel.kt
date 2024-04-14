@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.config
 
-import android.app.Application
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
@@ -30,10 +28,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 
-class DumbScenarioConfigViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
+class DumbScenarioConfigViewModel @Inject constructor(
+    private val dumbEditionRepository: DumbEditionRepository,
+) : ViewModel() {
 
     private val userModifications: StateFlow<DumbScenario?> =
         dumbEditionRepository.editedDumbScenario

@@ -44,9 +44,11 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGa
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setHeaderInfo
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.game.bindings.setScore
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscreenOverlay
+import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class TutorialGameFragment : Fragment() {
 
     /** ViewModel providing the state of the UI. */

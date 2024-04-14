@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,9 +27,13 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.tutorials.twoMovingTarg
 import com.buzbuz.smartautoclicker.feature.tutorial.data.tutorials.twoStillTargetsPressWhenBothVisibleTutorialInfo
 import com.buzbuz.smartautoclicker.feature.tutorial.data.tutorials.twoStillTargetsPressWhenOneVisibleTutorialInfo
 
-internal object TutorialDataSource {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    val tutorialsInfo: List<TutorialInfo> = listOf(
+@Singleton
+class TutorialDataSource @Inject constructor() {
+
+    internal val tutorialsInfo: List<TutorialInfo> = listOf(
         oneStillTargetTutorialInfo,
         oneMovingTargetTutorialInfo,
         twoStillTargetsPressWhenBothVisibleTutorialInfo,
@@ -37,7 +41,7 @@ internal object TutorialDataSource {
         twoMovingTargetsPressInOrderTutorialInfo,
     )
 
-    fun getTutorialData(index: Int): TutorialData? {
+    internal fun getTutorialData(index: Int): TutorialData? {
         if (index < 0 || index > tutorialsInfo.lastIndex) return null
 
         return when (tutorialsInfo[index]) {

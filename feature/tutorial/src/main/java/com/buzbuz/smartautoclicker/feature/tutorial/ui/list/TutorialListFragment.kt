@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,9 +30,11 @@ import androidx.navigation.fragment.findNavController
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class TutorialListFragment : Fragment() {
 
     /** ViewModel providing the state of the UI. */

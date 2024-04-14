@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
+import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
@@ -53,10 +53,9 @@ import javax.inject.Inject
 class ScenarioListViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val smartRepository: IRepository,
+    private val dumbRepository: IDumbRepository,
     private val billingRepository: IBillingRepository,
 ) : ViewModel() {
-
-    private val dumbRepository = DumbRepository.getRepository(context)
 
     /** Current state type of the ui. */
     private val uiStateType = MutableStateFlow(ScenarioListUiState.Type.SELECTION)

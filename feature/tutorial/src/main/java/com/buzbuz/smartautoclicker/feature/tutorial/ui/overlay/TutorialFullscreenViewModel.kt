@@ -16,12 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay
 
-import android.app.Application
 import android.graphics.Rect
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
@@ -35,13 +34,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TutorialOverlayViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val monitoredViewsManager: MonitoredViewsManager = MonitoredViewsManager.getInstance()
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
-    private val displayMetrics: DisplayMetrics = DisplayMetrics.getInstance(application)
+class TutorialOverlayViewModel @Inject constructor(
+    private val monitoredViewsManager: MonitoredViewsManager,
+    private val tutorialRepository: TutorialRepository,
+    private val displayMetrics: DisplayMetrics,
+) : ViewModel() {
 
     val uiState: Flow<UiTutorialOverlayState?> = tutorialRepository.activeStep
         .map { step -> if (step is TutorialStep.TutorialOverlay) step else null }

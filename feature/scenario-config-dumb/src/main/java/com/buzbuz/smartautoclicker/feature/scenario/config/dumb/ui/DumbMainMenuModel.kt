@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui
 
-import android.app.Application
-import android.graphics.Point
-
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.domain.DumbEditionRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
@@ -34,14 +30,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class DumbMainMenuModel(application: Application) : AndroidViewModel(application) {
-
-    private val dumbEditionRepository = DumbEditionRepository.getInstance(application)
-    private val dumbEngine = DumbEngine.getInstance(application)
-
-    /** The repository for the tutorials data. */
-    private val tutorialRepository: TutorialRepository = TutorialRepository.getTutorialRepository(application)
+class DumbMainMenuModel @Inject constructor(
+    private val dumbEditionRepository: DumbEditionRepository,
+    private val dumbEngine: DumbEngine,
+    private val tutorialRepository: TutorialRepository,
+) : ViewModel() {
 
     val canPlay: Flow<Boolean> =
         combine(dumbEditionRepository.isEditionSynchronized, dumbEngine.dumbScenario) { isSync, scenario ->

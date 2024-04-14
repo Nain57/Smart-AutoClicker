@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.actions.swipe
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Point
 
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
@@ -28,14 +27,18 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.getDumbConf
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeDurationConfig
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatCountConfig
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.data.putSwipeRepeatDelayConfig
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
+import javax.inject.Inject
 
-class DumbSwipeViewModel(application: Application) : AndroidViewModel(application) {
+class DumbSwipeViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+) : ViewModel() {
 
     private val _editedDumbSwipe: MutableStateFlow<DumbAction.DumbSwipe?> = MutableStateFlow(null)
     private val editedDumbSwipe: Flow<DumbAction.DumbSwipe> = _editedDumbSwipe.filterNotNull()
@@ -81,7 +84,7 @@ class DumbSwipeViewModel(application: Application) : AndroidViewModel(applicatio
     /** Subtext for the position selector. */
     val swipePositionText: Flow<String> = editedDumbSwipe
         .map { dumbSwipe ->
-            application.getString(
+            context.getString(
                 R.string.item_desc_dumb_swipe_positions,
                 dumbSwipe.fromPosition.x,
                 dumbSwipe.fromPosition.y,

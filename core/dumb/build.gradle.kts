@@ -18,6 +18,7 @@ plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidRoom)
     alias(libs.plugins.buzbuz.kotlinSerialization)
+    alias(libs.plugins.buzbuz.hilt)
 }
 
 android {

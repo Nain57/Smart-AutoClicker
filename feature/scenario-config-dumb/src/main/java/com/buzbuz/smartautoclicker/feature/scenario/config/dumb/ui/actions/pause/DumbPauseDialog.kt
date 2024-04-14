@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.DialogConfigDumbActionPauseBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -54,7 +55,10 @@ class DumbPauseDialog(
 ) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: DumbPauseViewModel by viewModels()
+    private val viewModel: DumbPauseViewModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbPauseViewModel() },
+    )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigDumbActionPauseBinding
 

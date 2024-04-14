@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,12 +28,12 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.R
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.databinding.OverlayDumbMainMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.brief.DumbScenarioBriefMenu
 import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.scenario.DumbScenarioDialog
 import com.google.android.material.color.DynamicColors
@@ -47,7 +47,10 @@ class DumbMainMenu(
 ) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme) {
 
     /** The view model for this menu. */
-    private val viewModel: DumbMainMenuModel by viewModels()
+    private val viewModel: DumbMainMenuModel by viewModels(
+        entryPoint = DumbConfigViewModelsEntryPoint::class.java,
+        creator = { dumbMainMenuModel() },
+    )
 
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayDumbMainMenuBinding

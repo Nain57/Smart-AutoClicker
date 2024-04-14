@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.backup.domain
 
 /** State of a backup import/export. */
-internal sealed class Backup {
+sealed class Backup {
 
     /**
      * The backup is progressing.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,18 +28,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.FullscreenOverlay
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.IncludeTutorialInstructionsBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.OverlayTutorialBinding
+import com.buzbuz.smartautoclicker.feature.tutorial.di.TutorialViewModelsEntryPoint
 
 import kotlinx.coroutines.launch
 
 class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
 
     /** The view model for this overlay. */
-    private val viewModel: TutorialOverlayViewModel by viewModels()
+    private val viewModel: TutorialOverlayViewModel by viewModels(
+        entryPoint = TutorialViewModelsEntryPoint::class.java,
+        creator = { tutorialOverlayViewModel() },
+    )
 
     /** ViewBinding containing the views for this overlay. */
     private lateinit var viewBinding: OverlayTutorialBinding

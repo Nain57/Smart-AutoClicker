@@ -23,6 +23,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
+import javax.inject.Singleton
+
+
 @Database(
     entities = [
         DumbScenarioEntity::class,
@@ -34,6 +37,7 @@ import androidx.room.TypeConverters
 @TypeConverters(
     DumbActionTypeStringConverter::class,
 )
+@Singleton
 abstract class DumbDatabase : RoomDatabase() {
 
     companion object {
