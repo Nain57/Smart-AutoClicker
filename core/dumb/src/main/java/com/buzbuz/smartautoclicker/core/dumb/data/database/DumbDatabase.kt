@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.data.database
 
-import android.content.Context
-
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
@@ -39,33 +36,6 @@ import javax.inject.Singleton
 )
 @Singleton
 abstract class DumbDatabase : RoomDatabase() {
-
-    companion object {
-
-        /** Singleton preventing multiple instances of database opening at the same time. */
-        @Volatile
-        private var INSTANCE: DumbDatabase? = null
-
-        /**
-         * Get the Room database singleton, or instantiates it if it wasn't yet.
-         * <p>
-         * @param context the Android context.
-         * <p>
-         * @return the Room database singleton.
-         */
-        fun getDatabase(context: Context): DumbDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    DumbDatabase::class.java,
-                    "dumb_database"
-                ).build()
-
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 
     /** The data access object for the dumb scenario in the database. */
     abstract fun dumbScenarioDao(): DumbScenarioDao

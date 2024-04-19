@@ -34,13 +34,11 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 
 class EditedItemsBuilder internal constructor(
-    context: Context,
+    private val repository: IRepository,
     private val editor: ScenarioEditor,
 ) {
 
-    private val repository: IRepository = IRepository.getRepository(context)
-
-    private val defaultValues = EditionDefaultValues(context)
+    private val defaultValues = EditionDefaultValues(repository)
     private val eventsIdCreator = IdentifierCreator()
     private val conditionsIdCreator = IdentifierCreator()
     private val actionsIdCreator = IdentifierCreator()

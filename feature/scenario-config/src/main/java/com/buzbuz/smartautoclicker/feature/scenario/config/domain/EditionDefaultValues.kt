@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +31,7 @@ import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getIntentIsAdva
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getPauseDurationConfig
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getSwipeDurationConfig
 
-internal class EditionDefaultValues(context: Context) {
-
-    private val scenarioRepository: IRepository = IRepository.getRepository(context)
-
-    internal fun isTutorialModeEnabled(): Boolean = scenarioRepository.isTutorialModeEnabled()
+internal class EditionDefaultValues(private val scenarioRepository: IRepository) {
 
     fun eventName(context: Context): String =
         context.getString(R.string.default_event_name)
@@ -85,4 +81,7 @@ internal class EditionDefaultValues(context: Context) {
 
     fun counterComparisonOperation(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
         TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
+
+    private fun isTutorialModeEnabled(): Boolean =
+        scenarioRepository.isTutorialModeEnabled()
 }

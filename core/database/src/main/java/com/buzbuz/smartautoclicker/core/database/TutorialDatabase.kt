@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.database
 
-import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
-import androidx.room.Room
 
 import com.buzbuz.smartautoclicker.core.database.dao.TutorialDao
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
@@ -29,9 +27,9 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
-import com.buzbuz.smartautoclicker.core.database.migrations.Migration10to11
-import com.buzbuz.smartautoclicker.core.database.migrations.Migration12to13
+import javax.inject.Singleton
 
+@Singleton
 @Database(
     entities = [
         ActionEntity::class,
@@ -51,38 +49,6 @@ import com.buzbuz.smartautoclicker.core.database.migrations.Migration12to13
 abstract class TutorialDatabase : ScenarioDatabase() {
 
     abstract fun tutorialDao(): TutorialDao
-
-    companion object {
-
-        /** Singleton preventing multiple instances of database opening at the same time. */
-        @Volatile
-        private var INSTANCE: TutorialDatabase? = null
-
-        /**
-         * Get the Room database singleton, or instantiates it if it wasn't yet.
-         * <p>
-         * @param context the Android context.
-         * <p>
-         * @return the Room database singleton.
-         */
-        fun getDatabase(context: Context): TutorialDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    TutorialDatabase::class.java,
-                    "tutorial_database",
-                )
-                    .addMigrations(
-                        Migration10to11,
-                        Migration12to13
-                    )
-                    .build()
-
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }
 
 /** Current version of the database. */
