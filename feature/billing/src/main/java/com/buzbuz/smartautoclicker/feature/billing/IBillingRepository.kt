@@ -25,28 +25,6 @@ import kotlinx.coroutines.flow.Flow
 
 abstract class IBillingRepository {
 
-    companion object {
-
-        /** Singleton preventing multiple instances of the repository at the same time. */
-        @Volatile
-        private var INSTANCE: BillingRepository? = null
-
-        /**
-         * Get the repository singleton, or instantiates it if it wasn't yet.
-         *
-         * @param context the Android context.
-         *
-         * @return the repository singleton.
-         */
-        fun getRepository(context: Context): BillingRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = BillingRepository(context)
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
     abstract val newPurchases: Flow<List<String>>
 
     /**

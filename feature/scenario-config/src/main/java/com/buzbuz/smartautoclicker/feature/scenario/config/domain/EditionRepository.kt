@@ -18,7 +18,6 @@
 
 package com.buzbuz.smartautoclicker.feature.scenario.config.domain
 
-import android.content.Context
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
@@ -30,7 +29,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.scenario.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.model.IEditionState
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -44,7 +42,6 @@ import javax.inject.Singleton
 
 @Singleton
 class EditionRepository @Inject constructor(
-    @ApplicationContext context: Context,
     private val repository: IRepository,
 ) {
 
@@ -52,9 +49,9 @@ class EditionRepository @Inject constructor(
     private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
     /** Provides creators for all elements in an edited scenario. */
-    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(context, scenarioEditor)
+    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(repository, scenarioEditor)
     /** Provides the states of all elements in the edited scenario. */
-    val editionState: IEditionState = EditionState(context, scenarioEditor)
+    val editionState: IEditionState = EditionState(repository, scenarioEditor)
 
     /** Tells if the editions made on the scenario are synchronized with the database values. */
     val isEditionSynchronized: Flow<Boolean> = scenarioEditor.editedScenario

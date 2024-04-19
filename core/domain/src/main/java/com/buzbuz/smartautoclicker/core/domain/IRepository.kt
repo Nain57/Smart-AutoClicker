@@ -41,32 +41,6 @@ import kotlinx.coroutines.flow.Flow
  */
 interface IRepository {
 
-    companion object {
-
-        /** Singleton preventing multiple instances of the repository at the same time. */
-        @Volatile
-        private var INSTANCE: IRepository? = null
-
-        /**
-         * Get the repository singleton, or instantiates it if it wasn't yet.
-         *
-         * @param context the Android context.
-         *
-         * @return the repository singleton.
-         */
-        fun getRepository(context: Context): IRepository {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Repository(
-                    ClickDatabase.getDatabase(context),
-                    TutorialDatabase.getDatabase(context),
-                    IBitmapManager.getBitmapManager(context),
-                )
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
     /** The list of scenarios. */
     val scenarios: Flow<List<Scenario>>
     /** All image events from all scenarios.  */

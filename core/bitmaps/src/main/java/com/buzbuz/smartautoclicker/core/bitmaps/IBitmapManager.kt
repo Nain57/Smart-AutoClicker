@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.bitmaps
 
-import android.content.Context
 import android.graphics.Bitmap
 
 /** Manages the bitmaps for the click conditions. */
 interface IBitmapManager {
-
-    companion object {
-        /** Singleton preventing multiple instances of the repository at the same time. */
-        @Volatile
-        private var INSTANCE: IBitmapManager? = null
-
-        /**
-         * Get the repository singleton, or instantiates it if it wasn't yet.
-         *
-         * @param context the Android context.
-         *
-         * @return the repository singleton.
-         */
-        fun getBitmapManager(context: Context): IBitmapManager {
-            return INSTANCE ?: synchronized(this) {
-                val instance = BitmapManager(context.filesDir)
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 
     /**
      * Save the provided bitmap into the persistent memory.

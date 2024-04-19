@@ -49,12 +49,9 @@ import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class EditionState internal constructor(
-    context: Context,
+    repository: IRepository,
     private val editor: ScenarioEditor,
 ) : IEditionState {
-
-    /** The repository providing access to the database. */
-    private val repository: IRepository = IRepository.getRepository(context)
 
     override val scenarioCompleteState: Flow<EditedElementState<EditedScenarioState>> =
         combine(
