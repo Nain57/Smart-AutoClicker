@@ -39,7 +39,7 @@ import javax.inject.Singleton
  * are no longer needed, call [stopMonitoring] to release all resources.
  */
 @Singleton
-class DisplayMetrics @Inject internal constructor(
+class DisplayMetrics @Inject constructor(
     @ApplicationContext context: Context,
 ) {
 

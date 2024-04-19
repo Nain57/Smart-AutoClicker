@@ -107,7 +107,7 @@ class DisplayRecorderTests {
         mockWhen(mockMediaProjectionManager.getMediaProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT))
             .thenReturn(mockMediaProjection)
         mockWhen(mockMediaProjection.createVirtualDisplay(
-            DisplayRecorder.VIRTUAL_DISPLAY_NAME,
+            VIRTUAL_DISPLAY_NAME,
             TEST_DATA_DISPLAY_SIZE_WIDTH,
             TEST_DATA_DISPLAY_SIZE_HEIGHT,
             TEST_DATA_DENSITY_DPI,

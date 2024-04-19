@@ -23,8 +23,10 @@ import android.os.Build
 import android.view.Display
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.testutils.anyNotNull
 
 import org.junit.Assert
@@ -73,7 +75,10 @@ class OverlayManagerTests {
         Mockito.`when`(mockSharedPrefsEditor.putInt(Mockito.anyString(), Mockito.anyInt())).thenReturn(mockSharedPrefsEditor)
         Mockito.`when`(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
 
-        overlayManager = OverlayManager(mockContext)
+        overlayManager = OverlayManager(
+            displayMetrics = DisplayMetrics(mockContext),
+            menuPositionDataSource = OverlayMenuPositionDataSource(mockContext)
+        )
     }
 
     @Test

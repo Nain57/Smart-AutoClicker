@@ -46,6 +46,7 @@ class AndroidUnitTestConventionPlugin : Plugin<Project> {
             testImplementation(libs.getLibrary("androidx.test.ext.junit"))
             testImplementation(libs.getLibrary("mockito.core"))
             testImplementation(libs.getLibrary("mockito.kotlin"))
+            testImplementation(libs.getLibrary("mockk.android"))
             testImplementation(libs.getLibrary("robolectric"))
         }
     }
