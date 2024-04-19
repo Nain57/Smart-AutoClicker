@@ -29,5 +29,8 @@ internal fun DependencyHandlerScope.playStoreImplementation(dependency: Provider
 internal fun DependencyHandlerScope.ksp(dependency: Provider<MinimalExternalModuleDependency>) =
     add("ksp", dependency)
 
+internal fun DependencyHandlerScope.kspTest(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("kspTest", dependency)
+
 internal fun DependencyHandlerScope.testImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
     add("testImplementation", dependency)

@@ -28,32 +28,40 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageButton
-
 import androidx.annotation.IdRes
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
+import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
+import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedMenuView
 import com.buzbuz.smartautoclicker.core.ui.testutils.captureWindowManagerAddedViews
-import com.buzbuz.smartautoclicker.core.ui.R
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPositionDataSource
-
+import dagger.hilt.EntryPoints
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import io.mockk.every
+import io.mockk.mockkStatic
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.Mockito.`when` as mockWhen
 import org.robolectric.annotation.Config
+import org.mockito.Mockito.`when` as mockWhen
+
 
 /** Test the [OverlayMenu] class. */
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [Build.VERSION_CODES.Q])
+@Config(sdk = [Build.VERSION_CODES.Q], application = HiltTestApplication::class)
+@HiltAndroidTest
 class OverlayMenuTests {
 
     private companion object {
@@ -94,18 +102,24 @@ class OverlayMenuTests {
 
     @Mock private lateinit var mockContext: Context
     @Mock private lateinit var mockResources: Resources
-    @Mock private lateinit var mockDisplay: Display
     @Mock private lateinit var mockSharedPrefs: SharedPreferences
     @Mock private lateinit var mockSharedPrefsEditor: SharedPreferences.Editor
     @Mock private lateinit var mockWindowManager: WindowManager
-    @Mock private lateinit var mockDisplayManager: DisplayManager
     @Mock private lateinit var mockLayoutInflater: LayoutInflater
+
+    @Mock private lateinit var mockDisplayEntryPoint: DisplayEntryPoint
+    @Mock private lateinit var mockDisplayMetrics: DisplayMetrics
+
+    @Mock private lateinit var mockUiEntryPoint: UiEntryPoint
+    @Mock private lateinit var mockOverlayMenuPositionDataSource: OverlayMenuPositionDataSource
+
     @Mock private lateinit var overlayMenuControllerImpl: OverlayMenuControllerImpl
+
+    @get:Rule
+    var hiltAndroidRule: HiltAndroidRule = HiltAndroidRule(this)
 
     /** The object under tests. */
     private lateinit var overlayMenuController: OverlayMenuTestImpl
-    /** The screen metrics singleton for the tests. */
-    private lateinit var screenMetrics: DisplayMetrics
 
     /**
      * Create a mock for the menu view.
@@ -151,13 +165,25 @@ class OverlayMenuTests {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
+        // Mock hilt entry points
+        mockkStatic(EntryPoints::class)
+        every { EntryPoints.get(mockContext, DisplayEntryPoint::class.java) } returns mockDisplayEntryPoint
+        every { EntryPoints.get(mockContext, UiEntryPoint::class.java) } returns mockUiEntryPoint
+
         // Mock Android managers
+        mockWhen(mockContext.applicationContext).thenReturn(mockContext)
         mockWhen(mockContext.resources).thenReturn(mockResources)
-        mockWhen(mockContext.getSystemService(DisplayManager::class.java)).thenReturn(mockDisplayManager)
         mockWhen(mockContext.getSystemService(LayoutInflater::class.java)).thenReturn(mockLayoutInflater)
         mockWhen(mockContext.getSystemService(WindowManager::class.java)).thenReturn(mockWindowManager)
         mockWhen(mockContext.getSharedPreferences(OverlayMenuPositionDataSource.PREFERENCE_NAME, Context.MODE_PRIVATE))
             .thenReturn(mockSharedPrefs)
+
+        // Mock display metrics
+        mockWhen(mockDisplayEntryPoint.displayMetrics()).thenReturn(mockDisplayMetrics)
+        mockWhen(mockDisplayMetrics.screenSize).thenReturn(Point(TEST_DATA_DISPLAY_WIDTH, TEST_DATA_DISPLAY_HEIGHT))
+
+        // Mock position data source
+        mockWhen(mockUiEntryPoint.overlayMenuPositionDataSource()).thenReturn(mockOverlayMenuPositionDataSource)
 
         // Mock config
         mockWhen(mockResources.getFraction(R.dimen.alpha_menu_item_disabled, 1, 1))
@@ -166,23 +192,6 @@ class OverlayMenuTests {
         // Mock shared prefs editor to verify insertions
         mockWhen(mockSharedPrefs.edit()).thenReturn(mockSharedPrefsEditor)
         mockWhen(mockSharedPrefsEditor.putInt(anyString(), anyInt())).thenReturn(mockSharedPrefsEditor)
-
-        // Mock get display size
-        mockWhen(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
-        doAnswer { invocation ->
-            val argument = invocation.arguments[0] as Point
-            argument.x = TEST_DATA_DISPLAY_WIDTH
-            argument.y = TEST_DATA_DISPLAY_HEIGHT
-            null
-        }.`when`(mockDisplay).getRealSize(any())
-
-        screenMetrics = DisplayMetrics.getInstance(mockContext)
-        screenMetrics.startMonitoring(mockContext)
-    }
-
-    @After
-    fun tearDown() {
-        screenMetrics.stopMonitoring(mockContext)
     }
 
     @Test

@@ -45,6 +45,7 @@ androidxTestExtJunit = "1.1.5"
 junit = "4.13.2"
 mockitoCore = "5.6.0"
 mockitoKotlin = "5.1.0"
+mockk = "1.13.10"
 robolectric = "4.11.1"
 
 
@@ -66,6 +67,7 @@ androidx-test-core = { group = "androidx.test", name = "core", version.ref = "an
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 # Androidx
@@ -92,6 +94,8 @@ airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "googleDaggerHilt" }
+google-dagger-hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "googleDaggerHilt" }
 
 # PlayStore only. Might seem unused but check in files if that is the case
 android-billingClient = { group = "com.android.billingclient", name = "billing", version.ref = "androidBillingClient" }
@@ -100,7 +104,6 @@ google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", ve
 google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "googleFirebaseCrashlytics" }
 google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk", version.ref = "googleFirebaseCrashlytics" }
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleDaggerHilt" }
-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "googleDaggerHilt" }
 
 # Tests only
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreTesting" }

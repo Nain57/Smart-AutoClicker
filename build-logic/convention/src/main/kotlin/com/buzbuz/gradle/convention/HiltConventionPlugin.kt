@@ -20,6 +20,8 @@ import com.buzbuz.gradle.convention.utils.getLibs
 import com.buzbuz.gradle.convention.utils.implementation
 import com.buzbuz.gradle.convention.utils.plugins
 import com.buzbuz.gradle.convention.utils.ksp
+import com.buzbuz.gradle.convention.utils.kspTest
+import com.buzbuz.gradle.convention.utils.testImplementation
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -37,6 +39,9 @@ class HiltConventionPlugin : Plugin<Project> {
         dependencies {
             implementation(libs.getLibrary("google.dagger.hilt"))
             ksp(libs.getLibrary("google.dagger.hilt.compiler"))
+
+            testImplementation(libs.getLibrary("google.dagger.hilt.testing"))
+            kspTest(libs.getLibrary("google.dagger.hilt.compiler"))
         }
     }
 }
