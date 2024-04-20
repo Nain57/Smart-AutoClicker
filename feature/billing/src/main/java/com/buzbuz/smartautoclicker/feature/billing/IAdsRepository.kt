@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.billing
 
 import android.app.Activity
+import android.content.Context
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
@@ -32,6 +33,9 @@ abstract class IAdsRepository: Dumpable {
 
     abstract fun requestUserConsentIfNeeded(activity: Activity)
     abstract fun showPrivacyOptionsForm(activity: Activity)
+
+    abstract fun loadAd(context: Context)
+    abstract fun showAd(activity: Activity)
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()

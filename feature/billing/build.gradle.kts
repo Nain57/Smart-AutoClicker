@@ -40,9 +40,16 @@ android {
             }
 
             buildParameters["adsApplicationId"].asManifestPlaceHolder(this)
+            buildParameters["adsApplicationId"].asStringBuildConfigField(this)
 
             buildParameters["consentTestDevicesIds"].asStringArrayBuildConfigField(this)
             buildParameters["billingPublicKey"].asStringBuildConfigField(this)
+
+            buildConfigField(
+                type = "String",
+                name = "testAdsApplicationId",
+                value = "\"\"",
+            )
         }
     }
 }
@@ -62,6 +69,7 @@ dependencies {
     "playStoreImplementation"(libs.android.billingClient.ktx)
 
     "playStoreImplementation"(libs.google.userMessaging)
+    "playStoreImplementation"(libs.google.gms.ads)
 
     "playStoreImplementation"(libs.google.material)
 }

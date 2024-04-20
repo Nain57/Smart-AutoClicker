@@ -38,6 +38,7 @@ androidBillingClient = "6.2.0"
 googleFirebaseBom = "32.8.0"
 googleFirebaseCrashlytics = "18.6.3"
 googleUserMessaging = "2.2.0"
+googleGmsAds = "23.0.0"
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"
@@ -106,6 +107,7 @@ google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "fireb
 google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk", version.ref = "googleFirebaseCrashlytics" }
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleDaggerHilt" }
 google-userMessaging = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "googleUserMessaging" }
+google-gms-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googleGmsAds" }
 
 # Tests only
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreTesting" }

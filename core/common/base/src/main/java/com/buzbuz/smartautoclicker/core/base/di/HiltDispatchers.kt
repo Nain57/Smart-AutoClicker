@@ -34,7 +34,7 @@ object DispatchersModule {
 
     @Provides
     @Dispatcher(HiltCoroutineDispatchers.Main)
-    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Main
 }
 
 @Qualifier

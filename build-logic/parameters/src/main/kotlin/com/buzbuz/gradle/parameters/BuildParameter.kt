@@ -16,28 +16,28 @@
  */
 package com.buzbuz.gradle.parameters
 
-import com.android.build.api.dsl.LibraryProductFlavor
+import com.android.build.api.dsl.VariantDimension
 
 data class BuildParameter(val name: String, val value: String?) {
 
-    fun asStringBuildConfigField(flavor: LibraryProductFlavor) {
-        flavor.buildConfigField(
+    fun asStringBuildConfigField(variant: VariantDimension) {
+        variant.buildConfigField(
             type = "String",
             name = name.asBuildConfigFieldName(),
             value = "\"$value\""
         )
     }
 
-    fun asStringArrayBuildConfigField(flavor: LibraryProductFlavor) {
-        flavor.buildConfigField(
+    fun asStringArrayBuildConfigField(variant: VariantDimension) {
+        variant.buildConfigField(
             type = "String[]",
             name = name.asBuildConfigFieldName(),
             value = value ?: "",
         )
     }
 
-    fun asManifestPlaceHolder(flavor: LibraryProductFlavor) {
-        flavor.manifestPlaceholders[name] = value ?: ""
+    fun asManifestPlaceHolder(variant: VariantDimension) {
+        variant.manifestPlaceholders[name] = value ?: ""
     }
 
     private fun String.asBuildConfigFieldName(): String =
