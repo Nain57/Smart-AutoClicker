@@ -21,7 +21,7 @@ import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
-import com.buzbuz.smartautoclicker.feature.billing.data.BillingDataSource
+import com.buzbuz.smartautoclicker.feature.billing.data.billing.BillingDataSource
 import com.buzbuz.smartautoclicker.feature.billing.ui.ProModeBillingActivity
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,8 +31,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BillingRepository(
+@Singleton
+class BillingRepository @Inject constructor(
     @ApplicationContext applicationContext: Context,
 ): IBillingRepository() {
 
@@ -45,7 +48,7 @@ class BillingRepository(
 
     override val newPurchases: Flow<List<String>> = dataSource.getNewPurchases()
 
-    override val isProModePurchased: Flow<Boolean> = dataSource.isPurchased()
+    override val isProModePurchased: Flow<Boolean> = dataSource.isPurchased
     override val canPurchaseProMode = dataSource.canPurchase()
 
     override val proModeTitle: Flow<String> = dataSource.getProductTitle()
@@ -65,4 +68,6 @@ class BillingRepository(
     override fun setBillingActivityState(created: Boolean) {
         billingActivityState.value = created
     }
+
+    override fun isPurchased(): Boolean = dataSource.isPurchased()
 }

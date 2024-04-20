@@ -19,8 +19,6 @@ package com.buzbuz.smartautoclicker.feature.billing
 import android.app.Activity
 import android.content.Context
 
-import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
-
 import kotlinx.coroutines.flow.Flow
 
 abstract class IBillingRepository {
@@ -65,4 +63,6 @@ abstract class IBillingRepository {
     internal abstract fun launchPlayStoreBillingFlow(activity: Activity)
 
     internal abstract fun setBillingActivityState(created: Boolean)
+
+    internal abstract fun isPurchased(): Boolean
 }

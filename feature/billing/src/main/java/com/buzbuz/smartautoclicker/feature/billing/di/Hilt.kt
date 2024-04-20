@@ -16,15 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.billing.di
 
-import android.content.Context
+import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-
+import com.buzbuz.smartautoclicker.feature.billing.domain.AdsRepository
 import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
 
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -34,6 +33,11 @@ object BillingHiltModule {
 
     @Provides
     @Singleton
-    fun providesBillingRepository(@ApplicationContext context: Context): IBillingRepository =
-        BillingRepository(context)
+    fun providesBillingRepository(billingRepository: BillingRepository): IBillingRepository =
+        billingRepository
+
+    @Provides
+    @Singleton
+    fun providesAdsRepository(adsRepository: AdsRepository): IAdsRepository =
+        adsRepository
 }

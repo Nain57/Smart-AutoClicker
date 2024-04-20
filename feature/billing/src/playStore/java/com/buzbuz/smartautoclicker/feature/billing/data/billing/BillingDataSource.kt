@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing.data
+package com.buzbuz.smartautoclicker.feature.billing.data.billing
 
 import android.app.Activity
 import android.content.Context
@@ -75,8 +75,11 @@ internal class BillingDataSource(
      *
      * @return a Flow that observes the product purchase state
      */
-    fun isPurchased(): Flow<Boolean> = purchaseManager.productState
+    val isPurchased: Flow<Boolean> = purchaseManager.productState
         .map { state -> state == ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED }
+
+    fun isPurchased(): Boolean =
+        purchaseManager.productState.value == ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED
 
     /**
      * Returns whether or not the user can purchase a product.
