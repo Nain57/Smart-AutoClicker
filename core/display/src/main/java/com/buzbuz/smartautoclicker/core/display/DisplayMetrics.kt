@@ -82,6 +82,8 @@ class DisplayMetrics @Inject constructor(
 
     /** Start the monitoring of the screen metrics. */
     fun startMonitoring(context: Context) {
+        updateScreenConfig()
+
         ContextCompat.registerReceiver(
             context,
             configChangedReceiver,
