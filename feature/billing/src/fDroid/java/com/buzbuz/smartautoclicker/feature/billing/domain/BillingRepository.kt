@@ -24,10 +24,10 @@ import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
 
-@Suppress("UNUSED_PARAMETER") // Required by other build variants
-class BillingRepository(applicationContext: Context): IBillingRepository() {
+class BillingRepository @Inject constructor(): IBillingRepository() {
 
     override val newPurchases: Flow<List<String>> = flowOf(emptyList())
 
@@ -43,4 +43,5 @@ class BillingRepository(applicationContext: Context): IBillingRepository() {
 
     override fun launchPlayStoreBillingFlow(activity: Activity) = Unit
     override fun setBillingActivityState(created: Boolean) = Unit
+    override fun isPurchased(): Boolean = true
 }

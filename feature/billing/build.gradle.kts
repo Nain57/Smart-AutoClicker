@@ -39,6 +39,9 @@ android {
                 viewBinding = true
             }
 
+            buildParameters["adsApplicationId"].asManifestPlaceHolder(this)
+
+            buildParameters["consentTestDevicesIds"].asStringArrayBuildConfigField(this)
             buildParameters["billingPublicKey"].asStringBuildConfigField(this)
         }
     }
@@ -56,6 +59,8 @@ dependencies {
 
     "playStoreImplementation"(libs.android.billingClient)
     "playStoreImplementation"(libs.android.billingClient.ktx)
+
+    "playStoreImplementation"(libs.google.userMessaging)
 
     "playStoreImplementation"(libs.google.material)
 }
