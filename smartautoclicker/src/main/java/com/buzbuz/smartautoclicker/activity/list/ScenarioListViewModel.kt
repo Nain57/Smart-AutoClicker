@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.activity.list
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
@@ -30,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
+import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
@@ -55,6 +57,7 @@ class ScenarioListViewModel @Inject constructor(
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
     private val billingRepository: IBillingRepository,
+    private val adsRepository: IAdsRepository,
 ) : ViewModel() {
 
     /** Current state type of the ui. */
@@ -87,10 +90,11 @@ class ScenarioListViewModel @Inject constructor(
         filteredScenarios,
         selectedForBackup,
         billingRepository.isProModePurchased,
-    ) { stateType, scenarios, backupSelection, isProMode ->
+        adsRepository.isPrivacyOptionsRequired,
+    ) { stateType, scenarios, backupSelection, isProMode, privacyRequired ->
         ScenarioListUiState(
             type = stateType,
-            menuUiState = stateType.toMenuUiState(scenarios, backupSelection, isProMode),
+            menuUiState = stateType.toMenuUiState(scenarios, backupSelection, isProMode, privacyRequired),
             listContent =
                 if (stateType != ScenarioListUiState.Type.EXPORT) scenarios
                 else scenarios.filterForBackupSelection(backupSelection),
@@ -181,17 +185,26 @@ class ScenarioListViewModel @Inject constructor(
         billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.BACKUP_IMPORT)
     }
 
+    fun showPrivacySettings(activity: Activity) {
+        adsRepository.showPrivacyOptionsForm(activity)
+    }
+
     private fun ScenarioListUiState.Type.toMenuUiState(
         scenarioItems: List<ScenarioListUiState.Item>,
         backupSelection: ScenarioBackupSelection,
         isProModePurchased: Boolean,
+        isPrivacyRequired: Boolean,
     ): ScenarioListUiState.Menu = when (this) {
         ScenarioListUiState.Type.SEARCH -> ScenarioListUiState.Menu.Search
-        ScenarioListUiState.Type.EXPORT -> ScenarioListUiState.Menu.Export(!backupSelection.isEmpty())
+        ScenarioListUiState.Type.EXPORT -> ScenarioListUiState.Menu.Export(
+            canExport = !backupSelection.isEmpty(),
+            privacyRequired = isPrivacyRequired,
+        )
         ScenarioListUiState.Type.SELECTION -> ScenarioListUiState.Menu.Selection(
             searchEnabled = scenarioItems.isNotEmpty(),
             exportEnabled = scenarioItems.firstOrNull { it is ScenarioListUiState.Item.Valid } != null,
             isProMode = isProModePurchased,
+            privacyRequired = isPrivacyRequired,
         )
     }
 

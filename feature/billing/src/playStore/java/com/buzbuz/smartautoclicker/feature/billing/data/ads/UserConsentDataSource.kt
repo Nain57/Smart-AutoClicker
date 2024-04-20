@@ -32,7 +32,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 internal class UserConsentDataSource @Inject constructor() {
 
     private val consentInformation: MutableStateFlow<ConsentInformation?> =
@@ -60,8 +62,18 @@ internal class UserConsentDataSource @Inject constructor() {
             params.build(),
             { onUserConsentInfoUpdated(activity, consentInfo) },
             { Log.w(TAG, "User consent info update failure: [${it.errorCode}] ${it.message}") },
-            )
+        )
+    }
+
+    fun showPrivacyOptionsForm(activity: Activity) {
+        Log.d(TAG, "Showing privacy options form")
+        UserMessagingPlatform.showPrivacyOptionsForm(activity) { formError ->
+            formError?.let {
+                Log.w(TAG, "User consent failure: [${formError.errorCode}] ${formError.message}")
+            }
         }
+    }
+
     private fun getConsentDebugSettings(context: Context): ConsentDebugSettings? {
         if (BuildConfig.CONSENT_TEST_DEVICES_IDS.isNullOrEmpty()) return null
 
@@ -89,7 +101,8 @@ internal class UserConsentDataSource @Inject constructor() {
         }
 
         consentInformation.value = consentInfo
-        Log.d(TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}")
+        Log.d(TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}, " +
+                "settings required: ${consentInfo.privacyOptionsRequirementStatus}")
     }
 }
 

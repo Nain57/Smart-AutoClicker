@@ -47,8 +47,10 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import dagger.hilt.android.AndroidEntryPoint
+import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.FileDescriptor
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -126,6 +128,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     @Inject lateinit var detectionRepository: DetectionRepository
     @Inject lateinit var dumbEngine: DumbEngine
     @Inject lateinit var bitmapManager: IBitmapManager
+    @Inject lateinit var billingRepository: IBillingRepository
+    @Inject lateinit var adsRepository: IAdsRepository
 
     private var currentScenarioName: String? = null
 
@@ -292,6 +296,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         overlayManager.dump(writer)
         detectionRepository.dump(writer)
         dumbEngine.dump(writer)
+
+        billingRepository.dump(writer)
+        adsRepository.dump(writer)
     }
 
     override fun onInterrupt() { /* Unused */ }

@@ -51,4 +51,9 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="@string/menu_item_title_search" />
 
+    <item
+        android:id="@+id/action_privacy_settings"
+        app:showAsAction="never"
+        android:title="@string/menu_item_title_privacy" />
+
 </menu>

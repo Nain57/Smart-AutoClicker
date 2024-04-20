@@ -35,7 +35,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BillingRepository @Inject constructor(
+internal class BillingRepository @Inject constructor(
     @ApplicationContext applicationContext: Context,
 ): IBillingRepository() {
 

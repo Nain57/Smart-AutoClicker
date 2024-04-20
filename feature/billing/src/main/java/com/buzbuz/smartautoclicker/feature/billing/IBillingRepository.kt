@@ -18,10 +18,14 @@ package com.buzbuz.smartautoclicker.feature.billing
 
 import android.app.Activity
 import android.content.Context
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
 
 import kotlinx.coroutines.flow.Flow
+import java.io.PrintWriter
 
-abstract class IBillingRepository {
+abstract class IBillingRepository : Dumpable {
 
     abstract val newPurchases: Flow<List<String>>
 
@@ -65,4 +69,21 @@ abstract class IBillingRepository {
     internal abstract fun setBillingActivityState(created: Boolean)
 
     internal abstract fun isPurchased(): Boolean
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(prefix).println("* BillingRepository:")
+            append(contentPrefix)
+                .append("- canPurchase=${canPurchaseProMode.dumpWithTimeout()}; ")
+                .append("isPurchased=${isPurchased()}; ")
+                .println()
+            append(contentPrefix)
+                .append("- title=${proModeTitle.dumpWithTimeout()}; ")
+                .append("price=${proModePrice.dumpWithTimeout()}; ")
+                .append("description=${proModeDescription.dumpWithTimeout()}; ")
+                .println()
+        }
+    }
 }
