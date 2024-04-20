@@ -17,12 +17,31 @@
 package com.buzbuz.smartautoclicker.feature.billing
 
 import android.app.Activity
+
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
+
 import kotlinx.coroutines.flow.Flow
+import java.io.PrintWriter
 
-interface IAdsRepository {
+abstract class IAdsRepository: Dumpable {
 
-    val isUserConsentingForAds: Flow<Boolean>
-    val isPrivacyOptionsRequired: Flow<Boolean>
+    abstract val isUserConsentingForAds: Flow<Boolean>
+    abstract val isPrivacyOptionsRequired: Flow<Boolean>
 
-    fun requestUserConsentIfNeeded(activity: Activity)
+    abstract fun requestUserConsentIfNeeded(activity: Activity)
+    abstract fun showPrivacyOptionsForm(activity: Activity)
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(prefix).println("* AdsRepository:")
+            append(contentPrefix)
+                .append("- adsConsent=${isUserConsentingForAds.dumpWithTimeout()}; ")
+                .append("privacyOptionsRequired=${isPrivacyOptionsRequired.dumpWithTimeout()}; ")
+                .println()
+        }
+    }
 }

@@ -95,9 +95,7 @@ class ScenarioListFragment : Fragment() {
             add.setOnClickListener { onCreateClicked() }
 
             appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
-            topAppBar.apply {
-                setOnMenuItemClickListener { onMenuItemSelected(it) }
-            }
+            topAppBar.setOnMenuItemClickListener { onMenuItemSelected(it) }
         }
 
         lifecycleScope.launch {
@@ -129,6 +127,7 @@ class ScenarioListFragment : Fragment() {
             R.id.action_cancel -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)
             R.id.action_search -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SEARCH)
             R.id.action_select_all -> scenarioListViewModel.toggleAllScenarioSelectionForBackup()
+            R.id.action_privacy_settings -> activity?.let(scenarioListViewModel::showPrivacySettings)
             else -> return false
         }
 
@@ -175,6 +174,7 @@ class ScenarioListFragment : Fragment() {
                     }
                 }
             }
+            findItem(R.id.action_privacy_settings)?.bind(menuState.privacyItemState)
         }
     }
 

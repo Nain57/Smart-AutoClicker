@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.activity
 
 import android.Manifest
+import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -28,6 +29,7 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,6 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScenarioViewModel @Inject constructor(
     @ApplicationContext context: Context,
+    private val adsRepository: IAdsRepository,
 ) : ViewModel() {
 
     /** Callback upon the availability of the [SmartAutoClickerService]. */
@@ -64,6 +67,10 @@ class ScenarioViewModel @Inject constructor(
     override fun onCleared() {
         SmartAutoClickerService.getLocalService(null)
         super.onCleared()
+    }
+
+    fun requestUserConsent(activity: Activity) {
+        adsRepository.requestUserConsentIfNeeded(activity)
     }
 
     /**

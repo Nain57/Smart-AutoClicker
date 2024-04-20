@@ -22,9 +22,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-class AdsRepository @Inject constructor() : IAdsRepository {
+internal class AdsRepository @Inject constructor() : IAdsRepository() {
 
     override val isUserConsentingForAds: Flow<Boolean> = flowOf(false)
     override val isPrivacyOptionsRequired: Flow<Boolean> = flowOf(false)
     override fun requestUserConsentIfNeeded(activity: Activity) = Unit
+    override fun showPrivacyOptionsForm(activity: Activity) = Unit
 }

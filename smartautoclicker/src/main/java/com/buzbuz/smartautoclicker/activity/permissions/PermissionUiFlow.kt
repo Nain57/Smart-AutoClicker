@@ -27,7 +27,7 @@ fun AppCompatActivity.startPermissionFlow(
     onMandatoryDenied: () -> Unit,
 ) {
     val permissionsLeft = buildSet {
-        Permission.Type.values().forEach { permissionType ->
+        Permission.Type.entries.forEach { permissionType ->
             if (!permissionType.permission.isGranted(this@startPermissionFlow)) add(permissionType)
         }
     }.toMutableSet()

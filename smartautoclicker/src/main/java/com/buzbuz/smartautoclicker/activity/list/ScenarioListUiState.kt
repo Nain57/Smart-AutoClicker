@@ -50,21 +50,14 @@ data class ScenarioListUiState(
         EXPORT,
     }
 
-    /**
-     * Ui state of the action menu.
-     *
-     * @param searchItemState the state of the search item.
-     * @param selectAllItemState the state of the select all item.
-     * @param cancelItemState the state of the cancel item.
-     * @param importItemState the state of the import item.
-     * @param exportItemState the state of the export item.
-     */
+    /** Ui state of the action menu. */
     sealed class Menu(
         val searchItemState: Item,
         val selectAllItemState: Item,
         val cancelItemState: Item,
         val importItemState: Item,
         val exportItemState: Item,
+        val privacyItemState: Item,
     ) {
 
         /**
@@ -86,9 +79,13 @@ data class ScenarioListUiState(
             cancelItemState = Item(false),
             importItemState = Item(false),
             exportItemState = Item(false),
+            privacyItemState = Item(false),
         )
 
-        data class Export(private val canExport: Boolean) : Menu(
+        data class Export(
+            private val canExport: Boolean,
+            private val privacyRequired: Boolean,
+        ) : Menu(
             searchItemState = Item(false),
             selectAllItemState = Item(true),
             cancelItemState = Item(true),
@@ -98,12 +95,14 @@ data class ScenarioListUiState(
                 enabled = canExport,
                 iconAlpha = if (canExport) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
             ),
+            privacyItemState = Item(privacyRequired),
         )
 
         data class Selection(
             private val searchEnabled: Boolean,
             private val exportEnabled: Boolean,
             private val isProMode: Boolean,
+            private val privacyRequired: Boolean,
         ) : Menu(
             searchItemState = Item(searchEnabled),
             selectAllItemState = Item(false),
@@ -118,6 +117,7 @@ data class ScenarioListUiState(
                 enabled = exportEnabled,
                 iconAlpha = if (isProMode) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
             ),
+            privacyItemState = Item(privacyRequired),
         )
     }
 

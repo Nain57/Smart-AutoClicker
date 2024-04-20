@@ -39,6 +39,7 @@
     <string name="menu_item_title_export">导出</string>
     <string name="menu_item_title_import">导入</string>
     <string name="menu_item_title_select_all">全选</string>
+    <string name="menu_item_title_privacy">隐私设置</string>
 
     <!--
       - Text for items in a list or vertical layout.

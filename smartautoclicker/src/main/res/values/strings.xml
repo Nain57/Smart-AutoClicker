@@ -47,6 +47,7 @@
     <string name="menu_item_title_export">Export</string>
     <string name="menu_item_title_import">Import</string>
     <string name="menu_item_title_select_all">Select all</string>
+    <string name="menu_item_title_privacy">Privacy settings</string>
 
     <!--
       - Text for items in a list or vertical layout.

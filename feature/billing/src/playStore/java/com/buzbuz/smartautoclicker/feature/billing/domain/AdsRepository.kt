@@ -29,24 +29,27 @@ import javax.inject.Singleton
 
 
 @Singleton
-class AdsRepository @Inject internal constructor(
+internal class AdsRepository @Inject constructor(
     private val billingRepository: IBillingRepository,
     private val userConsentDataSource: UserConsentDataSource,
-) : IAdsRepository {
+) : IAdsRepository() {
 
     override val isUserConsentingForAds: Flow<Boolean> = userConsentDataSource.isUserConsentingForAds
         .combine(billingRepository.isProModePurchased) { isConsenting, haveProMode ->
-                !haveProMode && isConsenting
-            }
+            !haveProMode && isConsenting
+        }
 
     override val isPrivacyOptionsRequired: Flow<Boolean> = userConsentDataSource.isPrivacyOptionsRequired
         .combine(billingRepository.isProModePurchased) { required, haveProMode ->
-                !haveProMode && required
-            }
-
-    override fun requestUserConsentIfNeeded(activity: Activity) {
-            if (billingRepository.isPurchased()) return
-            userConsentDataSource.requestUserConsent(activity)
+            !haveProMode && required
         }
 
+    override fun requestUserConsentIfNeeded(activity: Activity) {
+        if (billingRepository.isPurchased()) return
+        userConsentDataSource.requestUserConsent(activity)
+    }
+
+    override fun showPrivacyOptionsForm(activity: Activity) {
+        userConsentDataSource.showPrivacyOptionsForm(activity)
+    }
 }

@@ -40,6 +40,7 @@
     <string name="menu_item_title_export">Exporter</string>
     <string name="menu_item_title_import">Importer</string>
     <string name="menu_item_title_select_all">Tout sélectionner</string>
+    <string name="menu_item_title_privacy">Confidentialité</string>
 
 
     <!--

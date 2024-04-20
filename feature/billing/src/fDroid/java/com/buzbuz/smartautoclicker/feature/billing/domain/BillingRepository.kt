@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 
-class BillingRepository @Inject constructor(): IBillingRepository() {
+internal class BillingRepository @Inject constructor(): IBillingRepository() {
 
     override val newPurchases: Flow<List<String>> = flowOf(emptyList())
 

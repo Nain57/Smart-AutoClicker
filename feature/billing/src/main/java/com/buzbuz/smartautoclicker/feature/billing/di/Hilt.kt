@@ -33,11 +33,11 @@ object BillingHiltModule {
 
     @Provides
     @Singleton
-    fun providesBillingRepository(billingRepository: BillingRepository): IBillingRepository =
+    internal fun providesBillingRepository(billingRepository: BillingRepository): IBillingRepository =
         billingRepository
 
     @Provides
     @Singleton
-    fun providesAdsRepository(adsRepository: AdsRepository): IAdsRepository =
+    internal fun providesAdsRepository(adsRepository: AdsRepository): IAdsRepository =
         adsRepository
 }
