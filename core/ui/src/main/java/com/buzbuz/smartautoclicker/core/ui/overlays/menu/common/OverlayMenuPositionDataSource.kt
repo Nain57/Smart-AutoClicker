@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,14 +23,16 @@ import android.graphics.Point
 import android.util.Log
 
 import androidx.annotation.VisibleForTesting
+import com.buzbuz.smartautoclicker.core.base.Dumpable
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class OverlayMenuPositionDataSource @Inject constructor(
     @ApplicationContext context: Context,
-) {
+): Dumpable {
 
     internal companion object {
         /** Name of the preference file. */
@@ -57,6 +59,9 @@ class OverlayMenuPositionDataSource @Inject constructor(
      */
     private var lockedMenuPosition: Point? = null
 
+    private var lastLoadedOrientation: Int? = null
+    private var lastLoadedPosition: Point? = null
+
     /**
      * Load last user menu position for the current orientation, if any.
      *
@@ -67,7 +72,8 @@ class OverlayMenuPositionDataSource @Inject constructor(
             return lockedPosition
         }
 
-        val position = when (orientation) {
+        lastLoadedOrientation = orientation
+        lastLoadedPosition = when (orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> Point(
                 sharedPreferences.getInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, 0),
                 sharedPreferences.getInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, 0),
@@ -79,8 +85,8 @@ class OverlayMenuPositionDataSource @Inject constructor(
             else -> return null
         }
 
-        Log.d(TAG, "loadMenuPosition for orientation $orientation = [${position.x}, ${position.y}]")
-        return position
+        Log.d(TAG, "loadMenuPosition for orientation $orientation = [${lastLoadedPosition?.x}, ${lastLoadedPosition?.y}]")
+        return lastLoadedPosition
     }
 
     /**
@@ -134,6 +140,14 @@ class OverlayMenuPositionDataSource @Inject constructor(
 
     private fun isPositionLocked(): Boolean =
         lockedMenuPosition != null
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        writer.append(prefix)
+            .append("lastLoadedOrientation=$lastLoadedOrientation; ")
+            .append("lastLoadedPosition=$lastLoadedPosition; ")
+            .append("lockedMenuPosition=$lockedMenuPosition; ")
+            .println()
+    }
 }
 
 private const val TAG = "OverlayMenuPositionDataSource"

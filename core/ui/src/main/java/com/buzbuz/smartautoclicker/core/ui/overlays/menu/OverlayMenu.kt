@@ -37,6 +37,7 @@ import androidx.annotation.StyleRes
 import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 
 import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
@@ -50,6 +51,7 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuPosit
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.common.OverlayMenuResizeController
 
 import dagger.hilt.EntryPoints
+import java.io.PrintWriter
 
 /**
  * Controller for a menu displayed as an overlay shown from a service.
@@ -117,10 +119,14 @@ abstract class OverlayMenu(
     private lateinit var buttonsContainer: ViewGroup
     /** Handles the window size computing when animating a resize of the overlay. */
     private lateinit var resizeController: OverlayMenuResizeController
-    /** Handles the save/load of the position of the menus. */
-    private lateinit var positionDataSource: OverlayMenuPositionDataSource
     /** Handles the touch events on the move button. */
     private lateinit var moveTouchEventHandler: OverlayMenuMoveTouchEventHandler
+
+    /** Handles the save/load of the position of the menus. */
+    private val positionDataSource: OverlayMenuPositionDataSource by lazy {
+        EntryPoints.get(context.applicationContext, UiEntryPoint::class.java)
+            .overlayMenuPositionDataSource()
+    }
 
     /** Value of the alpha for a disabled item view in the menu. */
     private var disabledItemAlpha: Float = 1f
@@ -199,8 +205,6 @@ abstract class OverlayMenu(
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
         overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
-        positionDataSource = EntryPoints.get(context.applicationContext, UiEntryPoint::class.java)
-            .overlayMenuPositionDataSource()
         positionDataSource.addOnLockedPositionChangedListener(onLockedPositionChangedListener)
         loadMenuPosition(displayMetrics.orientation)
 
@@ -576,6 +580,21 @@ abstract class OverlayMenu(
             Log.d(TAG, "Unlocking menu position of overlay ${hashCode()}")
             moveButton?.let { setMenuItemVisibility(it, true) }
             loadMenuPosition(displayMetrics.orientation)
+        }
+    }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        super.dump(writer, prefix)
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(contentPrefix)
+                .append("resumeOnceShown=$resumeOnceShown; ")
+                .append("destroyOnceHidden=$destroyOnceHidden; ")
+                .println()
+
+            animations.dump(writer, contentPrefix)
+            positionDataSource.dump(writer, contentPrefix)
         }
     }
 }

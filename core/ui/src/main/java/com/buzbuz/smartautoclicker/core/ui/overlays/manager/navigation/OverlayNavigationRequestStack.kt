@@ -16,10 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.overlays.manager.navigation
 
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.ui.utils.internal.LifoStack
 import java.io.PrintWriter
 
-internal class OverlayNavigationRequestStack : LifoStack<OverlayNavigationRequest>() {
+internal class OverlayNavigationRequestStack : LifoStack<OverlayNavigationRequest>(), Dumpable {
 
     override fun push(element: OverlayNavigationRequest) =
         when(element) {
@@ -38,7 +40,18 @@ internal class OverlayNavigationRequestStack : LifoStack<OverlayNavigationReques
         if (!contains(request)) super.push(request)
     }
 
-    fun dump(writer: PrintWriter, prefix: String) {
-        forEach { writer.println("$prefix $it") }
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(prefix).append("- Navigation Request Stack:")
+            if (isEmpty()) {
+                append(" empty").println()
+                return
+            }
+            println()
+
+            forEach { request -> append(contentPrefix).println(request) }
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,12 @@ import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 
 import androidx.core.view.children
+import com.buzbuz.smartautoclicker.core.base.Dumpable
 
 import com.buzbuz.smartautoclicker.core.base.extensions.setListener
+import java.io.PrintWriter
 
-internal class OverlayMenuAnimations {
+internal class OverlayMenuAnimations : Dumpable {
 
     /** Animation for showing the menu. */
     private val showOverlayMenuAnimation: Animation = AlphaAnimation(0f, 1f).apply {
@@ -110,6 +112,13 @@ internal class OverlayMenuAnimations {
         if (overlayView is ViewGroup && overlayView.childCount == 1) {
             overlayView.children.first().startAnimation(hideOverlayViewAnimation)
         }
+    }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        writer.append(prefix)
+            .append("showIsRunning=$showAnimationIsRunning; ")
+            .append("hideIsRunning=$hideAnimationIsRunning; ")
+            .println()
     }
 }
 

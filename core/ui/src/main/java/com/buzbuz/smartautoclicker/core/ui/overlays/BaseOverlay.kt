@@ -32,6 +32,8 @@ import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.lifecycleScope
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
@@ -63,7 +65,7 @@ import java.io.PrintWriter
 abstract class BaseOverlay internal constructor(
     private val theme: Int? = null,
     private val recreateOnRotation: Boolean = false,
-) : Overlay() {
+) : Overlay(), Dumpable {
 
     /** The context for this overlay. */
     override lateinit var context: Context
@@ -308,19 +310,16 @@ abstract class BaseOverlay internal constructor(
             }
         )
 
-    /**
-     * Dump the state of this overlay controller into the provided writer.
-     *
-     * @param writer the writer to dump into.
-     * @param prefix the prefix to start each line with.
-     */
-    fun dump(writer: PrintWriter, prefix: String) {
-        writer.apply {
-            println("$prefix * ${this@BaseOverlay.toDumpString()}:")
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
 
-            val contentPrefix = "$prefix\t"
-            println("$contentPrefix Lifecycle: ${lifecycleRegistry.currentState}")
-            if (recreateOnRotation) println("$contentPrefix\t - shouldBeRecreated")
+        writer.apply {
+            append(prefix).println(this@BaseOverlay.toDumpString())
+            append(contentPrefix)
+                .append("lifecycle=${lifecycleRegistry.currentState}; ")
+                .append("recreateOnRotation=$recreateOnRotation; ")
+                .append("shouldBeRecreated=$shouldBeRecreated; ")
+                .println()
         }
     }
 

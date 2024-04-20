@@ -16,13 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.core.domain
 
-import android.content.Context
 import android.graphics.Bitmap
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
-import com.buzbuz.smartautoclicker.core.database.ClickDatabase
-import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition

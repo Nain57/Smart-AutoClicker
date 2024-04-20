@@ -26,11 +26,13 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 
 import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.io.PrintWriter
 
 /**
  * Controller for a dialog opened from a service as an overlay.
@@ -49,7 +51,7 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
     }
 
     /** Tells if the dialog is visible. */
-    private var isShowing = false
+    private var isShown = false
 
     /**
      * The dialog currently displayed by this controller.
@@ -119,9 +121,9 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
 
     @CallSuper
     override fun onStart() {
-        if (isShowing) return
+        if (isShown) return
 
-        isShowing = true
+        isShown = true
         dialog?.show()
     }
 
@@ -133,11 +135,11 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
 
     @CallSuper
     override fun onStop() {
-        if (!isShowing) return
+        if (!isShown) return
 
         hideSoftInput()
         dialog?.hide()
-        isShowing = false
+        isShown = false
     }
 
     @CallSuper
@@ -160,5 +162,14 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
         dialog?.let {
             inputMethodManager.hideSoftInputFromWindow(it.window!!.decorView.windowToken, 0)
         }
+    }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        super.dump(writer, prefix)
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.append(contentPrefix)
+            .append("isDialogShown=$isShown; ")
+            .println()
     }
 }

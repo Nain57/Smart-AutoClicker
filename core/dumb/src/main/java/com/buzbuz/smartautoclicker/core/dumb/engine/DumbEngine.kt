@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.dumb.engine
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
@@ -34,15 +36,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.minutes
+
+import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
 class DumbEngine @Inject constructor(
     private val dumbRepository: IDumbRepository,
-) {
+): Dumpable {
 
     /** Execute the dumb actions. */
     private var dumbActionExecutor: DumbActionExecutor? = null
@@ -130,6 +134,19 @@ class DumbEngine @Inject constructor(
 
             processingScope?.launch { stopDumbScenario() }
         }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(prefix).println("* DumbEngine:")
+
+            append(contentPrefix)
+                .append("- scenarioId=${dumbScenarioDbId.value}; ")
+                .append("isRunning=${isRunning.value}; ")
+                .println()
+        }
+    }
 }
 
 private const val TAG = "DumbEngine"

@@ -29,7 +29,10 @@ import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +44,7 @@ import javax.inject.Singleton
 @Singleton
 class DisplayMetrics @Inject constructor(
     @ApplicationContext context: Context,
-) {
+): Dumpable {
 
     /** The Android window manager. */
     private val windowManager = context.getSystemService(WindowManager::class.java)
@@ -112,16 +115,7 @@ class DisplayMetrics @Inject constructor(
         val newOrientation = getCurrentOrientation()
         if (newOrientation == orientation) return false
 
-        val newSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            windowManager.currentWindowMetrics.bounds.let { windowBound ->
-                Point(windowBound.width(), windowBound.height())
-            }
-        } else {
-            val realSize = Point()
-            display.getRealSize(realSize)
-            realSize
-        }
-
+        val newSize = getCurrentDisplaySize()
         orientation = newOrientation
         screenSize = if (newSize == screenSize) {
             Point(newSize.y, newSize.x)
@@ -134,11 +128,53 @@ class DisplayMetrics @Inject constructor(
         return true
     }
 
+    private fun getCurrentDisplaySize(): Point =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            windowManager.currentWindowMetrics.bounds.let { windowBound ->
+                Point(windowBound.width(), windowBound.height())
+            }
+        } else {
+            val realSize = Point()
+            display.getRealSize(realSize)
+            realSize
+        }
+
     /**  @return the orientation of the screen. */
     private fun getCurrentOrientation(): Int = when (display.rotation) {
         Surface.ROTATION_0, Surface.ROTATION_180 -> Configuration.ORIENTATION_PORTRAIT
         Surface.ROTATION_90, Surface.ROTATION_270 -> Configuration.ORIENTATION_LANDSCAPE
         else -> Configuration.ORIENTATION_UNDEFINED
+    }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(prefix).println("* DisplayMetrics:")
+            append(contentPrefix)
+                .append("- topInset=$safeInsetTop; ")
+                .append("orientation=${orientation.toOrientationString()}; ")
+                .append("screenSize=$screenSize; ")
+                .println()
+            append(contentPrefix)
+                .append("- displayRotation=${display.rotation.toDisplayRotationString()}; ")
+                .append("displaySize=${getCurrentDisplaySize()}; ")
+                .println()
+        }
+    }
+
+    private fun Int?.toOrientationString(): String = when (this) {
+        Configuration.ORIENTATION_PORTRAIT -> "PORTRAIT"
+        Configuration.ORIENTATION_LANDSCAPE -> "LANDSCAPE"
+        else -> "UNDEFINED"
+    }
+
+    private fun Int?.toDisplayRotationString(): String = when (this) {
+        Surface.ROTATION_0 -> "ROTATION_0"
+        Surface.ROTATION_180 -> "ROTATION_180"
+        Surface.ROTATION_90 -> "ROTATION_90"
+        Surface.ROTATION_270 -> "ROTATION_270"
+        else -> "UNDEFINED"
     }
 }
 

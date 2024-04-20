@@ -38,7 +38,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.PrintWriter
 
 class LocalService(
     private val context: Context,
@@ -56,7 +55,7 @@ class LocalService(
     /** Coroutine job for the delayed start of engine & ui. */
     private var startJob: Job? = null
     /** True if the overlay is started, false if not. */
-    private var isStarted: Boolean = false
+    internal var isStarted: Boolean = false
 
     override fun startDumbScenario(dumbScenario: DumbScenario) {
         if (isStarted) return
@@ -151,14 +150,6 @@ class LocalService(
             } else {
                 hideAll()
             }
-        }
-    }
-
-    fun dump(writer: PrintWriter) {
-        writer.apply {
-            writer.println("* UI:")
-            val prefix = "\t"
-            overlayManager.dump(writer, prefix)
         }
     }
 }

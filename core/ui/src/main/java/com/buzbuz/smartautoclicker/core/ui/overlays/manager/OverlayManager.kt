@@ -22,6 +22,8 @@ import android.util.Log
 import android.view.KeyEvent
 
 import androidx.lifecycle.Lifecycle
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.ui.overlays.BaseOverlay
@@ -50,7 +52,7 @@ import javax.inject.Singleton
 class OverlayManager @Inject internal constructor(
     private val displayMetrics: DisplayMetrics,
     private val menuPositionDataSource: OverlayMenuPositionDataSource,
-) {
+): Dumpable {
     /** The listener upon screen rotation. */
     private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
 
@@ -320,17 +322,17 @@ class OverlayManager @Inject internal constructor(
         overlayBackStack.forEachReversed { it.changeOrientation() }
     }
 
-    fun dump(writer: PrintWriter, prefix: String) {
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+        val itemPrefix = contentPrefix.addDumpTabulationLvl()
+
         writer.apply {
-            println("$prefix * OverlayManager:")
-            val contentPrefix = "$prefix\t"
-            val itemPrefix = "$contentPrefix\t"
+            append(prefix).println("* OverlayManager:")
 
-            println("$contentPrefix * Back Stack:")
+            overlayNavigationRequestStack.dump(this, contentPrefix)
+
+            append(contentPrefix).println("- BackStack:")
             overlayBackStack.forEach { overlay -> (overlay as BaseOverlay).dump(this, itemPrefix) }
-
-            println("$contentPrefix * Navigation Request Stack:")
-            overlayNavigationRequestStack.dump(this, itemPrefix)
         }
     }
 }

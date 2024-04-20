@@ -31,7 +31,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
@@ -44,7 +43,6 @@ import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugMo
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.hilt.EntryPoints
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

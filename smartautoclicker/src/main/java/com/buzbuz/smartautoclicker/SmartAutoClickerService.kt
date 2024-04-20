@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVI
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
@@ -272,15 +273,21 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
     /**
      * Dump the state of the service via adb.
-     * adb shell "dumpsys activity service com.buzbuz.smartautoclicker.debug/com.buzbuz.smartautoclicker.SmartAutoClickerService"
+     * adb shell "dumpsys activity service com.buzbuz.smartautoclicker"
      */
     override fun dump(fd: FileDescriptor?, writer: PrintWriter?, args: Array<out String>?) {
-        super.dump(fd, writer, args)
-
         if (writer == null) return
 
-        (LOCAL_SERVICE_INSTANCE as? LocalService)
-            ?.dump(writer) ?: writer.println("None")
+        writer.append("* SmartAutoClickerService:").println()
+        writer.append(Dumpable.DUMP_DISPLAY_TAB)
+            .append("- isStarted=").append("${(LOCAL_SERVICE_INSTANCE as? LocalService)?.isStarted ?: false}; ")
+            .append("scenarioName=").append("$currentScenarioName; ")
+            .println()
+
+        displayMetrics.dump(writer)
+        overlayManager.dump(writer)
+        detectionRepository.dump(writer)
+        dumbEngine.dump(writer)
     }
 
     override fun onInterrupt() { /* Unused */ }

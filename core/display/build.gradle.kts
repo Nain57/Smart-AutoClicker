@@ -30,4 +30,6 @@ dependencies {
 
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.core.ktx)
+
+    implementation(project(":core:base"))
 }

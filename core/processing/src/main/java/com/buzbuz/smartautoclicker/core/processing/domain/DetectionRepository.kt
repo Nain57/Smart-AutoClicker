@@ -21,6 +21,9 @@ import android.content.Intent
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -42,6 +45,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 
+import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,7 +54,7 @@ import javax.inject.Singleton
 class DetectionRepository @Inject constructor(
     private val scenarioRepository: IRepository,
     private val detectorEngine: DetectorEngine,
-) {
+): Dumpable {
 
     /** The current scenario unique identifier. */
     private val _scenarioId: MutableStateFlow<Identifier?> = MutableStateFlow(null)
@@ -154,6 +158,20 @@ class DetectionRepository @Inject constructor(
             bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = listener,
         )
+    }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(prefix).println("* DetectionRepository:")
+
+            append(contentPrefix)
+                .append("- scenarioId=${scenarioId.value}; ")
+                .append("canStartDetection=${canStartDetection.dumpWithTimeout() ?: false}; ")
+                .append("detectionState=${detectionState.dumpWithTimeout() ?: DetectionState.INACTIVE}; ")
+                .println()
+        }
     }
 }
 
