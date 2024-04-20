@@ -152,9 +152,6 @@ interface IRepository {
 
     suspend fun cleanupUnusedBitmaps(removedPath: List<String>)
 
-    /** Clean the cache of this repository. */
-    fun cleanCache()
-
     fun startTutorialMode()
 
     fun stopTutorialMode()

@@ -17,9 +17,10 @@
 package com.buzbuz.smartautoclicker.core.bitmaps
 
 import android.graphics.Bitmap
+import com.buzbuz.smartautoclicker.core.base.Dumpable
 
 /** Manages the bitmaps for the click conditions. */
-interface IBitmapManager {
+interface IBitmapManager : Dumpable {
 
     /**
      * Save the provided bitmap into the persistent memory.

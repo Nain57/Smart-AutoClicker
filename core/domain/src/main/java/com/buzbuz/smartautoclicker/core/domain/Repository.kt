@@ -127,10 +127,6 @@ internal class Repository @Inject internal constructor(
         dataSource.clearRemovedConditionsBitmaps(removedPath)
     }
 
-    override fun cleanCache(): Unit =
-        bitmapManager.releaseCache()
-
-
     override fun startTutorialMode() {
         Log.d(TAG, "Start tutorial mode, use tutorial database")
         dataSource.currentDatabase.value = tutorialDatabase

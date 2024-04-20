@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
+import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -124,6 +125,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     @Inject lateinit var displayMetrics: DisplayMetrics
     @Inject lateinit var detectionRepository: DetectionRepository
     @Inject lateinit var dumbEngine: DumbEngine
+    @Inject lateinit var bitmapManager: IBitmapManager
 
     private var currentScenarioName: String? = null
 
@@ -149,6 +151,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             displayMetrics = displayMetrics,
             detectionRepository = detectionRepository,
             dumbEngine = dumbEngine,
+            bitmapManager = bitmapManager,
             androidExecutor = this,
             onStart = { isSmart, name ->
                 currentScenarioName = name
@@ -225,7 +228,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             builder.addAction(
                 R.drawable.ic_visible_on,
                 getString(R.string.notification_button_toggle_menu),
-                PendingIntent.getBroadcast(this, 0, Intent(INTENT_ACTION_TOGGLE_OVERLAY), PendingIntent.FLAG_IMMUTABLE,),
+                PendingIntent.getBroadcast(this, 0, Intent(INTENT_ACTION_TOGGLE_OVERLAY), PendingIntent.FLAG_IMMUTABLE),
             )
             builder.addAction(
                 R.drawable.ic_stop,
@@ -285,6 +288,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             .println()
 
         displayMetrics.dump(writer)
+        bitmapManager.dump(writer)
         overlayManager.dump(writer)
         detectionRepository.dump(writer)
         dumbEngine.dump(writer)

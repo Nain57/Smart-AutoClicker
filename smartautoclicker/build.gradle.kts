@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.google.material)
 
     implementation(project(":core:base"))
+    implementation(project(":core:bitmaps"))
     implementation(project(":core:detection"))
     implementation(project(":core:display"))
     implementation(project(":core:domain"))

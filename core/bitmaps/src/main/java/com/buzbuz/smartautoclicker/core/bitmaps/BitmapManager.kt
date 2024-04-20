@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.bitmaps
 import android.graphics.Bitmap
 import android.util.Log
 import android.util.LruCache
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,6 +27,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.PrintWriter
 import java.nio.ByteBuffer
 import javax.inject.Inject
 
@@ -47,14 +49,7 @@ internal class BitmapManager @Inject constructor(
     }
 
     /** Cache for the bitmaps loaded in memory. */
-    private val memoryCache: LruCache<String, Bitmap> = object
-        : LruCache<String, Bitmap>(((Runtime.getRuntime().maxMemory() / 1024).toInt() * CACHE_SIZE_RATIO).toInt()) {
-
-        override fun sizeOf(key: String, bitmap: Bitmap): Int {
-            // The cache size will be measured in kilobytes rather than number of items.
-            return bitmap.byteCount / 1024
-        }
-    }
+    private var memoryCache: LruCache<String, Bitmap>? = null
 
     override suspend fun saveBitmap(bitmap: Bitmap, prefix: String) : String {
         val uncompressedBuffer = ByteBuffer.allocateDirect(bitmap.byteCount)
@@ -73,13 +68,13 @@ internal class BitmapManager @Inject constructor(
             }
         }
 
-        memoryCache.put(path, bitmap)
+        getMemoryCache().put(path, bitmap)
 
         return path
     }
 
     override suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap? {
-        var cachedBitmap = memoryCache.get(path)
+        var cachedBitmap = getMemoryCache().get(path)
         if (cachedBitmap != null) {
             return cachedBitmap
         }
@@ -101,7 +96,7 @@ internal class BitmapManager @Inject constructor(
                 cachedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 cachedBitmap.copyPixelsFromBuffer(buffer)
 
-                memoryCache.put(path, cachedBitmap)
+                getMemoryCache().put(path, cachedBitmap)
                 cachedBitmap
             }
         }
@@ -120,6 +115,39 @@ internal class BitmapManager @Inject constructor(
     }
 
     override fun releaseCache() {
-        memoryCache.evictAll()
+        memoryCache?.evictAll()
+        memoryCache = null
+    }
+
+    private fun getMemoryCache(): LruCache<String, Bitmap> {
+        if (memoryCache == null) memoryCache = createBitmapMemoryCache()
+        return memoryCache!!
+    }
+
+    private fun createBitmapMemoryCache(): LruCache<String, Bitmap>  = object
+        : LruCache<String, Bitmap>(((Runtime.getRuntime().maxMemory() / 1024).toInt() * CACHE_SIZE_RATIO).toInt()) {
+
+        override fun sizeOf(key: String, bitmap: Bitmap): Int {
+            // The cache size will be measured in kilobytes rather than number of items.
+            return bitmap.byteCount / 1024
+        }
+    }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        val contentPrefix = prefix.addDumpTabulationLvl()
+
+        writer.apply {
+            append(prefix).println("* BitmapManager:")
+            append(contentPrefix)
+                .append("- directory=${appDataDir.path}")
+                .println()
+
+            if (memoryCache != null) {
+                append(contentPrefix)
+                    .append("- cacheSize=[${memoryCache?.size()}/${memoryCache?.maxSize()}]; ")
+                    .append("hit/miss=[${memoryCache?.hitCount()}/${memoryCache?.missCount()}]; ")
+                    .println()
+            }
+        }
     }
 }

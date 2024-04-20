@@ -188,11 +188,6 @@ class MainMenuModel @Inject constructor(
 
     fun onStopVolumeDownTutorialDialogShown(): Unit =
         tutorialRepository.setIsTutorialStopVolumeDownPopupShown()
-
-    override fun onCleared() {
-        repository.cleanCache()
-        super.onCleared()
-    }
 }
 
 sealed class UiState {

@@ -22,6 +22,7 @@ import android.media.projection.MediaProjectionManager
 import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -44,6 +45,7 @@ class LocalService(
     private val overlayManager: OverlayManager,
     private val displayMetrics: DisplayMetrics,
     private val detectionRepository: DetectionRepository,
+    private val bitmapManager: IBitmapManager,
     private val dumbEngine: DumbEngine,
     private val androidExecutor: AndroidExecutor,
     private val onStart: (isSmart: Boolean, name: String) -> Unit,
@@ -129,6 +131,7 @@ class LocalService(
             overlayManager.closeAll(context)
             detectionRepository.stopScreenRecord()
             displayMetrics.stopMonitoring(context)
+            bitmapManager.releaseCache()
 
             onStop()
         }
