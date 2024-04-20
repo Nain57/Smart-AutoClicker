@@ -25,28 +25,23 @@ import com.buzbuz.smartautoclicker.feature.billing.BuildConfig
 import com.google.android.ump.ConsentDebugSettings
 import com.google.android.ump.ConsentInformation
 import com.google.android.ump.ConsentRequestParameters
-import com.google.android.ump.FormError
 import com.google.android.ump.UserMessagingPlatform
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.StateFlow
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class UserConsentDataSource @Inject constructor() {
 
-    private val consentInformation: MutableStateFlow<ConsentInformation?> =
-        MutableStateFlow(null)
+    private val _isUserConsentingForAds: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isUserConsentingForAds: StateFlow<Boolean> = _isUserConsentingForAds
 
-    val isUserConsentingForAds: Flow<Boolean> =
-        consentInformation.map { info -> info?.canRequestAds() ?: false }
-
-    val isPrivacyOptionsRequired: Flow<Boolean> =
-        consentInformation.map { info ->
-            info?.privacyOptionsRequirementStatus == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
-        }
+    private val _isPrivacyOptionsRequired: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isPrivacyOptionsRequired: Flow<Boolean> = _isPrivacyOptionsRequired
 
     fun requestUserConsent(activity: Activity) {
         Log.d(TAG, "Requesting user consent...")
@@ -63,6 +58,8 @@ internal class UserConsentDataSource @Inject constructor() {
             { onUserConsentInfoUpdated(activity, consentInfo) },
             { Log.w(TAG, "User consent info update failure: [${it.errorCode}] ${it.message}") },
         )
+
+        refreshConsentInfo(consentInfo)
     }
 
     fun showPrivacyOptionsForm(activity: Activity) {
@@ -71,7 +68,30 @@ internal class UserConsentDataSource @Inject constructor() {
             formError?.let {
                 Log.w(TAG, "User consent failure: [${formError.errorCode}] ${formError.message}")
             }
+
+            refreshConsentInfo(UserMessagingPlatform.getConsentInformation(activity))
         }
+    }
+
+    private fun onUserConsentInfoUpdated(activity: Activity, consentInfo: ConsentInformation) {
+        Log.d(TAG, "User content info updated, load and show consent form if required...")
+
+        UserMessagingPlatform.loadAndShowConsentFormIfRequired(activity) { error ->
+            if (error != null) {
+                Log.w(TAG, "User consent failure: [${error.errorCode}] ${error.message}")
+            }
+
+            refreshConsentInfo(consentInfo)
+        }
+    }
+
+    private fun refreshConsentInfo(consentInfo: ConsentInformation) {
+        _isUserConsentingForAds.value = consentInfo.canRequestAds()
+        _isPrivacyOptionsRequired.value =
+            consentInfo.privacyOptionsRequirementStatus == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
+
+        Log.d(TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}, " +
+                "settings required: ${consentInfo.privacyOptionsRequirementStatus}")
     }
 
     private fun getConsentDebugSettings(context: Context): ConsentDebugSettings? {
@@ -85,24 +105,6 @@ internal class UserConsentDataSource @Inject constructor() {
                 }
             }
             .build()
-    }
-
-    private fun onUserConsentInfoUpdated(activity: Activity, consentInfo: ConsentInformation) {
-        Log.d(TAG, "User content info updated, load and show consent form if required...")
-
-        UserMessagingPlatform.loadAndShowConsentFormIfRequired(activity) { error ->
-            onUserConsentFormDismissed(consentInfo, error)
-        }
-    }
-
-    private fun onUserConsentFormDismissed(consentInfo: ConsentInformation, loadAndShowError: FormError?) {
-        if (loadAndShowError != null) {
-            Log.w(TAG, "User consent failure: [${loadAndShowError.errorCode}] ${loadAndShowError.message}")
-        }
-
-        consentInformation.value = consentInfo
-        Log.d(TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}, " +
-                "settings required: ${consentInfo.privacyOptionsRequirementStatus}")
     }
 }
 

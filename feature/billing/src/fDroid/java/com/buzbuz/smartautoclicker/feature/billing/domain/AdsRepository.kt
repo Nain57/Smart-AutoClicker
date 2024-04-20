@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.billing.domain
 
 import android.app.Activity
+import android.content.Context
 import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -26,6 +27,10 @@ internal class AdsRepository @Inject constructor() : IAdsRepository() {
 
     override val isUserConsentingForAds: Flow<Boolean> = flowOf(false)
     override val isPrivacyOptionsRequired: Flow<Boolean> = flowOf(false)
+
     override fun requestUserConsentIfNeeded(activity: Activity) = Unit
     override fun showPrivacyOptionsForm(activity: Activity) = Unit
+
+    override fun loadAd(context: Context) = Unit
+    override fun showAd(activity: Activity) = Unit
 }
