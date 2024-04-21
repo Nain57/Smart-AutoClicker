@@ -53,4 +53,5 @@ dependencies {
     implementation(project(":core:smart:processing"))
     implementation(project(":feature:billing"))
     implementation(project(":feature:scenario-debugging"))
+    implementation(project(":feature:tutorial"))
 }

@@ -38,7 +38,6 @@ include(":core:smart:processing")
 
 include(":feature:backup")
 include(":feature:billing")
-include(":feature:floating-menu")
 include(":feature:scenario-config")
 include(":feature:scenario-config-dumb")
 include(":feature:scenario-debugging")

@@ -90,7 +90,6 @@ dependencies {
     implementation(project(":core:smart:processing"))
     implementation(project(":feature:backup"))
     implementation(project(":feature:billing"))
-    implementation(project(":feature:floating-menu"))
     implementation(project(":feature:scenario-config"))
     implementation(project(":feature:scenario-config-dumb"))
     implementation(project(":feature:scenario-debugging"))

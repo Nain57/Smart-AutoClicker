@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.scenario.config.di
 
 import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.feature.scenario.config.ui.MainMenuModel
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.ActionTypeSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.changecounter.ChangeCounterViewModel
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.click.ClickViewModel
@@ -81,6 +82,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun imageEventListViewModel(): ImageEventListViewModel
     fun intentActionsSelectionViewModel(): IntentActionsSelectionViewModel
     fun intentViewModel(): IntentViewModel
+    fun mainMenuViewModel(): MainMenuModel
     fun moreViewModel(): MoreViewModel
     fun pauseViewModel(): PauseViewModel
     fun scenarioConfigViewModel(): ScenarioConfigViewModel

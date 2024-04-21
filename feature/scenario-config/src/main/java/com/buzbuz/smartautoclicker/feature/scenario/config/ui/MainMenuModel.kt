@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui
 
 import android.content.Context
 import android.view.View
@@ -22,7 +22,6 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
@@ -45,7 +44,6 @@ import kotlin.time.Duration.Companion.minutes
 
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
-    private val repository: IRepository,
     private val detectionRepository: DetectionRepository,
     private val editionRepository: EditionRepository,
     private val billingRepository: IBillingRepository,

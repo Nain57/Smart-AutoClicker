@@ -162,6 +162,9 @@
     <string name="message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
     <string name="message_condition_delete_associated_action">Cette condition est référencée par une ou plusieures actions. La supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
     <string name="message_tutorial_start">Apprenez à utiliser Smart AutoClicker</string>
+    <string name="message_scenario_saving_error">Votre scenario ne peux pas être enregistré à cause d\'une erreur interne.\nVoulez vous le modifier ou annuler vos modifications ?</string>
+    <string name="message_tutorial_first_time">Félicitations, Smart AutoClicker est maintenant fonctionnel ! \nVoulez vous suivre le tutorial pour apprendre les bases de l\'application ?</string>
+    <string name="message_error_native_lib">Smart AutoClicker est mal installé et ne peut pas démarrer la détection.\n\nSi vous l\'avez installé à partir d\'une boutique d\'applications légitime, veuillez nous contacter sur GitHub, car cela nous aidera à résoudre ce problème.</string>
 
     <!--
       - Section titles.
@@ -204,6 +207,7 @@
     <string name="button_text_quality_speed">Vitesse</string>
     <string name="button_text_quality_precision">Précision</string>
     <string name="button_text_swipe_positions_select">Choisir les positions</string>
+    <string name="button_dialog_modify">Modifier</string>
 
     <!--
       - Text input fields labels and error messages.

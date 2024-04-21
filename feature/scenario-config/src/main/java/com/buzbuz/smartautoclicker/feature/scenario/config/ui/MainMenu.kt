@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.floatingmenu.ui
+package com.buzbuz.smartautoclicker.feature.scenario.config.ui
 
 import android.content.ComponentName
 import android.content.DialogInterface
@@ -34,9 +34,9 @@ import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
-import com.buzbuz.smartautoclicker.feature.floatingmenu.R
-import com.buzbuz.smartautoclicker.feature.floatingmenu.databinding.OverlayMenuBinding
-import com.buzbuz.smartautoclicker.feature.floatingmenu.di.MainMenuEntryPoint
+import com.buzbuz.smartautoclicker.feature.scenario.config.R
+import com.buzbuz.smartautoclicker.feature.scenario.config.databinding.OverlayMenuBinding
+import com.buzbuz.smartautoclicker.feature.scenario.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.scenario.debugging.ui.overlay.DebugModel
@@ -61,7 +61,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     /** The view model for this menu. */
     private val viewModel: MainMenuModel by viewModels(
-        entryPoint = MainMenuEntryPoint::class.java,
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { mainMenuViewModel() },
     )
     /** The view model for the debugging features. */

@@ -167,6 +167,9 @@
     <string name="message_event_delete_associated_action">This event have one or more actions referencing it. Deleting this event will delete the associated actions as well.\nAre you sure ?</string>
     <string name="message_condition_delete_associated_action">This condition have one or more actions referencing it. Deleting this condition will delete the associated actions as well.\nAre you sure ?</string>
     <string name="message_tutorial_start">Learn how to use Smart AutoClicker</string>
+    <string name="message_scenario_saving_error">Your scenario can\'t be saved due to an internal error.\nDo you want to modify it or cancel all your modifications ?</string>
+    <string name="message_tutorial_first_time">Congratulations, Smart AutoClicker is now functional on your device !\nWould you like to follow a tutorial teaching you the basics of the application ?</string>
+    <string name="message_error_native_lib">Smart AutoClicker is incorrectly installed and can\'t start the detection.\n\nIf you have installed it from a legitimate application store, please contact us on GitHub, as it will help us fix this issue.</string>
 
     <!--
       - Section titles.
@@ -209,6 +212,8 @@
     <string name="button_text_quality_speed">Speed</string>
     <string name="button_text_quality_precision">Precision</string>
     <string name="button_text_swipe_positions_select">Select the positions</string>
+    <string name="button_dialog_modify">Modify</string>
+
 
     <!--
       - Text input fields labels and error messages.

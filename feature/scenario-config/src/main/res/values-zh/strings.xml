@@ -162,6 +162,9 @@
     <string name="message_event_delete_associated_action">这个场景存在一个或多个动作被引用。 删除这个场景也会删除相关的动作。\n确认删除？</string>
     <string name="message_condition_delete_associated_action">此条件有一个或多个引用它的操作。删除此条件也会删除关联的操作。\n您确定吗？</string>
     <string name="message_tutorial_start">了解如何使用 Smart AutoClicker</string>
+    <string name="message_scenario_saving_error">由于内部错误，您的方案无法保存。您要修改还是取消所有修改？</string>
+    <string name="message_tutorial_first_time">恭喜，Smart AutoClicker 现已在您的设备上正常运行！\n您想按照教程学习该应用程序的基础知识吗？</string>
+    <string name="message_error_native_lib">Smart AutoClicker 安装错误，无法启动检测。\n\n如果您是从合法的应用程序商店安装的，请在 GitHub 上联系我们，这将有助于我们修复此问题。</string>
 
     <!--
       - Section titles.
@@ -205,6 +208,7 @@
     <string name="button_text_quality_speed">速度</string>
     <string name="button_text_quality_precision">精准度</string>
     <string name="button_text_swipe_positions_select">选择滑动起止坐标</string>
+    <string name="button_dialog_modify">调整</string>
 
     <!--
       - Text input fields labels and error messages.
