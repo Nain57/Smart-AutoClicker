@@ -18,6 +18,7 @@ androidxAppCompat = "1.6.1"
 androidxCardView = "1.0.0"
 androidxConstraintLayout = "2.1.4"
 androidxCoreKtx = "1.12.0"
+androidxDatastore = "1.1.0"
 androidxFragmentKtx = "1.6.2"
 androidxLifecycle = "2.7.0"
 androidxLifecycleExtension = "2.2.0"
@@ -78,6 +79,7 @@ androidx-appCompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-cardView = { group = "androidx.cardview", name = "cardview", version.ref = "androidxCardView" }
 androidx-constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintLayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCoreKtx" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragmentKtx" }
 androidx-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
 androidx-lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "androidxLifecycle" }
