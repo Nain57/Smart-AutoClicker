@@ -29,8 +29,8 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.feature.scenario.config.ui.MainMenu
-import com.buzbuz.smartautoclicker.feature.scenario.config.dumb.ui.DumbMainMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

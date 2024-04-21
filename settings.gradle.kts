@@ -38,9 +38,9 @@ include(":core:smart:processing")
 
 include(":feature:backup")
 include(":feature:billing")
-include(":feature:scenario-config")
-include(":feature:scenario-config-dumb")
-include(":feature:scenario-debugging")
+include(":feature:dumb-config")
+include(":feature:smart-config")
+include(":feature:smart-debugging")
 include(":feature:tutorial")
 
 include(":smartautoclicker")

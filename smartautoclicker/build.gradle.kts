@@ -90,8 +90,8 @@ dependencies {
     implementation(project(":core:smart:processing"))
     implementation(project(":feature:backup"))
     implementation(project(":feature:billing"))
-    implementation(project(":feature:scenario-config"))
-    implementation(project(":feature:scenario-config-dumb"))
-    implementation(project(":feature:scenario-debugging"))
+    implementation(project(":feature:smart-config"))
+    implementation(project(":feature:smart-debugging"))
+    implementation(project(":feature:dumb-config"))
     implementation(project(":feature:tutorial"))
 }

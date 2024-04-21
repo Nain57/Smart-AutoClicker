@@ -40,8 +40,8 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogNavigationTo
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldTextBinding
 import com.buzbuz.smartautoclicker.databinding.DialogScenarioCreationBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeScenarioTypeViewBinding
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.scenario.config.utils.ALPHA_ENABLED_ITEM
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
