@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
 import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.common.quality.QualityManager
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -128,6 +129,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     @Inject lateinit var detectionRepository: DetectionRepository
     @Inject lateinit var dumbEngine: DumbEngine
     @Inject lateinit var bitmapManager: IBitmapManager
+    @Inject lateinit var qualityManager: QualityManager
     @Inject lateinit var billingRepository: IBillingRepository
     @Inject lateinit var adsRepository: IAdsRepository
 
@@ -149,6 +151,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     override fun onServiceConnected() {
         super.onServiceConnected()
 
+        qualityManager.onServiceConnected()
         LOCAL_SERVICE_INSTANCE = LocalService(
             context = this,
             overlayManager = overlayManager,
@@ -158,6 +161,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             bitmapManager = bitmapManager,
             androidExecutor = this,
             onStart = { isSmart, name ->
+                qualityManager.onServiceForegroundStart()
                 currentScenarioName = name
                 if (isSmart) {
                     createNotificationChannel()
@@ -166,6 +170,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 requestFilterKeyEvents(true)
             },
             onStop = {
+                qualityManager.onServiceForegroundEnd()
                 currentScenarioName = null
                 requestFilterKeyEvents(false)
                 stopForeground(Service.STOP_FOREGROUND_REMOVE)
@@ -190,6 +195,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         LOCAL_SERVICE_INSTANCE?.release()
         LOCAL_SERVICE_INSTANCE = null
 
+        qualityManager.onServiceUnbind()
         return super.onUnbind(intent)
     }
 
@@ -296,6 +302,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         overlayManager.dump(writer)
         detectionRepository.dump(writer)
         dumbEngine.dump(writer)
+        qualityManager.dump(writer)
 
         billingRepository.dump(writer)
         adsRepository.dump(writer)
