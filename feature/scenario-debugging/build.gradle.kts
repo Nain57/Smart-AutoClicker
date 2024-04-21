@@ -34,9 +34,9 @@ dependencies {
 
     implementation(libs.google.material)
 
-    implementation(project(":core:base"))
-    implementation(project(":core:detection"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:processing"))
-    implementation(project(":core:ui"))
+    implementation(project(":core:common:base"))
+    implementation(project(":core:common:ui"))
+    implementation(project(":core:smart:detection"))
+    implementation(project(":core:smart:domain"))
+    implementation(project(":core:smart:processing"))
 }

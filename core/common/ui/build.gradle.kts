@@ -22,16 +22,20 @@ plugins {
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.processing"
+    namespace = "com.buzbuz.smartautoclicker.core.ui"
+    buildFeatures.viewBinding = true
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
-    implementation(project(":core:base"))
-    implementation(project(":core:detection"))
-    implementation(project(":core:display"))
-    implementation(project(":core:domain"))
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.recyclerView)
 
-    testImplementation(libs.kotlinx.coroutines.test)
+    implementation(libs.google.material)
+
+    implementation(project(":core:common:base"))
+    implementation(project(":core:common:display"))
 }

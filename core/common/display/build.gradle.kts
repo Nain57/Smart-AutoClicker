@@ -14,16 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.hilt)
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.bitmaps"
+    namespace = "com.buzbuz.smartautoclicker.core.capture"
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
-    implementation(project(":core:base"))
+
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.core.ktx)
+
+    implementation(project(":core:common:base"))
 }

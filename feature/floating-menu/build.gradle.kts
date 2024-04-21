@@ -46,11 +46,11 @@ dependencies {
 
     implementation(libs.google.material)
 
-    implementation(project(":core:base"))
-    implementation(project(":core:display"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:processing"))
-    implementation(project(":core:ui"))
+    implementation(project(":core:common:base"))
+    implementation(project(":core:common:display"))
+    implementation(project(":core:common:ui"))
+    implementation(project(":core:smart:domain"))
+    implementation(project(":core:smart:processing"))
     implementation(project(":feature:billing"))
     implementation(project(":feature:scenario-debugging"))
     implementation(project(":feature:scenario-config"))

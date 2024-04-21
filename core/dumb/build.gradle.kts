@@ -33,5 +33,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:base"))
+    implementation(project(":core:common:base"))
 }

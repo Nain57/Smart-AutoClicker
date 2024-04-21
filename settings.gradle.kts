@@ -25,16 +25,16 @@ dependencyResolutionManagement {
 
 rootProject.name = "Smart Auto Clicker"
 
-include(":core:android")
-include(":core:base")
-include(":core:bitmaps")
-include(":core:database")
-include(":core:detection")
-include(":core:display")
-include(":core:domain")
+include(":core:common:android")
+include(":core:common:base")
+include(":core:common:bitmaps")
+include(":core:common:display")
+include(":core:common:ui")
 include(":core:dumb")
-include(":core:processing")
-include(":core:ui")
+include(":core:smart:database")
+include(":core:smart:detection")
+include(":core:smart:domain")
+include(":core:smart:processing")
 
 include(":feature:backup")
 include(":feature:billing")

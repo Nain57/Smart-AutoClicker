@@ -47,7 +47,7 @@ android {
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
-    implementation(project(":core:ui"))
+    implementation(project(":core:common:ui"))
 
     "playStoreImplementation"(libs.androidx.appCompat)
     "playStoreImplementation"(libs.androidx.core.ktx)

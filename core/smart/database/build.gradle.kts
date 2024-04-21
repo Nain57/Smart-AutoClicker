@@ -14,28 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.kotlinSerialization)
+    alias(libs.plugins.buzbuz.androidRoom)
     alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.hilt)
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.ui"
-    buildFeatures.viewBinding = true
+    namespace = "com.buzbuz.smartautoclicker.core.database"
+
+    sourceSets {
+        getByName("test") {
+            // Adds exported schema location as test app assets.
+            assets.srcDirs("$projectDir/schemas")
+        }
+    }
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(project(":core:common:base"))
 
-    implementation(libs.androidx.appCompat)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.recyclerView)
-
-    implementation(libs.google.material)
-
-    implementation(project(":core:display"))
-    implementation(project(":core:base"))
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

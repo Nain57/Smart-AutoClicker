@@ -31,9 +31,9 @@ dependencies {
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.room.ktx)
 
-    implementation(project(":core:bitmaps"))
-    implementation(project(":core:database"))
-    implementation(project(":core:base"))
+    implementation(project(":core:common:base"))
+    implementation(project(":core:common:bitmaps"))
+    implementation(project(":core:smart:database"))
 
     testImplementation(libs.kotlinx.coroutines.test)
 }
