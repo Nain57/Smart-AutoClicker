@@ -16,24 +16,24 @@
  */
 package com.buzbuz.smartautoclicker.feature.billing.data.ads
 
+import android.app.Activity
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
 
-sealed class RemoteInterstitialAd {
-
-    data object SdkNotInitialized : RemoteInterstitialAd()
-    data object Initialized : RemoteInterstitialAd()
-    data object Loading : RemoteInterstitialAd()
-    data class NotShown(val ad: InterstitialAd) : RemoteInterstitialAd()
-    data object Showing : RemoteInterstitialAd()
-    data class Shown(val shownTimeMs: Long = System.currentTimeMillis()) : RemoteInterstitialAd()
-
-    sealed class Error : RemoteInterstitialAd() {
-        abstract val adError: AdError?
-
-        data class LoadingError(override val adError: LoadAdError) : Error()
-        data class ShowError(override val adError: AdError? = null) : Error()
+internal fun InterstitialAd.show(
+    activity: Activity,
+    onShow: () -> Unit,
+    onDismiss: (impression: Boolean) -> Unit,
+    onError: (AdError) -> Unit,
+) {
+    var impression = false
+    fullScreenContentCallback = object : FullScreenContentCallback() {
+        override fun onAdImpression() { impression = true }
+        override fun onAdShowedFullScreenContent(): Unit = onShow()
+        override fun onAdDismissedFullScreenContent(): Unit = onDismiss(impression)
+        override fun onAdFailedToShowFullScreenContent(adError: AdError): Unit = onError(adError)
     }
 
+    show(activity)
 }

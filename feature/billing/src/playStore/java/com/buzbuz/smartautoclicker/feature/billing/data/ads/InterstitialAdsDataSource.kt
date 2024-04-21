@@ -19,27 +19,34 @@ package com.buzbuz.smartautoclicker.feature.billing.data.ads
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import com.buzbuz.smartautoclicker.feature.billing.BuildConfig
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class InterstitialAdsDataSource @Inject constructor() {
+internal class InterstitialAdsDataSource @Inject constructor(
+    @Dispatcher(Main) mainDispatcher: CoroutineDispatcher,
+) {
+    private val coroutineScopeMain: CoroutineScope =
+        CoroutineScope(SupervisorJob() + mainDispatcher)
 
-    private val adsId: String =
-        if (BuildConfig.DEBUG) INTERSTITIAL_AD_TEST_ID
-        else BuildConfig.ADS_APPLICATION_ID
+    /** The number of automatic retries for the loading of an ad. */
+    private var loadRetries: Int = 0
 
     private val _remoteAd: MutableStateFlow<RemoteInterstitialAd> =
         MutableStateFlow(RemoteInterstitialAd.SdkNotInitialized)
@@ -60,65 +67,72 @@ internal class InterstitialAdsDataSource @Inject constructor() {
     fun loadAd(context: Context) {
         if (_remoteAd.value == RemoteInterstitialAd.SdkNotInitialized) return
 
-        Log.d(TAG, "Load interstitial ad with id $adsId")
+        Log.d(TAG, "Load interstitial ad with id $adsUnitId")
 
         _remoteAd.value = RemoteInterstitialAd.Loading
-        loadInterstitialAd(context) { interstitialAd ->
-            _remoteAd.value =
-                if (interstitialAd != null) RemoteInterstitialAd.Loaded.NotShown(interstitialAd)
-                else RemoteInterstitialAd.Error
-        }
+        adsUnitId.load(
+            context = context,
+            onLoad = ::onAdLoaded,
+            onError = { error -> onAdLoadFailed(context, error) },
+        )
     }
 
     fun showAd(activity: Activity) {
         val remoteAd = _remoteAd.value
-        if (remoteAd !is RemoteInterstitialAd.Loaded) return
+        if (remoteAd !is RemoteInterstitialAd.NotShown) return
 
-        Log.d(TAG, "Show interstitial ad with id $adsId")
-        remoteAd.ad.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdClicked() {
-                Log.d(TAG, "Ad was clicked.")
-            }
+        Log.d(TAG, "Showing interstitial ad")
 
-            override fun onAdDismissedFullScreenContent() {
-                Log.d(TAG, "Ad dismissed fullscreen content.")
-            }
-
-            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                Log.e(TAG, "Ad failed to show fullscreen content.")
-            }
-
-            override fun onAdImpression() {
-                Log.d(TAG, "Ad recorded an impression.")
-            }
-
-            override fun onAdShowedFullScreenContent() {
-                Log.d(TAG, "Ad showed fullscreen content.")
-            }
-        }
-
-        remoteAd.ad.show(activity)
+        remoteAd.ad.show(
+            activity = activity,
+            onShow = ::onAdShown,
+            onDismiss = ::onAdDismissed,
+            onError = ::onAdShowError,
+        )
     }
 
-    private fun buildAdRequest(): AdRequest =
-        AdRequest.Builder().build()
+    private fun onAdLoaded(ad: InterstitialAd) {
+        Log.d(TAG, "onAdLoaded")
+        loadRetries = 0
+        _remoteAd.value = RemoteInterstitialAd.NotShown(ad)
+    }
 
-    private fun loadInterstitialAd(context: Context, onLoad: (InterstitialAd?) -> Unit): Unit =
-        InterstitialAd.load(
-            context, adsId, buildAdRequest(),
-            object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.w(TAG, "onAdFailedToLoad: $adError")
-                    onLoad(null)
-                }
+    private fun onAdLoadFailed(context: Context, error: LoadAdError) {
+        Log.w(TAG, "onAdFailedToLoad: $error, retry=$loadRetries/$MAX_LOADING_RETRIES")
 
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d(TAG, "onAdLoaded")
-                    onLoad(interstitialAd)
-                }
-            },
-        )
+        if (loadRetries > MAX_LOADING_RETRIES) {
+            _remoteAd.value = RemoteInterstitialAd.Error.LoadingError(error)
+            loadRetries = 0
+            Log.e(TAG, "Can't load ad")
+            return
+        }
+
+        loadRetries++
+        coroutineScopeMain.launch {
+            delay(RETRY_INCREMENTAL_DELAY_MS * loadRetries)
+            loadAd(context)
+        }
+    }
+
+    private fun onAdShown() {
+        Log.d(TAG, "onAdShown")
+        _remoteAd.value = RemoteInterstitialAd.Showing
+    }
+
+    private fun onAdDismissed(impression: Boolean) {
+        Log.d(TAG, "onAdDismissed, impression=$impression")
+
+        _remoteAd.value =
+            if (impression) RemoteInterstitialAd.Shown()
+            else RemoteInterstitialAd.Error.ShowError()
+    }
+
+    private fun onAdShowError(error: AdError) {
+        Log.w(TAG, "onAdShowError: $error")
+        _remoteAd.value = RemoteInterstitialAd.Error.ShowError(error)
+    }
 }
 
-private const val INTERSTITIAL_AD_TEST_ID = "ca-app-pub-3940256099942544/1033173712"
+private const val RETRY_INCREMENTAL_DELAY_MS = 500L
+private const val MAX_LOADING_RETRIES = 5
 private const val TAG = "InterstitialAdsDataSource"
