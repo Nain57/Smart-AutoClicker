@@ -21,8 +21,6 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -35,21 +33,12 @@ import javax.inject.Inject
 
 class ImageEventListViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
-    private val billingRepository: IBillingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     /** Currently configured events. */
     val eventsItems = editionRepository.editionState.editedImageEventsState
         .mapNotNull { it.value }
-
-    /** Tells if the limitation in event count have been reached. */
-    val isEventLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
-        .combine(eventsItems) { isProModePurchased, events ->
-            !isProModePurchased && events.size >= ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT.limit
-        }
-    /** Tells if the pro mode billing flow is being displayed. */
-    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> = editionRepository.editionState.canCopyImageEvents
@@ -77,10 +66,6 @@ class ImageEventListViewModel @Inject constructor(
 
     /** Update the priority of the events in the scenario. */
     fun updateEventsPriority(events: List<ImageEvent>) = editionRepository.updateImageEventsOrder(events)
-
-    fun onEventCountReachedAddCopyClicked(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT)
-    }
 
     fun monitorFirstEventView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT, view)

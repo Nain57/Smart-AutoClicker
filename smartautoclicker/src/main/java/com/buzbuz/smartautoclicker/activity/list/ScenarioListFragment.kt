@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,7 +110,6 @@ class ScenarioListFragment : Fragment() {
 
         when (item.itemId) {
             R.id.action_export -> when {
-                !uiState.isProModePurchased -> scenarioListViewModel.onExportClickedWithoutProMode(requireContext())
                 uiState.type == ScenarioListUiState.Type.EXPORT -> showBackupDialog(
                     isImport = false,
                     smartScenariosToBackup = scenarioListViewModel.getSmartScenariosSelectedForBackup(),
@@ -119,11 +118,7 @@ class ScenarioListFragment : Fragment() {
                 else -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.EXPORT)
             }
 
-            R.id.action_import -> when {
-                !uiState.isProModePurchased -> scenarioListViewModel.onImportClickedWithoutProMode(requireContext())
-                else -> showBackupDialog(true)
-            }
-
+            R.id.action_import -> showBackupDialog(true)
             R.id.action_cancel -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)
             R.id.action_search -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SEARCH)
             R.id.action_select_all -> scenarioListViewModel.toggleAllScenarioSelectionForBackup()

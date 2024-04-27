@@ -29,7 +29,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -46,16 +45,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ScenarioCreationViewModel @Inject constructor(
     @ApplicationContext context: Context,
+    billingRepository: IBillingRepository,
     private val smartRepository: IRepository,
-    private val billingRepository: IBillingRepository,
     private val dumbRepository: IDumbRepository,
 ) : ViewModel() {
-
-    /** Tells if the limitation in smart scenario count have been reached. */
-    private val isSmartScenarioLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
-        .combine(smartRepository.scenarios) { isProModePurchased, scenarios ->
-            !isProModePurchased && scenarios.size >= ProModeAdvantage.Limitation.SMART_SCENARIO_COUNT_LIMIT.limit
-        }
 
     private val _name: MutableStateFlow<String?> =
         MutableStateFlow(context.getString(R.string.default_scenario_name))
@@ -68,22 +61,12 @@ class ScenarioCreationViewModel @Inject constructor(
     private val _selectedType: MutableStateFlow<ScenarioTypeSelection> =
         MutableStateFlow(ScenarioTypeSelection.SMART)
     val scenarioTypeSelectionState: Flow<ScenarioTypeSelectionState> =
-        combine(_selectedType, billingRepository.isProModePurchased, isSmartScenarioLimitReached) { selectedType, isProMode, limitIsReached ->
-            when {
-                limitIsReached -> ScenarioTypeSelectionState(
-                    dumbItem = ScenarioTypeItem.Dumb,
-                    smartItem = ScenarioTypeItem.Smart(isProMode),
-                    smartItemEnabled = false,
-                    selectedItem = ScenarioTypeSelection.DUMB,
-                )
-
-                else -> ScenarioTypeSelectionState(
-                    dumbItem = ScenarioTypeItem.Dumb,
-                    smartItem = ScenarioTypeItem.Smart(isProMode),
-                    smartItemEnabled = true,
-                    selectedItem = selectedType,
-                )
-            }
+        combine(_selectedType, billingRepository.isProModePurchased) { selectedType, isProMode ->
+            ScenarioTypeSelectionState(
+                dumbItem = ScenarioTypeItem.Dumb,
+                smartItem = ScenarioTypeItem.Smart(isProMode),
+                selectedItem = selectedType,
+            )
         }
 
     private val canBeCreated: Flow<Boolean> = _name.map { name -> !name.isNullOrEmpty() }
@@ -113,13 +96,6 @@ class ScenarioCreationViewModel @Inject constructor(
             }
             _creationState.value = CreationState.SAVED
         }
-    }
-
-    fun onScenarioCountReachedAddCopyClicked(context: Context) {
-        billingRepository.startBillingActivity(
-            context,
-            ProModeAdvantage.Limitation.SMART_SCENARIO_COUNT_LIMIT,
-        )
     }
 
     private suspend fun createDumbScenario() {
@@ -156,8 +132,8 @@ data class ScenarioTypeSelectionState(
     val dumbItem: ScenarioTypeItem.Dumb,
     val smartItem: ScenarioTypeItem.Smart,
     val selectedItem: ScenarioTypeSelection,
-    val smartItemEnabled: Boolean,
 )
+
 sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descriptionText: Int) {
 
     data object Dumb: ScenarioTypeItem(

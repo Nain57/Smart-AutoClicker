@@ -32,8 +32,6 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +54,6 @@ class ScenarioListViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
-    private val billingRepository: IBillingRepository,
     private val adsRepository: IAdsRepository,
 ) : ViewModel() {
 
@@ -89,16 +86,14 @@ class ScenarioListViewModel @Inject constructor(
         uiStateType,
         filteredScenarios,
         selectedForBackup,
-        billingRepository.isProModePurchased,
         adsRepository.isPrivacyOptionsRequired,
-    ) { stateType, scenarios, backupSelection, isProMode, privacyRequired ->
+    ) { stateType, scenarios, backupSelection, privacyRequired ->
         ScenarioListUiState(
             type = stateType,
-            menuUiState = stateType.toMenuUiState(scenarios, backupSelection, isProMode, privacyRequired),
+            menuUiState = stateType.toMenuUiState(scenarios, backupSelection, privacyRequired),
             listContent =
                 if (stateType != ScenarioListUiState.Type.EXPORT) scenarios
                 else scenarios.filterForBackupSelection(backupSelection),
-            isProModePurchased = isProMode,
         )
     }.stateIn(
         viewModelScope,
@@ -177,14 +172,6 @@ class ScenarioListViewModel @Inject constructor(
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
         getImageConditionBitmap(smartRepository, condition, onBitmapLoaded)
 
-    fun onExportClickedWithoutProMode(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.BACKUP_EXPORT)
-    }
-
-    fun onImportClickedWithoutProMode(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.BACKUP_IMPORT)
-    }
-
     fun showPrivacySettings(activity: Activity) {
         adsRepository.showPrivacyOptionsForm(activity)
     }
@@ -192,7 +179,6 @@ class ScenarioListViewModel @Inject constructor(
     private fun ScenarioListUiState.Type.toMenuUiState(
         scenarioItems: List<ScenarioListUiState.Item>,
         backupSelection: ScenarioBackupSelection,
-        isProModePurchased: Boolean,
         isPrivacyRequired: Boolean,
     ): ScenarioListUiState.Menu = when (this) {
         ScenarioListUiState.Type.SEARCH -> ScenarioListUiState.Menu.Search
@@ -203,7 +189,6 @@ class ScenarioListViewModel @Inject constructor(
         ScenarioListUiState.Type.SELECTION -> ScenarioListUiState.Menu.Selection(
             searchEnabled = scenarioItems.isNotEmpty(),
             exportEnabled = scenarioItems.firstOrNull { it is ScenarioListUiState.Item.Valid } != null,
-            isProMode = isProModePurchased,
             privacyRequired = isPrivacyRequired,
         )
     }

@@ -16,16 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event.config
 
-import android.content.Context
 import android.view.View
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
@@ -43,11 +39,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+
 import javax.inject.Inject
 
 class EventConfigViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
-    private val billingRepository: IBillingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
@@ -63,14 +59,8 @@ class EventConfigViewModel @Inject constructor(
         title= R.string.dropdown_item_title_event_state_disabled,
         helperText = R.string.dropdown_helper_text_event_state_disabled,
     )
-    val eventStateDropdownState: Flow<EventStateDropdownUiState> = billingRepository.isProModePurchased
-        .map { isProModePurchased ->
-            EventStateDropdownUiState(
-                items = listOf(enableEventItem, disableEventItem),
-                enabled = isProModePurchased,
-                disabledIcon = R.drawable.ic_pro_small,
-            )
-        }
+    val eventStateDropdownItems: List<DropdownItem> =
+        listOf(enableEventItem, disableEventItem)
 
     /** The enabled on start state of the configured event. */
     val eventStateItem: Flow<DropdownItem> = configuredEvent
@@ -118,9 +108,6 @@ class EventConfigViewModel @Inject constructor(
 
     val canTryEvent: Flow<Boolean> = configuredEvent
         .map { it.isComplete() }
-
-    /** Tells if the pro mode billing flow is being displayed. */
-    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     fun getTryInfo(): Pair<Scenario, ImageEvent>? {
         val scenario = editionRepository.editionState.getScenario() ?: return null
@@ -171,10 +158,6 @@ class EventConfigViewModel @Inject constructor(
         }
     }
 
-    fun onEventStateClickedWithoutProMode(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.EVENT_STATE)
-    }
-
     fun monitorConditionOperatorView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR, view)
     }
@@ -198,9 +181,3 @@ class EventConfigViewModel @Inject constructor(
         }
     }
 }
-
-data class EventStateDropdownUiState(
-    val items: List<DropdownItem>,
-    val enabled: Boolean = true,
-    @DrawableRes val disabledIcon: Int? = null,
-)

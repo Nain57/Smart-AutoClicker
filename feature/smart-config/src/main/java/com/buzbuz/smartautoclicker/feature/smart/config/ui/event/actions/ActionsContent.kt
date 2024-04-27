@@ -26,11 +26,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyDialog
@@ -39,10 +40,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseDia
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.ActionDetails
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.ActionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
@@ -74,11 +71,6 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     /** Adapter for the list of actions. */
     private lateinit var actionAdapter: ActionAdapter
 
-    /** Tells if the billing flow has been triggered by the action count limit. */
-    private var actionLimitReachedClick: Boolean = false
-    /** Dialog for the selection of the action type when creating a new one. Null if not displayed. */
-    private var actionTypeSelectionDialog: MultiChoiceDialog<ActionTypeChoice>? = null
-
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
@@ -103,25 +95,8 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     override fun onViewCreated() {
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        actionTypeSelectionDialog?.show()
-
-                        if (actionLimitReachedClick) {
-                            dialogController.show()
-                            actionLimitReachedClick = false
-                        }
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isActionLimitReached.collect(::updateActionLimitationVisibility) }
                 launch { viewModel.canCopyAction.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.actionDetails.collect(::updateActionList) }
             }
@@ -140,24 +115,14 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onCreateButtonClicked() {
         debounceUserInteraction {
-            val dialog = ActionTypeSelectionDialog(
-                choices = viewModel.actionCreationItems.value,
-                onChoiceSelectedListener = { choiceClicked ->
-                    if (!choiceClicked.enabled) {
-                        actionTypeSelectionDialog?.show()
-                        viewModel.onProModeUnsubscribedActionClicked(context, choiceClicked)
-                    } else {
-                        actionTypeSelectionDialog = null
-                        showActionConfigDialog(viewModel.createAction(context, choiceClicked))
-                    }
-                },
-                onCancelledListener = { actionTypeSelectionDialog = null }
-            )
-            actionTypeSelectionDialog = dialog
-
             dialogController.overlayManager.navigateTo(
                 context = context,
-                newOverlay = dialog,
+                newOverlay = ActionTypeSelectionDialog(
+                    choices = viewModel.actionCreationItems,
+                    onChoiceSelectedListener = { choiceClicked ->
+                        showActionConfigDialog(viewModel.createAction(context, choiceClicked))
+                    },
+                ),
             )
         }
     }
@@ -175,15 +140,6 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
-    private fun onCreateCopyClickedWhileLimited() {
-        debounceUserInteraction {
-            actionLimitReachedClick = true
-
-            dialogController.hide()
-            viewModel.onActionCountReachedAddCopyClicked(context)
-        }
-    }
-
     private fun onActionClicked(action: Action) {
         debounceUserInteraction {
             showActionConfigDialog(action)
@@ -195,20 +151,6 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         if (itemView != null) viewModel.monitorFirstActionView(itemView)
         else viewModel.stopFirstActionViewMonitoring()
-    }
-
-    private fun updateActionLimitationVisibility(isVisible: Boolean) {
-        dialogController.createCopyButtons.apply {
-            if (isVisible) {
-                root.alpha = ALPHA_DISABLED_ITEM
-                buttonNew.setOnClickListener { onCreateCopyClickedWhileLimited() }
-                buttonCopy.setOnClickListener { onCreateCopyClickedWhileLimited() }
-            } else {
-                root.alpha = ALPHA_ENABLED_ITEM
-                buttonNew.setOnClickListener { onCreateButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
-            }
-        }
     }
 
     private fun updateCopyButtonVisibility(isVisible: Boolean) {

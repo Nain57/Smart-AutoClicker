@@ -75,7 +75,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     /** Controls the animations of the play/pause button. */
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
 
-    private var billingFlowTriggeredByDetectionLimitation: Boolean = false
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
 
@@ -105,20 +104,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         // Ensure the debug view state is correct
         viewBinding.layoutDebug.visibility = View.GONE
         setOverlayViewVisibility(false)
-
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowInProgress.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (billingFlowTriggeredByDetectionLimitation) {
-                            show()
-                            billingFlowTriggeredByDetectionLimitation = false
-                        }
-                    }
-                }
-            }
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -199,10 +184,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             return
         }
 
-        viewModel.toggleDetection(context) {
-            billingFlowTriggeredByDetectionLimitation = true
-            hide()
-        }
+        viewModel.toggleDetection(context)
     }
 
     /** Refresh the play menu item according to the scenario state. */

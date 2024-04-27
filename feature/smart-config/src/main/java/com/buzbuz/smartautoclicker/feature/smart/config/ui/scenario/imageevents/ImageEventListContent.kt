@@ -34,10 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 
@@ -87,23 +84,8 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     override fun onViewCreated() {
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (eventLimitReachedClick) {
-                            dialogController.show()
-                            eventLimitReachedClick = false
-                        }
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isEventLimitReached.collect(::updateEventLimitationVisibility) }
                 launch { viewModel.copyButtonIsVisible.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.eventsItems.collect(::updateEventList) }
             }
@@ -127,15 +109,6 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
         }
     }
 
-    private fun onCreateCopyClickedWhileLimited() {
-        debounceUserInteraction {
-            eventLimitReachedClick = true
-
-            dialogController.hide()
-            viewModel.onEventCountReachedAddCopyClicked(context)
-        }
-    }
-
     private fun onEventItemClicked(event: ImageEvent) {
         debounceUserInteraction {
             showEventConfigDialog(event)
@@ -147,20 +120,6 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
 
         if (eventItemView != null) viewModel.monitorFirstEventView(eventItemView)
         else viewModel.stopViewMonitoring()
-    }
-
-    private fun updateEventLimitationVisibility(isVisible: Boolean) {
-        dialogController.createCopyButtons.apply {
-            if (isVisible) {
-                root.alpha = ALPHA_DISABLED_ITEM
-                buttonNew.setOnClickListener { onCreateCopyClickedWhileLimited() }
-                buttonCopy.setOnClickListener { onCreateCopyClickedWhileLimited() }
-            } else {
-                root.alpha = ALPHA_ENABLED_ITEM
-                buttonNew.setOnClickListener { onCreateButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
-            }
-        }
     }
 
     private fun updateEventList(newItems: List<ImageEvent>?) {

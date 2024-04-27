@@ -25,7 +25,6 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -35,30 +34,20 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.minutes
 
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
     private val detectionRepository: DetectionRepository,
     private val editionRepository: EditionRepository,
-    private val billingRepository: IBillingRepository,
     private val tutorialRepository: TutorialRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val debugRepository: DebuggingRepository,
 ) : ViewModel() {
-
-    /** Tells if the pro mode is purchased. */
-    private val isProModePurchased: StateFlow<Boolean> = billingRepository.isProModePurchased
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            false,
-        )
 
     private val scenarioDbId: StateFlow<Long?> = detectionRepository.scenarioId
         .map { it?.databaseId }
@@ -70,8 +59,6 @@ class MainMenuModel @Inject constructor(
 
     /** Coroutine Job stopping the detection automatically if user is not in pro mode. */
     private var autoStopJob: Job? = null
-
-    val isBillingFlowInProgress: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** The current of the detection. */
     val detectionState: StateFlow<UiState> = detectionRepository.detectionState
@@ -95,10 +82,10 @@ class MainMenuModel @Inject constructor(
         .distinctUntilChanged()
 
     /** Start/Stop the detection. */
-    fun toggleDetection(context: Context, onStoppedByLimitation: () -> Unit) {
+    fun toggleDetection(context: Context) {
         when (detectionState.value) {
             UiState.Detecting -> stopDetection()
-            UiState.Idle -> startDetection(context, onStoppedByLimitation)
+            UiState.Idle -> startDetection(context)
         }
     }
 
@@ -113,22 +100,9 @@ class MainMenuModel @Inject constructor(
         return true
     }
 
-    private fun startDetection(context: Context, onStoppedByLimitation: () -> Unit) {
+    private fun startDetection(context: Context) {
         viewModelScope.launch {
             detectionRepository.startDetection(context, debugRepository.detectionProgressListener)
-        }
-
-        if (!isProModePurchased.value) {
-            autoStopJob = viewModelScope.launch {
-                delay(ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT.limit.minutes.inWholeMilliseconds)
-
-                detectionRepository.stopDetection()
-                onStoppedByLimitation()
-                billingRepository.startBillingActivity(
-                    context,
-                    ProModeAdvantage.Limitation.DETECTION_DURATION_MINUTES_LIMIT,
-                )
-            }
         }
     }
 

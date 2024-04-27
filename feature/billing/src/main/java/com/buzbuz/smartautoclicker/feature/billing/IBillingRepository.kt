@@ -59,10 +59,8 @@ abstract class IBillingRepository : Dumpable {
      * Launch the billing activity.
      *
      * @param context the Android context.
-     * @param requestedAdvantage the pro mode advantage the user is trying to access.
      */
-    abstract fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage)
-
+    abstract fun startBillingActivity(context: Context)
 
     internal abstract fun launchPlayStoreBillingFlow(activity: Activity)
 
