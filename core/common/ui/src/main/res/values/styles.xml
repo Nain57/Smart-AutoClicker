@@ -61,6 +61,16 @@
         <item name="dividerInsetStart">@dimen/margin_horizontal_default</item>
         <item name="dividerInsetEnd">@dimen/margin_horizontal_default</item>
     </style>
+    <!-- Style for an indeterminate circular progress in a outlined button -->
+    <style name="AppTheme.Widget.CircularProgressIndicator.Button" parent="Widget.Material3.CircularProgressIndicator.ExtraSmall">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="showAnimationBehavior">inward</item>
+    </style>
+    <!-- Style for an indeterminate circular progress in a button -->
+    <style name="AppTheme.Widget.CircularProgressIndicator.Button.Colored">
+        <item name="indicatorColor">?attr/colorOnPrimary</item>
+    </style>
     <!-- Style for the card views. -->
     <style name="AppTheme.Widget.Card" parent="@style/Widget.Material3.CardView.Elevated" />
     <!-- Style for the card views. -->
