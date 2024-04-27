@@ -16,15 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config
 
-import android.content.Context
-
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
@@ -44,7 +39,6 @@ import kotlin.math.min
 /** View model for the [ScenarioConfigContent]. */
 class ScenarioConfigViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
-    private val billingRepository: IBillingRepository,
 ) : ViewModel() {
 
     /** Currently configured scenario. */
@@ -68,14 +62,8 @@ class ScenarioConfigViewModel @Inject constructor(
         title = R.string.dropdown_item_title_anti_detection_disabled,
         helperText = R.string.dropdown_helper_text_anti_detection_disabled,
     )
-    val randomizationDropdownState: Flow<RandomizationDropdownUiState> = billingRepository.isProModePurchased
-        .map { isProModePurchased ->
-            RandomizationDropdownUiState(
-                items = listOf(enabledRandomization, disableRandomization),
-                enabled = isProModePurchased,
-                disabledIcon = R.drawable.ic_pro_small,
-            )
-        }
+    val randomizationDropdownItems: List<DropdownItem> =
+        listOf(enabledRandomization, disableRandomization)
 
     /** The randomization value for the scenario. */
     val randomization: Flow<DropdownItem> = configuredScenario
@@ -90,11 +78,6 @@ class ScenarioConfigViewModel @Inject constructor(
     /** The quality of the detection. */
     val detectionQuality: Flow<Int?> = configuredScenario
         .map { it.detectionQuality }
-
-    /** Tells if the pro mode has been purchased by the user. */
-    val isProModePurchased: Flow<Boolean> = billingRepository.isProModePurchased
-    /** Tells if the pro mode billing flow is being displayed. */
-    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** Set a new name for the scenario. */
     fun setScenarioName(name: String) {
@@ -157,21 +140,7 @@ class ScenarioConfigViewModel @Inject constructor(
             }
         }
     }
-
-    fun onAntiDetectionClickedWithoutProMode(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_ANTI_DETECTION)
-    }
-
-    fun onDetectionQualityClickedWithoutProMode(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.SCENARIO_DETECTION_QUALITY)
-    }
 }
-
-data class RandomizationDropdownUiState(
-    val items: List<DropdownItem>,
-    val enabled: Boolean = true,
-    @DrawableRes val disabledIcon: Int? = null,
-)
 
 /** The minimum value for the seek bar. */
 const val SLIDER_QUALITY_MIN = DETECTION_QUALITY_MIN.toFloat()

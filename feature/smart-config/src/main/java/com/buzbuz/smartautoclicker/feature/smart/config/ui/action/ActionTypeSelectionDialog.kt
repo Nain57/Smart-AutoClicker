@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionT
 class ActionTypeSelectionDialog(
     choices: List<ActionTypeChoice>,
     onChoiceSelectedListener: (ActionTypeChoice) -> Unit,
-    onCancelledListener: () -> Unit,
+    onCancelledListener: (() -> Unit)? = null,
 ) : MultiChoiceDialog<ActionTypeChoice>(
     theme = R.style.ScenarioConfigTheme,
     dialogTitleText = R.string.dialog_overlay_title_action_type,

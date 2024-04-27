@@ -31,13 +31,11 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
  * @param type the current ui type
  * @param menuUiState the ui state for the action bar menu
  * @param listContent the content of the scenario list
- * @param isProModePurchased tells if the user have bought pro mode
  */
 data class ScenarioListUiState(
     val type: Type,
     val menuUiState: Menu,
     val listContent: List<Item>,
-    val isProModePurchased: Boolean,
 ) {
 
     /** Possible states for the action menu of the ScenarioListFragment. */
@@ -101,7 +99,6 @@ data class ScenarioListUiState(
         data class Selection(
             private val searchEnabled: Boolean,
             private val exportEnabled: Boolean,
-            private val isProMode: Boolean,
             private val privacyRequired: Boolean,
         ) : Menu(
             searchItemState = Item(searchEnabled),
@@ -110,12 +107,10 @@ data class ScenarioListUiState(
             importItemState = Item(
                 visible = true,
                 enabled = true,
-                iconAlpha = if (isProMode) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
             ),
             exportItemState = Item(
                 visible = exportEnabled,
                 enabled = exportEnabled,
-                iconAlpha = if (isProMode) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
             ),
             privacyItemState = Item(privacyRequired),
         )

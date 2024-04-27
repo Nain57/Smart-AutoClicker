@@ -42,8 +42,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentEventConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 
 import kotlinx.coroutines.launch
 
@@ -57,8 +55,6 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
 
     /** View binding for all views in this content. */
     private lateinit var viewBinding: ContentEventConfigBinding
-
-    private var billingFlowStarted: Boolean = false
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
@@ -78,6 +74,12 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
                 onItemBound = ::onConditionOperatorDropdownItemBound,
             )
 
+            enabledOnStartField.setItems(
+                label = context.resources.getString(R.string.input_field_label_event_state),
+                items = viewModel.eventStateDropdownItems,
+                onItemSelected = viewModel::setEventState,
+            )
+
             tryEventCard.apply {
                 setElementTypeName(context.getString(R.string.dialog_overlay_title_image_event_config))
                 setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
@@ -88,26 +90,11 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
     }
 
     override fun onViewCreated() {
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (billingFlowStarted) {
-                            dialogController.show()
-                            billingFlowStarted = false
-                        }
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.eventName.collect(viewBinding.eventNameInputLayout::setText) }
                 launch { viewModel.eventNameError.collect(viewBinding.eventNameInputLayout::setError) }
                 launch { viewModel.conditionOperator.collect(viewBinding.conditionsOperatorField::setSelectedItem) }
-                launch { viewModel.eventStateDropdownState.collect(::updateEventStateDropdown) }
                 launch { viewModel.eventStateItem.collect(viewBinding.enabledOnStartField::setSelectedItem) }
                 launch { viewModel.shouldShowTryCard.collect(::updateTryCardVisibility) }
                 launch { viewModel.canTryEvent.collect(viewBinding.tryEventCard::setEnabledState) }
@@ -130,25 +117,6 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
             if (view != null) viewModel.monitorDropdownItemAndView(view)
             else viewModel.stopDropdownItemConditionViewMonitoring()
         }
-    }
-
-    private fun updateEventStateDropdown(dropdownState: EventStateDropdownUiState) {
-        viewBinding.enabledOnStartField.setItems(
-            label = context.resources.getString(R.string.input_field_label_event_state),
-            items = dropdownState.items,
-            enabled = dropdownState.enabled,
-            disabledIcon = dropdownState.disabledIcon,
-            onItemSelected = viewModel::setEventState,
-            onDisabledClick = {
-                billingFlowStarted = true
-                dialogController.hide()
-                viewModel.onEventStateClickedWithoutProMode(context)
-           },
-        )
-
-        viewBinding.enabledOnStartField.root.alpha =
-            if (dropdownState.enabled) ALPHA_ENABLED_ITEM
-            else ALPHA_DISABLED_ITEM
     }
 
     private fun updateTryCardVisibility(isVisible: Boolean) {

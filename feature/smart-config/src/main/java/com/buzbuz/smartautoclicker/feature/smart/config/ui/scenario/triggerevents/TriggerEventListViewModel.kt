@@ -19,32 +19,20 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.triggereven
 import android.content.Context
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class TriggerEventListViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
-    private val billingRepository: IBillingRepository,
 ) : ViewModel() {
 
     /** Currently configured events. */
     val triggerEvents = editionRepository.editionState.editedTriggerEventsState
         .mapNotNull { it.value }
-
-    /** Tells if the limitation in event count have been reached. */
-    val isEventLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
-        .combine(triggerEvents) { isProModePurchased, events ->
-            !isProModePurchased && events.size >= ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT.limit
-        }
-    /** Tells if the pro mode billing flow is being displayed. */
-    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> = editionRepository.editionState.canCopyTriggerEvents
@@ -69,8 +57,4 @@ class TriggerEventListViewModel @Inject constructor(
 
     /** Drop all changes made to the currently edited event. */
     fun dismissEditedEvent() = editionRepository.stopEventEdition()
-
-    fun onEventCountReachedAddCopyClicked(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.EVENT_COUNT_LIMIT)
-    }
 }

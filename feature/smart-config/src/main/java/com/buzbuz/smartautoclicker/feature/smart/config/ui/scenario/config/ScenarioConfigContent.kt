@@ -20,11 +20,8 @@ import android.content.Context
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
-import androidx.annotation.IdRes
-import androidx.core.view.children
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -41,10 +38,6 @@ import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
-
-import com.google.android.material.card.MaterialCardView
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -59,8 +52,6 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
 
     private lateinit var viewBinding: ContentScenarioConfigBinding
 
-    private var billingFlowStarted: Boolean = false
-
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             scenarioNameField.apply {
@@ -71,6 +62,12 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 )
             }
             dialogController.hideSoftInputOnFocusLoss(scenarioNameField.textField)
+
+            scenarioActionRandomization.setItems(
+                label = context.resources.getString(R.string.input_field_label_anti_detection),
+                items = viewModel.randomizationDropdownItems,
+                onItemSelected = viewModel::setRandomization,
+            )
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
@@ -83,27 +80,11 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     override fun onViewCreated() {
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (billingFlowStarted) {
-                            dialogController.show()
-                            billingFlowStarted = false
-                        }
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.scenarioName.collect(::updateScenarioName) }
                 launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameField::setError) }
-                launch { viewModel.randomizationDropdownState.collect(::updateRandomizationDropdown) }
                 launch { viewModel.randomization.collect(::updateRandomization) }
-                launch { viewModel.isProModePurchased.collect(::updateProModeFeaturesUi) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
             }
         }
@@ -113,37 +94,8 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
         viewBinding.scenarioNameField.setText(name)
     }
 
-    private fun updateRandomizationDropdown(dropdownState: RandomizationDropdownUiState) {
-        viewBinding.scenarioActionRandomization.setItems(
-            label = context.resources.getString(R.string.input_field_label_anti_detection),
-            items = dropdownState.items,
-            enabled = dropdownState.enabled,
-            disabledIcon = dropdownState.disabledIcon,
-            onItemSelected = viewModel::setRandomization,
-            onDisabledClick = {
-                billingFlowStarted = true
-                dialogController.hide()
-                viewModel.onAntiDetectionClickedWithoutProMode(context)
-            },
-        )
-
-        viewBinding.scenarioActionRandomization.root.alpha =
-            if (dropdownState.enabled) ALPHA_ENABLED_ITEM
-            else ALPHA_DISABLED_ITEM
-    }
-
     private fun updateRandomization(randomizationItem: DropdownItem) {
         viewBinding.scenarioActionRandomization.setSelectedItem(randomizationItem)
-    }
-
-    private fun updateProModeFeaturesUi(isEnabled: Boolean) {
-        viewBinding.apply {
-            detectionQualityCard.setEnabledState(isEnabled, R.id.quality_pro_mode) {
-                billingFlowStarted = true
-                dialogController.hide()
-                viewModel.onDetectionQualityClickedWithoutProMode(context)
-            }
-        }
     }
 
     private fun updateQuality(quality: Int?) {
@@ -158,32 +110,6 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
             if (isNotInitialized) {
                 seekbarQuality.valueFrom = SLIDER_QUALITY_MIN
                 seekbarQuality.valueTo = SLIDER_QUALITY_MAX
-            }
-        }
-    }
-
-    private fun MaterialCardView.setEnabledState(
-        isEnabled: Boolean,
-        @IdRes disableReasonView: Int,
-        onDisabledClick: () -> Unit,
-    ) {
-        val alpha = if (isEnabled) ALPHA_ENABLED_ITEM else ALPHA_DISABLED_ITEM
-
-        (getChildAt(0) as ViewGroup).children.forEach { child ->
-            if (child.id == disableReasonView) child.visibility = if (isEnabled) View.GONE else View.VISIBLE
-            else child.apply {
-                this.alpha = alpha
-                this.isEnabled = isEnabled
-            }
-        }
-
-        (getChildAt(1) as View).apply {
-            if (isEnabled) {
-                setOnClickListener(null)
-                visibility = View.GONE
-            } else {
-                setOnClickListener { onDisabledClick() }
-                visibility = View.VISIBLE
             }
         }
     }

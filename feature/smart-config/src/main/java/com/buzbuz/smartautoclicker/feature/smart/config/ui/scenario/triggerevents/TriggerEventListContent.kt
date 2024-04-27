@@ -35,8 +35,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 
 import kotlinx.coroutines.launch
 
@@ -78,23 +76,8 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
     }
 
     override fun onViewCreated() {
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (eventLimitReachedClick) {
-                            dialogController.show()
-                            eventLimitReachedClick = false
-                        }
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isEventLimitReached.collect(::updateEventLimitationVisibility) }
                 launch { viewModel.copyButtonIsVisible.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.triggerEvents.collect(::updateTriggerEventList) }
             }
@@ -113,32 +96,9 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
         }
     }
 
-    private fun onCreateCopyClickedWhileLimited() {
-        debounceUserInteraction {
-            eventLimitReachedClick = true
-
-            dialogController.hide()
-            viewModel.onEventCountReachedAddCopyClicked(context)
-        }
-    }
-
     private fun onTriggerEventItemClicked(event: TriggerEvent) {
         debounceUserInteraction {
             showTriggerEventConfigDialog(event)
-        }
-    }
-
-    private fun updateEventLimitationVisibility(isVisible: Boolean) {
-        dialogController.createCopyButtons.apply {
-            if (isVisible) {
-                root.alpha = ALPHA_DISABLED_ITEM
-                buttonNew.setOnClickListener { onCreateCopyClickedWhileLimited() }
-                buttonCopy.setOnClickListener { onCreateCopyClickedWhileLimited() }
-            } else {
-                root.alpha = ALPHA_ENABLED_ITEM
-                buttonNew.setOnClickListener { onCreateButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
-            }
         }
     }
 
