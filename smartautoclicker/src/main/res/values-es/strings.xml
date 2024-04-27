@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="app_name" translatable="false">Smart AutoClicker</string>
+    <string name="notification_channel_name" translatable="false">Smart AutoClicker</string>
+
+    <!-- Application wide texts. -->
+    <string name="notification_title">Guión: %1$s</string>
+    <string name="notification_message">Presiona para cambiar el guión</string>
+    <string name="activity_title">Guiones</string>
+    <string name="accessibility_service_description">Esta aplicación necesita este permiso para inyectar los clicks que hayas creado
+        en otras aplicaciones una vez que las condiciones se hayan detectado.\n\nNo se recogerán datos de esa aplicación.
+        Puedes visitar nuestro github, ¡el código es libre !</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">Nuevo guión</string>
+    <string name="dialog_title_permissions">Se necesitan permisos</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_export">Exportar</string>
+    <string name="menu_item_title_import">Importar</string>
+    <string name="menu_item_title_select_all">Seleccionar todo</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_permissions">Se necesitan los siguientes permisos para usar Smart AutoClicker:</string>
+    <string name="item_desc_permission_overlay">El permiso de mostrar sobre otras aplicaciones permiten a esta app mostrar un menú
+                                                  sobre otras apps.</string>
+    <string name="item_desc_permission_accessibility">El permiso de accesibilidad le permite a esta aplicación hacer click en
+                                                        otras apps por ti.</string>
+    <string name="item_desc_permission_notification">Opcional: Muestra la notificación mientras la aplicación se ejecuta.</string>
+    <string name="item_title_permission_accessibility">Permiso de accesibilidad</string>
+    <string name="item_title_permission_notification">Notificación</string>
+    <string name="item_title_permission_overlay">Mostrar sobre otras aplicaciones</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_scenario_list">Crea tu primer guión y empieza a automatizar tareas en tu teléfono</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_delete_scenario">Esto eliminará %1$s. Estás seguro ?</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Tu dispositivo no provee el diálogo de
+        capturar pantalla estándar de Android. Smart AutoClicker no podrá ejecutarse.</string>
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_denied_screen_sharing_permission">El usuario ha denegado el permiso de capturar pantalla</string>
+    <string name="toast_denied_foreground_permission">El usuario ha denegado el permiso de aplicación en primer plano</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">Crear un guión</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">Crear un nuevo guión</string>
+    <string name="content_desc_overlay_state">Estado del permiso de mostrar sobre otras aplicaciones</string>
+    <string name="content_desc_accessibility_state">Estado del permiso de accesibilidad</string>
+
+</resources>
