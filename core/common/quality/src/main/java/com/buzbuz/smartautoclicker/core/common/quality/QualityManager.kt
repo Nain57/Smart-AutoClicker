@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.time.Duration
 
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -46,12 +47,9 @@ import javax.inject.Singleton
 
 @Singleton
 class QualityManager @Inject constructor(
-    @ApplicationContext context: Context,
+    private val qualityDataStore: DataStore<Preferences>,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
 ) : Dumpable {
-
-    /** Preferences persisting data required for quality insights. */
-    private val qualityDataStore: DataStore<Preferences> = context.qualityDataStore
 
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
@@ -109,30 +107,31 @@ class QualityManager @Inject constructor(
     private suspend fun startQualityMonitoring() {
         val startingQuality = when {
             // Check if that's not the first time the service is started
-            lastServiceStartTimeMs.first() == INVALID_TIME -> Quality.High
+            lastServiceStartTimeMs.first() == INVALID_TIME -> Quality.FirstTime
 
             // Restart is due to a crash
             lastServiceForegroundTimeMs.first() != INVALID_TIME -> {
                 Log.i(TAG, "Smart AutoClicker has crashed during it's last session !")
-                Quality.Problematic.Low
+                Quality.Low
             }
 
             // Restart is due to a permission removal
             else -> {
                 Log.i(TAG, "Accessibility service permission was removed !")
-                Quality.Problematic.Medium
+                Quality.Medium
             }
         }
 
         _quality.emit(startingQuality)
+        startingQuality.backToHighDelay?.let(::delayToHighQuality)
+    }
 
-        if (startingQuality is Quality.Problematic) {
-            coroutineScopeIo.launch {
-                delay(startingQuality.backToHighDelay)
+    private fun delayToHighQuality(delayDuration: Duration) {
+        coroutineScopeIo.launch {
+            delay(delayDuration)
 
-                Log.i(TAG, "Grace period expired, quality is back to High")
-                _quality.emit(Quality.High)
-            }
+            Log.i(TAG, "Grace period expired, quality is back to High")
+            _quality.emit(Quality.High)
         }
     }
 
@@ -150,5 +149,5 @@ class QualityManager @Inject constructor(
     }
 }
 
-private const val INVALID_TIME = -1L
+internal const val INVALID_TIME = -1L
 private const val TAG = "QualityManager"
