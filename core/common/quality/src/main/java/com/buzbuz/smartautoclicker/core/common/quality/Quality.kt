@@ -18,9 +18,10 @@ package com.buzbuz.smartautoclicker.core.common.quality
 
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 /** Describe the different quality levels felt by the user. */
-sealed class Quality {
+sealed class Quality(internal val backToHighDelay: Duration? = null) {
 
     /** The quality is not initialized yet. */
     data object Unknown : Quality()
@@ -28,13 +29,12 @@ sealed class Quality {
     /** Everything is working as intended. */
     data object High : Quality()
 
-    /** Something unexpected has occurred and the user had to reset the Accessibility permission. */
-    sealed class Problematic(internal val backToHighDelay: Duration) : Quality() {
+    /** The issue has occurred due to external perturbations, such as aggressive background service management */
+    data object Medium : Quality(30.minutes)
 
-        /** The issue has occurred due to external perturbations, such as aggressive background service management */
-        data object Medium : Problematic(12.hours)
+    /** The issue has occurred due to a crash of Smart AutoClicker. */
+    data object Low : Quality(6.hours)
 
-        /** The issue has occurred due to a crash of Smart AutoClicker. */
-        data object Low : Problematic(24.hours)
-    }
+    /** The user is using the app for the first time. */
+    data object FirstTime : Quality(2.hours)
 }

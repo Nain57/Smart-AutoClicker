@@ -14,22 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.smartautoclicker.core.common.quality.di
 
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
-    alias(libs.plugins.buzbuz.hilt)
-}
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.core.common.quality"
-}
+import com.buzbuz.smartautoclicker.core.common.quality.qualityDataStore
 
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.datastore)
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 
-    implementation(project(":core:common:base"))
+@Module
+@InstallIn(SingletonComponent::class)
+internal object BillingHiltModule {
 
-    testImplementation(libs.kotlinx.coroutines.test)
+    @Provides
+    internal fun providesQualityDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<Preferences> = context.qualityDataStore
+
 }
