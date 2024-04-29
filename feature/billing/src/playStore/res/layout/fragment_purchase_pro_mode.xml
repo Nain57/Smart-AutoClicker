@@ -47,7 +47,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/banner"
-            app:layout_constraintBottom_toTopOf="@id/button_trial"
+            app:layout_constraintBottom_toTopOf="@id/button_source"
             android:visibility="visible"
             tools:visibility="visible"/>
 
@@ -63,12 +63,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/banner"
-            app:layout_constraintBottom_toTopOf="@id/button_trial"
+            app:layout_constraintBottom_toTopOf="@id/button_source"
             android:visibility="gone"
             tools:visibility="invisible"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_trial"
+            android:id="@+id/button_source"
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,21 +78,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/purchase_text"
-            app:layout_constraintBottom_toTopOf="@id/button_watch_ad"
-            android:text="@string/button_text_trial"/>
-
-        <include layout="@layout/include_loadable_button_outlined"
-            android:id="@+id/button_watch_ad"
-            style="@style/AppTheme.Widget.TextButtonOutlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_trial"
             app:layout_constraintBottom_toTopOf="@id/button_buy"
-            android:text="@string/button_text_watch_ad"/>
+            android:text="@string/button_text_visit_github"/>
 
         <include layout="@layout/include_loadable_button"
             android:id="@+id/button_buy"
@@ -102,7 +89,7 @@
             android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_watch_ad"
+            app:layout_constraintTop_toBottomOf="@id/button_source"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

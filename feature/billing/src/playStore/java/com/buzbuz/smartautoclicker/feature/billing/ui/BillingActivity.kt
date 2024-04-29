@@ -56,6 +56,9 @@ class BillingActivity : AppCompatActivity() {
             AdsLoadingFragment.FRAGMENT_TAG -> AdsLoadingFragment()
                 .show(supportFragmentManager, AdsLoadingFragment.FRAGMENT_TAG)
 
+            PurchaseProModeFragment.FRAGMENT_TAG -> PurchaseProModeFragment()
+                .show(supportFragmentManager, PurchaseProModeFragment.FRAGMENT_TAG)
+
             else -> {
                 Log.e("BillingActivity", "Invalid fragment tag $tag")
                 finish()

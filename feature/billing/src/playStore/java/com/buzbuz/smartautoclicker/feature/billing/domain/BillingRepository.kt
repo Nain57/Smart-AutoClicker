@@ -21,8 +21,8 @@ import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 import com.buzbuz.smartautoclicker.feature.billing.data.billing.BillingDataSource
-import com.buzbuz.smartautoclicker.feature.billing.ui.AdsLoadingFragment
 import com.buzbuz.smartautoclicker.feature.billing.ui.BillingActivity
+import com.buzbuz.smartautoclicker.feature.billing.ui.PurchaseProModeFragment
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -54,8 +54,8 @@ internal class BillingRepository @Inject constructor(
 
     override val isBillingFlowInProgress: Flow<Boolean> = dataSource.billingFlowInProgress
 
-    override fun startBillingActivity(context: Context) {
-        context.startActivity(BillingActivity.getStartIntent(context, AdsLoadingFragment.FRAGMENT_TAG))
+    override fun startRemoveAdsUiFlow(context: Context) {
+        context.startActivity(BillingActivity.getStartIntent(context, PurchaseProModeFragment.FRAGMENT_TAG))
     }
 
     override fun launchPlayStoreBillingFlow(activity: Activity) {

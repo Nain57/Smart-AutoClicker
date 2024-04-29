@@ -18,8 +18,10 @@ package com.buzbuz.smartautoclicker.feature.billing.domain
 
 import android.app.Activity
 import android.content.Context
+
+import com.buzbuz.smartautoclicker.feature.billing.AdState
 import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
-import com.buzbuz.smartautoclicker.feature.billing.RemoteInterstitialAd
+
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
@@ -28,7 +30,7 @@ internal class AdsRepository @Inject constructor() : IAdsRepository() {
 
     override val isUserConsentingForAds: Flow<Boolean> = flowOf(false)
     override val isPrivacyOptionsRequired: Flow<Boolean> = flowOf(false)
-    override val adsState: Flow<RemoteInterstitialAd> = flowOf(RemoteInterstitialAd.SdkNotInitialized)
+    override val adsState: Flow<AdState> = flowOf(AdState.VALIDATED)
 
     override fun requestUserConsentIfNeeded(activity: Activity) = Unit
     override fun showPrivacyOptionsForm(activity: Activity) = Unit
