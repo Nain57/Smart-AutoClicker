@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2024 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:background="@color/md_theme_light_surface">
 
     <include layout="@layout/include_dialog_navigation_top_bar"
         android:id="@+id/layout_top_bar" />
@@ -47,7 +48,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/reason_text"
-                    style="@style/AppTheme.TextAppearance.BodyLarge"
+                    style="@style/AppTheme.TextAppearance.TopBarTitle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_default"
@@ -55,12 +56,14 @@
                     android:layout_marginBottom="@dimen/margin_vertical_extra_large"
                     android:gravity="center"
                     app:drawableStartCompat="@drawable/ic_pro"
-                    tools:text="@string/billing_reason_action_type_toggle_event"/>
+                    android:drawablePadding="-48dp"
+                    android:text="@string/header_billing"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     style="@style/AppTheme.Widget.Divider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_vertical_extra_large"
                     app:dividerInsetStart="@dimen/margin_horizontal_large"
                     app:dividerInsetEnd="@dimen/margin_horizontal_large"/>
 
@@ -71,17 +74,33 @@
                     android:layout_height="match_parent"
                     android:layout_marginVertical="@dimen/margin_vertical_extra_large"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_large"
-                    android:gravity="center_vertical"
-                    android:text="@string/billing_pro_mode_description"/>
+                    android:gravity="center"
+                    android:text="@string/message_billing"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buy_button"
-                    style="@style/AppTheme.Widget.TextButton"
+                <com.google.android.material.divider.MaterialDivider
+                    style="@style/AppTheme.Widget.Divider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_vertical_extra_large"
+                    android:layout_marginBottom="@dimen/margin_vertical_default"
+                    app:dividerInsetStart="@dimen/margin_horizontal_large"
+                    app:dividerInsetEnd="@dimen/margin_horizontal_large"/>
+
+                <include layout="@layout/include_loadable_button_outlined"
+                    android:id="@+id/ad_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_vertical_extra_large"
+                    android:layout_marginBottom="@dimen/margin_vertical_default"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_large" />
+
+                <include layout="@layout/include_loadable_button"
+                    android:id="@+id/buy_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_vertical_extra_large"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_large"
-                    android:layout_marginVertical="@dimen/margin_vertical_extra_large"
-                    tools:text="4.99€"/>
+                    tools:text="@string/button_text_buy_pro"/>
 
             </LinearLayout>
 
@@ -94,16 +113,6 @@
                 android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
                 android:gravity="center"
                 android:text="@string/billing_pro_mode_success"
-                android:visibility="gone"/>
-
-            <ProgressBar
-                android:id="@+id/layout_connecting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_default"
-                android:layout_marginBottom="@dimen/margin_vertical_default"
-                android:layout_gravity="center"
-                style="?android:attr/progressBarStyleLarge"
                 android:visibility="gone"/>
 
         </FrameLayout>

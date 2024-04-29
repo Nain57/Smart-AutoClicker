@@ -20,9 +20,9 @@ import android.app.Activity
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.billing.data.billing.BillingDataSource
-import com.buzbuz.smartautoclicker.feature.billing.ui.ProModeBillingActivity
+import com.buzbuz.smartautoclicker.feature.billing.ui.AdsLoadingFragment
+import com.buzbuz.smartautoclicker.feature.billing.ui.BillingActivity
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -30,7 +30,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,30 +42,24 @@ internal class BillingRepository @Inject constructor(
     private val billingScope = CoroutineScope(Job() + Dispatchers.IO)
     /** Manages the connexion with the billing API and provide status about pro mode product state. */
     private val dataSource: BillingDataSource = BillingDataSource(applicationContext, billingScope)
-    /** Tells if the [ProModeBillingActivity] is started or not. */
-    private val billingActivityState = MutableStateFlow(false)
 
     override val newPurchases: Flow<List<String>> = dataSource.getNewPurchases()
 
     override val isProModePurchased: Flow<Boolean> = dataSource.isPurchased
     override val canPurchaseProMode = dataSource.canPurchase()
 
-    override val proModeTitle: Flow<String> = dataSource.getProductTitle()
-    override val proModePrice: Flow<String> = dataSource.getProductPrice()
-    override val proModeDescription: Flow<String> = dataSource.getProductDescription()
+    override val proModeTitle: Flow<String?> = dataSource.getProductTitle()
+    override val proModePrice: Flow<String?> = dataSource.getProductPrice()
+    override val proModeDescription: Flow<String?> = dataSource.getProductDescription()
 
-    override val isBillingFlowInProcess: Flow<Boolean> = billingActivityState
+    override val isBillingFlowInProgress: Flow<Boolean> = dataSource.billingFlowInProgress
 
-    override fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage) {
-        context.startActivity(ProModeBillingActivity.getStartIntent(context, requestedAdvantage))
+    override fun startBillingActivity(context: Context) {
+        context.startActivity(BillingActivity.getStartIntent(context, AdsLoadingFragment.FRAGMENT_TAG))
     }
 
     override fun launchPlayStoreBillingFlow(activity: Activity) {
         dataSource.launchBillingFlow(activity)
-    }
-
-    override fun setBillingActivityState(created: Boolean) {
-        billingActivityState.value = created
     }
 
     override fun isPurchased(): Boolean = dataSource.isPurchased()

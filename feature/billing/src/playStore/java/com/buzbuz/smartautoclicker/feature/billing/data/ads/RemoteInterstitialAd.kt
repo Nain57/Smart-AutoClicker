@@ -16,24 +16,43 @@
  */
 package com.buzbuz.smartautoclicker.feature.billing.data.ads
 
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.buzbuz.smartautoclicker.feature.billing.AdState
 
-sealed class RemoteInterstitialAd {
+internal sealed class RemoteInterstitialAd {
 
     data object SdkNotInitialized : RemoteInterstitialAd()
     data object Initialized : RemoteInterstitialAd()
     data object Loading : RemoteInterstitialAd()
-    data class NotShown(val ad: InterstitialAd) : RemoteInterstitialAd()
+    data object NotShown : RemoteInterstitialAd()
     data object Showing : RemoteInterstitialAd()
-    data class Shown(val shownTimeMs: Long = System.currentTimeMillis()) : RemoteInterstitialAd()
+    data object Shown : RemoteInterstitialAd()
 
     sealed class Error : RemoteInterstitialAd() {
-        abstract val adError: AdError?
+        abstract val code: Int?
+        abstract val message: String?
 
-        data class LoadingError(override val adError: LoadAdError) : Error()
-        data class ShowError(override val adError: AdError? = null) : Error()
+        data class LoadingError(override val code: Int, override val message: String) : Error()
+        data class ShowError(override val code: Int, override val message: String) : Error()
+        data object NoImpressionError : Error() {
+            override val code = null
+            override val message = null
+        }
     }
+}
 
+internal fun RemoteInterstitialAd.toAdState(): AdState = when (this) {
+    RemoteInterstitialAd.SdkNotInitialized,
+    RemoteInterstitialAd.Initialized -> AdState.REQUESTED
+
+    RemoteInterstitialAd.Loading -> AdState.LOADING
+
+    is RemoteInterstitialAd.NotShown -> AdState.READY
+
+    RemoteInterstitialAd.Showing -> AdState.SHOWING
+
+    is RemoteInterstitialAd.Shown -> AdState.VALIDATED
+
+    is RemoteInterstitialAd.Error.LoadingError,
+    is RemoteInterstitialAd.Error.ShowError,
+    RemoteInterstitialAd.Error.NoImpressionError -> AdState.ERROR
 }

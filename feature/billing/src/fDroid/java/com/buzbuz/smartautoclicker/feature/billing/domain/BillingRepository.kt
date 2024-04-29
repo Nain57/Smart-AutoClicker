@@ -20,7 +20,6 @@ import android.app.Activity
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -38,10 +37,10 @@ internal class BillingRepository @Inject constructor(): IBillingRepository() {
     override val proModePrice: Flow<String> = flowOf("")
     override val proModeDescription: Flow<String> = flowOf("")
 
-    override val isBillingFlowInProcess: Flow<Boolean> = flowOf(false)
-    override fun startBillingActivity(context: Context, requestedAdvantage: ProModeAdvantage) {}
+    override val isBillingFlowInProgress: Flow<Boolean> = flowOf(false)
+
+    override fun startBillingActivity(context: Context) {}
 
     override fun launchPlayStoreBillingFlow(activity: Activity) = Unit
-    override fun setBillingActivityState(created: Boolean) = Unit
     override fun isPurchased(): Boolean = true
 }

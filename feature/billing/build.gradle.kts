@@ -16,6 +16,7 @@
  */
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.hilt)
 }
@@ -58,6 +59,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(project(":core:common:base"))
+    implementation(project(":core:common:quality"))
     implementation(project(":core:common:ui"))
 
     "playStoreImplementation"(libs.androidx.appCompat)
@@ -72,4 +74,6 @@ dependencies {
     "playStoreImplementation"(libs.google.gms.ads)
 
     "playStoreImplementation"(libs.google.material)
+
+    "testPlayStoreImplementation"(libs.kotlinx.coroutines.test)
 }

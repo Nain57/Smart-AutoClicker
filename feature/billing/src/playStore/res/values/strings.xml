@@ -34,4 +34,13 @@
     <string name="billing_reason_scenario_count">Buy Smart AutoClicker Pro to create more than %1$d scenarios</string>
     <string name="billing_reason_scenario_detection_quality">Buy Smart AutoClicker Pro to change the detection quality of the algorithm</string>
     <string name="billing_reason_scenario_end_conditions">Buy Smart AutoClicker Pro to create auto end detection conditions</string>
+
+    <string name="header_billing">Smart AutoClicker Pro</string>
+    <string name="message_billing">This application is open source and crafted with love by people working on their free time.\n\nSupport the development by watching an ad, or buy Smart AutoClicker Pro to remove ads forever!</string>
+    <string name="button_text_watch_ad">Watch an Ad</string>
+    <string name="button_text_watch_ad_error">Ad error</string>
+    <string name="button_text_buy_pro">Buy Pro (%1$s)</string>
+    <string name="button_text_buy_pro_error">Cannot purchase</string>
+
+
 </resources>
