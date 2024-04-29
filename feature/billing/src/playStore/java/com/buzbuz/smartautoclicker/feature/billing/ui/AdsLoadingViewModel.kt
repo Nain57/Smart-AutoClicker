@@ -52,6 +52,7 @@ internal class AdsLoadingViewModel @Inject constructor(
             isPurchased -> DialogState.Purchased
             adsState == AdState.VALIDATED -> DialogState.AdWatched
             else -> DialogState.NotPurchased(
+                trialDurationMinutes = 30,
                 adButtonState = adsState.toAdButtonState(appContext),
                 purchaseButtonState = getPurchaseButtonState(appContext, canPurchase, billingInProgress, price),
             )
@@ -70,6 +71,7 @@ internal class AdsLoadingViewModel @Inject constructor(
 internal sealed class DialogState {
 
     internal data class NotPurchased(
+        val trialDurationMinutes: Int,
         val adButtonState: LoadableButtonState,
         val purchaseButtonState: LoadableButtonState,
     ): DialogState()

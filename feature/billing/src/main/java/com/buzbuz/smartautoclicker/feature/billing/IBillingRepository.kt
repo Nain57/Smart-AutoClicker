@@ -60,7 +60,7 @@ abstract class IBillingRepository : Dumpable {
      *
      * @param context the Android context.
      */
-    abstract fun startBillingActivity(context: Context)
+    abstract fun startRemoveAdsUiFlow(context: Context)
 
     internal abstract fun launchPlayStoreBillingFlow(activity: Activity)
 

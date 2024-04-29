@@ -121,7 +121,7 @@ internal class AdsRepository @Inject constructor(
     }
 
     private fun initAdsOnConsentFlow(context: Context) : Flow<Unit> =
-        combine(isUserConsentingForAds, adsDataSource.remoteAd) { isConsenting, remoteAd ->
+        combine(userConsentDataSource.isUserConsentingForAds, adsDataSource.remoteAd) { isConsenting, remoteAd ->
             if (!isConsenting || remoteAd != RemoteInterstitialAd.SdkNotInitialized) return@combine
 
             Log.i(TAG, "User consenting for ads, initialize ads SDK")

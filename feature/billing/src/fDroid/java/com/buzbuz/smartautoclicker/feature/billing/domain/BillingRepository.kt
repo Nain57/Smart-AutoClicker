@@ -39,7 +39,7 @@ internal class BillingRepository @Inject constructor(): IBillingRepository() {
 
     override val isBillingFlowInProgress: Flow<Boolean> = flowOf(false)
 
-    override fun startBillingActivity(context: Context) {}
+    override fun startRemoveAdsUiFlow(context: Context) {}
 
     override fun launchPlayStoreBillingFlow(activity: Activity) = Unit
     override fun isPurchased(): Boolean = true
