@@ -35,7 +35,7 @@ internal class PurchaseManager(
     private val billingClient: BillingClient,
     private val productId: String,
     private val defaultScope: CoroutineScope,
-    private val onPurchaseUpdateFailed: () -> Unit,
+    private val onPurchaseUpdated: () -> Unit,
 ) {
 
     /** Purchase state of the product. */
@@ -82,7 +82,7 @@ internal class PurchaseManager(
                 Log.d(LOG_TAG, "BillingResult [" + billingResult.responseCode + "]: " + billingResult.debugMessage)
         }
 
-        onPurchaseUpdateFailed()
+        onPurchaseUpdated()
     }
 
     /**
@@ -140,6 +140,7 @@ internal class PurchaseManager(
                         Log.e(LOG_TAG, "Error acknowledging purchase")
                     } else {
                         productState.tryEmit(ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED)
+                        onPurchaseUpdated()
                     }
                     newPurchaseFlow.tryEmit(purchase.skus)
                 }

@@ -42,18 +42,18 @@ abstract class IBillingRepository : Dumpable {
     abstract val canPurchaseProMode: Flow<Boolean>
 
     /** @return the PlayStore name of the pro mode. */
-    abstract val proModeTitle: Flow<String>
+    abstract val proModeTitle: Flow<String?>
     /** @return the PlayStore price of the pro mode. */
-    abstract val proModePrice: Flow<String>
+    abstract val proModePrice: Flow<String?>
     /** @return the PlayStore description of the pro mode. */
-    abstract val proModeDescription: Flow<String>
+    abstract val proModeDescription: Flow<String?>
 
     /**
      * Returns a Flow that reports if a billing flow is in process.
      *
      * @return Flow that indicates the known state of the billing flow.
      */
-    abstract val isBillingFlowInProcess: Flow<Boolean>
+    abstract val isBillingFlowInProgress: Flow<Boolean>
 
     /**
      * Launch the billing activity.
@@ -63,8 +63,6 @@ abstract class IBillingRepository : Dumpable {
     abstract fun startBillingActivity(context: Context)
 
     internal abstract fun launchPlayStoreBillingFlow(activity: Activity)
-
-    internal abstract fun setBillingActivityState(created: Boolean)
 
     internal abstract fun isPurchased(): Boolean
 

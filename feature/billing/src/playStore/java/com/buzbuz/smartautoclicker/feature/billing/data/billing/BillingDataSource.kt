@@ -57,10 +57,11 @@ internal class BillingDataSource(
         billingClient,
         PRODUCT_ID,
         defaultScope,
-        ::onPurchaseUpdateFailed,
+        ::onPurchaseUpdated,
     )
 
-    private val billingFlowInProcess = MutableStateFlow(false)
+    private val _billingFlowInProgress = MutableStateFlow(false)
+    val billingFlowInProgress: StateFlow<Boolean> = _billingFlowInProgress
 
     init {
         billingClient.startConnection(billingServiceConnection)
@@ -94,22 +95,14 @@ internal class BillingDataSource(
             state == ProductState.PRODUCT_STATE_NOT_PURCHASED && details != null
         }
 
-    fun getProductTitle(): Flow<String> = productDetailsManager.productDetails
-        .mapNotNull { details -> details?.title }
+    fun getProductTitle(): Flow<String?> = productDetailsManager.productDetails
+        .map { details -> details?.title }
 
-    fun getProductPrice(): Flow<String> = productDetailsManager.productDetails
-        .mapNotNull { details -> details?.oneTimePurchaseOfferDetails?.formattedPrice }
+    fun getProductPrice(): Flow<String?> = productDetailsManager.productDetails
+        .map { details -> details?.oneTimePurchaseOfferDetails?.formattedPrice }
 
-    fun getProductDescription(): Flow<String> = productDetailsManager.productDetails
-        .mapNotNull { skuDetails -> skuDetails?.description }
-
-    /**
-     * Returns a Flow that reports if a billing flow is in process, meaning that launchBillingFlow has returned
-     * BillingResponseCode.OK and onPurchasesUpdated hasn't yet been called.
-     *
-     * @return Flow that indicates the known state of the billing flow.
-     */
-    fun getBillingFlowInProcess(): Flow<Boolean> = billingFlowInProcess.asStateFlow()
+    fun getProductDescription(): Flow<String?> = productDetailsManager.productDetails
+        .map { skuDetails -> skuDetails?.description }
 
     /**
      * Launch the billing flow.
@@ -135,7 +128,7 @@ internal class BillingDataSource(
         defaultScope.launch {
             val billingResult = billingClient.launchBillingFlow(activity, billingFlowParams)
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                billingFlowInProcess.emit(true)
+                _billingFlowInProgress.emit(true)
             } else {
                 Log.e(LOG_TAG, "Billing failed: " + billingResult.debugMessage)
             }
@@ -157,9 +150,9 @@ internal class BillingDataSource(
         }
     }
 
-    private fun onPurchaseUpdateFailed() {
+    private fun onPurchaseUpdated() {
         defaultScope.launch {
-            billingFlowInProcess.emit(false)
+            _billingFlowInProgress.emit(false)
         }
     }
 }

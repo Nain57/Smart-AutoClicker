@@ -31,6 +31,8 @@ abstract class IAdsRepository: Dumpable {
     abstract val isUserConsentingForAds: Flow<Boolean>
     abstract val isPrivacyOptionsRequired: Flow<Boolean>
 
+    abstract val adsState: Flow<AdState>
+
     abstract fun requestUserConsentIfNeeded(activity: Activity)
     abstract fun showPrivacyOptionsForm(activity: Activity)
 

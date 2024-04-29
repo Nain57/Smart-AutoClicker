@@ -19,20 +19,23 @@ package com.buzbuz.smartautoclicker.feature.billing.data.ads
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import androidx.annotation.VisibleForTesting
+
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.feature.billing.data.ads.sdk.IAdsSdk
 
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.interstitial.InterstitialAd
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
-
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
@@ -40,50 +43,69 @@ import javax.inject.Singleton
 
 @Singleton
 internal class InterstitialAdsDataSource @Inject constructor(
+    @ApplicationContext context: Context,
     @Dispatcher(Main) mainDispatcher: CoroutineDispatcher,
+    private val adsSdk: IAdsSdk,
 ) {
     private val coroutineScopeMain: CoroutineScope =
         CoroutineScope(SupervisorJob() + mainDispatcher)
 
     /** The number of automatic retries for the loading of an ad. */
     private var loadRetries: Int = 0
+    /**
+     * If a call to [loadAd] is made before the sdk is initialized, we register it and execute it as soon as the sdk
+     * initialization is complete. Executed on the main thread due to sdk requirement.
+     */
+    private val pendingLoadRequest: MutableStateFlow<Boolean> =
+        MutableStateFlow(false)
 
     private val _remoteAd: MutableStateFlow<RemoteInterstitialAd> =
         MutableStateFlow(RemoteInterstitialAd.SdkNotInitialized)
     val remoteAd: StateFlow<RemoteInterstitialAd> = _remoteAd
 
-    fun isSdkInitialized(): Boolean =
-        _remoteAd.value != RemoteInterstitialAd.SdkNotInitialized
+    init { loadAdRequestConsumerFlow(context).launchIn(coroutineScopeMain) }
 
     fun initialize(context: Context) {
         if (_remoteAd.value != RemoteInterstitialAd.SdkNotInitialized) return
 
-        Log.d(TAG, "Initialize MobileAds")
+        Log.i(TAG, "Initialize MobileAds")
 
-        MobileAds.initialize(context)
-        _remoteAd.value = RemoteInterstitialAd.Initialized
+        adsSdk.initializeSdk(context) {
+            coroutineScopeMain.launch {
+                _remoteAd.emit(RemoteInterstitialAd.Initialized)
+            }
+        }
     }
 
     fun loadAd(context: Context) {
-        if (_remoteAd.value == RemoteInterstitialAd.SdkNotInitialized) return
+        val adState = _remoteAd.value
+        if (adState == RemoteInterstitialAd.SdkNotInitialized) {
+            Log.i(TAG, "Load ad request delayed, SDK is not initialized")
+            pendingLoadRequest.value = true
+            return
+        }
 
-        Log.d(TAG, "Load interstitial ad with id $adsUnitId")
+        if (adState != RemoteInterstitialAd.Initialized) return
 
-        _remoteAd.value = RemoteInterstitialAd.Loading
-        adsUnitId.load(
-            context = context,
-            onLoad = ::onAdLoaded,
-            onError = { error -> onAdLoadFailed(context, error) },
-        )
+        Log.i(TAG, "Load interstitial ad")
+        coroutineScopeMain.launch {
+            _remoteAd.emit(RemoteInterstitialAd.Loading)
+            adsSdk.loadInterstitialAd(
+                context = context,
+                onLoaded = ::onAdLoaded,
+                onError = { code, message -> onAdLoadFailed(context, code, message) },
+            )
+        }
     }
+
 
     fun showAd(activity: Activity) {
         val remoteAd = _remoteAd.value
         if (remoteAd !is RemoteInterstitialAd.NotShown) return
 
-        Log.d(TAG, "Showing interstitial ad")
+        Log.i(TAG, "Show interstitial ad")
 
-        remoteAd.ad.show(
+        adsSdk.showInterstitialAd(
             activity = activity,
             onShow = ::onAdShown,
             onDismiss = ::onAdDismissed,
@@ -91,48 +113,83 @@ internal class InterstitialAdsDataSource @Inject constructor(
         )
     }
 
-    private fun onAdLoaded(ad: InterstitialAd) {
-        Log.d(TAG, "onAdLoaded")
-        loadRetries = 0
-        _remoteAd.value = RemoteInterstitialAd.NotShown(ad)
+    fun reset() {
+        if (_remoteAd.value == RemoteInterstitialAd.Initialized
+            || _remoteAd.value == RemoteInterstitialAd.SdkNotInitialized
+        ) return
+
+        Log.i(TAG, "Reset ad state")
+        coroutineScopeMain.launch {
+            _remoteAd.emit(RemoteInterstitialAd.Initialized)
+        }
     }
 
-    private fun onAdLoadFailed(context: Context, error: LoadAdError) {
-        Log.w(TAG, "onAdFailedToLoad: $error, retry=$loadRetries/$MAX_LOADING_RETRIES")
-
-        if (loadRetries > MAX_LOADING_RETRIES) {
-            _remoteAd.value = RemoteInterstitialAd.Error.LoadingError(error)
-            loadRetries = 0
-            Log.e(TAG, "Can't load ad")
-            return
-        }
-
-        loadRetries++
+    private fun onAdLoaded() {
+        Log.i(TAG, "onAdLoaded")
         coroutineScopeMain.launch {
+            loadRetries = 0
+            _remoteAd.emit(RemoteInterstitialAd.NotShown)
+        }
+    }
+
+    private fun onAdLoadFailed(context: Context, errorCode: Int, errorMessage: String) {
+        Log.w(TAG, "onAdFailedToLoad: retry=$loadRetries/$MAX_LOADING_RETRIES; $errorCode:$errorMessage")
+
+        coroutineScopeMain.launch {
+            loadRetries++
+
+            if (loadRetries >= MAX_LOADING_RETRIES) {
+                _remoteAd.emit(RemoteInterstitialAd.Error.LoadingError(errorCode, errorMessage))
+                loadRetries = 0
+                Log.e(TAG, "Can't load ad")
+                return@launch
+            }
+
             delay(RETRY_INCREMENTAL_DELAY_MS * loadRetries)
+
+            _remoteAd.value = RemoteInterstitialAd.Initialized
             loadAd(context)
         }
     }
 
     private fun onAdShown() {
-        Log.d(TAG, "onAdShown")
-        _remoteAd.value = RemoteInterstitialAd.Showing
+        Log.i(TAG, "onAdShown")
+
+        coroutineScopeMain.launch {
+            _remoteAd.emit(RemoteInterstitialAd.Showing)
+        }
     }
 
     private fun onAdDismissed(impression: Boolean) {
-        Log.d(TAG, "onAdDismissed, impression=$impression")
+        Log.i(TAG, "onAdDismissed, impression=$impression")
 
-        _remoteAd.value =
-            if (impression) RemoteInterstitialAd.Shown()
-            else RemoteInterstitialAd.Error.ShowError()
+        coroutineScopeMain.launch {
+            _remoteAd.emit(
+                if (impression) RemoteInterstitialAd.Shown
+                else RemoteInterstitialAd.Error.NoImpressionError
+            )
+        }
     }
 
-    private fun onAdShowError(error: AdError) {
-        Log.w(TAG, "onAdShowError: $error")
-        _remoteAd.value = RemoteInterstitialAd.Error.ShowError(error)
+    private fun onAdShowError(errorCode: Int, errorMessage: String) {
+        Log.w(TAG, "onAdShowError: $errorCode:$errorMessage")
+
+        coroutineScopeMain.launch {
+            _remoteAd.emit(RemoteInterstitialAd.Error.ShowError(errorCode, errorMessage))
+        }
     }
+
+    private fun loadAdRequestConsumerFlow(context: Context) : Flow<Unit> =
+        combine(_remoteAd, pendingLoadRequest) { remoteAd, haveLoadRequest ->
+            if (remoteAd != RemoteInterstitialAd.Initialized || !haveLoadRequest) return@combine
+
+            Log.i(TAG, "Ads SDK is now initialized, consuming pending ad load request")
+
+            pendingLoadRequest.emit(false)
+            loadAd(context)
+        }
 }
 
+@VisibleForTesting internal const val MAX_LOADING_RETRIES = 5
 private const val RETRY_INCREMENTAL_DELAY_MS = 500L
-private const val MAX_LOADING_RETRIES = 5
 private const val TAG = "InterstitialAdsDataSource"
