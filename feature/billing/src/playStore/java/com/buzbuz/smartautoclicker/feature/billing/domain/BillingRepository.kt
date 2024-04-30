@@ -19,8 +19,9 @@ package com.buzbuz.smartautoclicker.feature.billing.domain
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import androidx.annotation.VisibleForTesting
 
+import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
@@ -92,11 +93,8 @@ internal class BillingRepository @Inject constructor(
         userConsentDataSource.isPrivacyOptionsRequired
 
     override val adsState: StateFlow<AdState> =
-        combine(
-            userConsentDataSource.isUserConsentingForAds,
-            adsDataSource.remoteAdState,
-            ::toAdState,
-        ).stateIn(coroutineScopeIo, SharingStarted.Eagerly, AdState.NOT_INITIALIZED)
+        adsDataSource.remoteAdState.map(::toAdState)
+            .stateIn(coroutineScopeIo, SharingStarted.Eagerly, AdState.NOT_INITIALIZED)
 
     override val purchaseState: StateFlow<PurchaseState> =
         combine(
@@ -104,7 +102,7 @@ internal class BillingRepository @Inject constructor(
             billingDataSource.isPurchased,
             billingDataSource.billingFlowInProgress,
             ::toPurchaseState,
-        ).stateIn(coroutineScopeIo, SharingStarted.Eagerly, PurchaseState.NOT_PURCHASED)
+        ).stateIn(coroutineScopeIo, SharingStarted.Eagerly, PurchaseState.CANNOT_PURCHASE)
 
     override val userBillingState: StateFlow<UserBillingState> = combine(
         adsState,
@@ -185,10 +183,8 @@ internal class BillingRepository @Inject constructor(
     private fun toProModeInfo(product: ProModeProduct?): ProModeInfo? =
         product?.let { ProModeInfo(it.title, it.description, it.price) }
 
-    private fun toAdState(isConsenting: Boolean, remoteAdState: RemoteAdState): AdState {
-        if (!isConsenting) return AdState.NOT_INITIALIZED
-
-        return when (remoteAdState) {
+    private fun toAdState(remoteAdState: RemoteAdState): AdState =
+        when (remoteAdState) {
             RemoteAdState.SdkNotInitialized -> AdState.NOT_INITIALIZED
             RemoteAdState.Initialized -> AdState.INITIALIZED
             RemoteAdState.Loading -> AdState.LOADING
@@ -200,7 +196,6 @@ internal class BillingRepository @Inject constructor(
             is RemoteAdState.Error.ShowError,
             RemoteAdState.Error.NoImpressionError -> AdState.ERROR
         }
-    }
 
     private fun toPurchaseState(canPurchase: Boolean, isPurchased: Boolean, billingInProgress: Boolean): PurchaseState =
         when {
@@ -262,6 +257,6 @@ internal class BillingRepository @Inject constructor(
 }
 
 internal val TRIAL_SESSION_DURATION_DURATION = 30.minutes
-private val AD_WATCHED_STATE_DURATION = 1.hours
+@VisibleForTesting internal val AD_WATCHED_STATE_DURATION = 1.hours
 
 private const val TAG = "BillingRepository"
