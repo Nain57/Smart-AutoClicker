@@ -123,6 +123,7 @@ class ScenarioListFragment : Fragment() {
             R.id.action_search -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SEARCH)
             R.id.action_select_all -> scenarioListViewModel.toggleAllScenarioSelectionForBackup()
             R.id.action_privacy_settings -> activity?.let(scenarioListViewModel::showPrivacySettings)
+            R.id.action_purchase -> context?.let(scenarioListViewModel::showPurchaseActivity)
             else -> return false
         }
 
@@ -170,6 +171,7 @@ class ScenarioListFragment : Fragment() {
                 }
             }
             findItem(R.id.action_privacy_settings)?.bind(menuState.privacyItemState)
+            findItem(R.id.action_purchase)?.bind(menuState.purchaseItemState)
         }
     }
 

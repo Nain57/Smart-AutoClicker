@@ -16,18 +16,16 @@
  */
 package com.buzbuz.smartautoclicker.feature.billing.data.ads
 
-import com.buzbuz.smartautoclicker.feature.billing.AdState
+internal sealed class RemoteAdState {
 
-internal sealed class RemoteInterstitialAd {
+    data object SdkNotInitialized : RemoteAdState()
+    data object Initialized : RemoteAdState()
+    data object Loading : RemoteAdState()
+    data object NotShown : RemoteAdState()
+    data object Showing : RemoteAdState()
+    data object Shown : RemoteAdState()
 
-    data object SdkNotInitialized : RemoteInterstitialAd()
-    data object Initialized : RemoteInterstitialAd()
-    data object Loading : RemoteInterstitialAd()
-    data object NotShown : RemoteInterstitialAd()
-    data object Showing : RemoteInterstitialAd()
-    data object Shown : RemoteInterstitialAd()
-
-    sealed class Error : RemoteInterstitialAd() {
+    sealed class Error : RemoteAdState() {
         abstract val code: Int?
         abstract val message: String?
 
@@ -38,21 +36,4 @@ internal sealed class RemoteInterstitialAd {
             override val message = null
         }
     }
-}
-
-internal fun RemoteInterstitialAd.toAdState(): AdState = when (this) {
-    RemoteInterstitialAd.SdkNotInitialized,
-    RemoteInterstitialAd.Initialized -> AdState.REQUESTED
-
-    RemoteInterstitialAd.Loading -> AdState.LOADING
-
-    is RemoteInterstitialAd.NotShown -> AdState.READY
-
-    RemoteInterstitialAd.Showing -> AdState.SHOWING
-
-    is RemoteInterstitialAd.Shown -> AdState.VALIDATED
-
-    is RemoteInterstitialAd.Error.LoadingError,
-    is RemoteInterstitialAd.Error.ShowError,
-    RemoteInterstitialAd.Error.NoImpressionError -> AdState.ERROR
 }

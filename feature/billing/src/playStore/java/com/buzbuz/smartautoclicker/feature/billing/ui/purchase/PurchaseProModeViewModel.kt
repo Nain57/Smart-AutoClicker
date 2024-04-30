@@ -14,14 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing.ui
+package com.buzbuz.smartautoclicker.feature.billing.ui.purchase
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.InternalBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.model.PurchaseState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -31,24 +32,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class PurchaseProModeViewModel @Inject constructor(
-    private val billingRepository: IBillingRepository,
+    private val billingRepository: InternalBillingRepository,
 ) : ViewModel() {
 
-    val dialogState: Flow<PurchaseDialogState> = combine(
-        billingRepository.canPurchaseProMode,
-        billingRepository.isProModePurchased,
-        billingRepository.proModePrice,
-    ) { canPurchase, isPurchased, price ->
-        when {
-            isPurchased -> PurchaseDialogState.Purchased
-            !canPurchase -> PurchaseDialogState.Error
-            price.isNullOrEmpty() -> PurchaseDialogState.Loading
-            else -> PurchaseDialogState.Loaded(price)
+    val dialogState: Flow<PurchaseDialogState> =
+        combine(billingRepository.purchaseState, billingRepository.proModeInfo) { state, info ->
+            when {
+                state == PurchaseState.PURCHASED -> PurchaseDialogState.Purchased
+                state == PurchaseState.CANNOT_PURCHASE -> PurchaseDialogState.Error
+                info == null -> PurchaseDialogState.Loading
+                else -> PurchaseDialogState.Loaded(info.price)
+            }
         }
-    }
 
     fun launchPlayStoreBillingFlow(activity: Activity) {
-        billingRepository.launchPlayStoreBillingFlow(activity)
+        billingRepository.startPlayStoreBillingUiFlow(activity)
     }
 
     fun getGitHubWebPageIntent(): Intent =

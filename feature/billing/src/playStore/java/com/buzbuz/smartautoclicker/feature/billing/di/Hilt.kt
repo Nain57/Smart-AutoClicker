@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.feature.billing.di
 
 import com.buzbuz.smartautoclicker.feature.billing.data.ads.sdk.IAdsSdk
 import com.buzbuz.smartautoclicker.feature.billing.data.ads.sdk.GoogleAdsSdk
+import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.InternalBillingRepository
 
 import dagger.Module
 import dagger.Provides
@@ -34,4 +36,9 @@ internal object PlayStoreBillingHiltModule {
     @Singleton
     internal fun providesAdsSdk(googleAdsSdk: GoogleAdsSdk): IAdsSdk =
         googleAdsSdk
+
+    @Provides
+    @Singleton
+    internal fun providesInternalBillingRepository(repository: BillingRepository): InternalBillingRepository =
+        repository
 }

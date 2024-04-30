@@ -24,11 +24,13 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.feature.billing.R
+import com.buzbuz.smartautoclicker.feature.billing.ui.paywall.PaywallFragment
+import com.buzbuz.smartautoclicker.feature.billing.ui.purchase.PurchaseProModeFragment
 
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BillingActivity : AppCompatActivity() {
+internal class BillingActivity : AppCompatActivity() {
 
     companion object {
 
@@ -43,8 +45,9 @@ class BillingActivity : AppCompatActivity() {
          *
          * @return the intent, ready to be sent.
          */
-        internal fun getStartIntent(context: Context, billingFragment: String): Intent =
+        fun getStartIntent(context: Context, billingFragment: String): Intent =
             Intent(context, BillingActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra(EXTRA_FRAGMENT_TAG, billingFragment)
     }
 
@@ -53,8 +56,8 @@ class BillingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pro_mode)
 
         when (val tag = intent?.getStringExtra(EXTRA_FRAGMENT_TAG)) {
-            AdsLoadingFragment.FRAGMENT_TAG -> AdsLoadingFragment()
-                .show(supportFragmentManager, AdsLoadingFragment.FRAGMENT_TAG)
+            PaywallFragment.FRAGMENT_TAG -> PaywallFragment()
+                .show(supportFragmentManager, PaywallFragment.FRAGMENT_TAG)
 
             PurchaseProModeFragment.FRAGMENT_TAG -> PurchaseProModeFragment()
                 .show(supportFragmentManager, PurchaseProModeFragment.FRAGMENT_TAG)

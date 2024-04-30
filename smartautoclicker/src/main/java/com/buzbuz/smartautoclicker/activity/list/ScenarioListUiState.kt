@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,12 +50,13 @@ data class ScenarioListUiState(
 
     /** Ui state of the action menu. */
     sealed class Menu(
-        val searchItemState: Item,
-        val selectAllItemState: Item,
-        val cancelItemState: Item,
-        val importItemState: Item,
-        val exportItemState: Item,
-        val privacyItemState: Item,
+        val searchItemState: Item = Item(false),
+        val selectAllItemState: Item = Item(false),
+        val cancelItemState: Item = Item(false),
+        val importItemState: Item = Item(false),
+        val exportItemState: Item = Item(false),
+        val privacyItemState: Item = Item(false),
+        val purchaseItemState: Item = Item(false),
     ) {
 
         /**
@@ -71,35 +72,23 @@ data class ScenarioListUiState(
             @IntRange(from = 0, to = 255) val iconAlpha: Int = 255,
         )
 
-        data object Search : Menu(
-            searchItemState = Item(false),
-            selectAllItemState = Item(false),
-            cancelItemState = Item(false),
-            importItemState = Item(false),
-            exportItemState = Item(false),
-            privacyItemState = Item(false),
-        )
+        data object Search : Menu()
 
-        data class Export(
-            private val canExport: Boolean,
-            private val privacyRequired: Boolean,
-        ) : Menu(
-            searchItemState = Item(false),
+        data class Export(private val canExport: Boolean) : Menu(
             selectAllItemState = Item(true),
             cancelItemState = Item(true),
-            importItemState = Item(false),
             exportItemState = Item(
                 visible = true,
                 enabled = canExport,
                 iconAlpha = if (canExport) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
             ),
-            privacyItemState = Item(privacyRequired),
         )
 
         data class Selection(
             private val searchEnabled: Boolean,
             private val exportEnabled: Boolean,
             private val privacyRequired: Boolean,
+            private val canPurchase: Boolean,
         ) : Menu(
             searchItemState = Item(searchEnabled),
             selectAllItemState = Item(false),
@@ -113,6 +102,7 @@ data class ScenarioListUiState(
                 enabled = exportEnabled,
             ),
             privacyItemState = Item(privacyRequired),
+            purchaseItemState = Item(canPurchase),
         )
     }
 

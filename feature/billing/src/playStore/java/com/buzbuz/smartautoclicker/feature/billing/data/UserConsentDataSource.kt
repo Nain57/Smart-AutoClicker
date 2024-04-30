@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing.data.ads
+package com.buzbuz.smartautoclicker.feature.billing.data
 
 import android.app.Activity
 import android.content.Context
@@ -90,7 +90,8 @@ internal class UserConsentDataSource @Inject constructor() {
         _isPrivacyOptionsRequired.value =
             consentInfo.privacyOptionsRequirementStatus == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
 
-        Log.d(TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}, " +
+        Log.d(
+            TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}, " +
                 "settings required: ${consentInfo.privacyOptionsRequirementStatus}")
     }
 

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing.ui
+package com.buzbuz.smartautoclicker.feature.billing.ui.paywall
 
 import android.app.Activity
 import android.content.Context
@@ -22,10 +22,11 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.LoadableButtonState
-import com.buzbuz.smartautoclicker.feature.billing.AdState
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.model.AdState
 import com.buzbuz.smartautoclicker.feature.billing.R
-import com.buzbuz.smartautoclicker.feature.billing.domain.AdsRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.InternalBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.model.ProModeInfo
+import com.buzbuz.smartautoclicker.feature.billing.domain.model.PurchaseState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,34 +38,31 @@ import javax.inject.Inject
 @HiltViewModel
 internal class AdsLoadingViewModel @Inject constructor(
     @ApplicationContext appContext: Context,
-    private val billingRepository: IBillingRepository,
-    private val adsRepository: AdsRepository,
+    private val billingRepository: InternalBillingRepository,
 ) : ViewModel() {
 
     val dialogState: Flow<DialogState> = combine(
-        billingRepository.canPurchaseProMode,
-        billingRepository.isProModePurchased,
-        billingRepository.isBillingFlowInProgress,
-        adsRepository.adsState,
-        billingRepository.proModePrice,
-    ) { canPurchase, isPurchased, billingInProgress, adsState, price ->
+        billingRepository.purchaseState,
+        billingRepository.adsState,
+        billingRepository.proModeInfo,
+    ) { purchaseState, adsState, info ->
         when {
-            isPurchased -> DialogState.Purchased
+            purchaseState == PurchaseState.PURCHASED -> DialogState.Purchased
             adsState == AdState.VALIDATED -> DialogState.AdWatched
             else -> DialogState.NotPurchased(
                 trialDurationMinutes = 30,
                 adButtonState = adsState.toAdButtonState(appContext),
-                purchaseButtonState = getPurchaseButtonState(appContext, canPurchase, billingInProgress, price),
+                purchaseButtonState = getPurchaseButtonState(appContext, purchaseState, info),
             )
         }
     }
 
     fun launchPlayStoreBillingFlow(activity: Activity) {
-        billingRepository.launchPlayStoreBillingFlow(activity)
+        billingRepository.startPlayStoreBillingUiFlow(activity)
     }
 
     fun showAd(activity: Activity) {
-        adsRepository.showAd(activity)
+        billingRepository.showAd(activity)
     }
 }
 
@@ -83,7 +81,7 @@ internal sealed class DialogState {
 
 
 private fun AdState.toAdButtonState(context: Context): LoadableButtonState = when (this) {
-    AdState.REQUESTED,
+    AdState.INITIALIZED,
     AdState.LOADING -> LoadableButtonState.Loading
 
     AdState.READY -> LoadableButtonState.Loaded.Enabled(
@@ -95,17 +93,21 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
         text = context.getString(R.string.button_text_watch_ad)
     )
 
+    AdState.NOT_INITIALIZED,
     AdState.ERROR -> LoadableButtonState.Loaded.Disabled(
         text = context.getString(R.string.button_text_watch_ad_error)
     )
 }
 
-private fun getPurchaseButtonState(context: Context, canPurchase: Boolean, billingInProgress: Boolean, price: String?): LoadableButtonState {
-    if (price.isNullOrEmpty() || billingInProgress) return LoadableButtonState.Loading
+private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseState, info: ProModeInfo?): LoadableButtonState {
+    val price = info?.price
+    if (price.isNullOrEmpty() || purchaseState == PurchaseState.BILLING_IN_PROGRESS)
+        return LoadableButtonState.Loading
 
-    if (!canPurchase) return LoadableButtonState.Loaded.Disabled(
-        text = context.getString(R.string.button_text_buy_pro_error)
-    )
+    if (purchaseState == PurchaseState.CANNOT_PURCHASE)
+        return LoadableButtonState.Loaded.Disabled(
+            text = context.getString(R.string.button_text_buy_pro_error)
+        )
 
     return LoadableButtonState.Loaded.Enabled(
         text = context.getString(R.string.button_text_buy_pro, price)

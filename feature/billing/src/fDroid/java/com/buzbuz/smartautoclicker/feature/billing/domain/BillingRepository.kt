@@ -20,27 +20,25 @@ import android.app.Activity
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.UserBillingState
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
+
 import javax.inject.Inject
 
 
-internal class BillingRepository @Inject constructor(): IBillingRepository() {
+internal class BillingRepository @Inject constructor(): IBillingRepository {
 
-    override val newPurchases: Flow<List<String>> = flowOf(emptyList())
+    override val isPrivacySettingRequired: Flow<Boolean> = flowOf(false)
+    override val userBillingState: StateFlow<UserBillingState> = MutableStateFlow(UserBillingState.PURCHASED)
 
-    override val isProModePurchased: Flow<Boolean> = flowOf(true)
-    override val canPurchaseProMode: Flow<Boolean> = flowOf(false)
+    override fun startUserConsentRequestUiFlowIfNeeded(activity: Activity) = Unit
+    override fun startPrivacySettingUiFlow(activity: Activity) = Unit
+    override fun loadAd(context: Context) = Unit
+    override fun startPaywallUiFlow(context: Context) = Unit
+    override fun startPurchaseUiFlow(context: Context) = Unit
 
-    override val proModeTitle: Flow<String> = flowOf("")
-    override val proModePrice: Flow<String> = flowOf("")
-    override val proModeDescription: Flow<String> = flowOf("")
-
-    override val isBillingFlowInProgress: Flow<Boolean> = flowOf(false)
-
-    override fun startRemoveAdsUiFlow(context: Context) {}
-
-    override fun launchPlayStoreBillingFlow(activity: Activity) = Unit
-    override fun isPurchased(): Boolean = true
 }

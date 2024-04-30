@@ -17,24 +17,22 @@
 package com.buzbuz.smartautoclicker.feature.billing.domain
 
 import android.app.Activity
-import android.content.Context
 
-import com.buzbuz.smartautoclicker.feature.billing.AdState
-import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.model.AdState
+import com.buzbuz.smartautoclicker.feature.billing.domain.model.ProModeInfo
+import com.buzbuz.smartautoclicker.feature.billing.domain.model.PurchaseState
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import javax.inject.Inject
+import kotlinx.coroutines.flow.StateFlow
 
-internal class AdsRepository @Inject constructor() : IAdsRepository() {
 
-    override val isUserConsentingForAds: Flow<Boolean> = flowOf(false)
-    override val isPrivacyOptionsRequired: Flow<Boolean> = flowOf(false)
-    override val adsState: Flow<AdState> = flowOf(AdState.VALIDATED)
+internal interface InternalBillingRepository {
 
-    override fun requestUserConsentIfNeeded(activity: Activity) = Unit
-    override fun showPrivacyOptionsForm(activity: Activity) = Unit
+    val proModeInfo: Flow<ProModeInfo?>
+    val adsState: StateFlow<AdState>
+    val purchaseState: StateFlow<PurchaseState>
 
-    override fun loadAd(context: Context) = Unit
-    override fun showAd(activity: Activity) = Unit
+    fun showAd(activity: Activity)
+
+    fun startPlayStoreBillingUiFlow(activity: Activity)
 }

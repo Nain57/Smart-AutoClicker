@@ -14,23 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing.di
+package com.buzbuz.smartautoclicker.feature.billing
 
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.domain.BillingRepository
-
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
-
-@Module
-@InstallIn(SingletonComponent::class)
-object BillingHiltModule {
-
-    @Provides
-    @Singleton
-    internal fun providesBillingRepository(billingRepository: BillingRepository): IBillingRepository =
-        billingRepository
+enum class UserBillingState {
+    EXEMPTED,
+    AD_REQUESTED,
+    AD_WATCHED,
+    PURCHASED,
 }
