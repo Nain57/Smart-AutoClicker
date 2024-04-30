@@ -28,8 +28,8 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.UserBillingState
+import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
+import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -46,7 +46,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScenarioCreationViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    billingRepository: IBillingRepository,
+    revenueRepository: IRevenueRepository,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
 ) : ViewModel() {
@@ -62,7 +62,7 @@ class ScenarioCreationViewModel @Inject constructor(
     private val _selectedType: MutableStateFlow<ScenarioTypeSelection> =
         MutableStateFlow(ScenarioTypeSelection.SMART)
     val scenarioTypeSelectionState: Flow<ScenarioTypeSelectionState> =
-        combine(_selectedType, billingRepository.userBillingState) { selectedType, billingState ->
+        combine(_selectedType, revenueRepository.userBillingState) { selectedType, billingState ->
             ScenarioTypeSelectionState(
                 dumbItem = ScenarioTypeItem.Dumb,
                 smartItem = ScenarioTypeItem.Smart(isProModeEnabled = billingState == UserBillingState.PURCHASED),
