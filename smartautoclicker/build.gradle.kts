@@ -90,7 +90,7 @@ dependencies {
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))
     implementation(project(":feature:backup"))
-    implementation(project(":feature:billing"))
+    implementation(project(":feature:revenue"))
     implementation(project(":feature:smart-config"))
     implementation(project(":feature:smart-debugging"))
     implementation(project(":feature:dumb-config"))

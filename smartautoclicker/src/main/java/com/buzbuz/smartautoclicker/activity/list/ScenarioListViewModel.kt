@@ -31,8 +31,8 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.UserBillingState
+import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
+import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,7 +55,7 @@ class ScenarioListViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
-    private val billingRepository: IBillingRepository,
+    private val revenueRepository: IRevenueRepository,
 ) : ViewModel() {
 
     /** Current state type of the ui. */
@@ -87,8 +87,8 @@ class ScenarioListViewModel @Inject constructor(
         uiStateType,
         filteredScenarios,
         selectedForBackup,
-        billingRepository.userBillingState,
-        billingRepository.isPrivacySettingRequired,
+        revenueRepository.userBillingState,
+        revenueRepository.isPrivacySettingRequired,
     ) { stateType, scenarios, backupSelection, billingState, privacyRequired ->
         ScenarioListUiState(
             type = stateType,
@@ -175,11 +175,11 @@ class ScenarioListViewModel @Inject constructor(
         getImageConditionBitmap(smartRepository, condition, onBitmapLoaded)
 
     fun showPrivacySettings(activity: Activity) {
-        billingRepository.startPrivacySettingUiFlow(activity)
+        revenueRepository.startPrivacySettingUiFlow(activity)
     }
 
     fun showPurchaseActivity(context: Context) {
-        billingRepository.startPurchaseUiFlow(context)
+        revenueRepository.startPurchaseUiFlow(context)
     }
 
     private fun ScenarioListUiState.Type.toMenuUiState(
