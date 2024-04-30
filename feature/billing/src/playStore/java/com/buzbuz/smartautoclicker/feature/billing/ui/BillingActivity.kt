@@ -20,12 +20,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 
 import com.buzbuz.smartautoclicker.feature.billing.R
 import com.buzbuz.smartautoclicker.feature.billing.ui.paywall.PaywallFragment
 import com.buzbuz.smartautoclicker.feature.billing.ui.purchase.PurchaseProModeFragment
+import com.buzbuz.smartautoclicker.feature.billing.ui.purchase.PurchaseProModeViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,6 +54,8 @@ internal class BillingActivity : AppCompatActivity() {
                 .putExtra(EXTRA_FRAGMENT_TAG, billingFragment)
     }
 
+    private val viewModel: BillingActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pro_mode)
@@ -63,9 +68,16 @@ internal class BillingActivity : AppCompatActivity() {
                 .show(supportFragmentManager, PurchaseProModeFragment.FRAGMENT_TAG)
 
             else -> {
-                Log.e("BillingActivity", "Invalid fragment tag $tag")
+                Log.e(TAG, "Invalid fragment tag $tag")
                 finish()
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.setBillingActivityDestroyed()
+    }
 }
+
+private const val TAG = "BillingActivity"

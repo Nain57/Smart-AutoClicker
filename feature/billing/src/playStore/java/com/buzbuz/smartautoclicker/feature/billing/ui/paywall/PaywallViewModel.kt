@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.LoadableButtonState
 import com.buzbuz.smartautoclicker.feature.billing.domain.model.AdState
 import com.buzbuz.smartautoclicker.feature.billing.R
 import com.buzbuz.smartautoclicker.feature.billing.domain.InternalBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.domain.TRIAL_SESSION_DURATION_DURATION
 import com.buzbuz.smartautoclicker.feature.billing.domain.model.ProModeInfo
 import com.buzbuz.smartautoclicker.feature.billing.domain.model.PurchaseState
 
@@ -50,7 +51,7 @@ internal class AdsLoadingViewModel @Inject constructor(
             purchaseState == PurchaseState.PURCHASED -> DialogState.Purchased
             adsState == AdState.VALIDATED -> DialogState.AdWatched
             else -> DialogState.NotPurchased(
-                trialDurationMinutes = 30,
+                trialDurationMinutes = TRIAL_SESSION_DURATION_DURATION.inWholeMinutes.toInt(),
                 adButtonState = adsState.toAdButtonState(appContext),
                 purchaseButtonState = getPurchaseButtonState(appContext, purchaseState, info),
             )
@@ -63,6 +64,10 @@ internal class AdsLoadingViewModel @Inject constructor(
 
     fun showAd(activity: Activity) {
         billingRepository.showAd(activity)
+    }
+
+    fun requestTrial() {
+        billingRepository.requestTrial()
     }
 }
 

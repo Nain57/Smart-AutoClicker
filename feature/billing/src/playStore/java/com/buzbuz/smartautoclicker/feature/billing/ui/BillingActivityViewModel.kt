@@ -14,12 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing
+package com.buzbuz.smartautoclicker.feature.billing.ui
 
-enum class UserBillingState {
-    EXEMPTED,
-    AD_REQUESTED,
-    AD_WATCHED,
-    PURCHASED,
-    TRIAL,
+import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.feature.billing.domain.InternalBillingRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+internal class BillingActivityViewModel@Inject constructor(
+    private val billingRepository: InternalBillingRepository,
+) : ViewModel() {
+
+    fun setBillingActivityDestroyed() {
+        billingRepository.setBillingActivityDestroyed()
+    }
 }

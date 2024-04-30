@@ -49,7 +49,7 @@ internal class PaywallFragment : DialogFragment() {
     }
 
     /** ViewModel providing the click scenarios data to the UI. */
-    private val billingViewModel: AdsLoadingViewModel by viewModels()
+    private val viewModel: AdsLoadingViewModel by viewModels()
     /** The view binding on the views of this dialog. */
     private lateinit var viewBinding: FragmentAdsLoadingDialogBinding
 
@@ -58,7 +58,7 @@ internal class PaywallFragment : DialogFragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { billingViewModel.dialogState.collect(::updateDialogState) }
+                launch { viewModel.dialogState.collect(::updateDialogState) }
             }
         }
     }
@@ -66,10 +66,11 @@ internal class PaywallFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewBinding = FragmentAdsLoadingDialogBinding.inflate(layoutInflater).apply {
             buttonTrial.setOnClickListener {
-                //TODO()
+                viewModel.requestTrial()
+                dismiss()
             }
-            buttonWatchAd.setOnClickListener { activity?.let(billingViewModel::showAd) }
-            buttonBuy.setOnClickListener { activity?.let(billingViewModel::launchPlayStoreBillingFlow) }
+            buttonWatchAd.setOnClickListener { activity?.let(viewModel::showAd) }
+            buttonBuy.setOnClickListener { activity?.let(viewModel::launchPlayStoreBillingFlow) }
         }
 
         return BottomSheetDialog(requireContext()).apply {
@@ -114,7 +115,7 @@ internal class PaywallFragment : DialogFragment() {
             buttonWatchAd.setState(state.adButtonState)
 
             buttonBuy.setState(state.purchaseButtonState)
-            buttonBuy.setOnClickListener { activity?.let(billingViewModel::launchPlayStoreBillingFlow) }
+            buttonBuy.setOnClickListener { activity?.let(viewModel::launchPlayStoreBillingFlow) }
         }
     }
 

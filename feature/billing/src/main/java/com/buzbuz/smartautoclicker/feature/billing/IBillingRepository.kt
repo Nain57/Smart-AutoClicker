@@ -22,9 +22,10 @@ import android.content.Context
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
-import kotlinx.coroutines.flow.Flow
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.time.Duration
 
 import java.io.PrintWriter
 
@@ -33,14 +34,17 @@ interface IBillingRepository : Dumpable {
 
     val isPrivacySettingRequired: Flow<Boolean>
     val userBillingState: StateFlow<UserBillingState>
+    val isBillingFlowInProgress: Flow<Boolean>
 
     fun startUserConsentRequestUiFlowIfNeeded(activity: Activity)
     fun startPrivacySettingUiFlow(activity: Activity)
 
-    fun loadAd(context: Context)
+    fun loadAdIfNeeded(context: Context)
     fun startPaywallUiFlow(context: Context)
 
     fun startPurchaseUiFlow(context: Context)
+
+    fun consumeTrial(): Duration?
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()
