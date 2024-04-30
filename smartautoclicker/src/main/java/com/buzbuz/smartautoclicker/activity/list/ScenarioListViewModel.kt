@@ -31,7 +31,8 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
-import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
+import com.buzbuz.smartautoclicker.feature.billing.UserBillingState
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,7 +55,7 @@ class ScenarioListViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
-    private val adsRepository: IAdsRepository,
+    private val billingRepository: IBillingRepository,
 ) : ViewModel() {
 
     /** Current state type of the ui. */
@@ -86,11 +87,12 @@ class ScenarioListViewModel @Inject constructor(
         uiStateType,
         filteredScenarios,
         selectedForBackup,
-        adsRepository.isPrivacyOptionsRequired,
-    ) { stateType, scenarios, backupSelection, privacyRequired ->
+        billingRepository.userBillingState,
+        billingRepository.isPrivacySettingRequired,
+    ) { stateType, scenarios, backupSelection, billingState, privacyRequired ->
         ScenarioListUiState(
             type = stateType,
-            menuUiState = stateType.toMenuUiState(scenarios, backupSelection, privacyRequired),
+            menuUiState = stateType.toMenuUiState(scenarios, backupSelection, billingState, privacyRequired),
             listContent =
                 if (stateType != ScenarioListUiState.Type.EXPORT) scenarios
                 else scenarios.filterForBackupSelection(backupSelection),
@@ -173,23 +175,28 @@ class ScenarioListViewModel @Inject constructor(
         getImageConditionBitmap(smartRepository, condition, onBitmapLoaded)
 
     fun showPrivacySettings(activity: Activity) {
-        adsRepository.showPrivacyOptionsForm(activity)
+        billingRepository.startPrivacySettingUiFlow(activity)
+    }
+
+    fun showPurchaseActivity(context: Context) {
+        billingRepository.startPurchaseUiFlow(context)
     }
 
     private fun ScenarioListUiState.Type.toMenuUiState(
         scenarioItems: List<ScenarioListUiState.Item>,
         backupSelection: ScenarioBackupSelection,
+        billingState: UserBillingState,
         isPrivacyRequired: Boolean,
     ): ScenarioListUiState.Menu = when (this) {
         ScenarioListUiState.Type.SEARCH -> ScenarioListUiState.Menu.Search
         ScenarioListUiState.Type.EXPORT -> ScenarioListUiState.Menu.Export(
             canExport = !backupSelection.isEmpty(),
-            privacyRequired = isPrivacyRequired,
         )
         ScenarioListUiState.Type.SELECTION -> ScenarioListUiState.Menu.Selection(
             searchEnabled = scenarioItems.isNotEmpty(),
             exportEnabled = scenarioItems.firstOrNull { it is ScenarioListUiState.Item.Valid } != null,
             privacyRequired = isPrivacyRequired,
+            canPurchase = billingState != UserBillingState.PURCHASED,
         )
     }
 

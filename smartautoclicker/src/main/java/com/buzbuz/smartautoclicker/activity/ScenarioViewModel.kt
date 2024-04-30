@@ -29,7 +29,7 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.feature.billing.IAdsRepository
+import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -39,7 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScenarioViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val adsRepository: IAdsRepository,
+    private val billingRepository: IBillingRepository,
 ) : ViewModel() {
 
     /** Callback upon the availability of the [SmartAutoClickerService]. */
@@ -70,7 +70,15 @@ class ScenarioViewModel @Inject constructor(
     }
 
     fun requestUserConsent(activity: Activity) {
-        adsRepository.requestUserConsentIfNeeded(activity)
+        billingRepository.startUserConsentRequestUiFlowIfNeeded(activity)
+    }
+
+    fun loadAd(context: Context) {
+        billingRepository.loadAd(context)
+    }
+
+    fun showAd(activity: Activity) {
+        billingRepository.startPaywallUiFlow(activity)
     }
 
     /**

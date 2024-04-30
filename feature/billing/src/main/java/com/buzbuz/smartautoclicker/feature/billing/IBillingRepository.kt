@@ -18,53 +18,29 @@ package com.buzbuz.smartautoclicker.feature.billing
 
 import android.app.Activity
 import android.content.Context
+
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
-
 import kotlinx.coroutines.flow.Flow
+
+import kotlinx.coroutines.flow.StateFlow
+
 import java.io.PrintWriter
 
-abstract class IBillingRepository : Dumpable {
 
-    abstract val newPurchases: Flow<List<String>>
+interface IBillingRepository : Dumpable {
 
-    /**
-     * Returns whether or not the user has purchased ProMode.
-     * @return a Flow that observes the product purchase state
-     */
-    abstract val isProModePurchased: Flow<Boolean>
+    val isPrivacySettingRequired: Flow<Boolean>
+    val userBillingState: StateFlow<UserBillingState>
 
-    /**
-     * Returns whether or not the user can purchase a product.
-     * @return a Flow that observes the ProMode purchase state
-     */
-    abstract val canPurchaseProMode: Flow<Boolean>
+    fun startUserConsentRequestUiFlowIfNeeded(activity: Activity)
+    fun startPrivacySettingUiFlow(activity: Activity)
 
-    /** @return the PlayStore name of the pro mode. */
-    abstract val proModeTitle: Flow<String?>
-    /** @return the PlayStore price of the pro mode. */
-    abstract val proModePrice: Flow<String?>
-    /** @return the PlayStore description of the pro mode. */
-    abstract val proModeDescription: Flow<String?>
+    fun loadAd(context: Context)
+    fun startPaywallUiFlow(context: Context)
 
-    /**
-     * Returns a Flow that reports if a billing flow is in process.
-     *
-     * @return Flow that indicates the known state of the billing flow.
-     */
-    abstract val isBillingFlowInProgress: Flow<Boolean>
-
-    /**
-     * Launch the billing activity.
-     *
-     * @param context the Android context.
-     */
-    abstract fun startRemoveAdsUiFlow(context: Context)
-
-    internal abstract fun launchPlayStoreBillingFlow(activity: Activity)
-
-    internal abstract fun isPurchased(): Boolean
+    fun startPurchaseUiFlow(context: Context)
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()
@@ -72,13 +48,8 @@ abstract class IBillingRepository : Dumpable {
         writer.apply {
             append(prefix).println("* BillingRepository:")
             append(contentPrefix)
-                .append("- canPurchase=${canPurchaseProMode.dumpWithTimeout()}; ")
-                .append("isPurchased=${isPurchased()}; ")
-                .println()
-            append(contentPrefix)
-                .append("- title=${proModeTitle.dumpWithTimeout()}; ")
-                .append("price=${proModePrice.dumpWithTimeout()}; ")
-                .append("description=${proModeDescription.dumpWithTimeout()}; ")
+                .append("- userBillingState=${userBillingState.dumpWithTimeout()}; ")
+                .append("isPrivacySettingRequired=${isPrivacySettingRequired.dumpWithTimeout()}; ")
                 .println()
         }
     }

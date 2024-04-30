@@ -59,37 +59,40 @@ internal class InterstitialAdsDataSource @Inject constructor(
     private val pendingLoadRequest: MutableStateFlow<Boolean> =
         MutableStateFlow(false)
 
-    private val _remoteAd: MutableStateFlow<RemoteInterstitialAd> =
-        MutableStateFlow(RemoteInterstitialAd.SdkNotInitialized)
-    val remoteAd: StateFlow<RemoteInterstitialAd> = _remoteAd
+    private val _remoteAdState: MutableStateFlow<RemoteAdState> =
+        MutableStateFlow(RemoteAdState.SdkNotInitialized)
+    val remoteAdState: StateFlow<RemoteAdState> = _remoteAdState
 
-    init { loadAdRequestConsumerFlow(context).launchIn(coroutineScopeMain) }
+    init {
+        loadAdRequestConsumerFlow(context, _remoteAdState, pendingLoadRequest)
+            .launchIn(coroutineScopeMain)
+    }
 
     fun initialize(context: Context) {
-        if (_remoteAd.value != RemoteInterstitialAd.SdkNotInitialized) return
+        if (_remoteAdState.value != RemoteAdState.SdkNotInitialized) return
 
         Log.i(TAG, "Initialize MobileAds")
 
         adsSdk.initializeSdk(context) {
             coroutineScopeMain.launch {
-                _remoteAd.emit(RemoteInterstitialAd.Initialized)
+                _remoteAdState.emit(RemoteAdState.Initialized)
             }
         }
     }
 
     fun loadAd(context: Context) {
-        val adState = _remoteAd.value
-        if (adState == RemoteInterstitialAd.SdkNotInitialized) {
+        val adState = _remoteAdState.value
+        if (adState == RemoteAdState.SdkNotInitialized) {
             Log.i(TAG, "Load ad request delayed, SDK is not initialized")
             pendingLoadRequest.value = true
             return
         }
 
-        if (adState != RemoteInterstitialAd.Initialized) return
+        if (adState != RemoteAdState.Initialized) return
 
         Log.i(TAG, "Load interstitial ad")
         coroutineScopeMain.launch {
-            _remoteAd.emit(RemoteInterstitialAd.Loading)
+            _remoteAdState.emit(RemoteAdState.Loading)
             adsSdk.loadInterstitialAd(
                 context = context,
                 onLoaded = ::onAdLoaded,
@@ -100,8 +103,11 @@ internal class InterstitialAdsDataSource @Inject constructor(
 
 
     fun showAd(activity: Activity) {
-        val remoteAd = _remoteAd.value
-        if (remoteAd !is RemoteInterstitialAd.NotShown) return
+        val remoteAd = _remoteAdState.value
+        if (remoteAd !is RemoteAdState.NotShown) {
+            Log.w(TAG, "Can't show ad, loading is not completed")
+            return
+        }
 
         Log.i(TAG, "Show interstitial ad")
 
@@ -114,13 +120,13 @@ internal class InterstitialAdsDataSource @Inject constructor(
     }
 
     fun reset() {
-        if (_remoteAd.value == RemoteInterstitialAd.Initialized
-            || _remoteAd.value == RemoteInterstitialAd.SdkNotInitialized
+        if (_remoteAdState.value == RemoteAdState.Initialized
+            || _remoteAdState.value == RemoteAdState.SdkNotInitialized
         ) return
 
         Log.i(TAG, "Reset ad state")
         coroutineScopeMain.launch {
-            _remoteAd.emit(RemoteInterstitialAd.Initialized)
+            _remoteAdState.emit(RemoteAdState.Initialized)
         }
     }
 
@@ -128,7 +134,7 @@ internal class InterstitialAdsDataSource @Inject constructor(
         Log.i(TAG, "onAdLoaded")
         coroutineScopeMain.launch {
             loadRetries = 0
-            _remoteAd.emit(RemoteInterstitialAd.NotShown)
+            _remoteAdState.emit(RemoteAdState.NotShown)
         }
     }
 
@@ -139,7 +145,7 @@ internal class InterstitialAdsDataSource @Inject constructor(
             loadRetries++
 
             if (loadRetries >= MAX_LOADING_RETRIES) {
-                _remoteAd.emit(RemoteInterstitialAd.Error.LoadingError(errorCode, errorMessage))
+                _remoteAdState.emit(RemoteAdState.Error.LoadingError(errorCode, errorMessage))
                 loadRetries = 0
                 Log.e(TAG, "Can't load ad")
                 return@launch
@@ -147,7 +153,7 @@ internal class InterstitialAdsDataSource @Inject constructor(
 
             delay(RETRY_INCREMENTAL_DELAY_MS * loadRetries)
 
-            _remoteAd.value = RemoteInterstitialAd.Initialized
+            _remoteAdState.value = RemoteAdState.Initialized
             loadAd(context)
         }
     }
@@ -156,7 +162,7 @@ internal class InterstitialAdsDataSource @Inject constructor(
         Log.i(TAG, "onAdShown")
 
         coroutineScopeMain.launch {
-            _remoteAd.emit(RemoteInterstitialAd.Showing)
+            _remoteAdState.emit(RemoteAdState.Showing)
         }
     }
 
@@ -164,9 +170,9 @@ internal class InterstitialAdsDataSource @Inject constructor(
         Log.i(TAG, "onAdDismissed, impression=$impression")
 
         coroutineScopeMain.launch {
-            _remoteAd.emit(
-                if (impression) RemoteInterstitialAd.Shown
-                else RemoteInterstitialAd.Error.NoImpressionError
+            _remoteAdState.emit(
+                if (impression) RemoteAdState.Shown
+                else RemoteAdState.Error.NoImpressionError
             )
         }
     }
@@ -175,17 +181,21 @@ internal class InterstitialAdsDataSource @Inject constructor(
         Log.w(TAG, "onAdShowError: $errorCode:$errorMessage")
 
         coroutineScopeMain.launch {
-            _remoteAd.emit(RemoteInterstitialAd.Error.ShowError(errorCode, errorMessage))
+            _remoteAdState.emit(RemoteAdState.Error.ShowError(errorCode, errorMessage))
         }
     }
 
-    private fun loadAdRequestConsumerFlow(context: Context) : Flow<Unit> =
-        combine(_remoteAd, pendingLoadRequest) { remoteAd, haveLoadRequest ->
-            if (remoteAd != RemoteInterstitialAd.Initialized || !haveLoadRequest) return@combine
+    private fun loadAdRequestConsumerFlow(
+        context: Context,
+        adState: Flow<RemoteAdState>,
+        isPending: MutableStateFlow<Boolean>,
+    ) : Flow<Unit> =
+        combine(adState, isPending) { remoteAd, haveLoadRequest ->
+            if (remoteAd != RemoteAdState.Initialized || !haveLoadRequest) return@combine
 
             Log.i(TAG, "Ads SDK is now initialized, consuming pending ad load request")
 
-            pendingLoadRequest.emit(false)
+            isPending.emit(false)
             loadAd(context)
         }
 }

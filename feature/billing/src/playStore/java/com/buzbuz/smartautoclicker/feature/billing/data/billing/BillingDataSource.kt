@@ -27,16 +27,31 @@ import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
+
+import dagger.hilt.android.qualifiers.ApplicationContext
+
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-internal class BillingDataSource(
-    applicationContext: Context,
-    private val defaultScope: CoroutineScope,
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+internal class BillingDataSource @Inject constructor(
+    @ApplicationContext context: Context,
+    @Dispatcher(HiltCoroutineDispatchers.IO) ioDispatcher: CoroutineDispatcher,
 ) {
+
+    private val coroutineScopeIo: CoroutineScope =
+        CoroutineScope(SupervisorJob() + ioDispatcher)
+
     /** Google Play billing client. */
-    private val billingClient = BillingClient.newBuilder(applicationContext)
+    private val billingClient = BillingClient.newBuilder(context)
         .setListener(::onPurchasesUpdated)
         .enablePendingPurchases()
         .build()
@@ -50,13 +65,13 @@ internal class BillingDataSource(
     private val productDetailsManager = ProductDetailsManager(
         billingClient,
         PRODUCT_ID,
-        defaultScope,
+        coroutineScopeIo,
     )
     /** Manages the [Purchase] of a product. */
     private val purchaseManager = PurchaseManager(
         billingClient,
         PRODUCT_ID,
-        defaultScope,
+        coroutineScopeIo,
         ::onPurchaseUpdated,
     )
 
@@ -70,6 +85,17 @@ internal class BillingDataSource(
     fun getNewPurchases() = purchaseManager.newPurchaseFlow.asSharedFlow()
 
     /**
+     * Returns whether or not the user can purchase a product.
+     * It does this by returning a Flow combine transformation that returns true if the product is in the UNSPECIFIED
+     * state, as well as if we have productDetails for the product.
+     * (Product cannot be purchased without valid ProductDetails.)
+     */
+    val canPurchase: Flow<Boolean> = purchaseManager.productState
+        .combine(productDetailsManager.productDetails) { state, details ->
+            state == ProductState.PRODUCT_STATE_NOT_PURCHASED && details != null
+        }
+
+    /**
      * Returns whether or not the user has purchased a product.
      * It does this by returning a Flow that returns true if the product is in the PURCHASED state and the purchase has
      * been acknowledged.
@@ -79,30 +105,16 @@ internal class BillingDataSource(
     val isPurchased: Flow<Boolean> = purchaseManager.productState
         .map { state -> state == ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED }
 
-    fun isPurchased(): Boolean =
-        purchaseManager.productState.value == ProductState.PRODUCT_STATE_PURCHASED_AND_ACKNOWLEDGED
+    val proModeProduct: Flow<ProModeProduct?> = productDetailsManager.productDetails
+        .map { details ->
+            if (details == null) return@map null
 
-    /**
-     * Returns whether or not the user can purchase a product.
-     * It does this by returning a Flow combine transformation that returns true if the product is in the UNSPECIFIED
-     * state, as well as if we have productDetails for the product.
-     * (Product cannot be purchased without valid ProductDetails.)
-     *
-     * @return a Flow that observes the SKUs purchase state
-     */
-    fun canPurchase(): Flow<Boolean> = purchaseManager.productState
-        .combine(productDetailsManager.productDetails) { state, details ->
-            state == ProductState.PRODUCT_STATE_NOT_PURCHASED && details != null
+            ProModeProduct(
+                title = details.title,
+                description = details.description,
+                price = details.oneTimePurchaseOfferDetails?.formattedPrice ?: "",
+            )
         }
-
-    fun getProductTitle(): Flow<String?> = productDetailsManager.productDetails
-        .map { details -> details?.title }
-
-    fun getProductPrice(): Flow<String?> = productDetailsManager.productDetails
-        .map { details -> details?.oneTimePurchaseOfferDetails?.formattedPrice }
-
-    fun getProductDescription(): Flow<String?> = productDetailsManager.productDetails
-        .map { skuDetails -> skuDetails?.description }
 
     /**
      * Launch the billing flow.
@@ -125,7 +137,7 @@ internal class BillingDataSource(
             .setProductDetailsParamsList(listOf(productDetailsParams))
             .build()
 
-        defaultScope.launch {
+        coroutineScopeIo.launch {
             val billingResult = billingClient.launchBillingFlow(activity, billingFlowParams)
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 _billingFlowInProgress.emit(true)
@@ -144,14 +156,14 @@ internal class BillingDataSource(
     }
 
     private fun onBillingClientConnected() {
-        defaultScope.launch {
+        coroutineScopeIo.launch {
             productDetailsManager.queryProductDetailsAsync()
             refreshPurchases()
         }
     }
 
     private fun onPurchaseUpdated() {
-        defaultScope.launch {
+        coroutineScopeIo.launch {
             _billingFlowInProgress.emit(false)
         }
     }

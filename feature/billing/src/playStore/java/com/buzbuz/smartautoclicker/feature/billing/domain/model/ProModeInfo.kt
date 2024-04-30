@@ -14,13 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing
+package com.buzbuz.smartautoclicker.feature.billing.domain.model
 
-enum class AdState {
-    REQUESTED,
-    LOADING,
-    READY,
-    SHOWING,
-    VALIDATED,
-    ERROR,
-}
+internal data class ProModeInfo(
+    val title: String,
+    val description: String,
+    val price: String,
+)

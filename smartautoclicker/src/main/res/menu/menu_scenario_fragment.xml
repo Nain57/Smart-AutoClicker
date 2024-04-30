@@ -56,4 +56,9 @@
         app:showAsAction="never"
         android:title="@string/menu_item_title_privacy" />
 
+    <item
+        android:id="@+id/action_purchase"
+        app:showAsAction="never"
+        android:title="Remove ads" />
+
 </menu>

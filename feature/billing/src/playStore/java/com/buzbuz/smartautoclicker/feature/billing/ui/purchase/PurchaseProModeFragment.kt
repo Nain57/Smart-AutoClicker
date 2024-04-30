@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.billing.ui
+package com.buzbuz.smartautoclicker.feature.billing.ui.purchase
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -27,57 +27,56 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.ui.bindings.LoadableButtonState
 
+import com.buzbuz.smartautoclicker.core.ui.bindings.LoadableButtonState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.setState
 import com.buzbuz.smartautoclicker.feature.billing.R
-import com.buzbuz.smartautoclicker.feature.billing.databinding.FragmentAdsLoadingDialogBinding
+import com.buzbuz.smartautoclicker.feature.billing.databinding.FragmentPurchaseProModeBinding
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-internal class AdsLoadingFragment : DialogFragment() {
+internal class PurchaseProModeFragment : DialogFragment() {
 
     companion object {
         /** Tag for ads loading dialog fragment. */
-        const val FRAGMENT_TAG = "AdsLoadingDialog"
+        const val FRAGMENT_TAG = "PurchaseProModeFragment"
     }
 
-    /** ViewModel providing the click scenarios data to the UI. */
-    private val billingViewModel: AdsLoadingViewModel by viewModels()
+    private val viewModel: PurchaseProModeViewModel by viewModels()
     /** The view binding on the views of this dialog. */
-    private lateinit var viewBinding: FragmentAdsLoadingDialogBinding
+    private lateinit var viewBinding: FragmentPurchaseProModeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { billingViewModel.dialogState.collect(::updateDialogState) }
+                launch { viewModel.dialogState.collect(::updateDialogState) }
             }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewBinding = FragmentAdsLoadingDialogBinding.inflate(layoutInflater).apply {
-            buttonTrial.setOnClickListener {
-                //TODO()
+        viewBinding = FragmentPurchaseProModeBinding.inflate(layoutInflater).apply {
+            buttonSource.setOnClickListener {
+                startActivity(viewModel.getGitHubWebPageIntent())
             }
-            buttonWatchAd.setOnClickListener { activity?.let(billingViewModel::showAd) }
-            buttonBuy.setOnClickListener { activity?.let(billingViewModel::launchPlayStoreBillingFlow) }
+
+            buttonBuy.setOnClickListener {
+                viewModel.launchPlayStoreBillingFlow(requireActivity())
+            }
         }
 
         return BottomSheetDialog(requireContext()).apply {
             setContentView(viewBinding.root)
-            setCancelable(false)
             setOnKeyListener { _, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                    this@AdsLoadingFragment.dismiss()
+                    this@PurchaseProModeFragment.dismiss()
                     true
                 } else {
                     false
@@ -85,7 +84,6 @@ internal class AdsLoadingFragment : DialogFragment() {
             }
 
             create()
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
@@ -94,27 +92,28 @@ internal class AdsLoadingFragment : DialogFragment() {
         activity?.finish()
     }
 
-    private fun updateDialogState(state: DialogState) {
-        when (state) {
-            is DialogState.NotPurchased -> toNotPurchasedState(state)
-            DialogState.Purchased -> toPurchasedState()
-            DialogState.AdWatched -> dismiss()
-        }
+    private fun updateDialogState(state: PurchaseDialogState): Unit = when (state) {
+        PurchaseDialogState.Loading -> toLoadingState()
+        is PurchaseDialogState.Loaded -> toLoadedState(state.price)
+        PurchaseDialogState.Purchased -> toPurchasedState()
+        PurchaseDialogState.Error -> toErrorState()
     }
 
-    private fun toNotPurchasedState(state: DialogState.NotPurchased) {
+    private fun toLoadingState() {
         viewBinding.apply {
             purchaseText.visibility = View.VISIBLE
             purchasedText.visibility = View.GONE
+            buttonBuy.setState(LoadableButtonState.Loading)
+        }
+    }
 
-            buttonTrial.visibility = View.VISIBLE
-            buttonTrial.text = requireContext().getString(R.string.button_text_trial, state.trialDurationMinutes)
-
-            buttonWatchAd.root.visibility = View.VISIBLE
-            buttonWatchAd.setState(state.adButtonState)
-
-            buttonBuy.setState(state.purchaseButtonState)
-            buttonBuy.setOnClickListener { activity?.let(billingViewModel::launchPlayStoreBillingFlow) }
+    private fun toLoadedState(price: String) {
+        viewBinding.apply {
+            purchaseText.visibility = View.VISIBLE
+            purchasedText.visibility = View.GONE
+            buttonBuy.setState(
+                LoadableButtonState.Loaded.Enabled(requireContext().getString(R.string.button_text_buy_pro, price))
+            )
         }
     }
 
@@ -122,14 +121,19 @@ internal class AdsLoadingFragment : DialogFragment() {
         viewBinding.apply {
             purchaseText.visibility = View.INVISIBLE
             purchasedText.visibility = View.VISIBLE
-
-            buttonTrial.visibility = View.GONE
-            buttonWatchAd.root.visibility = View.GONE
-
             buttonBuy.setState(
                 LoadableButtonState.Loaded.Enabled(requireContext().getString(R.string.button_text_understood))
             )
-            buttonBuy.setOnClickListener { dismiss() }
+        }
+    }
+
+    private fun toErrorState() {
+        viewBinding.apply {
+            purchaseText.visibility = View.VISIBLE
+            purchasedText.visibility = View.GONE
+            buttonBuy.setState(
+                LoadableButtonState.Loaded.Disabled(requireContext().getString(R.string.button_text_buy_pro_error))
+            )
         }
     }
 }
