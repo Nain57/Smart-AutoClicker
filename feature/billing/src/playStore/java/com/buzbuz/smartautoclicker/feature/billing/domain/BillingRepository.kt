@@ -213,7 +213,7 @@ internal class BillingRepository @Inject constructor(
     private fun toUserBillingState(adState: AdState, purchaseState: PurchaseState, trial: Boolean, quality: Quality): UserBillingState =
         when {
             purchaseState == PurchaseState.PURCHASED -> UserBillingState.PURCHASED
-            //quality != Quality.High -> UserBillingState.EXEMPTED
+            quality != Quality.High -> UserBillingState.EXEMPTED
             adState == AdState.VALIDATED -> UserBillingState.AD_WATCHED
             trial -> UserBillingState.TRIAL
             else -> UserBillingState.AD_REQUESTED
