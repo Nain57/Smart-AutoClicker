@@ -48,6 +48,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -61,6 +62,8 @@ import kotlin.time.Duration.Companion.hours
 import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 
 @Singleton
@@ -78,6 +81,9 @@ internal class BillingRepository @Inject constructor(
 
     /** Reset the ad watched state after a while */
     private var resetAdJob: Job? = null
+
+    private val trialRequest: MutableStateFlow<Boolean> =
+        MutableStateFlow(false)
 
     override val proModeInfo: Flow<ProModeInfo?> =
         billingDataSource.proModeProduct.map(::toProModeInfo)
@@ -103,16 +109,25 @@ internal class BillingRepository @Inject constructor(
     override val userBillingState: StateFlow<UserBillingState> = combine(
         adsState,
         purchaseState,
+        trialRequest,
         qualityManager.quality,
         ::toUserBillingState,
     ).stateIn(coroutineScopeIo, SharingStarted.Eagerly, UserBillingState.AD_REQUESTED)
 
+    override val isBillingFlowInProgress: MutableStateFlow<Boolean> =
+        MutableStateFlow(false)
+
+
     init {
+        // Once the user has given his consent, initialize the ads sdk
         initAdsOnConsentFlow(context, userConsentDataSource.isUserConsentingForAds, adsState)
             .launchIn(coroutineScopeIo)
-        watchedAdInvalidatorFlow(userBillingState)
+
+        // Some user state are temporary, monitor that and act accordingly
+        userStateInvalidatorFlow(userBillingState)
             .launchIn(coroutineScopeIo)
     }
+
 
     override fun startUserConsentRequestUiFlowIfNeeded(activity: Activity) {
         if (userBillingState.value == UserBillingState.PURCHASED) return
@@ -123,17 +138,23 @@ internal class BillingRepository @Inject constructor(
         userConsentDataSource.showPrivacyOptionsForm(activity)
     }
 
-    override fun loadAd(context: Context) {
+    override fun loadAdIfNeeded(context: Context) {
         if (userBillingState.value != UserBillingState.AD_REQUESTED) return
         adsDataSource.loadAd(context)
     }
 
     override fun startPaywallUiFlow(context: Context) {
+        isBillingFlowInProgress.value = true
         context.startActivity(BillingActivity.getStartIntent(context, PaywallFragment.FRAGMENT_TAG))
     }
 
     override fun startPurchaseUiFlow(context: Context) {
+        isBillingFlowInProgress.value = true
         context.startActivity(BillingActivity.getStartIntent(context, PurchaseProModeFragment.FRAGMENT_TAG))
+    }
+
+    override fun setBillingActivityDestroyed() {
+        isBillingFlowInProgress.value = false
     }
 
     override fun showAd(activity: Activity) {
@@ -144,6 +165,20 @@ internal class BillingRepository @Inject constructor(
     override fun startPlayStoreBillingUiFlow(activity: Activity) {
         if (purchaseState.value != PurchaseState.NOT_PURCHASED) return
         billingDataSource.launchBillingFlow(activity)
+    }
+
+    override fun requestTrial() {
+        Log.d(TAG, "User requesting trial period")
+        trialRequest.value = true
+    }
+
+    override fun consumeTrial(): Duration? {
+        if (!trialRequest.value) return null
+
+        Log.d(TAG, "User consuming trial period")
+
+        trialRequest.value = false
+        return TRIAL_SESSION_DURATION_DURATION
     }
 
 
@@ -175,11 +210,12 @@ internal class BillingRepository @Inject constructor(
             else -> PurchaseState.CANNOT_PURCHASE
         }
 
-    private fun toUserBillingState(adState: AdState, purchaseState: PurchaseState, quality: Quality): UserBillingState =
+    private fun toUserBillingState(adState: AdState, purchaseState: PurchaseState, trial: Boolean, quality: Quality): UserBillingState =
         when {
             purchaseState == PurchaseState.PURCHASED -> UserBillingState.PURCHASED
-            quality != Quality.High -> UserBillingState.EXEMPTED
+            //quality != Quality.High -> UserBillingState.EXEMPTED
             adState == AdState.VALIDATED -> UserBillingState.AD_WATCHED
+            trial -> UserBillingState.TRIAL
             else -> UserBillingState.AD_REQUESTED
         }
 
@@ -192,9 +228,9 @@ internal class BillingRepository @Inject constructor(
             adsDataSource.initialize(context)
         }
 
-    private fun watchedAdInvalidatorFlow(userBillingState: Flow<UserBillingState>) : Flow<Any> =
+    private fun userStateInvalidatorFlow(userBillingState: Flow<UserBillingState>) : Flow<Any> =
         userBillingState.onEach { state ->
-            if (resetAdJob != null || state != UserBillingState.AD_WATCHED) return@onEach
+            if (state != UserBillingState.AD_WATCHED) return@onEach
 
             resetAdJob?.cancel()
             resetAdJob = coroutineScopeIo.launch {
@@ -207,6 +243,7 @@ internal class BillingRepository @Inject constructor(
             }
         }
 
+
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         super.dump(writer, prefix)
         val contentPrefix = prefix.addDumpTabulationLvl()
@@ -214,8 +251,8 @@ internal class BillingRepository @Inject constructor(
         writer.apply {
             append(contentPrefix)
                 .append("- userConsent=${userConsentDataSource.isUserConsentingForAds.value}; ")
-                .append("adsState=${adsState.dumpWithTimeout()}; ")
-                .append("purchaseState=${purchaseState.dumpWithTimeout()}; ")
+                .append("adsState=${adsState.value}; ")
+                .append("purchaseState=${purchaseState.value}; ")
                 .println()
             append(contentPrefix)
                 .append("- proModeInfo=${proModeInfo.dumpWithTimeout()}; ")
@@ -224,5 +261,7 @@ internal class BillingRepository @Inject constructor(
     }
 }
 
+internal val TRIAL_SESSION_DURATION_DURATION = 30.minutes
 private val AD_WATCHED_STATE_DURATION = 1.hours
+
 private const val TAG = "BillingRepository"

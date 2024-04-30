@@ -33,6 +33,9 @@ internal interface InternalBillingRepository {
     val purchaseState: StateFlow<PurchaseState>
 
     fun showAd(activity: Activity)
+    fun requestTrial()
 
     fun startPlayStoreBillingUiFlow(activity: Activity)
+
+    fun setBillingActivityDestroyed()
 }

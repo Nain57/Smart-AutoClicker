@@ -73,14 +73,6 @@ class ScenarioViewModel @Inject constructor(
         billingRepository.startUserConsentRequestUiFlowIfNeeded(activity)
     }
 
-    fun loadAd(context: Context) {
-        billingRepository.loadAd(context)
-    }
-
-    fun showAd(activity: Activity) {
-        billingRepository.startPaywallUiFlow(activity)
-    }
-
     /**
      * Start the overlay UI and instantiates the detection objects for a given scenario.
      *

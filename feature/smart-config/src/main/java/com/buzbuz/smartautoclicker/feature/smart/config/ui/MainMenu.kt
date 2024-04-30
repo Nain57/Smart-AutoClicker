@@ -70,6 +70,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         creator = { debugModel() },
     )
 
+    private var isHiddenForPaywall: Boolean = false
+
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayMenuBinding
     /** Controls the animations of the play/pause button. */
@@ -104,6 +106,15 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         // Ensure the debug view state is correct
         viewBinding.layoutDebug.visibility = View.GONE
         setOverlayViewVisibility(false)
+
+        // Start loading advertisement if needed
+        viewModel.loadAdIfNeeded(context)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.paywallIsVisible.collect(::updateVisibilityForPaywall) }
+            }
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -221,6 +232,16 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                     }
                 }
             }
+        }
+    }
+
+    private fun updateVisibilityForPaywall(isHidden: Boolean) {
+        if (isHidden) {
+            isHiddenForPaywall = true
+            hide()
+        } else if (isHiddenForPaywall) {
+            isHiddenForPaywall = false
+            show()
         }
     }
 

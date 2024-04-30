@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 
 import androidx.lifecycle.ViewModel
@@ -30,11 +31,20 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepos
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.billing.UserBillingState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -45,6 +55,7 @@ class MainMenuModel @Inject constructor(
     private val detectionRepository: DetectionRepository,
     private val editionRepository: EditionRepository,
     private val tutorialRepository: TutorialRepository,
+    private val billingRepository: IBillingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val debugRepository: DebuggingRepository,
 ) : ViewModel() {
@@ -57,8 +68,11 @@ class MainMenuModel @Inject constructor(
             initialValue = null,
         )
 
-    /** Coroutine Job stopping the detection automatically if user is not in pro mode. */
-    private var autoStopJob: Job? = null
+    private var paywallResultJob: Job? = null
+
+    /** Tells if the paywall is currently displayed. */
+    val paywallIsVisible: Flow<Boolean> =
+        billingRepository.isBillingFlowInProgress
 
     /** The current of the detection. */
     val detectionState: StateFlow<UiState> = detectionRepository.detectionState
@@ -76,16 +90,24 @@ class MainMenuModel @Inject constructor(
             canStartDetection && isSynchronized
         }
 
-    /** Tells if the . */
+    /** Tells if the detector can't work due to a native library load error. */
     val nativeLibError: Flow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.ERROR_NO_NATIVE_LIB }
         .distinctUntilChanged()
+
+    /** Load an advertisement, if needed. Should be called before showing the paywall to reduce user waiting time. */
+    fun loadAdIfNeeded(context: Context) {
+        billingRepository.loadAdIfNeeded(context)
+    }
 
     /** Start/Stop the detection. */
     fun toggleDetection(context: Context) {
         when (detectionState.value) {
             UiState.Detecting -> stopDetection()
-            UiState.Idle -> startDetection(context)
+            UiState.Idle -> {
+                if (billingRepository.userBillingState.value.isAdRequested()) startPaywall(context)
+                else startDetection(context)
+            }
         }
     }
 
@@ -93,16 +115,31 @@ class MainMenuModel @Inject constructor(
     fun stopDetection(): Boolean {
         if (detectionState.value !is UiState.Detecting) return false
 
-        autoStopJob?.cancel()
-        autoStopJob = null
-
         detectionRepository.stopDetection()
         return true
     }
 
+    private fun startPaywall(context: Context) {
+        billingRepository.startPaywallUiFlow(context)
+
+        paywallResultJob = combine(billingRepository.isBillingFlowInProgress, billingRepository.userBillingState) { inProgress, state ->
+            if (inProgress) return@combine
+
+            Log.d(TAG, "onPaywall finished")
+
+            if (!state.isAdRequested()) startDetection(context)
+            paywallResultJob?.cancel()
+            paywallResultJob = null
+        }.launchIn(viewModelScope)
+    }
+
     private fun startDetection(context: Context) {
         viewModelScope.launch {
-            detectionRepository.startDetection(context, debugRepository.detectionProgressListener)
+            detectionRepository.startDetection(
+                context,
+                debugRepository.detectionProgressListener,
+                billingRepository.consumeTrial(),
+            )
         }
     }
 
@@ -160,9 +197,14 @@ class MainMenuModel @Inject constructor(
 
     fun onStopVolumeDownTutorialDialogShown(): Unit =
         tutorialRepository.setIsTutorialStopVolumeDownPopupShown()
+
+    private fun UserBillingState.isAdRequested(): Boolean =
+        this == UserBillingState.AD_REQUESTED
 }
 
 sealed class UiState {
     data object Detecting: UiState()
     data object Idle: UiState()
 }
+
+private const val TAG = "MainMenuViewModel"
