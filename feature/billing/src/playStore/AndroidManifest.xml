@@ -24,7 +24,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-${adsApplicationId}"/>
+            android:value="${adsApplicationId}"/>
 
         <activity
             android:name="com.buzbuz.smartautoclicker.feature.billing.ui.BillingActivity"
