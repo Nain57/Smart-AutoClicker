@@ -59,16 +59,6 @@
     <string name="item_title_dumb_scenario">Simple</string>
     <string name="item_title_smart_scenario">Intelligente</string>
 
-    <!--
-      - Text for items in a list or vertical layout.
-      -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
-      -->
-    <string name="dialog_title_permission_accessibility">Service d\'accessibilité</string>
-    <string name="dialog_title_permission_notification">Notification</string>
-    <string name="dialog_title_permission_mandatory_denied">Permission refusée</string>
-    <string name="dialog_title_permission_overlay">Superposition</string>
-
 
     <!--
       - Empty list messages.
@@ -83,17 +73,6 @@
     <string name="message_delete_scenario">Le scénario %1$s va être supprimé. Êtes vous sûr ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Votre appareil ne donne pas la possibilité à
         Smart Autoclicker de pouvoir enregistrer votre écran. L\'application ne pourra pas fonctionner dessus.</string>
-    <string name="message_permission_desc_accessibility">La permission de service d\'accessibilité permet à Smart AutoClicker
-        d\'éxecuter des gestes sur votre écran. Cette permission est requise afin d\'éxecuter les clics et les swipes
-        que vous allez créer dans vos scénarios d\'automatisation.\n\nAucune donnée n\'est collectée par Smart AutoClicker.\n\n
-        Pour accorder la permission de service d\'accessibilité, cliquez sur le boutton ci dessous.</string>
-    <string name="message_permission_desc_notification">Optionnel: Affiche une notification pendant que l\'application est lancée afin
-        de facilement revenir à l\'écran de sélection des scénarios.</string>
-    <string name="message_permission_desc_overlay">La permission de superposition est requise afin de pouvoir afficher l\'interface de
-        Smart AutoClicker par dessus les applications que vous voulez automatiser, vous permettant de configurer vos scenarios sans
-        stopper ces autres applications.</string>
-    <string name="message_permission_mandatory_denied">Cette permission est obligatoire pour Smart AutoClicker.
-        L\'application ne pourra pas fonctionner sans elle.</string>
 
     <!--
       - Section titles.
@@ -113,8 +92,6 @@
       - Should be short and concise.
       -->
     <string name="button_text_create_scenario">Créer un scénario</string>
-    <string name="button_request_permission">Requête de permission</string>
-    <string name="button_deny">Refuser</string>
 
     <!--
       - Content description texts.

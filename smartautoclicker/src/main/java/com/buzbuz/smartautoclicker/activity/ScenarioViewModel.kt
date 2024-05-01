@@ -19,9 +19,11 @@ package com.buzbuz.smartautoclicker.activity
 import android.Manifest
 import android.app.Activity
 import android.app.NotificationManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 
 import androidx.core.content.PermissionChecker
 import androidx.lifecycle.ViewModel
@@ -29,6 +31,10 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.feature.permissions.PermissionsController
+import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionAccessibilityService
+import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionOverlay
+import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,6 +46,7 @@ import javax.inject.Inject
 class ScenarioViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val revenueRepository: IRevenueRepository,
+    private val permissionController: PermissionsController,
 ) : ViewModel() {
 
     /** Callback upon the availability of the [SmartAutoClickerService]. */
@@ -71,6 +78,21 @@ class ScenarioViewModel @Inject constructor(
 
     fun requestUserConsent(activity: Activity) {
         revenueRepository.startUserConsentRequestUiFlowIfNeeded(activity)
+    }
+
+    fun startPermissionFlow(activity: AppCompatActivity, onAllGranted: () -> Unit) {
+        permissionController.requestPermissions(
+            activity = activity,
+            permissions = listOf(
+                PermissionOverlay,
+                PermissionAccessibilityService(
+                    componentName = ComponentName(activity, SmartAutoClickerService::class.java),
+                    isServiceRunning = { SmartAutoClickerService.isServiceStarted() },
+                ),
+                PermissionPostNotification,
+            ),
+            onAllGranted = onAllGranted,
+        )
     }
 
     /**

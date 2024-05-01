@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_permission_accessibility">Service d\'accessibilité</string>
+    <string name="dialog_title_permission_notification">Notification</string>
+    <string name="dialog_title_permission_mandatory_denied">Permission refusée</string>
+    <string name="dialog_title_permission_overlay">Superposition</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_accessibility">La permission de service d\'accessibilité permet à Smart AutoClicker
+        d\'éxecuter des gestes sur votre écran. Cette permission est requise afin d\'éxecuter les clics et les swipes
+        que vous allez créer dans vos scénarios d\'automatisation.\n\nAucune donnée n\'est collectée par Smart AutoClicker.\n\n
+        Pour accorder la permission de service d\'accessibilité, cliquez sur le boutton ci dessous.</string>
+    <string name="message_permission_desc_notification">Optionnel: Affiche une notification pendant que l\'application est lancée afin
+        de facilement revenir à l\'écran de sélection des scénarios.</string>
+    <string name="message_permission_desc_overlay">La permission de superposition est requise afin de pouvoir afficher l\'interface de
+        Smart AutoClicker par dessus les applications que vous voulez automatiser, vous permettant de configurer vos scenarios sans
+        stopper ces autres applications.</string>
+    <string name="message_permission_mandatory_denied">Cette permission est obligatoire pour Smart AutoClicker.
+        L\'application ne pourra pas fonctionner sans elle.</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">Requête de permission</string>
+    <string name="button_deny">Refuser</string>
+
+</resources>

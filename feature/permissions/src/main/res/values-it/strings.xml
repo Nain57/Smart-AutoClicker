@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_permission_accessibility">Servizio di accessibilità</string>
+    <string name="dialog_title_permission_notification">Notifica</string>
+    <string name="dialog_title_permission_mandatory_denied">Permesso negato</string>
+    <string name="dialog_title_permission_overlay">Sovrapposizione</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_overlay">Per visualizzare Smart AutoClicker è necessaria l\'autorizzazione di sovrapposizione
+        interfaccia sulle applicazioni che desideri automatizzare, permettendoti di configurare il tuo scenario senza fermarti
+        l\'altra applicazione.</string>
+    <string name="message_permission_desc_accessibility">L\'autorizzazione del servizio di accessibilità consente Smart AutoClicker
+        per eseguire gesti sullo schermo del tuo dispositivo. Questa autorizzazione è necessaria per eseguire i clic e i passaggi
+        creerai nei tuoi scenari di automazione.\n\nNessun dato viene raccolto da Smart AutoClicker\n\nPer garantire l\'accessibilità
+        autorizzazione al servizio, fare clic sul pulsante qui sotto.</string>
+    <string name="message_permission_desc_notification">Facoltativo: mostra la notifica mentre l\'applicazione viene eseguita in ordine
+        per tornare facilmente alla schermata di selezione dello scenario.</string>
+    <string name="message_permission_mandatory_denied">Questa autorizzazione è obbligatoria per Smart AutoClicker.
+        Non sarà in grado di funzionare correttamente senza di esso.</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">Richiesta di permesso</string>
+    <string name="button_deny">Negare</string>
+
+</resources>
