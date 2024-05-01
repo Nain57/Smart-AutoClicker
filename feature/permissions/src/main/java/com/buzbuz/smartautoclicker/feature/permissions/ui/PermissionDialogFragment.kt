@@ -38,7 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PermissionDialogFragment : DialogFragment() {
+internal class PermissionDialogFragment : DialogFragment() {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val viewModel: PermissionDialogViewModel by viewModels()

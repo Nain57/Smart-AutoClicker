@@ -27,19 +27,19 @@ import androidx.fragment.app.Fragment
 sealed class Permission {
 
     /** Tells if the [Permission] is mandatory or not. */
-    fun isOptional(): Boolean = this is Optional
+    internal fun isOptional(): Boolean = this is Optional
 
-    fun hasBeenRequestedBefore(context: Context): Boolean =
+    internal fun hasBeenRequestedBefore(context: Context): Boolean =
         context.getPermissionSharedPrefs().getBoolean(javaClass.simpleName, false)
 
     /** Tells if the [Permission] is granted. */
-    fun checkIfGranted(context: Context): Boolean {
+    internal fun checkIfGranted(context: Context): Boolean {
         if (!isRequiredForAndroidSdkVersion()) return true
         return isGranted(context)
     }
 
     /** Start the request ui flow for the permission, if required. */
-    fun startRequestFlowIfNeeded(context: Context): Boolean {
+    internal fun startRequestFlowIfNeeded(context: Context): Boolean {
         if (!isRequiredForAndroidSdkVersion()) return false
 
         context.getPermissionSharedPrefs()
@@ -64,7 +64,7 @@ sealed class Permission {
         /** The Android permission string value. */
         protected abstract val permissionString: String
 
-        fun initResultLauncher(fragment: Fragment, onResult: (isGranted: Boolean) -> Unit) {
+        internal fun initResultLauncher(fragment: Fragment, onResult: (isGranted: Boolean) -> Unit) {
             if (permissionLauncher != null) return
             permissionLauncher = fragment
                 .registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
