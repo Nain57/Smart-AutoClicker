@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="dialog_title_permission_accessibility">无障碍服务</string>
+    <string name="dialog_title_permission_notification">通知</string>
+    <string name="dialog_title_permission_overlay">显示在其他应用的上层</string>
+    <string name="dialog_title_permission_mandatory_denied">没有权限</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_overlay">需要覆盖权限才能显示智能自动点击器您想要自动化的应用程序的界面，允许您无需停止即可配置您的场景另一个应用程序。</string>
+    <string name="message_permission_desc_accessibility">辅助功能服务权限允许智能自动点击器在设备屏幕上执行手势。需要此权限才能执行点击和滑动
+        您将在自动化场景中创建。\n\n智能自动点击器不会收集任何数据\n\n要授予辅助功能服务权限，单击下面的按钮。</string>
+    <string name="message_permission_desc_notification">可选：在应用程序按顺序运行时显示通知轻松返回场景选择屏幕。</string>
+    <string name="message_permission_mandatory_denied">对于智能自动点击器，此权限是必需的。没有它，它将无法正常工作。</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">请求许可</string>
+    <string name="button_deny">否定</string>
+
+</resources>

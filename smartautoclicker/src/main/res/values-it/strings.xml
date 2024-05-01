@@ -59,16 +59,6 @@
     <string name="item_title_smart_scenario">Intelligente</string>
 
     <!--
-      - Text for items in a list or vertical layout.
-      -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
-      -->
-    <string name="dialog_title_permission_accessibility">Servizio di accessibilità</string>
-    <string name="dialog_title_permission_notification">Notifica</string>
-    <string name="dialog_title_permission_mandatory_denied">Permesso negato</string>
-    <string name="dialog_title_permission_overlay">Sovrapposizione</string>
-
-    <!--
       - Empty list messages.
       - Views handles any length here, but try to be concise.
       -->
@@ -81,17 +71,6 @@
     <string name="message_delete_scenario">Questo cancellerà %1$s. Sei sicuro ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Il tuo dispositivo non fornisce la finestra
         di dialogo standard per l\'autorizzazione all\'acquisizione dello schermo Android. Smart AutoClicker non potrà essere eseguito su di esso.</string>
-    <string name="message_permission_desc_overlay">Per visualizzare Smart AutoClicker è necessaria l\'autorizzazione di sovrapposizione
-        interfaccia sulle applicazioni che desideri automatizzare, permettendoti di configurare il tuo scenario senza fermarti
-        l\'altra applicazione.</string>
-    <string name="message_permission_desc_accessibility">L\'autorizzazione del servizio di accessibilità consente Smart AutoClicker
-        per eseguire gesti sullo schermo del tuo dispositivo. Questa autorizzazione è necessaria per eseguire i clic e i passaggi
-        creerai nei tuoi scenari di automazione.\n\nNessun dato viene raccolto da Smart AutoClicker\n\nPer garantire l\'accessibilità
-        autorizzazione al servizio, fare clic sul pulsante qui sotto.</string>
-    <string name="message_permission_desc_notification">Facoltativo: mostra la notifica mentre l\'applicazione viene eseguita in ordine
-        per tornare facilmente alla schermata di selezione dello scenario.</string>
-    <string name="message_permission_mandatory_denied">Questa autorizzazione è obbligatoria per Smart AutoClicker.
-        Non sarà in grado di funzionare correttamente senza di esso.</string>
 
     <!--
       - Section titles.
@@ -111,8 +90,6 @@
       - Should be short and concise.
       -->
     <string name="button_text_create_scenario">Crea uno scenario</string>
-    <string name="button_request_permission">Richiesta di permesso</string>
-    <string name="button_deny">Negare</string>
 
     <!--
       - Content description texts.

@@ -33,7 +33,6 @@ import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListUiState
-import com.buzbuz.smartautoclicker.activity.permissions.startPermissionFlow
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
@@ -78,10 +77,9 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
     override fun startScenario(item: ScenarioListUiState.Item) {
         requestedItem = item
 
-        startPermissionFlow(
-            fragmentManager = supportFragmentManager,
+        scenarioViewModel.startPermissionFlow(
+            activity = this,
             onAllGranted = ::onMandatoryPermissionsGranted,
-            onMandatoryDenied = ::showMandatoryPermissionDeniedDialog,
         )
     }
 
@@ -107,15 +105,6 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
                 showUnsupportedDeviceDialog()
             }
         }
-    }
-
-    private fun showMandatoryPermissionDeniedDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.dialog_title_permission_mandatory_denied)
-            .setMessage(R.string.message_permission_mandatory_denied)
-            .setPositiveButton(android.R.string.ok, null)
-            .create()
-            .show()
     }
 
     /**

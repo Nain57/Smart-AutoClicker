@@ -38,6 +38,7 @@ include(":core:smart:domain")
 include(":core:smart:processing")
 
 include(":feature:backup")
+include(":feature:permissions")
 include(":feature:revenue")
 include(":feature:dumb-config")
 include(":feature:smart-config")
