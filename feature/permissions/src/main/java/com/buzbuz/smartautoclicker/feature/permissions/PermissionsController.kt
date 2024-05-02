@@ -44,7 +44,7 @@ class PermissionsController @Inject constructor() {
     private var allGrantedCallback: (() -> Unit)? = null
 
 
-    fun requestPermissions(activity: AppCompatActivity, permissions: List<Permission>, onAllGranted: () -> Unit) {
+    fun startPermissionsUiFlow(activity: AppCompatActivity, permissions: List<Permission>, onAllGranted: () -> Unit) {
         if (permissions.isEmpty()) return
 
         permissionsRequestedLeft.clear()

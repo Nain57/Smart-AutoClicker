@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.quality
+package com.buzbuz.smartautoclicker.core.common.quality.domain
 
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -30,10 +30,10 @@ sealed class Quality(internal val backToHighDelay: Duration? = null) {
     data object High : Quality()
 
     /** The issue has occurred due to external perturbations, such as aggressive background service management */
-    data object Medium : Quality(30.minutes)
+    data object ExternalIssue : Quality(30.minutes)
 
     /** The issue has occurred due to a crash of Smart AutoClicker. */
-    data object Low : Quality(6.hours)
+    data object Crashed : Quality(6.hours)
 
     /** The user is using the app for the first time. */
     data object FirstTime : Quality(2.hours)

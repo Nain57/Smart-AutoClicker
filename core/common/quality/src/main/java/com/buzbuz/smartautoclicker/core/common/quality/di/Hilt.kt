@@ -20,7 +20,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 
-import com.buzbuz.smartautoclicker.core.common.quality.qualityDataStore
+import com.buzbuz.smartautoclicker.core.common.quality.data.qualityDataStore
 
 import dagger.Module
 import dagger.Provides

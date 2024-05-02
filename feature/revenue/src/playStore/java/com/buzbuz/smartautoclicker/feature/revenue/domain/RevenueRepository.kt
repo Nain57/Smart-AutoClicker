@@ -25,8 +25,8 @@ import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
-import com.buzbuz.smartautoclicker.core.common.quality.Quality
-import com.buzbuz.smartautoclicker.core.common.quality.QualityManager
+import com.buzbuz.smartautoclicker.core.common.quality.domain.Quality
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.InterstitialAdsDataSource
@@ -74,7 +74,7 @@ internal class RevenueRepository @Inject constructor(
     private val userConsentDataSource: UserConsentDataSource,
     private val adsDataSource: InterstitialAdsDataSource,
     private val billingDataSource: BillingDataSource,
-    qualityManager: QualityManager,
+    qualityRepository: QualityRepository,
 ): IRevenueRepository, InternalRevenueRepository {
 
     private val coroutineScopeIo: CoroutineScope =
@@ -108,7 +108,7 @@ internal class RevenueRepository @Inject constructor(
         adsState,
         purchaseState,
         trialRequest,
-        qualityManager.quality,
+        qualityRepository.quality,
         ::toUserBillingState,
     ).stateIn(coroutineScopeIo, SharingStarted.Eagerly, UserBillingState.AD_REQUESTED)
 

@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.common.quality
 
 import android.content.Context
 import android.os.Build
+
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -25,9 +26,18 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 
+import com.buzbuz.smartautoclicker.core.common.quality.data.INVALID_TIME
+import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_LAST_SERVICE_FOREGROUND_TIME_MS
+import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_LAST_SERVICE_START_TIME_MS
+import com.buzbuz.smartautoclicker.core.common.quality.domain.Quality
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -40,11 +50,11 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 
-/** Tests for the [QualityManager]. */
+/** Tests for the [QualityRepository]. */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
-class QualityManagerTests {
+class QualityRepositoryTests {
 
     private val testContext: Context = ApplicationProvider.getApplicationContext()
     private val testDispatcher = StandardTestDispatcher()
@@ -57,91 +67,100 @@ class QualityManagerTests {
 
     @Test
     fun `no init`() = runTest(testDispatcher) {
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
-        assertEquals(Quality.Unknown, qualityManager.quality.value)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
+
+        assertEquals(Quality.Unknown, qualityRepository.quality.value)
     }
 
     @Test
     fun `first start state`() = runTest(testDispatcher) {
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
+        metricsMonitor.onServiceConnected()
         testDispatcher.scheduler.runCurrent()
 
-        assertEquals(Quality.FirstTime, qualityManager.quality.value)
+        assertEquals(Quality.FirstTime, qualityRepository.quality.value)
     }
 
     @Test
     fun `restart crash state`() = runTest(testDispatcher) {
         testDataStore.setLowQualityConditions()
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
+        metricsMonitor.onServiceConnected()
         testDispatcher.scheduler.runCurrent()
 
-        assertEquals(Quality.Low, qualityManager.quality.value)
+        assertEquals(Quality.Crashed, qualityRepository.quality.value)
     }
 
     @Test
     fun `restart permission removed state`() = runTest(testDispatcher) {
         testDataStore.setMediumQualityConditions()
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
+        metricsMonitor.onServiceConnected()
         testDispatcher.scheduler.runCurrent()
 
-        assertEquals(Quality.Medium, qualityManager.quality.value)
+        assertEquals(Quality.ExternalIssue, qualityRepository.quality.value)
     }
 
     @Test
     fun `grace time medium quality`() = runTest(testDispatcher) {
         testDataStore.setMediumQualityConditions()
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
-        testDispatcher.scheduler.runCurrent()
+        metricsMonitor.onServiceConnected()
 
-        assertEquals(Quality.Medium, qualityManager.quality.value)
         testDispatcher.scheduler.advanceTimeBy(
-            Quality.Medium.backToHighDelay!!.inWholeMilliseconds + 1000
+            Quality.ExternalIssue.backToHighDelay!!.inWholeMilliseconds - 1000
         )
-        assertEquals(Quality.High, qualityManager.quality.value)
+        assertEquals(Quality.ExternalIssue, qualityRepository.quality.value)
+        testDispatcher.scheduler.advanceTimeBy(2000)
+        assertEquals(Quality.High, qualityRepository.quality.value)
     }
 
     @Test
     fun `grace time low quality`() = runTest(testDispatcher) {
         testDataStore.setLowQualityConditions()
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
-        testDispatcher.scheduler.runCurrent()
+        metricsMonitor.onServiceConnected()
 
-        assertEquals(Quality.Low, qualityManager.quality.value)
         testDispatcher.scheduler.advanceTimeBy(
-            Quality.Low.backToHighDelay!!.inWholeMilliseconds + 1000
+            Quality.Crashed.backToHighDelay!!.inWholeMilliseconds - 1000
         )
-        assertEquals(Quality.High, qualityManager.quality.value)
+        assertEquals(Quality.Crashed, qualityRepository.quality.value)
+        testDispatcher.scheduler.advanceTimeBy(2000)
+        assertEquals(Quality.High, qualityRepository.quality.value)
     }
 
     @Test
     fun `grace time first time quality`() = runTest(testDispatcher) {
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
-        testDispatcher.scheduler.runCurrent()
+        metricsMonitor.onServiceConnected()
 
-        assertEquals(Quality.FirstTime, qualityManager.quality.value)
         testDispatcher.scheduler.advanceTimeBy(
-            Quality.FirstTime.backToHighDelay!!.inWholeMilliseconds + 1000
+            Quality.FirstTime.backToHighDelay!!.inWholeMilliseconds - 1000
         )
-        assertEquals(Quality.High, qualityManager.quality.value)
+        assertEquals(Quality.FirstTime, qualityRepository.quality.value)
+        testDispatcher.scheduler.advanceTimeBy(2000)
+        assertEquals(Quality.High, qualityRepository.quality.value)
     }
 
     @Test
     fun `service connected time is set`() = runTest(testDispatcher) {
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
+        metricsMonitor.onServiceConnected()
         testDispatcher.scheduler.runCurrent()
 
         assertNotEquals(
@@ -152,10 +171,11 @@ class QualityManagerTests {
 
     @Test
     fun `service foreground time is set`() = runTest(testDispatcher) {
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
-        qualityManager.onServiceForegroundStart()
+        metricsMonitor.onServiceConnected()
+        metricsMonitor.onServiceForegroundStart()
         testDispatcher.scheduler.runCurrent()
 
         assertNotEquals(
@@ -166,11 +186,12 @@ class QualityManagerTests {
 
     @Test
     fun `service foreground time is reset`() = runTest(testDispatcher) {
-        val qualityManager = QualityManager(testDataStore, testDispatcher)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
-        qualityManager.onServiceConnected()
-        qualityManager.onServiceForegroundStart()
-        qualityManager.onServiceForegroundEnd()
+        metricsMonitor.onServiceConnected()
+        metricsMonitor.onServiceForegroundStart()
+        metricsMonitor.onServiceForegroundEnd()
         testDispatcher.scheduler.runCurrent()
 
         assertEquals(
@@ -190,4 +211,7 @@ class QualityManagerTests {
             preferences[KEY_LAST_SERVICE_START_TIME_MS] = 1
             preferences[KEY_LAST_SERVICE_FOREGROUND_TIME_MS] = 2
         }
+
+    private fun <T> DataStore<Preferences>.flowOf(key: Preferences.Key<T>, default: T): Flow<T> =
+        data.map { preferences -> preferences[key] ?: default }
 }
