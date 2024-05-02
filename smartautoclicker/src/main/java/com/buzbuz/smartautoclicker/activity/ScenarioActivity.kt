@@ -77,16 +77,18 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
     override fun startScenario(item: ScenarioListUiState.Item) {
         requestedItem = item
 
-        scenarioViewModel.startPermissionFlow(
+        scenarioViewModel.startPermissionFlowIfNeeded(
             activity = this,
             onAllGranted = ::onMandatoryPermissionsGranted,
         )
     }
 
     private fun onMandatoryPermissionsGranted() {
-        when (val scenario = requestedItem?.scenario) {
-            is DumbScenario -> startDumbScenario(scenario)
-            is Scenario -> showMediaProjectionWarning()
+        scenarioViewModel.startTroubleshootingFlowIfNeeded(this) {
+            when (val scenario = requestedItem?.scenario) {
+                is DumbScenario -> startDumbScenario(scenario)
+                is Scenario -> showMediaProjectionWarning()
+            }
         }
     }
 

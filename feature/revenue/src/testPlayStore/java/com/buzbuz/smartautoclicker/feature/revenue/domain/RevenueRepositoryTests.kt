@@ -18,9 +18,9 @@ package com.buzbuz.smartautoclicker.feature.revenue.domain
 
 import android.content.Context
 import android.os.Build
-import com.buzbuz.smartautoclicker.core.common.quality.Quality
+import com.buzbuz.smartautoclicker.core.common.quality.domain.Quality
 
-import com.buzbuz.smartautoclicker.core.common.quality.QualityManager
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.InterstitialAdsDataSource
 import com.buzbuz.smartautoclicker.feature.revenue.data.UserConsentDataSource
@@ -61,7 +61,7 @@ class RevenueRepositoryTests {
     @Mock private lateinit var mockBillingDataSource: BillingDataSource
     @Mock private lateinit var mockUserConsentDataSource: UserConsentDataSource
     @Mock private lateinit var mockAdsDataSource: InterstitialAdsDataSource
-    @Mock private lateinit var mockQualityManager: QualityManager
+    @Mock private lateinit var mockQualityRepository: QualityRepository
 
     private val userConsent = MutableStateFlow(false)
     private val adState: MutableStateFlow<RemoteAdState> = MutableStateFlow(RemoteAdState.SdkNotInitialized)
@@ -81,7 +81,7 @@ class RevenueRepositoryTests {
         Mockito.`when`(mockBillingDataSource.canPurchase).thenReturn(canPurchase)
         Mockito.`when`(mockBillingDataSource.isPurchased).thenReturn(isPurchased)
         Mockito.`when`(mockBillingDataSource.billingFlowInProgress).thenReturn(playStoreBillingInProgress)
-        Mockito.`when`(mockQualityManager.quality).thenReturn(quality)
+        Mockito.`when`(mockQualityRepository.quality).thenReturn(quality)
 
         testedBillingRepository = RevenueRepository(
             mockContext,
@@ -89,7 +89,7 @@ class RevenueRepositoryTests {
             mockUserConsentDataSource,
             mockAdsDataSource,
             mockBillingDataSource,
-            mockQualityManager,
+            mockQualityRepository,
         )
     }
 
@@ -139,7 +139,7 @@ class RevenueRepositoryTests {
 
     @Test
     fun `quality not high`() {
-        quality.value = Quality.Low
+        quality.value = Quality.Crashed
         testedBillingRepository.assertStates(
             ad = AdState.NOT_INITIALIZED,
             purchase = PurchaseState.CANNOT_PURCHASE,

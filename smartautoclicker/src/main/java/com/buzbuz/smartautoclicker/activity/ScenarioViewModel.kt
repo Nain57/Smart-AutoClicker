@@ -29,6 +29,7 @@ import androidx.core.content.PermissionChecker
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.permissions.PermissionsController
@@ -46,6 +47,7 @@ import javax.inject.Inject
 class ScenarioViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val revenueRepository: IRevenueRepository,
+    private val qualityRepository: QualityRepository,
     private val permissionController: PermissionsController,
 ) : ViewModel() {
 
@@ -80,8 +82,8 @@ class ScenarioViewModel @Inject constructor(
         revenueRepository.startUserConsentRequestUiFlowIfNeeded(activity)
     }
 
-    fun startPermissionFlow(activity: AppCompatActivity, onAllGranted: () -> Unit) {
-        permissionController.requestPermissions(
+    fun startPermissionFlowIfNeeded(activity: AppCompatActivity, onAllGranted: () -> Unit) {
+        permissionController.startPermissionsUiFlow(
             activity = activity,
             permissions = listOf(
                 PermissionOverlay,
@@ -93,6 +95,10 @@ class ScenarioViewModel @Inject constructor(
             ),
             onAllGranted = onAllGranted,
         )
+    }
+
+    fun startTroubleshootingFlowIfNeeded(activity: AppCompatActivity, onCompleted: () -> Unit) {
+        qualityRepository.startTroubleshootingUiFlowIfNeeded(activity, onCompleted)
     }
 
     /**

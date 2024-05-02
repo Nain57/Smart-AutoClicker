@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="dialog_title_permission_issue">Permission</string>
+    <string name="message_accessibility_issues">It seems like the Accessibility Service permission has been removed several times. If you haven\'t changed it yourself, this means your device has removed it.\n\n
+        Some Android devices manufacturer are not respecting the standard behaviour about background applications, and depending on your device brand, you might need to perform additional configuration.\n\n
+        Please refer to the following website to find more insight about that issue and how you can improve the permission stability.</string>
+    <string name="button_understood">Understood</string>
+    <string name="button_open_dont_kill_my_app" translatable="false">Don\'t kill my app</string>
+
+</resources>
