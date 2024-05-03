@@ -58,11 +58,14 @@ class QualityRepository @Inject constructor(
 
     private companion object {
         const val TAG = "QualityManager"
-        val TS_DIALOG_DISPLAY_AT_PERMISSION_LOSS_COUNTS = listOf(1, 3, 7)
+        val TS_DIALOG_DISPLAY_AT_LOSS_COUNT = listOf(1, 3, 7)
     }
 
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
+
+    /** Tells if the troubleshooting dialog has already been displayed for this user session. */
+    private var isTroubleshootingDialogDisplayed: Boolean = false
 
     /** The quality at the start of the application session. */
     private val startingQuality: Flow<Quality> = qualityMetricsMonitor.startingQualityMetrics
@@ -80,7 +83,8 @@ class QualityRepository @Inject constructor(
      * [onCompleted] will be called immediately.
      */
     fun startTroubleshootingUiFlowIfNeeded(activity: AppCompatActivity, onCompleted: () -> Unit) {
-        if (quality.value != Quality.ExternalIssue) {
+        // If the permission has not been removed, or if the dialog has already been displayed, complete.
+        if (quality.value != Quality.ExternalIssue || isTroubleshootingDialogDisplayed) {
             onCompleted()
             return
         }
@@ -88,24 +92,19 @@ class QualityRepository @Inject constructor(
         coroutineScopeIo.launch {
             val metrics = qualityMetricsMonitor.currentQualityMetrics.first()
 
-            if (metrics.accessibilityLossCount !in 1..TS_DIALOG_DISPLAY_AT_PERMISSION_LOSS_COUNTS.last()) {
-                withContext(mainDispatcher) { onCompleted() }
-                return@launch
-            }
+            TS_DIALOG_DISPLAY_AT_LOSS_COUNT.forEachIndexed { index, triggerLossCount ->
+                // Permission has been lost less times than the current threshold, no need for the dialog
+                if (metrics.accessibilityLossCount < triggerLossCount) {
+                    withContext(mainDispatcher) { onCompleted() }
+                    return@launch
+                }
 
-            for (stepDisplayCount in TS_DIALOG_DISPLAY_AT_PERMISSION_LOSS_COUNTS.indices) {
-                if (metrics.accessibilityLossCount < TS_DIALOG_DISPLAY_AT_PERMISSION_LOSS_COUNTS[stepDisplayCount]
-                    || metrics.troubleshootingDisplayCount > stepDisplayCount) continue
+                // The dialog has already been displayed for this iteration
+                if (metrics.troubleshootingDisplayCount > index) return@forEachIndexed
 
                 Log.i(TAG, "Starting troubleshooting dialog, " +
                         "lossCount=${metrics.accessibilityLossCount}; displayCount=${metrics.troubleshootingDisplayCount}")
-
-                qualityMetricsMonitor.onTroubleshootingDisplayed()
-                withContext(mainDispatcher) {
-                    activity.supportFragmentManager
-                        .setFragmentResultListener(FRAGMENT_RESULT_KEY_TROUBLESHOOTING, activity) { _, _ -> onCompleted() }
-                    AccessibilityTroubleshootingDialog().show(activity.supportFragmentManager, FRAGMENT_TAG_TROUBLESHOOTING_DIALOG)
-                }
+                startTroubleshootingDialog(activity, onCompleted)
                 return@launch
             }
 
@@ -124,6 +123,17 @@ class QualityRepository @Inject constructor(
                 currentQuality.emit(Quality.High)
             }
         }
+
+    private suspend fun startTroubleshootingDialog(activity: AppCompatActivity, onCompleted: () -> Unit) {
+        isTroubleshootingDialogDisplayed = true
+        qualityMetricsMonitor.onTroubleshootingDisplayed()
+
+        withContext(mainDispatcher) {
+            activity.supportFragmentManager
+                .setFragmentResultListener(FRAGMENT_RESULT_KEY_TROUBLESHOOTING, activity) { _, _ -> onCompleted() }
+            AccessibilityTroubleshootingDialog().show(activity.supportFragmentManager, FRAGMENT_TAG_TROUBLESHOOTING_DIALOG)
+        }
+    }
 
     private fun QualityMetrics.toQuality(): Quality = when {
         // Check if that's not the first time the service is started

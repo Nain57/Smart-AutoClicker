@@ -18,15 +18,20 @@ package com.buzbuz.smartautoclicker.core.common.quality
 
 import android.content.Context
 import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.test.core.app.ApplicationProvider
 
 import com.buzbuz.smartautoclicker.core.common.quality.data.INVALID_TIME
+import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT
+import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT
 import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_LAST_SERVICE_FOREGROUND_TIME_MS
 import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_LAST_SERVICE_START_TIME_MS
 import com.buzbuz.smartautoclicker.core.common.quality.domain.Quality
@@ -44,8 +49,15 @@ import kotlinx.coroutines.test.runTest
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
@@ -64,6 +76,17 @@ class QualityRepositoryTests {
             scope = testCoroutineScope,
             produceFile = { testContext.preferencesDataStoreFile("TEST_DATASTORE_NAME") }
         )
+
+    @Mock private lateinit var mockActivity: AppCompatActivity
+    @Mock private lateinit var mockFragmentManager: FragmentManager
+    @Mock private lateinit var mockFragmentTransaction: FragmentTransaction
+
+    @Before
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+        Mockito.`when`(mockActivity.supportFragmentManager).thenReturn(mockFragmentManager)
+        Mockito.`when`(mockFragmentManager.beginTransaction()).thenReturn(mockFragmentTransaction)
+    }
 
     @Test
     fun `no init`() = runTest(testDispatcher) {
@@ -86,7 +109,7 @@ class QualityRepositoryTests {
 
     @Test
     fun `restart crash state`() = runTest(testDispatcher) {
-        testDataStore.setLowQualityConditions()
+        testDataStore.setCrashedQualityConditions()
         val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
         val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
@@ -98,7 +121,7 @@ class QualityRepositoryTests {
 
     @Test
     fun `restart permission removed state`() = runTest(testDispatcher) {
-        testDataStore.setMediumQualityConditions()
+        testDataStore.setExternalIssueQualityConditions()
         val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
         val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
@@ -109,8 +132,8 @@ class QualityRepositoryTests {
     }
 
     @Test
-    fun `grace time medium quality`() = runTest(testDispatcher) {
-        testDataStore.setMediumQualityConditions()
+    fun `grace time external issues quality`() = runTest(testDispatcher) {
+        testDataStore.setExternalIssueQualityConditions()
         val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
         val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
@@ -125,8 +148,8 @@ class QualityRepositoryTests {
     }
 
     @Test
-    fun `grace time low quality`() = runTest(testDispatcher) {
-        testDataStore.setLowQualityConditions()
+    fun `grace time crashed quality`() = runTest(testDispatcher) {
+        testDataStore.setCrashedQualityConditions()
         val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
         val qualityRepository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
 
@@ -155,6 +178,38 @@ class QualityRepositoryTests {
         assertEquals(Quality.High, qualityRepository.quality.value)
     }
 
+
+    @Test
+    fun `service connected loss count is incremented`() = runTest(testDispatcher) {
+        testDataStore.setExternalIssueQualityConditions()
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
+
+        metricsMonitor.onServiceConnected()
+        testDispatcher.scheduler.runCurrent()
+
+        assertEquals(
+            1,
+            testDataStore.flowOf(KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT).first()
+        )
+    }
+
+    @Test
+    fun `service connected loss count is not incremented on crash`() = runTest(testDispatcher) {
+        testDataStore.setCrashedQualityConditions()
+        testDataStore.setTroubleshootingConditions(lossCount = 1, displayCount = 0)
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
+
+        metricsMonitor.onServiceConnected()
+        testDispatcher.scheduler.runCurrent()
+
+        assertEquals(
+            1,
+            testDataStore.flowOf(KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT).first()
+        )
+    }
+
     @Test
     fun `service connected time is set`() = runTest(testDispatcher) {
         val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
@@ -165,7 +220,7 @@ class QualityRepositoryTests {
 
         assertNotEquals(
             INVALID_TIME,
-            testDataStore.flowOf(KEY_LAST_SERVICE_START_TIME_MS, INVALID_TIME).first()
+            testDataStore.flowOf(KEY_LAST_SERVICE_START_TIME_MS).first()
         )
     }
 
@@ -180,7 +235,7 @@ class QualityRepositoryTests {
 
         assertNotEquals(
             INVALID_TIME,
-            testDataStore.flowOf(KEY_LAST_SERVICE_FOREGROUND_TIME_MS, INVALID_TIME).first()
+            testDataStore.flowOf(KEY_LAST_SERVICE_FOREGROUND_TIME_MS).first()
         )
     }
 
@@ -196,22 +251,87 @@ class QualityRepositoryTests {
 
         assertEquals(
             INVALID_TIME,
-            testDataStore.flowOf(KEY_LAST_SERVICE_FOREGROUND_TIME_MS, INVALID_TIME).first()
+            testDataStore.flowOf(KEY_LAST_SERVICE_FOREGROUND_TIME_MS).first()
         )
     }
 
-    private suspend fun DataStore<Preferences>.setMediumQualityConditions() =
+    @Test
+    fun `show troubleshooting dialog when needed`() = runTest(testDispatcher) {
+        testDataStore.setExternalIssueQualityConditions()
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val repository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
+        testDispatcher.scheduler.runCurrent()
+        metricsMonitor.onServiceConnected()
+        testDispatcher.scheduler.runCurrent()
+
+        repository.startTroubleshootingUiFlowIfNeeded(mockActivity) {}
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Verify the show dialog and the data store increment
+        inOrder(mockFragmentManager, mockFragmentTransaction) {
+            verify(mockFragmentManager).beginTransaction()
+            verify(mockFragmentTransaction).commit()
+        }
+        assertEquals(1, testDataStore.flowOf(KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT).first())
+    }
+
+    @Test
+    fun `show troubleshooting dialog twice skip second`() = runTest(testDispatcher) {
+        testDataStore.setExternalIssueQualityConditions()
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val repository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
+        testDispatcher.scheduler.runCurrent()
+        metricsMonitor.onServiceConnected()
+        testDispatcher.scheduler.runCurrent()
+
+        repository.startTroubleshootingUiFlowIfNeeded(mockActivity) {}
+        testDispatcher.scheduler.advanceUntilIdle()
+        repository.startTroubleshootingUiFlowIfNeeded(mockActivity) {}
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Verify the show dialog and the data store increment
+        inOrder(mockFragmentManager, mockFragmentTransaction) {
+            verify(mockFragmentManager).beginTransaction()
+            verify(mockFragmentTransaction).commit()
+        }
+        assertEquals(1, testDataStore.flowOf(KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT).first())
+    }
+
+    @Test
+    fun `show troubleshooting dialog skipped on crash`() = runTest(testDispatcher) {
+        testDataStore.setCrashedQualityConditions()
+        val metricsMonitor = QualityMetricsMonitor(testDataStore, testDispatcher)
+        val repository = QualityRepository(metricsMonitor, testDispatcher, testDispatcher)
+        testDispatcher.scheduler.runCurrent()
+        metricsMonitor.onServiceConnected()
+        testDispatcher.scheduler.runCurrent()
+
+        repository.startTroubleshootingUiFlowIfNeeded(mockActivity) {}
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        verify(mockFragmentManager, never()).beginTransaction()
+        verify(mockFragmentTransaction, never()).commit()
+        assertEquals(null, testDataStore.flowOf(KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT).first())
+    }
+
+    private suspend fun DataStore<Preferences>.setExternalIssueQualityConditions() =
         edit { preferences ->
             preferences[KEY_LAST_SERVICE_START_TIME_MS] = 1
             preferences.remove(KEY_LAST_SERVICE_FOREGROUND_TIME_MS)
         }
 
-    private suspend fun DataStore<Preferences>.setLowQualityConditions() =
+    private suspend fun DataStore<Preferences>.setCrashedQualityConditions() =
         edit { preferences ->
             preferences[KEY_LAST_SERVICE_START_TIME_MS] = 1
             preferences[KEY_LAST_SERVICE_FOREGROUND_TIME_MS] = 2
         }
 
-    private fun <T> DataStore<Preferences>.flowOf(key: Preferences.Key<T>, default: T): Flow<T> =
-        data.map { preferences -> preferences[key] ?: default }
+    private suspend fun DataStore<Preferences>.setTroubleshootingConditions(lossCount: Int, displayCount: Int) =
+        edit { preferences ->
+            preferences[KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT] = lossCount
+            preferences[KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT] = displayCount
+        }
+
+    private fun <T> DataStore<Preferences>.flowOf(key: Preferences.Key<T>): Flow<T?> =
+        data.map { preferences -> preferences[key] }
 }

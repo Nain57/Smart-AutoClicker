@@ -54,19 +54,20 @@ class QualityMetricsMonitor @Inject constructor(
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
 
-    internal val startingQualityMetrics: Flow<QualityMetrics> = qualityDataStore
-        .qualityMetrics()
-        .take(1)
-        .shareIn(coroutineScopeIo, SharingStarted.Eagerly)
-
     internal val currentQualityMetrics: Flow<QualityMetrics> = qualityDataStore
         .qualityMetrics()
+
+    internal val startingQualityMetrics: Flow<QualityMetrics> = currentQualityMetrics
+        .take(1)
+        .shareIn(coroutineScopeIo, SharingStarted.Eagerly)
 
     fun onServiceConnected() {
         coroutineScopeIo.launch {
             qualityDataStore.edit { preferences ->
-                val lastForegroundStartTime = preferences[KEY_LAST_SERVICE_FOREGROUND_TIME_MS]
-                if (lastForegroundStartTime == INVALID_TIME) {
+                val serviceStartTime = preferences[KEY_LAST_SERVICE_START_TIME_MS] ?: INVALID_TIME
+                val lastForegroundStartTime = preferences[KEY_LAST_SERVICE_FOREGROUND_TIME_MS] ?: INVALID_TIME
+
+                if (serviceStartTime != INVALID_TIME && lastForegroundStartTime == INVALID_TIME) {
                     val lossCount = preferences[KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT] ?: 0
                     preferences[KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT] = lossCount + 1
                 }
