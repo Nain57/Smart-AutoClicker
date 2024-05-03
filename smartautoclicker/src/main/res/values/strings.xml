@@ -44,6 +44,8 @@
     <string name="menu_item_title_import">Import</string>
     <string name="menu_item_title_select_all">Select all</string>
     <string name="menu_item_title_privacy">Privacy settings</string>
+    <string name="menu_item_title_remove_ads">Remove ads</string>
+    <string name="menu_item_title_troubleshooting">Troubleshooting</string>
 
     <!--
       - Text for items in a list or vertical layout.

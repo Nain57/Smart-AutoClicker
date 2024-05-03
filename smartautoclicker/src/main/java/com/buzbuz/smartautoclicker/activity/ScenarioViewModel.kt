@@ -26,6 +26,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.core.content.PermissionChecker
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
@@ -97,7 +98,7 @@ class ScenarioViewModel @Inject constructor(
         )
     }
 
-    fun startTroubleshootingFlowIfNeeded(activity: AppCompatActivity, onCompleted: () -> Unit) {
+    fun startTroubleshootingFlowIfNeeded(activity: FragmentActivity, onCompleted: () -> Unit) {
         qualityRepository.startTroubleshootingUiFlowIfNeeded(activity, onCompleted)
     }
 

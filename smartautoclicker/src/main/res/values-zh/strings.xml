@@ -40,6 +40,8 @@
     <string name="menu_item_title_import">导入</string>
     <string name="menu_item_title_select_all">全选</string>
     <string name="menu_item_title_privacy">隐私设置</string>
+    <string name="menu_item_title_remove_ads">删除广告</string>
+    <string name="menu_item_title_troubleshooting">故障排除</string>
 
     <!--
       - Text for items in a list or vertical layout.

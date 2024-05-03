@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="dialog_title_permission_issue">Autorizzazioni</string>
+    <string name="dialog_title_permission_issue">Risoluzione dei problemi</string>
     <string name="message_accessibility_issues">Sembra che l\'autorizzazione del Servizio Accessibilità sia stata rimossa più volte. Se non l\'avete modificata voi stessi, significa che il vostro dispositivo l\'ha rimossa.\n\n
         Alcuni produttori di dispositivi Android non rispettano il comportamento standard delle applicazioni in background e, a seconda della marca del dispositivo, potrebbe essere necessario eseguire una configurazione aggiuntiva.\n\n
         Fare riferimento al seguente sito web per trovare maggiori informazioni su questo problema e su come migliorare la stabilità dei permessi.</string>

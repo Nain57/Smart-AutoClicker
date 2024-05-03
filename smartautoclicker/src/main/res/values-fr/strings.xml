@@ -41,6 +41,8 @@
     <string name="menu_item_title_import">Importer</string>
     <string name="menu_item_title_select_all">Tout sélectionner</string>
     <string name="menu_item_title_privacy">Confidentialité</string>
+    <string name="menu_item_title_remove_ads">Enlever les pubs</string>
+    <string name="menu_item_title_troubleshooting">Dépannage</string>
 
 
     <!--

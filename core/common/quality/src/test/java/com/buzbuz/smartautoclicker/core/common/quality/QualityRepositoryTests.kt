@@ -25,6 +25,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.test.core.app.ApplicationProvider
@@ -77,7 +78,7 @@ class QualityRepositoryTests {
             produceFile = { testContext.preferencesDataStoreFile("TEST_DATASTORE_NAME") }
         )
 
-    @Mock private lateinit var mockActivity: AppCompatActivity
+    @Mock private lateinit var mockActivity: FragmentActivity
     @Mock private lateinit var mockFragmentManager: FragmentManager
     @Mock private lateinit var mockFragmentTransaction: FragmentTransaction
 

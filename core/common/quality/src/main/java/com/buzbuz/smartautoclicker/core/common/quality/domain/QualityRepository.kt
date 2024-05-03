@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.common.quality.domain
 
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
@@ -82,7 +83,7 @@ class QualityRepository @Inject constructor(
      * Once the user has dismissed the ui, [onCompleted] will be called. If the ui doesn't needs to be shown,
      * [onCompleted] will be called immediately.
      */
-    fun startTroubleshootingUiFlowIfNeeded(activity: AppCompatActivity, onCompleted: () -> Unit) {
+    fun startTroubleshootingUiFlowIfNeeded(activity: FragmentActivity, onCompleted: () -> Unit) {
         // If the permission has not been removed, or if the dialog has already been displayed, complete.
         if (quality.value != Quality.ExternalIssue || isTroubleshootingDialogDisplayed) {
             onCompleted()
@@ -104,12 +105,22 @@ class QualityRepository @Inject constructor(
 
                 Log.i(TAG, "Starting troubleshooting dialog, " +
                         "lossCount=${metrics.accessibilityLossCount}; displayCount=${metrics.troubleshootingDisplayCount}")
-                startTroubleshootingDialog(activity, onCompleted)
+
+                isTroubleshootingDialogDisplayed = true
+                qualityMetricsMonitor.onTroubleshootingDisplayed()
+                startTroubleshootingUiFlow(activity, onCompleted)
+
                 return@launch
             }
 
             withContext(mainDispatcher) { onCompleted() }
         }
+    }
+
+    fun startTroubleshootingUiFlow(activity: FragmentActivity, onCompleted: (() -> Unit)? = null) {
+        activity.supportFragmentManager
+            .setFragmentResultListener(FRAGMENT_RESULT_KEY_TROUBLESHOOTING, activity) { _, _ -> onCompleted?.invoke() }
+        AccessibilityTroubleshootingDialog().show(activity.supportFragmentManager, FRAGMENT_TAG_TROUBLESHOOTING_DIALOG)
     }
 
     private fun monitorQuality(startingQuality: Flow<Quality>, currentQuality: MutableStateFlow<Quality>) : Flow<Quality> =
@@ -124,16 +135,7 @@ class QualityRepository @Inject constructor(
             }
         }
 
-    private suspend fun startTroubleshootingDialog(activity: AppCompatActivity, onCompleted: () -> Unit) {
-        isTroubleshootingDialogDisplayed = true
-        qualityMetricsMonitor.onTroubleshootingDisplayed()
 
-        withContext(mainDispatcher) {
-            activity.supportFragmentManager
-                .setFragmentResultListener(FRAGMENT_RESULT_KEY_TROUBLESHOOTING, activity) { _, _ -> onCompleted() }
-            AccessibilityTroubleshootingDialog().show(activity.supportFragmentManager, FRAGMENT_TAG_TROUBLESHOOTING_DIALOG)
-        }
-    }
 
     private fun QualityMetrics.toQuality(): Quality = when {
         // Check if that's not the first time the service is started

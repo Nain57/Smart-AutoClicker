@@ -57,6 +57,7 @@ data class ScenarioListUiState(
         val exportItemState: Item = Item(false),
         val privacyItemState: Item = Item(false),
         val purchaseItemState: Item = Item(false),
+        val troubleshootingItemState: Item = Item(false),
     ) {
 
         /**
@@ -103,6 +104,7 @@ data class ScenarioListUiState(
             ),
             privacyItemState = Item(privacyRequired),
             purchaseItemState = Item(canPurchase),
+            troubleshootingItemState = Item(true),
         )
     }
 

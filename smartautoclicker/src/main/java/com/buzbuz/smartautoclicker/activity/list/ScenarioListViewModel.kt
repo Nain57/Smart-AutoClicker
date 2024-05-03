@@ -19,10 +19,13 @@ package com.buzbuz.smartautoclicker.activity.list
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -56,6 +59,7 @@ class ScenarioListViewModel @Inject constructor(
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
     private val revenueRepository: IRevenueRepository,
+    private val qualityRepository: QualityRepository,
 ) : ViewModel() {
 
     /** Current state type of the ui. */
@@ -180,6 +184,10 @@ class ScenarioListViewModel @Inject constructor(
 
     fun showPurchaseActivity(context: Context) {
         revenueRepository.startPurchaseUiFlow(context)
+    }
+
+    fun showTroubleshootingDialog(activity: FragmentActivity) {
+        qualityRepository.startTroubleshootingUiFlow(activity)
     }
 
     private fun ScenarioListUiState.Type.toMenuUiState(
