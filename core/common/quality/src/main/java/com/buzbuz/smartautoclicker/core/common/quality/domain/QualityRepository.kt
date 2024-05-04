@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.common.quality.domain
 
 import android.util.Log
+import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 
@@ -108,7 +109,7 @@ class QualityRepository @Inject constructor(
 
                 isTroubleshootingDialogDisplayed = true
                 qualityMetricsMonitor.onTroubleshootingDisplayed()
-                startTroubleshootingUiFlow(activity, onCompleted)
+                withContext(mainDispatcher) { startTroubleshootingUiFlow(activity, onCompleted) }
 
                 return@launch
             }
@@ -117,6 +118,7 @@ class QualityRepository @Inject constructor(
         }
     }
 
+    @MainThread
     fun startTroubleshootingUiFlow(activity: FragmentActivity, onCompleted: (() -> Unit)? = null) {
         activity.supportFragmentManager
             .setFragmentResultListener(FRAGMENT_RESULT_KEY_TROUBLESHOOTING, activity) { _, _ -> onCompleted?.invoke() }
