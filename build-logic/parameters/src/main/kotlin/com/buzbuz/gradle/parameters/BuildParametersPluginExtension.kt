@@ -16,7 +16,6 @@
  */
 package com.buzbuz.gradle.parameters
 
-import com.android.build.api.dsl.LibraryProductFlavor
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
@@ -36,7 +35,7 @@ abstract class BuildParametersPluginExtension {
     private val properties: MutableMap<String, Any> = mutableMapOf()
 
     operator fun get(parameterName: String): BuildParameter {
-        properties[parameterName]?.let { return BuildParameter(parameterName, it as String) }
+        properties[parameterName]?.let { return BuildParameter(rootProject, parameterName, it as String) }
 
         val parameterValue =
             if (rootProject.hasProperty(parameterName)) rootProject.properties[parameterName]
@@ -49,22 +48,11 @@ abstract class BuildParametersPluginExtension {
                 }
             }
 
-        if (parameterValue == null) {
-            rootProject.logger.warn("WARNING: Build property $parameterName was not found")
-            return BuildParameter(parameterName, null)
-        }
-
-        return BuildParameter(parameterName, parameterValue as String)
+        return BuildParameter(rootProject, parameterName, parameterValue as? String)
     }
 
     fun isBuildForVariant(variantName: String): Boolean =
-        rootProject.let { project ->
-            val normalizedName = variantName.uppercaseFirstChar()
-
-            return project.gradle.startParameter.taskRequests.find { taskExecRequest ->
-                taskExecRequest.args.find { taskName -> taskName.contains(normalizedName) } != null
-            } != null
-        }
+        rootProject.isBuildForVariant(variantName)
 
     private companion object {
         const val LOCAL_PROPERTIES_FILE = "local.properties"

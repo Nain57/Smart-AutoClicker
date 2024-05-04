@@ -47,9 +47,7 @@ internal class UserConsentDataSource @Inject constructor() {
         Log.d(TAG, "Requesting user consent...")
 
         val params = ConsentRequestParameters.Builder()
-        if (BuildConfig.DEBUG) {
-            getConsentDebugSettings(activity)?.let(params::setConsentDebugSettings)
-        }
+        getConsentDebugSettings(activity)?.let(params::setConsentDebugSettings)
 
         val consentInfo = UserMessagingPlatform.getConsentInformation(activity)
         consentInfo.requestConsentInfoUpdate(
@@ -93,19 +91,6 @@ internal class UserConsentDataSource @Inject constructor() {
         Log.d(
             TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}, " +
                 "settings required: ${consentInfo.privacyOptionsRequirementStatus}")
-    }
-
-    private fun getConsentDebugSettings(context: Context): ConsentDebugSettings? {
-        if (BuildConfig.CONSENT_TEST_DEVICES_IDS.isNullOrEmpty()) return null
-
-        return ConsentDebugSettings.Builder(context)
-            .apply {
-                BuildConfig.CONSENT_TEST_DEVICES_IDS.forEach { testDeviceId ->
-                    Log.d(TAG, "Using $testDeviceId as test device id")
-                    addTestDeviceHashedId(testDeviceId)
-                }
-            }
-            .build()
     }
 }
 

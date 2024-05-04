@@ -35,15 +35,17 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("./smartautoclicker.jks")
-            storePassword = buildParameters["signingStorePassword"].value
-            keyAlias = buildParameters["signingKeyAlias"].value
-            keyPassword = buildParameters["signingKeyPassword"].value
+            storePassword = buildParameters["signingStorePassword"].asString()
+            keyAlias = buildParameters["signingKeyAlias"].asString()
+            keyPassword = buildParameters["signingKeyPassword"].asString()
         }
     }
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".debug"
+            if (buildParameters.isBuildForVariant("fDroidDebug")) {
+                applicationIdSuffix = ".debug"
+            }
         }
     }
 

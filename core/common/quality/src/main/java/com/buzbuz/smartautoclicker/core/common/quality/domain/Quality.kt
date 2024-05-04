@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.common.quality.domain
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 /** Describe the different quality levels felt by the user. */
 sealed class Quality(internal val backToHighDelay: Duration? = null) {

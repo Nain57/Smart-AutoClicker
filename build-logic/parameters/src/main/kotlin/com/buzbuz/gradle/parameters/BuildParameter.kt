@@ -16,28 +16,60 @@
  */
 package com.buzbuz.gradle.parameters
 
+import com.android.build.api.dsl.LibraryProductFlavor
 import com.android.build.api.dsl.VariantDimension
+import org.gradle.api.GradleException
+import org.gradle.api.Project
 
-data class BuildParameter(val name: String, val value: String?) {
 
-    fun asStringBuildConfigField(variant: VariantDimension) {
+class BuildParameter(private val project: Project, private val name: String, private val value: String?) {
+
+    fun asString(): String? {
+        if (value == null) project.logger.warn("WARNING: Build property $name not found.")
+        return value
+    }
+
+    fun asIntBuildConfigField(variant: LibraryProductFlavor, default: Int? = null) {
+        if (!project.isBuildForVariant(variant.name)) return
+
+        if (value == null && default == null)
+            throw GradleException("ERROR: Build property $name not found, cannot set BuildConfig field.")
+
+        variant.buildConfigField(
+            type = "int",
+            name = name.asBuildConfigFieldName(),
+            value = value ?: default.toString(),
+        )
+    }
+
+    fun asStringBuildConfigField(variant: LibraryProductFlavor, default: String? = null) {
+        if (!project.isBuildForVariant(variant.name)) return
+
+        if (value == null && default == null)
+            throw GradleException("ERROR: Build property $name not found, cannot set BuildConfig field.")
+
         variant.buildConfigField(
             type = "String",
             name = name.asBuildConfigFieldName(),
-            value = "\"$value\""
+            value = value?.let { "\"$value\"" } ?: default!!,
         )
     }
 
-    fun asStringArrayBuildConfigField(variant: VariantDimension) {
+    fun asStringArrayBuildConfigField(variant: LibraryProductFlavor) {
+        if (!project.isBuildForVariant(variant.name)) return
+
         variant.buildConfigField(
             type = "String[]",
             name = name.asBuildConfigFieldName(),
-            value = value ?: "",
+            value = value ?: "{}",
         )
     }
 
-    fun asManifestPlaceHolder(variant: VariantDimension) {
-        variant.manifestPlaceholders[name] = value ?: ""
+    fun asManifestPlaceHolder(variant: VariantDimension, default: String? = null) {
+        if (value == null && default == null)
+            throw GradleException("ERROR: Build property $name not found, cannot set manifest placeholder.")
+
+        variant.manifestPlaceholders[name] = value ?: default!!
     }
 
     private fun String.asBuildConfigFieldName(): String =

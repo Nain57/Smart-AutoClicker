@@ -27,6 +27,9 @@ internal interface IAdsSdk {
     fun initializeSdk(context: Context, onComplete: () -> Unit)
 
     @MainThread
+    fun setTestDevices(deviceIds: List<String>)
+
+    @MainThread
     fun loadInterstitialAd(
         context: Context,
         onLoaded: () -> Unit,

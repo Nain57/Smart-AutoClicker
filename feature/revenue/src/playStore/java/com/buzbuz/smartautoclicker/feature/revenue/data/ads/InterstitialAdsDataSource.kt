@@ -24,6 +24,7 @@ import androidx.annotation.VisibleForTesting
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.sdk.IAdsSdk
+import com.buzbuz.smartautoclicker.feature.revenue.data.getAdsDebugTestDevicesIds
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -74,6 +75,7 @@ internal class InterstitialAdsDataSource @Inject constructor(
         Log.i(TAG, "Initialize MobileAds")
 
         adsSdk.initializeSdk(context) {
+            getAdsDebugTestDevicesIds()?.let(adsSdk::setTestDevices)
             coroutineScopeMain.launch {
                 _remoteAdState.emit(RemoteAdState.Initialized)
             }

@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.common.quality.domain
 
 import android.util.Log
 import androidx.annotation.MainThread
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable

@@ -19,12 +19,14 @@ package com.buzbuz.smartautoclicker.feature.revenue.data.ads.sdk
 import android.app.Activity
 import android.content.Context
 import androidx.annotation.MainThread
+import com.buzbuz.smartautoclicker.feature.revenue.BuildConfig
 import com.google.android.gms.ads.AdError
 
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
@@ -42,13 +44,20 @@ class GoogleAdsSdk @Inject constructor() : IAdsSdk {
     }
 
     @MainThread
+    override fun setTestDevices(deviceIds: List<String>) {
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder().setTestDeviceIds(deviceIds).build()
+        )
+    }
+
+    @MainThread
     override fun loadInterstitialAd(
         context: Context,
         onLoaded: () -> Unit,
         onError: (code: Int, message: String) -> Unit,
     ) = InterstitialAd.load(
         context,
-        adsUnitId,
+        BuildConfig.ADS_UNIT_ID,
         buildInterstitialAdRequest(),
         newAdLoadCallback(onLoaded, onError),
     )

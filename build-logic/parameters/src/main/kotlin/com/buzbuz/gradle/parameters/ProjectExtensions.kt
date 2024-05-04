@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.revenue.data.ads.sdk
+package com.buzbuz.gradle.parameters
 
-import com.buzbuz.smartautoclicker.feature.revenue.BuildConfig
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 
 
-typealias AdsUnitId = String
+internal fun Project.isBuildForVariant(variantName: String): Boolean {
+    val normalizedName = variantName.uppercaseFirstChar()
 
-private const val INTERSTITIAL_AD_TEST_ID: AdsUnitId = "ca-app-pub-3940256099942544/1033173712"
-private const val INTERSTITIAL_VIDEO_AD_TEST_ID: AdsUnitId = "ca-app-pub-3940256099942544/8691691433"
-
-internal val adsUnitId: AdsUnitId =
-    if (BuildConfig.DEBUG) INTERSTITIAL_VIDEO_AD_TEST_ID
-    else BuildConfig.ADS_APPLICATION_ID
+    return project.gradle.startParameter.taskRequests.find { taskExecRequest ->
+        taskExecRequest.args.find { taskName -> taskName.contains(normalizedName) } != null
+    } != null
+}
