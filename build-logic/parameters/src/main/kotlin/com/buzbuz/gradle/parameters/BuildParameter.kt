@@ -48,10 +48,11 @@ class BuildParameter(private val project: Project, private val name: String, pri
         if (value == null && default == null)
             throw GradleException("ERROR: Build property $name not found, cannot set BuildConfig field.")
 
+        val fieldValue = value ?: default!!
         variant.buildConfigField(
             type = "String",
             name = name.asBuildConfigFieldName(),
-            value = value?.let { "\"$value\"" } ?: default!!,
+            value = "\"$fieldValue\"",
         )
     }
 
