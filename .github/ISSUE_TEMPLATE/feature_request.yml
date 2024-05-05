@@ -5,18 +5,21 @@ body:
   - type: textarea
     id: feature-description
     attributes:
-      label: Describe what is the new feature and how it should behave. You can add screenshot or sketches to illustrate it.
+      label: Describe the feature
+      description: |
+        Describe what is the new feature and how it should behave. You can add screenshot or sketches to illustrate it.
       placeholder: "Ex: I would like to have a new type of actions that turns off the devices when executed."
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: feature-usage
     attributes:
-      label: |
-        Describe the usage for this feature. Smart AutoClicker cannot include every feature request, only the ones that
-        have a real use case for the most people that uses the app. Please be generic and avoid referencing specific
-        app use cases (or as an example for a more general type of usage).
+      label: Describe the usage
+      description: |
+        Smart AutoClicker cannot include every feature request, only the ones that have a real use case for the most \
+        people that uses the app. Please be generic and avoid referencing specific apps use cases (or as an example for \
+        a more general type of usage).
       placeholder: "Ex: Xiaomi phones can explode if they are turned on for more that 10 hours, we need a way to avoid dying "
     validations:
       required: true
@@ -25,6 +28,8 @@ body:
     id: terms
     attributes:
       label: Is it a duplicate?
+      description: |
+        I have checked if this feature wasn't already requested in another ticket.
       options:
-        - label: I have checked if this feature wasn't already requested
+        - label: No
           required: true
