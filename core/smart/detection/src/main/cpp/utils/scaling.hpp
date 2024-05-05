@@ -49,7 +49,7 @@ namespace smartautoclicker {
     }
 
     const void scaleMat(const Mat& image, const double ratio, Mat& scaledImage) {
-        if (scalingTimeUpdateMs < getUnixTimestampMs()) {
+        if (scalingTimeUpdateMs != -1 && scalingTimeUpdateMs < getUnixTimestampMs()) {
             resize(image, scaledImage, Size(), 25, 25, INTER_AREA);
         } else {
             resize(image, scaledImage, Size(), ratio, ratio, INTER_AREA);
