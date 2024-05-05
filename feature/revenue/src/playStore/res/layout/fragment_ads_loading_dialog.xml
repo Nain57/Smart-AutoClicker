@@ -59,7 +59,7 @@
             android:layout_marginVertical="@dimen/margin_vertical_extra_large"
             android:layout_marginHorizontal="@dimen/margin_horizontal_large"
             android:gravity="center"
-            android:text="@string/billing_pro_mode_success"
+            android:text="@string/message_billing_success"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/banner"

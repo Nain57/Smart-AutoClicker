@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2024 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,13 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="billing_pro_mode_dialog_title" translatable="false">Smart AutoClicker Pro</string>
+    <string name="dialog_title_billing" translatable="false">Smart AutoClicker Pro</string>
 
-    <string name="billing_pro_mode_description">&#8226; No detection duration limit\n&#8226; No scenario, events, conditions and actions creation count limitations\n&#8226; Export/Import scenarios as zip files\n&#8226; Communicate with other application via Intents\n&#8226; Enable/Disable an event and change its state during the scenario execution\n&#8226; Control the detection threshold for each condition\n&#8226; Automatically stop the detection when certain end conditions are met\n&#8226; Randomize your scenario values to avoid detection by other applications\n&#8226; Tune the detection algorithm to improve its speed or its correctness</string>
-    <string name="billing_pro_mode_success">Thank you for buying\nSmart AutoClicker Pro !</string>
+    <string name="header_billing" translatable="false">Smart AutoClicker Pro</string>
 
-    <string name="header_billing">Smart AutoClicker Pro</string>
-    <string name="message_billing">This application is open source and crafted with love by people working on their free time.\n\nSupport the development by watching an ad, or buy Smart AutoClicker Pro to remove ads forever!</string>
+    <string name="message_billing">This application is open source and crafted with love by people working on their free time.\n\n
+        Support the development by watching an ad, or buy Smart AutoClicker Pro to remove ads forever!</string>
+    <string name="message_billing_success">Thank you for buying\nSmart AutoClicker Pro !</string>
 
     <string name="button_text_watch_ad">Watch an Ad</string>
     <string name="button_text_watch_ad_error">Ad error</string>
@@ -31,6 +31,5 @@
     <string name="button_text_buy_pro_error">Cannot purchase</string>
     <string name="button_text_visit_github">Visit our GitHub</string>
     <string name="button_text_trial">%1$d minutes trial</string>
-
 
 </resources>
