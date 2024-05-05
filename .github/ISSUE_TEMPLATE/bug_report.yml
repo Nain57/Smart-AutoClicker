@@ -5,11 +5,6 @@ labels: ["bug"]
 assignees:
   - Nain57
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
-
   - type: input
     id: app-version
     attributes:
@@ -53,7 +48,9 @@ body:
     id: what-happened
     attributes:
       label: Describe what happened?
-      description: Describe precise steps to reproduce the issue
+      description: |
+        Describe precise steps to reproduce the issue. You can attach screenshots showing the problem, or a scenario \
+        backup zip file with simple steps reproducing the issue.
       placeholder: Tell us what you see!
     validations:
       required: true
@@ -61,12 +58,8 @@ body:
   - type: textarea
     id: what-should-happened
     attributes:
-      label: Describe what should happen?
+      label: Describe what should have happened?
       description: Describe what you expect to happen
       placeholder: Tell us own you think the application should have reacted
     validations:
       required: true
-
-  - type: markdown
-    attributes:
-      value: "Thanks for completing our form!\nPlease take time to add any helpful resources such as screenshots or scenario backup as a comment once your ticket is created"
