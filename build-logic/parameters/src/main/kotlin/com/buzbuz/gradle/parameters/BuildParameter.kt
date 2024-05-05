@@ -17,7 +17,6 @@
 package com.buzbuz.gradle.parameters
 
 import com.android.build.api.dsl.LibraryProductFlavor
-import com.android.build.api.dsl.VariantDimension
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
@@ -66,7 +65,9 @@ class BuildParameter(private val project: Project, private val name: String, pri
         )
     }
 
-    fun asManifestPlaceHolder(variant: VariantDimension, default: String? = null) {
+    fun asManifestPlaceHolder(variant: LibraryProductFlavor, default: String? = null) {
+        if (!project.isBuildForVariant(variant.name)) return
+
         if (value == null && default == null)
             throw GradleException("ERROR: Build property $name not found, cannot set manifest placeholder.")
 
