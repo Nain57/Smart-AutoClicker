@@ -1,6 +1,5 @@
 name: Bug report
 description: Create a report to help us improve
-title: '[Bug]: '
 labels: ["bug"]
 assignees:
   - Nain57
@@ -49,7 +48,7 @@ body:
     attributes:
       label: Describe what happened?
       description: |
-        Describe precise steps to reproduce the issue. You can attach screenshots showing the problem, or a scenario \
+        Describe precise steps to reproduce the issue. You can also attach screenshots showing the problem, or a scenario \
         backup zip file with simple steps reproducing the issue.
       placeholder: Tell us what you see!
     validations:
