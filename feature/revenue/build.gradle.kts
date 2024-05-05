@@ -68,8 +68,11 @@ android {
              * production ad unit ID.
              */
             buildParameters["adsUnitId"].apply {
-                asManifestPlaceHolder(this@create, default = "ca-app-pub-3940256099942544/8691691433")
-                asStringBuildConfigField(this@create, default = "ca-app-pub-3940256099942544/8691691433")
+                val defaultAdsUnitId =
+                    if (buildParameters.isBuildForVariant("release")) null
+                    else "ca-app-pub-3940256099942544/8691691433"
+                asManifestPlaceHolder(this@create, default = defaultAdsUnitId)
+                asStringBuildConfigField(this@create, default = defaultAdsUnitId)
             }
 
             /**
