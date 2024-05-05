@@ -29,7 +29,7 @@ body:
     attributes:
       label: Is it a duplicate?
       description: |
-        I have checked if this feature wasn't already requested in another ticket.
+        I have checked if this feature was not already requested in another ticket.
       options:
-        - label: No
+        - label: There is no duplicates
           required: true
