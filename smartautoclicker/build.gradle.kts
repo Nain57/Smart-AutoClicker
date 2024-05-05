@@ -32,23 +32,6 @@ android {
         versionName = "2.4.2"
     }
 
-    signingConfigs {
-        create("release") {
-            storeFile = file("./smartautoclicker.jks")
-            storePassword = buildParameters["signingStorePassword"].asString()
-            keyAlias = buildParameters["signingKeyAlias"].asString()
-            keyPassword = buildParameters["signingKeyPassword"].asString()
-        }
-    }
-
-    buildTypes {
-        debug {
-            if (buildParameters.isBuildForVariant("fDroidDebug")) {
-                applicationIdSuffix = ".debug"
-            }
-        }
-    }
-
     flavorDimensions += listOf("version")
     productFlavors {
         create("fDroid") {
@@ -58,7 +41,27 @@ android {
             dimension = "version"
         }
     }
+
+    if (buildParameters.isBuildForVariant("fDroidDebug")) {
+        buildTypes {
+            debug {
+                applicationIdSuffix = ".debug"
+            }
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("./smartautoclicker.jks")
+            storePassword = buildParameters["signingStorePassword"].asString()
+            keyAlias = buildParameters["signingKeyAlias"].asString()
+            keyPassword = buildParameters["signingKeyPassword"].asString()
+        }
+    }
 }
+
+// Apply signature convention after declaring the signingConfigs
+apply { plugin(libs.plugins.buzbuz.androidSigning.get().pluginId) }
 
 // Only apply gms/firebase plugins if we are building for the play store
 if (buildParameters.isBuildForVariant("playStoreRelease")) {

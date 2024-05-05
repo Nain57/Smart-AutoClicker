@@ -25,7 +25,7 @@ import org.gradle.api.Project
 class BuildParameter(private val project: Project, private val name: String, private val value: String?) {
 
     fun asString(): String? {
-        if (value == null) project.logger.warn("WARNING: Build property $name not found.")
+        if (value == null) project.logger.info("INFO: Build property $name not found.")
         return value
     }
 

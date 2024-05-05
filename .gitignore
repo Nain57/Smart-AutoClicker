@@ -83,7 +83,3 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-
-# signing
-signing.properties
-smartautoclicker/smartautoclicker.jks

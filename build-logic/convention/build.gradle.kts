@@ -72,6 +72,11 @@ gradlePlugin {
             implementationClass = "com.buzbuz.gradle.convention.AndroidUnitTestConventionPlugin"
         }
 
+        register("androidSigning") {
+            id = "com.buzbuz.gradle.android.signing"
+            implementationClass = "com.buzbuz.gradle.convention.AndroidSigningConvention"
+        }
+
         register("crashlytics") {
             id = "com.buzbuz.gradle.crashlytics"
             implementationClass = "com.buzbuz.gradle.convention.CrashlyticsConventionPlugin"
