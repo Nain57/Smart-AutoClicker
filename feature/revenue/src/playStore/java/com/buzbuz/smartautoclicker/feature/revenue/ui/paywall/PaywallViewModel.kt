@@ -49,6 +49,7 @@ internal class AdsLoadingViewModel @Inject constructor(
     ) { purchaseState, adsState, info ->
         when {
             purchaseState == PurchaseState.PURCHASED -> DialogState.Purchased
+            adsState == AdState.SHOWING -> DialogState.AdShowing
             adsState == AdState.VALIDATED -> DialogState.AdWatched
             else -> DialogState.NotPurchased(
                 trialDurationMinutes = TRIAL_SESSION_DURATION_DURATION.inWholeMinutes.toInt(),
@@ -80,6 +81,8 @@ internal sealed class DialogState {
     ): DialogState()
 
     internal data object Purchased : DialogState()
+
+    internal data object AdShowing : DialogState()
 
     internal data object AdWatched : DialogState()
 }

@@ -105,6 +105,32 @@
             app:layout_constraintTop_toBottomOf="@id/button_watch_ad"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_ad_watched"
+            style="@style/AppTheme.Widget.CircularProgressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/banner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="invisible"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_ad_watched"
+            style="@style/AppTheme.TextAppearance.DisplaySmall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:gravity="center"
+            android:text="@string/header_starting_detection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/progress_ad_watched"
+            android:visibility="invisible"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

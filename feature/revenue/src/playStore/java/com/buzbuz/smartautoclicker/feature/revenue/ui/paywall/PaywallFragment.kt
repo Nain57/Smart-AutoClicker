@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.revenue.ui.paywall
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -38,7 +40,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 internal class PaywallFragment : DialogFragment() {
@@ -99,14 +103,17 @@ internal class PaywallFragment : DialogFragment() {
         when (state) {
             is DialogState.NotPurchased -> toNotPurchasedState(state)
             DialogState.Purchased -> toPurchasedState()
-            DialogState.AdWatched -> dismiss()
+            DialogState.AdShowing -> toAdShowingState()
+            DialogState.AdWatched -> toAdWatchedState()
         }
     }
 
     private fun toNotPurchasedState(state: DialogState.NotPurchased) {
         viewBinding.apply {
             purchaseText.visibility = View.VISIBLE
-            purchasedText.visibility = View.GONE
+            purchasedText.visibility = View.INVISIBLE
+            textAdWatched.visibility = View.INVISIBLE
+            progressAdWatched.visibility = View.INVISIBLE
 
             buttonTrial.visibility = View.VISIBLE
             buttonTrial.text = requireContext().getString(R.string.button_text_trial, state.trialDurationMinutes)
@@ -114,6 +121,7 @@ internal class PaywallFragment : DialogFragment() {
             buttonWatchAd.root.visibility = View.VISIBLE
             buttonWatchAd.setState(state.adButtonState)
 
+            buttonBuy.root.visibility = View.VISIBLE
             buttonBuy.setState(state.purchaseButtonState)
             buttonBuy.setOnClickListener { activity?.let(viewModel::launchPlayStoreBillingFlow) }
         }
@@ -123,14 +131,57 @@ internal class PaywallFragment : DialogFragment() {
         viewBinding.apply {
             purchaseText.visibility = View.INVISIBLE
             purchasedText.visibility = View.VISIBLE
+            textAdWatched.visibility = View.INVISIBLE
+            progressAdWatched.visibility = View.INVISIBLE
 
-            buttonTrial.visibility = View.GONE
-            buttonWatchAd.root.visibility = View.GONE
+            buttonTrial.visibility = View.INVISIBLE
+            buttonWatchAd.root.visibility = View.INVISIBLE
 
+            buttonBuy.root.visibility = View.VISIBLE
             buttonBuy.setState(
                 LoadableButtonState.Loaded.Enabled(requireContext().getString(R.string.button_text_understood))
             )
             buttonBuy.setOnClickListener { dismiss() }
         }
+    }
+
+    private fun toAdShowingState() {
+        viewBinding.apply {
+            purchaseText.visibility = View.INVISIBLE
+            purchasedText.visibility = View.INVISIBLE
+            textAdWatched.visibility = View.INVISIBLE
+            progressAdWatched.show()
+
+            buttonTrial.visibility = View.INVISIBLE
+            buttonWatchAd.root.visibility = View.INVISIBLE
+            buttonBuy.root.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun toAdWatchedState() {
+        viewBinding.apply {
+            purchaseText.visibility = View.INVISIBLE
+            purchasedText.visibility = View.INVISIBLE
+            textAdWatched.visibility = View.VISIBLE
+
+            textAdWatched.animateShow()
+            progressAdWatched.show()
+
+            buttonTrial.visibility = View.INVISIBLE
+            buttonWatchAd.root.visibility = View.INVISIBLE
+            buttonBuy.root.visibility = View.INVISIBLE
+        }
+
+        lifecycleScope.launch {
+            delay(1.seconds)
+            dismiss()
+        }
+    }
+
+    private fun View.animateShow() {
+        alpha = 0f
+        visibility = View.VISIBLE
+        animate().alpha(1f)
+            .setDuration(250)
     }
 }

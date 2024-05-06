@@ -16,6 +16,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <string name="header_starting_detection">开始检测</string>
+
     <string name="message_billing">本应用程序是开源软件，由人们利用业余时间精心制作而成。\n\n请观看广告以支持开发，或购买 Smart AutoClicker Pro 以永久去除广告！</string>
     <string name="message_billing_success">感谢您购买\nSmart AutoClicker Pro！</string>
 

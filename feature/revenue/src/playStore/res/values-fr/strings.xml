@@ -16,6 +16,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <string name="header_starting_detection">Démarrage de la détéction</string>
+
     <string name="message_billing">Cette application est open source et créée avec amour par des personnes travaillant sur leur temps libre.\n\n
         Soutenez le développement en regardant une publicité, ou achetez Smart AutoClicker Pro pour supprimer les publicités pour toujours !</string>
     <string name="message_billing_success">Merci d\'avoir acheté\nSmart AutoClicker Pro !</string>

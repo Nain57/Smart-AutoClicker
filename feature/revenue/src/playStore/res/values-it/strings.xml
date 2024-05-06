@@ -16,6 +16,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <string name="header_starting_detection">Rilevamento iniziale</string>
+
     <string name="message_billing">Questa applicazione è open source e realizzata con amore da persone che lavorano nel loro tempo libero.\n\n
         Sostenete lo sviluppo guardando un annuncio, oppure acquistate Smart AutoClicker Pro per rimuovere gli annunci per sempre!</string>
     <string name="message_billing_success">Grazie per l\'acquisto\nSmart AutoClicker Pro!</string>

@@ -19,6 +19,8 @@
     <string name="dialog_title_billing" translatable="false">Smart AutoClicker Pro</string>
 
     <string name="header_billing" translatable="false">Smart AutoClicker Pro</string>
+    <string name="header_starting_detection">Starting detection</string>
+
 
     <string name="message_billing">This application is open source and crafted with love by people working on their free time.\n\n
         Support the development by watching an ad, or buy Smart AutoClicker Pro to remove ads forever!</string>
