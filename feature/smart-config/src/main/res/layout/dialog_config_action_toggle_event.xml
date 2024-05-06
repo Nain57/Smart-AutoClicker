@@ -59,14 +59,6 @@
                     android:layout_marginVertical="@dimen/margin_vertical_large">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/toggle_type_title"
-                        style="@style/AppTheme.TextAppearance.CardTitle"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:text="@string/item_title_toggle_type" />
-
-                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/enable_all_text"
                         style="@style/AppTheme.TextAppearance.BodyLarge"
                         android:layout_width="match_parent"
@@ -81,9 +73,9 @@
                         android:id="@+id/toggle_all_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_vertical_extra_large"
+                        android:layout_marginTop="@dimen/margin_vertical_default"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/toggle_type_title"/>
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/toggle_all_subtext"
@@ -92,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_vertical_large"
                         android:gravity="center"
-                        android:lines="2"
+                        android:lines="3"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/toggle_all_button"
