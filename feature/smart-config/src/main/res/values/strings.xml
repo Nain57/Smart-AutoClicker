@@ -26,7 +26,6 @@
     <string name="dialog_overlay_title_click">Click</string>
     <string name="dialog_overlay_title_condition_config">Condition</string>
     <string name="dialog_overlay_title_condition_selection">Select a condition</string>
-    <string name="dialog_overlay_title_end_condition_config">End Condition</string>
     <string name="dialog_overlay_title_event_config">Event</string>
     <string name="dialog_overlay_title_event_selection">Select an event</string>
     <string name="dialog_overlay_title_intent" translatable="false">Intent</string>
@@ -45,7 +44,7 @@
     <string name="dialog_overlay_title_broadcast_received">Broadcast received</string>
     <string name="dialog_overlay_title_counter_reached">Counter value</string>
     <string name="dialog_overlay_title_image_event_config">Screen Event</string>
-    <string name="dialog_overlay_title_trigger_event_config">Event</string>
+    <string name="dialog_overlay_title_trigger_event_config">Trigger</string>
 
     <!--
       - Text for menu items.
@@ -55,7 +54,6 @@
     <string name="menu_item_title_cancel">Cancel</string>
     <string name="menu_item_title_search">Search</string>
     <string name="menu_item_title_simple">Simple</string>
-    <string name="menu_item_title_events">Events</string>
     <string name="menu_item_title_config">Config</string>
     <string name="menu_item_title_more">More</string>
     <string name="menu_item_title_conditions">Conditions</string>
@@ -105,7 +103,7 @@
     <string name="item_desc_on_timer_reached">%1$s after event is enabled</string>
     <string name="item_desc_broadcast_received">Fulfilled when a Broadcast is received</string>
     <string name="item_desc_counter_reached">Verify the value of a counter modified by an Action</string>
-    <string name="item_desc_timer_reached">Fulfilled after a defined time from this event activation</string>
+    <string name="item_desc_timer_reached">Fulfilled after a defined time from this trigger activation</string>
     <string name="item_error_action_invalid_toggle_event_target">Target event not found</string>
     <string name="item_error_action_invalid_change_counter">Counter is invalid</string>
     <string name="item_title_click">Click</string>
@@ -139,19 +137,16 @@
     <string name="message_empty_actions">No actions !</string>
     <string name="message_empty_trigger_conditions">No conditions !</string>
     <string name="message_empty_image_conditions">No screen conditions !</string>
-    <string name="message_empty_end_condition_config_event_none_in_scenario">No Event created in the scenario</string>
-    <string name="message_empty_end_condition_config_event_no_selection">No Event selected</string>
     <string name="message_empty_image_event_list">No screen events !</string>
-    <string name="message_empty_trigger_event_list">No events !</string>
+    <string name="message_empty_trigger_event_list">No trigger events !</string>
     <string name="message_empty_counter_name_list">No counter defined</string>
 
     <!--
       - Secondary empty list messages.
       - Views handles any length here, you can use more verbosity than the regular empty text.
       -->
-    <string name="message_empty_secondary_end_condition_no_events">You need at least one event to create an end condition for your scenario</string>
-    <string name="message_empty_secondary_screen_event_list">A screen event contains a set of actions executed when a specific condition is detected on the screen.\nYou need at least one event or screen event in your scenario to execute it.</string>
-    <string name="message_empty_secondary_trigger_event_list">An event contains a set of actions executed when a set of custom conditions are met.\nYou need at least one event or screen event in your scenario to execute it.</string>
+    <string name="message_empty_secondary_screen_event_list">A screen event contains a set of actions executed when a specific condition is detected on the screen.\nYou need at least one screen or trigger event in your scenario to execute it.</string>
+    <string name="message_empty_secondary_trigger_event_list">A trigger event contains a set of actions executed when a set of custom conditions are met.\nYou need at least one screen or trigger event in your scenario to execute it.</string>
     <string name="message_empty_secondary_trigger_condition_list">A condition is a custom criteria for starting an action.\nYou need at least one condition in your event.</string>
     <string name="message_empty_secondary_image_condition_list">An screen condition is a part of a screenshot that will be searched on each frames displayed by your phone screen.\nYou need at least one condition in your event.</string>
     <string name="message_empty_secondary_action_list">An action is an interaction (click, swipe…) with your phone triggered when the created conditions are fulfilled.\nYou need at least one action in your event.</string>
@@ -163,7 +158,6 @@
       -->
     <string name="message_condition_threshold">%1$d%%</string>
     <string name="message_event_copy_with_toggle_action_from_another_scenario">This event have one or more toggle event actions referencing an event from another scenario.\nYou will have to update their target events before saving your scenario.</string>
-    <string name="message_event_delete_associated_end_condition">This event have one or more end conditions referencing it. Deleting this event will delete the associated end conditions as well.\nAre you sure ?</string>
     <string name="message_event_delete_associated_action">This event have one or more actions referencing it. Deleting this event will delete the associated actions as well.\nAre you sure ?</string>
     <string name="message_condition_delete_associated_action">This condition have one or more actions referencing it. Deleting this condition will delete the associated actions as well.\nAre you sure ?</string>
     <string name="message_tutorial_start">Learn how to use Smart AutoClicker</string>
@@ -178,7 +172,6 @@
     <string name="section_title_condition_detection_details">Detection details</string>
     <string name="section_title_condition_threshold">Tolerated difference</string>
     <string name="section_title_detection_quality_title">Detection quality</string>
-    <string name="section_title_end_condition">End conditions</string>
     <string name="section_title_intent_extras_value">Value</string>
     <string name="section_title_start_application">Start application</string>
     <string name="section_title_tutorial">Tutorial</string>
@@ -194,6 +187,8 @@
     <string name="list_header_copy_event_all">Events from all scenarios</string>
     <string name="list_header_copy_conditions_this">Conditions from this event</string>
     <string name="list_header_copy_conditions_all">Conditions from all events</string>
+    <string name="list_header_image_events">Screen Events</string>
+    <string name="list_header_trigger_events">Trigger Events</string>
 
     <!--
       - SearchView hint
@@ -260,10 +255,6 @@
     <string name="dropdown_item_title_condition_and">All</string>
     <string name="dropdown_helper_text_condition_or">Only one condition must be fulfilled to trigger the actions</string>
     <string name="dropdown_helper_text_condition_and">All conditions must be fulfilled to trigger the actions</string>
-
-    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
-    <string name="dropdown_helper_text_end_condition_or">Only one condition must be fulfilled to stop the scenario</string>
-    <string name="dropdown_helper_text_end_condition_and">All conditions must be fulfilled to stop the scenario</string>
 
     <!-- Dropdown field for selecting the condition detection type. -->
     <string name="dropdown_label_condition_detection_type">Detection type</string>

@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -24,7 +25,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +35,7 @@ import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class EventTogglesViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
@@ -56,10 +60,10 @@ class EventTogglesViewModel @Inject constructor(
         combine(editionRepository.editionState.allEditedEvents, userModifications) { editedEvents, modifications ->
             buildList {
                 val imageEvents = mutableListOf<EventTogglesListItem>().apply {
-                    add(EventTogglesListItem.Header("ImageEvents")) // TODO handle title
+                    add(EventTogglesListItem.Header(context.getString(R.string.list_header_image_events)))
                 }
                 val triggerEvents = mutableListOf<EventTogglesListItem>().apply {
-                    add(EventTogglesListItem.Header("TriggerEvents")) // TODO handle title
+                    add(EventTogglesListItem.Header(context.getString(R.string.list_header_trigger_events)))
                 }
 
                 editedEvents

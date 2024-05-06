@@ -26,7 +26,6 @@
     <string name="dialog_overlay_title_click">Clic</string>
     <string name="dialog_overlay_title_condition_config">Condition</string>
     <string name="dialog_overlay_title_condition_selection">Choisir une condition</string>
-    <string name="dialog_overlay_title_end_condition_config">Condition de fin</string>
     <string name="dialog_overlay_title_event_config">Évènement</string>
     <string name="dialog_overlay_title_event_selection">Choisir un évènement</string>
     <string name="dialog_overlay_title_pause">Pause</string>
@@ -41,7 +40,7 @@
     <string name="dialog_overlay_title_broadcast_received">Broadcast reçu</string>
     <string name="dialog_overlay_title_counter_reached">Valeur du compteur</string>
     <string name="dialog_overlay_title_image_event_config">Évènement d\'écran</string>
-    <string name="dialog_overlay_title_trigger_event_config">Évènement</string>
+    <string name="dialog_overlay_title_trigger_event_config">Déclencheur</string>
 
     <!--
       - Text for menu items.
@@ -51,7 +50,6 @@
     <string name="menu_item_title_search">Rechercher</string>
     <string name="menu_item_title_simple">Simple</string>
     <string name="menu_item_title_advanced">Avancé</string>
-    <string name="menu_item_title_events">Évènements</string>
     <string name="menu_item_title_config">Configuration</string>
     <string name="menu_item_title_more">Plus</string>
     <string name="menu_item_title_actions">Actions</string>
@@ -100,7 +98,7 @@
     <string name="item_desc_on_timer_reached">%1$s après l\'activation de l\'évènement</string>
     <string name="item_desc_broadcast_received">Remplie quand un Broadcast est reçu</string>
     <string name="item_desc_counter_reached">Vérifie la valeur d\'un compteur modifié par une Action</string>
-    <string name="item_desc_timer_reached">Remplie après un temps défini depuis l\'activation de cet évènement</string>
+    <string name="item_desc_timer_reached">Remplie après un délai défini depuis l\'activation de ce déclencheur</string>
     <string name="item_error_action_invalid_toggle_event_target">Évènement cible non trouvé</string>
     <string name="item_error_action_invalid_change_counter">Le compteur est invalid</string>
     <string name="item_title_click">Clic</string>
@@ -134,19 +132,16 @@
     <string name="message_empty_actions">Aucune action !</string>
     <string name="message_empty_trigger_conditions">Aucune condition !</string>
     <string name="message_empty_image_conditions">Aucune condition d\'écran !</string>
-    <string name="message_empty_end_condition_config_event_none_in_scenario">Pas d\'évènement créé dans ce scenario</string>
-    <string name="message_empty_end_condition_config_event_no_selection">Pas d\'évènement selectionné</string>
     <string name="message_empty_image_event_list">Aucun évènement d\'écran !</string>
-    <string name="message_empty_trigger_event_list">Aucun évènement !</string>
+    <string name="message_empty_trigger_event_list">Aucun événement déclencheurs !</string>
     <string name="message_empty_counter_name_list">Pas de compteurs définis</string>
 
     <!--
       - Secondary empty list messages.
       - Views handles any length here, you can use more verbosity than the regular empty text.
       -->
-    <string name="message_empty_secondary_end_condition_no_events">Vous avez besoin d\'au moins un évènement pour créer une condition de fin pour votre scénario</string>
-    <string name="message_empty_secondary_screen_event_list">Un évènement d\'écran est un ensemble d\'actions exécutées lorsque qu\'une condition spécifique est détectée sur l\'écran.  Vous avez besoin d\'au moins un évènement ou évènement d\'écran dans votre scénario pour l\'exécuter.</string>
-    <string name="message_empty_secondary_trigger_event_list">Un évènement est un ensemble d\'actions exécutées lorsque que des conditions personnalisées sont remplies.\nVous avez besoin d\'au moins un évènement ou évènement d\'écran dans votre scénario pour l\'exécuter.</string>
+    <string name="message_empty_secondary_screen_event_list">Un événement d\'écran contient un ensemble d\'actions exécutées lorsqu\'une condition spécifique est détectée à l\'écran.\nVous avez besoin d\'au moins un événement d\'écran ou de déclenchement dans votre scénario pour l\'exécuter.</string>
+    <string name="message_empty_secondary_trigger_event_list">Un événement déclencheur contient un ensemble d\'actions exécutées lorsqu\'un ensemble de conditions personnalisées sont remplies.\nVous avez besoin d\'au moins un événement d\'écran ou de déclenchement dans votre scénario pour l\'exécuter.</string>
     <string name="message_empty_secondary_trigger_condition_list">Une condition est un critère personnalisé pour lancer une action.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
     <string name="message_empty_secondary_image_condition_list">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
     <string name="message_empty_secondary_action_list">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.\nVous avez besoin d\'au moins une action dans votre évènement.</string>
@@ -158,7 +153,6 @@
       -->
     <string name="message_condition_threshold">%1$d%%</string>
     <string name="message_event_copy_with_toggle_action_from_another_scenario">Cet évènement possède une ou plusieures actions de changement d\'état référenceant un évènement d\'un autre scénario.\nVous devrez mettre à jour ces actions avant de pouvoir sauvegarder le scénario.</string>
-    <string name="message_event_delete_associated_end_condition">Cet évènement est référencé par une ou plusieures conditions de fin. Le supprimer supprimera aussi les conditions de fin associées.\nÊtes vous sûr ?</string>
     <string name="message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
     <string name="message_condition_delete_associated_action">Cette condition est référencée par une ou plusieures actions. La supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
     <string name="message_tutorial_start">Apprenez à utiliser Smart AutoClicker</string>
@@ -173,7 +167,6 @@
     <string name="section_title_condition_detection_details">Détails de la détection</string>
     <string name="section_title_condition_threshold">Différence tolérée</string>
     <string name="section_title_detection_quality_title">Qualité de détection</string>
-    <string name="section_title_end_condition">Conditions de fin</string>
     <string name="section_title_intent_extras_value">Valeur</string>
     <string name="section_title_start_application">Lancer une application</string>
     <string name="section_title_tutorial">Tutoriel</string>
@@ -189,6 +182,8 @@
     <string name="list_header_copy_event_all">Évènements de tous les scenarios</string>
     <string name="list_header_copy_conditions_this">Condition de cet évènement</string>
     <string name="list_header_copy_conditions_all">Conditions de tous les évènements</string>
+    <string name="list_header_image_events">Évènements d\'écran</string>
+    <string name="list_header_trigger_events">Évènements déclencheurs</string>
 
     <!--
       - SearchView hint
@@ -254,10 +249,6 @@
     <string name="dropdown_item_title_condition_and">Toutes</string>
     <string name="dropdown_helper_text_condition_or">Une seule des conditions doit être remplie pour déclencher les actions</string>
     <string name="dropdown_helper_text_condition_and">Toutes les conditions doivent être remplies pour déclencher les actions</string>
-
-    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
-    <string name="dropdown_helper_text_end_condition_or">Une seule des conditions doit être remplie pour arrêter le scenario</string>
-    <string name="dropdown_helper_text_end_condition_and">Toutes les conditions doivent être remplies pour arrêter le scenario</string>
 
     <!-- Dropdown field for selecting the condition detection type. -->
     <string name="dropdown_label_condition_detection_type">Type de détection</string>
