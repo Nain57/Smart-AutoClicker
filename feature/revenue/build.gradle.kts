@@ -56,8 +56,12 @@ android {
              */
             buildParameters["consentTestGeography"].asIntBuildConfigField(this, default = 0)
 
+            /** The identifier for the application for the AdMob SDK */
+            buildParameters["adsApplicationId"].apply {
+                asManifestPlaceHolder(this@create)
+            }
             /**
-             * The advertisement id for the AdMob SDK.
+             * The advertisement block id for the AdMob SDK.
              * Should have the following syntax: ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
              *
              * For debug builds, you can use one of the following Sample ad unit ID:
@@ -71,7 +75,6 @@ android {
                 val defaultAdsUnitId =
                     if (buildParameters.isBuildForVariant("release")) null
                     else "ca-app-pub-3940256099942544/8691691433"
-                asManifestPlaceHolder(this@create, default = defaultAdsUnitId)
                 asStringBuildConfigField(this@create, default = defaultAdsUnitId)
             }
 
