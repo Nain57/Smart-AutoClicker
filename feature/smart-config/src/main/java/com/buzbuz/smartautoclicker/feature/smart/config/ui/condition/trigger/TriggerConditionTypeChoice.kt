@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.DialogChoice
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.DialogChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 

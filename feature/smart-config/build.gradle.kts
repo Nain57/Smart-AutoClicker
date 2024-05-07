@@ -48,6 +48,7 @@ dependencies {
     implementation(project(":core:common:android"))
     implementation(project(":core:common:base"))
     implementation(project(":core:common:display"))
+    implementation(project(":core:common:overlays"))
     implementation(project(":core:common:ui"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))

@@ -20,7 +20,7 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.DialogChoice
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.DialogChoice
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType

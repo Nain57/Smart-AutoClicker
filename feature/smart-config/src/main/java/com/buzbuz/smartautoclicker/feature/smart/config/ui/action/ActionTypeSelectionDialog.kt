@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action
 
 import android.view.View
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionTypeChoice
