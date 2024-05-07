@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.di
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenuModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.ActionTypeSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
