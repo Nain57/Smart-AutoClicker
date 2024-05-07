@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
@@ -48,33 +47,23 @@ class DebugModel @Inject constructor(
         debugging && sharedPreferences.getIsDebugViewEnabled(context)
     }
 
-    /** The coordinates of the last positive detection. */
-    val debugLastPositiveCoordinates: Flow<Rect> = debuggingRepository.lastResult
-        .map { debugInfo ->
-            if (debugInfo != null && debugInfo.isDetected) debugInfo.conditionArea
-            else Rect()
-        }
-
     /** The info on the last positive detection. */
     val debugLastPositive: Flow<LastPositiveDebugInfo> = debuggingRepository.lastPositiveInfo
-        .flatMapLatest { debugInfo ->
-            flow {
-                if (debugInfo == null) {
-                    emit(LastPositiveDebugInfo())
-                    return@flow
-                }
-
-                emit(
-                    LastPositiveDebugInfo(
-                        debugInfo.event.name,
-                        debugInfo.condition.name,
-                        debugInfo.confidenceRate.formatConfidenceRate(),
-                    )
-                )
-
-                delay(POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)
+        .transformLatest { debugInfo ->
+            if (debugInfo == null) {
                 emit(LastPositiveDebugInfo())
+                return@transformLatest
             }
+
+            emit(
+                LastPositiveDebugInfo(
+                    debugInfo.event.name,
+                    debugInfo.condition.name,
+                    debugInfo.confidenceRate.formatConfidenceRate(),
+                )
+            )
+            delay(POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)
+            emit(LastPositiveDebugInfo())
         }
 }
 

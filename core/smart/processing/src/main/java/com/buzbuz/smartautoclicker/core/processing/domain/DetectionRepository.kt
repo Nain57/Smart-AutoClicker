@@ -112,7 +112,7 @@ class DetectionRepository @Inject constructor(
         detectorEngine.startScreenRecord(context, resultCode, data, androidExecutor)
     }
 
-    suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener, autoStopDuration: Duration? = null) {
+    suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener?, autoStopDuration: Duration? = null) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getImageEvents(id)

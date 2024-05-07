@@ -56,8 +56,13 @@ class DebuggingRepository @Inject constructor(
     val lastPositiveInfo: Flow<DebugInfo?> = debugEngine.currentInfo
         .filter { it?.isDetected ?: false }
 
-    /** The listener upon scenario detection progress. Must be set at detection start in order to get debugging info. */
-    val detectionProgressListener: ScenarioProcessingListener = debugEngine
+    /**
+     * The listener upon scenario detection progress.
+     * Must be set at detection start in order to get debugging info. If no debug features are enable, returns null.
+     */
+    fun getDebugDetectionListenerIfNeeded(context: Context): ScenarioProcessingListener? =
+        if (isDebugViewEnabled(context) || isDebugReportEnabled(context)) debugEngine
+        else null
 
     fun isDebugViewEnabled(context: Context): Boolean =
         sharedPreferences.getIsDebugViewEnabled(context)

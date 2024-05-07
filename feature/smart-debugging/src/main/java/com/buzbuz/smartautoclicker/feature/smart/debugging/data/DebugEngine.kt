@@ -160,8 +160,11 @@ internal class DebugEngine : ScenarioProcessingListener {
         }
 
         // Notify current detection progress
-        val conditionResults = results.getFirstImageDetectedResult() ?: return@withLock
-        if (instantData && conditionResults.haveBeenDetected) {
+        val conditionResults = results.getFirstImageDetectedResult() ?: let {
+            currentInfo.value = null
+            return@withLock
+        }
+        if (instantData) {
             val halfWidth = conditionResults.condition.area.width() / 2
             val halfHeight = conditionResults.condition.area.height() / 2
 
@@ -173,8 +176,9 @@ internal class DebugEngine : ScenarioProcessingListener {
                 conditionResults.position.y + halfHeight
             )
 
-            currentInfo.value = DebugInfo(event, conditionResults.condition, conditionResults.haveBeenDetected,
+            val info = DebugInfo(event, conditionResults.condition, conditionResults.haveBeenDetected,
                 conditionResults.position, conditionResults.confidenceRate, coordinates)
+            currentInfo.value = info
         }
     }
 
