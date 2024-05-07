@@ -136,7 +136,7 @@ class MainMenuModel @Inject constructor(
         viewModelScope.launch {
             detectionRepository.startDetection(
                 context,
-                debugRepository.detectionProgressListener,
+                debugRepository.getDebugDetectionListenerIfNeeded(context),
                 revenueRepository.consumeTrial(),
             )
         }
