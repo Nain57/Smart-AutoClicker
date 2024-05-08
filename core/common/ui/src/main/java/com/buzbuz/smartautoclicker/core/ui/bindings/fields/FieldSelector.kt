@@ -18,16 +18,22 @@ package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_DISABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_ENABLED
-import com.buzbuz.smartautoclicker.core.ui.bindings.setTextOrGone
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldSelectorBinding
 
 
 fun IncludeFieldSelectorBinding.setTitle(titleText: String) {
-    title.setTextOrGone(titleText)
+    titleAndDescription.setTitle(titleText)
 }
 
-fun IncludeFieldSelectorBinding.setDescription(descriptionText: String?) {
-    description.setTextOrGone(descriptionText)
+fun IncludeFieldSelectorBinding.setupDescriptions(descriptions: List<String>) {
+    titleAndDescription.setupDescriptions(descriptions)
+}
+
+fun IncludeFieldSelectorBinding.setDescription(descriptionIndex: Int) {
+    titleAndDescription.setDescription(descriptionIndex)
 }
 
 fun IncludeFieldSelectorBinding.setEnabled(isEnabled: Boolean) {

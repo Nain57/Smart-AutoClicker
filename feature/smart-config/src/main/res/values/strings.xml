@@ -208,6 +208,8 @@
     <string name="button_text_quality_precision">Precision</string>
     <string name="button_text_swipe_positions_select">Select the positions</string>
     <string name="button_dialog_modify">Modify</string>
+    <string name="button_text_and" translatable="false">AND</string>
+    <string name="button_text_or" translatable="false">"OR  "</string>
 
 
     <!--
@@ -251,8 +253,6 @@
 
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">Conditions</string>
-    <string name="dropdown_item_title_condition_or">One</string>
-    <string name="dropdown_item_title_condition_and">All</string>
     <string name="dropdown_helper_text_condition_or">Only one condition must be fulfilled to trigger the actions</string>
     <string name="dropdown_helper_text_condition_and">All conditions must be fulfilled to trigger the actions</string>
 

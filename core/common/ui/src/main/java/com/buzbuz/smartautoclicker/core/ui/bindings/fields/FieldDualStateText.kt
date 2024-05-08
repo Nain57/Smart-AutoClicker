@@ -16,29 +16,37 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.DualStateButtonTextConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setup
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setupDescriptions
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldSwitchBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldDualStateTextBinding
 
 
-fun IncludeFieldSwitchBinding.setTitle(titleText: String) {
+fun IncludeFieldDualStateTextBinding.setTitle(titleText: String) {
     titleAndDescription.setTitle(titleText)
 }
 
-fun IncludeFieldSwitchBinding.setupDescriptions(descriptions: List<String>) {
+fun IncludeFieldDualStateTextBinding.setupDescriptions(descriptions: List<String>) {
     titleAndDescription.setupDescriptions(descriptions)
 }
 
-fun IncludeFieldSwitchBinding.setDescription(descriptionIndex: Int) {
+fun IncludeFieldDualStateTextBinding.setDescription(descriptionIndex: Int) {
     titleAndDescription.setDescription(descriptionIndex)
 }
 
-fun IncludeFieldSwitchBinding.setChecked(isChecked: Boolean) {
-    toggleSwitch.isChecked = isChecked
+fun IncludeFieldDualStateTextBinding.setButtonConfig(config: DualStateButtonTextConfig) {
+    dualStateButton.setup(config)
 }
 
-fun IncludeFieldSwitchBinding.setOnClickListener(listener: (() -> Unit)?) {
-    if (listener == null) toggleSwitch.setOnClickListener(null)
-    else toggleSwitch.setOnClickListener { listener() }
+fun IncludeFieldDualStateTextBinding.setChecked(checkedId: Int) {
+    dualStateButton.setChecked(checkedId)
+}
+
+fun IncludeFieldDualStateTextBinding.setOnCheckedListener(listener: ((Int?) -> Unit)?) {
+    if (listener == null) dualStateButton.setOnCheckedListener(null)
+    else dualStateButton.setOnCheckedListener(listener)
 }

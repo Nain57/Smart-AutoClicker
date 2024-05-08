@@ -246,8 +246,6 @@
 
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="dropdown_label_condition_operator">需匹配的图像</string>
-    <string name="dropdown_item_title_condition_or">单一</string>
-    <string name="dropdown_item_title_condition_and">所有</string>
     <string name="dropdown_helper_text_condition_or">只要满足其中任意一个条件，就能够触发动作</string>
     <string name="dropdown_helper_text_condition_and">需要满足所有条件，才能触发动作</string>
 
