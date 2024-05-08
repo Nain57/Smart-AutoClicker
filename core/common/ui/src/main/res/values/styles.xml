@@ -71,7 +71,7 @@
     </style>
     <!-- Style for the secondary horizontal dividers. -->
     <style name="AppTheme.Widget.Divider.Horizontal">
-        <item name="android:layout_marginTop">@dimen/margin_vertical_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_default</item>
         <item name="android:layout_marginBottom">@dimen/margin_vertical_small</item>
         <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>
         <item name="android:layout_marginEnd">@dimen/margin_horizontal_default</item>
@@ -150,6 +150,18 @@
         <item name="android:minHeight">32dp</item>
         <item name="backgroundTint">@color/selector_button_checkable_background</item>
         <item name="iconTint">@color/selector_button_checkable_tint</item>
+    </style>
+    <!-- Style for segmented buttons with only text -->
+    <style name="AppTheme.Widget.SegmentedTextButtons" parent="@style/Widget.Material3.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">24dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="backgroundTint">@color/selector_button_checkable_background</item>
+        <item name="android:textColor">@color/selector_button_checkable_tint</item>
     </style>
     <!-- Style for the main floating action button. -->
     <style name="AppTheme.Widget.Fab" parent="@style/Widget.Material3.CompoundButton.MaterialSwitch">

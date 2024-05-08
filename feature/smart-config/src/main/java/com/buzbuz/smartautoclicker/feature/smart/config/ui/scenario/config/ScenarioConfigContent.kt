@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setOnTextChangedListener
@@ -66,6 +67,12 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
 
             fieldAntiDetection.apply {
                 setTitle(context.resources.getString(R.string.input_field_label_anti_detection))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.dropdown_helper_text_anti_detection_disabled),
+                        context.getString(R.string.dropdown_helper_text_anti_detection_enabled),
+                    )
+                )
                 setOnClickListener(viewModel::toggleRandomization)
             }
 
@@ -97,12 +104,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
     private fun updateRandomization(isEnabled: Boolean) {
         viewBinding.fieldAntiDetection.apply {
             setChecked(isEnabled)
-            setDescription(
-                context.getString(
-                    if (isEnabled) R.string.dropdown_helper_text_anti_detection_enabled
-                    else R.string.dropdown_helper_text_anti_detection_disabled
-                ),
-            )
+            setDescription(if (isEnabled) 1 else 0)
         }
     }
 

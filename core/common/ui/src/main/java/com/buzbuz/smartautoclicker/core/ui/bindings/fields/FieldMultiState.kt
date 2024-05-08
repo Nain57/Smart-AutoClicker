@@ -20,16 +20,22 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConf
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setup
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setTextOrGone
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldMultiStateBinding
 
 
 fun IncludeFieldMultiStateBinding.setTitle(titleText: String) {
-    title.setTextOrGone(titleText)
+    titleAndDescription.setTitle(titleText)
 }
 
-fun IncludeFieldMultiStateBinding.setDescription(descriptionText: String?) {
-    description.setTextOrGone(descriptionText)
+fun IncludeFieldMultiStateBinding.setupDescriptions(descriptions: List<String>) {
+    titleAndDescription.setupDescriptions(descriptions)
+}
+
+fun IncludeFieldMultiStateBinding.setDescription(descriptionIndex: Int) {
+    titleAndDescription.setDescription(descriptionIndex)
 }
 
 fun IncludeFieldMultiStateBinding.setButtonConfig(config: MultiStateButtonConfig) {

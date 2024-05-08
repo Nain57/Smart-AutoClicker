@@ -21,17 +21,14 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
@@ -51,47 +48,13 @@ class EventConfigViewModel @Inject constructor(
     private val configuredEvent = editionRepository.editionState.editedEventState
         .mapNotNull { it.value }
 
-    private val enableEventItem = DropdownItem(
-        title = R.string.dropdown_item_title_event_state_enabled,
-        helperText = R.string.dropdown_helper_text_event_state_enabled,
-    )
-    private val disableEventItem = DropdownItem(
-        title= R.string.dropdown_item_title_event_state_disabled,
-        helperText = R.string.dropdown_helper_text_event_state_disabled,
-    )
-    val eventStateDropdownItems: List<DropdownItem> =
-        listOf(enableEventItem, disableEventItem)
-
     /** The enabled on start state of the configured event. */
-    val eventStateItem: Flow<DropdownItem> = configuredEvent
-        .map { event ->
-            when (event.enabledOnStart) {
-                true -> enableEventItem
-                false -> disableEventItem
-            }
-        }
-        .filterNotNull()
-
-    val conditionAndItem = DropdownItem(
-        title = R.string.dropdown_item_title_condition_and,
-        helperText = R.string.dropdown_helper_text_condition_and,
-    )
-    private val conditionOrItem = DropdownItem(
-        title= R.string.dropdown_item_title_condition_or,
-        helperText = R.string.dropdown_helper_text_condition_or,
-    )
-    val conditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
+    val eventEnabledOnStart: Flow<Boolean> = configuredEvent
+        .map { event -> event.enabledOnStart }
 
     /** The event condition operator currently edited by the user. */
-    val conditionOperator: Flow<DropdownItem> = configuredEvent
-        .map { event ->
-            when (event.conditionOperator) {
-                AND -> conditionAndItem
-                OR -> conditionOrItem
-                else -> null
-            }
-        }
-        .filterNotNull()
+    val conditionOperator: Flow<Int> = configuredEvent
+        .map { event -> event.conditionOperator }
 
     /** The event name value currently edited by the user. */
     val eventName: Flow<String?> = configuredEvent
@@ -123,28 +86,16 @@ class EventConfigViewModel @Inject constructor(
     }
 
     /** Toggle the end condition operator between AND and OR. */
-    fun setConditionOperator(operatorItem: DropdownItem) {
+    fun setConditionOperator(@ConditionOperator operator: Int) {
         updateEditedEvent { oldValue ->
-            oldValue.copyBase(
-                conditionOperator = when (operatorItem) {
-                    conditionAndItem -> AND
-                    conditionOrItem -> OR
-                    else -> return@updateEditedEvent null
-                }
-            )
+            oldValue.copyBase(conditionOperator = operator)
         }
     }
 
     /** Toggle the event state between true and false. */
-    fun setEventState(state: DropdownItem) {
+    fun toggleEventState() {
         updateEditedEvent { oldValue ->
-            oldValue.copyBase(
-                enabledOnStart = when (state) {
-                    enableEventItem -> true
-                    disableEventItem -> false
-                    else -> return@updateEditedEvent null
-                }
-            )
+            oldValue.copyBase(enabledOnStart = !oldValue.enabledOnStart)
         }
     }
 

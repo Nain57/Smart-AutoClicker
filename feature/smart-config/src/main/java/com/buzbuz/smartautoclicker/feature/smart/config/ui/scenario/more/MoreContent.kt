@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentMoreBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -55,22 +56,30 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
         viewBinding = ContentMoreBinding.inflate(LayoutInflater.from(context), container, false).apply {
             fieldStartTutorial.apply {
                 setTitle(context.getString(R.string.section_title_tutorial))
-                setDescription(context.getString(R.string.message_tutorial_start))
+                setupDescriptions(listOf(context.getString(R.string.message_tutorial_start)))
                 setOnClickListener(::onTutorialClicked)
             }
 
             fieldDebugOverlay.apply {
                 setTitle(context.getString(R.string.item_title_debug_show_view))
+                setupDescriptions(emptyList())
                 setOnClickListener(viewModel::toggleIsDebugViewEnabled)
             }
 
             fieldDebugReport.apply {
                 setTitle(context.getString(R.string.item_title_debug_generate_report))
+                setupDescriptions(emptyList())
                 setOnClickListener(viewModel::toggleIsDebugReportEnabled)
             }
 
             fieldShowReport.apply {
                 setTitle(context.getString(R.string.item_title_debug_show_report))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.item_title_debug_report_not_available),
+                        context.getString(R.string.item_title_debug_report_available),
+                    )
+                )
                 setOnClickListener { debounceUserInteraction { showDebugReport() } }
             }
         }
@@ -116,12 +125,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun updateDebugReportAvailability(isAvailable: Boolean) {
         viewBinding.fieldShowReport.apply {
             setEnabled(isAvailable)
-            setDescription(
-                context.getString(
-                    if (isAvailable) R.string.item_title_debug_report_available
-                    else R.string.item_title_debug_report_not_available
-                )
-            )
+            setDescription(if (isAvailable) 1 else 0)
         }
     }
 
