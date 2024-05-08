@@ -24,7 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog

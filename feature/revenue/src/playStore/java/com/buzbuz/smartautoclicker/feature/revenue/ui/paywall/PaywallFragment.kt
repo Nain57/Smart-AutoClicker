@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.revenue.ui.paywall
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -29,10 +27,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.ui.bindings.LoadableButtonState
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnClickListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setState
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setState
 import com.buzbuz.smartautoclicker.feature.revenue.R
 import com.buzbuz.smartautoclicker.feature.revenue.databinding.FragmentAdsLoadingDialogBinding
 

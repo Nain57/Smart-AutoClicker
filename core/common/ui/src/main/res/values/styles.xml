@@ -61,6 +61,22 @@
         <item name="dividerInsetStart">@dimen/margin_horizontal_default</item>
         <item name="dividerInsetEnd">@dimen/margin_horizontal_default</item>
     </style>
+    <!-- Style for the secondary vertical dividers. -->
+    <style name="AppTheme.Widget.Divider.Vertical">
+        <item name="android:layout_marginTop">@dimen/margin_vertical_default</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_default</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
+    </style>
+    <!-- Style for the secondary horizontal dividers. -->
+    <style name="AppTheme.Widget.Divider.Horizontal">
+        <item name="android:layout_marginTop">@dimen/margin_vertical_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_small</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
+    </style>
     <!-- Style for an indeterminate circular progress -->
     <style name="AppTheme.Widget.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator.Medium">
         <item name="android:layout_width">wrap_content</item>
@@ -128,15 +144,15 @@
         <item name="iconPadding">0dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:minWidth">32dp</item>
-        <item name="android:minHeight">36dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">24dp</item>
+        <item name="android:minHeight">32dp</item>
         <item name="backgroundTint">@color/selector_button_checkable_background</item>
         <item name="iconTint">@color/selector_button_checkable_tint</item>
     </style>
     <!-- Style for the main floating action button. -->
-    <style name="AppTheme.Widget.Fab" parent="@style/Widget.Material3.FloatingActionButton.Primary">
+    <style name="AppTheme.Widget.Fab" parent="@style/Widget.Material3.CompoundButton.MaterialSwitch">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>
@@ -226,6 +242,17 @@
         <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListItemSubText</item>
     </style>
 
+    <!-- Base style for fields. -->
+    <style name="AppTheme.Field"/>
+    <!-- Style for the field title. -->
+    <style name="AppTheme.Field.TitleText">
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.FieldTitle</item>
+    </style>
+    <!-- Style for the list item secondary text.-->
+    <style name="AppTheme.Field.SubText">
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.FieldSubText</item>
+    </style>
+
     <!-- Base text appearance. -->
     <style name="AppTheme.TextAppearance" />
     <!-- Text appearance for the dialog top bar title. -->
@@ -242,6 +269,12 @@
     <style name="AppTheme.TextAppearance.ListItemTitle" parent="@style/TextAppearance.Material3.TitleMedium"/>
     <!-- Text appearance for the list sub text. -->
     <style name="AppTheme.TextAppearance.ListItemSubText" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for the list items title. -->
+    <style name="AppTheme.TextAppearance.FieldTitle" parent="@style/TextAppearance.Material3.BodyLarge"/>
+    <!-- Text appearance for the list sub text. -->
+    <style name="AppTheme.TextAppearance.FieldSubText" parent="@style/TextAppearance.Material3.BodySmall">
+        <item name="android:textStyle">italic</item>
+    </style>
     <!-- Text appearance for a card horizontal item text. -->
     <style name="AppTheme.TextAppearance.CardItemHText" parent="@style/TextAppearance.Material3.BodyMedium"/>
     <!-- Text appearance for the body text. -->

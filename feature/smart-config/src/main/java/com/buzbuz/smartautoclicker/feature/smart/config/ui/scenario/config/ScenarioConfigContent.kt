@@ -25,16 +25,17 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
-
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setText
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -54,20 +55,19 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            scenarioNameField.apply {
+            fieldScenarioName.apply {
                 setLabel(R.string.input_field_label_scenario_name)
                 setOnTextChangedListener { viewModel.setScenarioName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(scenarioNameField.textField)
+            dialogController.hideSoftInputOnFocusLoss(fieldScenarioName.textField)
 
-            scenarioActionRandomization.setItems(
-                label = context.resources.getString(R.string.input_field_label_anti_detection),
-                items = viewModel.randomizationDropdownItems,
-                onItemSelected = viewModel::setRandomization,
-            )
+            fieldAntiDetection.apply {
+                setTitle(context.resources.getString(R.string.input_field_label_anti_detection))
+                setOnClickListener(viewModel::toggleRandomization)
+            }
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
@@ -83,7 +83,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.scenarioName.collect(::updateScenarioName) }
-                launch { viewModel.scenarioNameError.collect(viewBinding.scenarioNameField::setError) }
+                launch { viewModel.scenarioNameError.collect(viewBinding.fieldScenarioName::setError) }
                 launch { viewModel.randomization.collect(::updateRandomization) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
             }
@@ -91,11 +91,19 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun updateScenarioName(name: String?) {
-        viewBinding.scenarioNameField.setText(name)
+        viewBinding.fieldScenarioName.setText(name)
     }
 
-    private fun updateRandomization(randomizationItem: DropdownItem) {
-        viewBinding.scenarioActionRandomization.setSelectedItem(randomizationItem)
+    private fun updateRandomization(isEnabled: Boolean) {
+        viewBinding.fieldAntiDetection.apply {
+            setChecked(isEnabled)
+            setDescription(
+                context.getString(
+                    if (isEnabled) R.string.dropdown_helper_text_anti_detection_enabled
+                    else R.string.dropdown_helper_text_anti_detection_disabled
+                ),
+            )
+        }
     }
 
     private fun updateQuality(quality: Int?) {

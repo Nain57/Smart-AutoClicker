@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R

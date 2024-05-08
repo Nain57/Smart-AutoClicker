@@ -23,50 +23,34 @@
     android:layout_height="match_parent"
     android:scrollbars="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_marginTop="@dimen/margin_vertical_large"
         android:layout_marginBottom="@dimen/margin_vertical_extra_large"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginVertical="@dimen/margin_horizontal_default">
 
         <include layout="@layout/include_input_field_text"
-            android:id="@+id/scenario_name_field"
+            android:id="@+id/field_scenario_name"
             style="@style/AppTheme.Widget.InputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_horizontal_small"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/scenario_action_randomization"/>
-
-        <include layout="@layout/include_input_field_dropdown"
-            android:id="@+id/scenario_action_randomization"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_vertical_large"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scenario_name_field"
-            app:layout_constraintBottom_toTopOf="@id/detection_quality_card"/>
+            android:layout_marginBottom="@dimen/margin_horizontal_small"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/detection_quality_card"
             style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scenario_action_randomization"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_marginTop="@dimen/margin_vertical_large">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_vertical_large">
+                android:layout_marginVertical="@dimen/margin_vertical_default">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
@@ -74,29 +58,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/quality_pro_mode"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:text="@string/section_title_detection_quality_title" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/quality_pro_mode"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/detection_quality_title"
-                    app:layout_constraintBottom_toBottomOf="@id/detection_quality_title"
-                    app:srcCompat="@drawable/ic_pro"
-                    android:visibility="gone"
-                    tools:visibility="visible"/>
-
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_quality_value"
-                    style="@style/AppTheme.TextAppearance.Body"
+                    style="@style/AppTheme.TextAppearance.BodyLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_horizontal_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
-                    android:layout_marginTop="@dimen/margin_vertical_small"
                     android:gravity="center"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,6 +127,21 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.card.MaterialCardView
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large">
+
+            <include layout="@layout/include_field_switch"
+                android:id="@+id/field_anti_detection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

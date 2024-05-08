@@ -29,8 +29,8 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.na
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog

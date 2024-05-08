@@ -16,13 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.bindings
 
-import android.content.Context
+import android.view.View
+import android.widget.TextView
 
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.ui.R
-import com.buzbuz.smartautoclicker.core.ui.utils.ConditionalDividerItemDecoration
-
-fun getDividerWithoutHeader(context: Context): RecyclerView.ItemDecoration =
-    ConditionalDividerItemDecoration(context, DividerItemDecoration.VERTICAL, setOf(R.layout.item_list_header))
+internal fun TextView.setTextOrGone(textToSet: String?) {
+    visibility = if (textToSet == null) View.GONE else View.VISIBLE
+    text = textToSet
+}

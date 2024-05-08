@@ -25,9 +25,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setIcons
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemEventToggleBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding

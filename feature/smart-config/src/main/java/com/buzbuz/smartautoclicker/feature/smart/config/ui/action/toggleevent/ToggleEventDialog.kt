@@ -26,15 +26,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setIcons
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R

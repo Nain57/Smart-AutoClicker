@@ -20,7 +20,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -29,7 +28,12 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentMoreBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -49,9 +53,26 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentMoreBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            tutorialCard.setOnClickListener { onTutorialClicked() }
-            debugOverlay.setOnClickListener { viewModel.toggleIsDebugViewEnabled() }
-            debugReport.setOnClickListener { viewModel.toggleIsDebugReportEnabled() }
+            fieldStartTutorial.apply {
+                setTitle(context.getString(R.string.section_title_tutorial))
+                setDescription(context.getString(R.string.message_tutorial_start))
+                setOnClickListener(::onTutorialClicked)
+            }
+
+            fieldDebugOverlay.apply {
+                setTitle(context.getString(R.string.item_title_debug_show_view))
+                setOnClickListener(viewModel::toggleIsDebugViewEnabled)
+            }
+
+            fieldDebugReport.apply {
+                setTitle(context.getString(R.string.item_title_debug_generate_report))
+                setOnClickListener(viewModel::toggleIsDebugReportEnabled)
+            }
+
+            fieldShowReport.apply {
+                setTitle(context.getString(R.string.item_title_debug_show_report))
+                setOnClickListener { debounceUserInteraction { showDebugReport() } }
+            }
         }
 
         return viewBinding.root
@@ -85,22 +106,22 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun updateDebugView(isEnabled: Boolean) {
-        viewBinding.debugOverlay.isChecked = isEnabled
+        viewBinding.fieldDebugOverlay.setChecked(isEnabled)
     }
 
     private fun updateDebugReport(isEnabled: Boolean) {
-        viewBinding.debugReport.isChecked = isEnabled
+        viewBinding.fieldDebugReport.setChecked(isEnabled)
     }
 
     private fun updateDebugReportAvailability(isAvailable: Boolean) {
-        if (isAvailable) {
-            viewBinding.debugReportStateText.setText(R.string.item_title_debug_report_available)
-            viewBinding.debugReportChevron.visibility = View.VISIBLE
-            viewBinding.debugReportOpenView.setOnClickListener { debounceUserInteraction { showDebugReport() } }
-        } else {
-            viewBinding.debugReportStateText.setText(R.string.item_title_debug_report_not_available)
-            viewBinding.debugReportChevron.visibility = View.GONE
-            viewBinding.debugReportOpenView.setOnClickListener(null)
+        viewBinding.fieldShowReport.apply {
+            setEnabled(isAvailable)
+            setDescription(
+                context.getString(
+                    if (isAvailable) R.string.item_title_debug_report_available
+                    else R.string.item_title_debug_report_not_available
+                )
+            )
         }
     }
 

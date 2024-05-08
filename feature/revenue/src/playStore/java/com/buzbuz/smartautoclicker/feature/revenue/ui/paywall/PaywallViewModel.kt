@@ -20,8 +20,8 @@ import android.app.Activity
 import android.content.Context
 
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.LoadableButtonState
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.AdState
 import com.buzbuz.smartautoclicker.feature.revenue.R
 import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository

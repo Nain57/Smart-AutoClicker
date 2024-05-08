@@ -17,12 +17,10 @@
 package com.buzbuz.smartautoclicker.core.ui.bindings.dropdown
 
 import android.view.View
-
 import androidx.annotation.DrawableRes
-
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldDropdownBinding
-
 import com.google.android.material.textfield.TextInputLayout
+
 
 fun IncludeInputFieldDropdownBinding.setItems(
     items: List<DropdownItem>,
