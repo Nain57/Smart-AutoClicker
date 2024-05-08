@@ -21,8 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.bindings.getDividerWithoutHeader
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.newDividerWithoutHeader
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
@@ -63,7 +63,7 @@ class DumbActionCopyDialog(
         }
 
         viewBinding.layoutLoadableList.list.apply {
-            addItemDecoration(getDividerWithoutHeader(context))
+            addItemDecoration(newDividerWithoutHeader(context))
             adapter = actionCopyAdapter
         }
 

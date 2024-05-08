@@ -291,4 +291,5 @@
     <string name="content_desc_image_condition">L\'image qui doit être détectée</string>
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
+    <string name="item_title_debug_show_report">Show report</string>
 </resources>

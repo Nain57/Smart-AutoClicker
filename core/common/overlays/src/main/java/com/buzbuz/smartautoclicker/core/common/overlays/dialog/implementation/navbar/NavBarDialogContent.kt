@@ -32,7 +32,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponentBuilderEntryPoint
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.common.overlays.di.createHiltViewModelFactory
 import dagger.hilt.EntryPoints
 

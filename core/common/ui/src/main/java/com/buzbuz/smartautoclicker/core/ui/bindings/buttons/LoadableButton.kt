@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.bindings
+package com.buzbuz.smartautoclicker.core.ui.bindings.buttons
 
 import android.view.View
 
@@ -24,16 +24,34 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableButtonOutl
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
+/** Configuration for the button represented by [IncludeLoadableButtonBinding] & [IncludeLoadableButtonOutlinedBinding]. */
+sealed class LoadableButtonState {
+    /** The button is in loading state, the text is hidden and the progress spinner is shown. */
+    data object Loading : LoadableButtonState()
 
-fun IncludeLoadableButtonBinding.setOnClickListener(onClick: () -> Unit): Unit =
-    button.setOnClickListener { onClick() }
-fun IncludeLoadableButtonOutlinedBinding.setOnClickListener(onClick: () -> Unit): Unit =
-    button.setOnClickListener { onClick() }
+    /** The button is in loaded state, the text is shown and the progress spinner is hidden. */
+    sealed class Loaded : LoadableButtonState() {
+
+        /** The text of the button. */
+        abstract val text: String
+
+        /** The button can be clicked. */
+        data class Enabled(override val text: String) : Loaded()
+        /** The button can't be clicked and the text is dimmed. */
+        data class Disabled(override val text: String) : Loaded()
+    }
+}
+
 
 fun IncludeLoadableButtonBinding.setState(state: LoadableButtonState): Unit =
     setState(button, loading, state)
 fun IncludeLoadableButtonOutlinedBinding.setState(state: LoadableButtonState): Unit =
     setState(button, loading, state)
+
+fun IncludeLoadableButtonBinding.setOnClickListener(onClick: () -> Unit): Unit =
+    button.setOnClickListener { onClick() }
+fun IncludeLoadableButtonOutlinedBinding.setOnClickListener(onClick: () -> Unit): Unit =
+    button.setOnClickListener { onClick() }
 
 private fun setState(button: MaterialButton, progress: CircularProgressIndicator, state: LoadableButtonState): Unit =
     when (state) {
@@ -60,15 +78,6 @@ private fun setState(button: MaterialButton, progress: CircularProgressIndicator
             }
         }
     }
-
-sealed class LoadableButtonState {
-    data object Loading : LoadableButtonState()
-    sealed class Loaded : LoadableButtonState() {
-        abstract val text: String
-        data class Enabled(override val text: String) : Loaded()
-        data class Disabled(override val text: String) : Loaded()
-    }
-}
 
 private const val ENABLED_ITEM_ALPHA = 1f
 private const val DISABLED_ITEM_ALPHA = 0.5f

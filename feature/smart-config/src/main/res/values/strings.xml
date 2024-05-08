@@ -335,5 +335,6 @@
     <string name="item_title_add" translatable="false">+</string>
     <string name="item_title_set" translatable="false">=</string>
     <string name="item_title_minus" translatable="false">-</string>
+    <string name="item_title_debug_show_report">Show report</string>
 
 </resources>

@@ -30,7 +30,7 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.DialogBaseNavBarBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.ViewBottomNavBarBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeCreateCopyButtonsBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogNavigationTopBarBinding
 

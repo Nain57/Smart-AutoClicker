@@ -23,10 +23,10 @@ import androidx.annotation.StyleRes
 
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.DialogBaseCopyBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnDismissClickedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setup
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setOnDismissClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setup
 
 abstract class CopyDialog(
     @StyleRes theme: Int,

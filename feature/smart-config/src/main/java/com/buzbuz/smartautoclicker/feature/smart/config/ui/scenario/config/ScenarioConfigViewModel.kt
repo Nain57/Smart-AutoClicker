@@ -19,11 +19,9 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MAX
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -54,26 +52,9 @@ class ScenarioConfigViewModel @Inject constructor(
     val scenarioNameError: Flow<Boolean> = configuredScenario
         .map { it.name.isEmpty() }
 
-    private val enabledRandomization = DropdownItem(
-        title = R.string.dropdown_item_title_anti_detection_enabled,
-        helperText = R.string.dropdown_helper_text_anti_detection_enabled,
-    )
-    private val disableRandomization = DropdownItem(
-        title = R.string.dropdown_item_title_anti_detection_disabled,
-        helperText = R.string.dropdown_helper_text_anti_detection_disabled,
-    )
-    val randomizationDropdownItems: List<DropdownItem> =
-        listOf(enabledRandomization, disableRandomization)
-
     /** The randomization value for the scenario. */
-    val randomization: Flow<DropdownItem> = configuredScenario
-        .map {
-            when (it.randomize) {
-                true -> enabledRandomization
-                false -> disableRandomization
-            }
-        }
-        .filterNotNull()
+    val randomization: Flow<Boolean> = configuredScenario
+        .map { it.randomize }
 
     /** The quality of the detection. */
     val detectionQuality: Flow<Int?> = configuredScenario
@@ -89,16 +70,10 @@ class ScenarioConfigViewModel @Inject constructor(
     }
 
     /** Toggle the randomization value. */
-    fun setRandomization(randomizationItem: DropdownItem) {
+    fun toggleRandomization() {
         editionRepository.editionState.getScenario()?.let { scenario ->
-            val value = when (randomizationItem) {
-                enabledRandomization -> true
-                disableRandomization -> false
-                else -> return
-            }
-
             viewModelScope.launch {
-                editionRepository.updateEditedScenario(scenario.copy(randomize = value))
+                editionRepository.updateEditedScenario(scenario.copy(randomize = !scenario.randomize))
             }
         }
     }

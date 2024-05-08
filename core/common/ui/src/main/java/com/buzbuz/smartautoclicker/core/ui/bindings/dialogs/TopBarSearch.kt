@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.bindings
+package com.buzbuz.smartautoclicker.core.ui.bindings.dialogs
 
 import android.view.View
 import android.view.inputmethod.InputMethodManager

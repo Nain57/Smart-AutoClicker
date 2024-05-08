@@ -290,5 +290,6 @@
     <string name="content_desc_image_condition">L\'immagine da rilevare</string>
     <string name="content_desc_open_event_list">Apri la lista eventi</string>
     <string name="content_desc_application_icon">L\'icona dell\'applicazione da avviare.</string>
+    <string name="item_title_debug_show_report">Show report</string>
 
 </resources>
