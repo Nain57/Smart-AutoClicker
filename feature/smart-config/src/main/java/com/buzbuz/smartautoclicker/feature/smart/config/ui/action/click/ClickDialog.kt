@@ -23,8 +23,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.toPoint
 
+import androidx.core.graphics.toPoint
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -43,6 +43,16 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setError
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setIconBitmap
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -89,30 +99,46 @@ class ClickDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
-            editPressDurationLayout.apply {
+            fieldPressDuration.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_click_press_duration)
                 setOnTextChangedListener {
                     viewModel.setPressDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
             }
-            hideSoftInputOnFocusLoss(editPressDurationLayout.textField)
+            hideSoftInputOnFocusLoss(fieldPressDuration.textField)
 
-            clickPositionField.setItems(
-                label = context.getString(R.string.dropdown_label_click_position_type),
-                items = viewModel.clickTypeItems,
-                onItemSelected = viewModel::setClickOnCondition,
-                onItemBound = ::onClickOnDropdownItemBound,
-            )
+            fieldClickType.apply {
+                setTitle(context.getString(R.string.dropdown_label_click_position_type))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.dropdown_helper_text_click_position_type_on_position),
+                        context.getString(R.string.dropdown_helper_text_click_position_type_on_condition),
+                    )
+                )
+                setButtonConfig(
+                    MultiStateButtonConfig(
+                        icons = listOf(R.drawable.ic_click_on_condition, R.drawable.ic_condition),
+                        singleSelection = true,
+                        selectionRequired = true,
+                    )
+                )
+                setOnCheckedListener { checkedId ->
+                    viewModel.setClickOnCondition(
+                        if (checkedId == 0) Action.Click.PositionType.USER_SELECTED
+                        else Action.Click.PositionType.ON_DETECTED_CONDITION
+                    )
+                }
+            }
         }
 
         return viewBinding.root
@@ -127,9 +153,9 @@ class ClickDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.pressDuration.collect(::updateClickDuration) }
-                launch { viewModel.pressDurationError.collect(viewBinding.editPressDurationLayout::setError)}
+                launch { viewModel.pressDurationError.collect(viewBinding.fieldPressDuration::setError)}
                 launch { viewModel.positionStateUi.collect(::updateClickPositionUiState) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
@@ -140,8 +166,8 @@ class ClickDialog(
         super.onStart()
         viewModel.apply {
             monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-            monitorSelectPositionView(viewBinding.layoutClickSelector)
-            monitorClickOnDropdownView(viewBinding.clickPositionField.root)
+            //monitorSelectPositionView(viewBinding.layoutClickSelector)
+            //monitorClickOnDropdownView(viewBinding.clickPositionField.root)
         }
     }
 
@@ -166,61 +192,42 @@ class ClickDialog(
     }
 
     private fun onClickOnDropdownItemBound(item: DropdownItem, view: View?) {
-        if (item == viewModel.clickTypeItemOnCondition) {
+        /*if (item == viewModel.clickTypeItemOnCondition) {
             if (view != null) viewModel.monitorDropdownItemConditionView(view)
             else viewModel.stopDropdownItemConditionViewMonitoring()
-        }
+        }*/
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
+        viewBinding.fieldName.setText(newName)
     }
 
     private fun updateClickDuration(newDuration: String?) {
-        viewBinding.editPressDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
+        viewBinding.fieldPressDuration.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
     }
 
     private fun updateClickPositionUiState(state: ClickPositionUiState?) {
         state ?: return
 
-        viewBinding.apply {
-            clickPositionField.setSelectedItem(state.selectedChoice)
-            clickSelectorTitle.text = state.selectorTitle
+        viewBinding.fieldClickType.apply {
+            val checkIndex = if (state.positionType == Action.Click.PositionType.USER_SELECTED) 0 else 1
+            setChecked(checkIndex)
+            setDescription(checkIndex)
 
-            if (state.selectorSubText != null) {
-                clickSelectorSubtext.text = state.selectorSubText
-                clickSelectorSubtext.visibility = View.VISIBLE
-            } else {
-                clickSelectorSubtext.text = null
-                clickSelectorSubtext.visibility = View.GONE
-            }
+            root.visibility = if (state.isTypeFieldVisible) View.VISIBLE else View.GONE
+        }
 
-            if (state.selectorIcon != null) {
-                clickSelectorConditionIcon.setImageBitmap(state.selectorIcon)
-                clickSelectorConditionIcon.visibility = View.VISIBLE
-            } else {
-                clickSelectorConditionIcon.setImageIcon(null)
-                clickSelectorConditionIcon.visibility = View.GONE
-            }
+        viewBinding.fieldClickSelection.apply {
+            setTitle(state.selectorTitle)
+            setDescription(state.selectorDescription)
+            setEnabled(state.isSelectorEnabled)
+            setIconBitmap(state.selectorBitmap)
 
-            clickSelectorChevron.visibility = if (state.chevronIsVisible) View.VISIBLE else View.GONE
-
-            if (state.forTriggerEvent) {
-                clickPositionField.root.visibility = View.GONE
-                separatorClickType.visibility = View.GONE
-            } else {
-                clickPositionField.root.visibility = View.VISIBLE
-                separatorClickType.visibility = View.VISIBLE
-            }
-
-            layoutClickSelector.setOnClickListener {
-                debounceUserInteraction {
-                    when (state.action) {
-                        ClickPositionSelectorAction.NONE -> Unit
-                        ClickPositionSelectorAction.SELECT_POSITION -> showPositionSelector()
-                        ClickPositionSelectorAction.SELECT_CONDITION -> showConditionSelector()
-                    }
-                }
+            when (state.positionType) {
+                Action.Click.PositionType.USER_SELECTED ->
+                    setOnClickListener { debounceUserInteraction { showPositionSelector() } }
+                Action.Click.PositionType.ON_DETECTED_CONDITION ->
+                    setOnClickListener { debounceUserInteraction { showConditionSelector() } }
             }
         }
     }
