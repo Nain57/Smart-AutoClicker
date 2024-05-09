@@ -114,7 +114,6 @@
     <string name="item_title_debug_report_not_available">No debug report available</string>
     <string name="item_title_debug_show_view">Show debug view</string>
     <string name="item_title_detection_type_exact">Detection at the captured position</string>
-    <string name="item_title_detection_type_in_area">Detection on a part of the screen</string>
     <string name="item_title_detection_type_screen">Detection on the whole screen</string>
     <string name="item_title_intent">Intent</string>
     <string name="item_title_pause">Wait</string>
@@ -129,6 +128,13 @@
     <string name="item_title_restart_when_reached">Restart when reached</string>
     <string name="item_title_toggle_type">Toggle type</string>
     <string name="item_title_toggle_change_all">Change all</string>
+
+    <!--
+      - Field titles.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+     -->
+    <string name="field_title_select_detection_area">Detection Area</string>
 
     <!--
       - Empty list messages.
@@ -170,7 +176,7 @@
       - Should be short and concise.
       -->
     <string name="section_title_condition_detection_details">Detection details</string>
-    <string name="section_title_condition_threshold">Tolerated difference</string>
+    <string name="field_title_condition_threshold">Tolerated difference</string>
     <string name="section_title_detection_quality_title">Detection quality</string>
     <string name="section_title_intent_extras_value">Value</string>
     <string name="section_title_start_application">Start application</string>

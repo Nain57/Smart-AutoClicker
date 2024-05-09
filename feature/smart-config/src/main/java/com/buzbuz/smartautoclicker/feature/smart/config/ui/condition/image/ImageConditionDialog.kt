@@ -33,19 +33,29 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectorState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setElementTypeName
-import com.buzbuz.smartautoclicker.core.ui.bindings.setEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setText
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnClickListener
+import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
+import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnValueChangedFromUserListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderRange
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionImageBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -97,39 +107,67 @@ class ImageConditionDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldEditName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldEditName.textField)
 
-            conditionDetectionType.setItems(
-                label = context.getString(R.string.dropdown_label_condition_detection_type),
-                items = viewModel.detectionTypeItems,
-                onItemSelected = viewModel::setDetectionType,
-                onItemBound = ::onDetectionTypeDropdownItemBound,
-                onSelectorClicked = ::showDetectionAreaSelector,
-            )
-
-            conditionShouldAppear.setItems(
-                label = context.getString(R.string.dropdown_label_condition_visibility),
-                items = viewModel.shouldBeDetectedItems,
-                onItemSelected = viewModel::setShouldBeDetected,
-            )
-
-            seekbarDiffThreshold.apply {
-                setLabelFormatter { "$it %" }
-                addOnChangeListener {  _, value, fromUser ->
-                    if (fromUser) viewModel.setThreshold(value.roundToInt())
-                }
+            fieldShouldAppear.apply {
+                setTitle(context.getString(R.string.dropdown_label_condition_visibility))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.dropdown_helper_text_condition_visibility_absent),
+                        context.getString(R.string.dropdown_helper_text_condition_visibility_present),
+                    )
+                )
+                setOnClickListener { viewModel.toggleShouldBeDetected() }
             }
 
+            fieldDetectionType.apply {
+                setTitle(context.getString(R.string.dropdown_label_condition_detection_type))
+                setButtonConfig(
+                    MultiStateButtonConfig(
+                        icons = listOf(
+                            R.drawable.ic_detect_exact,
+                            R.drawable.ic_detect_whole_screen,
+                            R.drawable.ic_detect_in_area,
+                        ),
+                        selectionRequired = true,
+                    )
+                )
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.item_title_detection_type_exact),
+                        context.getString(R.string.item_title_detection_type_screen),
+                        context.getString(R.string.field_title_select_detection_area),
+                    )
+                )
+                setOnCheckedListener { index -> viewModel.setDetectionType(index.fromIndexToDetectionType())}
+            }
 
-            tryConditionCard.apply {
-                setElementTypeName(context.getString(R.string.dialog_overlay_title_condition_config))
+            fieldSelectArea.apply {
+                setTitle(context.getString(R.string.field_title_select_detection_area))
+                setOnClickListener { showDetectionAreaSelector() }
+            }
+
+            fieldSliderThreshold.apply {
+                setTitle(context.getString(R.string.field_title_condition_threshold))
+                setValueLabelState(isEnabled = true, prefix = "%")
+                setSliderRange(0f, MAX_THRESHOLD)
+                setOnValueChangedFromUserListener { value -> viewModel.setThreshold(value.roundToInt()) }
+            }
+
+            fieldTestCondition.apply {
+                setTitle(
+                    context.getString(
+                        R.string.item_title_try_element,
+                        context.getString(R.string.dialog_overlay_title_condition_config),
+                    )
+                )
                 setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
             }
         }
@@ -146,13 +184,13 @@ class ImageConditionDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateConditionName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
+                launch { viewModel.nameError.collect(viewBinding.fieldEditName::setError) }
                 launch { viewModel.conditionBitmap.collect(::updateConditionBitmap) }
                 launch { viewModel.shouldBeDetected.collect(::updateShouldBeDetected) }
-                launch { viewModel.detectionType.collect(::updateConditionType) }
+                launch { viewModel.detectionType.collect(::updateDetectionType) }
                 launch { viewModel.threshold.collect(::updateThreshold) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
-                launch { viewModel.canTryCondition.collect(viewBinding.tryConditionCard::setEnabledState) }
+                launch { viewModel.canTryCondition.collect(viewBinding.fieldTestCondition::setEnabled) }
             }
         }
     }
@@ -160,7 +198,7 @@ class ImageConditionDialog(
     override fun onStart() {
         super.onStart()
         viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-        viewModel.monitorDetectionTypeDropdownView(viewBinding.conditionDetectionType.textLayout)
+        //viewModel.monitorDetectionTypeDropdownView(viewBinding.conditionDetectionType.textLayout)
     }
 
     override fun onStop() {
@@ -174,14 +212,14 @@ class ImageConditionDialog(
     }
 
     private fun onDetectionTypeDropdownItemBound(item: DropdownItem, view: View?) {
-        if (item == viewModel.detectionTypeScreen) {
+        /*if (item == viewModel.detectionTypeScreen) {
             if (view != null) viewModel.monitorDropdownItemWholeScreenView(view)
             else viewModel.stopDropdownItemWholeScreenViewMonitoring()
-        }
+        }*/
     }
 
     private fun updateConditionName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
+        viewBinding.fieldEditName.setText(newName)
     }
 
     private fun updateConditionBitmap(newBitmap: Bitmap?) {
@@ -196,27 +234,34 @@ class ImageConditionDialog(
         }
     }
 
-    private fun updateShouldBeDetected(newValue: DropdownItem) {
-        viewBinding.conditionShouldAppear.setSelectedItem(newValue)
+    private fun updateShouldBeDetected(newValue: Boolean) {
+        viewBinding.fieldShouldAppear.apply {
+            setChecked(newValue)
+            setDescription(if (newValue) 1 else 0)
+        }
     }
 
-    private fun updateConditionType(newState: DetectionTypeState) {
-        viewBinding.conditionDetectionType.apply {
-            setSelectedItem(newState.dropdownItem)
-            setSelectorState(newState.selectorState)
+    private fun updateDetectionType(detectionTypeState: DetectionTypeState) {
+        val index = when (detectionTypeState.type) {
+            EXACT -> 0
+            WHOLE_SCREEN -> 1
+            IN_AREA -> 2
+            else -> return
+        }
+
+        viewBinding.fieldDetectionType.apply {
+            setChecked(index)
+            setDescription(index)
+        }
+
+        viewBinding.fieldSelectArea.apply {
+            setEnabled(detectionTypeState.type == IN_AREA)
+            setDescription(detectionTypeState.areaText)
         }
     }
 
     private fun updateThreshold(newThreshold: Int) {
-        viewBinding.apply {
-            val isNotInitialized = seekbarDiffThreshold.value == 0f
-            seekbarDiffThreshold.value = newThreshold.toFloat()
-
-            if (isNotInitialized) {
-                seekbarDiffThreshold.valueFrom = 0f
-                seekbarDiffThreshold.valueTo = MAX_THRESHOLD
-            }
-        }
+        viewBinding.fieldSliderThreshold.setSliderValue(newThreshold.toFloat())
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
@@ -268,6 +313,13 @@ class ImageConditionDialog(
             )
         }
     }
+
+    private fun Int?.fromIndexToDetectionType() : Int =
+        when (this) {
+            0 -> EXACT
+            1 -> WHOLE_SCREEN
+            else -> IN_AREA
+        }
 }
 
 private const val TAG = "ConditionDialog"

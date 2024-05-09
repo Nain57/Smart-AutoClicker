@@ -34,6 +34,10 @@ fun IncludeFieldSwitchBinding.setDescription(descriptionIndex: Int) {
     titleAndDescription.setDescription(descriptionIndex)
 }
 
+fun IncludeFieldSwitchBinding.setDescription(description: String) {
+    titleAndDescription.setDescription(description)
+}
+
 fun IncludeFieldSwitchBinding.setChecked(isChecked: Boolean) {
     toggleSwitch.isChecked = isChecked
 }

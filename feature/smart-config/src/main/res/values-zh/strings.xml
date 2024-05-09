@@ -109,7 +109,7 @@
     <string name="item_title_debug_report_not_available">没有可用的调试报告</string>
     <string name="item_title_debug_show_view">显示调试窗口</string>
     <string name="item_title_detection_type_exact">在捕获位置进行检测</string>
-    <string name="item_title_detection_type_in_area">检测屏幕的一部分</string>
+    <string name="field_title_select_detection_area">检测屏幕的一部分</string>
     <string name="item_title_detection_type_screen">全屏检测</string>
     <string name="item_title_intent">意图</string>
     <string name="item_title_pause">等待</string>
@@ -165,7 +165,7 @@
       - Should be short and concise.
       -->
     <string name="section_title_condition_detection_details">检测细节</string>
-    <string name="section_title_condition_threshold">容差</string>
+    <string name="field_title_condition_threshold">容差</string>
     <string name="section_title_detection_quality_title">检测质量</string>
     <string name="section_title_intent_extras_value">参数值</string>
     <string name="section_title_start_application">启动应用程序</string>

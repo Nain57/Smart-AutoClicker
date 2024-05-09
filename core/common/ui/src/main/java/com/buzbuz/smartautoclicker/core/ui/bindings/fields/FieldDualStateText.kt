@@ -38,6 +38,10 @@ fun IncludeFieldDualStateTextBinding.setDescription(descriptionIndex: Int) {
     titleAndDescription.setDescription(descriptionIndex)
 }
 
+fun IncludeFieldDualStateTextBinding.setDescription(description: String) {
+    titleAndDescription.setDescription(description)
+}
+
 fun IncludeFieldDualStateTextBinding.setButtonConfig(config: DualStateButtonTextConfig) {
     dualStateButton.setup(config)
 }

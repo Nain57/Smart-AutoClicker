@@ -24,6 +24,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
+
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextOrGone
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeTitleAndDescriptionBinding
 
@@ -56,6 +57,10 @@ internal fun IncludeTitleAndDescriptionBinding.setupDescriptions(descriptions: L
         description.tag = oldState?.copy(descriptions = descriptions, maxLinesCount = maxLinesCount)
             ?: DescriptionsState(descriptions, null, maxLinesCount)
     }
+}
+
+internal fun IncludeTitleAndDescriptionBinding.setDescription(text: String?) {
+    description.setTextOrGone(text)
 }
 
 internal fun IncludeTitleAndDescriptionBinding.setDescription(index: Int) {
