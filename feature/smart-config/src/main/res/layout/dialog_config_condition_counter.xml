@@ -39,7 +39,7 @@
             android:orientation="vertical">
 
             <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_name_layout"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_horizontal_small"
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_name_layout"
+                app:layout_constraintTop_toBottomOf="@id/field_name"
                 app:layout_constraintBottom_toTopOf="@id/comparison_operator_field"/>
 
             <include layout="@layout/include_input_field_dropdown"

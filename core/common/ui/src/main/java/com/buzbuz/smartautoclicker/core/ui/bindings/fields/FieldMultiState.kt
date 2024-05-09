@@ -46,7 +46,7 @@ fun IncludeFieldMultiStateBinding.setButtonConfig(config: MultiStateButtonConfig
     multiStateButton.setup(config)
 }
 
-fun IncludeFieldMultiStateBinding.setChecked(checkedId: Int) {
+fun IncludeFieldMultiStateBinding.setChecked(checkedId: Int?) {
     multiStateButton.setChecked(checkedId)
 }
 

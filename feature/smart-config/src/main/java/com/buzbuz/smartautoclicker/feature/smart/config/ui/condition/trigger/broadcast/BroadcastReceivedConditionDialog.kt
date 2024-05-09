@@ -85,14 +85,14 @@ class BroadcastReceivedConditionDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             editBroadcastAction.apply {
                 setup(R.string.input_field_label_broadcast_action, R.drawable.ic_search, false)
@@ -116,8 +116,8 @@ class BroadcastReceivedConditionDialog(
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.intentAction.collect(viewBinding.editBroadcastAction::setTextValue) }
                 launch { viewModel.intentActionError.collect(viewBinding.editBroadcastAction::setError)}
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }

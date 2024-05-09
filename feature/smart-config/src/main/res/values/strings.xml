@@ -132,9 +132,15 @@
     <!--
       - Field titles.
       -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
      -->
     <string name="field_title_select_detection_area">Detection Area</string>
+    <string name="field_title_select_swipe_positions">Swipe positions</string>
+
+    <!--
+      - Field descriptions.
+      -  * Desc can have more space to describe the title
+     -->
+    <string name="field_desc_application_selection">Start an application when this action is executed</string>
 
     <!--
       - Empty list messages.

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.view.View
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_DISABLED
@@ -46,6 +47,11 @@ fun IncludeFieldSelectorBinding.setDescription(description: String?) {
 fun IncludeFieldSelectorBinding.setIconBitmap(bitmap: Bitmap?) {
     icon.visibility = if (bitmap == null) View.GONE else View.VISIBLE
     icon.setImageBitmap(bitmap)
+}
+
+fun IncludeFieldSelectorBinding.setImageDrawable(drawable: Drawable?) {
+    icon.visibility = if (drawable == null) View.GONE else View.VISIBLE
+    icon.setImageDrawable(drawable)
 }
 
 fun IncludeFieldSelectorBinding.setEnabled(isEnabled: Boolean) {

@@ -84,14 +84,14 @@ class ChangeCounterDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             editCounterNameLayout.apply {
                 setup(R.string.input_field_label_change_counter_name, R.drawable.ic_search, false)
@@ -130,8 +130,8 @@ class ChangeCounterDialog(
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
+                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError) }
                 launch { viewModel.counterName.collect(viewBinding.editCounterNameLayout::setTextValue) }
                 launch { viewModel.counterNameError.collect(viewBinding.editCounterNameLayout::setError) }
                 launch { viewModel.operatorDropdownState.collect(viewBinding.operatorField::setSelectedItem) }

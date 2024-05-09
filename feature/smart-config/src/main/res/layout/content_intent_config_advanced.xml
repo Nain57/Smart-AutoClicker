@@ -32,7 +32,7 @@
         android:orientation="vertical">
 
         <include layout="@layout/include_input_field_text"
-            android:id="@+id/edit_name_layout"
+            android:id="@+id/field_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_horizontal_small"/>

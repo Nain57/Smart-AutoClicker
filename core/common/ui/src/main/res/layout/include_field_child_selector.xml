@@ -20,9 +20,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:layout_marginHorizontal="@dimen/margin_horizontal_default"
-    tools:background="?attr/colorSurface">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
@@ -37,6 +35,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/children_container"
         app:layout_constraintVertical_chainStyle="packed"
+        android:visibility="gone"
+        tools:visibility="visible"
         tools:text="Field title"/>
 
     <include layout="@layout/include_children_container"
@@ -49,7 +49,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/chevron"
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description"
+        style="@style/AppTheme.Field.SubText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/children_container"
+        app:layout_constraintEnd_toEndOf="@id/children_container"
+        app:layout_constraintTop_toTopOf="@id/children_container"
+        app:layout_constraintBottom_toBottomOf="@id/children_container"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        tools:text="Field Subtext for the selector with a text"
+        tools:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/chevron"

@@ -44,6 +44,9 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
@@ -85,25 +88,28 @@ class SwipeDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
-            editSwipeDurationLayout.apply {
+            fieldSwipeDuration.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_swipe_duration)
                 setOnTextChangedListener {
                     viewModel.setSwipeDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
             }
-            hideSoftInputOnFocusLoss(editSwipeDurationLayout.textField)
+            hideSoftInputOnFocusLoss(fieldSwipeDuration.textField)
 
-            onPositionSelectButton.setOnClickListener { showPositionSelector() }
+            fieldSelectionSwipePosition.apply {
+                setTitle(context.getString(R.string.field_title_select_swipe_positions))
+                setOnClickListener { debounceUserInteraction { showPositionSelector() } }
+            }
         }
 
         return viewBinding.root
@@ -118,10 +124,10 @@ class SwipeDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.swipeDuration.collect(::updateSwipeDuration) }
-                launch { viewModel.swipeDurationError.collect(viewBinding.editSwipeDurationLayout::setError)}
-                launch { viewModel.positions.collect(::updateSwipePositionsButtonText) }
+                launch { viewModel.swipeDurationError.collect(viewBinding.fieldSwipeDuration::setError)}
+                launch { viewModel.positions.collect(::updateSwipePositionsField) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
@@ -143,25 +149,24 @@ class SwipeDialog(
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
+        viewBinding.fieldName.setText(newName)
     }
 
     private fun updateSwipeDuration(newDuration: String?) {
-        viewBinding.editSwipeDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
+        viewBinding.fieldSwipeDuration.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
     }
 
-    private fun updateSwipePositionsButtonText(positions: Pair<Point, Point>?) {
-        if (positions == null) {
-            viewBinding.onPositionSelectButton.setText(R.string.button_text_swipe_positions_select)
-            return
-        }
-
-        viewBinding.onPositionSelectButton.text = context.getString(
-            R.string.item_desc_swipe_positions,
-            positions.first.x,
-            positions.first.y,
-            positions.second.x,
-            positions.second.y,
+    private fun updateSwipePositionsField(positions: Pair<Point, Point>?) {
+        viewBinding.fieldSelectionSwipePosition.setDescription(
+            if (positions != null)
+                context.getString(
+                    R.string.item_desc_swipe_positions,
+                    positions.first.x,
+                    positions.first.y,
+                    positions.second.x,
+                    positions.second.y,
+                )
+            else context.getString(R.string.item_desc_position_select)
         )
     }
 

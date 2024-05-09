@@ -82,14 +82,14 @@ class PauseDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             editPauseDurationLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(min = 1))
@@ -119,7 +119,7 @@ class PauseDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.pauseDuration.collect(::updatePauseDuration) }
                 launch { viewModel.pauseDurationError.collect(viewBinding.editPauseDurationLayout::setError)}
                 launch { viewModel.selectedUnitItem.collect(viewBinding.timeUnitField::setSelectedItem) }
@@ -144,7 +144,7 @@ class PauseDialog(
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
+        viewBinding.fieldName.setText(newName)
     }
 
     private fun updatePauseDuration(newDuration: String?) {

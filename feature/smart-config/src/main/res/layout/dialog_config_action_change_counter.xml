@@ -38,7 +38,7 @@
             android:layout_marginHorizontal="@dimen/margin_horizontal_default">
 
             <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_name_layout"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_vertical_default"
@@ -54,7 +54,7 @@
                 android:layout_marginTop="@dimen/margin_horizontal_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_name_layout"
+                app:layout_constraintTop_toBottomOf="@id/field_name"
                 app:layout_constraintBottom_toTopOf="@id/operator_field"/>
 
             <include layout="@layout/include_input_field_dropdown"

@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent
 import android.content.Context
 import android.text.InputFilter
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -29,6 +28,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.dialogViewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setImageDrawable
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setOnTextChangedListener
@@ -37,7 +40,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentIntentConfigSimpleBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.activities.ActivitySelectionDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 
 import kotlinx.coroutines.launch
 
@@ -54,17 +56,18 @@ class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext)
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentIntentConfigSimpleBinding.inflate(LayoutInflater.from(context)).apply {
-            selectApplicationButton.setOnClickListener { debounceUserInteraction { showApplicationSelectionDialog() } }
-            selectedApplicationLayout.root.setOnClickListener { debounceUserInteraction { showApplicationSelectionDialog() } }
-
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(editNameLayout.textField)
+            dialogController.hideSoftInputOnFocusLoss(fieldName.textField)
+
+            fieldSelectionApplication.apply {
+                setOnClickListener { debounceUserInteraction { showApplicationSelectionDialog() } }
+            }
         }
 
         return viewBinding.root
@@ -74,25 +77,25 @@ class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { dialogViewModel.name.collect(::updateClickName) }
-                launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { dialogViewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { dialogViewModel.activityInfo.collect(::updateActivityInfo) }
             }
         }
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
+        viewBinding.fieldName.setText(newName)
     }
 
     private fun updateActivityInfo(activityInfo: AndroidApplicationInfo?) {
-        viewBinding.apply {
+        viewBinding.fieldSelectionApplication.apply {
             if (activityInfo == null) {
-                selectedApplicationLayout.root.visibility = View.GONE
-                selectApplicationButton.visibility = View.VISIBLE
+                setTitle(context.getString(R.string.dialog_overlay_title_application_selection))
+                setDescription(context.getString(R.string.field_desc_application_selection))
             } else {
-                selectedApplicationLayout.root.visibility = View.VISIBLE
-                selectedApplicationLayout.bind(activityInfo)
-                selectApplicationButton.visibility = View.GONE
+                setImageDrawable(activityInfo.icon)
+                setTitle(activityInfo.name)
+                setDescription(activityInfo.componentName.packageName)
             }
         }
     }
