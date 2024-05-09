@@ -39,13 +39,13 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/field_swipe_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
