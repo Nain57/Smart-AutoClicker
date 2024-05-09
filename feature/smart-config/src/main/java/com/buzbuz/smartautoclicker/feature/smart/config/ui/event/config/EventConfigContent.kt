@@ -164,7 +164,7 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
     }
 
     private fun updateTryFieldEnabledState(isEnabled: Boolean) {
-        viewBinding.fieldTestEvent.setEnabled(isEnabled)
+        viewBinding.cardTestEvent.visibility = if (isEnabled) View.VISIBLE else View.GONE
     }
 
     private fun onConditionOperatorDropdownItemBound(item: DropdownItem, view: View?) {
