@@ -62,7 +62,7 @@ fun IncludeButtonMultiStateBinding.setChecked(checkedId: Int?) {
 
 fun IncludeButtonMultiStateBinding.setOnCheckedListener(listener: ((Int?) -> Unit)?) {
     if (listener == null) {
-        val registeredListener = root.getTag(BUTTON_CHECKED_LISTENER_TAG_KEY)
+        val registeredListener = root.tag
         if (registeredListener is MaterialButtonToggleGroup.OnButtonCheckedListener) {
             root.removeOnButtonCheckedListener(registeredListener)
         }
@@ -83,7 +83,7 @@ fun IncludeButtonMultiStateBinding.setOnCheckedListener(listener: ((Int?) -> Uni
     }
 
     root.addOnButtonCheckedListener(buttonListener)
-    root.setTag(BUTTON_CHECKED_LISTENER_TAG_KEY, buttonListener)
+    root.tag = buttonListener
 }
 
 private fun IncludeButtonMultiStateBinding.getButtonViewIdFromCheckedId(checkedId: Int?): Int? =
@@ -93,5 +93,3 @@ private fun IncludeButtonMultiStateBinding.getButtonViewIdFromCheckedId(checkedI
         2 -> buttonRight.id
         else -> null
     }
-
-private const val BUTTON_CHECKED_LISTENER_TAG_KEY = 42

@@ -38,6 +38,10 @@ fun IncludeFieldMultiStateBinding.setDescription(descriptionIndex: Int) {
     titleAndDescription.setDescription(descriptionIndex)
 }
 
+fun IncludeFieldMultiStateBinding.setDescription(description: String) {
+    titleAndDescription.setDescription(description)
+}
+
 fun IncludeFieldMultiStateBinding.setButtonConfig(config: MultiStateButtonConfig) {
     multiStateButton.setup(config)
 }

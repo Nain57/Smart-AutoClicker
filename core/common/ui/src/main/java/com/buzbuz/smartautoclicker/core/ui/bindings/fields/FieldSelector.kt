@@ -36,6 +36,10 @@ fun IncludeFieldSelectorBinding.setDescription(descriptionIndex: Int) {
     titleAndDescription.setDescription(descriptionIndex)
 }
 
+fun IncludeFieldSelectorBinding.setDescription(description: String) {
+    titleAndDescription.setDescription(description)
+}
+
 fun IncludeFieldSelectorBinding.setEnabled(isEnabled: Boolean) {
     root.isEnabled = isEnabled
     root.alpha = if (isEnabled) ALPHA_ENABLED else ALPHA_DISABLED

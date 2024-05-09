@@ -109,7 +109,7 @@
     <string name="item_title_debug_report_not_available">Aucun rapport de debug disponible</string>
     <string name="item_title_debug_show_view">Overlay de débug</string>
     <string name="item_title_detection_type_exact">Détection à la position de capture</string>
-    <string name="item_title_detection_type_in_area">Détection sur une partie de l\'écran</string>
+    <string name="field_title_select_detection_area">Détection sur une partie de l\'écran</string>
     <string name="item_title_detection_type_screen">Détection sur tout l\'écran</string>
     <string name="item_title_intent">Intent</string>
     <string name="item_title_pause">Pause</string>
@@ -165,7 +165,7 @@
       - Should be short and concise.
       -->
     <string name="section_title_condition_detection_details">Détails de la détection</string>
-    <string name="section_title_condition_threshold">Différence tolérée</string>
+    <string name="field_title_condition_threshold">Différence tolérée</string>
     <string name="section_title_detection_quality_title">Qualité de détection</string>
     <string name="section_title_intent_extras_value">Valeur</string>
     <string name="section_title_start_application">Lancer une application</string>
