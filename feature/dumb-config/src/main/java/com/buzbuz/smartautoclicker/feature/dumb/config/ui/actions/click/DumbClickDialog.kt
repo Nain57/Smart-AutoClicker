@@ -49,6 +49,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setup
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
@@ -92,25 +95,25 @@ class DumbClickDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
-            editPressDurationLayout.apply {
+            fieldDuration.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_click_press_duration)
                 setOnTextChangedListener {
                     viewModel.setPressDurationMs(if (it.isNotEmpty()) it.toString().toLong() else 0)
                 }
             }
-            hideSoftInputOnFocusLoss(editPressDurationLayout.textField)
+            hideSoftInputOnFocusLoss(fieldDuration.textField)
 
-            editRepeatLayout.apply {
+            fieldRepeat.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(
                     REPEAT_COUNT_MIN_VALUE,
                     REPEAT_COUNT_MAX_VALUE
@@ -121,9 +124,9 @@ class DumbClickDialog(
                 }
                 setOnCheckboxClickedListener(viewModel::toggleInfiniteRepeat)
             }
-            hideSoftInputOnFocusLoss(editRepeatLayout.textField)
+            hideSoftInputOnFocusLoss(fieldRepeat.textField)
 
-            editRepeatDelay.apply {
+            fieldRepeatDelay.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(
                     REPEAT_DELAY_MIN_MS.toInt(),
                     REPEAT_DELAY_MAX_MS.toInt(),
@@ -133,9 +136,12 @@ class DumbClickDialog(
                     viewModel.setRepeatDelay(if (it.isNotEmpty()) it.toString().toLong() else 0)
                 }
             }
-            hideSoftInputOnFocusLoss(editRepeatDelay.textField)
+            hideSoftInputOnFocusLoss(fieldRepeatDelay.textField)
 
-            cardClickPosition.setOnClickListener { onPositionCardClicked() }
+            fieldSelectionPosition.apply {
+                setTitle(context.getString(R.string.item_title_click_position))
+                setOnClickListener { debounceUserInteraction { onPositionCardClicked() } }
+            }
         }
 
         return viewBinding.root
@@ -145,16 +151,16 @@ class DumbClickDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isValidDumbClick.collect(::updateSaveButton) }
-                launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.pressDuration.collect(::updateDumbClickPressDuration) }
-                launch { viewModel.pressDurationError.collect(viewBinding.editPressDurationLayout::setError)}
-                launch { viewModel.repeatCount.collect(viewBinding.editRepeatLayout::setNumericValue) }
-                launch { viewModel.repeatCountError.collect(viewBinding.editRepeatLayout::setError) }
-                launch { viewModel.repeatInfiniteState.collect(viewBinding.editRepeatLayout::setChecked) }
+                launch { viewModel.pressDurationError.collect(viewBinding.fieldDuration::setError)}
+                launch { viewModel.repeatCount.collect(viewBinding.fieldRepeat::setNumericValue) }
+                launch { viewModel.repeatCountError.collect(viewBinding.fieldRepeat::setError) }
+                launch { viewModel.repeatInfiniteState.collect(viewBinding.fieldRepeat::setChecked) }
                 launch { viewModel.repeatDelay.collect(::updateDumbClickRepeatDelay) }
-                launch { viewModel.repeatDelayError.collect(viewBinding.editRepeatDelay::setError)}
-                launch { viewModel.clickPositionText.collect(viewBinding.clickSelectorSubtext::setText) }
+                launch { viewModel.repeatDelayError.collect(viewBinding.fieldRepeatDelay::setError)}
+                launch { viewModel.clickPositionText.collect(::updateFieldPosition) }
             }
         }
     }
@@ -185,6 +191,22 @@ class DumbClickDialog(
         }
     }
 
+    private fun updateDumbClickPressDuration(duration: String) {
+        viewBinding.fieldDuration.setText(duration, InputType.TYPE_CLASS_NUMBER)
+    }
+
+    private fun updateDumbClickRepeatDelay(delay: String) {
+        viewBinding.fieldRepeatDelay.setText(delay, InputType.TYPE_CLASS_NUMBER)
+    }
+
+    private fun updateSaveButton(isValidCondition: Boolean) {
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
+    }
+
+    private fun updateFieldPosition(positionText: String) {
+        viewBinding.fieldSelectionPosition.setDescription(positionText)
+    }
+
     private fun onPositionCardClicked() {
         viewModel.getEditedDumbClick()?.let { dumbClick ->
             overlayManager.navigateTo(
@@ -201,18 +223,6 @@ class DumbClickDialog(
                 hideCurrent = true,
             )
         }
-    }
-
-    private fun updateDumbClickPressDuration(duration: String) {
-        viewBinding.editPressDurationLayout.setText(duration, InputType.TYPE_CLASS_NUMBER)
-    }
-
-    private fun updateDumbClickRepeatDelay(delay: String) {
-        viewBinding.editRepeatDelay.setText(delay, InputType.TYPE_CLASS_NUMBER)
-    }
-
-    private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     private fun Point.toEditionPosition(): PointF? =
