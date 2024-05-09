@@ -37,6 +37,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setOnTextChangedListen
 import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setText
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionTimerBinding
@@ -110,8 +115,15 @@ class TimerReachedConditionDialog(
                 onItemSelected = viewModel::setTimeUnit,
             )
 
-            checkboxResetWhenReached.setOnClickListener {
-                viewModel.toggleRestartWhenReached()
+            fieldIsReset.apply {
+                setTitle(context.getString(R.string.item_title_restart_when_reached))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.field_desc_timer_restart_off),
+                        context.getString(R.string.field_desc_timer_restart_on),
+                    )
+                )
+                setOnClickListener(viewModel::toggleRestartWhenReached)
             }
         }
 
@@ -131,7 +143,7 @@ class TimerReachedConditionDialog(
                 launch { viewModel.duration.collect(::updateDuration) }
                 launch { viewModel.durationError.collect(viewBinding.editDurationLayout::setError)}
                 launch { viewModel.selectedUnitItem.collect(viewBinding.timeUnitField::setSelectedItem) }
-                launch { viewModel.restartWhenReached.collect(viewBinding.checkboxResetWhenReached::setChecked) }
+                launch { viewModel.restartWhenReached.collect(::updateIsResetField) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
             }
         }
@@ -143,6 +155,13 @@ class TimerReachedConditionDialog(
 
     private fun updateSaveButton(canBeSaved: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, canBeSaved)
+    }
+
+    private fun updateIsResetField(resetWhenReached: Boolean) {
+        viewBinding.fieldIsReset.apply {
+            setChecked(resetWhenReached)
+            setDescription(if (resetWhenReached) 1 else 0)
+        }
     }
 
     private fun onConditionEditingStateChanged(isEditing: Boolean) {
