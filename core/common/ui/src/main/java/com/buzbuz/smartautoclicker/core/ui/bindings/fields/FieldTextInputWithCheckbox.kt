@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.bindings.texts
+package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 
 import android.text.Editable
 import android.text.InputType
@@ -25,10 +25,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.core.ui.R
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputTextWithCheckboxBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputWithCheckboxBinding
 import com.buzbuz.smartautoclicker.core.ui.utils.OnAfterTextChangedListener
 
-fun IncludeInputTextWithCheckboxBinding.setup(
+
+fun IncludeFieldTextInputWithCheckboxBinding.setup(
     @StringRes label: Int,
     @DrawableRes icon: Int,
     disableInputWithCheckbox: Boolean,
@@ -39,7 +40,7 @@ fun IncludeInputTextWithCheckboxBinding.setup(
     buttonCheckbox.isCheckable = disableInputWithCheckbox
 }
 
-fun IncludeInputTextWithCheckboxBinding.setNumericValue(value: String) {
+fun IncludeFieldTextInputWithCheckboxBinding.setNumericValue(value: String) {
     textField.apply {
         inputType = InputType.TYPE_CLASS_NUMBER
         imeOptions = EditorInfo.IME_ACTION_DONE
@@ -47,7 +48,7 @@ fun IncludeInputTextWithCheckboxBinding.setNumericValue(value: String) {
     }
 }
 
-fun IncludeInputTextWithCheckboxBinding.setTextValue(value: String?) {
+fun IncludeFieldTextInputWithCheckboxBinding.setTextValue(value: String?) {
     textField.apply {
         inputType = InputType.TYPE_CLASS_TEXT
         imeOptions = EditorInfo.IME_ACTION_DONE
@@ -55,7 +56,7 @@ fun IncludeInputTextWithCheckboxBinding.setTextValue(value: String?) {
     }
 }
 
-fun IncludeInputTextWithCheckboxBinding.setChecked(isChecked: Boolean) {
+fun IncludeFieldTextInputWithCheckboxBinding.setChecked(isChecked: Boolean) {
     if ((root.tag as? Boolean) != true) return
 
     editTextFieldLayout.apply {
@@ -65,23 +66,23 @@ fun IncludeInputTextWithCheckboxBinding.setChecked(isChecked: Boolean) {
     buttonCheckbox.isChecked = isChecked
 }
 
-fun IncludeInputTextWithCheckboxBinding.setButtonVisibility(isVisible: Boolean) {
+fun IncludeFieldTextInputWithCheckboxBinding.setButtonVisibility(isVisible: Boolean) {
     buttonCheckbox.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
 
-fun IncludeInputTextWithCheckboxBinding.setError(isError: Boolean) {
+fun IncludeFieldTextInputWithCheckboxBinding.setError(isError: Boolean) {
     setError(R.string.input_field_error_required, isError)
 }
 
-fun IncludeInputTextWithCheckboxBinding.setError(@StringRes messageId: Int, isError: Boolean) {
+fun IncludeFieldTextInputWithCheckboxBinding.setError(@StringRes messageId: Int, isError: Boolean) {
     editTextFieldLayout.error = if (isError) root.context.getString(messageId) else null
 }
 
-fun IncludeInputTextWithCheckboxBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {
+fun IncludeFieldTextInputWithCheckboxBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {
     textField.addTextChangedListener(OnAfterTextChangedListener(listener))
 }
 
-fun IncludeInputTextWithCheckboxBinding.setOnCheckboxClickedListener(listener: () -> Unit) {
+fun IncludeFieldTextInputWithCheckboxBinding.setOnCheckboxClickedListener(listener: () -> Unit) {
     buttonCheckbox.setOnClickListener { listener() }
 }
 

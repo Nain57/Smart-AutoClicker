@@ -40,25 +40,25 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/field_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
-            <include layout="@layout/include_input_text_with_checkbox"
+            <include layout="@layout/include_field_text_input_with_checkbox"
                 android:id="@+id/field_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/field_repeat_delay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

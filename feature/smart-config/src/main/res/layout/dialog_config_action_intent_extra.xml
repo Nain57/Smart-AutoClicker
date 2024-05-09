@@ -38,7 +38,7 @@
             android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:orientation="vertical">
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/edit_key_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <include layout="@layout/include_input_field_text"
+                        <include layout="@layout/include_field_text_input"
                             android:id="@+id/edit_value_field"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

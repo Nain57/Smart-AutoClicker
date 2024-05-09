@@ -32,12 +32,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogNavigationTopBarBinding
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldTextBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputBinding
 import com.buzbuz.smartautoclicker.databinding.DialogScenarioCreationBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeScenarioTypeViewBinding
 
@@ -116,7 +116,7 @@ class ScenarioCreationDialog : DialogFragment() {
         buttonDelete.visibility = View.GONE
     }
 
-    private fun IncludeInputFieldTextBinding.initScenarioNameField() {
+    private fun IncludeFieldTextInputBinding.initScenarioNameField() {
         setLabel(R.string.input_field_label_scenario_name)
         setOnTextChangedListener { viewModel.setName(it.toString()) }
         textField.filters = arrayOf<InputFilter>(

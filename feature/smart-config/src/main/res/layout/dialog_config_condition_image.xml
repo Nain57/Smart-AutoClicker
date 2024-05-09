@@ -39,7 +39,7 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/field_edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

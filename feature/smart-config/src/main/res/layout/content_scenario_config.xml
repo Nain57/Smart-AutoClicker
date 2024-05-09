@@ -32,7 +32,7 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginVertical="@dimen/margin_horizontal_default">
 
-        <include layout="@layout/include_input_field_text"
+        <include layout="@layout/include_field_text_input"
             android:id="@+id/field_scenario_name"
             style="@style/AppTheme.Widget.InputText"
             android:layout_width="match_parent"
