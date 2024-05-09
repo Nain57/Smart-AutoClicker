@@ -49,6 +49,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.texts.setup
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
@@ -92,25 +95,25 @@ class DumbSwipeDialog(
                 }
             }
 
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
-            editSwipeDurationLayout.apply {
+            fieldDuration.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_swipe_duration)
                 setOnTextChangedListener {
                     viewModel.setPressDurationMs(if (it.isNotEmpty()) it.toString().toLong() else 0)
                 }
             }
-            hideSoftInputOnFocusLoss(editSwipeDurationLayout.textField)
+            hideSoftInputOnFocusLoss(fieldDuration.textField)
 
-            editRepeatLayout.apply {
+            fieldRepeat.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(
                     REPEAT_COUNT_MIN_VALUE,
                     REPEAT_COUNT_MAX_VALUE
@@ -122,7 +125,7 @@ class DumbSwipeDialog(
                 setOnCheckboxClickedListener(viewModel::toggleInfiniteRepeat)
             }
 
-            editRepeatDelay.apply {
+            fieldRepeatDelay.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(
                     REPEAT_DELAY_MIN_MS.toInt(),
                     REPEAT_DELAY_MAX_MS.toInt(),
@@ -132,9 +135,12 @@ class DumbSwipeDialog(
                     viewModel.setRepeatDelay(if (it.isNotEmpty()) it.toString().toLong() else 0)
                 }
             }
-            hideSoftInputOnFocusLoss(editRepeatDelay.textField)
+            hideSoftInputOnFocusLoss(fieldRepeatDelay.textField)
 
-            cardSwipePosition.setOnClickListener { onPositionCardClicked() }
+            fieldSelectionPosition.apply {
+                setTitle(context.getString(R.string.item_title_swipe_positions))
+                setOnClickListener { debounceUserInteraction { onPositionCardClicked() } }
+            }
         }
 
         return viewBinding.root
@@ -144,16 +150,16 @@ class DumbSwipeDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isValidDumbSwipe.collect(::updateSaveButton) }
-                launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.swipeDuration.collect(::updateDumbSwipePressDuration) }
-                launch { viewModel.swipeDurationError.collect(viewBinding.editSwipeDurationLayout::setError)}
-                launch { viewModel.repeatCount.collect(viewBinding.editRepeatLayout::setNumericValue) }
-                launch { viewModel.repeatCountError.collect(viewBinding.editRepeatLayout::setError) }
-                launch { viewModel.repeatInfiniteState.collect(viewBinding.editRepeatLayout::setChecked) }
+                launch { viewModel.swipeDurationError.collect(viewBinding.fieldDuration::setError)}
+                launch { viewModel.repeatCount.collect(viewBinding.fieldRepeat::setNumericValue) }
+                launch { viewModel.repeatCountError.collect(viewBinding.fieldRepeat::setError) }
+                launch { viewModel.repeatInfiniteState.collect(viewBinding.fieldRepeat::setChecked) }
                 launch { viewModel.repeatDelay.collect(::updateDumbSwipeRepeatDelay) }
-                launch { viewModel.repeatDelayError.collect(viewBinding.editRepeatDelay::setError)}
-                launch { viewModel.swipePositionText.collect(viewBinding.swipeSelectorSubtext::setText) }
+                launch { viewModel.repeatDelayError.collect(viewBinding.fieldRepeatDelay::setError)}
+                launch { viewModel.swipePositionText.collect(::updateFieldPosition) }
             }
         }
     }
@@ -184,6 +190,22 @@ class DumbSwipeDialog(
         }
     }
 
+    private fun updateDumbSwipePressDuration(duration: String) {
+        viewBinding.fieldDuration.setText(duration, InputType.TYPE_CLASS_NUMBER)
+    }
+
+    private fun updateDumbSwipeRepeatDelay(delay: String) {
+        viewBinding.fieldRepeatDelay.setText(delay, InputType.TYPE_CLASS_NUMBER)
+    }
+
+    private fun updateSaveButton(isValidCondition: Boolean) {
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
+    }
+
+    private fun updateFieldPosition(positionText: String) {
+        viewBinding.fieldSelectionPosition.setDescription(positionText)
+    }
+
     private fun onPositionCardClicked() {
         viewModel.getEditedDumbSwipe()?.let { swipe ->
             overlayManager.navigateTo(
@@ -203,19 +225,6 @@ class DumbSwipeDialog(
                 hideCurrent = true,
             )
         }
-
-    }
-
-    private fun updateDumbSwipePressDuration(duration: String) {
-        viewBinding.editSwipeDurationLayout.setText(duration, InputType.TYPE_CLASS_NUMBER)
-    }
-
-    private fun updateDumbSwipeRepeatDelay(delay: String) {
-        viewBinding.editRepeatDelay.setText(delay, InputType.TYPE_CLASS_NUMBER)
-    }
-
-    private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     private fun Point.toEditionPosition(): PointF? =

@@ -70,25 +70,9 @@ class DumbScenarioConfigViewModel @Inject constructor(
     val maxDurationMinInfiniteState: Flow<Boolean> = userModifications
         .map { it == null || it.isDurationInfinite }
 
-    private val enabledRandomization = DropdownItem(
-        title = R.string.dropdown_item_title_anti_detection_enabled,
-        helperText = R.string.dropdown_helper_text_anti_detection_enabled,
-    )
-    private val disableRandomization = DropdownItem(
-        title = R.string.dropdown_item_title_anti_detection_disabled,
-        helperText = R.string.dropdown_helper_text_anti_detection_disabled,
-    )
-    val randomizationDropdownItems = listOf(enabledRandomization, disableRandomization)
-
     /** The randomization value for the scenario. */
-    val randomization: Flow<DropdownItem> = userModifications
-        .map {
-            when (it?.randomize) {
-                true -> enabledRandomization
-                else -> disableRandomization
-            }
-        }
-        .filterNotNull()
+    val randomization: Flow<Boolean> = userModifications
+        .map { it?.randomize == true }
 
     fun setDumbScenarioName(name: String) {
         userModifications.value?.copy(name = name)?.let {
@@ -122,15 +106,9 @@ class DumbScenarioConfigViewModel @Inject constructor(
         }
     }
 
-    fun setRandomization(randomizationItem: DropdownItem) {
+    fun toggleRandomization() {
         userModifications.value?.let { scenario ->
-            val value = when (randomizationItem) {
-                enabledRandomization -> true
-                disableRandomization -> false
-                else -> return
-            }
-
-            dumbEditionRepository.updateDumbScenario(scenario.copy(randomize = value))
+            dumbEditionRepository.updateDumbScenario(scenario.copy(randomize = !scenario.randomize))
         }
     }
 }
