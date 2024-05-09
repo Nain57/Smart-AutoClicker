@@ -70,14 +70,14 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
         )
 
         viewBinding = ContentIntentConfigAdvancedBinding.inflate(LayoutInflater.from(context)).apply {
-            editNameLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(editNameLayout.textField)
+            dialogController.hideSoftInputOnFocusLoss(fieldName.textField)
 
             intentSendingTypeField.setItems(
                 label = context.getString(R.string.dropdown_label_intent_sending_type),
@@ -120,8 +120,8 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { dialogViewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { dialogViewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { dialogViewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { dialogViewModel.sendingType.collect(::updateSendingType) }
                 launch { dialogViewModel.action.collect(viewBinding.editActionLayout::setTextValue) }
                 launch { dialogViewModel.actionError.collect(viewBinding.editActionLayout::setError) }

@@ -286,5 +286,7 @@
     <string name="content_desc_open_event_list">打开脚本列表</string>
     <string name="content_desc_application_icon">应用图标</string>
     <string name="item_title_debug_show_report">Show report</string>
+    <string name="field_title_select_swipe_positions">Swipe positions</string>
+    <string name="field_desc_application_selection">Start an application when this action is executed</string>
 
 </resources>

@@ -63,21 +63,16 @@ class ToggleEventViewModel @Inject constructor(
     val nameError: Flow<Boolean> = configuredToggleEvent.map { it.name?.isEmpty() ?: true }
 
     /** The selected toggle all state for the action. */
-    val toggleAllEnabledButton: Flow<ToggleAllButtonState> = configuredToggleEvent
+    val toggleAllButtonCheckIndex: Flow<Int?> = configuredToggleEvent
         .map { toggleEventAction ->
             when {
-                !toggleEventAction.toggleAll ->
-                    ToggleAllButtonState(null, R.string.item_desc_toggle_event_manual)
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.ENABLE ->
-                    ToggleAllButtonState(BUTTON_ENABLE_EVENT,R.string.item_desc_toggle_event_enable_all)
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.TOGGLE ->
-                    ToggleAllButtonState(BUTTON_TOGGLE_EVENT, R.string.item_desc_toggle_event_invert_all)
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.DISABLE ->
-                    ToggleAllButtonState(BUTTON_DISABLE_EVENT, R.string.item_desc_toggle_event_disable_all)
+                !toggleEventAction.toggleAll -> null
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
                 else -> null
             }
         }
-        .filterNotNull()
 
     val eventToggleSelectorState: Flow<EventToggleSelectorState> = configuredToggleEvent
         .map { toggleEventAction ->
@@ -159,18 +154,13 @@ class ToggleEventViewModel @Inject constructor(
 
 }
 
-data class ToggleAllButtonState(
-    val checkedButton: Int?,
-    @StringRes val descriptionText: Int,
-)
-
 data class EventToggleSelectorState(
     val isEnabled: Boolean,
     val title: String,
+    val enableCount: Int,
+    val toggleCount: Int,
+    val disableCount: Int,
     @StringRes val emptyText: Int?,
-    val enableCount: Int?,
-    val toggleCount: Int?,
-    val disableCount: Int?,
 )
 
 internal const val BUTTON_ENABLE_EVENT = 0

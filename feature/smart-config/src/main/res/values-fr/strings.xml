@@ -290,4 +290,6 @@
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
     <string name="item_title_debug_show_report">Show report</string>
+    <string name="field_title_select_swipe_positions">Swipe positions</string>
+    <string name="field_desc_application_selection">Start an application when this action is executed</string>
 </resources>
