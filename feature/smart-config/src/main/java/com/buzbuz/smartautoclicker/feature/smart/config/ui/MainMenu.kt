@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui
 
-import android.content.ComponentName
 import android.content.DialogInterface
-import android.content.Intent
 import android.util.Size
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -130,11 +128,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         super.onStart()
         viewModel.monitorPlayPauseButtonView(viewBinding.btnPlay)
         viewModel.monitorConfigButtonView(viewBinding.btnClickList)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (viewModel.shouldShowFirstTimeTutorialDialog()) showFirstTimeTutorialDialog()
     }
 
     override fun onStop() {
@@ -303,24 +296,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
             .create()
             .showAsOverlay()
-    }
-
-    private fun showFirstTimeTutorialDialog() {
-        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
-            .setTitle(R.string.dialog_title_tutorial)
-            .setMessage(R.string.message_tutorial_first_time)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                context.startActivity(
-                    Intent()
-                        .setComponent(ComponentName(context.packageName, "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                )
-            }
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .create()
-            .showAsOverlay()
-
-        viewModel.onFirstTimeTutorialDialogShown()
     }
 
     private fun showStopVolumeDownTutorialDialog() {

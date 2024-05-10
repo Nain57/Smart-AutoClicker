@@ -16,8 +16,6 @@
 -->
 <resources>
 
-    <string name="message_tutorial_first_time">Congratulations, Smart AutoClicker is now functional on your device !\nWould you like to follow a tutorial teaching you the basics of the application ?</string>
-
     <!-- Generic =================================================================================================== -->
     <!-- Those values are shared between several dialogs due to their generic meaning, such as name -->
 
