@@ -130,17 +130,16 @@
     <string name="item_title_toggle_change_all">Change all</string>
 
     <!--
-      - Field titles.
+      - Fields.
       -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title (3~4 lines max)
      -->
     <string name="field_title_select_detection_area">Detection Area</string>
     <string name="field_title_select_swipe_positions">Swipe positions</string>
-
-    <!--
-      - Field descriptions.
-      -  * Desc can have more space to describe the title
-     -->
+    <string name="field_title_show_debug_report">Show report</string>
     <string name="field_desc_application_selection">Start an application when this action is executed</string>
+    <string name="field_desc_timer_restart_on">Once reached, the timer will restart, allowing this condition to be fulfilled again</string>
+    <string name="field_desc_timer_restart_off">Once reached, the timer will not be restarted, meaning that this condition can be fulfilled only once</string>
 
     <!--
       - Empty list messages.
@@ -347,8 +346,5 @@
     <string name="item_title_add" translatable="false">+</string>
     <string name="item_title_set" translatable="false">=</string>
     <string name="item_title_minus" translatable="false">-</string>
-    <string name="item_title_debug_show_report">Show report</string>
-    <string name="field_desc_timer_restart_on">Once reached, the timer will restart, allowing this condition to be fulfilled again</string>
-    <string name="field_desc_timer_restart_off">Once reached, the timer will not be restarted, meaning that this condition can be fulfilled only once</string>
 
 </resources>

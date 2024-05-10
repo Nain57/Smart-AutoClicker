@@ -109,7 +109,6 @@
     <string name="item_title_debug_report_not_available">Nessun rapporto di debug disponibile</string>
     <string name="item_title_debug_show_view">Mostra visualizzazione debug</string>
     <string name="item_title_detection_type_exact">Rilevamento nella posizione catturata</string>
-    <string name="field_title_select_detection_area">Rilevamento su una parte dello schermo</string>
     <string name="item_title_detection_type_screen">Rilevamento su tutto lo schermo</string>
     <string name="item_title_intent">Intento</string>
     <string name="item_title_pause">Attendi</string>
@@ -124,6 +123,18 @@
     <string name="item_title_restart_when_reached">Riavviare quando viene raggiunto</string>
     <string name="item_title_toggle_type">Tipo di levetta</string>
     <string name="item_title_toggle_change_all">Cambiare tutti</string>
+
+    <!--
+      - Fields.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title (3~4 lines max)
+     -->
+    <string name="field_title_select_detection_area">Area di rilevamento</string>
+    <string name="field_title_select_swipe_positions">Posizioni di scorrimento</string>
+    <string name="field_title_show_debug_report">Mostra il rapporto</string>
+    <string name="field_desc_application_selection">Avviare un\'applicazione quando viene eseguita questa azione</string>
+    <string name="field_desc_timer_restart_on">Una volta raggiunto, il timer si riavvia, consentendo di soddisfare nuovamente questa condizione.</string>
+    <string name="field_desc_timer_restart_off">Una volta raggiunto, il timer non verrà riavviato, il che significa che questa condizione può essere soddisfatta una sola volta.</string>
 
     <!--
       - Empty list messages.
@@ -288,10 +299,5 @@
     <string name="content_desc_image_condition">L\'immagine da rilevare</string>
     <string name="content_desc_open_event_list">Apri la lista eventi</string>
     <string name="content_desc_application_icon">L\'icona dell\'applicazione da avviare.</string>
-    <string name="item_title_debug_show_report">Show report</string>
-    <string name="field_title_select_swipe_positions">Swipe positions</string>
-    <string name="field_desc_application_selection">Start an application when this action is executed</string>
-    <string name="field_desc_timer_restart_on">Once reached, the timer will restart, allowing this condition to be fulfilled again</string>
-    <string name="field_desc_timer_restart_off">Once reached, the timer will not be restarted, meaning that this condition can be fulfilled only once</string>
 
 </resources>

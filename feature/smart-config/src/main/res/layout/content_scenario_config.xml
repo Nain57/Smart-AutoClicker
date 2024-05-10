@@ -54,7 +54,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
-                    style="@style/AppTheme.TextAppearance.CardTitle"
+                    style="@style/AppTheme.TextAppearance.FieldTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
