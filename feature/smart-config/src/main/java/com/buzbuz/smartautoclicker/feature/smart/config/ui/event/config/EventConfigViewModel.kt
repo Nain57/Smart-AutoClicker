@@ -28,7 +28,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
@@ -109,26 +108,11 @@ class EventConfigViewModel @Inject constructor(
         }
     }
 
-    fun monitorConditionOperatorView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR, view)
-    }
-
-    fun monitorDropdownItemAndView(view: View) {
-        monitoredViewsManager.attach(
-            MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND,
-            view,
-            ViewPositioningType.SCREEN,
-        )
-    }
-
-    fun stopDropdownItemConditionViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND)
+    fun monitorConditionOperatorItemAndView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND, view,)
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.apply {
-            detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR)
-            detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND)
-        }
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND)
     }
 }

@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
 class TutorialGameViewModel @Inject constructor(
     private val tutorialRepository: TutorialRepository,
 ) : ViewModel() {

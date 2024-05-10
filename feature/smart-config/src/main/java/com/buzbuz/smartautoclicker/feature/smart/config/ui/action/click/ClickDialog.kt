@@ -31,17 +31,16 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
@@ -164,8 +163,8 @@ class ClickDialog(
         super.onStart()
         viewModel.apply {
             monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-            //monitorSelectPositionView(viewBinding.layoutClickSelector)
-            //monitorClickOnDropdownView(viewBinding.clickPositionField.root)
+            monitorFieldSelectPositionView(viewBinding.fieldClickSelection.root)
+            monitorFieldPositionTypeItemOnConditionView(viewBinding.fieldClickType.multiStateButton.buttonMiddle)
         }
     }
 
@@ -187,13 +186,6 @@ class ClickDialog(
             listener.onDeleteClicked()
             back()
         }
-    }
-
-    private fun onClickOnDropdownItemBound(item: DropdownItem, view: View?) {
-        /*if (item == viewModel.clickTypeItemOnCondition) {
-            if (view != null) viewModel.monitorDropdownItemConditionView(view)
-            else viewModel.stopDropdownItemConditionViewMonitoring()
-        }*/
     }
 
     private fun updateClickName(newName: String?) {

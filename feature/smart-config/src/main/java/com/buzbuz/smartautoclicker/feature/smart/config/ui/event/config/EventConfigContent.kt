@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.DualStateButtonTextConfig
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
@@ -135,7 +134,7 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
 
     override fun onStart() {
         super.onStart()
-        //viewModel.monitorConditionOperatorView(viewBinding.conditionsOperatorField.root)
+        viewModel.monitorConditionOperatorItemAndView(viewBinding.fieldConditionOperator.dualStateButton.buttonLeft)
     }
 
     override fun onStop() {
@@ -160,20 +159,11 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
 
     private fun updateTryFieldVisibility(isEnabled: Boolean) {
         viewBinding.cardTestEvent.visibility = if (isEnabled) View.VISIBLE else View.GONE
-
     }
 
     private fun updateTryFieldEnabledState(isEnabled: Boolean) {
         viewBinding.fieldTestEvent.setEnabled(isEnabled)
     }
-
-    private fun onConditionOperatorDropdownItemBound(item: DropdownItem, view: View?) {
-        /*if (item == viewModel.conditionAndItem) {
-            if (view != null) viewModel.monitorDropdownItemAndView(view)
-            else viewModel.stopDropdownItemConditionViewMonitoring()
-        }*/
-    }
-
 
     private fun showTryElementMenu() {
         viewModel.getTryInfo()?.let { (scenario, imageEvent) ->

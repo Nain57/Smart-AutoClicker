@@ -68,25 +68,17 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
                     MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT,
                 ),
             ),
-            // Click on Condition operator dropdown
+            // Click on Condition operator AND
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_3_step_5,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR,
-                ),
-            ),
-            // Click on AND
-            TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_6,
-                stepStartCondition = StepStartCondition.Immediate,
-                stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND,
+                    MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND,
                 ),
             ),
             // Select condition tab
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_7,
+                contentTextResId = R.string.message_tutorial_3_step_6,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS,
@@ -94,7 +86,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Create a new condition
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_8,
+                contentTextResId = R.string.message_tutorial_3_step_7,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION,
@@ -102,29 +94,29 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Take a screenshot
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_9,
+                contentTextResId = R.string.message_tutorial_3_step_8,
                 image = TutorialStepImage(
                     imageResId = R.drawable.ic_screenshot,
-                    imageDescResId = R.string.message_tutorial_3_step_secondary_9,
+                    imageDescResId = R.string.message_tutorial_3_step_secondary_8,
                 ),
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.NextButton,
             ),
             // Ensure target is captured or retry
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_10,
+                contentTextResId = R.string.message_tutorial_3_step_9,
                 image = TutorialStepImage(
                     imageResId = R.drawable.ic_cancel,
-                    imageDescResId = R.string.message_tutorial_3_step_secondary_10,
+                    imageDescResId = R.string.message_tutorial_3_step_secondary_9,
                 ),
                 stepStartCondition = StepStartCondition.MonitoredViewClicked(
-                    MonitoredViewType.CONDITION_CAPTURE_BUTTON_CAPTURE,
+                    MonitoredViewType.CONDITION_CAPTURE_MENU_BUTTON_CAPTURE,
                 ),
                 stepEndCondition = StepEndCondition.NextButton,
             ),
             // Save condition
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_11,
+                contentTextResId = R.string.message_tutorial_3_step_10,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
@@ -132,7 +124,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Select action tab
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_12,
+                contentTextResId = R.string.message_tutorial_3_step_11,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS,
@@ -140,7 +132,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Save event
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_13,
+                contentTextResId = R.string.message_tutorial_3_step_12,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE,
@@ -148,7 +140,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Save scenario
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_14,
+                contentTextResId = R.string.message_tutorial_3_step_13,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
@@ -156,7 +148,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Play scenario
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_15,
+                contentTextResId = R.string.message_tutorial_3_step_14,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.FLOATING_MENU_BUTTON_PLAY,
@@ -164,7 +156,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Game won
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_16,
+                contentTextResId = R.string.message_tutorial_3_step_15,
                 stepStartCondition = StepStartCondition.GameWon,
                 stepEndCondition = StepEndCondition.NextButton,
             ),

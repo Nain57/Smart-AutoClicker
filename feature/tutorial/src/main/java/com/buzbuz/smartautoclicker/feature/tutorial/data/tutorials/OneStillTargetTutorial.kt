@@ -38,7 +38,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
         info = oneStillTargetTutorialInfo,
         game = TutorialGameData(
             instructionsResId = R.string.message_tutorial_1_game_instructions,
-            gameRules = OneStillTargetRules(150),
+            gameRules = OneStillTargetRules(100),
         ),
         steps = listOf(
             // Start screen, before first play
@@ -102,7 +102,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
                     imageDescResId = R.string.message_tutorial_1_step_secondary_8,
                 ),
                 stepStartCondition = StepStartCondition.MonitoredViewClicked(
-                    MonitoredViewType.CONDITION_CAPTURE_BUTTON_CAPTURE,
+                    MonitoredViewType.CONDITION_CAPTURE_MENU_BUTTON_CAPTURE,
                 ),
                 stepEndCondition = StepEndCondition.NextButton,
             ),
@@ -153,7 +153,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_1_step_14,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION,
+                    MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION,
                 ),
             ),
             // Pick location

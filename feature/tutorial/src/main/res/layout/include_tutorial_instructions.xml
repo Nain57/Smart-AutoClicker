@@ -33,11 +33,11 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_instructions"
-            style="@style/AppTheme.TextAppearance.BodyLarge"
+            style="@style/AppTheme.TextAppearance.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            tools:text="@string/message_tutorial_1_step_9"/>
+            tools:text="@string/message_tutorial_1_step_9" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_image_instructions"
@@ -77,7 +77,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_image_instructions_description"
-                style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
+                style="@style/AppTheme.TextAppearance.FieldSubText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintTop_toBottomOf="@id/image_instructions"
