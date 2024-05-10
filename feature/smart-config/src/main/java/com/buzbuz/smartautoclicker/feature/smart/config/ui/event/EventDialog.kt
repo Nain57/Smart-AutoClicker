@@ -68,8 +68,8 @@ class EventDialog(
                 viewModel.getEditedEvent()?.let { event ->
                     dialogTitle.setText(
                         when (event) {
-                            is ImageEvent -> R.string.dialog_overlay_title_image_event_config
-                            is TriggerEvent -> R.string.dialog_overlay_title_trigger_event_config
+                            is ImageEvent -> R.string.dialog_title_image_event
+                            is TriggerEvent -> R.string.dialog_title_trigger_event
                         }
                     )
                 }
@@ -171,7 +171,7 @@ class EventDialog(
      * Once confirmed, it will delete the event and close the dialog.
      */
     private fun showAssociatedActionsWarning() {
-        showMessageDialog(R.string.dialog_overlay_title_warning, R.string.message_event_delete_associated_action) {
+        showMessageDialog(R.string.dialog_overlay_title_warning, R.string.warning_dialog_message_event_delete_associated_action) {
             onDelete()
             back()
         }

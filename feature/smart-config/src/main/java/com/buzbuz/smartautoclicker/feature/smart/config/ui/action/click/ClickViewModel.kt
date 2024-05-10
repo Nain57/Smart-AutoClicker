@@ -213,10 +213,10 @@ class ClickViewModel @Inject constructor(
             positionType = Action.Click.PositionType.USER_SELECTED,
             isTypeFieldVisible = !forced,
             isSelectorEnabled = true,
-            selectorTitle = getString(R.string.item_title_click_position),
+            selectorTitle = getString(R.string.field_click_position_title),
             selectorDescription =
-                if (click.x == null || click.y == null) getString(R.string.item_desc_position_select)
-                else getString(R.string.item_desc_click_on_position, click.x!!, click.y!!),
+                if (click.x == null || click.y == null) getString(R.string.generic_select_the_position)
+                else getString(R.string.field_click_position_desc, click.x!!, click.y!!),
         )
 
     private fun Context.getOnConditionWithOrPositionState(): ClickPositionUiState =
@@ -224,8 +224,8 @@ class ClickViewModel @Inject constructor(
             positionType = Action.Click.PositionType.ON_DETECTED_CONDITION,
             isTypeFieldVisible = true,
             isSelectorEnabled = false,
-            selectorTitle = getString(R.string.item_title_click_on_condition_or_operator),
-            selectorDescription = getString(R.string.item_desc_click_on_condition_or_operator),
+            selectorTitle = getString(R.string.field_condition_selection_title_or_operator),
+            selectorDescription = getString(R.string.field_condition_selection_desc_or_operator),
         )
 
     private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Action.Click): ClickPositionUiState {
@@ -236,10 +236,10 @@ class ClickViewModel @Inject constructor(
             positionType = Action.Click.PositionType.ON_DETECTED_CONDITION,
             isTypeFieldVisible = true,
             isSelectorEnabled = availableConditions.value.isNotEmpty(),
-            selectorTitle = getString(R.string.item_title_click_on_condition_and_operator),
+            selectorTitle = getString(R.string.field_condition_selection_title_and_operator),
             selectorDescription =
-                if (conditionToClick == null || conditionBitmap == null) getString(R.string.item_desc_click_on_condition_and_operator_not_found)
-                else getString(R.string.item_desc_click_on_condition_and_operator, conditionToClick.name),
+                if (conditionToClick == null || conditionBitmap == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
+                else getString(R.string.field_condition_selection_desc_and_operator, conditionToClick.name),
             selectorBitmap = conditionBitmap,
         )
     }

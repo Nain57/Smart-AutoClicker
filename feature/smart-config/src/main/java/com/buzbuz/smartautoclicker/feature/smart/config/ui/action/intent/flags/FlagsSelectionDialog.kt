@@ -65,7 +65,7 @@ class FlagsSelectionDialog (
 
         viewBinding = DialogConfigActionIntentFlagsBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_intent_flags)
+                dialogTitle.setText(R.string.dialog_title_intent_flags)
 
                 setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)

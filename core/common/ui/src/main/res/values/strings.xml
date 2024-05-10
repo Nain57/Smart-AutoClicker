@@ -30,8 +30,8 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_title_click_position">Click position</string>
-    <string name="item_title_swipe_positions">Swipe positions</string>
+    <string name="field_click_position_title">Click position</string>
+    <string name="field_swipe_positions_title">Swipe positions</string>
     <string name="item_title_try_element">Test your %1$s</string>
     <string name="item_error_action_invalid_generic">This action is invalid</string>
 

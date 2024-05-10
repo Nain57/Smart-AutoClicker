@@ -138,7 +138,7 @@ class DumbSwipeDialog(
             hideSoftInputOnFocusLoss(fieldRepeatDelay.textField)
 
             fieldSelectionPosition.apply {
-                setTitle(context.getString(R.string.item_title_swipe_positions))
+                setTitle(context.getString(R.string.field_swipe_positions_title))
                 setOnClickListener { debounceUserInteraction { onPositionCardClicked() } }
             }
         }

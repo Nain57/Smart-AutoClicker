@@ -66,7 +66,7 @@ class ChangeCounterDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionChangeCounterBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_change_counter)
+                dialogTitle.setText(R.string.dialog_title_change_counter)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -85,7 +85,7 @@ class ChangeCounterDialog(
             }
 
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -94,7 +94,7 @@ class ChangeCounterDialog(
             hideSoftInputOnFocusLoss(fieldName.textField)
 
             editCounterNameLayout.apply {
-                setup(R.string.input_field_label_change_counter_name, R.drawable.ic_search, false)
+                setup(R.string.field_counter_name_label, R.drawable.ic_search, false)
                 setOnTextChangedListener { viewModel.setCounterName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -104,14 +104,14 @@ class ChangeCounterDialog(
             hideSoftInputOnFocusLoss(editCounterNameLayout.textField)
 
             operatorField.setItems(
-                label = context.getString(R.string.dropdown_label_comparison_operator),
+                label = context.getString(R.string.dropdown_comparison_operator_label),
                 items = viewModel.operatorDropdownItems,
                 onItemSelected = viewModel::setOperationItem,
             )
 
             editValueLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
-                setLabel(R.string.input_field_label_change_counter_operation_value)
+                setLabel(R.string.field_counter_operation_value_label)
                 setOnTextChangedListener {
                     viewModel.setOperationValue(if (it.isNotEmpty()) it.toString().toInt() else null)
                 }

@@ -64,7 +64,7 @@ class PauseDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionPauseBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_pause)
+                dialogTitle.setText(R.string.dialog_title_pause)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -83,7 +83,7 @@ class PauseDialog(
             }
 
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))

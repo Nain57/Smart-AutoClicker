@@ -60,17 +60,8 @@
                         style="@style/AppTheme.TextAppearance.CardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/section_title_intent_extras_value"
+                        android:text="@string/field_intent_extra_value_title"
                         android:labelFor="@+id/edit_name"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/button_select_type"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/button_text_intent_extra_type_select"
-                        tools:visibility="gone"/>
 
                     <include layout="@layout/include_input_field_dropdown"
                         android:id="@+id/extra_value_type_field"

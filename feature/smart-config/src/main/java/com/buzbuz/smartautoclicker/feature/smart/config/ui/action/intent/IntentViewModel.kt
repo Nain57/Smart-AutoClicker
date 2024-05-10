@@ -90,8 +90,8 @@ class IntentViewModel @Inject constructor(
         !intent.isBroadcast && intent.componentName == null
     }
 
-    val sendingTypeActivity = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_activity)
-    val sendingTypeBroadcast = DropdownItem(title = R.string.dropdown_item_title_intent_sending_type_broadcast)
+    val sendingTypeActivity = DropdownItem(title = R.string.dropdown_intent_sending_type_item_activity)
+    val sendingTypeBroadcast = DropdownItem(title = R.string.dropdown_intent_sending_type_item_broadcast)
     /** Sending types choices for the dropdown field. */
     val sendingTypeItems = listOf(sendingTypeActivity, sendingTypeBroadcast)
     /** Current choice for the sending type dropdown field. */

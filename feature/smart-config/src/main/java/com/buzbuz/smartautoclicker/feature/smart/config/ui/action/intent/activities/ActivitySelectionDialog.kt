@@ -65,7 +65,7 @@ class ActivitySelectionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_application_selection)
+                dialogTitle.setText(R.string.dialog_title_application_selection)
                 buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
 

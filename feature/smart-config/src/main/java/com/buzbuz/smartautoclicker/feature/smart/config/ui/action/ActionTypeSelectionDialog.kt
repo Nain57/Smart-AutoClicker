@@ -30,7 +30,7 @@ class ActionTypeSelectionDialog(
     onCancelledListener: (() -> Unit)? = null,
 ) : MultiChoiceDialog<ActionTypeChoice>(
     theme = R.style.ScenarioConfigTheme,
-    dialogTitleText = R.string.dialog_overlay_title_action_type,
+    dialogTitleText = R.string.dialog_title_action_type,
     choices = choices,
     onChoiceSelected = onChoiceSelectedListener,
     onCanceled = onCancelledListener,

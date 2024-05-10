@@ -91,7 +91,7 @@ class EventCopyDialog(
     private fun showToggleEventCopyWarning(event: Event) {
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_event_copy_with_toggle_action_from_another_scenario)
+            .setMessage(R.string.warning_dialog_message_toggle_action_from_another_scenario)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 notifySelectionAndDestroy(event)
             }

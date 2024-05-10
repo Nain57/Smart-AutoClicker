@@ -67,7 +67,7 @@ class TimerReachedConditionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigConditionTimerBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_timer_reached)
+                dialogTitle.setText(R.string.dialog_title_timer_reached)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -92,7 +92,7 @@ class TimerReachedConditionDialog(
             }
 
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -116,11 +116,11 @@ class TimerReachedConditionDialog(
             )
 
             fieldIsReset.apply {
-                setTitle(context.getString(R.string.item_title_restart_when_reached))
+                setTitle(context.getString(R.string.field_timer_restart_title))
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.field_desc_timer_restart_off),
-                        context.getString(R.string.field_desc_timer_restart_on),
+                        context.getString(R.string.field_timer_restart_desc_off),
+                        context.getString(R.string.field_timer_restart_desc_on),
                     )
                 )
                 setOnClickListener(viewModel::toggleRestartWhenReached)

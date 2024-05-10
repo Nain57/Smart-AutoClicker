@@ -51,17 +51,17 @@ fun ItemTriggerConditionBinding.bind(
 private fun Context.getTriggerConditionDescription(condition: TriggerCondition): String =
     when (condition) {
         is TriggerCondition.OnBroadcastReceived -> getString(
-            R.string.item_desc_on_broadcast_received,
+            R.string.item_broadcast_received_details,
             condition.toBroadcastActionDisplayName(),
         )
         is TriggerCondition.OnCounterCountReached -> getString(
-            R.string.item_desc_on_counter_reached,
+            R.string.item_counter_reached_details,
             condition.counterName,
             getComparisonOperationDisplayName(condition.comparisonOperation),
             condition.counterValue,
         )
         is TriggerCondition.OnTimerReached -> getString(
-            R.string.item_desc_on_timer_reached,
+            R.string.item_timer_reached_details,
             formatDuration(condition.durationMs),
         )
         else -> throw UnsupportedOperationException("Scenario Start and End Conditions are not supported here")
@@ -69,11 +69,11 @@ private fun Context.getTriggerConditionDescription(condition: TriggerCondition):
 
 private fun Context.getComparisonOperationDisplayName(operation: ComparisonOperation): String =
     when (operation) {
-        GREATER -> getString(R.string.item_title_greater)
-        GREATER_OR_EQUALS -> getString(R.string.item_title_greater_or_equals)
-        EQUALS -> getString(R.string.item_title_equals)
-        LOWER_OR_EQUALS -> getString(R.string.item_title_lower_or_equals)
-        LOWER -> getString(R.string.item_title_lower)
+        GREATER -> getString(R.string.dropdown_comparison_operator_item_greater)
+        GREATER_OR_EQUALS -> getString(R.string.dropdown_comparison_operator_item_greater_or_equals)
+        EQUALS -> getString(R.string.dropdown_comparison_operator_item_equals)
+        LOWER_OR_EQUALS -> getString(R.string.dropdown_comparison_operator_item_lower_or_equals)
+        LOWER -> getString(R.string.dropdown_comparison_operator_item_lower)
     }
 
 private fun TriggerCondition.OnBroadcastReceived.toBroadcastActionDisplayName(): String {

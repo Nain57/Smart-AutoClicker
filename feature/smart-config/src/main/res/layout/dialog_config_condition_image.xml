@@ -46,7 +46,7 @@
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                 android:layout_marginBottom="@dimen/margin_horizontal_small"
                 app:endIconMode="clear_text"
-                android:hint="@string/input_field_label_name"/>
+                android:hint="@string/generic_name"/>
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/AppTheme.Widget.Card"

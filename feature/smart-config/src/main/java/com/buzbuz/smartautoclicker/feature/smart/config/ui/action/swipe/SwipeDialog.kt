@@ -70,7 +70,7 @@ class SwipeDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionSwipeBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_swipe)
+                dialogTitle.setText(R.string.dialog_title_swipe)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -89,7 +89,7 @@ class SwipeDialog(
             }
 
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -107,7 +107,7 @@ class SwipeDialog(
             hideSoftInputOnFocusLoss(fieldSwipeDuration.textField)
 
             fieldSelectionSwipePosition.apply {
-                setTitle(context.getString(R.string.field_title_select_swipe_positions))
+                setTitle(context.getString(R.string.field_swipe_positions_title))
                 setOnClickListener { debounceUserInteraction { showPositionSelector() } }
             }
         }
@@ -160,13 +160,13 @@ class SwipeDialog(
         viewBinding.fieldSelectionSwipePosition.setDescription(
             if (positions != null)
                 context.getString(
-                    R.string.item_desc_swipe_positions,
+                    R.string.field_swipe_positions_desc,
                     positions.first.x,
                     positions.first.y,
                     positions.second.x,
                     positions.second.y,
                 )
-            else context.getString(R.string.item_desc_position_select)
+            else context.getString(R.string.generic_select_the_position)
         )
     }
 

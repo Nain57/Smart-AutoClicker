@@ -61,7 +61,7 @@ class BroadcastReceivedConditionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigConditionBroadcastBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_broadcast_received)
+                dialogTitle.setText(R.string.dialog_title_broadcast_received)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -86,7 +86,7 @@ class BroadcastReceivedConditionDialog(
             }
 
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -95,7 +95,7 @@ class BroadcastReceivedConditionDialog(
             hideSoftInputOnFocusLoss(fieldName.textField)
 
             editBroadcastAction.apply {
-                setup(R.string.input_field_label_broadcast_action, R.drawable.ic_search, false)
+                setup(R.string.field_intent_broadcast_action_label, R.drawable.ic_search, false)
                 setOnTextChangedListener { viewModel.setIntentAction(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))

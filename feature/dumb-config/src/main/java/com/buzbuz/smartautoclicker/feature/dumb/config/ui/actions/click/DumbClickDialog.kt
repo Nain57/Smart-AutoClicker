@@ -139,7 +139,7 @@ class DumbClickDialog(
             hideSoftInputOnFocusLoss(fieldRepeatDelay.textField)
 
             fieldSelectionPosition.apply {
-                setTitle(context.getString(R.string.item_title_click_position))
+                setTitle(context.getString(R.string.field_click_position_title))
                 setOnClickListener { debounceUserInteraction { onPositionCardClicked() } }
             }
         }

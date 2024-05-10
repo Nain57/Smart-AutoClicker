@@ -43,6 +43,8 @@
     <string name="menu_item_title_privacy">Impostazioni sulla privacy</string>
     <string name="menu_item_title_remove_ads">Rimuovere gli annunci</string>
     <string name="menu_item_title_troubleshooting">Risoluzione dei problemi</string>
+    <string name="menu_item_title_cancel">Annulla</string>
+    <string name="menu_item_title_search">Cerca</string>
 
     <!--
       - Text for items in a list or vertical layout.

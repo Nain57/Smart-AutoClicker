@@ -82,9 +82,9 @@ private fun Action.Click.toClickDetails(context: Context, inError: Boolean): Act
         details = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             positionType == Action.Click.PositionType.ON_DETECTED_CONDITION ->
-                context.getString(R.string.item_desc_click_position_on_condition)
+                context.getString(R.string.item_click_details_on_condition)
             else  -> context.getString(
-                R.string.item_desc_click_details,
+                R.string.item_click_details_at_position,
                 formatDuration(pressDuration!!), x, y,
             )
         },
@@ -99,7 +99,7 @@ private fun Action.Swipe.toSwipeDetails(context: Context, inError: Boolean): Act
         details = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
-                R.string.item_desc_swipe_details,
+                R.string.item_swipe_details,
                 formatDuration(swipeDuration!!), fromX, fromY, toX, toY
             )
         },
@@ -114,7 +114,7 @@ private fun Action.Pause.toPauseDetails(context: Context, inError: Boolean): Act
         details = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
-                R.string.item_desc_pause_details,
+                R.string.item_pause_details,
                 formatDuration(pauseDuration!!)
             )
         },
@@ -140,7 +140,7 @@ private fun Action.ToggleEvent.toToggleEventDetails(context: Context, inError: B
         icon = R.drawable.ic_toggle_event,
         name = name!!,
         details = when {
-            inError -> context.getString(R.string.item_error_action_invalid_toggle_event_target)
+            inError -> context.getString(R.string.item_toggle_event_details_error)
             else -> formatToggleEventState(this, context)
         },
         action = this,
@@ -152,7 +152,7 @@ private fun Action.ChangeCounter.toChangeCounterDetails(context: Context, inErro
         icon = R.drawable.ic_change_counter,
         name = name!!,
         details = when {
-            inError -> context.getString(R.string.item_error_action_invalid_change_counter)
+            inError -> context.getString(R.string.item_change_counter_details_error)
             else -> formatChangeCounter(this, context)
         },
         action = this,
@@ -182,7 +182,7 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
                 componentName = componentName.substring(dotIndex2 + 1)
                 if (componentName.length < INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT) {
                     return context.getString(
-                        R.string.item_desc_intent_action_component,
+                        R.string.item_intent_details_component_name,
                         action,
                         componentName,
                     )
@@ -191,7 +191,7 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
         }
     }
 
-    return context.getString(R.string.item_desc_intent_action, action)
+    return context.getString(R.string.item_intent_details, action)
 }
 
 /**
@@ -203,21 +203,21 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
 private fun formatToggleEventState(toggleEvent: Action.ToggleEvent, context: Context): String =
     if (toggleEvent.toggleAll) {
         when (toggleEvent.toggleAllType) {
-            Action.ToggleEvent.ToggleType.ENABLE -> context.getString(R.string.item_desc_toggle_event_state_enable_all)
-            Action.ToggleEvent.ToggleType.TOGGLE -> context.getString(R.string.item_desc_toggle_event_state_invert_all)
-            Action.ToggleEvent.ToggleType.DISABLE -> context.getString(R.string.item_desc_toggle_event_state_disable_all)
+            Action.ToggleEvent.ToggleType.ENABLE -> context.getString(R.string.item_toggle_event_details_enable_all)
+            Action.ToggleEvent.ToggleType.TOGGLE -> context.getString(R.string.item_toggle_event_details_invert_all)
+            Action.ToggleEvent.ToggleType.DISABLE -> context.getString(R.string.item_toggle_event_details_disable_all)
             null -> throw IllegalArgumentException("Invalid toggle event type")
         }
     } else {
         context.getString(
-            R.string.item_desc_toggle_event_state_manual,
+            R.string.item_toggle_event_details_manual,
             toggleEvent.eventToggles.size,
         )
     }
 
 private fun formatChangeCounter(changeCounter: Action.ChangeCounter, context: Context): String =
     context.getString(
-        R.string.item_desc_change_counter_details,
+        R.string.item_change_counter_details,
         changeCounter.counterName.trim(),
         when (changeCounter.operation) {
             Action.ChangeCounter.OperationType.ADD -> "+"

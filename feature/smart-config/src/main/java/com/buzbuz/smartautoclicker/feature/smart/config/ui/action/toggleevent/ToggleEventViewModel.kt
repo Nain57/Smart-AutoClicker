@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -91,7 +90,7 @@ class ToggleEventViewModel @Inject constructor(
             EventToggleSelectorState(
                 isEnabled = !toggleEventAction.toggleAll,
                 title = context.getEventToggleListName(toggleEventAction),
-                emptyText = if (toggleEventAction.eventToggles.isEmpty()) R.string.item_desc_event_toggles_empty else null,
+                emptyText = if (toggleEventAction.eventToggles.isEmpty()) R.string.field_select_toggle_events_desc_empty else null,
                 enableCount = enableCount,
                 toggleCount = toggleCount,
                 disableCount = disableCount,
@@ -149,8 +148,8 @@ class ToggleEventViewModel @Inject constructor(
     }
 
     private fun Context.getEventToggleListName(toggleEventAction: Action.ToggleEvent): String =
-        if (toggleEventAction.eventToggles.isEmpty()) getString(R.string.item_title_empty_event_toggles)
-        else getString(R.string.item_title_event_toggles, toggleEventAction.eventToggles.size)
+        if (toggleEventAction.eventToggles.isEmpty()) getString(R.string.field_select_toggle_events_title_empty)
+        else getString(R.string.field_select_toggle_events_title, toggleEventAction.eventToggles.size)
 
 }
 

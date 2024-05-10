@@ -83,7 +83,7 @@ class ImageConditionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigConditionImageBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_condition_config)
+                dialogTitle.setText(R.string.dialog_title_condition_config)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -107,7 +107,7 @@ class ImageConditionDialog(
             }
 
             fieldEditName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -116,18 +116,18 @@ class ImageConditionDialog(
             hideSoftInputOnFocusLoss(fieldEditName.textField)
 
             fieldShouldAppear.apply {
-                setTitle(context.getString(R.string.dropdown_label_condition_visibility))
+                setTitle(context.getString(R.string.field_condition_visibility_title))
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.dropdown_helper_text_condition_visibility_absent),
-                        context.getString(R.string.dropdown_helper_text_condition_visibility_present),
+                        context.getString(R.string.field_condition_visibility_desc_absent),
+                        context.getString(R.string.field_condition_visibility_desc_present),
                     )
                 )
                 setOnClickListener { viewModel.toggleShouldBeDetected() }
             }
 
             fieldDetectionType.apply {
-                setTitle(context.getString(R.string.dropdown_label_condition_detection_type))
+                setTitle(context.getString(R.string.field_detection_type_title))
                 setButtonConfig(
                     MultiStateButtonConfig(
                         icons = listOf(
@@ -140,16 +140,16 @@ class ImageConditionDialog(
                 )
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.item_title_detection_type_exact),
-                        context.getString(R.string.item_title_detection_type_screen),
-                        context.getString(R.string.field_title_select_detection_area),
+                        context.getString(R.string.field_detection_type_desc_exact),
+                        context.getString(R.string.field_detection_type_desc_screen),
+                        context.getString(R.string.field_select_detection_area_title),
                     )
                 )
                 setOnCheckedListener { index -> viewModel.setDetectionType(index.fromIndexToDetectionType())}
             }
 
             fieldSelectArea.apply {
-                setTitle(context.getString(R.string.field_title_select_detection_area))
+                setTitle(context.getString(R.string.field_select_detection_area_title))
                 setOnClickListener { showDetectionAreaSelector() }
             }
 
@@ -164,7 +164,7 @@ class ImageConditionDialog(
                 setTitle(
                     context.getString(
                         R.string.item_title_try_element,
-                        context.getString(R.string.dialog_overlay_title_condition_config),
+                        context.getString(R.string.dialog_title_condition_config),
                     )
                 )
                 setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
@@ -263,7 +263,7 @@ class ImageConditionDialog(
     private fun showAssociatedActionWarning() {
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_condition_delete_associated_action)
+            .setMessage(R.string.warning_dialog_message_condition_delete_associated_action)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 confirmDelete()
             }

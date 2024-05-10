@@ -70,7 +70,7 @@ class ToggleEventDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionToggleEventBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_toggle_event)
+                dialogTitle.setText(R.string.dialog_title_toggle_event)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -89,7 +89,7 @@ class ToggleEventDialog(
             }
 
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -98,13 +98,13 @@ class ToggleEventDialog(
             hideSoftInputOnFocusLoss(fieldName.textField)
 
             fieldMultiStateToggleAll.apply {
-                setTitle(context.getString(R.string.item_title_toggle_change_all))
+                setTitle(context.getString(R.string.field_change_all_title))
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.item_desc_toggle_event_manual),
-                        context.getString(R.string.item_desc_toggle_event_enable_all),
-                        context.getString(R.string.item_desc_toggle_event_invert_all),
-                        context.getString(R.string.item_desc_toggle_event_disable_all),
+                        context.getString(R.string.field_change_all_desc_manual),
+                        context.getString(R.string.field_change_all_desc_enable_all),
+                        context.getString(R.string.field_change_all_desc_invert_all),
+                        context.getString(R.string.field_change_all_desc_disable_all),
                     )
                 )
                 setButtonConfig(

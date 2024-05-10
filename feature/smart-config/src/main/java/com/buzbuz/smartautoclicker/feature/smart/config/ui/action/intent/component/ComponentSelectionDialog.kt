@@ -60,7 +60,7 @@ class ComponentSelectionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_intent_component_name)
+                dialogTitle.setText(R.string.dialog_title_intent_component_name)
                 buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
 

@@ -71,7 +71,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
 
         viewBinding = ContentIntentConfigAdvancedBinding.inflate(LayoutInflater.from(context)).apply {
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -80,20 +80,20 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
             dialogController.hideSoftInputOnFocusLoss(fieldName.textField)
 
             intentSendingTypeField.setItems(
-                label = context.getString(R.string.dropdown_label_intent_sending_type),
+                label = context.getString(R.string.dropdown_intent_sending_type_label),
                 items = dialogViewModel.sendingTypeItems,
                 onItemSelected = dialogViewModel::setSendingType,
             )
 
             editActionLayout.apply {
-                setup(R.string.input_field_label_intent_action, R.drawable.ic_search, disableInputWithCheckbox = false)
+                setup(R.string.field_intent_action_label, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener { dialogViewModel.setIntentAction(it.toString()) }
                 setOnCheckboxClickedListener { showActionsDialog() }
             }
             dialogController.hideSoftInputOnFocusLoss(editActionLayout.textField)
 
             editFlagsLayout.apply {
-                setup(R.string.input_field_label_intent_flags, R.drawable.ic_search, disableInputWithCheckbox = false)
+                setup(R.string.field_intent_flags_label, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener {
                     dialogViewModel.setIntentFlags(
                         try { if (it.isNotEmpty()) it.toString().toInt() else null }
@@ -105,7 +105,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
             dialogController.hideSoftInputOnFocusLoss(editFlagsLayout.textField)
 
             editComponentNameLayout.apply {
-                setup(R.string.input_field_label_intent_component_name, R.drawable.ic_search, disableInputWithCheckbox = false)
+                setup(R.string.field_intent_component_name_label, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener { dialogViewModel.setComponentName(it.toString()) }
                 setOnCheckboxClickedListener { showComponentNameDialog() }
             }
