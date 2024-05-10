@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowM
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowManagerAddedViews
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
-import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.common.overlays.R
 import dagger.hilt.EntryPoints
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
