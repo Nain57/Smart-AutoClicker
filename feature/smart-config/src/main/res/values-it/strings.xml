@@ -162,7 +162,6 @@
     <string name="warning_dialog_message_condition_delete_associated_action">Questa condizione ha una o più azioni che fanno riferimento ad essa. L\'eliminazione di questa condizione eliminerà anche le azioni associate.\nSei sicuro?</string>
     <string name="field_tutorial_desc">Scopri come utilizzare Smart AutoClicker</string>
     <string name="error_dialog_message_scenario_saving">Il tuo scenario non può essere salvato a causa di un errore interno. \nVuoi modificarlo o annullare tutte le tue modifiche?</string>
-    <string name="message_tutorial_first_time">Congratulazioni, Smart AutoClicker è ora funzionante sul tuo dispositivo! \nVuoi seguire un tutorial che ti insegnerà le basi dell\'applicazione?</string>
     <string name="error_dialog_message_error_native_lib">Smart AutoClicker non è installato correttamente e non può avviare il rilevamento.\n\nSe l\'avete installata da un negozio di applicazioni legittimo, contattateci su GitHub per aiutarci a risolvere il problema.</string>
 
     <!--

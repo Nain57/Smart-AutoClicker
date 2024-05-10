@@ -185,12 +185,6 @@ class MainMenuModel @Inject constructor(
         }
     }
 
-    fun shouldShowFirstTimeTutorialDialog(): Boolean =
-        !tutorialRepository.isTutorialFirstTimePopupShown()
-
-    fun onFirstTimeTutorialDialogShown(): Unit =
-        tutorialRepository.setIsTutorialFirstTimePopupShown()
-
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
         !tutorialRepository.isTutorialStopVolumeDownPopupShown()
 
