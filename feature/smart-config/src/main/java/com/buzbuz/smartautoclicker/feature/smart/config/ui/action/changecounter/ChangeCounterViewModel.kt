@@ -39,9 +39,9 @@ class ChangeCounterViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
-    private val plusItem = DropdownItem(R.string.item_title_add)
-    private val setItem = DropdownItem(R.string.item_title_set)
-    private val minusItem = DropdownItem(R.string.item_title_minus)
+    private val plusItem = DropdownItem(R.string.dropdown_counter_operation_item_add)
+    private val setItem = DropdownItem(R.string.dropdown_counter_operation_item_set)
+    private val minusItem = DropdownItem(R.string.dropdown_counter_operation_item_minus)
 
     /** The action being configured by the user. */
     private val configuredChangeCounter = editionRepository.editionState.editedActionState

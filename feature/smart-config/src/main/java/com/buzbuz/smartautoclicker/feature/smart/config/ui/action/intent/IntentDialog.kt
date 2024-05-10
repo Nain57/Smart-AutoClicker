@@ -52,7 +52,7 @@ class IntentDialog(
     override fun onCreateView(): ViewGroup {
         return super.onCreateView().also {
             topBarBinding.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_intent)
+                dialogTitle.setText(R.string.dialog_title_intent)
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
             }

@@ -57,7 +57,7 @@ class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext)
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentIntentConfigSimpleBinding.inflate(LayoutInflater.from(context)).apply {
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -90,8 +90,8 @@ class SimpleIntentContent(appContext: Context) : NavBarDialogContent(appContext)
     private fun updateActivityInfo(activityInfo: AndroidApplicationInfo?) {
         viewBinding.fieldSelectionApplication.apply {
             if (activityInfo == null) {
-                setTitle(context.getString(R.string.dialog_overlay_title_application_selection))
-                setDescription(context.getString(R.string.field_desc_application_selection))
+                setTitle(context.getString(R.string.field_application_selection_title))
+                setDescription(context.getString(R.string.field_application_selection_desc))
             } else {
                 setImageDrawable(activityInfo.icon)
                 setTitle(activityInfo.name)

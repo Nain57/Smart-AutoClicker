@@ -88,8 +88,8 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun setupImageEventView() {
         viewBinding.apply {
             setEmptyText(
-                id = R.string.message_empty_image_conditions,
-                secondaryId = R.string.message_empty_secondary_image_condition_list,
+                id = R.string.message_empty_screen_condition_list_title,
+                secondaryId = R.string.message_empty_screen_condition_list_desc,
             )
             list.apply {
                 adapter = ImageConditionAdapter(
@@ -105,8 +105,8 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun setupTriggerEventView() {
         viewBinding.apply {
             setEmptyText(
-                id = R.string.message_empty_trigger_conditions,
-                secondaryId = R.string.message_empty_secondary_trigger_condition_list,
+                id = R.string.message_empty_trigger_condition_list_title,
+                secondaryId = R.string.message_empty_trigger_condition_list_desc,
             )
             list.apply {
                 adapter = TriggerConditionAdapter(
@@ -208,7 +208,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             context = context,
             newOverlay = MultiChoiceDialog(
                 theme = R.style.AppTheme,
-                dialogTitleText = R.string.dialog_overlay_title_trigger_condition_type,
+                dialogTitleText = R.string.dialog_title_trigger_condition_type,
                 choices = allTriggerConditionChoices(),
                 onChoiceSelected = { choice ->
                     showTriggerConditionDialog(viewModel.createNewTriggerCondition(context, choice))

@@ -133,39 +133,39 @@ sealed class ActionTypeChoice(
 ) {
     /** Click Action choice. */
     data object Click : ActionTypeChoice(
-        R.string.item_title_click,
-        R.string.item_desc_click,
+        R.string.item_click_title,
+        R.string.item_click_desc,
         R.drawable.ic_click,
     )
     /** Swipe Action choice. */
     data object Swipe : ActionTypeChoice(
-        R.string.item_title_swipe,
-        R.string.item_desc_swipe,
+        R.string.item_swipe_title,
+        R.string.item_swipe_desc,
         R.drawable.ic_swipe,
     )
     /** Pause Action choice. */
     data object Pause : ActionTypeChoice(
-        R.string.item_title_pause,
-        R.string.item_desc_pause,
+        R.string.item_pause_title,
+        R.string.item_pause_desc,
         R.drawable.ic_wait,
     )
     /** Intent Action choice. */
     data object Intent : ActionTypeChoice(
-        R.string.item_title_intent,
-        R.string.item_desc_intent,
+        R.string.item_intent_title,
+        R.string.item_intent_desc,
         R.drawable.ic_intent,
     )
     /** Toggle Event Action choice. */
     data object ToggleEvent : ActionTypeChoice(
-        R.string.item_title_toggle_event,
-        R.string.item_desc_toggle_event,
+        R.string.item_toggle_event_title,
+        R.string.item_toggle_event_desc,
         R.drawable.ic_toggle_event,
     )
 
     /** Change counter Action choice. */
     data object ChangeCounter : ActionTypeChoice(
-        R.string.item_title_change_counter,
-        R.string.item_desc_change_counter,
+        R.string.item_change_counter_title,
+        R.string.item_change_counter_desc,
         R.drawable.ic_change_counter,
     )
 }

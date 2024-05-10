@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_vertical_large"
-            android:hint="@string/input_field_label_name"
+            android:hint="@string/generic_name"
             app:endIconMode="clear_text"/>
 
         <com.google.android.material.card.MaterialCardView

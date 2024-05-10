@@ -40,10 +40,10 @@ fun ItemTriggerEventBinding.bind(item: TriggerEvent, itemClickedListener: (Trigg
     imageAction.setIconTintColor(typedValue.data)
 
     if (item.enabledOnStart) {
-        textEnabled.setText(R.string.dropdown_item_title_event_state_enabled)
+        textEnabled.setText(R.string.item_event_desc_enabled_children)
         iconEnabled.setImageResource(R.drawable.ic_confirm)
     } else {
-        textEnabled.setText(R.string.dropdown_item_title_event_state_disabled)
+        textEnabled.setText(R.string.item_event_desc_disabled_children)
         iconEnabled.setImageResource(R.drawable.ic_cancel)
     }
 

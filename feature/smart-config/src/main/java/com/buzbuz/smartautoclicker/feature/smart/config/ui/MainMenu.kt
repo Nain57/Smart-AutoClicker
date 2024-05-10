@@ -294,8 +294,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private fun showScenarioSaveErrorDialog() {
         MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
             .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_scenario_saving_error)
-            .setPositiveButton(R.string.button_dialog_modify) { _: DialogInterface, _: Int ->
+            .setMessage(R.string.error_dialog_message_scenario_saving)
+            .setPositiveButton(R.string.generic_modify) { _: DialogInterface, _: Int ->
                 showScenarioConfigDialog()
             }
             .setNegativeButton(android.R.string.cancel) { _: DialogInterface, _: Int ->
@@ -341,7 +341,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
             .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_error_native_lib)
+            .setMessage(R.string.error_dialog_message_error_native_lib)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 onStopClicked()
             }

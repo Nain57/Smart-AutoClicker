@@ -42,6 +42,8 @@
     <string name="menu_item_title_privacy">隐私设置</string>
     <string name="menu_item_title_remove_ads">删除广告</string>
     <string name="menu_item_title_troubleshooting">故障排除</string>
+    <string name="menu_item_title_cancel">取消</string>
+    <string name="menu_item_title_search">搜索</string>
 
     <!--
       - Text for items in a list or vertical layout.

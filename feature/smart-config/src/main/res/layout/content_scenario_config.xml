@@ -60,7 +60,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:text="@string/section_title_detection_quality_title" />
+                    android:text="@string/field_scenario_quality_title" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_quality_value"
@@ -89,7 +89,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_vertical"
-                    android:text="@string/button_text_quality_speed"/>
+                    android:text="@string/field_scenario_quality_button_speed"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/text_precision"
@@ -105,7 +105,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_vertical"
-                    android:text="@string/button_text_quality_precision"/>
+                    android:text="@string/field_scenario_quality_button_precision"/>
 
                 <com.google.android.material.slider.Slider
                     android:id="@+id/seekbar_quality"

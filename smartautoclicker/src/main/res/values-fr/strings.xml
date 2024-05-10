@@ -43,6 +43,8 @@
     <string name="menu_item_title_privacy">Confidentialité</string>
     <string name="menu_item_title_remove_ads">Enlever les pubs</string>
     <string name="menu_item_title_troubleshooting">Dépannage</string>
+    <string name="menu_item_title_cancel">Annuler</string>
+    <string name="menu_item_title_search">Rechercher</string>
 
 
     <!--

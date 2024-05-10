@@ -47,10 +47,10 @@ fun ItemImageEventBinding.bind(
     imageAction.setIconTintColor(typedValue.data)
 
     if (event.enabledOnStart) {
-        textEnabled.setText(R.string.dropdown_item_title_event_state_enabled)
+        textEnabled.setText(R.string.item_event_desc_enabled_children)
         iconEnabled.setImageResource(R.drawable.ic_confirm)
     } else {
-        textEnabled.setText(R.string.dropdown_item_title_event_state_disabled)
+        textEnabled.setText(R.string.item_event_desc_disabled_children)
         iconEnabled.setImageResource(R.drawable.ic_cancel)
     }
 

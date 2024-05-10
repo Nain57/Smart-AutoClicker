@@ -58,7 +58,7 @@ class EventTogglesDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigEventsToggleBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_events_toggle)
+                dialogTitle.setText(R.string.dialog_title_events_toggle)
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
 
@@ -78,7 +78,7 @@ class EventTogglesDialog(
             eventToggleAdapter = EventToggleAdapter(onEventToggleStateChanged = viewModel::changeEventToggleState)
 
             layoutLoadableList.apply {
-                setEmptyText(R.string.message_empty_image_event_list)
+                setEmptyText(R.string.message_empty_screen_event_title)
 
                 list.apply {
                     addItemDecoration(newDividerWithoutHeader(context))

@@ -55,13 +55,13 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentMoreBinding.inflate(LayoutInflater.from(context), container, false).apply {
             fieldStartTutorial.apply {
-                setTitle(context.getString(R.string.section_title_tutorial))
-                setupDescriptions(listOf(context.getString(R.string.message_tutorial_start)))
+                setTitle(context.getString(R.string.field_tutorial_title))
+                setupDescriptions(listOf(context.getString(R.string.field_tutorial_desc)))
                 setOnClickListener(::onTutorialClicked)
             }
 
             fieldDebugOverlay.apply {
-                setTitle(context.getString(R.string.item_title_debug_show_view))
+                setTitle(context.getString(R.string.field_show_debug_view_title))
                 setupDescriptions(emptyList())
                 setOnClickListener(viewModel::toggleIsDebugViewEnabled)
             }
@@ -73,11 +73,11 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
             }
 
             fieldShowReport.apply {
-                setTitle(context.getString(R.string.field_title_show_debug_report))
+                setTitle(context.getString(R.string.field_show_debug_report_title))
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.item_title_debug_report_not_available),
-                        context.getString(R.string.item_title_debug_report_available),
+                        context.getString(R.string.field_show_debug_report_desc_not_available),
+                        context.getString(R.string.field_show_debug_report_desc_available),
                     )
                 )
                 setOnClickListener { debounceUserInteraction { showDebugReport() } }

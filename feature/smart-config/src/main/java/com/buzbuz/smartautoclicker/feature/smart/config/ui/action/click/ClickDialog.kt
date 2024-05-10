@@ -78,7 +78,7 @@ class ClickDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionClickBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_click)
+                dialogTitle.setText(R.string.dialog_title_click)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -97,7 +97,7 @@ class ClickDialog(
             }
 
             fieldName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -115,11 +115,11 @@ class ClickDialog(
             hideSoftInputOnFocusLoss(fieldPressDuration.textField)
 
             fieldClickType.apply {
-                setTitle(context.getString(R.string.dropdown_label_click_position_type))
+                setTitle(context.getString(R.string.field_click_type_title))
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.dropdown_helper_text_click_position_type_on_position),
-                        context.getString(R.string.dropdown_helper_text_click_position_type_on_condition),
+                        context.getString(R.string.field_click_type_desc_on_position),
+                        context.getString(R.string.field_click_type_desc_on_condition),
                     )
                 )
                 setButtonConfig(

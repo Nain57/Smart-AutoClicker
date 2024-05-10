@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerEventBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 
 /**
@@ -69,26 +70,6 @@ class TriggerEventViewHolder(
      * @param itemClickedListener listener called when an event is clicked.
      */
     fun bindEvent(item: TriggerEvent, itemClickedListener: (TriggerEvent) -> Unit) {
-        holderViewBinding.apply {
-            textName.text = item.name
-            textConditionsCount.text = item.conditions.size.toString()
-            textActionsCount.text = item.actions.size.toString()
-
-            val typedValue = TypedValue()
-            val actionColorAttr = if (!item.isComplete()) R.attr.colorError else R.attr.colorOnSurface
-            root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
-            textActionsCount.setTextColor(typedValue.data)
-            imageAction.setIconTintColor(typedValue.data)
-
-            if (item.enabledOnStart) {
-                textEnabled.setText(R.string.dropdown_item_title_event_state_enabled)
-                iconEnabled.setImageResource(R.drawable.ic_confirm)
-            } else {
-                textEnabled.setText(R.string.dropdown_item_title_event_state_disabled)
-                iconEnabled.setImageResource(R.drawable.ic_cancel)
-            }
-
-            root.setOnClickListener { itemClickedListener(item) }
-        }
+        holderViewBinding.bind(item, itemClickedListener)
     }
 }

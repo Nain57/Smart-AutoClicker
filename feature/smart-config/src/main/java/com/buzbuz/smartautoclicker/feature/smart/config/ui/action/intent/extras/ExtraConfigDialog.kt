@@ -72,7 +72,7 @@ class ExtraConfigDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionIntentExtraBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_extra_config)
+                dialogTitle.setText(R.string.dialog_intent_extra_title)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -91,13 +91,13 @@ class ExtraConfigDialog(
             }
 
             editKeyLayout.apply {
-                setLabel(R.string.input_field_label_intent_extra_key)
+                setLabel(R.string.field_intent_extra_key_label)
                 setOnTextChangedListener { viewModel.setKey(it.toString()) }
             }
             hideSoftInputOnFocusLoss(editKeyLayout.textField)
 
             extraValueTypeField.setItems(
-                label = context.getString(R.string.dropdown_label_intent_extra_value_type),
+                label = context.getString(R.string.dropdown_intent_extra_type_title),
                 items = viewModel.extraTypeDropdownItems,
                 onItemSelected = viewModel::setType,
             )
@@ -154,7 +154,6 @@ class ExtraConfigDialog(
     private fun updateExtraValue(valueState: ExtraValueInputState) {
         viewBinding.apply {
             layoutValueInput.visibility = View.VISIBLE
-            buttonSelectType.visibility = View.GONE
             extraValueTypeField.setSelectedItem(valueState.typeItem)
         }
 

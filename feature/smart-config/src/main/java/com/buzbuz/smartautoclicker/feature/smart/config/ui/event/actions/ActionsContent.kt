@@ -82,8 +82,8 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
             setEmptyText(
-                id = R.string.message_empty_actions,
-                secondaryId = R.string.message_empty_secondary_action_list,
+                id = R.string.message_empty_action_list_title,
+                secondaryId = R.string.message_empty_action_list_desc,
             )
             list.apply {
                 itemTouchHelper.attachToRecyclerView(this)

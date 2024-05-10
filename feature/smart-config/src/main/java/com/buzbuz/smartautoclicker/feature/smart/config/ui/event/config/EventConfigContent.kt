@@ -65,7 +65,7 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentEventConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
             fieldEventName.apply {
-                setLabel(R.string.input_field_label_name)
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setEventName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -74,17 +74,17 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
             dialogController.hideSoftInputOnFocusLoss(fieldEventName.textField)
 
             fieldConditionOperator.apply {
-                setTitle(context.getString(R.string.dropdown_label_condition_operator))
+                setTitle(context.getString(R.string.field_operator_title))
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.dropdown_helper_text_condition_and),
-                        context.getString(R.string.dropdown_helper_text_condition_or),
+                        context.getString(R.string.field_operator_desc_and),
+                        context.getString(R.string.field_operator_desc_or),
                     )
                 )
                 setButtonConfig(
                     DualStateButtonTextConfig(
-                        textLeft = context.getString(R.string.button_text_and),
-                        textRight = context.getString(R.string.button_text_or),
+                        textLeft = context.getString(R.string.field_operator_button_and),
+                        textRight = context.getString(R.string.field_operator_button_or),
                         selectionRequired = true,
                         singleSelection = true,
                     )
@@ -95,11 +95,11 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
             }
 
             fieldIsEnabled.apply {
-                setTitle(context.resources.getString(R.string.input_field_label_event_state))
+                setTitle(context.resources.getString(R.string.field_event_state_title))
                 setupDescriptions(
                     listOf(
-                        context.getString(R.string.dropdown_helper_text_event_state_disabled),
-                        context.getString(R.string.dropdown_helper_text_event_state_enabled),
+                        context.getString(R.string.field_event_state_desc_disabled),
+                        context.getString(R.string.field_event_state_desc_enabled),
                     )
                 )
                 setOnClickListener(viewModel::toggleEventState)
@@ -109,7 +109,7 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
                 setTitle(
                     context.getString(
                         R.string.item_title_try_element,
-                        context.getString(R.string.dialog_overlay_title_image_event_config),
+                        context.getString(R.string.dialog_title_image_event),
                     )
                 )
                 setOnClickListener { debounceUserInteraction { showTryElementMenu() } }

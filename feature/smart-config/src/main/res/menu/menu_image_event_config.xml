@@ -20,7 +20,7 @@
         android:id="@+id/page_event"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="@string/menu_item_title_config"/>
+        android:title="@string/generic_config"/>
     <item
         android:id="@+id/page_conditions"
         android:enabled="true"

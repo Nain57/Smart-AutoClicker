@@ -186,7 +186,7 @@ class ImageConditionViewModel @Inject constructor(
 
     private fun Context.getDetectionTypeState(@DetectionType type: Int, area: Rect) = DetectionTypeState(
         type = type,
-        areaText = getString(R.string.item_desc_detection_type_in_area, area.left, area.top, area.right, area.bottom)
+        areaText = getString(R.string.field_select_detection_area_desc, area.left, area.top, area.right, area.bottom)
     )
 }
 
