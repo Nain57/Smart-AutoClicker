@@ -90,7 +90,10 @@ class TutorialEngine @Inject constructor(
     }
 
     private fun setStepIndex(newIndex: Int) {
-        val step = getStep(newIndex) ?: return
+        val step = getStep(newIndex) ?: let {
+            stepState.value = null
+            return
+        }
 
         Log.d(TAG, "Set step index to $newIndex")
 

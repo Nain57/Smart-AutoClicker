@@ -25,16 +25,11 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
-import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.SelectorState
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -158,26 +153,13 @@ class ImageConditionViewModel @Inject constructor(
         monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE, view)
     }
 
-    fun monitorDetectionTypeDropdownView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE, view)
-    }
-
-    fun monitorDropdownItemWholeScreenView(view: View) {
-        monitoredViewsManager.attach(
-            MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN,
-            view,
-            ViewPositioningType.SCREEN,
-        )
-    }
-
-    fun stopDropdownItemWholeScreenViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN)
+    fun monitorDetectionTypeItemWholeScreenView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN, view)
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE)
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE)
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN)
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN)
     }
 
     private fun sanitizeAreaForCondition(area: Rect, conditionArea: Rect): Rect {

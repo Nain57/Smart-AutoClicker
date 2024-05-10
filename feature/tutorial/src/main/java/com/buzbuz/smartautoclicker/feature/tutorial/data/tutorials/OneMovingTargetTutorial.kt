@@ -38,7 +38,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
         info = oneMovingTargetTutorialInfo,
         game = TutorialGameData(
             instructionsResId = R.string.message_tutorial_2_game_instructions,
-            gameRules = OneMovingTargetRules(50),
+            gameRules = OneMovingTargetRules(30),
         ),
         steps = listOf(
             // Start screen, before first play
@@ -84,29 +84,21 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
                     MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_CONDITION,
                 ),
             ),
-            // Click on Detection Type
+            // Click on Whole Screen Detection Type
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_2_step_7,
-                stepStartCondition = StepStartCondition.NextOverlay,
-                stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE,
-                ),
-            ),
-            // Click on Whole Screen
-            TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_8,
                 image = TutorialStepImage(
                     imageResId = R.drawable.ic_warning,
-                    imageDescResId = R.string.message_tutorial_2_step_secondary_8,
+                    imageDescResId = R.string.message_tutorial_2_step_secondary_7,
                 ),
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN,
+                    MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN,
                 ),
             ),
             // Save condition
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_9,
+                contentTextResId = R.string.message_tutorial_2_step_8,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
@@ -114,7 +106,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Select action tab
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_10,
+                contentTextResId = R.string.message_tutorial_2_step_9,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS,
@@ -122,39 +114,31 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Click on first action
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_11,
+                contentTextResId = R.string.message_tutorial_2_step_10,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_ACTION,
                 ),
             ),
-            // Click on Position/Condition dropdown
+            // Select position type Condition
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_12,
+                contentTextResId = R.string.message_tutorial_2_step_11,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON,
-                ),
-            ),
-            // Select Condition in dropdown
-            TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_13,
-                stepStartCondition = StepStartCondition.Immediate,
-                stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION,
+                    MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION,
                 ),
             ),
             // Save Click
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_14,
+                contentTextResId = R.string.message_tutorial_2_step_12,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION,
+                    MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION,
                 ),
             ),
             // Pick blue character
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_15,
+                contentTextResId = R.string.message_tutorial_2_step_13,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CONDITION_SELECTOR_DIALOG_ITEM_FIRST,
@@ -162,7 +146,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Save Click
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_16,
+                contentTextResId = R.string.message_tutorial_2_step_14,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE,
@@ -170,7 +154,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Save Event
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_17,
+                contentTextResId = R.string.message_tutorial_2_step_15,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE,
@@ -178,7 +162,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Save Scenario
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_18,
+                contentTextResId = R.string.message_tutorial_2_step_16,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
@@ -186,13 +170,13 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Start detection and game
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_19,
+                contentTextResId = R.string.message_tutorial_2_step_17,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.NextButton,
             ),
             // Game won
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_20,
+                contentTextResId = R.string.message_tutorial_2_step_18,
                 stepStartCondition = StepStartCondition.GameWon,
                 stepEndCondition = StepEndCondition.NextButton,
             ),

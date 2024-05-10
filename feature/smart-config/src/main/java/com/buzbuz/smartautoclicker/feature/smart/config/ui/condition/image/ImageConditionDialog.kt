@@ -31,36 +31,35 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnValueChangedFromUserListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderRange
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionImageBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -198,7 +197,7 @@ class ImageConditionDialog(
     override fun onStart() {
         super.onStart()
         viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-        //viewModel.monitorDetectionTypeDropdownView(viewBinding.conditionDetectionType.textLayout)
+        viewModel.monitorDetectionTypeItemWholeScreenView(viewBinding.fieldDetectionType.multiStateButton.buttonMiddle)
     }
 
     override fun onStop() {
@@ -209,13 +208,6 @@ class ImageConditionDialog(
     private fun onDeleteClicked() {
         if (viewModel.isConditionRelatedToClick()) showAssociatedActionWarning()
         else confirmDelete()
-    }
-
-    private fun onDetectionTypeDropdownItemBound(item: DropdownItem, view: View?) {
-        /*if (item == viewModel.detectionTypeScreen) {
-            if (view != null) viewModel.monitorDropdownItemWholeScreenView(view)
-            else viewModel.stopDropdownItemWholeScreenViewMonitoring()
-        }*/
     }
 
     private fun updateConditionName(newName: String?) {

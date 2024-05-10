@@ -34,7 +34,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
@@ -193,32 +192,19 @@ class ClickViewModel @Inject constructor(
         monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE, view)
     }
 
-    fun monitorSelectPositionView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION, view)
+    fun monitorFieldSelectPositionView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION, view)
     }
 
-    fun monitorClickOnDropdownView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON, view)
-    }
-
-    fun monitorDropdownItemConditionView(view: View) {
-        monitoredViewsManager.attach(
-            MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION,
-            view,
-            ViewPositioningType.SCREEN,
-        )
-    }
-
-    fun stopDropdownItemConditionViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION)
+    fun monitorFieldPositionTypeItemOnConditionView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION, view)
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.apply {
             detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE)
-            detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SELECT_POSITION_OR_CONDITION)
-            detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_ITEM_CLICK_ON_CONDITION)
-            detach(MonitoredViewType.CLICK_DIALOG_DROPDOWN_CLICK_ON)
+            detach(MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION)
+            detach(MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION)
         }
     }
 

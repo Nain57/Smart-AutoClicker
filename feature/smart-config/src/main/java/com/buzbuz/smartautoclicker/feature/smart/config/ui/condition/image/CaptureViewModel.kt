@@ -47,7 +47,7 @@ class CaptureViewModel @Inject constructor(
             displayRecorder.takeScreenshot { screenshot ->
                 withContext(Dispatchers.Main) {
                     resultCallback(screenshot)
-                    monitoredViewsManager.notifyClick(MonitoredViewType.CONDITION_CAPTURE_BUTTON_CAPTURE)
+                    monitoredViewsManager.notifyClick(MonitoredViewType.CONDITION_CAPTURE_MENU_BUTTON_CAPTURE)
                 }
             }
         }
