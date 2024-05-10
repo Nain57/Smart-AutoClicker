@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListe
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
@@ -158,12 +159,12 @@ class EventConfigContent(appContext: Context) : NavBarDialogContent(appContext) 
     }
 
     private fun updateTryFieldVisibility(isEnabled: Boolean) {
-        viewBinding.fieldTestEvent.root.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        viewBinding.cardTestEvent.visibility = if (isEnabled) View.VISIBLE else View.GONE
 
     }
 
     private fun updateTryFieldEnabledState(isEnabled: Boolean) {
-        viewBinding.cardTestEvent.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        viewBinding.fieldTestEvent.setEnabled(isEnabled)
     }
 
     private fun onConditionOperatorDropdownItemBound(item: DropdownItem, view: View?) {
