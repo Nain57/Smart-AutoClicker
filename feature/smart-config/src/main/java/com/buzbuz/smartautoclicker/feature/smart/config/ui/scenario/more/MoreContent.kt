@@ -73,7 +73,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
             }
 
             fieldShowReport.apply {
-                setTitle(context.getString(R.string.item_title_debug_show_report))
+                setTitle(context.getString(R.string.field_title_show_debug_report))
                 setupDescriptions(
                     listOf(
                         context.getString(R.string.item_title_debug_report_not_available),

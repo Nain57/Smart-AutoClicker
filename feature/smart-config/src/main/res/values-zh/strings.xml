@@ -109,7 +109,6 @@
     <string name="item_title_debug_report_not_available">没有可用的调试报告</string>
     <string name="item_title_debug_show_view">显示调试窗口</string>
     <string name="item_title_detection_type_exact">在捕获位置进行检测</string>
-    <string name="field_title_select_detection_area">检测屏幕的一部分</string>
     <string name="item_title_detection_type_screen">全屏检测</string>
     <string name="item_title_intent">意图</string>
     <string name="item_title_pause">等待</string>
@@ -124,6 +123,18 @@
     <string name="item_title_restart_when_reached">达到后重新启动</string>
     <string name="item_title_toggle_type">切换类型</string>
     <string name="item_title_toggle_change_all">全部更改</string>
+
+    <!--
+      - Fields.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title (3~4 lines max)
+     -->
+    <string name="field_title_select_detection_area">检测区域</string>
+    <string name="field_title_select_swipe_positions">刷卡位置</string>
+    <string name="field_title_show_debug_report">展示报告</string>
+    <string name="field_desc_application_selection">执行该操作时启动应用程序</string>
+    <string name="field_desc_timer_restart_on">一旦达到这一条件，计时器将重新启动，允许再次满足这一条件</string>
+    <string name="field_desc_timer_restart_off">一旦达到这一条件，定时器将不会重新启动，这意味着该条件只能满足一次</string>
 
     <!--
       - Empty list messages.
@@ -285,10 +296,5 @@
     <string name="content_desc_image_condition">要被检测的图像</string>
     <string name="content_desc_open_event_list">打开脚本列表</string>
     <string name="content_desc_application_icon">应用图标</string>
-    <string name="item_title_debug_show_report">Show report</string>
-    <string name="field_title_select_swipe_positions">Swipe positions</string>
-    <string name="field_desc_application_selection">Start an application when this action is executed</string>
-    <string name="field_desc_timer_restart_on">Once reached, the timer will restart, allowing this condition to be fulfilled again</string>
-    <string name="field_desc_timer_restart_off">Once reached, the timer will not be restarted, meaning that this condition can be fulfilled only once</string>
 
 </resources>
