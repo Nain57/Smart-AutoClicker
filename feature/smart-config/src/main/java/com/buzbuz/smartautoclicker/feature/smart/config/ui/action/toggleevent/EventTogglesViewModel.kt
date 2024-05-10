@@ -45,13 +45,12 @@ class EventTogglesViewModel @Inject constructor(
      */
     private val userModifications: MutableStateFlow<Map<Identifier, Pair<Identifier?, Action.ToggleEvent.ToggleType?>>> = MutableStateFlow(
         buildMap {
+            val currentEditedEvent = editionRepository.editionState.getEditedEvent<Event>() ?: return@buildMap
             val allEditedEvents = editionRepository.editionState.getAllEditedEvents()
             val toggles = editionRepository.editionState.getEditedActionEventToggles() ?: emptyList()
 
-            allEditedEvents.forEach { event ->
-                val eventToggle = toggles.find { eventToggle -> eventToggle.targetEventId == event.id }
-                put(event.id, eventToggle?.id to eventToggle?.toggleType)
-            }
+            findAndPutToggleState(currentEditedEvent.id, toggles)
+            allEditedEvents.forEach { event -> findAndPutToggleState(event.id, toggles) }
         }
     )
 
@@ -135,6 +134,14 @@ class EventTogglesViewModel @Inject constructor(
             conditionsCount = conditions.size,
             toggleState = toggleState,
         )
+
+    private fun MutableMap<Identifier, Pair<Identifier?, Action.ToggleEvent.ToggleType?>>.findAndPutToggleState(
+        eventId: Identifier,
+        toggles: List<EventToggle>,
+    ) {
+        val eventToggle = toggles.find { eventToggle -> eventToggle.targetEventId == eventId }
+        put(eventId, eventToggle?.id to eventToggle?.toggleType)
+    }
 }
 
 sealed class EventTogglesListItem {
