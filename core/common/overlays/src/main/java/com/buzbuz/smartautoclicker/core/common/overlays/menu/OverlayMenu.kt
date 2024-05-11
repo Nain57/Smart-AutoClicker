@@ -35,6 +35,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
 import androidx.core.view.children
+import androidx.core.view.doOnLayout
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
@@ -44,6 +45,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
 import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
+import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuAnimations
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuMoveTouchEventHandler
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
@@ -123,7 +125,7 @@ abstract class OverlayMenu(
 
     /** Handles the save/load of the position of the menus. */
     private val positionDataSource: OverlayMenuPositionDataSource by lazy {
-        EntryPoints.get(context.applicationContext, com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint::class.java)
+        EntryPoints.get(context.applicationContext, OverlaysEntryPoint::class.java)
             .overlayMenuPositionDataSource()
     }
 
@@ -557,8 +559,18 @@ abstract class OverlayMenu(
     }
 
     private fun loadMenuPosition(orientation: Int) {
-        positionDataSource.loadMenuPosition(orientation)?.let { savedPosition ->
+        val savedPosition = positionDataSource.loadMenuPosition(orientation)
+        if (savedPosition != null && savedPosition.x != 0 && savedPosition.y != 0) {
             updateMenuPosition(savedPosition)
+        } else {
+            menuLayout.doWhenMeasured {
+                updateMenuPosition(
+                    Point(
+                        (displayMetrics.screenSize.x - menuLayout.width) / 2,
+                        (displayMetrics.screenSize.y / 2) - menuLayout.height,
+                    )
+                )
+            }
         }
     }
 
@@ -580,6 +592,15 @@ abstract class OverlayMenu(
             moveButton?.let { setMenuItemVisibility(it, true) }
             loadMenuPosition(displayMetrics.orientation)
         }
+    }
+
+    private fun View.doWhenMeasured(closure: () -> Unit) {
+        if (width != 0 && height != 0) {
+            closure()
+            return
+        }
+
+        doOnLayout { doWhenMeasured(closure) }
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
