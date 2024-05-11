@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.quality.domain.Quality
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
+import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.InterstitialAdsDataSource
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.RemoteAdState
 import com.buzbuz.smartautoclicker.feature.revenue.data.UserConsentDataSource
@@ -88,6 +89,15 @@ internal class RevenueRepository @Inject constructor(
 
     override val proModeInfo: Flow<ProModeInfo?> =
         billingDataSource.proModeProduct.map(::toProModeInfo)
+
+    override val userConsentState: Flow<UserConsentState> =
+        combine(userConsentDataSource.isInitialized, userConsentDataSource.isUserConsentingForAds) { init, consent ->
+            when {
+                init && consent -> UserConsentState.CAN_REQUEST_ADS
+                init && !consent -> UserConsentState.CANNOT_REQUEST_ADS
+                else -> UserConsentState.UNKNOWN
+            }
+        }
 
     override val isPrivacySettingRequired: Flow<Boolean> =
         userConsentDataSource.isPrivacyOptionsRequired
@@ -245,7 +255,7 @@ internal class RevenueRepository @Inject constructor(
 
         writer.apply {
             append(contentPrefix)
-                .append("- userConsent=${userConsentDataSource.isUserConsentingForAds.value}; ")
+                .append("- userConsentState=${userConsentState.dumpWithTimeout()}; ")
                 .append("adsState=${adsState.value}; ")
                 .append("purchaseState=${purchaseState.value}; ")
                 .println()

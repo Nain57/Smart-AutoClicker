@@ -21,6 +21,7 @@ import android.content.Context
 
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
+import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,7 @@ import kotlin.time.Duration
 
 
 internal class RevenueRepository @Inject constructor(): IRevenueRepository {
-
+    override val userConsentState: Flow<UserConsentState> = flowOf(UserConsentState.CANNOT_REQUEST_ADS)
     override val isPrivacySettingRequired: Flow<Boolean> = flowOf(false)
     override val userBillingState: StateFlow<UserBillingState> = MutableStateFlow(UserBillingState.PURCHASED)
     override val isBillingFlowInProgress: Flow<Boolean> = flowOf(false)

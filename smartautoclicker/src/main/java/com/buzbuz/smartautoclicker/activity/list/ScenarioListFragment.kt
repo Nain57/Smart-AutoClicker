@@ -183,6 +183,7 @@ class ScenarioListFragment : Fragment() {
      */
     private fun updateScenarioList(uiState: ScenarioListUiState) {
         viewBinding.apply {
+            loading.visibility = View.GONE
             if (uiState.listContent.isEmpty() && uiState.type == ScenarioListUiState.Type.SELECTION) {
                 list.visibility = View.GONE
                 add.visibility = View.GONE

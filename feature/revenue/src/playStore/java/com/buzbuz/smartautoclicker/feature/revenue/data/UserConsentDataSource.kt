@@ -17,12 +17,8 @@
 package com.buzbuz.smartautoclicker.feature.revenue.data
 
 import android.app.Activity
-import android.content.Context
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.feature.revenue.BuildConfig
-
-import com.google.android.ump.ConsentDebugSettings
 import com.google.android.ump.ConsentInformation
 import com.google.android.ump.ConsentRequestParameters
 import com.google.android.ump.UserMessagingPlatform
@@ -36,6 +32,9 @@ import javax.inject.Singleton
 
 @Singleton
 internal class UserConsentDataSource @Inject constructor() {
+
+    private val _isInitialized: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isInitialized: StateFlow<Boolean> = _isInitialized
 
     private val _isUserConsentingForAds: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isUserConsentingForAds: StateFlow<Boolean> = _isUserConsentingForAds
@@ -54,7 +53,10 @@ internal class UserConsentDataSource @Inject constructor() {
             activity,
             params.build(),
             { onUserConsentInfoUpdated(activity, consentInfo) },
-            { Log.w(TAG, "User consent info update failure: [${it.errorCode}] ${it.message}") },
+            {
+                Log.w(TAG, "User consent info update failure: [${it.errorCode}] ${it.message}")
+                refreshConsentInfo(consentInfo, isError = true)
+            },
         )
 
         refreshConsentInfo(consentInfo)
@@ -83,8 +85,10 @@ internal class UserConsentDataSource @Inject constructor() {
         }
     }
 
-    private fun refreshConsentInfo(consentInfo: ConsentInformation) {
-        _isUserConsentingForAds.value = consentInfo.canRequestAds()
+    private fun refreshConsentInfo(consentInfo: ConsentInformation, isError: Boolean = false) {
+        _isInitialized.value = isError ||
+            consentInfo.privacyOptionsRequirementStatus != ConsentInformation.PrivacyOptionsRequirementStatus.UNKNOWN
+        _isUserConsentingForAds.value = !isError && consentInfo.canRequestAds()
         _isPrivacyOptionsRequired.value =
             consentInfo.privacyOptionsRequirementStatus == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
 

@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
@@ -38,9 +39,13 @@ import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionAccessibi
 import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionOverlay
 import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
+import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
@@ -64,6 +69,9 @@ class ScenarioViewModel @Inject constructor(
     private var clickerService: SmartAutoClickerService.ILocalService? = null
     /** The Android notification manager. Initialized only if needed.*/
     private val notificationManager: NotificationManager?
+
+    val userConsentState: StateFlow<UserConsentState> = revenueRepository.userConsentState
+        .stateIn(viewModelScope, SharingStarted.Eagerly, UserConsentState.UNKNOWN)
 
     init {
         SmartAutoClickerService.getLocalService(serviceConnection)

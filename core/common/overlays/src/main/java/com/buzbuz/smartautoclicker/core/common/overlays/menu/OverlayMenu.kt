@@ -42,6 +42,7 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
+import com.buzbuz.smartautoclicker.core.base.extensions.doWhenMeasured
 import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
@@ -592,15 +593,6 @@ abstract class OverlayMenu(
             moveButton?.let { setMenuItemVisibility(it, true) }
             loadMenuPosition(displayMetrics.orientation)
         }
-    }
-
-    private fun View.doWhenMeasured(closure: () -> Unit) {
-        if (width != 0 && height != 0) {
-            closure()
-            return
-        }
-
-        doOnLayout { doWhenMeasured(closure) }
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {

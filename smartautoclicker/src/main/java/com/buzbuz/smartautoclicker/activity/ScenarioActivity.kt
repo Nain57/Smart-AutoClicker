@@ -21,6 +21,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 
 import androidx.activity.result.ActivityResult
@@ -33,8 +34,10 @@ import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListUiState
+import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,6 +74,11 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
                     startSmartScenario(result, scenario)
                 }
             }
+        }
+
+        // Splash screen is dismissed on first frame drawn, delay it until we have a user consent status
+        findViewById<View>(android.R.id.content).delayDrawUntil {
+            scenarioViewModel.userConsentState.value != UserConsentState.UNKNOWN
         }
     }
 

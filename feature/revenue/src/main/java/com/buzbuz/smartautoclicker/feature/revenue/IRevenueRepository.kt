@@ -32,7 +32,9 @@ import java.io.PrintWriter
 
 interface IRevenueRepository : Dumpable {
 
+    val userConsentState: Flow<UserConsentState>
     val isPrivacySettingRequired: Flow<Boolean>
+
     val userBillingState: StateFlow<UserBillingState>
     val isBillingFlowInProgress: Flow<Boolean>
 
