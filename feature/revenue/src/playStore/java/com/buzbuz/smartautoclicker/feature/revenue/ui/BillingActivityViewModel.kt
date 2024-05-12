@@ -26,6 +26,10 @@ internal class BillingActivityViewModel@Inject constructor(
     private val revenueRepository: InternalRevenueRepository,
 ) : ViewModel() {
 
+    fun refreshPurchaseState() {
+        revenueRepository.refreshPurchases()
+    }
+
     fun setBillingActivityDestroyed() {
         revenueRepository.setBillingActivityDestroyed()
     }

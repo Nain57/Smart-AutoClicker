@@ -72,6 +72,11 @@ internal class BillingActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshPurchaseState()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.setBillingActivityDestroyed()

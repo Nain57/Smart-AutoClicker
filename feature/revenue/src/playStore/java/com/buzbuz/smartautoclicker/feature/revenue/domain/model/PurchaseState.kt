@@ -19,6 +19,5 @@ package com.buzbuz.smartautoclicker.feature.revenue.domain.model
 internal enum class PurchaseState {
     CANNOT_PURCHASE,
     NOT_PURCHASED,
-    BILLING_IN_PROGRESS,
     PURCHASED,
 }

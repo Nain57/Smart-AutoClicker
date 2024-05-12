@@ -44,6 +44,7 @@ interface IRevenueRepository : Dumpable {
     fun loadAdIfNeeded(context: Context)
     fun startPaywallUiFlow(context: Context)
 
+    fun refreshPurchases()
     fun startPurchaseUiFlow(context: Context)
 
     fun consumeTrial(): Duration?

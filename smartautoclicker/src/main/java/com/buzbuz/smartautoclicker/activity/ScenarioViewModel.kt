@@ -91,6 +91,10 @@ class ScenarioViewModel @Inject constructor(
         revenueRepository.startUserConsentRequestUiFlowIfNeeded(activity)
     }
 
+    fun refreshPurchaseState() {
+        revenueRepository.refreshPurchases()
+    }
+
     fun startPermissionFlowIfNeeded(activity: AppCompatActivity, onAllGranted: () -> Unit) {
         permissionController.startPermissionsUiFlow(
             activity = activity,
