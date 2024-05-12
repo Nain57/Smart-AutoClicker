@@ -82,6 +82,11 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        scenarioViewModel.refreshPurchaseState()
+    }
+
     override fun startScenario(item: ScenarioListUiState.Item) {
         requestedItem = item
 

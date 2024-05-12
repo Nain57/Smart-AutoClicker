@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.revenue.data.billing
+package com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk
 
-internal data class ProModeProduct(
-    val title: String,
-    val description: String,
-    val price: String,
-)
+enum class BillingUiFlowState {
+    VISIBLE,
+    NOT_VISIBLE,
+    NOT_VISIBLE_ALREADY_OWNED,
+    NOT_VISIBLE_ERROR,
+    NOT_VISIBLE_CANNOT_SHOW,
+}

@@ -109,7 +109,7 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
 
 private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseState, info: ProModeInfo?): LoadableButtonState {
     val price = info?.price
-    if (price.isNullOrEmpty() || purchaseState == PurchaseState.BILLING_IN_PROGRESS)
+    if (price.isNullOrEmpty())
         return LoadableButtonState.Loading
 
     if (purchaseState == PurchaseState.CANNOT_PURCHASE)

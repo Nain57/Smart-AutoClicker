@@ -42,6 +42,7 @@ internal class RevenueRepository @Inject constructor(): IRevenueRepository {
     override fun startPrivacySettingUiFlow(activity: Activity) = Unit
     override fun loadAdIfNeeded(context: Context) = Unit
     override fun startPaywallUiFlow(context: Context) = Unit
+    override fun refreshPurchases() = Unit
     override fun startPurchaseUiFlow(context: Context) = Unit
     override fun consumeTrial(): Duration? = null
 

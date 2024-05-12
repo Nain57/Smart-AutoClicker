@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.revenue.domain
 
 import android.app.Activity
+import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.AdState
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.ProModeInfo
@@ -26,7 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 
-internal interface InternalRevenueRepository {
+internal interface InternalRevenueRepository : IRevenueRepository {
 
     val proModeInfo: Flow<ProModeInfo?>
     val adsState: StateFlow<AdState>

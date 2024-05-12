@@ -27,14 +27,14 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
 import com.buzbuz.smartautoclicker.core.common.quality.domain.Quality
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.InterstitialAdsDataSource
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.RemoteAdState
 import com.buzbuz.smartautoclicker.feature.revenue.data.UserConsentDataSource
+import com.buzbuz.smartautoclicker.feature.revenue.data.billing.InAppPurchaseState
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.BillingDataSource
-import com.buzbuz.smartautoclicker.feature.revenue.data.billing.ProModeProduct
+import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.InAppProduct
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.AdState
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.ProModeInfo
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.PurchaseState
@@ -76,7 +76,7 @@ internal class RevenueRepository @Inject constructor(
     private val adsDataSource: InterstitialAdsDataSource,
     private val billingDataSource: BillingDataSource,
     qualityRepository: QualityRepository,
-): IRevenueRepository, InternalRevenueRepository {
+): InternalRevenueRepository {
 
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
@@ -88,7 +88,7 @@ internal class RevenueRepository @Inject constructor(
         MutableStateFlow(false)
 
     override val proModeInfo: Flow<ProModeInfo?> =
-        billingDataSource.proModeProduct.map(::toProModeInfo)
+        billingDataSource.product.map(::toProModeInfo)
 
     override val userConsentState: Flow<UserConsentState> =
         combine(userConsentDataSource.isInitialized, userConsentDataSource.isUserConsentingForAds) { init, consent ->
@@ -108,9 +108,8 @@ internal class RevenueRepository @Inject constructor(
 
     override val purchaseState: StateFlow<PurchaseState> =
         combine(
-            billingDataSource.canPurchase,
-            billingDataSource.isPurchased,
-            billingDataSource.billingFlowInProgress,
+            billingDataSource.purchaseState,
+            billingDataSource.product,
             ::toPurchaseState,
         ).stateIn(coroutineScopeIo, SharingStarted.Eagerly, PurchaseState.CANNOT_PURCHASE)
 
@@ -180,6 +179,12 @@ internal class RevenueRepository @Inject constructor(
         trialRequest.value = true
     }
 
+    override fun refreshPurchases() {
+        coroutineScopeIo.launch {
+            billingDataSource.refreshPurchases()
+        }
+    }
+
     override fun consumeTrial(): Duration? {
         if (!trialRequest.value) return null
 
@@ -190,7 +195,7 @@ internal class RevenueRepository @Inject constructor(
     }
 
 
-    private fun toProModeInfo(product: ProModeProduct?): ProModeInfo? =
+    private fun toProModeInfo(product: InAppProduct?): ProModeInfo? =
         product?.let { ProModeInfo(it.title, it.description, it.price) }
 
     private fun toAdState(remoteAdState: RemoteAdState): AdState =
@@ -207,11 +212,10 @@ internal class RevenueRepository @Inject constructor(
             RemoteAdState.Error.NoImpressionError -> AdState.ERROR
         }
 
-    private fun toPurchaseState(canPurchase: Boolean, isPurchased: Boolean, billingInProgress: Boolean): PurchaseState =
+    private fun toPurchaseState(state: InAppPurchaseState, product: InAppProduct?): PurchaseState =
         when {
-            isPurchased -> PurchaseState.PURCHASED
-            billingInProgress -> PurchaseState.BILLING_IN_PROGRESS
-            canPurchase -> PurchaseState.NOT_PURCHASED
+            state == InAppPurchaseState.PURCHASED -> PurchaseState.PURCHASED
+            state == InAppPurchaseState.NOT_PURCHASED && product != null -> PurchaseState.NOT_PURCHASED
             else -> PurchaseState.CANNOT_PURCHASE
         }
 
