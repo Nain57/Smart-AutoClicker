@@ -77,10 +77,10 @@
     <string name="dropdown_helper_text_anti_detection_enabled">Randomize the click swipe and pause positions and durations by a small random offset</string>
     <string name="dropdown_helper_text_anti_detection_disabled">Execute all actions as declared</string>
 
-    <string name="dropdown_label_time_unit_ms" translatable="false">ms</string>
-    <string name="dropdown_label_time_unit_s" translatable="false">s</string>
-    <string name="dropdown_label_time_unit_min" translatable="false">min</string>
-    <string name="dropdown_label_time_unit_h" translatable="false">h</string>
+    <string name="dropdown_label_time_unit_ms">ms</string>
+    <string name="dropdown_label_time_unit_s">s</string>
+    <string name="dropdown_label_time_unit_min">min</string>
+    <string name="dropdown_label_time_unit_h">h</string>
     <string name="dropdown_label_time_unit">Time Unit</string>
 
     <!--
