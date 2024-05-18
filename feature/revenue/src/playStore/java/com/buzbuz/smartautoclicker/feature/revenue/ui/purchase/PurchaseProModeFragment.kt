@@ -97,6 +97,7 @@ internal class PurchaseProModeFragment : DialogFragment() {
         is PurchaseDialogState.Loaded -> toLoadedState(state.price)
         PurchaseDialogState.Purchased -> toPurchasedState()
         PurchaseDialogState.Error -> toErrorState()
+        PurchaseDialogState.Pending -> toPendingState()
     }
 
     private fun toLoadingState() {
@@ -123,6 +124,16 @@ internal class PurchaseProModeFragment : DialogFragment() {
             purchasedText.visibility = View.VISIBLE
             buttonBuy.setState(
                 LoadableButtonState.Loaded.Enabled(requireContext().getString(R.string.button_text_understood))
+            )
+        }
+    }
+
+    private fun toPendingState() {
+        viewBinding.apply {
+            purchaseText.visibility = View.VISIBLE
+            purchasedText.visibility = View.GONE
+            buttonBuy.setState(
+                LoadableButtonState.Loaded.Disabled(requireContext().getString(R.string.button_text_buy_pro_pending))
             )
         }
     }

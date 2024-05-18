@@ -107,17 +107,16 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
     )
 }
 
-private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseState, info: ProModeInfo?): LoadableButtonState {
-    val price = info?.price
-    if (price.isNullOrEmpty())
-        return LoadableButtonState.Loading
+private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseState, info: ProModeInfo?): LoadableButtonState =
+    when {
+        info?.price.isNullOrEmpty() -> LoadableButtonState.Loading
 
-    if (purchaseState == PurchaseState.CANNOT_PURCHASE)
-        return LoadableButtonState.Loaded.Disabled(
-            text = context.getString(R.string.button_text_buy_pro_error)
-        )
+        purchaseState == PurchaseState.PENDING ->
+            LoadableButtonState.Loaded.Disabled(context.getString(R.string.button_text_buy_pro_pending))
 
-    return LoadableButtonState.Loaded.Enabled(
-        text = context.getString(R.string.button_text_buy_pro, price)
-    )
-}
+        purchaseState == PurchaseState.CANNOT_PURCHASE ->
+            LoadableButtonState.Loaded.Disabled(context.getString(R.string.button_text_buy_pro_error))
+
+        else ->
+            LoadableButtonState.Loaded.Enabled(context.getString(R.string.button_text_buy_pro, info?.price))
+    }

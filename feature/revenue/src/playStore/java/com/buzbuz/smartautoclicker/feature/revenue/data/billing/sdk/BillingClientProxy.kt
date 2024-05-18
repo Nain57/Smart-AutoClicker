@@ -68,24 +68,25 @@ internal class BillingClientProxy(
         billingUiFlowResultListener = { result, purchase ->
             when (result.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
+                    Log.i(TAG, "onPurchasesUpdated: OK")
                     billingUiFlowState.value = BillingUiFlowState.NOT_VISIBLE
                     onPurchaseStateFromUiFlow(purchase)
                 }
 
                 BillingClient.BillingResponseCode.USER_CANCELED -> {
-                    Log.i(TAG, "onPurchasesUpdated: User canceled the purchase")
+                    Log.i(TAG, "onPurchasesUpdated: User canceled the purchase. ${result.toLogString()}")
                     billingUiFlowState.value = BillingUiFlowState.NOT_VISIBLE
                 }
                 BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
-                    Log.i(TAG, "onPurchasesUpdated: The user already owns this item")
+                    Log.i(TAG, "onPurchasesUpdated: The user already owns this item. ${result.toLogString()}")
                     billingUiFlowState.value = BillingUiFlowState.NOT_VISIBLE_ALREADY_OWNED
                 }
                 BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
-                    Log.e(TAG, "onPurchasesUpdated: Google Play \"does not recognize the configuration.")
+                    Log.e(TAG, "onPurchasesUpdated: Google Play \"does not recognize the configuration. ${result.toLogString()}")
                     billingUiFlowState.value = BillingUiFlowState.NOT_VISIBLE_ERROR
                 }
                 else -> {
-                    Log.d(TAG, "BillingResult [${result.responseCode}]: ${result.debugMessage}")
+                    Log.d(TAG, "onPurchasesUpdated: Error ${result.toLogString()}")
                     billingUiFlowState.value = BillingUiFlowState.NOT_VISIBLE_ERROR
                 }
             }
@@ -106,7 +107,7 @@ internal class BillingClientProxy(
         if (startResult.responseCode == BillingClient.BillingResponseCode.OK) {
             billingUiFlowState.value = BillingUiFlowState.VISIBLE
         } else {
-            Log.e(TAG, "Error while starting play store billing ui flow")
+            Log.e(TAG, "Error while starting play store billing ui flow. ${startResult.toLogString()}")
         }
 
         return billingUiFlowState
@@ -119,10 +120,13 @@ internal class BillingClientProxy(
 
         val result = client.queryPurchasesAsync(inAppProductsPurchasesQueryParams())
         if (result.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            Log.i(TAG, "fetchInAppPurchases:  OK")
             val purchase = result.purchasesList.findProductPurchase(productId)
             if (purchase != null) return purchase
 
-            Log.d(TAG, "Null Purchase List Returned from OK response!")
+            Log.d(TAG, "fetchInAppPurchases: Null Purchase List Returned from OK response!")
+        } else {
+            Log.i(TAG, "fetchInAppPurchases error: ${result.billingResult.toLogString()}")
         }
 
         return null
@@ -136,18 +140,16 @@ internal class BillingClientProxy(
         val (billingResult, product) = fetchInAppProductDetailsCompat()
             ?: return (false to null)
 
-        val responseCode = billingResult.responseCode
-        val debugMessage = billingResult.debugMessage
         when (billingResult.responseCode) {
             BillingClient.BillingResponseCode.OK -> {
-                Log.i(TAG, "onProductDetailsResponse OK: $debugMessage")
+                Log.i(TAG, "fetchInAppProductDetails OK")
 
-                if (product == null) Log.e(TAG, "onProductDetailsResponse: Found null or empty ProductDetails.")
+                if (product == null) Log.e(TAG, "fetchInAppProductDetails: Found null or empty ProductDetails.")
                 return ((product != null) to product)
             }
 
             BillingClient.BillingResponseCode.USER_CANCELED ->
-                Log.i(TAG, "onProductDetailsResponse: $responseCode $debugMessage")
+                Log.i(TAG, "fetchInAppProductDetails: ${billingResult.toLogString()}")
 
             BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
             BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
@@ -155,9 +157,9 @@ internal class BillingClientProxy(
             BillingClient.BillingResponseCode.ITEM_UNAVAILABLE,
             BillingClient.BillingResponseCode.DEVELOPER_ERROR,
             BillingClient.BillingResponseCode.ERROR ->
-                Log.e(TAG, "onProductDetailsResponse: $responseCode $debugMessage")
+                Log.e(TAG, "fetchInAppProductDetails: ${billingResult.toLogString()}")
 
-            else -> Log.wtf(TAG, "onProductDetailsResponse: $responseCode $debugMessage")
+            else -> Log.wtf(TAG, "fetchInAppProductDetails: ${billingResult.toLogString()}")
         }
 
         return (false to product)
@@ -169,11 +171,15 @@ internal class BillingClientProxy(
             return true
         }
 
+        Log.i(TAG, "Acknowledging purchase")
+
         val billingResult = client.acknowledgePurchase(acknowledgePurchaseQueryParams(purchase.purchaseToken))
         if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-            Log.e(TAG, "Error acknowledging purchase")
+            Log.e(TAG, "Error acknowledging purchase. ${billingResult.toLogString()}")
             return false
         }
+
+        Log.i(TAG, "Purchase acknowledged")
 
         return true
     }

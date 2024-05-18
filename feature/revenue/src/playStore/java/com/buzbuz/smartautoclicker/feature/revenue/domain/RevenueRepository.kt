@@ -214,7 +214,9 @@ internal class RevenueRepository @Inject constructor(
 
     private fun toPurchaseState(state: InAppPurchaseState, product: InAppProduct?): PurchaseState =
         when {
-            state == InAppPurchaseState.PURCHASED -> PurchaseState.PURCHASED
+            state == InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED -> PurchaseState.PURCHASED
+            state == InAppPurchaseState.PURCHASED -> PurchaseState.PENDING
+            state == InAppPurchaseState.PENDING -> PurchaseState.PENDING
             state == InAppPurchaseState.NOT_PURCHASED && product != null -> PurchaseState.NOT_PURCHASED
             else -> PurchaseState.CANNOT_PURCHASE
         }
