@@ -17,14 +17,40 @@
 package com.buzbuz.smartautoclicker.feature.revenue.ui
 
 import androidx.lifecycle.ViewModel
-import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository
+import com.buzbuz.smartautoclicker.feature.revenue.domain.model.PurchaseState
+
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
+
+import kotlinx.coroutines.flow.transformLatest
+
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 internal class BillingActivityViewModel@Inject constructor(
     private val revenueRepository: InternalRevenueRepository,
 ) : ViewModel() {
+
+    init {
+        revenueRepository.purchaseState
+            .transformLatest<PurchaseState, Unit> { purchaseState ->
+                if (purchaseState != PurchaseState.PENDING) return@transformLatest
+
+                while (true) {
+                    revenueRepository.refreshPurchases()
+                    delay(PENDING_PURCHASE_POLLING_DURATION)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
     fun refreshPurchaseState() {
         revenueRepository.refreshPurchases()
@@ -34,3 +60,5 @@ internal class BillingActivityViewModel@Inject constructor(
         revenueRepository.setBillingActivityDestroyed()
     }
 }
+
+private val PENDING_PURCHASE_POLLING_DURATION = 3.seconds
