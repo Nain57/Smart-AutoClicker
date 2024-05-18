@@ -21,11 +21,6 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/Animation.Material3.BottomSheetDialog</item>
-        <item name="bottomSheetDialogTheme">@style/AppTheme.Dialog.BillingDialog</item>
-    </style>
-
-    <style name="AppTheme.Dialog.BillingDialog" parent="@style/ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="android:windowBackground">@drawable/dialog_background</item>
     </style>
 
     <style name="AppTheme.TextAppearance.BannerTitle" parent="@style/TextAppearance.Material3.HeadlineSmall">
