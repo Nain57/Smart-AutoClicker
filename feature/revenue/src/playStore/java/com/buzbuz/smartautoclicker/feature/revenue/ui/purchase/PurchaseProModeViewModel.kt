@@ -39,6 +39,7 @@ internal class PurchaseProModeViewModel @Inject constructor(
         combine(revenueRepository.purchaseState, revenueRepository.proModeInfo) { state, info ->
             when {
                 state == PurchaseState.PURCHASED -> PurchaseDialogState.Purchased
+                state == PurchaseState.PENDING -> PurchaseDialogState.Pending
                 state == PurchaseState.CANNOT_PURCHASE -> PurchaseDialogState.Error
                 info == null -> PurchaseDialogState.Loading
                 else -> PurchaseDialogState.Loaded(info.price)
@@ -55,6 +56,7 @@ internal class PurchaseProModeViewModel @Inject constructor(
 
 internal sealed class PurchaseDialogState {
     data object Loading : PurchaseDialogState()
+    data object Pending : PurchaseDialogState()
     data object Purchased : PurchaseDialogState()
     data object Error : PurchaseDialogState()
     data class Loaded(val price: String) : PurchaseDialogState()

@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.revenue.domain.model
+package com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk
 
-internal enum class PurchaseState {
-    CANNOT_PURCHASE,
-    NOT_PURCHASED,
-    PENDING,
-    PURCHASED,
-}
+import com.android.billingclient.api.BillingResult
+
+internal fun BillingResult.toLogString(): String =
+    "[$responseCode]: $debugMessage"

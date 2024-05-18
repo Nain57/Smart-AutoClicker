@@ -28,4 +28,6 @@
     <string name="button_text_buy_pro_error">无法购买</string>
     <string name="button_text_visit_github">访问我们的 GitHub</string>
     <string name="button_text_trial">%1$d 分钟试用</string>
+    <string name="button_text_buy_pro_pending">待处理交易</string>
+
 </resources>

@@ -46,6 +46,7 @@ internal class NewPurchaseManager @Inject constructor() {
 
         val purchaseState = purchase.purchaseState
         if (purchaseState != Purchase.PurchaseState.PURCHASED) {
+            Log.i(TAG, "Product purchase state: ${purchase.purchaseState}")
             _state.emit(purchase.toPurchaseState())
             return
         }

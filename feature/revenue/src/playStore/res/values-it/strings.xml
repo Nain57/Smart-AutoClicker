@@ -29,4 +29,6 @@
     <string name="button_text_buy_pro_error">Non è possibile acquistare</string>
     <string name="button_text_visit_github">Visita il nostro GitHub</string>
     <string name="button_text_trial">%1$d minuti di prova</string>
+    <string name="button_text_buy_pro_pending">Transazione in sospeso</string>
+
 </resources>

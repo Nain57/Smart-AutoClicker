@@ -33,5 +33,6 @@
     <string name="button_text_buy_pro_error">Cannot purchase</string>
     <string name="button_text_visit_github">Visit our GitHub</string>
     <string name="button_text_trial">%1$d minutes trial</string>
+    <string name="button_text_buy_pro_pending">Pending transaction</string>
 
 </resources>
