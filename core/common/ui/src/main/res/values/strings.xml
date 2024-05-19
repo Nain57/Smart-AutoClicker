@@ -46,7 +46,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_tutorial_volume_down_stop">If your scenario is clicking too quickly, it can
-        block you from using Smart AutoClicker menu to stop it.\n\nIn that case, you can press the
+        block you from using Klick\'r menu to stop it.\n\nIn that case, you can press the
         physical \"Volume Down\" button of your device to stop the running scenario.</string>
 
 
@@ -101,7 +101,7 @@
     <string name="content_desc_drag_and_drop">Drag and drop to reorder the elements</string>
     <string name="content_desc_move_menu">Move the floating menu</string>
     <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
-    <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
+    <string name="content_desc_stop_clicker">Stop Klick\'r</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_go_back">Back to dialog</string>
 </resources>

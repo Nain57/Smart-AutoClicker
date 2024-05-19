@@ -73,7 +73,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">是否删除场景： %1$s ？</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">您的设备不提供标准的 Android 屏幕捕获权限对话框。 Smart AutoClicker 将无法在其上运行。</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">您的设备不提供标准的 Android 屏幕捕获权限对话框。 Klick\'r 将无法在其上运行。</string>
 
     <!--
       - Section titles.

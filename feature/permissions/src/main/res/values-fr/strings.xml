@@ -30,16 +30,16 @@
       - Messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_permission_desc_accessibility">La permission de service d\'accessibilité permet à Smart AutoClicker
+    <string name="message_permission_desc_accessibility">La permission de service d\'accessibilité permet à Klick\'r
         d\'éxecuter des gestes sur votre écran. Cette permission est requise afin d\'éxecuter les clics et les swipes
-        que vous allez créer dans vos scénarios d\'automatisation.\n\nAucune donnée n\'est collectée par Smart AutoClicker.\n\n
+        que vous allez créer dans vos scénarios d\'automatisation.\n\nAucune donnée n\'est collectée par Klick\'r.\n\n
         Pour accorder la permission de service d\'accessibilité, cliquez sur le boutton ci dessous.</string>
     <string name="message_permission_desc_notification">Optionnel: Affiche une notification pendant que l\'application est lancée afin
         de facilement revenir à l\'écran de sélection des scénarios.</string>
     <string name="message_permission_desc_overlay">La permission de superposition est requise afin de pouvoir afficher l\'interface de
-        Smart AutoClicker par dessus les applications que vous voulez automatiser, vous permettant de configurer vos scenarios sans
+        Klick\'r par dessus les applications que vous voulez automatiser, vous permettant de configurer vos scenarios sans
         stopper ces autres applications.</string>
-    <string name="message_permission_mandatory_denied">Cette permission est obligatoire pour Smart AutoClicker.
+    <string name="message_permission_mandatory_denied">Cette permission est obligatoire pour Klick\'r.
         L\'application ne pourra pas fonctionner sans elle.</string>
 
     <!--
