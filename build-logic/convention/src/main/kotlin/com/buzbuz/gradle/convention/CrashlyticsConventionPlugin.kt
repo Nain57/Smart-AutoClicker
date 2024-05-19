@@ -18,8 +18,8 @@ package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.android
 import com.buzbuz.gradle.convention.utils.getLibs
-import com.buzbuz.gradle.convention.utils.playStoreImplementation
 import com.buzbuz.gradle.convention.utils.plugins
+import com.buzbuz.gradle.convention.utils.releaseImplementation
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
@@ -43,24 +43,23 @@ class CrashlyticsConventionPlugin : Plugin<Project> {
                 getByName("release") {
                     configure<CrashlyticsExtension> {
                         nativeSymbolUploadEnabled = true
-                        unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/mergePlayStoreReleaseNativeLibs/out/lib"
+                        unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/fDroidRelease/mergeFDroidReleaseNativeLibs/out/lib"
                     }
                 }
             }
         }
 
         dependencies {
-            playStoreImplementation(platform(libs.getLibrary("google.firebase.bom")))
-            playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ktx"))
-            playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ndk"))
+            releaseImplementation(platform(libs.getLibrary("google.firebase.bom")))
+            releaseImplementation(libs.getLibrary("google.firebase.crashlytics.ktx"))
+            releaseImplementation(libs.getLibrary("google.firebase.crashlytics.ndk"))
         }
 
         afterEvaluate {
-            tasks.filter { task ->
-                task.name.startsWith("uploadCrashlyticsSymbolFilePlayStoreRelease")
-            }.forEach { task ->
-                task.shouldRunAfter("assemblePlayStoreRelease")
-            }
+            val uploadSymbolsTask = tasks.findByName("uploadCrashlyticsSymbolFileFDroidRelease") ?: return@afterEvaluate
+            val assembleTask = tasks.findByName("assembleFDroidRelease") ?: return@afterEvaluate
+            uploadSymbolsTask.mustRunAfter(assembleTask)
+            assembleTask.finalizedBy(uploadSymbolsTask)
         }
     }
 }
