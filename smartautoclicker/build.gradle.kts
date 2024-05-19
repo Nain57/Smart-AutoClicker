@@ -63,10 +63,7 @@ android {
 // Apply signature convention after declaring the signingConfigs
 apply { plugin(libs.plugins.buzbuz.androidSigning.get().pluginId) }
 
-// Only apply gms/firebase plugins if we are building for the play store
-if (buildParameters.isBuildForVariant("playStoreRelease")) {
-    apply { plugin(libs.plugins.buzbuz.crashlytics.get().pluginId) }
-}
+apply { plugin(libs.plugins.buzbuz.crashlytics.get().pluginId) }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)

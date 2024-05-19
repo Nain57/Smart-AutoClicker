@@ -18,8 +18,8 @@ package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.android
 import com.buzbuz.gradle.convention.utils.getLibs
-import com.buzbuz.gradle.convention.utils.playStoreImplementation
 import com.buzbuz.gradle.convention.utils.plugins
+import com.buzbuz.gradle.convention.utils.releaseImplementation
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
@@ -49,9 +49,9 @@ class CrashlyticsConventionPlugin : Plugin<Project> {
         }
 
         dependencies {
-            playStoreImplementation(platform(libs.getLibrary("google.firebase.bom")))
-            playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ktx"))
-            playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ndk"))
+            releaseImplementation(platform(libs.getLibrary("google.firebase.bom")))
+            releaseImplementation(libs.getLibrary("google.firebase.crashlytics.ktx"))
+            releaseImplementation(libs.getLibrary("google.firebase.crashlytics.ndk"))
         }
     }
 }
