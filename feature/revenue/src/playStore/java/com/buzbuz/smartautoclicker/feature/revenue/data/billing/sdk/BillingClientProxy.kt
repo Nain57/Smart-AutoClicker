@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:Suppress("DEPRECATION")
 
 package com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk
 
@@ -26,12 +25,11 @@ import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
 import com.android.billingclient.api.acknowledgePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.android.billingclient.api.queryPurchasesAsync
@@ -47,7 +45,7 @@ internal class BillingClientProxy(
 ) {
 
     internal val client = BillingClient.newBuilder(context)
-        .enablePendingPurchases()
+        .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
         .setListener { result, purchases ->
             billingUiFlowResultListener?.invoke(
                 result,
@@ -217,11 +215,6 @@ private fun billingFlowQueryParams(product: ProductDetails) =
         )
         .build()
 
-private fun legacyBillingFlowQueryParams(sku: SkuDetails) =
-    BillingFlowParams.newBuilder()
-        .setSkuDetails(sku)
-        .build()
-
 private fun inAppProductDetailsQueryParams(productId: String) =
     QueryProductDetailsParams.newBuilder()
         .setProductList(
@@ -232,12 +225,6 @@ private fun inAppProductDetailsQueryParams(productId: String) =
                     .build()
             )
         )
-        .build()
-
-private fun legacyInAppProductDetailsQueryParams(productId: String) =
-    SkuDetailsParams.newBuilder()
-        .setSkusList(listOf(productId))
-        .setType(BillingClient.SkuType.INAPP)
         .build()
 
 private fun inAppProductsPurchasesQueryParams() =
@@ -255,9 +242,6 @@ private fun List<Purchase>.findProductPurchase(productId: String): Purchase? =
 
 private fun List<ProductDetails>.findProduct(productId: String): InAppProduct? =
     find { it.productId == productId }?.toInAppProduct()
-
-private fun List<SkuDetails>.findLegacyProduct(productId: String): InAppProduct? =
-    find { it.sku == productId }?.toInAppProduct()
 
 
 /** Tag for logs */
