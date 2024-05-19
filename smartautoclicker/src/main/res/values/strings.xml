@@ -17,8 +17,8 @@
 -->
 <resources>
 
-    <string name="app_name" translatable="false">Smart AutoClicker</string>
-    <string name="notification_channel_name" translatable="false">Smart AutoClicker</string>
+    <string name="app_name" translatable="false">Klick\'r</string>
+    <string name="notification_channel_name" translatable="false">Klick\'r</string>
 
     <!-- Application wide texts. -->
     <string name="notification_title">Scenario: %1$s</string>
@@ -77,7 +77,7 @@
       -->
     <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Your device does not provide the standard
-        Android screen capture permission dialog. Smart AutoClicker won\'t be able to run on it.</string>
+        Android screen capture permission dialog. Klick\'r won\'t be able to run on it.</string>
 
     <!--
       - Section titles.

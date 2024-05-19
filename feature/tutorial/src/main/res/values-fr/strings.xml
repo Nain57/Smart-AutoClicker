@@ -47,12 +47,12 @@
     <string name="message_tutorial_1_game_instructions">Cliquez sur le bouton bleu le plus rapidement possible</string>
 
     <string name="message_tutorial_1_step_1">Bienvenue dans votre premier tutoriel !\n\nIci, vous allez essayer de battre le meilleur score
-        d\'un jeu avec l\'aide de Smart AutoClicker.\n\nD\'abord, lancez le jeu et essayez de gagner par vous-même.</string>
+        d\'un jeu avec l\'aide de Klick\'r.\n\nD\'abord, lancez le jeu et essayez de gagner par vous-même.</string>
 
-    <string name="message_tutorial_1_step_3">Difficile, n\'est-ce pas ?\nUtilisons maintenant Smart AutoClicker pour y parvenir !\n\n
+    <string name="message_tutorial_1_step_3">Difficile, n\'est-ce pas ?\nUtilisons maintenant Klick\'r pour y parvenir !\n\n
         Cliquez sur l\'icône de configuration du scénario pour commencer à éditer votre nouveau scénario.</string>
 
-    <string name="message_tutorial_1_step_4">Un scénario est la structure de base de l\'automatisation Smart AutoClicker.\n\n
+    <string name="message_tutorial_1_step_4">Un scénario est la structure de base de l\'automatisation Klick\'r.\n\n
         Il contient les paramètres de détection généraux et une liste d\'événements décrivant ce qui sera exécuté lors de l\'exécution
         de votre scénario.\n\nCliquez sur le bouton de création d\'événement pour créer votre premier événement.</string>
 
@@ -123,9 +123,9 @@
 
     <string name="message_tutorial_1_step_20">Il est en cours de lecture, mais rien ne se passe ?\n\nC\'est normal, il cliquera seulement
         lorsque le personnage bleu sera visible, vous vous souvenez ? Tout en maintenant le scénario en cours d\'exécution, appuyez sur le bouton de
-        démarrage du jeu et regardez Smart AutoClicker le battre pour vous !</string>
+        démarrage du jeu et regardez Klick\'r le battre pour vous !</string>
 
-    <string name="message_tutorial_1_step_21">Félicitations !\n\nVous connaissez maintenant les bases de Smart AutoClicker, mais tous les
+    <string name="message_tutorial_1_step_21">Félicitations !\n\nVous connaissez maintenant les bases de Klick\'r, mais tous les
         cas d\'utilisation ne seront pas aussi simples que ce jeu.\nJetez un coup d\'œil au tutoriel suivant pour apprendre à suivre une cible en mouvement.</string>
 
 

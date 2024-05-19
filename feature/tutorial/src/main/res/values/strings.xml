@@ -47,12 +47,12 @@
     <string name="message_tutorial_1_game_instructions">Click on the blue button as fast as possible</string>
 
     <string name="message_tutorial_1_step_1">Welcome to your first tutorial!\n\nHere, you will try to beat the high score
-        of a game with the help of Smart AutoClicker.\n\nFirst, start the game and try to win by yourself.</string>
+        of a game with the help of Klick\'r.\n\nFirst, start the game and try to win by yourself.</string>
 
-    <string name="message_tutorial_1_step_3">Difficult, isn\'t it?\nLet\'s use Smart AutoClicker to beat it !\n\n
+    <string name="message_tutorial_1_step_3">Difficult, isn\'t it?\nLet\'s use Klick\'r to beat it !\n\n
         Click on the scenario configuration icon to start editing your new scenario.</string>
 
-    <string name="message_tutorial_1_step_4">A Scenario is the root structure of Smart AutoClicker automation.\n\n
+    <string name="message_tutorial_1_step_4">A Scenario is the root structure of Klick\'r automation.\n\n
         It contains the general detection settings and a list of Events describing what will be executed when running
         your Scenario. \n\nClick on the create event button to create your first event.</string>
 
@@ -124,9 +124,9 @@
 
     <string name="message_tutorial_1_step_20">It\'s playing but nothing happens?\n\nThat\'s normal, it will click only
         when the blue character is visible, remember? While keeping the scenario running, press the start game button
-        and just watch as Smart AutoClicker will beat it for you!</string>
+        and just watch as Klick\'r will beat it for you!</string>
 
-    <string name="message_tutorial_1_step_21">Congratulations!\n\nYou now know the basics of Smart AutoClicker, but not
+    <string name="message_tutorial_1_step_21">Congratulations!\n\nYou now know the basics of Klick\'r, but not
         all use cases will be as simple as this game.\nTake a look at the next tutorial to learn how to track a moving
         target</string>
 

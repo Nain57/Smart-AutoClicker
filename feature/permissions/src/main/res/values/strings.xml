@@ -30,16 +30,16 @@
       - Messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_permission_desc_overlay">The overlay permission is required in order to show Smart AutoClicker
+    <string name="message_permission_desc_overlay">The overlay permission is required in order to show Klick\'r
         interface over the applications you want to automate, allowing you to configure your scenario without stopping
         the other application.</string>
-    <string name="message_permission_desc_accessibility">The accessibility service permission allows Smart AutoClicker
+    <string name="message_permission_desc_accessibility">The accessibility service permission allows Klick\'r
         to perform gestures on your device screen. This permission is required in order to execute the clicks and swipes
-        you will create in your automations scenarios.\n\nNo data is collected by Smart AutoClicker\n\nTo grant the Accessibility
+        you will create in your automations scenarios.\n\nNo data is collected by Klick\'r\n\nTo grant the Accessibility
         service permission, click on the button bellow.</string>
     <string name="message_permission_desc_notification">Optional: Shows the notification while the application is running in order
         to easily return to the scenario selection screen.</string>
-    <string name="message_permission_mandatory_denied">This permission is mandatory for Smart AutoClicker.
+    <string name="message_permission_mandatory_denied">This permission is mandatory for Klick\'r.
         It won\'t be able to work correctly without it.</string>
 
     <!--

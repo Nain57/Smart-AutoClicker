@@ -52,7 +52,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/banner_text"
-        android:text="Smart AutoClicker Pro"/>
+        android:text="Klick\'r Pro"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/banner_text"

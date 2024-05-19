@@ -76,7 +76,7 @@
       -->
     <string name="message_delete_scenario">Le scénario %1$s va être supprimé. Êtes vous sûr ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Votre appareil ne donne pas la possibilité à
-        Smart Autoclicker de pouvoir enregistrer votre écran. L\'application ne pourra pas fonctionner dessus.</string>
+        Klick\'r de pouvoir enregistrer votre écran. L\'application ne pourra pas fonctionner dessus.</string>
 
     <!--
       - Section titles.

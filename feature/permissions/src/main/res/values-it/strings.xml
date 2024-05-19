@@ -30,16 +30,16 @@
       - Messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_permission_desc_overlay">Per visualizzare Smart AutoClicker è necessaria l\'autorizzazione di sovrapposizione
+    <string name="message_permission_desc_overlay">Per visualizzare Klick\'r è necessaria l\'autorizzazione di sovrapposizione
         interfaccia sulle applicazioni che desideri automatizzare, permettendoti di configurare il tuo scenario senza fermarti
         l\'altra applicazione.</string>
-    <string name="message_permission_desc_accessibility">L\'autorizzazione del servizio di accessibilità consente Smart AutoClicker
+    <string name="message_permission_desc_accessibility">L\'autorizzazione del servizio di accessibilità consente Klick\'r
         per eseguire gesti sullo schermo del tuo dispositivo. Questa autorizzazione è necessaria per eseguire i clic e i passaggi
-        creerai nei tuoi scenari di automazione.\n\nNessun dato viene raccolto da Smart AutoClicker\n\nPer garantire l\'accessibilità
+        creerai nei tuoi scenari di automazione.\n\nNessun dato viene raccolto da Klick\'r\n\nPer garantire l\'accessibilità
         autorizzazione al servizio, fare clic sul pulsante qui sotto.</string>
     <string name="message_permission_desc_notification">Facoltativo: mostra la notifica mentre l\'applicazione viene eseguita in ordine
         per tornare facilmente alla schermata di selezione dello scenario.</string>
-    <string name="message_permission_mandatory_denied">Questa autorizzazione è obbligatoria per Smart AutoClicker.
+    <string name="message_permission_mandatory_denied">Questa autorizzazione è obbligatoria per Klick\'r.
         Non sarà in grado di funzionare correttamente senza di esso.</string>
 
     <!--
