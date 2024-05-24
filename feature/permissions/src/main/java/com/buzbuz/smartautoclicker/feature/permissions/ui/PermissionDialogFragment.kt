@@ -47,6 +47,9 @@ internal class PermissionDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.initResultLauncherIfNeeded(this) { isGranted, isOptional ->
+            if (isGranted || isOptional) dismiss()
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -56,10 +59,6 @@ internal class PermissionDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel.initResultLauncherIfNeeded(this) { isGranted, isOptional ->
-            if (isGranted || isOptional) dismiss()
-        }
-
         viewBinding = DialogPermissionBinding.inflate(layoutInflater).apply {
             buttonRequestPermission.setOnClickListener {
                 viewModel.startPermissionFlow(requireActivity())

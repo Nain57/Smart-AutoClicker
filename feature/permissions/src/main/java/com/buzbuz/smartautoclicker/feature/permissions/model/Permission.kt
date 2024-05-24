@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.permissions.model
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -65,7 +66,6 @@ sealed class Permission {
         protected abstract val permissionString: String
 
         internal fun initResultLauncher(fragment: Fragment, onResult: (isGranted: Boolean) -> Unit) {
-            if (permissionLauncher != null) return
             permissionLauncher = fragment
                 .registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
                     onResult(granted)
@@ -74,8 +74,14 @@ sealed class Permission {
 
         override fun onStartRequestFlow(context: Context): Boolean =
             permissionLauncher?.let { launcher ->
-                launcher.launch(permissionString)
-                true
+                try {
+                    launcher.launch(permissionString)
+                    true
+                } catch (isEx: IllegalStateException) {
+                    Log.e("PermissionDangerous", "Can't start permission request", isEx)
+                    false
+                }
+
             } ?: false
     }
 
