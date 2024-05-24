@@ -52,11 +52,12 @@ fun IncludeButtonTextDualStateBinding.setChecked(checkedId: Int?) {
 }
 
 fun IncludeButtonTextDualStateBinding.setOnCheckedListener(listener: ((Int?) -> Unit)?) {
+    val registeredListener = root.tag
+    if (registeredListener is MaterialButtonToggleGroup.OnButtonCheckedListener) {
+        root.removeOnButtonCheckedListener(registeredListener)
+    }
+
     if (listener == null) {
-        val registeredListener = root.tag
-        if (registeredListener is MaterialButtonToggleGroup.OnButtonCheckedListener) {
-            root.removeOnButtonCheckedListener(registeredListener)
-        }
         return
     }
 

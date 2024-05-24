@@ -66,6 +66,11 @@ class EventToggleAdapter(
             is ItemViewHolder -> holder.onBind(getItem(position) as EventTogglesListItem.Item)
         }
     }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is ItemViewHolder) holder.onUnbind()
+    }
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [EventToggleAdapter] list. */
@@ -128,6 +133,15 @@ class ItemViewHolder(
             textActionsCount.text = item.actionsCount.toString()
             textConditionCount.text = item.conditionsCount.toString()
 
+            toggleTypeButton.setChecked(
+                when (item.toggleState) {
+                    Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
+                    Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
+                    Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
+                    else -> null
+                }
+            )
+
             toggleTypeButton.setOnCheckedListener { newChecked ->
                 val newState = when (newChecked) {
                     BUTTON_ENABLE_EVENT -> Action.ToggleEvent.ToggleType.ENABLE
@@ -138,16 +152,11 @@ class ItemViewHolder(
 
                 onEventToggleStateChanged(item.eventId, newState)
             }
-
-            toggleTypeButton.setChecked(
-                when (item.toggleState) {
-                    Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
-                    Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
-                    Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
-                    else -> null
-                }
-            )
         }
+    }
+
+    fun onUnbind() {
+        viewBinding.toggleTypeButton.setOnCheckedListener(null)
     }
 }
 
