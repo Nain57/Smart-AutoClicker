@@ -24,16 +24,12 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
-import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.SelectorState
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -73,51 +69,14 @@ class ImageConditionViewModel @Inject constructor(
     /** Tells if the condition name is valid or not. */
     val nameError: Flow<Boolean> = configuredCondition.map { it.name.isEmpty() }
 
-    private val shouldBeDetectedItem = DropdownItem(
-        title = R.string.dropdown_item_title_condition_visibility_present,
-        helperText = R.string.dropdown_helper_text_condition_visibility_present,
-        icon = R.drawable.ic_confirm,
-    )
-    private val shouldNotBeDetectedItem = DropdownItem(
-        title= R.string.dropdown_item_title_condition_visibility_absent,
-        helperText = R.string.dropdown_helper_text_condition_visibility_absent,
-        icon = R.drawable.ic_cancel,
-    )
-    /**  Should be detected choices for the dropdown field. */
-    val shouldBeDetectedItems = listOf(shouldBeDetectedItem, shouldNotBeDetectedItem)
     /** Tells if the condition should be present or not on the screen. */
-    val shouldBeDetected: Flow<DropdownItem> = configuredCondition
-        .mapNotNull { condition ->
-            when (condition.shouldBeDetected) {
-                true -> shouldBeDetectedItem
-                false -> shouldNotBeDetectedItem
-            }
-        }
-        .filterNotNull()
+    val shouldBeDetected: Flow<Boolean> = configuredCondition
+        .map { condition -> condition.shouldBeDetected }
 
-    val detectionTypeExact = DropdownItem(
-        title = R.string.dropdown_item_title_detection_type_exact,
-        icon = R.drawable.ic_detect_exact,
-    )
-    val detectionTypeScreen = DropdownItem(
-        title= R.string.dropdown_item_title_detection_type_screen,
-        icon = R.drawable.ic_detect_whole_screen,
-    )
-    val detectionTypeInArea = DropdownItem(
-        title= R.string.dropdown_item_title_detection_type_in_area,
-        icon = R.drawable.ic_detect_in_area,
-    )
-    /** Detection types choices for the dropdown field. */
-    val detectionTypeItems = listOf(detectionTypeExact, detectionTypeScreen, detectionTypeInArea)
     /** The type of detection currently selected by the user. */
     val detectionType: Flow<DetectionTypeState> = configuredCondition
         .map { condition ->
-            when (condition.detectionType) {
-                EXACT -> context.getExactDetectionTypeState(condition.area)
-                WHOLE_SCREEN -> context.getWholeScreenDetectionTypeState()
-                IN_AREA -> context.getInAreaDetectionTypeState(condition.detectionArea ?: condition.area)
-                else -> null
-            }
+            context.getDetectionTypeState(condition.detectionType, condition.detectionArea ?: condition.area)
         }
         .filterNotNull()
 
@@ -152,30 +111,20 @@ class ImageConditionViewModel @Inject constructor(
     }
 
     /** Set the shouldBeDetected value of the condition. */
-    fun setShouldBeDetected(newShouldBeDetected: DropdownItem) {
+    fun toggleShouldBeDetected() {
         updateEditedCondition { oldCondition ->
-            oldCondition.copy(
-                shouldBeDetected = when (newShouldBeDetected) {
-                    shouldBeDetectedItem -> true
-                    shouldNotBeDetectedItem -> false
-                    else -> return@updateEditedCondition null
-                }
-            )
+            oldCondition.copy(shouldBeDetected = !oldCondition.shouldBeDetected)
         }
     }
 
     /** Set the detection type. */
-    fun setDetectionType(newType: DropdownItem) {
+    fun setDetectionType(newType: Int) {
         updateEditedCondition { oldCondition ->
-            when (newType) {
-                detectionTypeExact -> oldCondition.copy(detectionType = EXACT)
-                detectionTypeScreen -> oldCondition.copy(detectionType = WHOLE_SCREEN)
-                detectionTypeInArea -> oldCondition.copy(
-                    detectionType = IN_AREA,
-                    detectionArea = oldCondition.detectionArea ?: oldCondition.area,
-                )
-                else -> return@updateEditedCondition null
-            }
+            val detectionArea =
+                if (oldCondition.detectionArea == null && newType == IN_AREA) oldCondition.area
+                else oldCondition.detectionArea
+
+            oldCondition.copy(detectionType = newType, detectionArea = detectionArea)
         }
     }
 
@@ -204,26 +153,13 @@ class ImageConditionViewModel @Inject constructor(
         monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE, view)
     }
 
-    fun monitorDetectionTypeDropdownView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE, view)
-    }
-
-    fun monitorDropdownItemWholeScreenView(view: View) {
-        monitoredViewsManager.attach(
-            MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN,
-            view,
-            ViewPositioningType.SCREEN,
-        )
-    }
-
-    fun stopDropdownItemWholeScreenViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN)
+    fun monitorDetectionTypeItemWholeScreenView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN, view)
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE)
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_DETECTION_TYPE)
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_DROPDOWN_ITEM_WHOLE_SCREEN)
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN)
     }
 
     private fun sanitizeAreaForCondition(area: Rect, conditionArea: Rect): Rect {
@@ -248,40 +184,15 @@ class ImageConditionViewModel @Inject constructor(
         }
     }
 
-    private fun Context.getExactDetectionTypeState(area: Rect) = DetectionTypeState(
-        dropdownItem = detectionTypeExact,
-        selectorState = SelectorState(
-            isClickable = false,
-            title = getString(R.string.item_title_detection_type_exact),
-            subText = getString(R.string.item_desc_detection_type_exact, area.left, area.top, area.right, area.bottom),
-            iconRes = null,
-        )
-    )
-
-    private fun Context.getWholeScreenDetectionTypeState() = DetectionTypeState(
-        dropdownItem = detectionTypeScreen,
-        selectorState = SelectorState(
-            isClickable = false,
-            title = getString(R.string.item_title_detection_type_screen),
-            subText = null,
-            iconRes = null,
-        )
-    )
-
-    private fun Context.getInAreaDetectionTypeState(area: Rect) = DetectionTypeState(
-        dropdownItem = detectionTypeInArea,
-        selectorState = SelectorState(
-            isClickable = true,
-            title = getString(R.string.item_title_detection_type_in_area),
-            subText = getString(R.string.item_desc_detection_type_in_area, area.left, area.top, area.right, area.bottom),
-            iconRes = null,
-        )
+    private fun Context.getDetectionTypeState(@DetectionType type: Int, area: Rect) = DetectionTypeState(
+        type = type,
+        areaText = getString(R.string.field_select_detection_area_desc, area.left, area.top, area.right, area.bottom)
     )
 }
 
 data class DetectionTypeState(
-    val dropdownItem: DropdownItem,
-    val selectorState: SelectorState,
+    @DetectionType val type: Int,
+    val areaText: String,
 )
 
 /** The maximum threshold value selectable by the user. */

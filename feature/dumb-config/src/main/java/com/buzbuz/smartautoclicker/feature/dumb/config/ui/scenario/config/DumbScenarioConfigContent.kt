@@ -28,18 +28,20 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_SCENARIO_MAX_DURATION_MINUTES
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MIN_VALUE
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setNumericValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.setup
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setNumericValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ContentDumbScenarioConfigBinding
@@ -58,16 +60,16 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
     private lateinit var viewBinding: ContentDumbScenarioConfigBinding
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentDumbScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            scenarioNameInputLayout.apply {
+            fieldName.apply {
                 setLabel(R.string.input_field_label_scenario_name)
                 setOnTextChangedListener { dialogViewModel.setDumbScenarioName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(scenarioNameInputLayout.textField)
+            dialogController.hideSoftInputOnFocusLoss(fieldName.textField)
 
-            repeatCountInputField.apply {
+            fieldRepeatCount.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(
                     REPEAT_COUNT_MIN_VALUE,
                     REPEAT_COUNT_MAX_VALUE,
@@ -79,19 +81,25 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
                 setOnCheckboxClickedListener(dialogViewModel::toggleInfiniteRepeat)
             }
 
-            scenarioRandomization.setItems(
-                label = context.resources.getString(R.string.input_field_label_anti_detection),
-                items = dialogViewModel.randomizationDropdownItems,
-                onItemSelected = dialogViewModel::setRandomization,
-            )
-
-            maxDurationInputField.apply {
+            fieldMaxDuration.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(1, DUMB_SCENARIO_MAX_DURATION_MINUTES))
                 setup(R.string.input_field_label_maximum_duration, R.drawable.ic_infinite, disableInputWithCheckbox = true)
                 setOnTextChangedListener {
                     dialogViewModel.setMaxDurationMinutes(if (it.isNotEmpty()) it.toString().toInt() else 0)
                 }
                 setOnCheckboxClickedListener(dialogViewModel::toggleInfiniteMaxDuration)
+            }
+
+            fieldAntiDetection.apply {
+                setTitle(context.resources.getString(R.string.input_field_label_anti_detection))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.dropdown_helper_text_anti_detection_disabled),
+                        context.getString(R.string.dropdown_helper_text_anti_detection_enabled),
+                    )
+                )
+                setOnClickListener(dialogViewModel::toggleRandomization)
+
             }
         }
 
@@ -101,16 +109,23 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { dialogViewModel.scenarioName.collect(viewBinding.scenarioNameInputLayout::setText) }
-                launch { dialogViewModel.scenarioNameError.collect(viewBinding.scenarioNameInputLayout::setError)}
-                launch { dialogViewModel.repeatCount.collect(viewBinding.repeatCountInputField::setNumericValue) }
-                launch { dialogViewModel.repeatCountError.collect(viewBinding.repeatCountInputField::setError) }
-                launch { dialogViewModel.repeatInfiniteState.collect(viewBinding.repeatCountInputField::setChecked) }
-                launch { dialogViewModel.maxDurationMin.collect(viewBinding.maxDurationInputField::setNumericValue) }
-                launch { dialogViewModel.maxDurationMinError.collect(viewBinding.maxDurationInputField::setError) }
-                launch { dialogViewModel.maxDurationMinInfiniteState.collect(viewBinding.maxDurationInputField::setChecked) }
-                launch { dialogViewModel.randomization.collect(viewBinding.scenarioRandomization::setSelectedItem) }
+                launch { dialogViewModel.scenarioName.collect(viewBinding.fieldName::setText) }
+                launch { dialogViewModel.scenarioNameError.collect(viewBinding.fieldName::setError)}
+                launch { dialogViewModel.repeatCount.collect(viewBinding.fieldRepeatCount::setNumericValue) }
+                launch { dialogViewModel.repeatCountError.collect(viewBinding.fieldRepeatCount::setError) }
+                launch { dialogViewModel.repeatInfiniteState.collect(viewBinding.fieldRepeatCount::setChecked) }
+                launch { dialogViewModel.maxDurationMin.collect(viewBinding.fieldMaxDuration::setNumericValue) }
+                launch { dialogViewModel.maxDurationMinError.collect(viewBinding.fieldMaxDuration::setError) }
+                launch { dialogViewModel.maxDurationMinInfiniteState.collect(viewBinding.fieldMaxDuration::setChecked) }
+                launch { dialogViewModel.randomization.collect(::updateFieldRandomization) }
             }
+        }
+    }
+
+    private fun updateFieldRandomization(isEnabled: Boolean) {
+        viewBinding.fieldAntiDetection.apply {
+            setChecked(isEnabled)
+            setDescription(if (isEnabled) 1 else 0)
         }
     }
 }

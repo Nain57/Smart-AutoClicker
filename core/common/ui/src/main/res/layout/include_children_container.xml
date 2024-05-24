@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_item_event"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/text_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            tools:src="@drawable/ic_click"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/text_left"
+            style="@style/AppTheme.Field.SubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_horizontal_mini"
+            android:layout_marginEnd="@dimen/margin_horizontal_small"
+            app:layout_constraintStart_toEndOf="@id/icon_left"
+            app:layout_constraintEnd_toStartOf="@id/icon_middle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Value"/>
+
+        <ImageView
+            android:id="@+id/icon_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_large"
+            app:layout_constraintStart_toEndOf="@id/text_left"
+            app:layout_constraintEnd_toStartOf="@id/text_middle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@drawable/ic_click"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/text_middle"
+            style="@style/AppTheme.Field.SubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_horizontal_mini"
+            app:layout_constraintStart_toEndOf="@id/icon_middle"
+            app:layout_constraintEnd_toStartOf="@id/icon_right"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="3"/>
+
+        <ImageView
+            android:id="@+id/icon_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_large"
+            app:layout_constraintStart_toEndOf="@id/text_middle"
+            app:layout_constraintEnd_toStartOf="@id/text_right"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@drawable/ic_click"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/text_right"
+            style="@style/AppTheme.Field.SubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_horizontal_mini"
+            app:layout_constraintStart_toEndOf="@id/icon_right"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="1"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

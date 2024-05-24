@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.DialogDebugReportConditionBinding
 

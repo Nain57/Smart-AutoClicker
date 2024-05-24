@@ -17,8 +17,8 @@
 -->
 <resources>
 
-    <string name="app_name" translatable="false">Smart AutoClicker</string>
-    <string name="notification_channel_name" translatable="false">Smart AutoClicker</string>
+    <string name="app_name" translatable="false">Klick\'r</string>
+    <string name="notification_channel_name" translatable="false">Klick\'r</string>
 
     <!-- Application wide texts. -->
     <string name="notification_title">Scenario: %1$s</string>
@@ -35,10 +35,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">New scenario</string>
-    <string name="dialog_title_permission_accessibility">Accessibility service</string>
-    <string name="dialog_title_permission_notification">Notification</string>
-    <string name="dialog_title_permission_mandatory_denied">Permission denied</string>
-    <string name="dialog_title_permission_overlay">Overlay</string>
 
     <!--
       - Text for menu items.
@@ -47,6 +43,11 @@
     <string name="menu_item_title_export">Export</string>
     <string name="menu_item_title_import">Import</string>
     <string name="menu_item_title_select_all">Select all</string>
+    <string name="menu_item_title_privacy">Privacy settings</string>
+    <string name="menu_item_title_remove_ads">Remove ads</string>
+    <string name="menu_item_title_troubleshooting">Troubleshooting</string>
+    <string name="menu_item_title_cancel">Cancel</string>
+    <string name="menu_item_title_search">Search</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -76,18 +77,7 @@
       -->
     <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Your device does not provide the standard
-        Android screen capture permission dialog. Smart AutoClicker won\'t be able to run on it.</string>
-    <string name="message_permission_desc_overlay">The overlay permission is required in order to show Smart AutoClicker
-        interface over the applications you want to automate, allowing you to configure your scenario without stopping
-        the other application.</string>
-    <string name="message_permission_desc_accessibility">The accessibility service permission allows Smart AutoClicker
-        to perform gestures on your device screen. This permission is required in order to execute the clicks and swipes
-        you will create in your automations scenarios.\n\nNo data is collected by Smart AutoClicker\n\nTo grant the Accessibility
-        service permission, click on the button bellow.</string>
-    <string name="message_permission_desc_notification">Optional: Shows the notification while the application is running in order
-        to easily return to the scenario selection screen.</string>
-    <string name="message_permission_mandatory_denied">This permission is mandatory for Smart AutoClicker.
-        It won\'t be able to work correctly without it.</string>
+        Android screen capture permission dialog. Klick\'r won\'t be able to run on it.</string>
 
     <!--
       - Section titles.
@@ -108,9 +98,6 @@
       - Should be short and concise.
       -->
     <string name="button_text_create_scenario">Create a scenario</string>
-    <string name="button_request_permission">Request permission</string>
-    <string name="button_deny">Deny</string>
-
 
     <!--
       - Content description texts.

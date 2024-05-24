@@ -21,11 +21,11 @@ import android.graphics.Point
 import android.util.Log
 
 import androidx.core.graphics.toPoint
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
@@ -51,7 +51,11 @@ internal fun OverlayManager.startDumbActionCreationUiFlow(
                 when (choice) {
                     DumbActionTypeChoice.Click -> onDumbClickCreationSelected(context, creator, listener)
                     DumbActionTypeChoice.Swipe -> onDumbSwipeCreationSelected(context, creator, listener)
-                    DumbActionTypeChoice.Pause -> startDumbPauseEditionFlow(context, creator.createNewDumbPause(), listener)
+                    DumbActionTypeChoice.Pause -> startDumbPauseEditionFlow(
+                        context,
+                        creator.createNewDumbPause(),
+                        listener
+                    )
                 }
             },
             onCanceled = listener.onDumbActionCreationCancelled,

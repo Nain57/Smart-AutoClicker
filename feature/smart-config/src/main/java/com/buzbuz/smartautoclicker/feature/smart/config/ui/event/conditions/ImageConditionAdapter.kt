@@ -43,7 +43,7 @@ class ImageConditionAdapter(
     private val conditionClickedListener: (ImageCondition) -> Unit,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val itemViewBound: ((Int, View?) -> Unit),
-    ) : ListAdapter<ImageCondition, ImageConditionViewHolder>(ImageConditionDiffUtilCallback) {
+) : ListAdapter<ImageCondition, ImageConditionViewHolder>(ImageConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ImageConditionViewHolder(

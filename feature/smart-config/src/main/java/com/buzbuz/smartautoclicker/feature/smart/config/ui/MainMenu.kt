@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui
 
-import android.content.ComponentName
 import android.content.DialogInterface
-import android.content.Intent
 import android.util.Size
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -31,8 +29,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuBinding
@@ -70,12 +68,13 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         creator = { debugModel() },
     )
 
+    private var isHiddenForPaywall: Boolean = false
+
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayMenuBinding
     /** Controls the animations of the play/pause button. */
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
 
-    private var billingFlowTriggeredByDetectionLimitation: Boolean = false
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
 
@@ -106,17 +105,12 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         viewBinding.layoutDebug.visibility = View.GONE
         setOverlayViewVisibility(false)
 
-        // When the billing flow is not longer displayed, restore the dialogs states
+        // Start loading advertisement if needed
+        viewModel.loadAdIfNeeded(context)
+
         lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowInProgress.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (billingFlowTriggeredByDetectionLimitation) {
-                            show()
-                            billingFlowTriggeredByDetectionLimitation = false
-                        }
-                    }
-                }
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.paywallIsVisible.collect(::updateVisibilityForPaywall) }
             }
         }
 
@@ -134,11 +128,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         super.onStart()
         viewModel.monitorPlayPauseButtonView(viewBinding.btnPlay)
         viewModel.monitorConfigButtonView(viewBinding.btnClickList)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (viewModel.shouldShowFirstTimeTutorialDialog()) showFirstTimeTutorialDialog()
     }
 
     override fun onStop() {
@@ -199,10 +188,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             return
         }
 
-        viewModel.toggleDetection(context) {
-            billingFlowTriggeredByDetectionLimitation = true
-            hide()
-        }
+        viewModel.toggleDetection(context)
     }
 
     /** Refresh the play menu item according to the scenario state. */
@@ -239,6 +225,16 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                     }
                 }
             }
+        }
+    }
+
+    private fun updateVisibilityForPaywall(isHidden: Boolean) {
+        if (isHidden) {
+            isHiddenForPaywall = true
+            hide()
+        } else if (isHiddenForPaywall) {
+            isHiddenForPaywall = false
+            show()
         }
     }
 
@@ -291,8 +287,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private fun showScenarioSaveErrorDialog() {
         MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
             .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_scenario_saving_error)
-            .setPositiveButton(R.string.button_dialog_modify) { _: DialogInterface, _: Int ->
+            .setMessage(R.string.error_dialog_message_scenario_saving)
+            .setPositiveButton(R.string.generic_modify) { _: DialogInterface, _: Int ->
                 showScenarioConfigDialog()
             }
             .setNegativeButton(android.R.string.cancel) { _: DialogInterface, _: Int ->
@@ -300,24 +296,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
             .create()
             .showAsOverlay()
-    }
-
-    private fun showFirstTimeTutorialDialog() {
-        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
-            .setTitle(R.string.dialog_title_tutorial)
-            .setMessage(R.string.message_tutorial_first_time)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                context.startActivity(
-                    Intent()
-                        .setComponent(ComponentName(context.packageName, "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"))
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                )
-            }
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .create()
-            .showAsOverlay()
-
-        viewModel.onFirstTimeTutorialDialogShown()
     }
 
     private fun showStopVolumeDownTutorialDialog() {
@@ -338,7 +316,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
             .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_error_native_lib)
+            .setMessage(R.string.error_dialog_message_error_native_lib)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 onStopClicked()
             }

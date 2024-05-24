@@ -46,6 +46,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:drawableEndCompat="@drawable/ic_chevron_right"
-        tools:text="Smart AutoClicker"/>
+        tools:text="Klick\'r"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

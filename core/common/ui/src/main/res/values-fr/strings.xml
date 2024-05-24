@@ -30,8 +30,8 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_title_click_position">Position du clic</string>
-    <string name="item_title_swipe_positions">Positions du swipe</string>
+    <string name="field_click_position_title">Position du clic</string>
+    <string name="field_swipe_positions_title">Positions du swipe</string>
     <string name="item_title_try_element">Testez votre %1$s</string>
     <string name="item_error_action_invalid_generic">Cette action est invalide</string>
 
@@ -75,6 +75,10 @@
     <string name="dropdown_helper_text_anti_detection_enabled">Ajoute une petite part de hasard dans les positions et durées des clics, swipes et pauses</string>
     <string name="dropdown_helper_text_anti_detection_disabled">Exécute les actions comme elles sont déclarées</string>
 
+    <string name="dropdown_label_time_unit_ms">ms</string>
+    <string name="dropdown_label_time_unit_s">s</string>
+    <string name="dropdown_label_time_unit_min">min</string>
+    <string name="dropdown_label_time_unit_h">h</string>
     <string name="dropdown_label_time_unit">Unité de temps</string>
 
     <!--
@@ -95,7 +99,7 @@
     <string name="content_desc_drag_and_drop">Drag and drop pour changer l\'ordre des éléments</string>
     <string name="content_desc_move_menu">Déplacer le menu flottant</string>
     <string name="content_desc_play_pause_scenario">Jouer ou arrêter le scenario</string>
-    <string name="content_desc_stop_clicker">Quitter Smart AutoClicker</string>
+    <string name="content_desc_stop_clicker">Quitter Klick\'r</string>
     <string name="content_desc_confirm">Confirmer</string>
     <string name="content_desc_go_back">Retour au dialog</string>
 </resources>

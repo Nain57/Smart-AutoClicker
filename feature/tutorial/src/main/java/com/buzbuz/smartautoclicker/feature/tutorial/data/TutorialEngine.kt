@@ -21,9 +21,9 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.Overlay
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -90,7 +90,10 @@ class TutorialEngine @Inject constructor(
     }
 
     private fun setStepIndex(newIndex: Int) {
-        val step = getStep(newIndex) ?: return
+        val step = getStep(newIndex) ?: let {
+            stepState.value = null
+            return
+        }
 
         Log.d(TAG, "Set step index to $newIndex")
 

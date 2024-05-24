@@ -30,8 +30,8 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_title_click_position">Click position</string>
-    <string name="item_title_swipe_positions">Swipe positions</string>
+    <string name="field_click_position_title">Click position</string>
+    <string name="field_swipe_positions_title">Swipe positions</string>
     <string name="item_title_try_element">Test your %1$s</string>
     <string name="item_error_action_invalid_generic">This action is invalid</string>
 
@@ -46,7 +46,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_tutorial_volume_down_stop">If your scenario is clicking too quickly, it can
-        block you from using Smart AutoClicker menu to stop it.\n\nIn that case, you can press the
+        block you from using Klick\'r menu to stop it.\n\nIn that case, you can press the
         physical \"Volume Down\" button of your device to stop the running scenario.</string>
 
 
@@ -77,10 +77,10 @@
     <string name="dropdown_helper_text_anti_detection_enabled">Randomize the click swipe and pause positions and durations by a small random offset</string>
     <string name="dropdown_helper_text_anti_detection_disabled">Execute all actions as declared</string>
 
-    <string name="dropdown_label_time_unit_ms" translatable="false">ms</string>
-    <string name="dropdown_label_time_unit_s" translatable="false">s</string>
-    <string name="dropdown_label_time_unit_min" translatable="false">min</string>
-    <string name="dropdown_label_time_unit_h" translatable="false">h</string>
+    <string name="dropdown_label_time_unit_ms">ms</string>
+    <string name="dropdown_label_time_unit_s">s</string>
+    <string name="dropdown_label_time_unit_min">min</string>
+    <string name="dropdown_label_time_unit_h">h</string>
     <string name="dropdown_label_time_unit">Time Unit</string>
 
     <!--
@@ -101,7 +101,7 @@
     <string name="content_desc_drag_and_drop">Drag and drop to reorder the elements</string>
     <string name="content_desc_move_menu">Move the floating menu</string>
     <string name="content_desc_play_pause_scenario">Play or pause the scenario</string>
-    <string name="content_desc_stop_clicker">Stop Smart AutoClicker</string>
+    <string name="content_desc_stop_clicker">Stop Klick\'r</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_go_back">Back to dialog</string>
 </resources>

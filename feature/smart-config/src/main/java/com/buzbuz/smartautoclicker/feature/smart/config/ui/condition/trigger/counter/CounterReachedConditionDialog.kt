@@ -26,19 +26,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.setup
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionCounterBinding
@@ -65,7 +65,7 @@ class CounterReachedConditionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigConditionCounterBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_counter_reached)
+                dialogTitle.setText(R.string.dialog_title_counter_reached)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -89,17 +89,17 @@ class CounterReachedConditionDialog(
                 }
             }
 
-            editNameLayout.apply {
-                setLabel(R.string.input_field_label_name)
+            fieldName.apply {
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             editCounterNameLayout.apply {
-                setup(R.string.input_field_label_change_counter_name, R.drawable.ic_search, false)
+                setup(R.string.field_counter_name_label, R.drawable.ic_search, false)
                 setOnTextChangedListener { viewModel.setCounterName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -109,14 +109,14 @@ class CounterReachedConditionDialog(
             hideSoftInputOnFocusLoss(editCounterNameLayout.textField)
 
             comparisonOperatorField.setItems(
-                label = context.getString(R.string.dropdown_label_comparison_operator),
+                label = context.getString(R.string.dropdown_comparison_operator_label),
                 items = viewModel.operatorDropdownItems,
                 onItemSelected = viewModel::setComparisonOperator,
             )
 
             editValueLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
-                setLabel(R.string.input_field_label_comparison_value)
+                setLabel(R.string.field_counter_comparison_value_label)
                 setOnTextChangedListener {
                     viewModel.setComparisonValue(if (it.isNotEmpty()) it.toString().toInt() else null)
                 }
@@ -135,8 +135,8 @@ class CounterReachedConditionDialog(
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.counterName.collect(viewBinding.editCounterNameLayout::setTextValue) }
                 launch { viewModel.counterNameError.collect(viewBinding.editCounterNameLayout::setError) }
                 launch { viewModel.operatorDropdownState.collect(viewBinding.comparisonOperatorField::setSelectedItem) }

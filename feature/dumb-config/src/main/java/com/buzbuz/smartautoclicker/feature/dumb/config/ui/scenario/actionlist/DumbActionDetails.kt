@@ -22,6 +22,7 @@ import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 
@@ -83,7 +84,7 @@ private fun DumbAction.DumbClick.toClickDetails(context: Context, withPositions:
                 formatDuration(pressDurationMs),
             )
         },
-        repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count, repeatCount),
+        repeatCountText = getRepeatDisplayText(context),
         haveError = inError,
         action = this,
     )
@@ -103,7 +104,7 @@ private fun DumbAction.DumbSwipe.toSwipeDetails(context: Context, withPositions:
                 formatDuration(swipeDurationMs),
             )
         },
-        repeatCountText = context.getString(R.string.item_desc_dumb_repeat_count, repeatCount),
+        repeatCountText = getRepeatDisplayText(context),
         haveError = inError,
         action = this,
     )
@@ -127,3 +128,7 @@ private fun DumbAction.DumbPause.toPauseDetails(context: Context, withPositions:
         haveError = inError,
         action = this,
     )
+
+private fun Repeatable.getRepeatDisplayText(context: Context): String =
+    if (isRepeatInfinite) context.getString(R.string.item_desc_dumb_repeat_infinite)
+    else context.getString(R.string.item_desc_dumb_repeat_count, repeatCount)

@@ -29,8 +29,8 @@ import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report.formatConfidenceRate
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,36 +39,33 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class TryElementViewModel @Inject constructor(
     private val detectionRepository: DetectionRepository
 ) : ViewModel() {
 
     private val triedElement: MutableStateFlow<Element?> = MutableStateFlow(null)
-    private var resetJob: Job? = null
 
     private val isPlaying: StateFlow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.DETECTING }
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = false)
 
-    private val _detectionResults: MutableStateFlow<List<DetectionResultInfo>> = MutableStateFlow(emptyList())
-    private val detectionResults: Flow<List<DetectionResultInfo>> = _detectionResults
+    private val tryResults: MutableStateFlow<List<DetectionResultInfo>> = MutableStateFlow(emptyList())
+    private val detectionResults: Flow<List<DetectionResultInfo>> = tryResults
         .combine(isPlaying) { results, playing -> if (playing) results else emptyList() }
-        .onEach { results ->
-            resetJob?.cancel()
-            resetJob = null
-            if (results.isEmpty()) return@onEach
+        .transformLatest { results ->
+            if (results.isEmpty()) return@transformLatest
 
-            resetJob = viewModelScope.launch {
-                delay(3.seconds)
-                _detectionResults.emit(emptyList())
-            }
+            emit(results)
+            delay(3.seconds)
+            tryResults.emit(emptyList())
         }
 
     val displayResults: Flow<ResultsDisplay?> = triedElement.combine(detectionResults) { element, results ->
@@ -113,7 +110,7 @@ class TryElementViewModel @Inject constructor(
                 when (element) {
                     is Element.ImageEventTry ->
                         detectionRepository.tryEvent(context, element.scenario, element.imageEvent) { results ->
-                            _detectionResults.value = results.getAllResults().mapNotNull { result ->
+                            tryResults.value = results.getAllResults().mapNotNull { result ->
                                 if (result is ImageConditionResult) result.toDetectionResultInfo()
                                 else null
                             }
@@ -121,7 +118,7 @@ class TryElementViewModel @Inject constructor(
 
                     is Element.ImageConditionTry ->
                         detectionRepository.tryImageCondition(context, element.scenario, element.imageCondition) { result ->
-                            _detectionResults.value = listOf(result.toDetectionResultInfo())
+                            tryResults.value = listOf(result.toDetectionResultInfo())
                         }
                 }
             }

@@ -67,7 +67,7 @@ fun ItemImageConditionBinding.bind(
 
 
     conditionThreshold.text = root.context.getString(
-        R.string.message_condition_threshold,
+        R.string.item_image_condition_desc_threshold,
         condition.threshold
     )
 

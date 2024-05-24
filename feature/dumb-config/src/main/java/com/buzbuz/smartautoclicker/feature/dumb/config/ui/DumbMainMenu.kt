@@ -28,8 +28,8 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbMainMenuBinding

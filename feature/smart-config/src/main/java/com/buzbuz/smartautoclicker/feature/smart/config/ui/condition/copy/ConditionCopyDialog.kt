@@ -17,15 +17,14 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2024 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -40,20 +40,19 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_name_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_press_duration_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_press_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/extras_card"
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,72 +65,16 @@
                     android:layout_marginVertical="@dimen/margin_vertical_default"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_default">
 
-                    <include layout="@layout/include_input_field_dropdown"
-                        android:id="@+id/click_position_field"
+                    <include layout="@layout/include_field_multi_state"
+                        android:id="@+id/field_click_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_vertical_large"/>
+                        android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
-                    <com.google.android.material.divider.MaterialDivider
-                        android:id="@+id/separator_click_type"
-                        style="@style/AppTheme.Widget.DividerSecondaryH"/>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/layout_click_selector"
+                    <include layout="@layout/include_field_selector"
+                        android:id="@+id/field_click_selection"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/item_height_big">
-
-                        <ImageView
-                            android:id="@+id/click_selector_condition_icon"
-                            android:layout_width="@dimen/dialog_choice_item_icon_size"
-                            android:layout_height="@dimen/dialog_choice_item_icon_size"
-                            android:layout_marginStart="@dimen/margin_horizontal_small"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/click_selector_title"
-                            android:scaleType="fitCenter"
-                            tools:ignore="ContentDescription"
-                            tools:visibility="gone"/>
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/click_selector_title"
-                            style="@style/AppTheme.List.ItemTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_vertical_mini"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toTopOf="@id/click_selector_subtext"
-                            app:layout_constraintStart_toEndOf="@id/click_selector_condition_icon"
-                            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
-                            tools:text="Click position"
-                            tools:textColor="@android:color/black"/>
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/click_selector_subtext"
-                            style="@style/AppTheme.List.ItemSubText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintTop_toBottomOf="@id/click_selector_title"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/click_selector_condition_icon"
-                            app:layout_constraintEnd_toStartOf="@id/click_selector_chevron"
-                            tools:text="@string/item_desc_click_on_condition_or_operator"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/click_selector_chevron"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/click_selector_title"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_chevron_right"
-                            tools:ignore="ContentDescription"/>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 

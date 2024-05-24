@@ -20,16 +20,21 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentMoreBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -49,9 +54,34 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentMoreBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            tutorialCard.setOnClickListener { onTutorialClicked() }
-            debugOverlay.setOnClickListener { viewModel.toggleIsDebugViewEnabled() }
-            debugReport.setOnClickListener { viewModel.toggleIsDebugReportEnabled() }
+            fieldStartTutorial.apply {
+                setTitle(context.getString(R.string.field_tutorial_title))
+                setupDescriptions(listOf(context.getString(R.string.field_tutorial_desc)))
+                setOnClickListener(::onTutorialClicked)
+            }
+
+            fieldDebugOverlay.apply {
+                setTitle(context.getString(R.string.field_show_debug_view_title))
+                setupDescriptions(emptyList())
+                setOnClickListener(viewModel::toggleIsDebugViewEnabled)
+            }
+
+            fieldDebugReport.apply {
+                setTitle(context.getString(R.string.item_title_debug_generate_report))
+                setupDescriptions(emptyList())
+                setOnClickListener(viewModel::toggleIsDebugReportEnabled)
+            }
+
+            fieldShowReport.apply {
+                setTitle(context.getString(R.string.field_show_debug_report_title))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.field_show_debug_report_desc_not_available),
+                        context.getString(R.string.field_show_debug_report_desc_available),
+                    )
+                )
+                setOnClickListener { debounceUserInteraction { showDebugReport() } }
+            }
         }
 
         return viewBinding.root
@@ -85,22 +115,17 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun updateDebugView(isEnabled: Boolean) {
-        viewBinding.debugOverlay.isChecked = isEnabled
+        viewBinding.fieldDebugOverlay.setChecked(isEnabled)
     }
 
     private fun updateDebugReport(isEnabled: Boolean) {
-        viewBinding.debugReport.isChecked = isEnabled
+        viewBinding.fieldDebugReport.setChecked(isEnabled)
     }
 
     private fun updateDebugReportAvailability(isAvailable: Boolean) {
-        if (isAvailable) {
-            viewBinding.debugReportStateText.setText(R.string.item_title_debug_report_available)
-            viewBinding.debugReportChevron.visibility = View.VISIBLE
-            viewBinding.debugReportOpenView.setOnClickListener { debounceUserInteraction { showDebugReport() } }
-        } else {
-            viewBinding.debugReportStateText.setText(R.string.item_title_debug_report_not_available)
-            viewBinding.debugReportChevron.visibility = View.GONE
-            viewBinding.debugReportOpenView.setOnClickListener(null)
+        viewBinding.fieldShowReport.apply {
+            setEnabled(isAvailable)
+            setDescription(if (isAvailable) 1 else 0)
         }
     }
 

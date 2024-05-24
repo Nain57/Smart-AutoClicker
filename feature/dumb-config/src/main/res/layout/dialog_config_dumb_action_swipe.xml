@@ -40,78 +40,43 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_name_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_swipe_duration_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
-            <include layout="@layout/include_input_text_with_checkbox"
-                android:id="@+id/edit_repeat_layout"
+            <include layout="@layout/include_field_text_input_with_checkbox"
+                android:id="@+id/field_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_repeat_delay"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_repeat_delay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_swipe_position"
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_vertical_large">
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                android:minHeight="@dimen/item_height">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_click_selector"
+                <include layout="@layout/include_field_selector"
+                    android:id="@+id/field_selection_position"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/item_height_big">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/click_selector_title"
-                        style="@style/AppTheme.List.ItemTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_vertical_mini"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/swipe_selector_subtext"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/swipe_selector_chevron"
-                        android:text="@string/item_title_swipe_positions"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/swipe_selector_subtext"
-                        style="@style/AppTheme.List.ItemSubText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/click_selector_title"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/swipe_selector_chevron"
-                        tools:text="Test text"/>
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/swipe_selector_chevron"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/click_selector_title"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_chevron_right"
-                        tools:ignore="ContentDescription"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_gravity="center"/>
 
             </com.google.android.material.card.MaterialCardView>
 

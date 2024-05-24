@@ -26,23 +26,29 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChildrenIcons
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChildrenTexts
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionToggleEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -64,7 +70,7 @@ class ToggleEventDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionToggleEventBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_toggle_event)
+                dialogTitle.setText(R.string.dialog_title_toggle_event)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -82,21 +88,39 @@ class ToggleEventDialog(
                 }
             }
 
-            editNameLayout.apply {
-                setLabel(R.string.input_field_label_name)
+            fieldName.apply {
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
-            toggleAllButton.apply {
-                setIcons(listOf(R.drawable.ic_confirm, R.drawable.ic_invert, R.drawable.ic_cancel))
+            fieldMultiStateToggleAll.apply {
+                setTitle(context.getString(R.string.field_change_all_title))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.field_change_all_desc_manual),
+                        context.getString(R.string.field_change_all_desc_enable_all),
+                        context.getString(R.string.field_change_all_desc_invert_all),
+                        context.getString(R.string.field_change_all_desc_disable_all),
+                    )
+                )
+                setButtonConfig(
+                    MultiStateButtonConfig(
+                        icons = listOf(R.drawable.ic_confirm, R.drawable.ic_invert, R.drawable.ic_cancel),
+                        selectionRequired = false,
+                        singleSelection = true,
+                    )
+                )
                 setOnCheckedListener(viewModel::setToggleAllType)
             }
 
-            layoutEventToggles.setOnClickListener { showEventTogglesDialog() }
+            fieldSelectionToggles.apply {
+                setChildrenIcons(listOf(R.drawable.ic_confirm, R.drawable.ic_invert, R.drawable.ic_cancel))
+                setOnClickListener { debounceUserInteraction { showEventTogglesDialog() } }
+            }
         }
 
         return viewBinding.root
@@ -111,8 +135,8 @@ class ToggleEventDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateToggleEventName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError) }
-                launch { viewModel.toggleAllEnabledButton.collect(::updateToggleAllButton) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError) }
+                launch { viewModel.toggleAllButtonCheckIndex.collect(::updateToggleAllField) }
                 launch { viewModel.eventToggleSelectorState.collect(::updateEventToggleSelector) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
@@ -133,40 +157,38 @@ class ToggleEventDialog(
         }
     }
 
-    private fun updateToggleEventName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
-    }
-
     private fun updateSaveButton(isValidCondition: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
-    private fun updateToggleAllButton(buttonState: ToggleAllButtonState) {
-        viewBinding.apply {
-            toggleAllButton.setChecked(buttonState.checkedButton)
-            toggleAllSubtext.setText(buttonState.descriptionText)
+    private fun updateToggleEventName(newName: String?) {
+        viewBinding.fieldName.setText(newName)
+    }
 
-            val isToggleSelectionEnabled = buttonState.checkedButton == null
-            layoutEventToggles.alpha = if (isToggleSelectionEnabled) ALPHA_ENABLED_ITEM else ALPHA_DISABLED_ITEM
-            layoutEventToggles.isEnabled = isToggleSelectionEnabled
+    private fun updateToggleAllField(checkedButtonIndex: Int?) {
+        viewBinding.fieldMultiStateToggleAll.apply {
+            setChecked(checkedButtonIndex)
+            setDescription(
+                if (checkedButtonIndex == null) 0
+                else checkedButtonIndex + 1
+            )
         }
     }
 
     private fun updateEventToggleSelector(state: EventToggleSelectorState) {
-        viewBinding.apply {
-            toggleEventsTitle.text = state.title
+        viewBinding.fieldSelectionToggles.apply {
+            setTitle(state.title)
+            setEnabled(state.isEnabled)
 
-            if (state.emptyText != null) {
-                togglesCountLayout.visibility = View.GONE
-                toggleEventsSubtext.visibility = View.VISIBLE
-                toggleEventsSubtext.setText(state.emptyText)
-            } else {
-                toggleEventsSubtext.visibility = View.GONE
-                togglesCountLayout.visibility = View.VISIBLE
-                textEnableCount.text = state.enableCount.toString()
-                textToggleCount.text = state.toggleCount.toString()
-                textDisableCount.text = state.disableCount.toString()
+            val emptyTextRes = state.emptyText
+            if (emptyTextRes != null) {
+                setDescription(context.getString(emptyTextRes))
+                return
             }
+
+            setChildrenTexts(
+                listOf(state.enableCount.toString(), state.toggleCount.toString(), state.disableCount.toString())
+            )
         }
     }
 

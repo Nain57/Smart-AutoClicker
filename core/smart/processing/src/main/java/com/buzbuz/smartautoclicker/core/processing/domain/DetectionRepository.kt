@@ -23,6 +23,8 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
@@ -35,8 +37,13 @@ import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionT
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventProcessingTryListener
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScenarioTry
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,17 +51,26 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
 import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
 class DetectionRepository @Inject constructor(
+    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val scenarioRepository: IRepository,
     private val detectorEngine: DetectorEngine,
 ): Dumpable {
+
+    private val coroutineScopeIo: CoroutineScope =
+        CoroutineScope(SupervisorJob() + ioDispatcher)
+
+    /** Stop the detection automatically after selected delay */
+    private var autoStopJob: Job? = null
 
     /** The current scenario unique identifier. */
     private val _scenarioId: MutableStateFlow<Identifier?> = MutableStateFlow(null)
@@ -96,7 +112,7 @@ class DetectionRepository @Inject constructor(
         detectorEngine.startScreenRecord(context, resultCode, data, androidExecutor)
     }
 
-    suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener) {
+    suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener?, autoStopDuration: Duration? = null) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getImageEvents(id)
@@ -110,10 +126,20 @@ class DetectionRepository @Inject constructor(
             bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = progressListener,
         )
+
+        autoStopDuration?.let { duration ->
+            autoStopJob?.cancel()
+            autoStopJob = coroutineScopeIo.launch {
+                delay(duration)
+                stopDetection()
+            }
+        }
     }
 
     fun stopDetection() {
         detectorEngine.stopDetection()
+        autoStopJob?.cancel()
+        autoStopJob = null
     }
 
     fun stopScreenRecord() {

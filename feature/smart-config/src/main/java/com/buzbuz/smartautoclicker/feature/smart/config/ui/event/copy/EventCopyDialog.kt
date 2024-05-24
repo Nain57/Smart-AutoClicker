@@ -22,11 +22,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.CopyDialog
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.ui.bindings.getDividerWithoutHeader
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.newDividerWithoutHeader
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 
@@ -57,7 +57,7 @@ class EventCopyDialog(
         eventCopyAdapter = EventCopyAdapter(::onEventClicked)
 
         viewBinding.layoutLoadableList.list.apply {
-            addItemDecoration(getDividerWithoutHeader(context))
+            addItemDecoration(newDividerWithoutHeader(context))
             adapter = eventCopyAdapter
         }
 
@@ -91,7 +91,7 @@ class EventCopyDialog(
     private fun showToggleEventCopyWarning(event: Event) {
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_event_copy_with_toggle_action_from_another_scenario)
+            .setMessage(R.string.warning_dialog_message_toggle_action_from_another_scenario)
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 notifySelectionAndDestroy(event)
             }

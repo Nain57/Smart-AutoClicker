@@ -21,6 +21,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 
 import androidx.activity.result.ActivityResult
@@ -33,9 +34,10 @@ import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListUiState
-import com.buzbuz.smartautoclicker.activity.permissions.startPermissionFlow
+import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,6 +64,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         setContentView(R.layout.activity_scenario)
 
         scenarioViewModel.stopScenario()
+        scenarioViewModel.requestUserConsent(this)
 
         projectionActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode != RESULT_OK) {
@@ -72,22 +75,33 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
                 }
             }
         }
+
+        // Splash screen is dismissed on first frame drawn, delay it until we have a user consent status
+        findViewById<View>(android.R.id.content).delayDrawUntil {
+            scenarioViewModel.userConsentState.value != UserConsentState.UNKNOWN
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        scenarioViewModel.refreshPurchaseState()
     }
 
     override fun startScenario(item: ScenarioListUiState.Item) {
         requestedItem = item
 
-        startPermissionFlow(
-            fragmentManager = supportFragmentManager,
+        scenarioViewModel.startPermissionFlowIfNeeded(
+            activity = this,
             onAllGranted = ::onMandatoryPermissionsGranted,
-            onMandatoryDenied = ::showMandatoryPermissionDeniedDialog,
         )
     }
 
     private fun onMandatoryPermissionsGranted() {
-        when (val scenario = requestedItem?.scenario) {
-            is DumbScenario -> startDumbScenario(scenario)
-            is Scenario -> showMediaProjectionWarning()
+        scenarioViewModel.startTroubleshootingFlowIfNeeded(this) {
+            when (val scenario = requestedItem?.scenario) {
+                is DumbScenario -> startDumbScenario(scenario)
+                is Scenario -> showMediaProjectionWarning()
+            }
         }
     }
 
@@ -106,15 +120,6 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
                 showUnsupportedDeviceDialog()
             }
         }
-    }
-
-    private fun showMandatoryPermissionDeniedDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.dialog_title_permission_mandatory_denied)
-            .setMessage(R.string.message_permission_mandatory_denied)
-            .setPositiveButton(android.R.string.ok, null)
-            .create()
-            .show()
     }
 
     /**

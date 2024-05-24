@@ -27,24 +27,26 @@ import android.view.ViewGroup
 import androidx.core.graphics.toPoint
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionSwipeBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.PositionSelectorMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
@@ -68,7 +70,7 @@ class SwipeDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionSwipeBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_swipe)
+                dialogTitle.setText(R.string.dialog_title_swipe)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -86,25 +88,28 @@ class SwipeDialog(
                 }
             }
 
-            editNameLayout.apply {
-                setLabel(R.string.input_field_label_name)
+            fieldName.apply {
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
-            editSwipeDurationLayout.apply {
+            fieldSwipeDuration.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(1, GESTURE_DURATION_MAX_VALUE.toInt()))
                 setLabel(R.string.input_field_label_swipe_duration)
                 setOnTextChangedListener {
                     viewModel.setSwipeDuration(if (it.isNotEmpty()) it.toString().toLong() else null)
                 }
             }
-            hideSoftInputOnFocusLoss(editSwipeDurationLayout.textField)
+            hideSoftInputOnFocusLoss(fieldSwipeDuration.textField)
 
-            onPositionSelectButton.setOnClickListener { showPositionSelector() }
+            fieldSelectionSwipePosition.apply {
+                setTitle(context.getString(R.string.field_swipe_positions_title))
+                setOnClickListener { debounceUserInteraction { showPositionSelector() } }
+            }
         }
 
         return viewBinding.root
@@ -119,10 +124,10 @@ class SwipeDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.swipeDuration.collect(::updateSwipeDuration) }
-                launch { viewModel.swipeDurationError.collect(viewBinding.editSwipeDurationLayout::setError)}
-                launch { viewModel.positions.collect(::updateSwipePositionsButtonText) }
+                launch { viewModel.swipeDurationError.collect(viewBinding.fieldSwipeDuration::setError)}
+                launch { viewModel.positions.collect(::updateSwipePositionsField) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
@@ -144,30 +149,29 @@ class SwipeDialog(
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
+        viewBinding.fieldName.setText(newName)
     }
 
     private fun updateSwipeDuration(newDuration: String?) {
-        viewBinding.editSwipeDurationLayout.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
+        viewBinding.fieldSwipeDuration.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
     }
 
-    private fun updateSwipePositionsButtonText(positions: Pair<Point, Point>?) {
-        if (positions == null) {
-            viewBinding.onPositionSelectButton.setText(R.string.button_text_swipe_positions_select)
-            return
-        }
-
-        viewBinding.onPositionSelectButton.text = context.getString(
-            R.string.item_desc_swipe_positions,
-            positions.first.x,
-            positions.first.y,
-            positions.second.x,
-            positions.second.y,
+    private fun updateSwipePositionsField(positions: Pair<Point, Point>?) {
+        viewBinding.fieldSelectionSwipePosition.setDescription(
+            if (positions != null)
+                context.getString(
+                    R.string.field_swipe_positions_desc,
+                    positions.first.x,
+                    positions.first.y,
+                    positions.second.x,
+                    positions.second.y,
+                )
+            else context.getString(R.string.generic_select_the_position)
         )
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     private fun showPositionSelector() {

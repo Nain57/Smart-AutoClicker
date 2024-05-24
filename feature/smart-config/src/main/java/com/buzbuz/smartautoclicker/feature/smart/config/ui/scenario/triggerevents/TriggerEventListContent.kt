@@ -25,18 +25,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 
 import kotlinx.coroutines.launch
 
@@ -65,8 +63,8 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
 
         viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
             setEmptyText(
-                id = R.string.message_empty_trigger_event_list,
-                secondaryId = R.string.message_empty_secondary_trigger_event_list,
+                id = R.string.message_empty_trigger_event_list_title,
+                secondaryId = R.string.message_empty_trigger_event_list_desc,
             )
             list.apply {
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -78,23 +76,8 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
     }
 
     override fun onViewCreated() {
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (eventLimitReachedClick) {
-                            dialogController.show()
-                            eventLimitReachedClick = false
-                        }
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isEventLimitReached.collect(::updateEventLimitationVisibility) }
                 launch { viewModel.copyButtonIsVisible.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.triggerEvents.collect(::updateTriggerEventList) }
             }
@@ -113,32 +96,9 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
         }
     }
 
-    private fun onCreateCopyClickedWhileLimited() {
-        debounceUserInteraction {
-            eventLimitReachedClick = true
-
-            dialogController.hide()
-            viewModel.onEventCountReachedAddCopyClicked(context)
-        }
-    }
-
     private fun onTriggerEventItemClicked(event: TriggerEvent) {
         debounceUserInteraction {
             showTriggerEventConfigDialog(event)
-        }
-    }
-
-    private fun updateEventLimitationVisibility(isVisible: Boolean) {
-        dialogController.createCopyButtons.apply {
-            if (isVisible) {
-                root.alpha = ALPHA_DISABLED_ITEM
-                buttonNew.setOnClickListener { onCreateCopyClickedWhileLimited() }
-                buttonCopy.setOnClickListener { onCreateCopyClickedWhileLimited() }
-            } else {
-                root.alpha = ALPHA_ENABLED_ITEM
-                buttonNew.setOnClickListener { onCreateButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
-            }
         }
     }
 

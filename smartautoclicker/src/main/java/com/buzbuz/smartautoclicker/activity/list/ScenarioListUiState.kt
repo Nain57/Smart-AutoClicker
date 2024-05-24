@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,13 +31,11 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
  * @param type the current ui type
  * @param menuUiState the ui state for the action bar menu
  * @param listContent the content of the scenario list
- * @param isProModePurchased tells if the user have bought pro mode
  */
 data class ScenarioListUiState(
     val type: Type,
     val menuUiState: Menu,
     val listContent: List<Item>,
-    val isProModePurchased: Boolean,
 ) {
 
     /** Possible states for the action menu of the ScenarioListFragment. */
@@ -50,21 +48,16 @@ data class ScenarioListUiState(
         EXPORT,
     }
 
-    /**
-     * Ui state of the action menu.
-     *
-     * @param searchItemState the state of the search item.
-     * @param selectAllItemState the state of the select all item.
-     * @param cancelItemState the state of the cancel item.
-     * @param importItemState the state of the import item.
-     * @param exportItemState the state of the export item.
-     */
+    /** Ui state of the action menu. */
     sealed class Menu(
-        val searchItemState: Item,
-        val selectAllItemState: Item,
-        val cancelItemState: Item,
-        val importItemState: Item,
-        val exportItemState: Item,
+        val searchItemState: Item = Item(false),
+        val selectAllItemState: Item = Item(false),
+        val cancelItemState: Item = Item(false),
+        val importItemState: Item = Item(false),
+        val exportItemState: Item = Item(false),
+        val privacyItemState: Item = Item(false),
+        val purchaseItemState: Item = Item(false),
+        val troubleshootingItemState: Item = Item(false),
     ) {
 
         /**
@@ -80,19 +73,11 @@ data class ScenarioListUiState(
             @IntRange(from = 0, to = 255) val iconAlpha: Int = 255,
         )
 
-        data object Search : Menu(
-            searchItemState = Item(false),
-            selectAllItemState = Item(false),
-            cancelItemState = Item(false),
-            importItemState = Item(false),
-            exportItemState = Item(false),
-        )
+        data object Search : Menu()
 
         data class Export(private val canExport: Boolean) : Menu(
-            searchItemState = Item(false),
             selectAllItemState = Item(true),
             cancelItemState = Item(true),
-            importItemState = Item(false),
             exportItemState = Item(
                 visible = true,
                 enabled = canExport,
@@ -103,7 +88,8 @@ data class ScenarioListUiState(
         data class Selection(
             private val searchEnabled: Boolean,
             private val exportEnabled: Boolean,
-            private val isProMode: Boolean,
+            private val privacyRequired: Boolean,
+            private val canPurchase: Boolean,
         ) : Menu(
             searchItemState = Item(searchEnabled),
             selectAllItemState = Item(false),
@@ -111,13 +97,14 @@ data class ScenarioListUiState(
             importItemState = Item(
                 visible = true,
                 enabled = true,
-                iconAlpha = if (isProMode) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
             ),
             exportItemState = Item(
                 visible = exportEnabled,
                 enabled = exportEnabled,
-                iconAlpha = if (isProMode) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
             ),
+            privacyItemState = Item(privacyRequired),
+            purchaseItemState = Item(canPurchase),
+            troubleshootingItemState = Item(true),
         )
     }
 

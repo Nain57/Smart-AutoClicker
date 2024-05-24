@@ -44,6 +44,7 @@
     <string name="item_desc_dumb_pause">Pause the execution</string>
     <string name="item_desc_dumb_pause_details">During %1$s</string>
     <string name="item_desc_dumb_repeat_count">Repeat %1$d times</string>
+    <string name="item_desc_dumb_repeat_infinite">Infinite repeat</string>
     <string name="item_desc_dumb_swipe">Swipe from a position on the screen to another</string>
     <string name="item_desc_dumb_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
     <string name="item_desc_dumb_swipe_positions">Swipe from %1$d, %2$d to %3$d, %4$d</string>

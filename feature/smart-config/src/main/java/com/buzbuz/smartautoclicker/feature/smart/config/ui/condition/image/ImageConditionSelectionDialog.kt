@@ -25,14 +25,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBinding
@@ -66,14 +66,14 @@ class ImageConditionSelectionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_condition_selection)
+                dialogTitle.setText(R.string.dialog_title_condition_selection)
                 buttonSave.visibility = View.GONE
                 buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
         }
 
         viewBinding.layoutLoadableList.apply {
-            setEmptyText(R.string.message_empty_image_conditions)
+            setEmptyText(R.string.message_empty_screen_condition_list_title)
             list.apply {
                 adapter = conditionsAdapter
                 layoutManager = GridLayoutManager(

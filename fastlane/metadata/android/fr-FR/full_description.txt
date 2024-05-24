@@ -1,10 +1,14 @@
-Smart AutoClicker est une application permettant d'automatiser des tâches répétitives sur votre téléphone en cliquant automatiquement pour vous sur l'écran. Contrairement à la plupart des auto clickers, les clics ne sont pas basés sur des timers. A la place, vous pouvez capturer une image depuis votre écran et éxecuter le clic une fois que la même image est détectée à la même position.
+<p>Klick'r is an open-source Android application designed to automate repetitive tasks effortlessly. Formerly known as Smart AutoClicker, Klick'r offers unique image detection capabilities alongside traditional auto-clicking functionalities, providing a versatile solution for all your automation needs.
+</p>
+<p>Whether you’re a gamer automating in-game actions, a tester simulating user interactions, or anyone performing repetitive clicking tasks, Klick'r offers both image detection for sophisticated automation and a Regular Mode for straightforward auto-clicking.
+</p>
 
-Il est possible de:
-* Organiser les clics par scénario
-* Faire des clics ou des swipes
-* Capturer des images de conditions depuis l'écran
-* Modifier la différence toléré entre l'image et le contenu de l'écran
-* Combiner plusieures images de condition
-* Configurer le délai minimum avant le prochain clic
-* Modifier la priorité des clics dans un scénario
+</br>
+
+## Key Features:
+* **Click and Swipes**: Automate clicks and swipes with precision by configuring press durations, swipe durations, and positions. Trigger actions on detected images to interact seamlessly with dynamic elements.
+* **Advanced Automation**: Enhance your automation scripts with advanced features like counters operations, Android Intents, and flow control, giving you unparalleled flexibility.
+* **Triggers**: Set up sophisticated triggers based on image detection, timers, counters, and Android broadcast receivers to perfectly tailor your automation tasks.
+* **Regular Mode**: Enjoy a straightforward auto-clicking experience with our Regular Mode, designed for easy configuration and ideal for simpler, repetitive tasks.
+* **Tutorials**: Learn to master Klick'r with our interactive game tutorials, which provide step-by-step instructions to help you automate tasks and beat the game using Klick'r's powerful features.
+* **Open Source**: As an open-source project, Klick'r is continuously improved by a dedicated community.

@@ -26,17 +26,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.timeUnitDropdownItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionTimerBinding
@@ -62,7 +67,7 @@ class TimerReachedConditionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigConditionTimerBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_timer_reached)
+                dialogTitle.setText(R.string.dialog_title_timer_reached)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -86,14 +91,14 @@ class TimerReachedConditionDialog(
                 }
             }
 
-            editNameLayout.apply {
-                setLabel(R.string.input_field_label_name)
+            fieldName.apply {
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             editDurationLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(min = 1))
@@ -110,8 +115,15 @@ class TimerReachedConditionDialog(
                 onItemSelected = viewModel::setTimeUnit,
             )
 
-            checkboxResetWhenReached.setOnClickListener {
-                viewModel.toggleRestartWhenReached()
+            fieldIsReset.apply {
+                setTitle(context.getString(R.string.field_timer_restart_title))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.field_timer_restart_desc_off),
+                        context.getString(R.string.field_timer_restart_desc_on),
+                    )
+                )
+                setOnClickListener(viewModel::toggleRestartWhenReached)
             }
         }
 
@@ -126,12 +138,12 @@ class TimerReachedConditionDialog(
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.duration.collect(::updateDuration) }
                 launch { viewModel.durationError.collect(viewBinding.editDurationLayout::setError)}
                 launch { viewModel.selectedUnitItem.collect(viewBinding.timeUnitField::setSelectedItem) }
-                launch { viewModel.restartWhenReached.collect(viewBinding.checkboxResetWhenReached::setChecked) }
+                launch { viewModel.restartWhenReached.collect(::updateIsResetField) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
             }
         }
@@ -143,6 +155,13 @@ class TimerReachedConditionDialog(
 
     private fun updateSaveButton(canBeSaved: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, canBeSaved)
+    }
+
+    private fun updateIsResetField(resetWhenReached: Boolean) {
+        viewBinding.fieldIsReset.apply {
+            setChecked(resetWhenReached)
+            setDescription(if (resetWhenReached) 1 else 0)
+        }
     }
 
     private fun onConditionEditingStateChanged(isEditing: Boolean) {

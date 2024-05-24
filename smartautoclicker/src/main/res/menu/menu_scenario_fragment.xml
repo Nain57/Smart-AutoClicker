@@ -15,7 +15,8 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
@@ -33,16 +34,18 @@
         android:visible="false"/>
 
     <item
-        android:id="@+id/action_import"
-        android:icon="@drawable/ic_load"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:title="@string/menu_item_title_import" />
-
-    <item
         android:id="@+id/action_export"
         android:icon="@drawable/ic_save"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:title="@string/menu_item_title_export" />
+        app:showAsAction="always"
+        android:title="@string/menu_item_title_export"
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/action_import"
+        android:icon="@drawable/ic_load"
+        app:showAsAction="always"
+        android:title="@string/menu_item_title_import"
+        tools:ignore="AlwaysShowAction"/>
 
     <item
         android:id="@+id/action_search"
@@ -50,5 +53,20 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="@string/menu_item_title_search" />
+
+    <item
+        android:id="@+id/action_privacy_settings"
+        app:showAsAction="never"
+        android:title="@string/menu_item_title_privacy" />
+
+    <item
+        android:id="@+id/action_troubleshooting"
+        app:showAsAction="never"
+        android:title="@string/menu_item_title_troubleshooting" />
+
+    <item
+        android:id="@+id/action_purchase"
+        app:showAsAction="never"
+        android:title="@string/menu_item_title_remove_ads" />
 
 </menu>

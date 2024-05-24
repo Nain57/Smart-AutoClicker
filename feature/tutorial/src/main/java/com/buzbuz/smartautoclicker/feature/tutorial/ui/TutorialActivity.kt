@@ -27,7 +27,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import dagger.hilt.android.AndroidEntryPoint
 

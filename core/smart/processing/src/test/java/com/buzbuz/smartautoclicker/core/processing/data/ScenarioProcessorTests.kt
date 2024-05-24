@@ -23,7 +23,6 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.*
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector

@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 

@@ -25,7 +25,7 @@
     <include layout="@layout/include_dialog_navigation_top_bar"
         android:id="@+id/layout_top_bar" />
 
-    <include layout="@layout/include_input_field_text"
+    <include layout="@layout/include_field_text_input"
         android:id="@+id/scenario_name_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

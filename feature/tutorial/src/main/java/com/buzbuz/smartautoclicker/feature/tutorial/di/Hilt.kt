@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.di
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialOverlayViewModel
 
 import dagger.hilt.EntryPoint

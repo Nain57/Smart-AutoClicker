@@ -102,16 +102,21 @@ class DumbEditionRepository @Inject constructor(
         val editedScenario = _editedDumbScenario.value ?: return
 
         Log.d(TAG, "Add dumb action to edited scenario $dumbAction at position $insertionIndex")
+        val previousActions = editedScenario.dumbActions
         _editedDumbScenario.value = editedScenario.copy(
-            dumbActions = editedScenario.dumbActions.toMutableList().apply {
-                if (insertionIndex != null && insertionIndex in editedScenario.dumbActions.indices) {
-                    add(insertionIndex, dumbAction)
-                    for (index in editedScenario.dumbActions.indices) {
-                        set(index, dumbAction.copyWithNewPriority(index))
-                    }
-                } else {
-                    add(dumbAction)
+            dumbActions = previousActions.toMutableList().apply {
+                if (insertionIndex == null || insertionIndex == (previousActions.lastIndex + 1)) {
+                    add(dumbAction.copyWithNewPriority(previousActions.lastIndex + 1))
+                    return@apply
                 }
+
+                if (insertionIndex !in editedScenario.dumbActions.indices) {
+                    Log.w(TAG, "Invalid insertion index $insertionIndex")
+                    return@apply
+                }
+
+                add(insertionIndex, dumbAction.copyWithNewPriority(insertionIndex))
+                updatePriorities((insertionIndex + 1)..lastIndex)
             }
         )
     }
@@ -135,14 +140,14 @@ class DumbEditionRepository @Inject constructor(
         val editedScenario = _editedDumbScenario.value ?: return
         val deleteIndex = editedScenario.dumbActions.indexOfFirst { it.id == dumbAction.id }
 
-        Log.d(TAG, "Delete dumb action from edited scenario $dumbAction")
+        Log.d(TAG, "Delete dumb action from edited scenario $dumbAction at $deleteIndex")
         _editedDumbScenario.value = editedScenario.copy(
             dumbActions = editedScenario.dumbActions.toMutableList().apply {
                 removeAt(deleteIndex)
 
-                for (index in editedScenario.dumbActions.indices) {
-                    set(index, dumbAction.copyWithNewPriority(index))
-                }
+                // Update priority for actions after the deleted one
+                if (deleteIndex > lastIndex) return@apply
+                updatePriorities(deleteIndex..lastIndex)
             }
         )
     }
@@ -152,8 +157,8 @@ class DumbEditionRepository @Inject constructor(
 
         Log.d(TAG, "Updating dumb action list with $dumbActions")
         _editedDumbScenario.value = editedScenario.copy(
-            dumbActions = dumbActions.mapIndexed { index, action ->
-                action.copyWithNewPriority(index)
+            dumbActions = dumbActions.toMutableList().apply {
+                updatePriorities()
             }
         )
     }
@@ -164,6 +169,13 @@ class DumbEditionRepository @Inject constructor(
             is DumbAction.DumbPause -> copy(priority = priority)
             is DumbAction.DumbSwipe -> copy(priority = priority)
         }
+
+    private fun MutableList<DumbAction>.updatePriorities(range: IntRange = indices) {
+        for (index in range) {
+            Log.d(TAG, "Updating priority to $index for action ${get(index)}")
+            set(index, get(index).copyWithNewPriority(index))
+        }
+    }
 }
 
 /** Tag for logs */

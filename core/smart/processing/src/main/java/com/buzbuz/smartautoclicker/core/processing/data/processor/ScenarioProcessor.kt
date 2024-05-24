@@ -103,11 +103,13 @@ internal class ScenarioProcessor(
         processingState.clearIterationState()
 
         // Handle the image detection
+        progressListener?.onImageEventsProcessingStarted()
         if (!processingState.areAllImageEventsDisabled()) {
             processImageEvents(screenFrame, processingState.getEnabledImageEvents())?.let { (imageEvent, results) ->
                 actionExecutor.executeActions(imageEvent, results)
             }
         }
+        progressListener?.onImageEventsProcessingCompleted()
 
         return
     }
@@ -128,9 +130,6 @@ internal class ScenarioProcessor(
         screenFrame: Bitmap,
         events: Collection<ImageEvent>,
     ): Pair<ImageEvent, ConditionsResult>? {
-
-        progressListener?.onImageEventsProcessingStarted()
-
         // Set the current screen image
         if (invalidateScreenMetrics) {
             imageDetector.setScreenMetrics(processingTag, screenFrame, detectionQuality.toDouble())

@@ -11,20 +11,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
     - name: set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
         java-version: '17'
+
     - name: Restore keystore
       run: |
         echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
         gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch smartautoclicker.jks.asc > smartautoclicker/smartautoclicker.jks
+
     - name: Build with Gradle
-      run: ./gradlew -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" assembleFDroidRelease bundleFDroidRelease
+      run: |
+        ./gradlew \
+          -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" \
+          -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" \
+          -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" \
+          assembleFDroidRelease bundleFDroidRelease
+
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: smartautoclicker-release
         path: smartautoclicker/build/outputs/

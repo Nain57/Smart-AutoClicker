@@ -249,5 +249,5 @@ private val INT_ITEM = DropdownItem(title = Int::class.getDisplayNameRes())
 private val SHORT_ITEM = DropdownItem(title = Short::class.getDisplayNameRes())
 private val STRING_ITEM = DropdownItem(title = String::class.getDisplayNameRes())
 
-private val BOOLEAN_ITEM_TRUE = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_true)
-private val BOOLEAN_ITEM_FALSE = DropdownItem(title = R.string.dropdown_item_title_extra_boolean_false)
+private val BOOLEAN_ITEM_TRUE = DropdownItem(title = R.string.dropdown_extra_boolean_item_true)
+private val BOOLEAN_ITEM_FALSE = DropdownItem(title = R.string.dropdown_extra_boolean_item_false)

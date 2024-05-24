@@ -24,8 +24,6 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -42,7 +40,6 @@ import javax.inject.Inject
 class ConditionsViewModel @Inject constructor(
      private val repository: IRepository,
      private val editionRepository: EditionRepository,
-     private val billingRepository: IBillingRepository,
      private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
@@ -50,17 +47,8 @@ class ConditionsViewModel @Inject constructor(
     val configuredEventConditions: Flow<List<Condition>> = editionRepository.editionState.editedEventConditionsState
         .mapNotNull { it.value }
 
-    /** Tells if the limitation in conditions count have been reached. */
-    val isConditionLimitReached: Flow<Boolean> = billingRepository.isProModePurchased
-        .combine(configuredEventConditions) { isProModePurchased, conditions ->
-            !isProModePurchased && (conditions.size  >= ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT.limit)
-        }
-
     /** Tells if there is at least one condition to copy. */
     val canCopyCondition: Flow<Boolean> = editionRepository.editionState.canCopyConditions
-
-    /** Tells if the pro mode billing flow is being displayed. */
-    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
 
     fun getEditedEvent(): Event? = editionRepository.editionState.getEditedEvent()
 
@@ -116,10 +104,6 @@ class ConditionsViewModel @Inject constructor(
      */
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
         getImageConditionBitmap(repository, condition, onBitmapLoaded)
-
-    fun onConditionCountReachedAddCopyClicked(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Limitation.CONDITION_COUNT_LIMIT)
-    }
 
     fun monitorCreateConditionView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION, view)

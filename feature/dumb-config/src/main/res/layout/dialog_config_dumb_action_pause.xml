@@ -39,7 +39,7 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/edit_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/edit_pause_duration_layout"/>
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/edit_pause_duration_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

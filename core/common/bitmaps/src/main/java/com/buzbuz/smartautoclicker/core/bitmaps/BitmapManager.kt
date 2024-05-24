@@ -94,10 +94,14 @@ internal class BitmapManager @Inject constructor(
                 buffer.position(0)
 
                 cachedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                cachedBitmap.copyPixelsFromBuffer(buffer)
-
-                getMemoryCache().put(path, cachedBitmap)
-                cachedBitmap
+                try {
+                    cachedBitmap.copyPixelsFromBuffer(buffer)
+                    getMemoryCache().put(path, cachedBitmap)
+                    cachedBitmap
+                } catch (rEx: RuntimeException) {
+                    Log.e(TAG, "Can't load image, size is invalid")
+                    null
+                }
             }
         }
     }

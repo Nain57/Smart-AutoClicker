@@ -28,18 +28,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.viewModels
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
@@ -50,8 +50,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.all
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 
 import kotlinx.coroutines.launch
 
@@ -73,9 +71,6 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
-    /** Tells if the billing flow has been triggered by the condition count limit. */
-    private var conditionLimitReachedClick: Boolean = false
-
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
@@ -93,8 +88,8 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun setupImageEventView() {
         viewBinding.apply {
             setEmptyText(
-                id = R.string.message_empty_image_conditions,
-                secondaryId = R.string.message_empty_secondary_image_condition_list,
+                id = R.string.message_empty_screen_condition_list_title,
+                secondaryId = R.string.message_empty_screen_condition_list_desc,
             )
             list.apply {
                 adapter = ImageConditionAdapter(
@@ -110,8 +105,8 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     private fun setupTriggerEventView() {
         viewBinding.apply {
             setEmptyText(
-                id = R.string.message_empty_trigger_conditions,
-                secondaryId = R.string.message_empty_secondary_trigger_condition_list,
+                id = R.string.message_empty_trigger_condition_list_title,
+                secondaryId = R.string.message_empty_trigger_condition_list_desc,
             )
             list.apply {
                 adapter = TriggerConditionAdapter(
@@ -123,23 +118,8 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     override fun onViewCreated() {
-        // When the billing flow is not longer displayed, restore the dialogs states
-        lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.CREATED)) {
-                viewModel.isBillingFlowDisplayed.collect { isDisplayed ->
-                    if (!isDisplayed) {
-                        if (conditionLimitReachedClick) {
-                            dialogController.show()
-                            conditionLimitReachedClick = false
-                        }
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isConditionLimitReached.collect(::updateConditionLimitationVisibility) }
                 launch { viewModel.canCopyCondition.collect(::updateCopyButtonVisibility) }
                 launch { viewModel.configuredEventConditions.collect(::updateConditionList) }
             }
@@ -172,15 +152,6 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
-    private fun onCreateCopyClickedWhileLimited() {
-        debounceUserInteraction {
-            conditionLimitReachedClick = true
-
-            dialogController.hide()
-            viewModel.onConditionCountReachedAddCopyClicked(context)
-        }
-    }
-
     private fun onImageConditionClicked(condition: ImageCondition) {
         debounceUserInteraction {
             showImageConditionConfigDialog(condition)
@@ -198,20 +169,6 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
 
         if (itemView != null) viewModel.monitorFirstConditionView(itemView)
         else viewModel.stopFirstConditionViewMonitoring()
-    }
-
-    private fun updateConditionLimitationVisibility(isVisible: Boolean) {
-        dialogController.createCopyButtons.apply {
-            if (isVisible) {
-                root.alpha = ALPHA_DISABLED_ITEM
-                buttonNew.setOnClickListener { onCreateCopyClickedWhileLimited() }
-                buttonCopy.setOnClickListener { onCreateCopyClickedWhileLimited() }
-            } else {
-                root.alpha = ALPHA_ENABLED_ITEM
-                buttonNew.setOnClickListener { onCreateButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
-            }
-        }
     }
 
     private fun updateCopyButtonVisibility(isVisible: Boolean) {
@@ -251,7 +208,7 @@ class ConditionsContent(appContext: Context) : NavBarDialogContent(appContext) {
             context = context,
             newOverlay = MultiChoiceDialog(
                 theme = R.style.AppTheme,
-                dialogTitleText = R.string.dialog_overlay_title_trigger_condition_type,
+                dialogTitleText = R.string.dialog_title_trigger_condition_type,
                 choices = allTriggerConditionChoices(),
                 onChoiceSelected = { choice ->
                     showTriggerConditionDialog(viewModel.createNewTriggerCondition(context, choice))

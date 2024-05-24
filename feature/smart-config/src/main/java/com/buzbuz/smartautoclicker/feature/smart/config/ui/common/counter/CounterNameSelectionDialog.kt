@@ -23,11 +23,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.buzbuz.smartautoclicker.core.ui.bindings.setEmptyText
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -52,7 +52,7 @@ class CounterNameSelectionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_counter_name_selection)
+                dialogTitle.setText(R.string.generic_counters)
                 buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
 
@@ -64,7 +64,7 @@ class CounterNameSelectionDialog(
             }
 
             layoutLoadableList.apply {
-                setEmptyText(R.string.message_empty_counter_name_list, R.string.message_empty_secondary_counter_name_list)
+                setEmptyText(R.string.message_empty_counter_name_list_title, R.string.message_empty_counter_name_list_desc)
                 list.adapter = counterNameAdapter
                 list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             }

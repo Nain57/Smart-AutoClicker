@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_permission_accessibility">Accessibility service</string>
+    <string name="dialog_title_permission_notification">Notification</string>
+    <string name="dialog_title_permission_mandatory_denied">Permission denied</string>
+    <string name="dialog_title_permission_overlay">Overlay</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_overlay">The overlay permission is required in order to show Klick\'r
+        interface over the applications you want to automate, allowing you to configure your scenario without stopping
+        the other application.</string>
+    <string name="message_permission_desc_accessibility">The accessibility service permission allows Klick\'r
+        to perform gestures on your device screen. This permission is required in order to execute the clicks and swipes
+        you will create in your automations scenarios.\n\nNo data is collected by Klick\'r\n\nTo grant the Accessibility
+        service permission, click on the button bellow.</string>
+    <string name="message_permission_desc_notification">Optional: Shows the notification while the application is running in order
+        to easily return to the scenario selection screen.</string>
+    <string name="message_permission_mandatory_denied">This permission is mandatory for Klick\'r.
+        It won\'t be able to work correctly without it.</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">Request permission</string>
+    <string name="button_deny">Deny</string>
+
+</resources>

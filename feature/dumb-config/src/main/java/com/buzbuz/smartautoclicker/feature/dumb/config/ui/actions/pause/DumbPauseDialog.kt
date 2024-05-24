@@ -27,17 +27,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.timeUnitDropdownItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.DialogConfigDumbActionPauseBinding

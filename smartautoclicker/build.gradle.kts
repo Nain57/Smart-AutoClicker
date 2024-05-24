@@ -28,23 +28,8 @@ android {
     defaultConfig {
         applicationId = "com.buzbuz.smartautoclicker"
 
-        versionCode = 41
-        versionName = "2.4.2"
-    }
-
-    signingConfigs {
-        create("release") {
-            storeFile = file("./smartautoclicker.jks")
-            storePassword = buildParameters["signingStorePassword"].value
-            keyAlias = buildParameters["signingKeyAlias"].value
-            keyPassword = buildParameters["signingKeyPassword"].value
-        }
-    }
-
-    buildTypes {
-        debug {
-            applicationIdSuffix = ".debug"
-        }
+        versionCode = 43
+        versionName = "3.0.0-beta02"
     }
 
     flavorDimensions += listOf("version")
@@ -56,7 +41,27 @@ android {
             dimension = "version"
         }
     }
+
+    if (buildParameters.isBuildForVariant("fDroidDebug")) {
+        buildTypes {
+            debug {
+                applicationIdSuffix = ".debug"
+            }
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("./smartautoclicker.jks")
+            storePassword = buildParameters["signingStorePassword"].asString()
+            keyAlias = buildParameters["signingKeyAlias"].asString()
+            keyPassword = buildParameters["signingKeyPassword"].asString()
+        }
+    }
 }
+
+// Apply signature convention after declaring the signingConfigs
+apply { plugin(libs.plugins.buzbuz.androidSigning.get().pluginId) }
 
 // Only apply gms/firebase plugins if we are building for the play store
 if (buildParameters.isBuildForVariant("playStoreRelease")) {
@@ -67,6 +72,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.recyclerView)
     implementation(libs.androidx.fragment.ktx)
@@ -83,13 +89,16 @@ dependencies {
     implementation(project(":core:common:base"))
     implementation(project(":core:common:bitmaps"))
     implementation(project(":core:common:display"))
+    implementation(project(":core:common:quality"))
+    implementation(project(":core:common:overlays"))
     implementation(project(":core:common:ui"))
     implementation(project(":core:dumb"))
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))
     implementation(project(":feature:backup"))
-    implementation(project(":feature:billing"))
+    implementation(project(":feature:permissions"))
+    implementation(project(":feature:revenue"))
     implementation(project(":feature:smart-config"))
     implementation(project(":feature:smart-debugging"))
     implementation(project(":feature:dumb-config"))

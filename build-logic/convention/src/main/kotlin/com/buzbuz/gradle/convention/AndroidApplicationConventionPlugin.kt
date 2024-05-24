@@ -55,22 +55,5 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 }
             }
         }
-
-        applySigningConfig()
-    }
-
-    private fun Project.applySigningConfig() = afterEvaluate {
-        androidApp {
-            buildTypes {
-                release {
-                    val signConfig = signingConfigs.getByName("release")
-                    if (signConfig.isSigningReady) {
-                        signingConfig = signConfig
-                    } else {
-                        logger.warn("WARNING: Signing config is incomplete, release apk will not be signed")
-                    }
-                }
-            }
-        }
     }
 }

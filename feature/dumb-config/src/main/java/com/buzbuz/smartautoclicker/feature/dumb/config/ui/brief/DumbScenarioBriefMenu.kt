@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbScenarioBriefMenuBinding

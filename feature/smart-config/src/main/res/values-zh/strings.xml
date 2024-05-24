@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 * Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
@@ -17,42 +16,38 @@
 -->
 <resources>
 
+    <string name="generic_modify">修改</string>
+
     <!--
       - Titles for the dialogs displayed as overlay.
       - Allowed characters can be small due to save/delete/close buttons.
       -->
-    <string name="dialog_overlay_title_action_type">动作类型</string>
-    <string name="dialog_overlay_title_application_selection">选择一个应用程序</string>
-    <string name="dialog_overlay_title_click">单击</string>
-    <string name="dialog_overlay_title_condition_config">条件</string>
-    <string name="dialog_overlay_title_condition_selection">选择条件</string>
-    <string name="dialog_overlay_title_end_condition_config">终止条件</string>
-    <string name="dialog_overlay_title_event_config">场景</string>
-    <string name="dialog_overlay_title_event_selection">选择一个场景</string>
-    <string name="dialog_overlay_title_pause">等待</string>
-    <string name="dialog_overlay_title_scenario_config">场景</string>
-    <string name="dialog_overlay_title_swipe">滑动</string>
-    <string name="dialog_overlay_title_toggle_event">场景状态</string>
-    <string name="dialog_overlay_title_events_toggle">事件切换</string>
-    <string name="dialog_overlay_title_change_counter">修改计数器</string>
-    <string name="dialog_overlay_title_counter_name_selection">计数器</string>
-    <string name="dialog_overlay_title_trigger_condition_type">触发器类型</string>
-    <string name="dialog_overlay_title_timer_reached">计时器达到</string>
-    <string name="dialog_overlay_title_broadcast_received">Broadcast 收到</string>
-    <string name="dialog_overlay_title_counter_reached">计数器数值</string>
-    <string name="dialog_overlay_title_image_event_config">屏幕事件</string>
-    <string name="dialog_overlay_title_trigger_event_config">活动</string>
+    <string name="dialog_title_action_type">动作类型</string>
+    <string name="dialog_title_application_selection">选择一个应用程序</string>
+    <string name="dialog_title_click">单击</string>
+    <string name="dialog_title_condition_config">条件</string>
+    <string name="dialog_title_condition_selection">选择条件</string>
+    <string name="dialog_title_pause">等待</string>
+    <string name="dialog_title_scenario_config">场景</string>
+    <string name="dialog_title_swipe">滑动</string>
+    <string name="dialog_title_toggle_event">场景状态</string>
+    <string name="dialog_title_events_toggle">事件切换</string>
+    <string name="dialog_title_change_counter">修改计数器</string>
+    <string name="generic_counters">计数器</string>
+    <string name="dialog_title_trigger_condition_type">触发器类型</string>
+    <string name="dialog_title_timer_reached">计时器达到</string>
+    <string name="dialog_title_broadcast_received">Broadcast 收到</string>
+    <string name="dialog_title_counter_reached">计数器数值</string>
+    <string name="dialog_title_image_event">屏幕事件</string>
+    <string name="dialog_title_trigger_event">触发器</string>
 
     <!--
       - Text for menu items.
       - Should be short and concise.
       -->
     <string name="menu_item_title_advanced">高级模式</string>
-    <string name="menu_item_title_cancel">取消</string>
-    <string name="menu_item_title_search">搜索</string>
     <string name="menu_item_title_simple">简易模式</string>
-    <string name="menu_item_title_events">场景</string>
-    <string name="menu_item_title_config">配置</string>
+    <string name="generic_config">配置</string>
     <string name="menu_item_title_more">更多</string>
     <string name="menu_item_title_conditions">条件</string>
     <string name="menu_item_title_actions">动作</string>
@@ -64,120 +59,119 @@
       -  * Title should be short and concise.
       -  * Desc can have more space to describe the title
       -->
-    <string name="item_desc_click">单击屏幕某处</string>
-    <string name="item_desc_click_details">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
-    <string name="item_desc_click_position_on_condition">识别并点击已保存的图片</string>
-    <string name="item_desc_click_on_condition_and_operator">%1$s</string>
-    <string name="item_desc_click_on_condition_and_operator_not_found">未选择条件</string>
-    <string name="item_desc_click_on_condition_or_operator">事件设置为“一个条件”，您无法选择特定条件</string>
-    <string name="item_desc_click_on_position">点击 (%1$d, %2$d)</string>
-    <string name="item_desc_detection_type_exact">在[%1$d，%2$d] [%3$d，%4$d]</string>
-    <string name="item_desc_detection_type_in_area">在[%1$d，%2$d] [%3$d，%4$d]中</string>
-    <string name="item_desc_intent">调用其他的应用程序</string>
-    <string name="item_desc_intent_action">发送广播： %1$s</string>
-    <string name="item_desc_intent_action_component">发送 %1$s 至 %2$s</string>
-    <string name="item_desc_pause">延迟一段时间执行</string>
-    <string name="item_desc_pause_details">延迟 %1$s</string>
-    <string name="item_desc_position_select">选择一个坐标</string>
-    <string name="item_desc_swipe">从A点滑动到B点</string>
-    <string name="item_desc_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
-    <string name="item_desc_swipe_positions">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
-    <string name="item_desc_toggle_event">启用或禁用某场景</string>
-    <string name="item_desc_toggle_event_details">将场景状态设置为： %1$s</string>
-    <string name="item_desc_toggle_event_manual">定义要手动更改的事件</string>
-    <string name="item_desc_toggle_event_enable_all">启用此场景中的所有事件</string>
-    <string name="item_desc_toggle_event_invert_all">反转该场景中所有事件的状态</string>
-    <string name="item_desc_toggle_event_disable_all">禁用此情景中的所有事件。禁用所有事件后，情景会自动停止。</string>
-    <string name="item_desc_event_toggles_empty">选择至少一个事件，将其状态更改为</string>
-    <string name="item_desc_toggle_event_state_enable_all">启用所有</string>
-    <string name="item_desc_toggle_event_state_disable_all">全部禁用</string>
-    <string name="item_desc_toggle_event_state_invert_all">全部反转</string>
-    <string name="item_desc_toggle_event_state_manual">更改 %1$d 事件</string>
-    <string name="item_desc_change_counter">更改数值以便稍后验证</string>
-    <string name="item_desc_change_counter_details">%1$s %2$s %3$d</string>
-    <string name="item_desc_on_broadcast_received">%1$s 收到</string>
-    <string name="item_desc_on_counter_reached">%1$s %2$s %3$d</string>
-    <string name="item_desc_on_timer_reached">%1$s 事件启用后</string>
-    <string name="item_desc_broadcast_received">收到Broadcast时执行</string>
-    <string name="item_desc_timer_reached">在事件激活后的规定时间内完成</string>
-    <string name="item_desc_counter_reached">验证被操作修改的计数器值</string>
-    <string name="item_error_action_invalid_toggle_event_target">"未找到目标事件 "</string>
-    <string name="item_error_action_invalid_change_counter">计数器无效</string>
-    <string name="item_title_click">单击</string>
-    <string name="item_title_click_on_condition_and_operator">单击一个条件</string>
-    <string name="item_title_click_on_condition_or_operator">单击第一个检测到的条件</string>
+    <string name="item_click_desc">单击屏幕某处</string>
+    <string name="item_click_details_at_position">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
+    <string name="item_click_details_on_condition">识别并点击已保存的图片</string>
+    <string name="field_condition_selection_desc_and_operator">%1$s</string>
+    <string name="field_condition_selection_desc_and_operator_not_found">未选择条件</string>
+    <string name="field_condition_selection_desc_or_operator">事件设置为“一个条件”，您无法选择特定条件</string>
+    <string name="field_click_position_desc">点击 (%1$d, %2$d)</string>
+    <string name="field_select_detection_area_desc">在[%1$d，%2$d] [%3$d，%4$d]中</string>
+    <string name="item_intent_desc">调用其他的应用程序</string>
+    <string name="item_intent_details">发送广播： %1$s</string>
+    <string name="item_intent_details_component_name">发送 %1$s 至 %2$s</string>
+    <string name="item_pause_desc">延迟一段时间执行</string>
+    <string name="item_pause_details">延迟 %1$s</string>
+    <string name="generic_select_the_position">选择一个坐标</string>
+    <string name="item_swipe_desc">从A点滑动到B点</string>
+    <string name="item_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
+    <string name="field_swipe_positions_desc">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
+    <string name="item_toggle_event_desc">启用或禁用某场景</string>
+    <string name="field_change_all_desc_manual">定义要手动更改的事件</string>
+    <string name="field_change_all_desc_enable_all">启用此场景中的所有事件</string>
+    <string name="field_change_all_desc_invert_all">反转该场景中所有事件的状态</string>
+    <string name="field_change_all_desc_disable_all">禁用此情景中的所有事件。禁用所有事件后，情景会自动停止。</string>
+    <string name="field_select_toggle_events_desc_empty">选择至少一个事件，将其状态更改为</string>
+    <string name="item_toggle_event_details_enable_all">启用所有</string>
+    <string name="item_toggle_event_details_disable_all">全部禁用</string>
+    <string name="item_toggle_event_details_invert_all">全部反转</string>
+    <string name="item_toggle_event_details_manual">更改 %1$d 事件</string>
+    <string name="item_change_counter_desc">更改数值以便稍后验证</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="item_broadcast_received_details">%1$s 收到</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$d</string>
+    <string name="item_timer_reached_details">%1$s 事件启用后</string>
+    <string name="item_broadcast_received_desc">收到Broadcast时执行</string>
+    <string name="item_timer_reached_desc">在该触发器激活后的规定时间内完成</string>
+    <string name="item_counter_reached_desc">验证被操作修改的计数器值</string>
+    <string name="item_toggle_event_details_error">"未找到目标事件 "</string>
+    <string name="item_change_counter_details_error">计数器无效</string>
+    <string name="item_click_title">单击</string>
+    <string name="field_condition_selection_title_and_operator">单击一个条件</string>
+    <string name="field_condition_selection_title_or_operator">单击第一个检测到的条件</string>
     <string name="item_title_debug_generate_report">生成调试报告</string>
-    <string name="item_title_debug_report_available">调试报告可用</string>
-    <string name="item_title_debug_report_not_available">没有可用的调试报告</string>
-    <string name="item_title_debug_show_view">显示调试窗口</string>
-    <string name="item_title_detection_type_exact">在捕获位置进行检测</string>
-    <string name="item_title_detection_type_in_area">检测屏幕的一部分</string>
-    <string name="item_title_detection_type_screen">全屏检测</string>
-    <string name="item_title_intent">意图</string>
-    <string name="item_title_pause">等待</string>
-    <string name="item_title_swipe">滑动</string>
-    <string name="item_title_toggle_event">修改场景状态</string>
-    <string name="item_title_empty_event_toggles">无变化</string>
-    <string name="item_title_event_toggles">%1$d 变化</string>
-    <string name="item_title_change_counter">更改计数器</string>
-    <string name="item_title_timer_reached">达到计时器时</string>
-    <string name="item_title_counter_reached">在柜台上达到</string>
-    <string name="item_title_broadcast_received">收到Broadcast</string>
-    <string name="item_title_restart_when_reached">达到后重新启动</string>
-    <string name="item_title_toggle_type">切换类型</string>
-    <string name="item_title_toggle_change_all">全部更改</string>
+    <string name="field_show_debug_report_desc_available">调试报告可用</string>
+    <string name="field_show_debug_report_desc_not_available">没有可用的调试报告</string>
+    <string name="field_show_debug_view_title">显示调试窗口</string>
+    <string name="field_detection_type_desc_exact">在捕获位置进行检测</string>
+    <string name="field_detection_type_desc_screen">全屏检测</string>
+    <string name="item_intent_title">意图</string>
+    <string name="item_pause_title">等待</string>
+    <string name="item_swipe_title">滑动</string>
+    <string name="item_toggle_event_title">修改场景状态</string>
+    <string name="field_select_toggle_events_title_empty">无变化</string>
+    <string name="field_select_toggle_events_title">%1$d 变化</string>
+    <string name="item_change_counter_title">更改计数器</string>
+    <string name="item_timer_reached_title">达到计时器时</string>
+    <string name="item_counter_reached_title">在柜台上达到</string>
+    <string name="item_broadcast_received_title">收到Broadcast</string>
+    <string name="field_timer_restart_title">达到后重新启动</string>
+    <string name="field_change_all_title">全部更改</string>
+
+    <!--
+      - Fields.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title (3~4 lines max)
+     -->
+    <string name="field_select_detection_area_title">检测区域</string>
+    <string name="field_swipe_positions_title">刷卡位置</string>
+    <string name="field_show_debug_report_title">展示报告</string>
+    <string name="field_application_selection_desc">执行该操作时启动应用程序</string>
+    <string name="field_timer_restart_desc_on">一旦达到这一条件，计时器将重新启动，允许再次满足这一条件</string>
+    <string name="field_timer_restart_desc_off">一旦达到这一条件，定时器将不会重新启动，这意味着该条件只能满足一次</string>
 
     <!--
       - Empty list messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_empty_actions">未创建动作！</string>
-    <string name="message_empty_trigger_conditions">无条件！</string>
-    <string name="message_empty_image_conditions">未创建条件！</string>
-    <string name="message_empty_end_condition_config_event_none_in_scenario">没有在脚本中创建场景</string>
-    <string name="message_empty_end_condition_config_event_no_selection">没有场景被选择</string>
-    <string name="message_empty_image_event_list">无屏幕事件 ！</string>
-    <string name="message_empty_trigger_event_list">无活动 ！</string>
-    <string name="message_empty_counter_name_list">未定义计数器</string>
+    <string name="message_empty_action_list_title">未创建动作！</string>
+    <string name="message_empty_trigger_condition_list_title">无条件！</string>
+    <string name="message_empty_screen_condition_list_title">未创建条件！</string>
+    <string name="message_empty_screen_event_title">无屏幕事件 ！</string>
+    <string name="message_empty_trigger_event_list_title">无触发事件 ！</string>
+    <string name="message_empty_counter_name_list_title">未定义计数器</string>
 
     <!--
       - Secondary empty list messages.
       - Views handles any length here, you can use more verbosity than the regular empty text.
       -->
-    <string name="message_empty_secondary_end_condition_no_events">您需要至少创建一个场景才能使用结束条件</string>
-    <string name="message_empty_secondary_screen_event_list">屏幕事件包含一组在屏幕上检测到特定条件时执行的操作。您需要在场景中至少有一个事件或屏幕事件才能执行。</string>
-    <string name="message_empty_secondary_trigger_event_list">事件包含一组在满足自定义条件时执行的操作。\n您需要在场景中至少有一个事件或屏幕事件才能执行它。</string>
-    <string name="message_empty_secondary_trigger_condition_list">条件是启动操作的自定义标准。</string>
-    <string name="message_empty_secondary_image_condition_list">屏幕条件是屏幕截图的一部分，将在手机屏幕显示的每个帧上进行搜索。</string>
-    <string name="message_empty_secondary_action_list">当条件满足时，创建的动作将被执行（点击、滑动……）\n您的场景中需要至少存在一个动作。</string>
-    <string name="message_empty_secondary_counter_name_list">使用更改计数器操作或计数器达到条件创建计数器</string>
+    <string name="message_empty_screen_event_desc">屏幕事件包含一组在屏幕上检测到特定条件时执行的操作。\n场景中至少需要一个屏幕或触发器事件才能执行。</string>
+    <string name="message_empty_trigger_event_list_desc">触发器事件包含一组在满足自定义条件时执行的操作。\n您需要在场景中至少有一个屏幕或触发事件才能执行。</string>
+    <string name="message_empty_trigger_condition_list_desc">条件是启动操作的自定义标准。</string>
+    <string name="message_empty_screen_condition_list_desc">屏幕条件是屏幕截图的一部分，将在手机屏幕显示的每个帧上进行搜索。</string>
+    <string name="message_empty_action_list_desc">当条件满足时，创建的动作将被执行（点击、滑动……）\n您的场景中需要至少存在一个动作。</string>
+    <string name="message_empty_counter_name_list_desc">使用更改计数器操作或计数器达到条件创建计数器</string>
 
     <!--
       - Messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_condition_threshold">%1$d%%</string>
-    <string name="message_event_copy_with_toggle_action_from_another_scenario">" 此事件有一个或多个切换事件操作引用来自另一场景的事件。 在保存场景之前，您必须更新他们的目标事件。"</string>
-    <string name="message_event_delete_associated_end_condition">这个场景存在一个或多个结束条件被引用。 删除这个场景将同时删除相关的结束条件\n确认删除？</string>
-    <string name="message_event_delete_associated_action">这个场景存在一个或多个动作被引用。 删除这个场景也会删除相关的动作。\n确认删除？</string>
-    <string name="message_condition_delete_associated_action">此条件有一个或多个引用它的操作。删除此条件也会删除关联的操作。\n您确定吗？</string>
-    <string name="message_tutorial_start">了解如何使用 Smart AutoClicker</string>
-    <string name="message_scenario_saving_error">由于内部错误，您的方案无法保存。您要修改还是取消所有修改？</string>
-    <string name="message_tutorial_first_time">恭喜，Smart AutoClicker 现已在您的设备上正常运行！\n您想按照教程学习该应用程序的基础知识吗？</string>
-    <string name="message_error_native_lib">Smart AutoClicker 安装错误，无法启动检测。\n\n如果您是从合法的应用程序商店安装的，请在 GitHub 上联系我们，这将有助于我们修复此问题。</string>
+    <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="warning_dialog_message_toggle_action_from_another_scenario">" 此事件有一个或多个切换事件操作引用来自另一场景的事件。 在保存场景之前，您必须更新他们的目标事件。"</string>
+    <string name="warning_dialog_message_event_delete_associated_action">这个场景存在一个或多个动作被引用。 删除这个场景也会删除相关的动作。\n确认删除？</string>
+    <string name="warning_dialog_message_condition_delete_associated_action">此条件有一个或多个引用它的操作。删除此条件也会删除关联的操作。\n您确定吗？</string>
+    <string name="field_tutorial_desc">了解如何使用 Klick\'r</string>
+    <string name="error_dialog_message_scenario_saving">由于内部错误，您的方案无法保存。您要修改还是取消所有修改？</string>
+    <string name="error_dialog_message_error_native_lib">Klick\'r 安装错误，无法启动检测。\n\n如果您是从合法的应用程序商店安装的，请在 GitHub 上联系我们，这将有助于我们修复此问题。</string>
 
     <!--
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="section_title_condition_detection_details">检测细节</string>
-    <string name="section_title_condition_threshold">容差</string>
-    <string name="section_title_detection_quality_title">检测质量</string>
-    <string name="section_title_end_condition">终止条件</string>
-    <string name="section_title_intent_extras_value">参数值</string>
-    <string name="section_title_start_application">启动应用程序</string>
-    <string name="section_title_tutorial">教程</string>
-    <string name="section_title_debug">调试</string>
+    <string name="field_title_condition_threshold">容差</string>
+    <string name="field_scenario_quality_title">检测质量</string>
+    <string name="field_intent_extra_value_title">参数值</string>
+    <string name="field_tutorial_title">教程</string>
 
     <!--
       - List header.
@@ -189,6 +183,8 @@
     <string name="list_header_copy_conditions_all">所有场景下的条件</string>
     <string name="list_header_copy_event_this">此脚本中的场景</string>
     <string name="list_header_copy_event_all">所有脚本中的场景</string>
+    <string name="list_header_image_events">屏幕事件</string>
+    <string name="list_header_trigger_events">触发事件</string>
 
 
     <!--
@@ -203,26 +199,19 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="button_text_create_scenario">创建脚本</string>
-    <string name="button_text_intent_extra_type_select">选择一个参数类型</string>
-    <string name="button_text_quality_speed">速度</string>
-    <string name="button_text_quality_precision">精准度</string>
-    <string name="button_text_swipe_positions_select">选择滑动起止坐标</string>
-    <string name="button_dialog_modify">调整</string>
+    <string name="field_scenario_quality_button_speed">速度</string>
+    <string name="field_scenario_quality_button_precision">精准度</string>
 
     <!--
       - Text input fields labels and error messages.
       - Should be short and concise.
       -->
-    <string name="input_field_label_name">名称</string>
-    <string name="input_field_label_execution_count">执行次数</string>
-    <string name="input_field_label_intent_extra_key">参数名</string>
-    <string name="input_field_label_event_state">状态</string>
-    <string name="input_field_toggle_event_type">场景新状态</string>
-    <string name="input_field_label_change_counter_operation_value">价值</string>
-    <string name="input_field_label_change_counter_name">计数器名称</string>
-    <string name="input_field_label_timer_duration">之后 (ms)</string>
-    <string name="input_field_label_comparison_value">价值</string>
+    <string name="generic_name">名称</string>
+    <string name="field_intent_extra_key_label">参数名</string>
+    <string name="field_event_state_title">状态</string>
+    <string name="field_counter_operation_value_label">价值</string>
+    <string name="field_counter_name_label">计数器名称</string>
+    <string name="field_counter_comparison_value_label">价值</string>
     <string name="input_field_label_timer_duration_no_unit">之后</string>
 
     <!--
@@ -235,56 +224,37 @@
       -->
 
     <!-- Dropdown field for selecting the event state -->
-    <string name="dropdown_item_title_event_state_enabled">启用</string>
-    <string name="dropdown_item_title_event_state_disabled">禁用</string>
-    <string name="dropdown_helper_text_event_state_enabled">运行该脚本时，这个场景将被启用</string>
-    <string name="dropdown_helper_text_event_state_disabled">运行该脚本时，需要其他动作执行状态变更才会被启用（不明白作者为什么要这种表述）</string>
-
-    <!-- Dropdown field for selecting the toggle event type -->
-    <string name="dropdown_item_title_toggle_event_state_enable">启用</string>
-    <string name="dropdown_item_title_toggle_event_state_disable">禁用</string>
-    <string name="dropdown_item_title_toggle_event_state_toggle">切换</string>
-    <string name="dropdown_helper_text_toggle_event_state_enable">该场景将在脚本中被启用</string>
-    <string name="dropdown_helper_text_toggle_event_state_disable">该场景将在脚本中被禁用</string>
-    <string name="dropdown_helper_text_toggle_event_state_toggle">如果脚本在该场景中是启用状态，将被切换为禁用；反之亦反之（doge）</string>
-
+    <string name="item_event_desc_enabled_children">启用</string>
+    <string name="item_event_desc_disabled_children">禁用</string>
+    <string name="field_event_state_desc_enabled">运行该脚本时，这个场景将被启用</string>
+    <string name="field_event_state_desc_disabled">运行该脚本时，需要其他动作执行状态变更才会被启用（不明白作者为什么要这种表述）</string>
 
     <!-- Dropdown field for selecting the conditions operator -->
-    <string name="dropdown_label_condition_operator">需匹配的图像</string>
-    <string name="dropdown_item_title_condition_or">单一</string>
-    <string name="dropdown_item_title_condition_and">所有</string>
-    <string name="dropdown_helper_text_condition_or">只要满足其中任意一个条件，就能够触发动作</string>
-    <string name="dropdown_helper_text_condition_and">需要满足所有条件，才能触发动作</string>
-
-    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
-    <string name="dropdown_helper_text_end_condition_or">只要满足其中任意一个条件，就停止脚本</string>
-    <string name="dropdown_helper_text_end_condition_and">需要满足所有条件，才能停止脚本</string>
+    <string name="field_operator_title">需匹配的图像</string>
+    <string name="field_operator_desc_or">只要满足其中任意一个条件，就能够触发动作</string>
+    <string name="field_operator_desc_and">需要满足所有条件，才能触发动作</string>
 
     <!-- Dropdown field for selecting the condition detection type. -->
-    <string name="dropdown_label_condition_detection_type">检测类型</string>
-    <string name="dropdown_item_title_detection_type_exact">精确位置</string>
-    <string name="dropdown_item_title_detection_type_in_area">区域</string>
-    <string name="dropdown_item_title_detection_type_screen">全屏幕</string>
+    <string name="field_detection_type_title">检测类型</string>
 
     <!-- Dropdown field for selecting the condition visibility. -->
-    <string name="dropdown_label_condition_visibility">存在与否</string>
-    <string name="dropdown_item_title_condition_visibility_present">存在</string>
-    <string name="dropdown_item_title_condition_visibility_absent">不存在</string>
-    <string name="dropdown_helper_text_condition_visibility_present">这个细节存在时，条件生效</string>
-    <string name="dropdown_helper_text_condition_visibility_absent">这个细节不存在时，条件生效</string>
+    <string name="field_condition_visibility_title">存在与否</string>
+    <string name="field_condition_visibility_desc_present">这个细节存在时，条件生效</string>
+    <string name="field_condition_visibility_desc_absent">这个细节不存在时，条件生效</string>
 
     <!-- Dropdown field for selecting the click position type -->
-    <string name="dropdown_label_click_position_type">单击位置</string>
-    <string name="dropdown_item_title_click_position_type_on_condition">匹配到的位置</string>
-    <string name="dropdown_item_title_click_position_type_on_position">选择一个坐标</string>
-    <string name="dropdown_helper_text_click_position_type_on_condition">点击条件满足的对应位置坐标</string>
-    <string name="dropdown_helper_text_click_position_type_on_position">点击自定义坐标位置</string>
+    <string name="field_click_type_title">单击位置</string>
+    <string name="field_click_type_desc_on_condition">点击条件满足的对应位置坐标</string>
+    <string name="field_click_type_desc_on_position">点击自定义坐标位置</string>
 
     <!-- Dropdown field for selecting the intent sending type. -->
-    <string name="dropdown_label_intent_extra_value_type">参数值类型</string>
-    <string name="dropdown_label_intent_sending_type">类型</string>
+    <string name="dropdown_intent_extra_type_title">参数值类型</string>
+    <string name="dropdown_intent_sending_type_label">类型</string>
 
-    <string name="dropdown_label_comparison_operator">操作员</string>
+    <string name="dropdown_comparison_operator_label">操作员</string>
+    <string name="dropdown_counter_operation_label">运行</string>
+    <string name="field_detection_type_desc_area">检测选定区域</string>
+
 
     <!--
       - Content description texts.
@@ -296,5 +266,6 @@
     <string name="content_desc_image_condition">要被检测的图像</string>
     <string name="content_desc_open_event_list">打开脚本列表</string>
     <string name="content_desc_application_icon">应用图标</string>
+    <string name="field_application_selection_title">选择一个应用程序</string>
 
 </resources>

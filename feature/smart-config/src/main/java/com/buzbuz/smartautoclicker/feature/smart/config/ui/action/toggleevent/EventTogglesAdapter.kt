@@ -25,9 +25,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.ui.bindings.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.setIcons
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemEventToggleBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
@@ -64,6 +65,11 @@ class EventToggleAdapter(
             is HeaderViewHolder -> holder.onBind(getItem(position) as EventTogglesListItem.Header)
             is ItemViewHolder -> holder.onBind(getItem(position) as EventTogglesListItem.Item)
         }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is ItemViewHolder) holder.onUnbind()
     }
 }
 
@@ -109,12 +115,16 @@ class ItemViewHolder(
         private const val BUTTON_ENABLE_EVENT = 0
         private const val BUTTON_TOGGLE_EVENT = 1
         private const val BUTTON_DISABLE_EVENT = 2
+
+        private val BUTTONS_CONFIG = MultiStateButtonConfig(
+            icons = listOf(R.drawable.ic_confirm, R.drawable.ic_invert, R.drawable.ic_cancel),
+            selectionRequired = false,
+            singleSelection = true,
+        )
     }
 
     init {
-        viewBinding.toggleTypeButton.apply {
-            setIcons(listOf(R.drawable.ic_confirm, R.drawable.ic_invert, R.drawable.ic_cancel))
-        }
+        viewBinding.toggleTypeButton.setup(BUTTONS_CONFIG)
     }
 
     fun onBind(item: EventTogglesListItem.Item) {
@@ -122,6 +132,15 @@ class ItemViewHolder(
             eventName.text = item.eventName
             textActionsCount.text = item.actionsCount.toString()
             textConditionCount.text = item.conditionsCount.toString()
+
+            toggleTypeButton.setChecked(
+                when (item.toggleState) {
+                    Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
+                    Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
+                    Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
+                    else -> null
+                }
+            )
 
             toggleTypeButton.setOnCheckedListener { newChecked ->
                 val newState = when (newChecked) {
@@ -133,16 +152,11 @@ class ItemViewHolder(
 
                 onEventToggleStateChanged(item.eventId, newState)
             }
-
-            toggleTypeButton.setChecked(
-                when (item.toggleState) {
-                    Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
-                    Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
-                    Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
-                    else -> null
-                }
-            )
         }
+    }
+
+    fun onUnbind() {
+        viewBinding.toggleTypeButton.setOnCheckedListener(null)
     }
 }
 

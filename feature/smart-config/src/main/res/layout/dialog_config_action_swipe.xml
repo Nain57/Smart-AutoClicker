@@ -39,24 +39,32 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_name_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_swipe_duration_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_swipe_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/on_position_select_button"
-                style="@style/Widget.Material3.Button.TonalButton"
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/button_text_swipe_positions_select"/>
+                android:layout_marginVertical="@dimen/margin_vertical_large">
+
+                <include layout="@layout/include_field_selector"
+                    android:id="@+id/field_selection_swipe_position"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

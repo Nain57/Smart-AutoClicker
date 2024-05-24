@@ -16,26 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event.config
 
-import android.content.Context
 import android.view.View
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.feature.billing.IBillingRepository
-import com.buzbuz.smartautoclicker.feature.billing.ProModeAdvantage
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
@@ -43,11 +35,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+
 import javax.inject.Inject
 
 class EventConfigViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
-    private val billingRepository: IBillingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
@@ -55,53 +47,13 @@ class EventConfigViewModel @Inject constructor(
     private val configuredEvent = editionRepository.editionState.editedEventState
         .mapNotNull { it.value }
 
-    private val enableEventItem = DropdownItem(
-        title = R.string.dropdown_item_title_event_state_enabled,
-        helperText = R.string.dropdown_helper_text_event_state_enabled,
-    )
-    private val disableEventItem = DropdownItem(
-        title= R.string.dropdown_item_title_event_state_disabled,
-        helperText = R.string.dropdown_helper_text_event_state_disabled,
-    )
-    val eventStateDropdownState: Flow<EventStateDropdownUiState> = billingRepository.isProModePurchased
-        .map { isProModePurchased ->
-            EventStateDropdownUiState(
-                items = listOf(enableEventItem, disableEventItem),
-                enabled = isProModePurchased,
-                disabledIcon = R.drawable.ic_pro_small,
-            )
-        }
-
     /** The enabled on start state of the configured event. */
-    val eventStateItem: Flow<DropdownItem> = configuredEvent
-        .map { event ->
-            when (event.enabledOnStart) {
-                true -> enableEventItem
-                false -> disableEventItem
-            }
-        }
-        .filterNotNull()
-
-    val conditionAndItem = DropdownItem(
-        title = R.string.dropdown_item_title_condition_and,
-        helperText = R.string.dropdown_helper_text_condition_and,
-    )
-    private val conditionOrItem = DropdownItem(
-        title= R.string.dropdown_item_title_condition_or,
-        helperText = R.string.dropdown_helper_text_condition_or,
-    )
-    val conditionOperatorsItems = listOf(conditionAndItem, conditionOrItem)
+    val eventEnabledOnStart: Flow<Boolean> = configuredEvent
+        .map { event -> event.enabledOnStart }
 
     /** The event condition operator currently edited by the user. */
-    val conditionOperator: Flow<DropdownItem> = configuredEvent
-        .map { event ->
-            when (event.conditionOperator) {
-                AND -> conditionAndItem
-                OR -> conditionOrItem
-                else -> null
-            }
-        }
-        .filterNotNull()
+    val conditionOperator: Flow<Int> = configuredEvent
+        .map { event -> event.conditionOperator }
 
     /** The event name value currently edited by the user. */
     val eventName: Flow<String?> = configuredEvent
@@ -119,9 +71,6 @@ class EventConfigViewModel @Inject constructor(
     val canTryEvent: Flow<Boolean> = configuredEvent
         .map { it.isComplete() }
 
-    /** Tells if the pro mode billing flow is being displayed. */
-    val isBillingFlowDisplayed: Flow<Boolean> = billingRepository.isBillingFlowInProcess
-
     fun getTryInfo(): Pair<Scenario, ImageEvent>? {
         val scenario = editionRepository.editionState.getScenario() ?: return null
         val event = editionRepository.editionState.getEditedEvent<ImageEvent>() ?: return null
@@ -136,28 +85,16 @@ class EventConfigViewModel @Inject constructor(
     }
 
     /** Toggle the end condition operator between AND and OR. */
-    fun setConditionOperator(operatorItem: DropdownItem) {
+    fun setConditionOperator(@ConditionOperator operator: Int) {
         updateEditedEvent { oldValue ->
-            oldValue.copyBase(
-                conditionOperator = when (operatorItem) {
-                    conditionAndItem -> AND
-                    conditionOrItem -> OR
-                    else -> return@updateEditedEvent null
-                }
-            )
+            oldValue.copyBase(conditionOperator = operator)
         }
     }
 
     /** Toggle the event state between true and false. */
-    fun setEventState(state: DropdownItem) {
+    fun toggleEventState() {
         updateEditedEvent { oldValue ->
-            oldValue.copyBase(
-                enabledOnStart = when (state) {
-                    enableEventItem -> true
-                    disableEventItem -> false
-                    else -> return@updateEditedEvent null
-                }
-            )
+            oldValue.copyBase(enabledOnStart = !oldValue.enabledOnStart)
         }
     }
 
@@ -171,36 +108,11 @@ class EventConfigViewModel @Inject constructor(
         }
     }
 
-    fun onEventStateClickedWithoutProMode(context: Context) {
-        billingRepository.startBillingActivity(context, ProModeAdvantage.Feature.EVENT_STATE)
-    }
-
-    fun monitorConditionOperatorView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR, view)
-    }
-
-    fun monitorDropdownItemAndView(view: View) {
-        monitoredViewsManager.attach(
-            MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND,
-            view,
-            ViewPositioningType.SCREEN,
-        )
-    }
-
-    fun stopDropdownItemConditionViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND)
+    fun monitorConditionOperatorItemAndView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND, view,)
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.apply {
-            detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_CONDITION_OPERATOR)
-            detach(MonitoredViewType.EVENT_DIALOG_DROPDOWN_ITEM_AND)
-        }
+        monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND)
     }
 }
-
-data class EventStateDropdownUiState(
-    val items: List<DropdownItem>,
-    val enabled: Boolean = true,
-    @DrawableRes val disabledIcon: Int? = null,
-)

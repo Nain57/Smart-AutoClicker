@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.DialogChoice
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.DialogChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
@@ -31,18 +31,18 @@ sealed class TriggerConditionTypeChoice(
     iconId = iconId,
 ) {
     data object OnBroadcastReceived : TriggerConditionTypeChoice(
-        R.string.item_title_broadcast_received,
-        R.string.item_desc_broadcast_received,
+        R.string.item_broadcast_received_title,
+        R.string.item_broadcast_received_desc,
         R.drawable.ic_broadcast_received,
     )
     data object OnCounterReached : TriggerConditionTypeChoice(
-        R.string.item_title_counter_reached,
-        R.string.item_desc_counter_reached,
+        R.string.item_counter_reached_title,
+        R.string.item_counter_reached_desc,
         R.drawable.ic_counter_reached,
     )
     data object OnTimerReached : TriggerConditionTypeChoice(
-        R.string.item_title_timer_reached,
-        R.string.item_desc_timer_reached,
+        R.string.item_timer_reached_title,
+        R.string.item_timer_reached_desc,
         R.drawable.ic_timer_reached,
     )
 }

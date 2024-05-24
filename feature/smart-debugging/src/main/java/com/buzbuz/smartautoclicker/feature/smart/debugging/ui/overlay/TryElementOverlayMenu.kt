@@ -25,8 +25,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.ui.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryElementMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint

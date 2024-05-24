@@ -24,22 +24,22 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.dialogViewModels
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setNumericValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.setup
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.dialogViewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonVisibility
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setNumericValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentIntentConfigAdvancedBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -70,30 +70,30 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
         )
 
         viewBinding = ContentIntentConfigAdvancedBinding.inflate(LayoutInflater.from(context)).apply {
-            editNameLayout.apply {
-                setLabel(R.string.input_field_label_name)
+            fieldName.apply {
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { dialogViewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(editNameLayout.textField)
+            dialogController.hideSoftInputOnFocusLoss(fieldName.textField)
 
             intentSendingTypeField.setItems(
-                label = context.getString(R.string.dropdown_label_intent_sending_type),
+                label = context.getString(R.string.dropdown_intent_sending_type_label),
                 items = dialogViewModel.sendingTypeItems,
                 onItemSelected = dialogViewModel::setSendingType,
             )
 
             editActionLayout.apply {
-                setup(R.string.input_field_label_intent_action, R.drawable.ic_search, disableInputWithCheckbox = false)
+                setup(R.string.field_intent_action_label, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener { dialogViewModel.setIntentAction(it.toString()) }
                 setOnCheckboxClickedListener { showActionsDialog() }
             }
             dialogController.hideSoftInputOnFocusLoss(editActionLayout.textField)
 
             editFlagsLayout.apply {
-                setup(R.string.input_field_label_intent_flags, R.drawable.ic_search, disableInputWithCheckbox = false)
+                setup(R.string.field_intent_flags_label, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener {
                     dialogViewModel.setIntentFlags(
                         try { if (it.isNotEmpty()) it.toString().toInt() else null }
@@ -105,7 +105,7 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
             dialogController.hideSoftInputOnFocusLoss(editFlagsLayout.textField)
 
             editComponentNameLayout.apply {
-                setup(R.string.input_field_label_intent_component_name, R.drawable.ic_search, disableInputWithCheckbox = false)
+                setup(R.string.field_intent_component_name_label, R.drawable.ic_search, disableInputWithCheckbox = false)
                 setOnTextChangedListener { dialogViewModel.setComponentName(it.toString()) }
                 setOnCheckboxClickedListener { showComponentNameDialog() }
             }
@@ -120,8 +120,8 @@ class AdvancedIntentContent(appContext: Context) : NavBarDialogContent(appContex
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { dialogViewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { dialogViewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { dialogViewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { dialogViewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { dialogViewModel.sendingType.collect(::updateSendingType) }
                 launch { dialogViewModel.action.collect(viewBinding.editActionLayout::setTextValue) }
                 launch { dialogViewModel.actionError.collect(viewBinding.editActionLayout::setError) }

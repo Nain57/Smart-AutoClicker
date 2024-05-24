@@ -30,7 +30,7 @@
         android:id="@+id/page_config"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="@string/menu_item_title_config"/>
+        android:title="@string/generic_config"/>
     <item
         android:id="@+id/page_more"
         android:enabled="true"

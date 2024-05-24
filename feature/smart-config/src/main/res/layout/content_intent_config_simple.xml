@@ -32,56 +32,28 @@
         android:layout_marginEnd="@dimen/margin_horizontal_default"
         android:orientation="vertical">
 
-        <include layout="@layout/include_input_field_text"
-            android:id="@+id/edit_name_layout"
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/field_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_vertical_large"
-            android:hint="@string/input_field_label_name"
+            android:hint="@string/generic_name"
             app:endIconMode="clear_text"/>
 
         <com.google.android.material.card.MaterialCardView
             style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginVertical="@dimen/margin_vertical_large"
+            android:minHeight="@dimen/item_height">
 
-            <LinearLayout
+            <include layout="@layout/include_field_selector"
+                android:id="@+id/field_selection_application"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                android:layout_marginVertical="@dimen/margin_vertical_large"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/start_app_title"
-                    style="@style/AppTheme.TextAppearance.CardTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/section_title_start_application"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_height_big">
-
-                    <include layout="@layout/item_application"
-                        android:id="@+id/selected_application_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:visibility="visible"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/select_application_button"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/dialog_overlay_title_application_selection"
-                        tools:visibility="gone"/>
-
-                </FrameLayout>
-
-            </LinearLayout>
+                android:layout_gravity="center"/>
 
         </com.google.android.material.card.MaterialCardView>
 

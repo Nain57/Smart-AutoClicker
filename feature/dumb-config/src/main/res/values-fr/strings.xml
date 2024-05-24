@@ -44,6 +44,7 @@
     <string name="item_desc_dumb_pause">Pause l\'exécution</string>
     <string name="item_desc_dumb_pause_details">Pendant %1$s</string>
     <string name="item_desc_dumb_repeat_count">Répéter %1$d fois</string>
+    <string name="item_desc_dumb_repeat_infinite">Répéter à l\'infini</string>
     <string name="item_desc_dumb_swipe">Swiper d\'une position à une autre</string>
     <string name="item_desc_dumb_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
     <string name="item_desc_dumb_swipe_positions">Swipe de %1$d, %2$d à %3$d, %4$d</string>

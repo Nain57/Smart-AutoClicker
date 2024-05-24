@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -63,21 +62,16 @@ class ToggleEventViewModel @Inject constructor(
     val nameError: Flow<Boolean> = configuredToggleEvent.map { it.name?.isEmpty() ?: true }
 
     /** The selected toggle all state for the action. */
-    val toggleAllEnabledButton: Flow<ToggleAllButtonState> = configuredToggleEvent
+    val toggleAllButtonCheckIndex: Flow<Int?> = configuredToggleEvent
         .map { toggleEventAction ->
             when {
-                !toggleEventAction.toggleAll ->
-                    ToggleAllButtonState(null, R.string.item_desc_toggle_event_manual)
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.ENABLE ->
-                    ToggleAllButtonState(BUTTON_ENABLE_EVENT,R.string.item_desc_toggle_event_enable_all)
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.TOGGLE ->
-                    ToggleAllButtonState(BUTTON_TOGGLE_EVENT, R.string.item_desc_toggle_event_invert_all)
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.DISABLE ->
-                    ToggleAllButtonState(BUTTON_DISABLE_EVENT, R.string.item_desc_toggle_event_disable_all)
+                !toggleEventAction.toggleAll -> null
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
+                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
                 else -> null
             }
         }
-        .filterNotNull()
 
     val eventToggleSelectorState: Flow<EventToggleSelectorState> = configuredToggleEvent
         .map { toggleEventAction ->
@@ -96,7 +90,7 @@ class ToggleEventViewModel @Inject constructor(
             EventToggleSelectorState(
                 isEnabled = !toggleEventAction.toggleAll,
                 title = context.getEventToggleListName(toggleEventAction),
-                emptyText = if (toggleEventAction.eventToggles.isEmpty()) R.string.item_desc_event_toggles_empty else null,
+                emptyText = if (toggleEventAction.eventToggles.isEmpty()) R.string.field_select_toggle_events_desc_empty else null,
                 enableCount = enableCount,
                 toggleCount = toggleCount,
                 disableCount = disableCount,
@@ -154,23 +148,18 @@ class ToggleEventViewModel @Inject constructor(
     }
 
     private fun Context.getEventToggleListName(toggleEventAction: Action.ToggleEvent): String =
-        if (toggleEventAction.eventToggles.isEmpty()) getString(R.string.item_title_empty_event_toggles)
-        else getString(R.string.item_title_event_toggles, toggleEventAction.eventToggles.size)
+        if (toggleEventAction.eventToggles.isEmpty()) getString(R.string.field_select_toggle_events_title_empty)
+        else getString(R.string.field_select_toggle_events_title, toggleEventAction.eventToggles.size)
 
 }
-
-data class ToggleAllButtonState(
-    val checkedButton: Int?,
-    @StringRes val descriptionText: Int,
-)
 
 data class EventToggleSelectorState(
     val isEnabled: Boolean,
     val title: String,
+    val enableCount: Int,
+    val toggleCount: Int,
+    val disableCount: Int,
     @StringRes val emptyText: Int?,
-    val enableCount: Int?,
-    val toggleCount: Int?,
-    val disableCount: Int?,
 )
 
 internal const val BUTTON_ENABLE_EVENT = 0

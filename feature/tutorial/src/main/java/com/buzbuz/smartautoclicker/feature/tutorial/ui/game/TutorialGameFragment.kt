@@ -36,7 +36,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialGameBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame

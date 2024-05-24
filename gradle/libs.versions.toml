@@ -7,24 +7,26 @@ androidMinSdk = "24"
 # Build script
 googleFirebaseCrashlyticsGradle = "2.9.9"
 googleServices = "4.4.1"
-androidGradlePlugin = "8.3.1"
+androidGradlePlugin = "8.3.2"
 kotlin = "1.9.23"
 kotlinxCoroutines = "1.8.0"
 ksp = "1.9.23-1.0.19"
 
 # Androidx
-androidxAnnotation = "1.7.1"
+androidxAnnotation = "1.8.0"
 androidxAppCompat = "1.6.1"
 androidxCardView = "1.0.0"
 androidxConstraintLayout = "2.1.4"
-androidxCoreKtx = "1.12.0"
-androidxFragmentKtx = "1.6.2"
-androidxLifecycle = "2.7.0"
+androidxCoreKtx = "1.13.1"
+androidxDatastore = "1.1.1"
+androidxFragmentKtx = "1.7.1"
+androidxLifecycle = "2.8.0"
 androidxLifecycleExtension = "2.2.0"
 androidxNavigation = "2.7.7"
 androidxRecyclerView = "1.3.2"
 androidxRoom = "2.6.1"
-androidxVectorDrawable = "1.1.0"
+androidxSplashScreen = "1.0.1"
+androidxVectorDrawable = "1.2.0"
 
 # Other
 airbnbLottie = "6.1.0"
@@ -34,9 +36,11 @@ openCv = "4.9.0"
 googleDaggerHilt = "2.51"
 
 # PlayStore only
-androidBillingClient = "6.2.0"
-googleFirebaseBom = "32.8.0"
-googleFirebaseCrashlytics = "18.6.3"
+androidBillingClient = "7.0.0"
+googleFirebaseBom = "33.0.0"
+googleFirebaseCrashlytics = "19.0.0"
+googleUserMessaging = "2.2.0"
+googleGmsAds = "23.1.0"
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"
@@ -76,6 +80,8 @@ androidx-appCompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-cardView = { group = "androidx.cardview", name = "cardview", version.ref = "androidxCardView" }
 androidx-constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintLayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCoreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragmentKtx" }
 androidx-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
 androidx-lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "androidxLifecycle" }
@@ -104,6 +110,8 @@ google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", ve
 google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "googleFirebaseCrashlytics" }
 google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk", version.ref = "googleFirebaseCrashlytics" }
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleDaggerHilt" }
+google-userMessaging = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "googleUserMessaging" }
+google-gms-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googleGmsAds" }
 
 # Tests only
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreTesting" }
@@ -130,6 +138,7 @@ buzbuz-androidApplication = { id = "com.buzbuz.gradle.android.application", vers
 buzbuz-androidLibrary = { id = "com.buzbuz.gradle.android.library", version = "unspecified" }
 buzbuz-androidRoom = { id = "com.buzbuz.gradle.android.room", version = "unspecified" }
 buzbuz-androidUnitTest = { id = "com.buzbuz.gradle.android.unittest", version = "unspecified" }
+buzbuz-androidSigning = { id = "com.buzbuz.gradle.android.signing", version = "unspecified" }
 buzbuz-buildParameters = { id = "com.buzbuz.gradle.build.parameters", version = "unspecified" }
 buzbuz-crashlytics = { id = "com.buzbuz.gradle.crashlytics", version = "unspecified" }
 buzbuz-hilt = { id = "com.buzbuz.gradle.android.hilt", version = "unspecified" }

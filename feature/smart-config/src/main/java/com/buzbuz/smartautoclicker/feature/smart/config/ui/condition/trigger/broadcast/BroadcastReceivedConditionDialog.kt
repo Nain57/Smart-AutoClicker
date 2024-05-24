@@ -25,17 +25,17 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnCheckboxClickedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.setTextValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.setup
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionBroadcastBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -61,7 +61,7 @@ class BroadcastReceivedConditionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigConditionBroadcastBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_broadcast_received)
+                dialogTitle.setText(R.string.dialog_title_broadcast_received)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -85,17 +85,17 @@ class BroadcastReceivedConditionDialog(
                 }
             }
 
-            editNameLayout.apply {
-                setLabel(R.string.input_field_label_name)
+            fieldName.apply {
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             editBroadcastAction.apply {
-                setup(R.string.input_field_label_broadcast_action, R.drawable.ic_search, false)
+                setup(R.string.field_intent_broadcast_action_label, R.drawable.ic_search, false)
                 setOnTextChangedListener { viewModel.setIntentAction(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
@@ -116,8 +116,8 @@ class BroadcastReceivedConditionDialog(
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.editNameLayout::setText) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.intentAction.collect(viewBinding.editBroadcastAction::setTextValue) }
                 launch { viewModel.intentActionError.collect(viewBinding.editBroadcastAction::setError)}
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }

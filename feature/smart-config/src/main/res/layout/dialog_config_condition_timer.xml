@@ -37,8 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_default">
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_name_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_horizontal_small"
@@ -47,7 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/edit_duration_layout"/>
 
-            <include layout="@layout/include_input_field_text"
+            <include layout="@layout/include_field_text_input"
                 android:id="@+id/edit_duration_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -55,8 +55,8 @@
                 android:layout_marginBottom="@dimen/margin_vertical_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/time_unit_field"
-                app:layout_constraintTop_toBottomOf="@id/edit_name_layout"
-                app:layout_constraintBottom_toTopOf="@id/separator"/>
+                app:layout_constraintTop_toBottomOf="@id/field_name"
+                app:layout_constraintBottom_toTopOf="@id/card_is_reset"/>
 
             <include layout="@layout/include_input_field_dropdown"
                 android:id="@+id/time_unit_field"
@@ -68,25 +68,26 @@
                 app:layout_constraintTop_toTopOf="@id/edit_duration_layout"
                 app:layout_constraintWidth_percent="0.3"/>
 
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/separator"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_is_reset"
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_vertical_default"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_duration_layout"
-                app:layout_constraintBottom_toTopOf="@id/checkbox_reset_when_reached"/>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/checkbox_reset_when_reached"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/separator"
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                app:layout_constraintTop_toBottomOf="@id/time_unit_field"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:text="@string/item_title_restart_when_reached"/>
+                android:minHeight="@dimen/item_height">
+
+                <include layout="@layout/include_field_switch"
+                    android:id="@+id/field_is_reset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

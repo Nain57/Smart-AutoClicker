@@ -30,13 +30,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.timeUnitDropdownItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionPauseBinding
@@ -63,7 +64,7 @@ class PauseDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionPauseBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_pause)
+                dialogTitle.setText(R.string.dialog_title_pause)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -81,14 +82,14 @@ class PauseDialog(
                 }
             }
 
-            editNameLayout.apply {
-                setLabel(R.string.input_field_label_name)
+            fieldName.apply {
+                setLabel(R.string.generic_name)
                 setOnTextChangedListener { viewModel.setName(it.toString()) }
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            hideSoftInputOnFocusLoss(editNameLayout.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             editPauseDurationLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(min = 1))
@@ -118,7 +119,7 @@ class PauseDialog(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.name.collect(::updateClickName) }
-                launch { viewModel.nameError.collect(viewBinding.editNameLayout::setError)}
+                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
                 launch { viewModel.pauseDuration.collect(::updatePauseDuration) }
                 launch { viewModel.pauseDurationError.collect(viewBinding.editPauseDurationLayout::setError)}
                 launch { viewModel.selectedUnitItem.collect(viewBinding.timeUnitField::setSelectedItem) }
@@ -143,7 +144,7 @@ class PauseDialog(
     }
 
     private fun updateClickName(newName: String?) {
-        viewBinding.editNameLayout.setText(newName)
+        viewBinding.fieldName.setText(newName)
     }
 
     private fun updatePauseDuration(newDuration: String?) {
@@ -151,7 +152,7 @@ class PauseDialog(
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     private fun onActionEditingStateChanged(isEditingAction: Boolean) {

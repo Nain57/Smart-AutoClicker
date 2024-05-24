@@ -30,18 +30,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogNavigationTopBarBinding
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldTextBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputBinding
 import com.buzbuz.smartautoclicker.databinding.DialogScenarioCreationBinding
 import com.buzbuz.smartautoclicker.databinding.IncludeScenarioTypeViewBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -118,7 +116,7 @@ class ScenarioCreationDialog : DialogFragment() {
         buttonDelete.visibility = View.GONE
     }
 
-    private fun IncludeInputFieldTextBinding.initScenarioNameField() {
+    private fun IncludeFieldTextInputBinding.initScenarioNameField() {
         setLabel(R.string.input_field_label_scenario_name)
         setOnTextChangedListener { viewModel.setName(it.toString()) }
         textField.filters = arrayOf<InputFilter>(
@@ -147,28 +145,8 @@ class ScenarioCreationDialog : DialogFragment() {
 
     private fun updateTypeSelection(state: ScenarioTypeSelectionState) {
         viewBinding.apply {
-            scenarioTypeDumb.apply {
-                root.isChecked = state.selectedItem == ScenarioTypeSelection.DUMB
-                titleScenarioType.setText(state.dumbItem.titleRes)
-                imageScenarioType.setImageResource(state.dumbItem.iconRes)
-
-                root.setOnClickListener { viewModel.setSelectedType(ScenarioTypeSelection.DUMB) }
-            }
-
-            scenarioTypeSmart.apply {
-                root.isChecked = state.selectedItem == ScenarioTypeSelection.SMART
-                titleScenarioType.setText(state.smartItem.titleRes)
-                imageScenarioType.setImageResource(state.smartItem.iconRes)
-
-                if (state.smartItemEnabled) {
-                    root.setOnClickListener { viewModel.setSelectedType(ScenarioTypeSelection.SMART) }
-                    root.alpha = ALPHA_ENABLED_ITEM
-                } else {
-                    root.setOnClickListener{ viewModel.onScenarioCountReachedAddCopyClicked(requireContext()) }
-                    root.alpha = ALPHA_DISABLED_ITEM
-                }
-            }
-
+            scenarioTypeDumb.setState(state.dumbItem, state.selectedItem, ScenarioTypeSelection.DUMB)
+            scenarioTypeSmart.setState(state.smartItem, state.selectedItem, ScenarioTypeSelection.SMART)
             scenarioTypeDescription.setText(
                 when (state.selectedItem) {
                     ScenarioTypeSelection.DUMB -> state.dumbItem.descriptionText
@@ -176,6 +154,18 @@ class ScenarioCreationDialog : DialogFragment() {
                 }
             )
         }
+    }
+
+    private fun IncludeScenarioTypeViewBinding.setState(
+        item: ScenarioTypeItem,
+        selectedItem: ScenarioTypeSelection,
+        type: ScenarioTypeSelection,
+    ) {
+        root.isChecked = selectedItem == type
+        titleScenarioType.setText(item.titleRes)
+        imageScenarioType.setImageResource(item.iconRes)
+
+        root.setOnClickListener { viewModel.setSelectedType(type) }
     }
 
     private fun updateCreationState(state: CreationState) {

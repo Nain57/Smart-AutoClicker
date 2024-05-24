@@ -27,15 +27,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonVisibility
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.NavBarDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionsContent
@@ -69,8 +68,8 @@ class EventDialog(
                 viewModel.getEditedEvent()?.let { event ->
                     dialogTitle.setText(
                         when (event) {
-                            is ImageEvent -> R.string.dialog_overlay_title_image_event_config
-                            is TriggerEvent -> R.string.dialog_overlay_title_trigger_event_config
+                            is ImageEvent -> R.string.dialog_title_image_event
+                            is TriggerEvent -> R.string.dialog_title_trigger_event
                         }
                     )
                 }
@@ -172,7 +171,7 @@ class EventDialog(
      * Once confirmed, it will delete the event and close the dialog.
      */
     private fun showAssociatedActionsWarning() {
-        showMessageDialog(R.string.dialog_overlay_title_warning, R.string.message_event_delete_associated_action) {
+        showMessageDialog(R.string.dialog_overlay_title_warning, R.string.warning_dialog_message_event_delete_associated_action) {
             onDelete()
             back()
         }

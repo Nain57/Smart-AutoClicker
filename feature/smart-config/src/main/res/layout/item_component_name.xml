@@ -49,7 +49,7 @@
         android:textSize="@dimen/text_size_list_item_text_big"
         android:textStyle="bold"
         android:singleLine="true"
-        tools:text="Smart AutoClicker"/>
+        tools:text="Klick\'r"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/component_name"

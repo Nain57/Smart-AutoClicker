@@ -23,19 +23,19 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.setOnTextChangedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.setText
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionIntentExtraBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -72,7 +72,7 @@ class ExtraConfigDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionIntentExtraBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_extra_config)
+                dialogTitle.setText(R.string.dialog_intent_extra_title)
 
                 buttonDismiss.setOnClickListener {
                     debounceUserInteraction {
@@ -91,13 +91,13 @@ class ExtraConfigDialog(
             }
 
             editKeyLayout.apply {
-                setLabel(R.string.input_field_label_intent_extra_key)
+                setLabel(R.string.field_intent_extra_key_label)
                 setOnTextChangedListener { viewModel.setKey(it.toString()) }
             }
             hideSoftInputOnFocusLoss(editKeyLayout.textField)
 
             extraValueTypeField.setItems(
-                label = context.getString(R.string.dropdown_label_intent_extra_value_type),
+                label = context.getString(R.string.dropdown_intent_extra_type_title),
                 items = viewModel.extraTypeDropdownItems,
                 onItemSelected = viewModel::setType,
             )
@@ -154,7 +154,6 @@ class ExtraConfigDialog(
     private fun updateExtraValue(valueState: ExtraValueInputState) {
         viewBinding.apply {
             layoutValueInput.visibility = View.VISIBLE
-            buttonSelectType.visibility = View.GONE
             extraValueTypeField.setSelectedItem(valueState.typeItem)
         }
 
@@ -186,7 +185,7 @@ class ExtraConfigDialog(
     }
 
     private fun updateSaveButton(isValidExtra: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidExtra)
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidExtra)
     }
 
     private fun onExtraEditingStateChanged(isEditingExtra: Boolean) {

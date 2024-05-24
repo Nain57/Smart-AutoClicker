@@ -26,9 +26,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
-import com.buzbuz.smartautoclicker.core.ui.bindings.updateState
-import com.buzbuz.smartautoclicker.core.ui.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.overlays.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -60,7 +60,7 @@ class ComponentSelectionDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_overlay_title_intent_component_name)
+                dialogTitle.setText(R.string.dialog_title_intent_component_name)
                 buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
             }
 

@@ -1,0 +1,64 @@
+name: Bug report
+description: Create a report to help us improve
+labels: ["bug"]
+assignees:
+  - Nain57
+body:
+  - type: input
+    id: app-version
+    attributes:
+      label: Version of Smart AutoClicker
+      placeholder: "2.4.2"
+    validations:
+      required: true
+
+  - type: input
+    id: device-type
+    attributes:
+      label: Device brand and model
+      placeholder: OnePlus 10 Pro
+    validations:
+      required: true
+
+  - type: input
+    id: android-version
+    attributes:
+      label: Version of your Android OS
+      description: Can usually be found under Settings -> About -> Versions
+      placeholder: "14"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      description: What kind of bug have you encountered ?
+      options:
+        - Smart scenario
+        - Dumb scenario
+        - Backup
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe what happened?
+      description: |
+        Describe precise steps to reproduce the issue. You can also attach screenshots showing the problem, or a scenario \
+        backup zip file with simple steps reproducing the issue.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-should-happened
+    attributes:
+      label: Describe what should have happened?
+      description: Describe what you expect to happen
+      placeholder: Tell us own you think the application should have reacted
+    validations:
+      required: true

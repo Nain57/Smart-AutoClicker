@@ -41,14 +41,17 @@ import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
 import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
+import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.ui.overlays.manager.OverlayManager
-import dagger.hilt.android.AndroidEntryPoint
+import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.FileDescriptor
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -126,6 +129,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     @Inject lateinit var detectionRepository: DetectionRepository
     @Inject lateinit var dumbEngine: DumbEngine
     @Inject lateinit var bitmapManager: IBitmapManager
+    @Inject lateinit var qualityRepository: QualityRepository
+    @Inject lateinit var qualityMetricsMonitor: QualityMetricsMonitor
+    @Inject lateinit var revenueRepository: IRevenueRepository
 
     private var currentScenarioName: String? = null
 
@@ -145,6 +151,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     override fun onServiceConnected() {
         super.onServiceConnected()
 
+        qualityMetricsMonitor.onServiceConnected()
         LOCAL_SERVICE_INSTANCE = LocalService(
             context = this,
             overlayManager = overlayManager,
@@ -154,6 +161,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             bitmapManager = bitmapManager,
             androidExecutor = this,
             onStart = { isSmart, name ->
+                qualityMetricsMonitor.onServiceForegroundStart()
                 currentScenarioName = name
                 if (isSmart) {
                     createNotificationChannel()
@@ -162,6 +170,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 requestFilterKeyEvents(true)
             },
             onStop = {
+                qualityMetricsMonitor.onServiceForegroundEnd()
                 currentScenarioName = null
                 requestFilterKeyEvents(false)
                 stopForeground(Service.STOP_FOREGROUND_REMOVE)
@@ -186,6 +195,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         LOCAL_SERVICE_INSTANCE?.release()
         LOCAL_SERVICE_INSTANCE = null
 
+        qualityMetricsMonitor.onServiceUnbind()
         return super.onUnbind(intent)
     }
 
@@ -292,6 +302,9 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         overlayManager.dump(writer)
         detectionRepository.dump(writer)
         dumbEngine.dump(writer)
+        qualityRepository.dump(writer)
+
+        revenueRepository.dump(writer)
     }
 
     override fun onInterrupt() { /* Unused */ }

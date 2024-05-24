@@ -44,6 +44,7 @@
     <string name="item_desc_dumb_pause">暂停执行</string>
     <string name="item_desc_dumb_pause_details">在 %1$s 期间</string>
     <string name="item_desc_dumb_repeat_count">重复 %1$d 次</string>
+    <string name="item_desc_dumb_repeat_infinite">无限重复</string>
     <string name="item_desc_dumb_swipe">从屏幕上的一个位置轻扫到另一个位置</string>
     <string name="item_desc_dumb_swipe_details">从 [%2$d, %3$d] 到 [%4$d, %5$d] 的 %1$s 期间</string>
     <string name="item_desc_dumb_swipe_positions">从 %1$d, %2$d 扫到 %3$d, %4$d</string>

@@ -39,13 +39,13 @@
             android:orientation="vertical"
             tools:layout_gravity="center">
 
-            <include layout="@layout/include_input_field_text"
-                android:id="@+id/edit_name_layout"
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_horizontal_small"/>
 
-            <include layout="@layout/include_input_text_with_checkbox"
+            <include layout="@layout/include_field_text_input_with_checkbox"
                 android:id="@+id/edit_broadcast_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

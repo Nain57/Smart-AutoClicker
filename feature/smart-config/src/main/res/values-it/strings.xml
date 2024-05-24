@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 * Copyright (C) 2023 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
@@ -17,42 +16,38 @@
 -->
 <resources>
 
+    <string name="generic_modify">Modificare</string>
+
     <!--
       - Titles for the dialogs displayed as overlay.
       - Allowed characters can be small due to save/delete/close buttons.
       -->
-    <string name="dialog_overlay_title_action_type">Tipo azione</string>
-    <string name="dialog_overlay_title_application_selection">Seleziona un\'applicazione</string>
-    <string name="dialog_overlay_title_click">Clic</string>
-    <string name="dialog_overlay_title_condition_config">Condizione</string>
-    <string name="dialog_overlay_title_condition_selection">Seleziona una condizione</string>
-    <string name="dialog_overlay_title_end_condition_config">Condizione di Fine</string>
-    <string name="dialog_overlay_title_event_config">Evento</string>
-    <string name="dialog_overlay_title_event_selection">Seleziona un evento</string>
-    <string name="dialog_overlay_title_pause">Attendi</string>
-    <string name="dialog_overlay_title_scenario_config">Scenario</string>
-    <string name="dialog_overlay_title_swipe">Scorri</string>
-    <string name="dialog_overlay_title_toggle_event">Stato evento</string>
-    <string name="dialog_overlay_title_events_toggle">Tocchi per gli eventi</string>
-    <string name="dialog_overlay_title_change_counter">"Modifica contatore "</string>
-    <string name="dialog_overlay_title_counter_name_selection">Contatori</string>
-    <string name="dialog_overlay_title_trigger_condition_type">Tipo di innesco</string>
-    <string name="dialog_overlay_title_timer_reached">Timer raggiunto</string>
-    <string name="dialog_overlay_title_broadcast_received">Broadcast ricevuto</string>
-    <string name="dialog_overlay_title_counter_reached">Valore del contatore</string>
-    <string name="dialog_overlay_title_image_event_config">Evento schermo</string>
-    <string name="dialog_overlay_title_trigger_event_config">Evento</string>
+    <string name="dialog_title_action_type">Tipo azione</string>
+    <string name="dialog_title_application_selection">Seleziona un\'applicazione</string>
+    <string name="dialog_title_click">Clic</string>
+    <string name="dialog_title_condition_config">Condizione</string>
+    <string name="dialog_title_condition_selection">Seleziona una condizione</string>
+    <string name="dialog_title_pause">Attendi</string>
+    <string name="dialog_title_scenario_config">Scenario</string>
+    <string name="dialog_title_swipe">Scorri</string>
+    <string name="dialog_title_toggle_event">Stato evento</string>
+    <string name="dialog_title_events_toggle">Tocchi per gli eventi</string>
+    <string name="dialog_title_change_counter">"Modifica contatore "</string>
+    <string name="generic_counters">Contatori</string>
+    <string name="dialog_title_trigger_condition_type">Tipo di innesco</string>
+    <string name="dialog_title_timer_reached">Timer raggiunto</string>
+    <string name="dialog_title_broadcast_received">Broadcast ricevuto</string>
+    <string name="dialog_title_counter_reached">Valore del contatore</string>
+    <string name="dialog_title_image_event">Evento schermo</string>
+    <string name="dialog_title_trigger_event">Innesco</string>
 
     <!--
       - Text for menu items.
       - Should be short and concise.
       -->
     <string name="menu_item_title_advanced">Avanzato</string>
-    <string name="menu_item_title_cancel">Annulla</string>
-    <string name="menu_item_title_search">Cerca</string>
     <string name="menu_item_title_simple">Semplice</string>
-    <string name="menu_item_title_events">Eventi</string>
-    <string name="menu_item_title_config">Configurazione</string>
+    <string name="generic_config">Configurazione</string>
     <string name="menu_item_title_more">Altro</string>
     <string name="menu_item_title_conditions">Condizioni</string>
     <string name="menu_item_title_actions">Azioni</string>
@@ -64,120 +59,119 @@
       -  * Title should be short and concise.
       -  * Desc can have more space to describe the title
       -->
-    <string name="item_desc_click">Clicca un punto dello schermo</string>
-    <string name="item_desc_click_details">Durante %1$s su [%2$d, %3$d]</string>
-    <string name="item_desc_click_position_on_condition">Sulla condizione</string>
-    <string name="item_desc_click_on_condition_and_operator">%1$s</string>
-    <string name="item_desc_click_on_condition_and_operator_not_found">Nessuna condizione selezionata</string>
-    <string name="item_desc_click_on_condition_or_operator">L\'evento è impostato su Una condizione, non è possibile selezionarne uno specifico</string>
-    <string name="item_desc_click_on_position">Clicca %1$d, %2$d</string>
-    <string name="item_desc_detection_type_exact">Alle [%1$d, %2$d] [%3$d, %4$d]</string>
-    <string name="item_desc_detection_type_in_area">Tra [%1$d, %2$d] [%3$d, %4$d]</string>
-    <string name="item_desc_intent">Interagisci con un\'altra applicazione</string>
-    <string name="item_desc_intent_action">Invia %1$s</string>
-    <string name="item_desc_intent_action_component">Invia %1$s a %2$s</string>
-    <string name="item_desc_pause">Sospendi l\'esecuzione</string>
-    <string name="item_desc_pause_details">Durante %1$s</string>
-    <string name="item_desc_position_select">Seleziona la posizione</string>
-    <string name="item_desc_swipe">Scorri da una posizione sullo schermo all\'altra</string>
-    <string name="item_desc_swipe_details">Durante %1$s da [%2$d, %3$d] a [%4$d, %5$d]</string>
-    <string name="item_desc_swipe_positions">Scorri da %1$d, %2$d a %3$d, %4$d</string>
-    <string name="item_desc_toggle_event">Cambia lo stato di abilitazione di un evento</string>
-    <string name="item_desc_toggle_event_details">Cambia stato dell\'evento con tipo %1$s</string>
-    <string name="item_desc_toggle_event_manual">Definire gli eventi da modificare manualmente</string>
-    <string name="item_desc_toggle_event_enable_all">Abilitare tutti gli eventi in questo scenario</string>
-    <string name="item_desc_toggle_event_invert_all">Invertire lo stato di tutti gli eventi in questo scenario</string>
-    <string name="item_desc_toggle_event_disable_all">Disabilita tutti gli eventi di questo scenario. Quando tutti gli eventi sono disattivati, lo scenario viene interrotto automaticamente.</string>
-    <string name="item_desc_event_toggles_empty">Selezionare almeno un evento per passare allo stato di</string>
-    <string name="item_desc_toggle_event_state_enable_all">Abilitare tutti</string>
-    <string name="item_desc_toggle_event_state_disable_all">Disattivare tutti</string>
-    <string name="item_desc_toggle_event_state_invert_all">Invertire tutti</string>
-    <string name="item_desc_toggle_event_state_manual">Modifica di %1$d eventi</string>
-    <string name="item_desc_change_counter">Modificare un valore per verificarlo in seguito</string>
-    <string name="item_desc_change_counter_details">%1$s %2$s %3$d</string>
-    <string name="item_desc_on_broadcast_received">%1$s ricevuto</string>
-    <string name="item_desc_on_counter_reached">%1$s %2$s %3$d</string>
-    <string name="item_desc_on_timer_reached">%1$s dopo che l\'evento è stato attivato</string>
-    <string name="item_desc_broadcast_received">Adempiuto quando viene ricevuto un Broadcast</string>
-    <string name="item_desc_counter_reached">Verifica del valore di un contatore modificato da un\'Azione</string>
-    <string name="item_desc_timer_reached">Si realizza dopo un periodo di tempo definito dall\'attivazione dell\'evento.</string>
-    <string name="item_error_action_invalid_toggle_event_target">"Evento di destinazione non trovato "</string>
-    <string name="item_error_action_invalid_change_counter">Il contatore non è valido</string>
-    <string name="item_title_click">Clic</string>
-    <string name="item_title_click_on_condition_and_operator">Clicca su</string>
-    <string name="item_title_click_on_condition_or_operator">Fare clic sulla prima condizione rilevata</string>
+    <string name="item_click_desc">Clicca un punto dello schermo</string>
+    <string name="item_click_details_at_position">Durante %1$s su [%2$d, %3$d]</string>
+    <string name="item_click_details_on_condition">Sulla condizione</string>
+    <string name="field_condition_selection_desc_and_operator">%1$s</string>
+    <string name="field_condition_selection_desc_and_operator_not_found">Nessuna condizione selezionata</string>
+    <string name="field_condition_selection_desc_or_operator">L\'evento è impostato su Una condizione, non è possibile selezionarne uno specifico</string>
+    <string name="field_click_position_desc">Clicca %1$d, %2$d</string>
+    <string name="field_select_detection_area_desc">Tra [%1$d, %2$d] [%3$d, %4$d]</string>
+    <string name="item_intent_desc">Interagisci con un\'altra applicazione</string>
+    <string name="item_intent_details">Invia %1$s</string>
+    <string name="item_intent_details_component_name">Invia %1$s a %2$s</string>
+    <string name="item_pause_desc">Sospendi l\'esecuzione</string>
+    <string name="item_pause_details">Durante %1$s</string>
+    <string name="generic_select_the_position">Seleziona la posizione</string>
+    <string name="item_swipe_desc">Scorri da una posizione sullo schermo all\'altra</string>
+    <string name="item_swipe_details">Durante %1$s da [%2$d, %3$d] a [%4$d, %5$d]</string>
+    <string name="field_swipe_positions_desc">Scorri da %1$d, %2$d a %3$d, %4$d</string>
+    <string name="item_toggle_event_desc">Cambia lo stato di abilitazione di un evento</string>
+    <string name="field_change_all_desc_manual">Definire gli eventi da modificare manualmente</string>
+    <string name="field_change_all_desc_enable_all">Abilitare tutti gli eventi in questo scenario</string>
+    <string name="field_change_all_desc_invert_all">Invertire lo stato di tutti gli eventi in questo scenario</string>
+    <string name="field_change_all_desc_disable_all">Disabilita tutti gli eventi di questo scenario. Quando tutti gli eventi sono disattivati, lo scenario viene interrotto automaticamente.</string>
+    <string name="field_select_toggle_events_desc_empty">Selezionare almeno un evento per passare allo stato di</string>
+    <string name="item_toggle_event_details_enable_all">Abilitare tutti</string>
+    <string name="item_toggle_event_details_disable_all">Disattivare tutti</string>
+    <string name="item_toggle_event_details_invert_all">Invertire tutti</string>
+    <string name="item_toggle_event_details_manual">Modifica di %1$d eventi</string>
+    <string name="item_change_counter_desc">Modificare un valore per verificarlo in seguito</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="item_broadcast_received_details">%1$s ricevuto</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$d</string>
+    <string name="item_timer_reached_details">%1$s dopo che l\'evento è stato attivato</string>
+    <string name="item_broadcast_received_desc">Adempiuto quando viene ricevuto un Broadcast</string>
+    <string name="item_counter_reached_desc">Verifica del valore di un contatore modificato da un\'Azione</string>
+    <string name="item_timer_reached_desc">Si esaurisce dopo un periodo di tempo definito dall\'attivazione dell\'attivazione.</string>
+    <string name="item_toggle_event_details_error">"Evento di destinazione non trovato "</string>
+    <string name="item_change_counter_details_error">Il contatore non è valido</string>
+    <string name="item_click_title">Clic</string>
+    <string name="field_condition_selection_title_and_operator">Clicca su</string>
+    <string name="field_condition_selection_title_or_operator">Fare clic sulla prima condizione rilevata</string>
     <string name="item_title_debug_generate_report">Genera un rapporto</string>
-    <string name="item_title_debug_report_available">Il rapporto di debug è disponibile</string>
-    <string name="item_title_debug_report_not_available">Nessun rapporto di debug disponibile</string>
-    <string name="item_title_debug_show_view">Mostra visualizzazione debug</string>
-    <string name="item_title_detection_type_exact">Rilevamento nella posizione catturata</string>
-    <string name="item_title_detection_type_in_area">Rilevamento su una parte dello schermo</string>
-    <string name="item_title_detection_type_screen">Rilevamento su tutto lo schermo</string>
-    <string name="item_title_intent">Intento</string>
-    <string name="item_title_pause">Attendi</string>
-    <string name="item_title_swipe">Scorri</string>
-    <string name="item_title_toggle_event">Cambia stato evento</string>
-    <string name="item_title_counter_reached">Sul bancone raggiunto</string>
-    <string name="item_title_timer_reached">Al raggiungimento del timer</string>
-    <string name="item_title_broadcast_received">Su Broadcast ricevuta</string>
-    <string name="item_title_empty_event_toggles">Nessuna modifica</string>
-    <string name="item_title_event_toggles">%1$d modifiche</string>
-    <string name="item_title_change_counter">Modificare contatore</string>
-    <string name="item_title_restart_when_reached">Riavviare quando viene raggiunto</string>
-    <string name="item_title_toggle_type">Tipo di levetta</string>
-    <string name="item_title_toggle_change_all">Cambiare tutti</string>
+    <string name="field_show_debug_report_desc_available">Il rapporto di debug è disponibile</string>
+    <string name="field_show_debug_report_desc_not_available">Nessun rapporto di debug disponibile</string>
+    <string name="field_show_debug_view_title">Mostra visualizzazione debug</string>
+    <string name="field_detection_type_desc_exact">Rilevamento nella posizione catturata</string>
+    <string name="field_detection_type_desc_screen">Rilevamento su tutto lo schermo</string>
+    <string name="item_intent_title">Intento</string>
+    <string name="item_pause_title">Attendi</string>
+    <string name="item_swipe_title">Scorri</string>
+    <string name="item_toggle_event_title">Cambia stato evento</string>
+    <string name="item_counter_reached_title">Sul bancone raggiunto</string>
+    <string name="item_timer_reached_title">Al raggiungimento del timer</string>
+    <string name="item_broadcast_received_title">Su Broadcast ricevuta</string>
+    <string name="field_select_toggle_events_title_empty">Nessuna modifica</string>
+    <string name="field_select_toggle_events_title">%1$d modifiche</string>
+    <string name="item_change_counter_title">Modificare contatore</string>
+    <string name="field_timer_restart_title">Riavviare quando viene raggiunto</string>
+    <string name="field_change_all_title">Cambiare tutti</string>
+
+    <!--
+      - Fields.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title (3~4 lines max)
+     -->
+    <string name="field_select_detection_area_title">Area di rilevamento</string>
+    <string name="field_swipe_positions_title">Posizioni di scorrimento</string>
+    <string name="field_show_debug_report_title">Mostra il rapporto</string>
+    <string name="field_application_selection_desc">Avviare un\'applicazione quando viene eseguita questa azione</string>
+    <string name="field_timer_restart_desc_on">Una volta raggiunto, il timer si riavvia, consentendo di soddisfare nuovamente questa condizione.</string>
+    <string name="field_timer_restart_desc_off">Una volta raggiunto, il timer non verrà riavviato, il che significa che questa condizione può essere soddisfatta una sola volta.</string>
 
     <!--
       - Empty list messages.
       - Views handles any length here, but try to be concise.
       -->
-    <string name="message_empty_actions">Nessuna azione !</string>
-    <string name="message_empty_trigger_conditions">Nessuna condizione !</string>
-    <string name="message_empty_image_conditions">Nessuna condizione di schermo!</string>
-    <string name="message_empty_end_condition_config_event_none_in_scenario">Nessun evento creato nello scenario</string>
-    <string name="message_empty_end_condition_config_event_no_selection">Nessun evento selezionato</string>
-    <string name="message_empty_image_event_list">Nessun evento sullo schermo!</string>
-    <string name="message_empty_trigger_event_list">Nessun evento!</string>
-    <string name="message_empty_counter_name_list">Nessun contatore definito</string>
+    <string name="message_empty_action_list_title">Nessuna azione !</string>
+    <string name="message_empty_trigger_condition_list_title">Nessuna condizione !</string>
+    <string name="message_empty_screen_condition_list_title">Nessuna condizione di schermo!</string>
+    <string name="message_empty_screen_event_title">Nessun evento sullo schermo!</string>
+    <string name="message_empty_trigger_event_list_title">Nessun evento di attivazione!</string>
+    <string name="message_empty_counter_name_list_title">Nessun contatore definito</string>
 
     <!--
       - Secondary empty list messages.
       - Views handles any length here, you can use more verbosity than the regular empty text.
       -->
-    <string name="message_empty_secondary_end_condition_no_events">Hai bisogno di almeno un evento per creare una condizione di fine per il tuo scenario</string>
-    <string name="message_empty_secondary_screen_event_list">Un evento contiene una serie di azioni eseguite quando una specifica condizione viene rilevata sullo schermo.\nHai bisogno di almeno un evento nel tuo scenario per eseguirlo.</string>
-    <string name="message_empty_secondary_trigger_event_list">Un evento contiene un insieme di azioni eseguite quando vengono soddisfatte una serie di condizioni personalizzate.\nPer poterlo eseguire, è necessario che lo scenario contenga almeno un evento o una schermata.</string>
-    <string name="message_empty_secondary_trigger_condition_list">Una condizione è un criterio personalizzato per l\'avvio di un\'azione.</string>
-    <string name="message_empty_secondary_image_condition_list">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.\nÈ necessaria almeno una condizione nell\'evento.</string>
-    <string name="message_empty_secondary_action_list">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.\nHai bisogno di almeno un\'azione nel tuo evento.</string>
-    <string name="message_empty_secondary_counter_name_list">I contatori vengono creati con un\'azione di modifica del contatore o con una condizione di raggiungimento del contatore.</string>
+    <string name="message_empty_screen_event_desc">Un evento schermo contiene un insieme di azioni eseguite quando viene rilevata una condizione specifica sullo schermo.\nÈ necessario almeno un evento schermo o trigger nel vostro scenario per eseguirlo.</string>
+    <string name="message_empty_trigger_event_list_desc">Un evento trigger contiene una serie di azioni eseguite quando si verificano una serie di condizioni personalizzate.\nPer eseguire lo scenario, è necessario disporre di almeno una schermata o di un evento di attivazione.</string>
+    <string name="message_empty_trigger_condition_list_desc">Una condizione è un criterio personalizzato per l\'avvio di un\'azione.</string>
+    <string name="message_empty_screen_condition_list_desc">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.\nÈ necessaria almeno una condizione nell\'evento.</string>
+    <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.\nHai bisogno di almeno un\'azione nel tuo evento.</string>
+    <string name="message_empty_counter_name_list_desc">I contatori vengono creati con un\'azione di modifica del contatore o con una condizione di raggiungimento del contatore.</string>
 
     <!--
       - Messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_condition_threshold">%1$d%%</string>
-    <string name="message_event_copy_with_toggle_action_from_another_scenario">Questo evento ha una o più azioni evento di commutazione che fanno riferimento a un evento da un altro scenario.</string>
-    <string name="message_event_delete_associated_end_condition">Questo evento ha una o più condizioni di fine che ne fanno riferimento. Cancellare questo evento eliminarà anche le condizioni di fine associate.\nSei sicuro ?</string>
-    <string name="message_event_delete_associated_action">Questo evento ha una o più azioni che ne fanno riferimento. Cancellare questo evento eliminarà anche le azioni associate.\nSei sicuro ?</string>
-    <string name="message_condition_delete_associated_action">Questa condizione ha una o più azioni che fanno riferimento ad essa. L\'eliminazione di questa condizione eliminerà anche le azioni associate.\nSei sicuro?</string>
-    <string name="message_tutorial_start">Scopri come utilizzare Smart AutoClicker</string>
-    <string name="message_scenario_saving_error">Il tuo scenario non può essere salvato a causa di un errore interno. \nVuoi modificarlo o annullare tutte le tue modifiche?</string>
-    <string name="message_tutorial_first_time">Congratulazioni, Smart AutoClicker è ora funzionante sul tuo dispositivo! \nVuoi seguire un tutorial che ti insegnerà le basi dell\'applicazione?</string>
-    <string name="message_error_native_lib">Smart AutoClicker non è installato correttamente e non può avviare il rilevamento.\n\nSe l\'avete installata da un negozio di applicazioni legittimo, contattateci su GitHub per aiutarci a risolvere il problema.</string>
+    <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="warning_dialog_message_toggle_action_from_another_scenario">Questo evento ha una o più azioni evento di commutazione che fanno riferimento a un evento da un altro scenario.</string>
+    <string name="warning_dialog_message_event_delete_associated_action">Questo evento ha una o più azioni che ne fanno riferimento. Cancellare questo evento eliminarà anche le azioni associate.\nSei sicuro ?</string>
+    <string name="warning_dialog_message_condition_delete_associated_action">Questa condizione ha una o più azioni che fanno riferimento ad essa. L\'eliminazione di questa condizione eliminerà anche le azioni associate.\nSei sicuro?</string>
+    <string name="field_tutorial_desc">Scopri come utilizzare Klick\'r</string>
+    <string name="error_dialog_message_scenario_saving">Il tuo scenario non può essere salvato a causa di un errore interno. \nVuoi modificarlo o annullare tutte le tue modifiche?</string>
+    <string name="error_dialog_message_error_native_lib">Klick\'r non è installato correttamente e non può avviare il rilevamento.\n\nSe l\'avete installata da un negozio di applicazioni legittimo, contattateci su GitHub per aiutarci a risolvere il problema.</string>
 
     <!--
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="section_title_condition_detection_details">Dettagli rilevamento</string>
-    <string name="section_title_condition_threshold">Differenza tollerato</string>
-    <string name="section_title_detection_quality_title">Qualità rilevamento</string>
-    <string name="section_title_end_condition">Condizioni di fine</string>
-    <string name="section_title_intent_extras_value">Valore</string>
-    <string name="section_title_start_application">Avvia applicazione</string>
-    <string name="section_title_tutorial">Tutorial</string>
-    <string name="section_title_debug">Debug</string>
+    <string name="field_title_condition_threshold">Differenza tollerato</string>
+    <string name="field_scenario_quality_title">Qualità rilevamento</string>
+    <string name="field_intent_extra_value_title">Valore</string>
+    <string name="field_tutorial_title">Tutorial</string>
 
     <!--
       - List header.
@@ -189,6 +183,8 @@
     <string name="list_header_copy_event_all">Eventi da tutti gli scenari</string>
     <string name="list_header_copy_conditions_this">Condizioni da questo evento</string>
     <string name="list_header_copy_conditions_all">Condizioni da tutti gli eventi</string>
+    <string name="list_header_image_events">Eventi sullo schermo</string>
+    <string name="list_header_trigger_events">Eventi scatenanti</string>
 
     <!--
       - SearchView hint
@@ -202,26 +198,19 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="button_text_create_scenario">Crea uno scenario</string>
-    <string name="button_text_intent_extra_type_select">Seleziona un tipo</string>
-    <string name="button_text_quality_speed">Velocità</string>
-    <string name="button_text_quality_precision">Precisione</string>
-    <string name="button_text_swipe_positions_select">Seleziona le posizioni</string>
-    <string name="button_dialog_modify">Modificare</string>
+    <string name="field_scenario_quality_button_speed">Velocità</string>
+    <string name="field_scenario_quality_button_precision">Precisione</string>
 
     <!--
       - Text input fields labels and error messages.
       - Should be short and concise.
       -->
-    <string name="input_field_label_name">Nome</string>
-    <string name="input_field_label_execution_count">Esecuzioni</string>
-    <string name="input_field_label_intent_extra_key">Chiave</string>
-    <string name="input_field_label_event_state">Stato</string>
-    <string name="input_field_toggle_event_type">Nuovo stato evento</string>
-    <string name="input_field_label_change_counter_operation_value">Valore</string>
-    <string name="input_field_label_comparison_value">Valore</string>
-    <string name="input_field_label_change_counter_name">Nome del contatore</string>
-    <string name="input_field_label_timer_duration">Dopo (ms)</string>
+    <string name="generic_name">Nome</string>
+    <string name="field_intent_extra_key_label">Chiave</string>
+    <string name="field_event_state_title">Stato</string>
+    <string name="field_counter_operation_value_label">Valore</string>
+    <string name="field_counter_comparison_value_label">Valore</string>
+    <string name="field_counter_name_label">Nome del contatore</string>
     <string name="input_field_label_timer_duration_no_unit">Dopo</string>
 
     <!--
@@ -234,60 +223,42 @@
       -->
 
     <!-- Dropdown field for selecting the event state -->
-    <string name="dropdown_item_title_event_state_enabled">Abilitato</string>
-    <string name="dropdown_item_title_event_state_disabled">Disabilitato</string>
-    <string name="dropdown_helper_text_event_state_enabled">Questo evento verrà interpretato normalmente quando esegui lo scenario</string>
-    <string name="dropdown_helper_text_event_state_disabled">Questo evento avrà bisogno di essere abilitato da un\'azione per essere interpretato quando esegui lo scenario</string>
-
-    <!-- Dropdown field for selecting the toggle event type -->
-    <string name="dropdown_item_title_toggle_event_state_enable">Abilita</string>
-    <string name="dropdown_item_title_toggle_event_state_disable">Disabilita</string>
-    <string name="dropdown_item_title_toggle_event_state_toggle">Alterna</string>
-    <string name="dropdown_helper_text_toggle_event_state_enable">L\'evento inizierà ad essere interpretato quando esegui lo scenario</string>
-    <string name="dropdown_helper_text_toggle_event_state_disable">L\'evento smetterà di essere interpretato quando esegui lo scenario</string>
-    <string name="dropdown_helper_text_toggle_event_state_toggle">Quando esegui lo scenario, inizia ad interpretare l\'evento se esso è disabilitato, smetti se esso è abilitato</string>
+    <string name="item_event_desc_enabled_children">Abilitato</string>
+    <string name="item_event_desc_disabled_children">Disabilitato</string>
+    <string name="field_event_state_desc_enabled">Questo evento verrà interpretato normalmente quando esegui lo scenario</string>
+    <string name="field_event_state_desc_disabled">Questo evento avrà bisogno di essere abilitato da un\'azione per essere interpretato quando esegui lo scenario</string>
 
     <!-- Dropdown field for selecting the conditions operator -->
-    <string name="dropdown_label_condition_operator">Condizioni</string>
-    <string name="dropdown_item_title_condition_or">Una</string>
-    <string name="dropdown_item_title_condition_and">Tutte</string>
-    <string name="dropdown_helper_text_condition_or">Deve essere rispettata almeno una condizione per permettere l\'esecuzione dell\'azione</string>
-    <string name="dropdown_helper_text_condition_and">Devono essere rispettate tutte le condizioni per permettere l\'esecuzione dell\'azione</string>
-
-    <!-- Dropdown field for selecting the end conditions operator. Item titles are the same as conditions operator. -->
-    <string name="dropdown_helper_text_end_condition_or">Deve essere rispettata almeno una condizione per interrompere lo scenario</string>
-    <string name="dropdown_helper_text_end_condition_and">Devono essere rispettate tutte le condizioni per interrompere lo scenario</string>
+    <string name="field_operator_title">Condizioni</string>
+    <string name="field_operator_desc_or">Deve essere rispettata almeno una condizione per permettere l\'esecuzione dell\'azione</string>
+    <string name="field_operator_desc_and">Devono essere rispettate tutte le condizioni per permettere l\'esecuzione dell\'azione</string>
 
     <!-- Dropdown field for selecting the condition detection type. -->
-    <string name="dropdown_label_condition_detection_type">Tipo rilevamento</string>
-    <string name="dropdown_item_title_detection_type_exact">Esatto</string>
-    <string name="dropdown_item_title_detection_type_in_area">Zona</string>
-    <string name="dropdown_item_title_detection_type_screen">Schermo</string>
+    <string name="field_detection_type_title">Tipo rilevamento</string>
 
     <!-- Dropdown field for selecting the condition visibility. -->
-    <string name="dropdown_label_condition_visibility">Visibilità</string>
-    <string name="dropdown_item_title_condition_visibility_present">Presente</string>
-    <string name="dropdown_item_title_condition_visibility_absent">Assente</string>
-    <string name="dropdown_helper_text_condition_visibility_present">La condizione deve essere rilevata</string>
-    <string name="dropdown_helper_text_condition_visibility_absent">La condizione deve essere non rilevata</string>
+    <string name="field_condition_visibility_title">Visibilità</string>
+    <string name="field_condition_visibility_desc_present">La condizione deve essere rilevata</string>
+    <string name="field_condition_visibility_desc_absent">La condizione deve essere non rilevata</string>
 
     <!-- Dropdown field for selecting the click position type -->
-    <string name="dropdown_label_click_position_type">Clicca su</string>
-    <string name="dropdown_item_title_click_position_type_on_condition">Condizione</string>
-    <string name="dropdown_item_title_click_position_type_on_position">Posizione selezionata</string>
-    <string name="dropdown_helper_text_click_position_type_on_condition">Clicca sulla condizione rilevata</string>
-    <string name="dropdown_helper_text_click_position_type_on_position">Clicca sulla posizione selezionata</string>
+    <string name="field_click_type_title">Clicca su</string>
+    <string name="field_click_type_desc_on_condition">Clicca sulla condizione rilevata</string>
+    <string name="field_click_type_desc_on_position">Clicca sulla posizione selezionata</string>
 
     <!-- Dropdown field for selecting the intent sending type. -->
-    <string name="dropdown_label_intent_sending_type">Tipo</string>
+    <string name="dropdown_intent_sending_type_label">Tipo</string>
 
     <!--
       - Dropdown field for selecting the intent extra type.
       - All items for this field are not translatable.
       -->
-    <string name="dropdown_label_intent_extra_value_type">Tipo valore</string>
+    <string name="dropdown_intent_extra_type_title">Tipo valore</string>
 
-    <string name="dropdown_label_comparison_operator">Operatore</string>
+    <string name="dropdown_comparison_operator_label">Operatore</string>
+    <string name="dropdown_counter_operation_label">Operazione</string>
+    <string name="field_detection_type_desc_area">Rilevamento su un\'area selezionata</string>
+
 
     <!--
       - Content description texts.
@@ -299,5 +270,6 @@
     <string name="content_desc_image_condition">L\'immagine da rilevare</string>
     <string name="content_desc_open_event_list">Apri la lista eventi</string>
     <string name="content_desc_application_icon">L\'icona dell\'applicazione da avviare.</string>
+    <string name="field_application_selection_title">Seleziona un\'applicazione</string>
 
 </resources>

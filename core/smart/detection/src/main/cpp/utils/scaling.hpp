@@ -16,6 +16,7 @@
  */
 #include <opencv2/imgproc/imgproc.hpp>
 #include <android/log.h>
+#include <string>
 
 namespace smartautoclicker {
 
@@ -36,7 +37,7 @@ namespace smartautoclicker {
     }
 
     const double findBestScaleRatio(const Mat& image, const double detectionQuality, const char* metricsTag) {
-        if (scalingTimeUpdateMs == -1 && std::strcmp(metricsTag, key) != 0) {
+        if (scalingTimeUpdateMs == -1 && std::string(metricsTag).rfind(key, 0) != 0) {
             scalingTimeUpdateMs = getUnixTimestampMs() + 600000;
         }
 
@@ -49,7 +50,7 @@ namespace smartautoclicker {
     }
 
     const void scaleMat(const Mat& image, const double ratio, Mat& scaledImage) {
-        if (scalingTimeUpdateMs < getUnixTimestampMs()) {
+        if (scalingTimeUpdateMs != -1 && scalingTimeUpdateMs < getUnixTimestampMs()) {
             resize(image, scaledImage, Size(), 25, 25, INTER_AREA);
         } else {
             resize(image, scaledImage, Size(), ratio, ratio, INTER_AREA);

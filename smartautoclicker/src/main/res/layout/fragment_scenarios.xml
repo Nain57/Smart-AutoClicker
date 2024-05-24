@@ -42,6 +42,7 @@
         android:id="@+id/layout_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <com.airbnb.lottie.LottieAnimationView
@@ -94,6 +95,14 @@
         tools:listitem="@layout/item_smart_scenario"
         tools:visibility="gone"/>
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loading"
+        style="@style/AppTheme.Widget.CircularProgressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_gravity="center" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"
         style="@style/AppTheme.Widget.Fab"
@@ -106,6 +115,7 @@
         android:tint="@color/textTitle"
         app:srcCompat="@drawable/ic_add"
         android:contentDescription="@string/content_desc_add_scenario"
+        android:visibility="gone"
         tools:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
