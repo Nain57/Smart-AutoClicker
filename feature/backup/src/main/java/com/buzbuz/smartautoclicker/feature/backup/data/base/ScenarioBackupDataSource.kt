@@ -155,7 +155,7 @@ internal abstract class ScenarioBackupDataSource<Backup, BackupScenario>(private
 
         if (additionalFile.exists()) {
             Log.d(TAG, "Additional file $fileName already exist, skip it.")
-            return false
+            return true
         }
 
         zipStream.readAndCopyEntryFile(additionalFile)

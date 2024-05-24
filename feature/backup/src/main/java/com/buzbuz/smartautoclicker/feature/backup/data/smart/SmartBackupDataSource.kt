@@ -103,8 +103,9 @@ internal class SmartBackupDataSource(
             }
 
             event.conditions.forEach { condition ->
-                if (condition.path == null || !File(appDataDir, condition.path!!).exists()) {
-                    Log.w(TAG, "Invalid condition, ${condition.path} file does not exist.")
+                if (condition.type == ConditionType.ON_IMAGE_DETECTED && (
+                            condition.path == null || !File(appDataDir, condition.path!!).exists())) {
+                    Log.w(TAG, "Invalid screen condition, ${condition.path} file does not exist.")
                     return null
                 }
             }
