@@ -136,17 +136,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     private var currentScenarioName: String? = null
 
     /** Receives commands from the notification. */
-    private val notificationActionsReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            intent ?: return
-            val service = localService ?: return
-
-            when (intent.action) {
-                INTENT_ACTION_TOGGLE_OVERLAY -> service.toggleOverlaysVisibility()
-                INTENT_ACTION_STOP_SCENARIO -> service.stop()
-            }
-        }
-    }
+    private var notificationActionsReceiver : BroadcastReceiver? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -177,6 +167,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             },
         )
 
+        notificationActionsReceiver = createNotificationActionReceiver()
         ContextCompat.registerReceiver(
             this,
             notificationActionsReceiver,
@@ -189,7 +180,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        unregisterReceiver(notificationActionsReceiver)
+        notificationActionsReceiver?.let { unregisterReceiver(it) }
+        notificationActionsReceiver = null
 
         LOCAL_SERVICE_INSTANCE?.stop()
         LOCAL_SERVICE_INSTANCE?.release()
@@ -249,6 +241,19 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
         return builder.build()
     }
+
+    private fun createNotificationActionReceiver() : BroadcastReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent ?: return
+                val service = localService ?: return
+
+                when (intent.action) {
+                    INTENT_ACTION_TOGGLE_OVERLAY -> service.toggleOverlaysVisibility()
+                    INTENT_ACTION_STOP_SCENARIO -> service.stop()
+                }
+            }
+        }
 
     override suspend fun executeGesture(gestureDescription: GestureDescription) {
         suspendCoroutine<Unit?> { continuation ->
