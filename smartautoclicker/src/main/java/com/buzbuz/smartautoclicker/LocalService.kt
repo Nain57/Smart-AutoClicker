@@ -109,7 +109,7 @@ class LocalService(
 
             // If we start too quickly, there is a chance of crash because the service isn't in foreground state yet
             // That's not really an issue as the user just clicked the permission button and the activity is closing
-            delay(500)
+            delay(1000)
             detectionRepository.startScreenRecord(
                 context = context,
                 resultCode = resultCode,
