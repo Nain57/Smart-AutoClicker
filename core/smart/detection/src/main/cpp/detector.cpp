@@ -79,29 +79,39 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
     }
 
     // Get and check the detection area in normal and scaled size
-    if (isRoiContainedInImage(fullSizeDetectionRoi, *fullSizeColorCurrentImage)) {
+    if (isRoiNotContainedInImage(fullSizeDetectionRoi, *fullSizeColorCurrentImage)) {
         logInvalidRoiInImage(fullSizeDetectionRoi, *fullSizeColorCurrentImage);
         return detectionResult;
     }
     auto scaledDetectionRoi = getScaledRoi(fullSizeDetectionRoi, scaleRatio);
-    if (isRoiContainedInImage(scaledDetectionRoi, *scaledGrayCurrentImage)) {
+    if (isRoiNotContainedInImage(scaledDetectionRoi, *scaledGrayCurrentImage)) {
         logInvalidRoiInImage(scaledDetectionRoi, *scaledGrayCurrentImage);
         return detectionResult;
     }
 
     // Get the condition image information from the android bitmap format.
     auto fullSizeColorCondition = createColorMatFromARGB8888BitmapData(env, conditionImage);
-    if (isRoiContainsImage(fullSizeDetectionRoi, *fullSizeColorCondition)) {
+
+    if (isRoiNotContainingImage(fullSizeDetectionRoi, *fullSizeColorCondition)) {
         logInvalidRoiInImage(fullSizeDetectionRoi, *fullSizeColorCondition);
         return detectionResult;
     }
     auto scaledGrayCondition = scaleAndChangeToGray(*fullSizeColorCondition);
-    if (isRoiContainsImage(scaledDetectionRoi, *scaledGrayCondition)) {
+    if (isRoiNotContainingImage(scaledDetectionRoi, *scaledGrayCondition)) {
         logInvalidRoiInImage(scaledDetectionRoi, *scaledGrayCondition);
         return detectionResult;
     }
     // Crop the scaled gray current image to only get the detection area
     auto croppedGrayCurrentImage = Mat(*scaledGrayCurrentImage, scaledDetectionRoi);
+    if (isImageNotContainingImage(croppedGrayCurrentImage, *scaledGrayCondition)) {
+        __android_log_print(
+                ANDROID_LOG_ERROR, "Detector",
+                "Condition is bigger than screen image, [%1d;%2d] [%3d;%4d]",
+                croppedGrayCurrentImage.cols, croppedGrayCurrentImage.rows,
+                scaledGrayCondition->cols, scaledGrayCondition->rows
+        );
+        return detectionResult;
+    }
 
     // Get the matching results
     auto matchingResults = matchTemplate(croppedGrayCurrentImage, *scaledGrayCondition);
@@ -117,8 +127,8 @@ DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionImage, c
         // Calculate the ROI based on the maximum location
         scaledMatchingRoi = getRoiForResult(detectionResult.maxLoc, *scaledGrayCondition);
         fullSizeMatchingRoi = getDetectionResultFullSizeRoi(fullSizeDetectionRoi, fullSizeColorCondition->cols, fullSizeColorCondition->rows);
-        if (isRoiContainedInImage(scaledMatchingRoi, *scaledGrayCurrentImage) ||
-            isRoiContainedInImage(fullSizeMatchingRoi, *fullSizeColorCurrentImage)) {
+        if (isRoiNotContainedInImage(scaledMatchingRoi, *scaledGrayCurrentImage) ||
+            isRoiNotContainedInImage(fullSizeMatchingRoi, *fullSizeColorCurrentImage)) {
             // Roi is out of bounds, invalid match
             detectionResult.centerX = 0;
             detectionResult.centerY = 0;
@@ -164,6 +174,7 @@ std::unique_ptr<Mat> Detector::matchTemplate(const Mat& image, const Mat& condit
     cv::Mat resultMat(max(image.rows - condition.rows + 1, 0),
                       max(image.cols - condition.cols + 1, 0),
                       CV_32F);
+
     cv::matchTemplate(image, condition, resultMat, cv::TM_CCOEFF_NORMED);
 
     return std::make_unique<cv::Mat>(resultMat);
@@ -196,3 +207,4 @@ cv::Rect Detector::getDetectionResultFullSizeRoi(const cv::Rect& fullSizeDetecti
             fullSizeHeight
     };
 }
+
