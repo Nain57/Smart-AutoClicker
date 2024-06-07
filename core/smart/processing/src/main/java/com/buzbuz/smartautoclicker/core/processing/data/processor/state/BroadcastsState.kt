@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -61,7 +62,13 @@ internal class BroadcastsState(
     fun onProcessingStarted(context: Context) {
         if (broadcastsState.isEmpty()) return
         this.context = context
-        context.registerReceiver(broadcastReceiver, broadcastFilter)
+
+        ContextCompat.registerReceiver(
+            context,
+            broadcastReceiver,
+            broadcastFilter,
+            ContextCompat.RECEIVER_EXPORTED,
+        )
     }
 
     fun onProcessingStopped() {
