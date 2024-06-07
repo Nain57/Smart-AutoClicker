@@ -62,7 +62,9 @@ class DebugReportModel @Inject constructor(
         }
 
         buildList {
-            val avgProcTimeMs = if (eventReports.isEmpty()) 0L else totalEventProcessingTimeMs / totalEventProcessingCount
+            val avgProcTimeMs =
+                if (eventReports.isEmpty() || totalEventProcessingCount == 0L) 0L
+                else totalEventProcessingTimeMs / totalEventProcessingCount
             add(newScenarioItem(report, avgProcTimeMs))
             addAll(eventReports)
         }
