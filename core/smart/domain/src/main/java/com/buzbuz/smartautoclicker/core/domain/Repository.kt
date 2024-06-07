@@ -43,6 +43,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -79,6 +80,9 @@ internal class Repository @Inject internal constructor(
 
     override suspend fun getScenario(scenarioId: Long): Scenario? =
         dataSource.getScenario(scenarioId)?.toDomain()
+
+    override suspend fun getScenarioFlow(scenarioId: Long): Flow<Scenario?> =
+        dataSource.getScenarioFlow(scenarioId).map { it?.toDomain() }
 
     override fun getEventsFlow(scenarioId: Long): Flow<List<Event>> =
         getImageEventsFlow(scenarioId).combine(getTriggerEventsFlow(scenarioId)) { imgEvts, trigEvts ->

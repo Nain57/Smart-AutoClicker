@@ -42,13 +42,20 @@ class PermissionsController @Inject constructor() {
     val currentRequestedPermission: StateFlow<Permission?> = _currentRequestedPermission
 
     private var allGrantedCallback: (() -> Unit)? = null
+    private var mandatoryDeniedCallback: (() -> Unit)? = null
 
 
-    fun startPermissionsUiFlow(activity: AppCompatActivity, permissions: List<Permission>, onAllGranted: () -> Unit) {
+    fun startPermissionsUiFlow(
+        activity: AppCompatActivity,
+        permissions: List<Permission>,
+        onAllGranted: () -> Unit,
+        onMandatoryDenied: (() -> Unit)? = null,
+    ) {
         if (permissions.isEmpty()) return
 
         permissionsRequestedLeft.clear()
         allGrantedCallback = onAllGranted
+        mandatoryDeniedCallback = onMandatoryDenied
 
         permissions.forEach { permission ->
             if (!permission.checkIfGranted(activity)) permissionsRequestedLeft.add(permission)
@@ -92,8 +99,14 @@ class PermissionsController @Inject constructor() {
         clear()
     }
 
+    private fun notifyMandatoryDenied() {
+        mandatoryDeniedCallback?.invoke()
+        clear()
+    }
+
     private fun clear() {
         allGrantedCallback = null
+        mandatoryDeniedCallback = null
         _currentRequestedPermission.value = null
         permissionsRequestedLeft.clear()
     }
@@ -114,8 +127,8 @@ class PermissionsController @Inject constructor() {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_title_permission_mandatory_denied)
             .setMessage(R.string.message_permission_mandatory_denied)
-            .setPositiveButton(android.R.string.ok) { _, _ -> clear() }
-            .setOnCancelListener { clear() }
+            .setPositiveButton(android.R.string.ok) { _, _ -> notifyMandatoryDenied() }
+            .setOnCancelListener { notifyMandatoryDenied() }
             .create()
             .show()
     }

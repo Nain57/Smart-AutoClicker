@@ -49,6 +49,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
+import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,6 +134,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     @Inject lateinit var qualityRepository: QualityRepository
     @Inject lateinit var qualityMetricsMonitor: QualityMetricsMonitor
     @Inject lateinit var revenueRepository: IRevenueRepository
+    @Inject lateinit var tileRepository: QSTileRepository
 
     private var currentScenarioName: String? = null
 
@@ -142,12 +145,28 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         super.onServiceConnected()
 
         qualityMetricsMonitor.onServiceConnected()
+        tileRepository.setTileActionHandler(
+            object : QSTileActionHandler {
+                override fun isRunning(): Boolean = isServiceStarted()
+                override fun startDumbScenario(dumbScenario: DumbScenario) {
+                    LOCAL_SERVICE_INSTANCE?.startDumbScenario(dumbScenario)
+                }
+                override fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
+                    LOCAL_SERVICE_INSTANCE?.startSmartScenario(resultCode, data, scenario)
+                }
+                override fun stop() {
+                    LOCAL_SERVICE_INSTANCE?.stop()
+                }
+            }
+        )
+
         LOCAL_SERVICE_INSTANCE = LocalService(
             context = this,
             overlayManager = overlayManager,
             displayMetrics = displayMetrics,
             detectionRepository = detectionRepository,
             dumbEngine = dumbEngine,
+            tileRepository = tileRepository,
             bitmapManager = bitmapManager,
             androidExecutor = this,
             onStart = { isSmart, name ->

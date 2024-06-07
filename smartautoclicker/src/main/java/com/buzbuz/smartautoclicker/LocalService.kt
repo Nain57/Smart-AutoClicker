@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
+import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +48,7 @@ class LocalService(
     private val detectionRepository: DetectionRepository,
     private val bitmapManager: IBitmapManager,
     private val dumbEngine: DumbEngine,
+    val tileRepository: QSTileRepository,
     private val androidExecutor: AndroidExecutor,
     private val onStart: (isSmart: Boolean, name: String) -> Unit,
     private val onStop: () -> Unit,
@@ -65,6 +67,7 @@ class LocalService(
         onStart(false, dumbScenario.name)
 
         displayMetrics.startMonitoring(context)
+        tileRepository.setTileScenario(scenarioId = dumbScenario.id.databaseId, isSmart = false)
         startJob = serviceScope.launch {
             delay(500)
 
@@ -97,6 +100,7 @@ class LocalService(
         onStart(true, scenario.name)
 
         displayMetrics.startMonitoring(context)
+        tileRepository.setTileScenario(scenarioId = scenario.id.databaseId, isSmart = true)
         startJob = serviceScope.launch {
             delay(500)
 
