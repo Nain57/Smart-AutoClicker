@@ -57,14 +57,7 @@ class DisplayMetrics @Inject constructor(
     private val orientationListeners: MutableSet<((Context) -> Unit)> = mutableSetOf()
 
     /** Listen to the configuration changes and calls [orientationListeners] when needed. */
-    private val configChangedReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            Log.i(TAG, "onConfigurationChanged")
-            if (updateScreenConfig()) {
-                orientationListeners.forEach { it.invoke(context) }
-            }
-        }
-    }
+    private var configChangedReceiver: BroadcastReceiver? = null
 
     val safeInsetTop: Int
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) display.cutout?.safeInsetTop ?: 0 else 0
@@ -84,6 +77,7 @@ class DisplayMetrics @Inject constructor(
     fun startMonitoring(context: Context) {
         updateScreenConfig()
 
+        configChangedReceiver = newConfigChangedReceiver()
         ContextCompat.registerReceiver(
             context,
             configChangedReceiver,
@@ -94,9 +88,21 @@ class DisplayMetrics @Inject constructor(
 
     /** Stop the monitoring of the screen metrics. All listeners will be unregistered. */
     fun stopMonitoring(context: Context) {
-        context.unregisterReceiver(configChangedReceiver)
+        configChangedReceiver?.let { context.unregisterReceiver(it) }
+        configChangedReceiver = null
+
         orientationListeners.clear()
     }
+
+    private fun newConfigChangedReceiver(): BroadcastReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.i(TAG, "onConfigurationChanged")
+                if (updateScreenConfig()) {
+                    orientationListeners.forEach { it.invoke(context) }
+                }
+            }
+        }
 
     /**
      * Register a new orientation listener.
