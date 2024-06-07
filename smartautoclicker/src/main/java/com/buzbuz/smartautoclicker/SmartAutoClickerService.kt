@@ -276,17 +276,22 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
     override suspend fun executeGesture(gestureDescription: GestureDescription) {
         suspendCoroutine<Unit?> { continuation ->
-            dispatchGesture(
-                gestureDescription,
-                object : GestureResultCallback() {
-                    override fun onCompleted(gestureDescription: GestureDescription?) = continuation.resume(null)
-                    override fun onCancelled(gestureDescription: GestureDescription?) {
-                        Log.w(TAG, "Gesture cancelled: $gestureDescription")
-                        continuation.resume(null)
-                    }
-                },
-                null,
-            )
+            try {
+                dispatchGesture(
+                    gestureDescription,
+                    object : GestureResultCallback() {
+                        override fun onCompleted(gestureDescription: GestureDescription?) = continuation.resume(null)
+                        override fun onCancelled(gestureDescription: GestureDescription?) {
+                            Log.w(TAG, "Gesture cancelled: $gestureDescription")
+                            continuation.resume(null)
+                        }
+                    },
+                    null,
+                )
+            } catch (rEx: RuntimeException) {
+                Log.w(TAG, "System is not responsive, the user might be spamming gesture too quickly", rEx)
+                continuation.resume(null)
+            }
         }
     }
 
