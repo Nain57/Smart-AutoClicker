@@ -87,7 +87,7 @@ class ScenarioViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun requestUserConsent(activity: Activity) {
+    fun requestUserConsentIfNeeded(activity: Activity) {
         revenueRepository.startUserConsentRequestUiFlowIfNeeded(activity)
     }
 
