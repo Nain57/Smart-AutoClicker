@@ -24,12 +24,14 @@ import android.view.KeyEvent
 import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
+import com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,12 +68,12 @@ class OverlayManager @Inject internal constructor(
     /** Tells if we are currently executing navigation requests. */
     private var isNavigating: MutableStateFlow<Boolean> = MutableStateFlow(false)
     /** The overlay at the top of the stack (the top visible one). Null if the stack is empty. */
-    private var topOverlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay? = null
+    private var topOverlay: Overlay? = null
     /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
     private var navigateUpToRootCompletionListener: (() -> Unit)? = null
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
-    val backStackTop: Flow<com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay?> = isNavigating
+    val backStackTop: Flow<Overlay?> = isNavigating
         .filter { navigating -> !navigating }
         .combine(overlayBackStack.topFlow) { _, stackTop ->
             Log.d(TAG, "New back stack top: $stackTop")
@@ -80,11 +82,11 @@ class OverlayManager @Inject internal constructor(
         .distinctUntilChanged()
 
     /** @return the top of the overlay back stack. */
-    fun getBackStackTop(): com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay? =
+    fun getBackStackTop(): Overlay? =
         overlayBackStack.top
 
     /** Display the provided overlay and pause the current one, if any. */
-    fun navigateTo(context: Context, newOverlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay, hideCurrent: Boolean = false) {
+    fun navigateTo(context: Context, newOverlay: Overlay, hideCurrent: Boolean = false) {
         Log.d(
             TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
                     ", currently navigating: ${isNavigating.value}")
@@ -196,7 +198,7 @@ class OverlayManager @Inject internal constructor(
      * Set an overlay as being shown above all overlays in the backstack.
      * It will not be added to the backstack, and can be seen as "an overlay for overlays".
      */
-    fun setTopOverlay(overlay: com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay) {
+    fun setTopOverlay(overlay: FullscreenOverlay) {
         if (topOverlay != null) return
         val stackTop = overlayBackStack.top ?: return
 
@@ -282,7 +284,7 @@ class OverlayManager @Inject internal constructor(
         }
     }
 
-    private fun onOverlayDismissed(context: Context, overlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay) {
+    private fun onOverlayDismissed(context: Context, overlay: Overlay) {
         Log.d(TAG, "Overlay dismissed ${overlay.hashCode()}")
 
         isNavigating.value = true
@@ -330,7 +332,7 @@ class OverlayManager @Inject internal constructor(
             overlayNavigationRequestStack.dump(this, contentPrefix)
 
             append(contentPrefix).println("- BackStack:")
-            overlayBackStack.forEach { overlay -> (overlay as com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay).dump(this, itemPrefix) }
+            overlayBackStack.forEach { overlay -> (overlay as BaseOverlay).dump(this, itemPrefix) }
         }
     }
 }
