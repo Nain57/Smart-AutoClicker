@@ -35,7 +35,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
 import androidx.core.view.children
-import androidx.core.view.doOnLayout
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
@@ -209,6 +208,7 @@ abstract class OverlayMenu(
         overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
         positionDataSource.addOnLockedPositionChangedListener(onLockedPositionChangedListener)
         loadMenuPosition(displayMetrics.orientation)
+        moveButton?.visibility = if (positionDataSource.isPositionLocked()) View.GONE else View.VISIBLE
 
         // Handle window resize animations
         resizeController = OverlayMenuResizeController(

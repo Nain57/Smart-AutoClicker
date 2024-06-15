@@ -138,7 +138,7 @@ class OverlayMenuPositionDataSource @Inject constructor(
         onLockPositionChangedListeners.forEach { it(position) }
     }
 
-    private fun isPositionLocked(): Boolean =
+    fun isPositionLocked(): Boolean =
         lockedMenuPosition != null
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
