@@ -55,36 +55,35 @@ internal class SwipeBriefRenderer(
     private var animatedSwipeProgressPosition: PointF = PointF()
     private var positions: Pair<PointF?, PointF?> = Pair(null, null)
 
-    override fun onNewDescription(description: ActionDescription) {
+    override fun onNewDescription(description: ActionDescription, animate: Boolean) {
         if (description !is SwipeDescription) return
 
-        swipeProgressAnimator.apply {
-            if (isStarted) cancel()
+        if (swipeProgressAnimator.isStarted) swipeProgressAnimator.cancel()
 
-            animatedSwipeProgressPosition = PointF()
-            positions = description.from to description.to
+        animatedSwipeProgressPosition = PointF()
+        positions = description.from to description.to
 
-            description.from?.let { from ->
-                gradientBackgroundPaintFrom.shader = createRadialGradientShader(
-                    position = from,
-                    radius = style.outerRadius * 1.75f,
-                    color = style.backgroundColor,
-                )
-            }
-
-            description.to?.let { to ->
-                gradientBackgroundPaintTo.shader = createRadialGradientShader(
-                    position = to,
-                    radius = style.outerRadius * 1.75f,
-                    color = style.backgroundColor,
-                )
-            }
-
-            if (description.from != null && description.to != null) {
-                duration = max(description.swipeDurationMs, MINIMAL_ANIMATION_DURATION_MS)
-                start()
-            }
+        description.from?.let { from ->
+            gradientBackgroundPaintFrom.shader = createRadialGradientShader(
+                position = from,
+                radius = style.outerRadius * 1.75f,
+                color = style.backgroundColor,
+            )
         }
+
+        description.to?.let { to ->
+            gradientBackgroundPaintTo.shader = createRadialGradientShader(
+                position = to,
+                radius = style.outerRadius * 1.75f,
+                color = style.backgroundColor,
+            )
+        }
+
+        if (animate && description.from != null && description.to != null) {
+            swipeProgressAnimator.duration = max(description.swipeDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+            swipeProgressAnimator.start()
+        }
+        invalidate()
     }
 
     private fun updateSwipePosition(completionRatio: Float) {

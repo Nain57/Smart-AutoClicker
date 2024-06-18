@@ -50,26 +50,27 @@ internal class ClickBriefRenderer(
     private var animatedOuterRadius: Float = style.outerRadius
     private var position: PointF? = null
 
-    override fun onNewDescription(description: ActionDescription) {
+    override fun onNewDescription(description: ActionDescription, animate: Boolean) {
         if (description !is ClickDescription) return
 
-        outerRadiusAnimator.apply {
-            if (isStarted) cancel()
+        if (outerRadiusAnimator.isStarted) outerRadiusAnimator.cancel()
 
-            position = description.position
-            animatedOuterRadius = style.outerRadius
+        position = description.position
+        animatedOuterRadius = style.outerRadius
 
-            description.position?.let { clickPosition ->
-                gradientBackgroundPaint.shader = createRadialGradientShader(
-                    position = clickPosition,
-                    radius = style.outerRadius * 1.75f,
-                    color = style.backgroundColor,
-                )
+        description.position?.let { clickPosition ->
+            gradientBackgroundPaint.shader = createRadialGradientShader(
+                position = clickPosition,
+                radius = style.outerRadius * 1.75f,
+                color = style.backgroundColor,
+            )
 
-                reverseDelay = description.pressDurationMs
-                start()
+            if (animate) {
+                outerRadiusAnimator.reverseDelay = description.pressDurationMs
+                outerRadiusAnimator.start()
             }
         }
+        invalidate()
     }
 
     override fun onStop() {

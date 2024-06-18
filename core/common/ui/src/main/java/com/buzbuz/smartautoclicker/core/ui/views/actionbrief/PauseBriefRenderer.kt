@@ -53,17 +53,16 @@ internal class PauseBriefRenderer(
     private var baseHandPosition: RectF? = null
     private var animatedRotationAngleDegree: Float? = null
 
-    override fun onNewDescription(description: ActionDescription) {
+    override fun onNewDescription(description: ActionDescription, animate: Boolean) {
         if (description !is PauseDescription) return
 
         updateDisplayValues(briefView.width, briefView.height)
-        rotationAnimator.apply {
-            if (isStarted) cancel()
+        if (rotationAnimator.isStarted) rotationAnimator.cancel()
 
-            animatedRotationAngleDegree = 0f
-            duration = max(description.pauseDurationMs, MINIMAL_ANIMATION_DURATION_MS)
-            start()
-        }
+        animatedRotationAngleDegree = 0f
+
+        rotationAnimator.duration = max(description.pauseDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+        rotationAnimator.start()
     }
 
     override fun onStop() {
