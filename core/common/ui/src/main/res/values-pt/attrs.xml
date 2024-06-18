@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2022 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <attr format="reference" name="actionBriefStyle"/>
+
+    <attr format="reference" name="conditionSelectorStyle"/>
+
+    <attr format="reference" name="areaSelectorStyle"/>
+
+    <!-- Color for the inner part of an overlay selector. -->
+    <attr name="colorInner" format="color" />
+    <!-- Primary color for the outline part of an overlay selector. -->
+    <attr name="colorOutlinePrimary" format="color" />
+    <!-- Secondary color for the outline part of an overlay selector. -->
+    <attr name="colorOutlineSecondary" format="color" />
+    <!-- The total thickness in dp of an overlay selector. -->
+    <attr name="thickness" format="dimension" />
+    <!-- The color of the background of the selector -->
+    <attr name="colorBackground" format="color" />
+
+    <!-- The radius of the selector corners. -->
+    <attr name="cornerRadius" format="dimension" />
+    <!-- The default width of the selector when displayed. -->
+    <attr name="defaultWidth" format="dimension" />
+    <!-- The default height of the selector when displayed. -->
+    <attr name="defaultHeight" format="dimension" />
+    <!-- The size of the handles around the selector allowing the resize of one edge of the selector. -->
+    <attr name="resizeHandleSize" format="dimension"/>
+    <!-- The size of the hints icons. -->
+    <attr name="hintsIconsSize" format="dimension"/>
+    <!-- The margin between two hint icons for hints with two icons. -->
+    <attr name="hintsIconsMargin" format="dimension"/>
+    <!-- The duration of the fade out animation on the hints in milliseconds. -->
+    <attr name="hintsFadeDuration" format="integer"/>
+    <!-- The delay before starting the fade out animation when showing all the hints in milliseconds. -->
+    <attr name="hintsAllFadeDelay" format="integer"/>
+    <!-- The drawable for the move Hint. -->
+    <attr name="hintMoveIcon" format="reference" />
+    <!-- The drawable for the resize up Hint. -->
+    <attr name="hintResizeUpIcon" format="reference" />
+    <!-- The drawable for the resize down Hint. -->
+    <attr name="hintResizeDownIcon" format="reference" />
+    <!-- The drawable for the left Hint. -->
+    <attr name="hintResizeLeftIcon" format="reference" />
+    <!-- The drawable for the right Hint. -->
+    <attr name="hintResizeRightIcon" format="reference" />
+    <!-- The duration of the show selector animation, in milliseconds . -->
+    <attr name="showSelectorAnimationDuration" format="integer" />
+
+    <!-- Styleable attributes for the ActionBriefView. -->
+    <declare-styleable name="ActionBriefView" >
+        <attr name="colorInner"/>
+        <attr name="colorOutlinePrimary"/>
+        <attr name="colorOutlineSecondary"/>
+        <attr name="colorBackground"/>
+        <attr name="thickness"/>
+        <!-- The radius of the selector circle, in dp. -->
+        <attr name="radius" format="dimension" />
+        <!-- The radius of the small circle at the center of the selector, in dp. -->
+        <attr name="innerRadius" format="dimension" />
+    </declare-styleable>
+
+    <!-- Styleable attributes for the ConditionSelectorView. -->
+    <declare-styleable name="ConditionSelectorView" >
+        <attr name="colorInner"/>
+        <attr name="colorOutlinePrimary"/>
+        <attr name="colorOutlineSecondary"/>
+        <attr name="colorBackground"/>
+        <attr name="thickness" />
+        <attr name="cornerRadius"/>
+        <attr name="defaultWidth"/>
+        <attr name="defaultHeight"/>
+        <attr name="resizeHandleSize"/>
+        <attr name="hintsIconsSize"/>
+        <attr name="hintsIconsMargin"/>
+        <attr name="hintsFadeDuration"/>
+        <attr name="hintsAllFadeDelay"/>
+        <attr name="hintMoveIcon"/>
+        <attr name="hintResizeUpIcon"/>
+        <attr name="hintResizeDownIcon"/>
+        <attr name="hintResizeLeftIcon"/>
+        <attr name="hintResizeRightIcon"/>
+        <attr name="showSelectorAnimationDuration"/>
+
+        <!-- The drawable for the pinch to zoom Hint. -->
+        <attr name="hintPinchIcon" format="reference" />
+        <!-- The margin between the top of the selector and the pinch hint. -->
+        <attr name="hintsPinchIconMargin" format="dimension"/>
+        <!-- The duration of the show capture animation, in milliseconds . -->
+        <attr name="showCaptureAnimationDuration" format="integer" />
+        <!-- The minimum value for the zoom. Should be between [0f..10f] for reasonable results) -->
+        <attr name="minimumZoomValue" format="float" />
+        <!-- The maximum value for the zoom. Should be between [0f..10f] for reasonable results) -->
+        <attr name="maximumZoomValue" format="float" />
+    </declare-styleable>
+
+    <!-- Styleable attributes for the AreaSelectorView. -->
+    <declare-styleable name="AreaSelectorView">
+        <attr name="colorInner"/>
+        <attr name="colorOutlinePrimary"/>
+        <attr name="colorOutlineSecondary"/>
+        <attr name="colorBackground"/>
+        <attr name="thickness"/>
+        <attr name="cornerRadius"/>
+        <attr name="defaultWidth"/>
+        <attr name="defaultHeight"/>
+        <attr name="resizeHandleSize"/>
+        <attr name="hintsIconsSize"/>
+        <attr name="hintsIconsMargin"/>
+        <attr name="hintsFadeDuration"/>
+        <attr name="hintsAllFadeDelay"/>
+        <attr name="hintMoveIcon"/>
+        <attr name="hintResizeUpIcon"/>
+        <attr name="hintResizeDownIcon"/>
+        <attr name="hintResizeLeftIcon"/>
+        <attr name="hintResizeRightIcon"/>
+        <attr name="showSelectorAnimationDuration"/>
+    </declare-styleable>
+</resources>
