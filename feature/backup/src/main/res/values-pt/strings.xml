@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">Criar backup</string>
+    <string name="dialog_title_delete_scenario">Excluir cenário</string>
+    <string name="dialog_title_import_backup">Importar backup</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_backup_create_select_file">Selecionar arquivo de saída</string>
+    <string name="item_title_backup_import_select_file">Selecionar arquivo de backup</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">Criando backup: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Backup concluído</string>
+    <string name="message_backup_create_error">Ocorreu um erro e a exportação do backup foi cancelada</string>
+    <string name="message_backup_import_progress">Importando backup: %1$d</string>
+    <string name="message_backup_import_verification">Verificação de dados</string>
+    <string name="message_backup_import_completed">Importação concluída\n%1$d cenário importado</string>
+    <string name="message_backup_import_completed_with_error">Importação concluída\n%1$d cenários importados\n%2$d erros</string>
+    <string name="message_backup_import_error">Ocorreu um erro e a importação do backup foi cancelada</string>
+    <string name="message_backup_import_compatibility">Alguns dos cenários importados foram gerados de um dispositivo com uma tela diferente e isso pode causar problemas com a detecção e as coordenadas das ações.\n\nPara corrigir, você precisa tirar novas capturas de tela para suas condições e atualizar as posições dos cliques/swipes.</string>
+    <string name="message_backup_error_no_zip_app">Nenhum aplicativo encontrado no dispositivo para lidar com o salvamento/carregamento de um arquivo zip.</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">O estado do backup</string>
+
+</resources>

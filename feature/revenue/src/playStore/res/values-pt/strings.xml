@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY ou FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="dialog_title_billing" translatable="false">Klick\'r Pro</string>
+
+    <string name="header_billing" translatable="false">Klick\'r Pro</string>
+    <string name="header_starting_detection">Iniciando detecção</string>
+
+    <string name="message_billing">Este aplicativo é de código aberto e criado com amor por pessoas que trabalham em seu tempo livre.\n\n
+        Apoie o desenvolvimento assistindo a um anúncio ou compre Klick\'r Pro para remover os anúncios para sempre!</string>
+    <string name="message_billing_success">Obrigado por comprar\nKlick\'r Pro!</string>
+
+    <string name="button_text_watch_ad">Assistir a um anúncio</string>
+    <string name="button_text_watch_ad_error">Erro no anúncio</string>
+    <string name="button_text_buy_pro">Comprar Pro (%1$s)</string>
+    <string name="button_text_understood">Entendido</string>
+    <string name="button_text_buy_pro_error">Não é possível comprar</string>
+    <string name="button_text_visit_github">Visite nosso GitHub</string>
+    <string name="button_text_trial">%1$d minutos de teste</string>
+    <string name="button_text_buy_pro_pending">Transação pendente</string>
+</resources>
