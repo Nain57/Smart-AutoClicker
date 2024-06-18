@@ -24,18 +24,17 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.toDumbActionDetails
-import dagger.hilt.android.qualifiers.ApplicationContext
 
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -62,7 +61,6 @@ class DumbScenarioBriefViewModel @Inject constructor(
         .filterNotNull()
 
     private val _actionListSnapIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    val actionListSnapIndex: StateFlow<Int> = _actionListSnapIndex
 
     val focusedActionDetails: Flow<FocusedActionDetails> = dumbEditionRepository.editedDumbScenario
         .combine(_actionListSnapIndex) { dumbScenario, index ->

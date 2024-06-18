@@ -17,16 +17,21 @@
 package com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
+import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ItemDumbActionBriefBinding
+import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ItemDumbActionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDiffUtilCallback
 
@@ -103,3 +108,33 @@ class DumbActionBriefViewHolder(
     }
 }
 
+fun LayoutInflater.inflateDumbActionBriefItemViewBinding(orientation: Int, parent: ViewGroup) =
+    if (orientation == Configuration.ORIENTATION_PORTRAIT)
+        DumbActionBriefItemBinding(ItemDumbActionBriefBinding.inflate(this, parent, false))
+    else
+        DumbActionBriefItemBinding(ItemDumbActionBriefLandBinding.inflate(this, parent, false))
+
+class DumbActionBriefItemBinding private constructor(
+    val root: View,
+    val actionTypeIcon: ImageView,
+    val actionName: TextView,
+    val actionDuration: TextView,
+    val actionRepeat: TextView,
+) {
+
+    constructor(binding: ItemDumbActionBriefBinding) : this(
+        root = binding.root,
+        actionTypeIcon = binding.actionTypeIcon,
+        actionName = binding.actionName,
+        actionDuration = binding.actionDuration,
+        actionRepeat = binding.actionRepeat,
+    )
+
+    constructor(binding: ItemDumbActionBriefLandBinding) : this(
+        root = binding.root,
+        actionTypeIcon = binding.actionTypeIcon,
+        actionName = binding.actionName,
+        actionDuration = binding.actionDuration,
+        actionRepeat = binding.actionRepeat,
+    )
+}
