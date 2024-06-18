@@ -30,7 +30,7 @@ internal abstract class ActionBriefRenderer(
     protected val style: ActionBriefViewStyle,
     private val viewInvalidator: () -> Unit,
 ) {
-    abstract fun onNewDescription(description: ActionDescription)
+    abstract fun onNewDescription(description: ActionDescription, animate: Boolean)
     open fun onSizeChanged(w: Int, h: Int) = Unit
     abstract fun onDraw(canvas: Canvas)
     abstract fun onStop()

@@ -39,26 +39,35 @@ class ActionBriefView @JvmOverloads constructor(
     }
 
     private var renderer: ActionBriefRenderer? = null
+    private var description: ActionDescription? = null
 
     /** Listener upon touch events */
     var onTouchListener: ((position: PointF) -> Unit)? = null
 
-    fun setDescription(description: ActionDescription?) {
-        renderer?.onStop()
+    fun setDescription(newDescription: ActionDescription?, animate: Boolean = true) {
+        if (description == newDescription) return
 
-        if (description == null) {
+        val oldDescription = description
+        description = newDescription
+        val keepRenderer = renderer != null && oldDescription != null && newDescription != null
+                && oldDescription::class.java == newDescription::class.java
+
+        renderer?.onStop()
+        if (!keepRenderer) {
+            renderer = when (description) {
+                is ClickDescription -> ClickBriefRenderer(this, style, ::invalidate)
+                is SwipeDescription -> SwipeBriefRenderer(this, style, ::invalidate)
+                is PauseDescription -> PauseBriefRenderer(this, style, ::invalidate)
+                else -> null
+            }
+        }
+
+        if (renderer == null || newDescription == null) {
             invalidate()
             return
         }
 
-        renderer = when (description) {
-            is ClickDescription -> ClickBriefRenderer(this, style, ::invalidate)
-            is SwipeDescription -> SwipeBriefRenderer(this, style, ::invalidate)
-            is PauseDescription -> PauseBriefRenderer(this, style, ::invalidate)
-            else -> return
-        }
-
-        renderer?.onNewDescription(description)
+        renderer?.onNewDescription(newDescription, animate)
         invalidate()
     }
 
