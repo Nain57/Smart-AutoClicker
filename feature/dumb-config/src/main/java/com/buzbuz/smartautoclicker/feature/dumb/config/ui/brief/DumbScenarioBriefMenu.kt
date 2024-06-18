@@ -16,22 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief
 
-import android.content.Context
-import android.content.res.Configuration
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.actionbrief.ActionBriefMenu
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
-import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbScenarioBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
@@ -46,7 +41,10 @@ import kotlinx.coroutines.launch
 
 class DumbScenarioBriefMenu(
     private val onConfigSaved: () -> Unit,
-) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme, recreateOverlayViewOnRotation = true) {
+) : ActionBriefMenu(
+    theme = R.style.DumbScenarioConfigTheme,
+    noActionsStringRes = R.string.message_dumb_brief_empty_action_list,
+) {
 
     /** The view model for this menu. */
     private val viewModel: DumbScenarioBriefViewModel by viewModels(
@@ -54,21 +52,14 @@ class DumbScenarioBriefMenu(
         creator = { dumbScenarioBriefViewModel() },
     )
 
-    private val actionListSnapHelper: PositionPagerSnapHelper = PositionPagerSnapHelper()
-
     /** The view binding for the overlay menu. */
     private lateinit var menuViewBinding: OverlayDumbScenarioBriefMenuBinding
-    /** The view binding for the position selector. */
-    private lateinit var visualisationViewBinding: DumbScenarioBriefViewBinding
     /** The adapter for the list of dumb actions. */
     private lateinit var dumbActionsAdapter: DumbActionBriefAdapter
-    /** Controls the action brief panel in and out animations. */
-    private lateinit var actionBriefPanelAnimationController: AutoHideAnimationController
 
     private lateinit var dumbActionCreator: DumbActionCreator
     private lateinit var createCopyActionUiFlowListener: DumbActionUiFlowListener
     private lateinit var updateActionUiFlowListener: DumbActionUiFlowListener
-    private lateinit var recyclerViewLayoutManager: LinearLayoutManagerExt
 
     override fun onCreate() {
         super.onCreate()
@@ -76,16 +67,13 @@ class DumbScenarioBriefMenu(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canCopyAction.collect(::onCopyMenuButtonStateUpdated) }
-                launch { viewModel.visualizedActions.collect(::onDumbActionListUpdated) }
+                launch { viewModel.visualizedActions.collect(::updateActionList) }
                 launch { viewModel.focusedActionDetails.collect(::onFocusedActionDetailsUpdated) }
             }
         }
     }
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        actionBriefPanelAnimationController = AutoHideAnimationController()
-        dumbActionsAdapter = DumbActionBriefAdapter(displayMetrics, ::onDumbActionCardClicked)
-
         dumbActionCreator = DumbActionCreator(
             createNewDumbClick = { position -> viewModel.createNewDumbClick(context, position) },
             createNewDumbSwipe = { from, to -> viewModel.createNewDumbSwipe(context, from, to) },
@@ -107,63 +95,9 @@ class DumbScenarioBriefMenu(
         return menuViewBinding.root
     }
 
-    override fun onCreateOverlayView(): View {
-        visualisationViewBinding = context.getSystemService(LayoutInflater::class.java)
-            .inflateDumbScenarioBriefViewBinding(displayMetrics.orientation)
-            .apply {
-
-                actionBriefPanelAnimationController.attachToView(
-                    layoutActionList,
-                    if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT)
-                        AutoHideAnimationController.ScreenSide.BOTTOM
-                    else
-                        AutoHideAnimationController.ScreenSide.LEFT
-                )
-
-                listDumbActions.adapter = dumbActionsAdapter
-                recyclerViewLayoutManager = LinearLayoutManagerExt(context, displayMetrics.orientation).apply {
-                    setNextLayoutCompletionListener {
-                        actionListSnapHelper.snapTo(viewModel.actionListSnapIndex.value)
-                    }
-                }
-                listDumbActions.layoutManager = recyclerViewLayoutManager
-
-                actionListSnapHelper.apply {
-                    onSnapPositionChangeListener = { snapIndex ->
-                        viewModel.onNewActionListSnapIndex(snapIndex)
-                        actionBriefPanelAnimationController.showOrResetTimer()
-                    }
-                    attachToRecyclerView(listDumbActions)
-                }
-
-                root.setOnClickListener {
-                    actionBriefPanelAnimationController.showOrResetTimer()
-                }
-                buttonPrevious.setOnClickListener {
-                    actionBriefPanelAnimationController.showOrResetTimer()
-                    actionListSnapHelper.snapToPrevious()
-                }
-                buttonNext.setOnClickListener {
-                    actionBriefPanelAnimationController.showOrResetTimer()
-                    actionListSnapHelper.snapToNext()
-                }
-            }
-
-        return visualisationViewBinding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        actionBriefPanelAnimationController.showOrResetTimer()
-    }
-
-    override fun onDestroy() {
-        actionBriefPanelAnimationController.detachFromView()
-        super.onDestroy()
-    }
-
-    override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {
-        if (isVisible) actionBriefPanelAnimationController.showOrResetTimer()
+    override fun onCreateAdapter(): ListAdapter<DumbActionDetails, DumbActionBriefViewHolder> {
+        dumbActionsAdapter = DumbActionBriefAdapter(displayMetrics, ::onDumbActionCardClicked)
+        return dumbActionsAdapter
     }
 
     override fun onMenuItemClicked(viewId: Int) {
@@ -183,8 +117,7 @@ class DumbScenarioBriefMenu(
 
     private fun onCreateDumbActionClicked() {
         debounceUserInteraction {
-            actionBriefPanelAnimationController.hide()
-
+            hidePanel()
             overlayManager.startDumbActionCreationUiFlow(
                 context = context,
                 creator = dumbActionCreator,
@@ -195,8 +128,7 @@ class DumbScenarioBriefMenu(
 
     private fun onCopyDumbActionClicked() {
         debounceUserInteraction {
-            actionBriefPanelAnimationController.hide()
-
+            hidePanel()
             overlayManager.startDumbActionCopyUiFlow(
                 context = context,
                 creator = dumbActionCreator,
@@ -216,12 +148,8 @@ class DumbScenarioBriefMenu(
     }
 
     private fun onNewDumbActionCreated(action: DumbAction) {
-        val index = actionListSnapHelper.snapPosition + 1
-        recyclerViewLayoutManager.setNextLayoutCompletionListener {
-            actionListSnapHelper.snapTo(index)
-        }
-
-        viewModel.addNewDumbAction(action, index)
+        prepareItemInsertion()
+        viewModel.addNewDumbAction(action, getFocusedItemIndex() + 1)
     }
 
     private fun onCopyMenuButtonStateUpdated(isEnabled: Boolean) {
@@ -232,58 +160,23 @@ class DumbScenarioBriefMenu(
         )
     }
 
-    private fun onDumbActionListUpdated(actions: List<DumbActionDetails>) {
-        dumbActionsAdapter.submitList(actions)
-
-        visualisationViewBinding.apply {
-            if (actions.isEmpty()) {
-                listDumbActions.visibility = View.GONE
-                emptyScenarioCard.visibility = View.VISIBLE
-            } else {
-                listDumbActions.visibility = View.VISIBLE
-                emptyScenarioCard.visibility = View.GONE
-            }
-        }
+    override fun onFocusedItemChanged(index: Int) {
+        super.onFocusedItemChanged(index)
+        viewModel.onNewActionListSnapIndex(index)
     }
 
     private fun onFocusedActionDetailsUpdated(details: FocusedActionDetails) {
-        visualisationViewBinding.apply {
+        briefViewBinding.apply {
             if (details.isEmpty) {
-                textDumbActionIndex.setText(R.string.item_title_no_dumb_actions)
-                buttonPrevious.isEnabled = false
-                buttonNext.isEnabled = false
+                textActionIndex.setText(R.string.item_title_no_dumb_actions)
             } else {
-                textDumbActionIndex.text = context.getString(
+                textActionIndex.text = context.getString(
                     R.string.title_action_count,
                     details.actionIndex + 1,
                     details.actionCount,
                 )
-
-                buttonPrevious.isEnabled = details.actionIndex != 0
-                buttonNext.isEnabled = details.actionIndex != details.actionCount - 1
             }
-            viewDumbBrief.setDescription(details.actionDescription)
-        }
-    }
-}
-
-private class LinearLayoutManagerExt(context: Context, screenOrientation: Int) : LinearLayoutManager(
-    /* context */ context,
-    /* orientation */ if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) HORIZONTAL else VERTICAL,
-    /* reverseLayout */false,
-) {
-
-    private var nextLayoutCompletionListener: (() -> Unit)? = null
-
-    fun setNextLayoutCompletionListener(listener: () -> Unit) {
-        nextLayoutCompletionListener = listener
-    }
-
-    override fun onLayoutCompleted(state: RecyclerView.State?) {
-        super.onLayoutCompleted(state)
-        if (nextLayoutCompletionListener != null) {
-            nextLayoutCompletionListener?.invoke()
-            nextLayoutCompletionListener = null
+            viewBrief.setDescription(details.actionDescription)
         }
     }
 }
