@@ -272,4 +272,5 @@
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
     <string name="field_application_selection_title">Choisir une application</string>
+    <string name="quick_config_empty_actions">No Actions. You nesd at least one Action to create a valid Event</string>
 </resources>

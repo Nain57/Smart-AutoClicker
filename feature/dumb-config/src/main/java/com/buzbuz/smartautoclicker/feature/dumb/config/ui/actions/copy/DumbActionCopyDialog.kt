@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
  */
 class DumbActionCopyDialog(
     private val onActionSelected: (DumbAction) -> Unit,
-) : CopyDialog(R.style.DumbScenarioConfigTheme) {
+) : CopyDialog(R.style.AppTheme) {
 
     /** View model for this content. */
     private val viewModel: DumbActionCopyModel by viewModels(

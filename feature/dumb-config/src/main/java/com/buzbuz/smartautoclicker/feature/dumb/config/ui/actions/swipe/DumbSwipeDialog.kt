@@ -67,7 +67,7 @@ class DumbSwipeDialog(
     private val onConfirmClicked: (DumbAction.DumbSwipe) -> Unit,
     private val onDeleteClicked: (DumbAction.DumbSwipe) -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
+) : OverlayDialog(R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: DumbSwipeViewModel by viewModels(

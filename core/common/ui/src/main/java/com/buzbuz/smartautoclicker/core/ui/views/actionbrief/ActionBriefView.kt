@@ -21,6 +21,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.PointF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 
@@ -60,6 +61,8 @@ class ActionBriefView @JvmOverloads constructor(
                 is PauseDescription -> PauseBriefRenderer(this, style, ::invalidate)
                 else -> null
             }
+
+            Log.d(TAG, "Changing renderer to $renderer")
         }
 
         if (renderer == null || newDescription == null) {
@@ -99,3 +102,5 @@ class ActionBriefView @JvmOverloads constructor(
 }
 
 interface ActionDescription
+
+private const val TAG = "ActionBriefView"

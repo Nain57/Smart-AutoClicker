@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 class DumbScenarioDialog(
     private val onConfigSaved: () -> Unit,
     private val onConfigDiscarded: () -> Unit,
-) : NavBarDialog(R.style.DumbScenarioConfigTheme) {
+) : NavBarDialog(R.style.AppTheme) {
 
     /** View model for this dialog. */
     private val viewModel: DumbScenarioViewModel by viewModels(

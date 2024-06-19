@@ -52,7 +52,7 @@ class DumbPauseDialog(
     private val onConfirmClicked: (DumbAction.DumbPause) -> Unit,
     private val onDeleteClicked: (DumbAction.DumbPause) -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
+) : OverlayDialog(R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: DumbPauseViewModel by viewModels(

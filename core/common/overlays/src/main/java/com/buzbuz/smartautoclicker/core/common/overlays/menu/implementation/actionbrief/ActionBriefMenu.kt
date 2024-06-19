@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.actionbrief
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.utils.PositionPagerSnapHelper
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
 
 abstract class ActionBriefMenu(
     @StyleRes theme: Int? = null,
@@ -48,8 +50,13 @@ abstract class ActionBriefMenu(
     /** The view binding for the position selector. */
     protected lateinit var briefViewBinding: ActionBriefBinding
 
+    private var actionCaptor: ActionCaptor? = null
 
     protected abstract fun onCreateAdapter(): ListAdapter<*, *>
+    protected open fun onOverlayViewCreated(binding: ActionBriefBinding): Unit = Unit
+    protected abstract fun onMoveItem(from: Int, to: Int)
+    protected abstract fun onDeleteItem(index: Int)
+    protected abstract fun onPlayItem(index: Int)
 
     override fun onCreateOverlayView(): View {
         actionBriefPanelAnimationController = AutoHideAnimationController()
@@ -73,7 +80,7 @@ abstract class ActionBriefMenu(
                 context,
                 displayMetrics.orientation
             )
-            recyclerViewLayoutManager.setNextLayoutCompletionListener {
+            recyclerViewLayoutManager.doOnNextLayoutCompleted {
                 actionListSnapHelper.snapTo(0)
             }
             listActions.layoutManager = recyclerViewLayoutManager
@@ -91,13 +98,25 @@ abstract class ActionBriefMenu(
             root.setOnClickListener {
                 actionBriefPanelAnimationController.showOrResetTimer()
             }
-            buttonPrevious.setOnClickListener {
-                actionBriefPanelAnimationController.showOrResetTimer()
-                actionListSnapHelper.snapToPrevious()
+            buttonPlay.setOnClickListener {
+                onPlayItem(actionListSnapHelper.snapPosition)
             }
-            buttonNext.setOnClickListener {
+            buttonDelete.setOnClickListener {
                 actionBriefPanelAnimationController.showOrResetTimer()
-                actionListSnapHelper.snapToNext()
+                onDeleteItem(actionListSnapHelper.snapPosition)
+            }
+
+            buttonMovePrevious.setOnClickListener {
+                actionBriefPanelAnimationController.showOrResetTimer()
+                debounceUserInteraction {
+                    onMoveItem(actionListSnapHelper.snapPosition, actionListSnapHelper.snapPosition - 1)
+                }
+            }
+            buttonMoveNext.setOnClickListener {
+                actionBriefPanelAnimationController.showOrResetTimer()
+                debounceUserInteraction {
+                    onMoveItem(actionListSnapHelper.snapPosition, actionListSnapHelper.snapPosition + 1)
+                }
             }
         }
 
@@ -105,8 +124,6 @@ abstract class ActionBriefMenu(
         onOverlayViewCreated(briefViewBinding)
         return briefViewBinding.root
     }
-
-    protected open fun onOverlayViewCreated(binding: ActionBriefBinding): Unit = Unit
 
     override fun onResume() {
         super.onResume()
@@ -124,16 +141,7 @@ abstract class ActionBriefMenu(
 
     @CallSuper
     protected open fun onFocusedItemChanged(index: Int) {
-        briefViewBinding.apply {
-            val itemCount = getAdapter<Any>().itemCount
-            if (itemCount == 0) {
-                buttonPrevious.isEnabled = false
-                buttonNext.isEnabled = false
-            } else {
-                buttonPrevious.isEnabled = actionListSnapHelper.snapPosition != 0
-                buttonNext.isEnabled = actionListSnapHelper.snapPosition != (itemCount - 1)
-            }
-        }
+        updateBriefButtons()
     }
 
     protected fun getFocusedItemIndex(): Int =
@@ -144,7 +152,7 @@ abstract class ActionBriefMenu(
 
     protected fun prepareItemInsertion() {
         val index = actionListSnapHelper.snapPosition + 1
-        recyclerViewLayoutManager.setNextLayoutCompletionListener {
+        recyclerViewLayoutManager.doOnNextAddedItem {
             actionListSnapHelper.snapTo(index)
         }
     }
@@ -152,14 +160,69 @@ abstract class ActionBriefMenu(
     protected fun <T> updateActionList(actions: List<T>) {
         briefViewBinding.apply {
 
-            getAdapter<T>().submitList(actions)
-
             if (actions.isEmpty()) {
                 listActions.visibility = View.GONE
                 emptyScenarioCard.visibility = View.VISIBLE
             } else {
                 listActions.visibility = View.VISIBLE
                 emptyScenarioCard.visibility = View.GONE
+            }
+
+            recyclerViewLayoutManager.doOnNextLayoutCompleted {
+                onFocusedItemChanged(actionListSnapHelper.snapPosition)
+            }
+            updateBriefButtons()
+            getAdapter<T>().submitList(actions)
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    protected fun startGestureCapture(onNewAction: (gesture: ActionDescription?, isFinished: Boolean) -> Unit) {
+        actionBriefPanelAnimationController.hide()
+        briefViewBinding.viewBrief.setDescription(null)
+
+        actionCaptor = ActionCaptor { gesture, isFinished ->
+            briefViewBinding.viewBrief.setDescription(gesture, isFinished)
+
+            if (isFinished) {
+                stopGestureCapture()
+                onNewAction(gesture, true)
+            }
+        }
+
+        briefViewBinding.root.setOnTouchListener { _, event ->
+            actionCaptor?.processEvent(event) ?: false
+        }
+    }
+
+    protected fun stopGestureCapture() {
+        actionCaptor?.clearCapture()
+        actionCaptor = null
+        briefViewBinding.root.setOnTouchListener(null)
+
+        actionBriefPanelAnimationController.showOrResetTimer()
+    }
+
+    protected fun isGestureCaptureStarted(): Boolean =
+        actionCaptor != null
+
+    private fun updateBriefButtons() {
+        briefViewBinding.apply {
+            val itemCount = getAdapter<Any>().itemCount
+            val index = actionListSnapHelper.snapPosition
+
+            if (itemCount == 0) {
+                buttonMovePrevious.isEnabled = false
+                buttonMoveNext.isEnabled = false
+                buttonPlay.isEnabled = false
+                buttonDelete.isEnabled = false
+                textActionIndex.text = "0/0"
+            } else {
+                buttonMovePrevious.isEnabled = actionListSnapHelper.snapPosition != 0
+                buttonMoveNext.isEnabled = actionListSnapHelper.snapPosition != (itemCount - 1)
+                buttonPlay.isEnabled = true
+                buttonDelete.isEnabled = true
+                textActionIndex.text = "${index + 1}/$itemCount"
             }
         }
     }
@@ -177,16 +240,29 @@ private class LinearLayoutManagerExt(context: Context, screenOrientation: Int) :
 ) {
 
     private var nextLayoutCompletionListener: (() -> Unit)? = null
+    private var nextAddedItemListener: (() -> Unit)? = null
+    private var itemCountAtAddedItemRegistration: Int? = null
 
-    fun setNextLayoutCompletionListener(listener: () -> Unit) {
+    fun doOnNextAddedItem(listener: () -> Unit) {
+        itemCountAtAddedItemRegistration = itemCount
+        nextAddedItemListener = listener
+    }
+
+    fun doOnNextLayoutCompleted(listener: () -> Unit) {
         nextLayoutCompletionListener = listener
     }
 
     override fun onLayoutCompleted(state: RecyclerView.State?) {
         super.onLayoutCompleted(state)
-        if (nextLayoutCompletionListener != null) {
-            nextLayoutCompletionListener?.invoke()
-            nextLayoutCompletionListener = null
+
+        val previousCount = itemCountAtAddedItemRegistration
+        if (previousCount != null && previousCount < itemCount) {
+            nextAddedItemListener?.invoke()
+            nextAddedItemListener = null
+            itemCountAtAddedItemRegistration = null
         }
+
+        nextLayoutCompletionListener?.invoke()
+        nextLayoutCompletionListener = null
     }
 }

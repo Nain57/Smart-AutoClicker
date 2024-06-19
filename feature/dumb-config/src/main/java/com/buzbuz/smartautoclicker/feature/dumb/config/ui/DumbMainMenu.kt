@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 class DumbMainMenu(
     private val dumbScenarioId: Identifier,
     private val onStopClicked: () -> Unit,
-) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme) {
+) : OverlayMenu(theme = R.style.AppTheme) {
 
     /** The view model for this menu. */
     private val viewModel: DumbMainMenuModel by viewModels(

@@ -37,7 +37,7 @@ internal abstract class EventsEditor<Item : Event, ChildCondition : Condition>(
         parentItem = editedItem,
     )
 
-    val actionsEditor = com.buzbuz.smartautoclicker.feature.smart.config.data.ActionsEditor(
+    val actionsEditor = ActionsEditor(
         ::onEditedEventActionsUpdated,
         parentItem = editedItem
     )

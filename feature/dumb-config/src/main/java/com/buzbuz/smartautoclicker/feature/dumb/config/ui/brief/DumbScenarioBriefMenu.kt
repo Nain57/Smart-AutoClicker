@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 class DumbScenarioBriefMenu(
     private val onConfigSaved: () -> Unit,
 ) : ActionBriefMenu(
-    theme = R.style.DumbScenarioConfigTheme,
+    theme = R.style.AppTheme,
     noActionsStringRes = R.string.message_dumb_brief_empty_action_list,
 ) {
 
@@ -98,6 +98,18 @@ class DumbScenarioBriefMenu(
     override fun onCreateAdapter(): ListAdapter<DumbActionDetails, DumbActionBriefViewHolder> {
         dumbActionsAdapter = DumbActionBriefAdapter(displayMetrics, ::onDumbActionCardClicked)
         return dumbActionsAdapter
+    }
+
+    override fun onMoveItem(from: Int, to: Int) {
+
+    }
+
+    override fun onDeleteItem(index: Int) {
+
+    }
+
+    override fun onPlayItem(index: Int) {
+
     }
 
     override fun onMenuItemClicked(viewId: Int) {

@@ -17,20 +17,6 @@
 -->
 <resources>
 
-    <!-- Base theme. -->
-    <style name="AppTheme.DumbScenarioConfig" />
-
-    <!-- Style for the click/swipe position(s) overlay selector view. -->
-    <style name="AppTheme.DumbScenarioConfig.PositionSelector">
-        <item name="colorBackground">@color/overlayActionsBriefBackground</item>
-        <item name="radius">@dimen/overlay_dumb_position_selector_radius</item>
-        <item name="innerRadius">@dimen/overlay_dumb_position_selector_inner_radius</item>
-        <item name="thickness">@dimen/overlay_dumb_position_selector_thickness</item>
-        <item name="colorInner">@color/overlayViewPrimary</item>
-        <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
-        <item name="colorOutlineSecondary">@color/overlayViewPrimary</item>
-    </style>
-
     <!-- Style for an outlined icon button -->
     <style name="AppTheme.Widget.InfiniteButton" parent="Widget.Material3.Button.IconButton.Outlined">
         <item name="android:layout_width">wrap_content</item>
