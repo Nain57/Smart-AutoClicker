@@ -45,8 +45,9 @@ class DumbActionBriefAdapter(
     override fun getItemViewType(position: Int): Int = orientation
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DumbActionBriefViewHolder =
-        DumbActionBriefViewHolder(LayoutInflater.from(parent.context)
-            .inflateDumbActionBriefItemViewBinding(orientation, parent))
+        DumbActionBriefViewHolder(
+            DumbActionBriefItemBinding.inflate(LayoutInflater.from(parent.context), orientation, parent)
+        )
 
     override fun onBindViewHolder(holder: DumbActionBriefViewHolder, position: Int) {
         holder.onBind(getItem(position), actionClickedListener)
@@ -108,11 +109,6 @@ class DumbActionBriefViewHolder(
     }
 }
 
-fun LayoutInflater.inflateDumbActionBriefItemViewBinding(orientation: Int, parent: ViewGroup) =
-    if (orientation == Configuration.ORIENTATION_PORTRAIT)
-        DumbActionBriefItemBinding(ItemDumbActionBriefBinding.inflate(this, parent, false))
-    else
-        DumbActionBriefItemBinding(ItemDumbActionBriefLandBinding.inflate(this, parent, false))
 
 class DumbActionBriefItemBinding private constructor(
     val root: View,
@@ -121,6 +117,14 @@ class DumbActionBriefItemBinding private constructor(
     val actionDuration: TextView,
     val actionRepeat: TextView,
 ) {
+
+    companion object {
+        fun inflate(layoutInflater: LayoutInflater, orientation: Int, parent: ViewGroup) =
+            if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                DumbActionBriefItemBinding(ItemDumbActionBriefBinding.inflate(layoutInflater, parent, false))
+            else
+                DumbActionBriefItemBinding(ItemDumbActionBriefLandBinding.inflate(layoutInflater, parent, false))
+    }
 
     constructor(binding: ItemDumbActionBriefBinding) : this(
         root = binding.root,

@@ -67,7 +67,7 @@ class DumbClickDialog(
     private val onConfirmClicked: (DumbAction.DumbClick) -> Unit,
     private val onDeleteClicked: (DumbAction.DumbClick) -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
+) : OverlayDialog(R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: DumbClickViewModel by viewModels(

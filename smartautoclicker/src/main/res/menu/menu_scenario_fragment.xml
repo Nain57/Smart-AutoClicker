@@ -35,7 +35,7 @@
 
     <item
         android:id="@+id/action_export"
-        android:icon="@drawable/ic_save"
+        android:icon="@drawable/ic_menu_save"
         app:showAsAction="always"
         android:title="@string/menu_item_title_export"
         tools:ignore="AlwaysShowAction" />
