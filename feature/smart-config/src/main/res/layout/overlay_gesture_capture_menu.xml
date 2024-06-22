@@ -48,11 +48,6 @@
                 android:src="@drawable/ic_add" />
 
             <ImageButton
-                android:id="@+id/btn_copy"
-                style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                android:src="@drawable/ic_copy_small" />
-
-            <ImageButton
                 android:id="@+id/btn_hide_overlay"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                 android:src="@drawable/ic_visible_on" />

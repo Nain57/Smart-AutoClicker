@@ -39,9 +39,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDia
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionTypeChoice
 
 import kotlinx.coroutines.launch
 
@@ -93,7 +93,6 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
                 }
                 R.id.btn_record -> onRecordClicked()
                 R.id.btn_add_other -> showNewActionDialog()
-                R.id.btn_copy -> showActionCopyDialog()
             }
         }
     }
@@ -147,14 +146,12 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         if (isRecording) {
             setMenuItemViewEnabled(viewBinding.btnSave, false)
             setMenuItemViewEnabled(viewBinding.btnAddOther, false)
-            setMenuItemViewEnabled(viewBinding.btnCopy, false)
             setMenuItemViewEnabled(viewBinding.btnHideOverlay, false)
             setMenuItemViewEnabled(viewBinding.btnMove, true)
             setMenuItemViewEnabled(viewBinding.btnRecord, true)
         } else {
             setMenuItemViewEnabled(viewBinding.btnSave, true)
             setMenuItemViewEnabled(viewBinding.btnAddOther, true)
-            setMenuItemViewEnabled(viewBinding.btnCopy, true)
             setMenuItemViewEnabled(viewBinding.btnHideOverlay, true)
             setMenuItemViewEnabled(viewBinding.btnMove, true)
             setMenuItemViewEnabled(viewBinding.btnRecord, true)
@@ -165,7 +162,6 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         setOverlayViewVisibility(!isReplaying)
         setMenuItemViewEnabled(viewBinding.btnSave, !isReplaying)
         setMenuItemViewEnabled(viewBinding.btnAddOther, !isReplaying)
-        setMenuItemViewEnabled(viewBinding.btnCopy, !isReplaying)
         setMenuItemViewEnabled(viewBinding.btnHideOverlay, !isReplaying)
         setMenuItemViewEnabled(viewBinding.btnMove, !isReplaying)
         setMenuItemViewEnabled(viewBinding.btnRecord, !isReplaying)
@@ -194,15 +190,13 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         overlayManager.navigateTo(
             context = context,
             newOverlay = ActionTypeSelectionDialog(
-                choices = buildList {
-                    add(ActionTypeChoice.Click)
-                    add(ActionTypeChoice.Swipe)
-                    add(ActionTypeChoice.Pause)
-                    add(ActionTypeChoice.ChangeCounter)
-                    add(ActionTypeChoice.ToggleEvent)
-                    add(ActionTypeChoice.Intent)
-                },
+                choices = viewModel.actionTypeChoices.value,
                 onChoiceSelectedListener = { choiceClicked ->
+                    if (choiceClicked is ActionTypeChoice.Copy) {
+                        showActionCopyDialog()
+                        return@ActionTypeSelectionDialog
+                    }
+
                     showActionConfigDialog(viewModel.createAction(context, choiceClicked), isNewAction = true)
                 },
             ),

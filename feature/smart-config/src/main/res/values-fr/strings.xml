@@ -117,6 +117,8 @@
     <string name="item_change_counter_title">Modifier compteur</string>
     <string name="field_timer_restart_title">Relancer quand atteint</string>
     <string name="field_change_all_title">Changer tous</string>
+    <string name="item_copy_title">Copie</string>
+    <string name="item_copy_desc">Copier une Action existante depuis n\'importe quel Scenario</string>
 
     <!--
       - Fields.

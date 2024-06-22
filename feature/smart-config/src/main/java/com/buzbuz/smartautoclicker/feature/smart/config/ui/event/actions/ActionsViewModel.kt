@@ -20,12 +20,11 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.DialogChoice
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.toActionDetails
 
@@ -78,6 +77,7 @@ class ActionsViewModel @Inject constructor(
         is ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
         is ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
         is ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
+        else -> throw IllegalArgumentException("Unsupported action type $actionType")
     }
 
     /**
@@ -118,54 +118,4 @@ class ActionsViewModel @Inject constructor(
         monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_ACTION)
         monitoredViewsManager.detach(MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_ACTION)
     }
-}
-
-/** Choices for the action type selection dialog. */
-sealed class ActionTypeChoice(
-    title: Int,
-    description: Int,
-    iconId: Int?,
-): DialogChoice(
-    title = title,
-    description = description,
-    iconId = iconId,
-    disabledIconId = R.drawable.ic_pro_small,
-) {
-    /** Click Action choice. */
-    data object Click : ActionTypeChoice(
-        R.string.item_click_title,
-        R.string.item_click_desc,
-        R.drawable.ic_click,
-    )
-    /** Swipe Action choice. */
-    data object Swipe : ActionTypeChoice(
-        R.string.item_swipe_title,
-        R.string.item_swipe_desc,
-        R.drawable.ic_swipe,
-    )
-    /** Pause Action choice. */
-    data object Pause : ActionTypeChoice(
-        R.string.item_pause_title,
-        R.string.item_pause_desc,
-        R.drawable.ic_wait,
-    )
-    /** Intent Action choice. */
-    data object Intent : ActionTypeChoice(
-        R.string.item_intent_title,
-        R.string.item_intent_desc,
-        R.drawable.ic_intent,
-    )
-    /** Toggle Event Action choice. */
-    data object ToggleEvent : ActionTypeChoice(
-        R.string.item_toggle_event_title,
-        R.string.item_toggle_event_desc,
-        R.drawable.ic_toggle_event,
-    )
-
-    /** Change counter Action choice. */
-    data object ChangeCounter : ActionTypeChoice(
-        R.string.item_change_counter_title,
-        R.string.item_change_counter_desc,
-        R.drawable.ic_change_counter,
-    )
 }

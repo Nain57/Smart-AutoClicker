@@ -45,6 +45,9 @@
     <string name="item_broadcast_received_desc">Fulfilled when a Broadcast is received</string>
     <string name="item_broadcast_received_details">%1$s received</string>
 
+    <string name="item_copy_title">Copy</string>
+    <string name="item_copy_desc">Copy an existing Action from any Scenarios</string>
+
     <string name="item_click_title">Click</string>
     <string name="item_click_desc">Click somewhere on the screen</string>
     <string name="item_click_details_on_condition">On condition</string>
