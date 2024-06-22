@@ -19,8 +19,12 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action
 import android.content.Context
 import android.graphics.PointF
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.PauseDescription
@@ -29,6 +33,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionTypeChoice
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,12 +42,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Collections
 import javax.inject.Inject
 
 class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
+    @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
     private val editionRepository: EditionRepository,
+    private val detectionRepository: DetectionRepository,
 ) : ViewModel() {
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
@@ -109,12 +119,17 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     fun dismissEditedAction() = editionRepository.stopActionEdition()
 
-    fun upsertActionFromGesture(context: Context, gesture: ActionDescription) {
+    fun playAction(context: Context, index: Int, onCompleted: () -> Unit) {
+        val scenario = editionRepository.editionState.getScenario()
+        val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList()
+        if (scenario == null || actions == null || index !in actions.indices) return
 
-    }
-
-    fun playAction(index: Int) {
-
+        viewModelScope.launch {
+            delay(500)
+            detectionRepository.tryAction(context, scenario, actions[index]) {
+                viewModelScope.launch(mainDispatcher) { onCompleted() }
+            }
+        }
     }
 
     fun moveAction(from: Int, to: Int) {

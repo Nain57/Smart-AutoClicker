@@ -62,7 +62,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isGestureCaptureStarted.collect(::updateMenuState) }
+                launch { viewModel.isGestureCaptureStarted.collect(::updateRecordingState) }
                 launch { viewModel.actionBriefList.collect(::updateActionList) }
                 launch { viewModel.actionVisualization.collect(::updateActionVisualisation) }
             }
@@ -104,7 +104,10 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
     }
 
     override fun onPlayItem(index: Int) {
-        viewModel.playAction(index)
+        updateReplayingState(true)
+        viewModel.playAction(context, index) {
+            updateReplayingState(false)
+        }
     }
 
     private fun onRecordClicked() {
@@ -128,7 +131,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         viewModel.setFocusedActionIndex(index)
     }
 
-    private fun updateMenuState(isRecording: Boolean) {
+    private fun updateRecordingState(isRecording: Boolean) {
         if (isRecording) {
             setMenuItemViewEnabled(viewBinding.btnSave, false)
             setMenuItemViewEnabled(viewBinding.btnAddOther, false)
@@ -144,6 +147,16 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
             setMenuItemViewEnabled(viewBinding.btnMove, true)
             setMenuItemViewEnabled(viewBinding.btnRecord, true)
         }
+    }
+
+    private fun updateReplayingState(isReplaying: Boolean) {
+        setOverlayViewVisibility(!isReplaying)
+        setMenuItemViewEnabled(viewBinding.btnSave, !isReplaying)
+        setMenuItemViewEnabled(viewBinding.btnAddOther, !isReplaying)
+        setMenuItemViewEnabled(viewBinding.btnCopy, !isReplaying)
+        setMenuItemViewEnabled(viewBinding.btnHideOverlay, !isReplaying)
+        setMenuItemViewEnabled(viewBinding.btnMove, !isReplaying)
+        setMenuItemViewEnabled(viewBinding.btnRecord, !isReplaying)
     }
 
     private fun updateActionVisualisation(visualization: ActionDescription?) {
