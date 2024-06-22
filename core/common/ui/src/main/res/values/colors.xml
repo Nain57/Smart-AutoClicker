@@ -29,8 +29,8 @@
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>
     <color name="overlayClickSelectorBackground">#77000000</color>
-
     <color name="overlayActionsBriefBackground">#99000000</color>
+    <color name="overlayGestureRecorder">#FFF00006</color>
 
     <!-- Material 3 Theme colors -->
     <color name="seed">#006688</color>

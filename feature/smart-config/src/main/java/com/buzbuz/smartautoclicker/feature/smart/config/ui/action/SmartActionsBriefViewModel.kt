@@ -20,9 +20,9 @@ import android.content.Context
 import android.graphics.PointF
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
-
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
@@ -32,10 +32,11 @@ import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionTypeChoice
+
 import dagger.hilt.android.qualifiers.ApplicationContext
+
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +44,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+
 import java.util.Collections
 import javax.inject.Inject
 

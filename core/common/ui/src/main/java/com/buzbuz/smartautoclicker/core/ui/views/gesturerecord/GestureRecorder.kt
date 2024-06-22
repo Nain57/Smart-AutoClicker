@@ -14,18 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.actionbrief
+package com.buzbuz.smartautoclicker.core.ui.views.gesturerecord
 
 import android.graphics.PointF
 import android.view.MotionEvent
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-internal class ActionCaptor(
-    private val onNewCapturedAction: (gesture: ActionDescription?, isFinished: Boolean) -> Unit,
+
+internal class GestureRecorder(
+    private val onNewCapturedGesture: (gesture: RecordedGesture?, isFinished: Boolean) -> Unit,
 ) {
 
     private var originEventPosition: PointF? = null
@@ -63,31 +61,31 @@ internal class ActionCaptor(
         originEventPosition = PointF(event.x, event.y)
 
         // Always start with a click
-        onNewCapturedAction(ClickDescription(1L, originEventPosition!!), false)
+        onNewCapturedGesture(RecordedGesture.Click(originEventPosition!!, 1L), false)
     }
 
     private fun updateCapture(event: MotionEvent) {
         val origin = originEventPosition ?: return
-        onNewCapturedAction(origin.getGestureWith(event), false)
+        onNewCapturedGesture(origin.getGestureWith(event), false)
     }
 
     private fun endCapture(event: MotionEvent) {
         val origin = originEventPosition ?: return
         originEventPosition = null
-        onNewCapturedAction(origin.getGestureWith(event), true)
+        onNewCapturedGesture(origin.getGestureWith(event), true)
     }
 
-    private fun PointF.getGestureWith(lastEvent: MotionEvent): ActionDescription =
+    private fun PointF.getGestureWith(lastEvent: MotionEvent): RecordedGesture =
         if (willBeAClick(lastEvent)) {
-            ClickDescription(
+            RecordedGesture.Click(
                 position = this,
-                pressDurationMs = lastEvent.eventTime - lastEvent.downTime,
+                durationMs = lastEvent.eventTime - lastEvent.downTime,
             )
         } else {
-            SwipeDescription(
+            RecordedGesture.Swipe(
                 from = this,
                 to = PointF(lastEvent.x, lastEvent.y),
-                swipeDurationMs = lastEvent.eventTime - lastEvent.downTime,
+                durationMs = lastEvent.eventTime - lastEvent.downTime,
             )
         }
 

@@ -24,7 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ListAdapter
 
-import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.actionbrief.ActionBriefMenu
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.ActionBriefMenu
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
