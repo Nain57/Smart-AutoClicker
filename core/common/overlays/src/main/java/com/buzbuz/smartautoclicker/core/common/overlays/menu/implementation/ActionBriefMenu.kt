@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.actionbrief
+package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
@@ -29,10 +31,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
+import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewActionBriefLandBinding
+import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewActionBriefPortBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.utils.PositionPagerSnapHelper
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionBriefView
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.GestureRecordView
+import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.toActionDescription
 
 abstract class ActionBriefMenu(
     @StyleRes theme: Int? = null,
@@ -49,8 +56,6 @@ abstract class ActionBriefMenu(
     private lateinit var recyclerViewLayoutManager: LinearLayoutManagerExt
     /** The view binding for the position selector. */
     protected lateinit var briefViewBinding: ActionBriefBinding
-
-    private var actionCaptor: ActionCaptor? = null
 
     protected abstract fun onCreateAdapter(): ListAdapter<*, *>
     protected open fun onOverlayViewCreated(binding: ActionBriefBinding): Unit = Unit
@@ -181,30 +186,26 @@ abstract class ActionBriefMenu(
         actionBriefPanelAnimationController.hide()
         briefViewBinding.viewBrief.setDescription(null)
 
-        actionCaptor = ActionCaptor { gesture, isFinished ->
-            briefViewBinding.viewBrief.setDescription(gesture, isFinished)
+        briefViewBinding.viewRecorder.apply {
+            visibility = View.VISIBLE
+            gestureCaptureListener = { gesture, isFinished ->
+                briefViewBinding.viewBrief.setDescription(gesture?.toActionDescription(), isFinished)
 
-            if (isFinished) {
-                stopGestureCapture()
-                onNewAction(gesture, true)
+                if (isFinished) {
+                    stopGestureCapture()
+                    onNewAction(gesture?.toActionDescription(), true)
+                }
             }
-        }
-
-        briefViewBinding.root.setOnTouchListener { _, event ->
-            actionCaptor?.processEvent(event) ?: false
         }
     }
 
     protected fun stopGestureCapture() {
-        actionCaptor?.clearCapture()
-        actionCaptor = null
-        briefViewBinding.root.setOnTouchListener(null)
-
+        briefViewBinding.viewRecorder.clearAndHide()
         actionBriefPanelAnimationController.showOrResetTimer()
     }
 
     protected fun isGestureCaptureStarted(): Boolean =
-        actionCaptor != null
+        briefViewBinding.viewRecorder.visibility == View.VISIBLE
 
     private fun updateBriefButtons() {
         briefViewBinding.apply {
@@ -265,4 +266,59 @@ private class LinearLayoutManagerExt(context: Context, screenOrientation: Int) :
         nextLayoutCompletionListener?.invoke()
         nextLayoutCompletionListener = null
     }
+}
+
+class ActionBriefBinding private constructor(
+    val root: View,
+    val viewBrief: ActionBriefView,
+    val viewRecorder: GestureRecordView,
+    val layoutActionList: View,
+    val listActions: RecyclerView,
+    val textActionIndex: TextView,
+    val buttonMovePrevious: Button,
+    val buttonMoveNext: Button,
+    val buttonDelete: Button,
+    val buttonPlay: Button,
+    val emptyScenarioCard: View,
+    val emptyScenarioText: TextView,
+) {
+
+    companion object {
+
+        fun inflate(inflater: LayoutInflater, orientation: Int) =
+            if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                ActionBriefBinding(OverlayViewActionBriefPortBinding.inflate(inflater))
+            else
+                ActionBriefBinding(OverlayViewActionBriefLandBinding.inflate(inflater))
+    }
+
+    constructor(binding: OverlayViewActionBriefPortBinding) : this(
+        root = binding.root,
+        viewBrief = binding.viewBrief,
+        viewRecorder = binding.viewRecord,
+        layoutActionList = binding.layoutActionList,
+        listActions = binding.listActions,
+        textActionIndex = binding.textActionIndex,
+        buttonMovePrevious = binding.buttonMovePrevious,
+        buttonMoveNext = binding.buttonMoveNext,
+        buttonDelete = binding.buttonDelete,
+        buttonPlay = binding.buttonPlayAction,
+        emptyScenarioCard = binding.emptyScenarioCard,
+        emptyScenarioText = binding.textEmptyScenario,
+    )
+
+    constructor(binding: OverlayViewActionBriefLandBinding) : this(
+        root = binding.root,
+        viewBrief = binding.viewBrief,
+        viewRecorder = binding.viewRecord,
+        layoutActionList = binding.layoutActionList,
+        listActions = binding.listActions,
+        textActionIndex = binding.textActionIndex,
+        buttonMovePrevious = binding.buttonMovePrevious,
+        buttonMoveNext = binding.buttonMoveNext,
+        buttonDelete = binding.buttonDelete,
+        buttonPlay = binding.buttonPlayAction,
+        emptyScenarioCard = binding.emptyScenarioCard,
+        emptyScenarioText = binding.textEmptyScenario,
+    )
 }

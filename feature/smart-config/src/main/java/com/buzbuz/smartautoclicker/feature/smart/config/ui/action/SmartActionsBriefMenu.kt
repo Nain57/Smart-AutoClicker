@@ -25,7 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ListAdapter
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
-import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.actionbrief.ActionBriefMenu
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.ActionBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -137,7 +137,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
             setMenuItemViewEnabled(viewBinding.btnAddOther, false)
             setMenuItemViewEnabled(viewBinding.btnCopy, false)
             setMenuItemViewEnabled(viewBinding.btnHideOverlay, false)
-            setMenuItemViewEnabled(viewBinding.btnMove, false)
+            setMenuItemViewEnabled(viewBinding.btnMove, true)
             setMenuItemViewEnabled(viewBinding.btnRecord, true)
         } else {
             setMenuItemViewEnabled(viewBinding.btnSave, true)

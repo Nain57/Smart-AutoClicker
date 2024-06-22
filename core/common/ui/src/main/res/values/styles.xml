@@ -235,6 +235,13 @@
         <item name="colorOutlineSecondary">@color/overlayViewPrimary</item>
     </style>
 
+    <!-- Style for the gesture record view. -->
+    <style name="AppTheme.Overlay.GestureRecorder">
+        <item name="recorderColor">@color/overlayGestureRecorder</item>
+        <item name="thickness">@dimen/overlay_gesture_recorder_thickness</item>
+        <item name="length">@dimen/overlay_gesture_recorder_length</item>
+    </style>
+
     <!-- Base style for the list elements. -->
     <style name="AppTheme.List"/>
     <!-- Style for the list headers text. -->
