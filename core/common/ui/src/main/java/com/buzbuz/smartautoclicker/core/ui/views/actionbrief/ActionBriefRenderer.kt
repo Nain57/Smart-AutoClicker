@@ -23,6 +23,7 @@ import android.graphics.RadialGradient
 import android.graphics.Shader
 import android.view.View
 
+import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 
 internal abstract class ActionBriefRenderer(
@@ -34,7 +35,9 @@ internal abstract class ActionBriefRenderer(
     open fun onSizeChanged(w: Int, h: Int) = Unit
     abstract fun onDraw(canvas: Canvas)
     abstract fun onStop()
-    protected fun invalidate() { viewInvalidator() }
+
+    @CallSuper
+    protected open fun invalidate() { viewInvalidator() }
 
     protected fun createRadialGradientShader(position: PointF, radius: Float, @ColorInt color: Int): Shader =
         RadialGradient(

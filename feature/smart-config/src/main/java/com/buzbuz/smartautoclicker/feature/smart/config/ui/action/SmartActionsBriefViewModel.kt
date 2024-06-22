@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action
 
 import android.content.Context
 import android.graphics.PointF
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -27,8 +28,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionTypeChoice
@@ -75,7 +78,7 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     val actionVisualization : Flow<ActionDescription?> =
         combine(focusedAction, _isGestureCaptureStarted) { action, isCapturing ->
-            action?.toActionDescription() to isCapturing
+            action?.toActionDescription(context) to isCapturing
         }.filter { (_, isCapturing) -> !isCapturing }.map { it.first }
 
     fun startGestureCaptureState() {
@@ -101,12 +104,12 @@ class SmartActionsBriefViewModel @Inject constructor(
     }
 
     fun createAction(context: Context, actionType: ActionTypeChoice): Action = when (actionType) {
-        is ActionTypeChoice.Click -> editionRepository.editedItemsBuilder.createNewClick(context)
-        is ActionTypeChoice.Swipe -> editionRepository.editedItemsBuilder.createNewSwipe(context)
-        is ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
-        is ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
-        is ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
-        is ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
+        ActionTypeChoice.Click -> editionRepository.editedItemsBuilder.createNewClick(context)
+        ActionTypeChoice.Swipe -> editionRepository.editedItemsBuilder.createNewSwipe(context)
+        ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
+        ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
+        ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
+        ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
     }
 
     fun createNewActionFrom(action: Action): Action =
@@ -172,7 +175,7 @@ class SmartActionsBriefViewModel @Inject constructor(
             else -> null
         }
 
-    private fun Action.toActionDescription(): ActionDescription? = when (this) {
+    private fun Action.toActionDescription(context: Context): ActionDescription = when (this) {
         is Action.Click -> ClickDescription(
             position = PointF((x ?: 0).toFloat(), (y ?: 0).toFloat()),
             pressDurationMs = pressDuration ?: 1,
@@ -188,8 +191,16 @@ class SmartActionsBriefViewModel @Inject constructor(
             pauseDurationMs = pauseDuration ?: 1,
         )
 
-        is Action.ChangeCounter,
-        is Action.Intent,
-        is Action.ToggleEvent -> null
+        is Action.ChangeCounter -> DefaultDescription(
+            ContextCompat.getDrawable(context, R.drawable.ic_change_counter)
+        )
+
+        is Action.Intent -> DefaultDescription(
+            ContextCompat.getDrawable(context, R.drawable.ic_intent)
+        )
+
+        is Action.ToggleEvent -> DefaultDescription(
+            ContextCompat.getDrawable(context, R.drawable.ic_toggle_event)
+        )
     }
 }
