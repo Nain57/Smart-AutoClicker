@@ -117,6 +117,8 @@
     <string name="item_broadcast_received_title">收到Broadcast</string>
     <string name="field_timer_restart_title">达到后重新启动</string>
     <string name="field_change_all_title">全部更改</string>
+    <string name="item_copy_title">复制</string>
+    <string name="item_copy_desc">从任何场景复制现有操作</string>
 
     <!--
       - Fields.

@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionTypeChoice
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -42,10 +42,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 import java.util.Collections
@@ -76,10 +78,23 @@ class SmartActionsBriefViewModel @Inject constructor(
             actionList[focusedIndex]
         }
 
-    val actionVisualization : Flow<ActionDescription?> =
+    val actionVisualization: Flow<ActionDescription?> =
         combine(focusedAction, _isGestureCaptureStarted) { action, isCapturing ->
             action?.toActionDescription(context) to isCapturing
         }.filter { (_, isCapturing) -> !isCapturing }.map { it.first }
+
+    val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
+        editionRepository.editionState.canCopyActions.map { canCopy ->
+            buildList {
+                if (canCopy) add(ActionTypeChoice.Copy)
+                add(ActionTypeChoice.Click)
+                add(ActionTypeChoice.Swipe)
+                add(ActionTypeChoice.Pause)
+                add(ActionTypeChoice.ChangeCounter)
+                add(ActionTypeChoice.ToggleEvent)
+                add(ActionTypeChoice.Intent)
+            }
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun startGestureCaptureState() {
         _isGestureCaptureStarted.value = true
@@ -110,6 +125,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
         ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
         ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
+        ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $actionType")
     }
 
     fun createNewActionFrom(action: Action): Action =

@@ -117,6 +117,8 @@
     <string name="item_change_counter_title">Modificare contatore</string>
     <string name="field_timer_restart_title">Riavviare quando viene raggiunto</string>
     <string name="field_change_all_title">Cambiare tutti</string>
+    <string name="item_copy_title">Copia</string>
+    <string name="item_copy_desc">Copiare un\'azione esistente da qualsiasi scenario</string>
 
     <!--
       - Fields.

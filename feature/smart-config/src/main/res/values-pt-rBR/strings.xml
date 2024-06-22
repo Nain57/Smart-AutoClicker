@@ -44,6 +44,9 @@
     <string name="item_broadcast_received_desc">Cumprido quando um broadcast for recebido</string>
     <string name="item_broadcast_received_details">%1$s recebido</string>
 
+    <string name="item_copy_title">Cópia</string>
+    <string name="item_copy_desc">Copiar uma ação existente de qualquer cenário</string>
+
     <string name="item_click_title">Clique</string>
     <string name="item_click_desc">Clique em algum lugar da tela</string>
     <string name="item_click_details_on_condition">Condição</string>
