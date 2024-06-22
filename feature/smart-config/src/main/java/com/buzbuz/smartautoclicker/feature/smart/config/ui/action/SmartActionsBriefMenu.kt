@@ -95,6 +95,11 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         }
     }
 
+    override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {
+        super.onScreenOverlayVisibilityChanged(isVisible)
+        setMenuItemViewEnabled(viewBinding.btnRecord, isVisible)
+    }
+
     override fun onMoveItem(from: Int, to: Int) {
         viewModel.moveAction(from, to)
     }
