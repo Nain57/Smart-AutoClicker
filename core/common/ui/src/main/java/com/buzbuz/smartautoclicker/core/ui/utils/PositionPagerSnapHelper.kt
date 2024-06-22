@@ -54,21 +54,12 @@ class PositionPagerSnapHelper : PagerSnapHelper() {
         attachedRecyclerView?.smoothScrollToPosition(position)
     }
 
-    fun snapToNext() {
-        val itemCount = getListItemCount() ?: return
-        if (snapPosition == itemCount - 1) return
+    fun snapToLast() {
+        val itemCount = getListItemCount()
+        if (itemCount == null || itemCount == 0) return
 
-        val newPosition = snapPosition + 1
-        Log.d(TAG, "snapToNext: $newPosition")
-        attachedRecyclerView?.smoothScrollToPosition(newPosition)
-    }
-
-    fun snapToPrevious() {
-        if (snapPosition == 0) return
-
-        val newPosition = snapPosition - 1
-        Log.d(TAG, "snapToPrevious: $newPosition")
-        attachedRecyclerView?.smoothScrollToPosition(newPosition)
+        Log.d(TAG, "snapToLast: $itemCount")
+        attachedRecyclerView?.scrollToPosition(itemCount)
     }
 
     private fun findSnapPosition(): Int {

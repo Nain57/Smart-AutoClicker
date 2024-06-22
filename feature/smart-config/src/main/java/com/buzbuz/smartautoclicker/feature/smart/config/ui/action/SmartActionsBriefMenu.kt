@@ -176,7 +176,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
                     add(ActionTypeChoice.Intent)
                 },
                 onChoiceSelectedListener = { choiceClicked ->
-                    showActionConfigDialog(viewModel.createAction(context, choiceClicked))
+                    showActionConfigDialog(viewModel.createAction(context, choiceClicked), isNewAction = true)
                 },
             ),
         )
@@ -187,17 +187,20 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
             context = context,
             newOverlay = ActionCopyDialog(
                 onActionSelected = { newCopyAction ->
-                    showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction))
+                    showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction), isNewAction = true)
                 }
             ),
         )
     }
 
-    private fun showActionConfigDialog(action: Action) {
+    private fun showActionConfigDialog(action: Action, isNewAction: Boolean = false) {
         viewModel.startActionEdition(action)
         val actionConfigDialogListener: OnActionConfigCompleteListener by lazy {
             object : OnActionConfigCompleteListener {
-                override fun onConfirmClicked() { viewModel.upsertEditedAction() }
+                override fun onConfirmClicked() {
+                    if (isNewAction) prepareItemInsertion()
+                    viewModel.upsertEditedAction()
+                }
                 override fun onDeleteClicked() { viewModel.removeEditedAction() }
                 override fun onDismissClicked() { viewModel.dismissEditedAction() }
             }

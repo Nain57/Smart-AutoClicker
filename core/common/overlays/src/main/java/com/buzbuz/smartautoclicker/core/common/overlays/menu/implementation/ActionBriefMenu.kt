@@ -156,9 +156,8 @@ abstract class ActionBriefMenu(
         actionBriefPanelAnimationController.hide()
 
     protected fun prepareItemInsertion() {
-        val index = actionListSnapHelper.snapPosition + 1
         recyclerViewLayoutManager.doOnNextAddedItem {
-            actionListSnapHelper.snapTo(index)
+            actionListSnapHelper.snapToLast()
         }
     }
 
