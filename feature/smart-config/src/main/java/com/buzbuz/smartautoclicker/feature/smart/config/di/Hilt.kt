@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.di
 
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenuModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.ActionTypeSelectionViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.SmartActionsBriefViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyModel

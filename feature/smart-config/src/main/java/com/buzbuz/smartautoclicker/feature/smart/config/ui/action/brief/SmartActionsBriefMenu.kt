@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.action
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,6 +32,8 @@ import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayGestureCaptureMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyDialog
@@ -117,18 +119,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
     }
 
     override fun onItemPositionCardClicked(index: Int, itemCount: Int) {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = MoveToDialog(
-                theme = R.style.ScenarioConfigTheme,
-                defaultValue = index + 1,
-                itemCount = itemCount,
-                onValueSelected = { value ->
-                    if (value == index) return@MoveToDialog
-                    viewModel.moveAction(index, value - 1)
-                }
-            ),
-        )
+        showMoveToDialog(index, itemCount)
     }
 
     private fun onRecordClicked() {
@@ -182,6 +173,21 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
 
     private fun updateActionVisualisation(visualization: ActionDescription?) {
         briefViewBinding.viewBrief.setDescription(visualization, true)
+    }
+
+    private fun showMoveToDialog(index: Int, itemCount: Int) {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = MoveToDialog(
+                theme = R.style.ScenarioConfigTheme,
+                defaultValue = index + 1,
+                itemCount = itemCount,
+                onValueSelected = { value ->
+                    if (value == index) return@MoveToDialog
+                    viewModel.moveAction(index, value - 1)
+                }
+            ),
+        )
     }
 
     private fun showNewActionDialog() {
