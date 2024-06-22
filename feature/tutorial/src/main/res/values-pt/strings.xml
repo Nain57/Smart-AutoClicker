@@ -47,16 +47,16 @@
     <string name="message_tutorial_1_game_instructions">Clique no botão azul o mais rápido possível</string>
 
     <string name="message_tutorial_1_step_1">Bem-vindo ao seu primeiro tutorial!\n\nAqui, você tentará superar a maior
-        pontuação de um jogo com a ajuda do Klick'r.\n\nPrimeiro, inicie o jogo e tente vencer por si mesmo.</string>
+        pontuação de um jogo com a ajuda do Klick\'r.\n\nPrimeiro, inicie o jogo e tente vencer por si mesmo.</string>
 
-    <string name="message_tutorial_1_step_3">Difícil, não é?\nVamos usar o Klick'r para superá-lo!\n\n
+    <string name="message_tutorial_1_step_3">Difícil, não é?\nVamos usar o Klick\'r para superá-lo!\n\n
         Clique no ícone de configuração de cenário para começar a editar seu novo cenário.</string>
 
-    <string name="message_tutorial_1_step_4">Um cenário é a estrutura básica da automação Klick'r.\n\n
+    <string name="message_tutorial_1_step_4">Um cenário é a estrutura básica da automação Klick\'r.\n\n
         Ele contém as configurações gerais de detecção e uma lista de Eventos descrevendo o que será executado ao
         rodar seu Cenário.\n\nClique no botão de criar evento para criar seu primeiro evento.</string>
 
-    <string name="message_tutorial_1_step_5">Um Evento descreve quais Ações (clique, deslize...) devem ser executadas
+    <string name="message_tutorial_1_step_5">Um Evento descreve quais Ações (clique, deslize…) devem ser executadas
         quando certas Condições são atendidas.\n\nVocê precisa criar pelo menos uma Condição e uma Ação para ter um
         Evento válido e usá-lo em seu cenário.\n\nClique na aba Condições para exibir a lista de Condições.</string>
 
@@ -124,9 +124,9 @@
     
     <string name="message_tutorial_1_step_20">Está rodando, mas nada está acontecendo?\n\nIsso é normal, ele só vai clicar
             quando o personagem azul estiver visível, lembra? Enquanto mantém o cenário em execução, pressione o botão
-            iniciar jogo e observe como o Klick'r vai vencer para você!</string>
+            iniciar jogo e observe como o Klick\'r vai vencer para você!</string>
     
-    <string name="message_tutorial_1_step_21">Parabéns!\n\nAgora você conhece o básico do Klick'r, mas nem todos os casos de
+    <string name="message_tutorial_1_step_21">Parabéns!\n\nAgora você conhece o básico do Klick\'r, mas nem todos os casos de
             uso serão tão simples quanto este jogo.\nDê uma olhada no próximo tutorial para aprender a rastrear um alvo móvel</string>
     
     
@@ -224,9 +224,9 @@
     
     <string name="message_tutorial_3_step_5">Vamos combinar várias condições, então precisamos verificar o Operador de Condição
             para este evento.\n\nO Operador de Condição indica como múltiplas condições serão interpretadas juntas.\n
-            'Um' significa que apenas uma das Condições deste Evento deve ser cumprida para executar as Ações.\n\n'Todos' significa
+            \'Um\' significa que apenas uma das Condições deste Evento deve ser cumprida para executar as Ações.\n\n\'Todos\' significa
             que todas as Condições deste Evento devem ser cumpridas para executar as Ações.\n\nComo queremos detectar se dois
-            elementos estão sendo exibidos juntos, vamos usar 'Todos'.</string>
+            elementos estão sendo exibidos juntos, vamos usar \'Todos\'.</string>
     
     <string name="message_tutorial_3_step_6">Agora precisamos atualizar nossas Condições.\n\nClique na aba Condições para
             exibir a lista de Condições.</string>

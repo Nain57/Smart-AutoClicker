@@ -16,7 +16,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="tile_label_start_scenario">Iniciar Klick'r</string>
-    <string name="tile_label_stop_scenario">Parar Klick'r</string>
+    <string name="tile_label_start_scenario">Iniciar Klick\'r</string>
+    <string name="tile_label_stop_scenario">Parar Klick\'r</string>
     <string name="tile_subtext_unavailable">Nenhum cenário definido</string>
 </resources>
