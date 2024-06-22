@@ -41,7 +41,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeDia
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.ActionDetails
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.ActionTypeSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.SmartActionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterDialog
 
@@ -117,13 +117,18 @@ class ActionsContent(appContext: Context) : NavBarDialogContent(appContext) {
         debounceUserInteraction {
             dialogController.overlayManager.navigateTo(
                 context = context,
+                newOverlay = SmartActionsBriefMenu {},
+                hideCurrent = true,
+            )
+            /*dialogController.overlayManager.navigateTo(
+                context = context,
                 newOverlay = ActionTypeSelectionDialog(
                     choices = viewModel.actionCreationItems,
                     onChoiceSelectedListener = { choiceClicked ->
                         showActionConfigDialog(viewModel.createAction(context, choiceClicked))
                     },
                 ),
-            )
+            )*/
         }
     }
 
