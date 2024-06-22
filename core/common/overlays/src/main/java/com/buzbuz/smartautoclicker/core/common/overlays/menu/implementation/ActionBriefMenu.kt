@@ -62,6 +62,7 @@ abstract class ActionBriefMenu(
     protected abstract fun onMoveItem(from: Int, to: Int)
     protected abstract fun onDeleteItem(index: Int)
     protected abstract fun onPlayItem(index: Int)
+    protected open fun onItemPositionCardClicked(index: Int, itemCount: Int): Unit = Unit
 
     override fun onCreateOverlayView(): View {
         actionBriefPanelAnimationController = AutoHideAnimationController()
@@ -121,6 +122,12 @@ abstract class ActionBriefMenu(
                 actionBriefPanelAnimationController.showOrResetTimer()
                 debounceUserInteraction {
                     onMoveItem(actionListSnapHelper.snapPosition, actionListSnapHelper.snapPosition + 1)
+                }
+            }
+
+            textActionIndex.setOnClickListener {
+                debounceUserInteraction {
+                    onItemPositionCardClicked(getFocusedItemIndex(), getAdapter<Any>().itemCount)
                 }
             }
         }
@@ -217,12 +224,14 @@ abstract class ActionBriefMenu(
                 buttonPlay.isEnabled = false
                 buttonDelete.isEnabled = false
                 textActionIndex.text = "0/0"
+                textActionIndex.isEnabled = false
             } else {
                 buttonMovePrevious.isEnabled = actionListSnapHelper.snapPosition != 0
                 buttonMoveNext.isEnabled = actionListSnapHelper.snapPosition != (itemCount - 1)
                 buttonPlay.isEnabled = true
                 buttonDelete.isEnabled = true
                 textActionIndex.text = "${index + 1}/$itemCount"
+                textActionIndex.isEnabled = true
             }
         }
     }

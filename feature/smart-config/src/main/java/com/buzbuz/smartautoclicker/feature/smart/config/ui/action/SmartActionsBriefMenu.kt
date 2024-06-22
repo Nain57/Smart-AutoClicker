@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ListAdapter
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.ActionBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
@@ -101,7 +102,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
     }
 
     override fun onMoveItem(from: Int, to: Int) {
-        viewModel.moveAction(from, to)
+        viewModel.swapActions(from, to)
     }
 
     override fun onDeleteItem(index: Int) {
@@ -113,6 +114,21 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         viewModel.playAction(context, index) {
             updateReplayingState(false)
         }
+    }
+
+    override fun onItemPositionCardClicked(index: Int, itemCount: Int) {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = MoveToDialog(
+                theme = R.style.ScenarioConfigTheme,
+                defaultValue = index + 1,
+                itemCount = itemCount,
+                onValueSelected = { value ->
+                    if (value == index) return@MoveToDialog
+                    viewModel.moveAction(index, value - 1)
+                }
+            ),
+        )
     }
 
     private fun onRecordClicked() {
