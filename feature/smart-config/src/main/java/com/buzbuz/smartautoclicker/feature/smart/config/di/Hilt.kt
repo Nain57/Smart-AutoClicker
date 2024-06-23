@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.Condit
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionAreaSelectorViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionViewModel
@@ -79,6 +80,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun extraConfigViewModel(): ExtraConfigModel
     fun flagsSelectionViewModel(): FlagsSelectionViewModel
     fun imageConditionAreaSelectorViewModel(): ImageConditionAreaSelectorViewModel
+    fun imageConditionsBriefViewModel(): ImageConditionsBriefViewModel
     fun imageConditionViewModel(): ImageConditionViewModel
     fun imageEventListViewModel(): ImageEventListViewModel
     fun intentActionsSelectionViewModel(): IntentActionsSelectionViewModel

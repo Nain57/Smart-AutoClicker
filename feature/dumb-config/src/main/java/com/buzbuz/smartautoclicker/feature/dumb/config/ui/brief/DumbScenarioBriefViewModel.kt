@@ -21,6 +21,7 @@ import android.graphics.Point
 
 import androidx.core.graphics.toPointF
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -49,7 +50,7 @@ class DumbScenarioBriefViewModel @Inject constructor(
     val canCopyAction: Flow<Boolean> = dumbEditionRepository.actionsToCopy
         .map { it.isNotEmpty() }
 
-    val visualizedActions: Flow<List<DumbActionDetails>> = dumbEditionRepository.editedDumbScenario
+   /* val visualizedActions: Flow<List<ItemBrief>> = dumbEditionRepository.editedDumbScenario
         .map { scenario ->
             scenario?.dumbActions?.map { dumbAction ->
                 dumbAction.toDumbActionDetails(
@@ -58,7 +59,7 @@ class DumbScenarioBriefViewModel @Inject constructor(
                 )
             }
         }
-        .filterNotNull()
+        .filterNotNull()*/
 
     private val _actionListSnapIndex: MutableStateFlow<Int> = MutableStateFlow(0)
 

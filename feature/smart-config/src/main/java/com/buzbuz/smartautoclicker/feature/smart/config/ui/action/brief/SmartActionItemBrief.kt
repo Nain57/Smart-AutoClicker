@@ -17,20 +17,14 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 
 import android.content.Context
-import androidx.annotation.DrawableRes
+
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
-data class SmartActionBriefItem(
-    val action: Action,
-    @DrawableRes val actionTypeIcon: Int,
-    val actionName: String,
-    val actionDescription: String,
-    val inError: Boolean,
-)
 
-fun Action.toActionBrief(context: Context, inError: Boolean = !isComplete()): SmartActionBriefItem = when (this) {
+fun Action.toActionBrief(context: Context, inError: Boolean = !isComplete()): ItemBrief = when (this) {
     is Action.Click -> toClickBrief(context, inError)
     is Action.Swipe -> toSwipeBrief(context, inError)
     is Action.Pause -> toPauseBrief(context, inError)
@@ -39,12 +33,13 @@ fun Action.toActionBrief(context: Context, inError: Boolean = !isComplete()): Sm
     is Action.ChangeCounter -> toChangeCounterBrief(context, inError)
 }
 
-private fun Action.Click.toClickBrief(context: Context, inError: Boolean): SmartActionBriefItem =
-    SmartActionBriefItem(
-        action = this,
-        actionTypeIcon = R.drawable.ic_click,
-        actionName = name ?: "Click",
-        actionDescription = when {
+private fun Action.Click.toClickBrief(context: Context, inError: Boolean): ItemBrief =
+    ItemBrief(
+        id = id,
+        data = this,
+        icon = R.drawable.ic_click,
+        name = name ?: "Click",
+        description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             positionType == Action.Click.PositionType.ON_DETECTED_CONDITION ->
                 context.getString(R.string.item_click_details_on_condition)
@@ -56,12 +51,13 @@ private fun Action.Click.toClickBrief(context: Context, inError: Boolean): Smart
         inError = inError,
     )
 
-private fun Action.Swipe.toSwipeBrief(context: Context, inError: Boolean): SmartActionBriefItem =
-    SmartActionBriefItem(
-        action = this,
-        actionTypeIcon = R.drawable.ic_swipe,
-        actionName = name ?: "Swipe",
-        actionDescription = when {
+private fun Action.Swipe.toSwipeBrief(context: Context, inError: Boolean): ItemBrief =
+    ItemBrief(
+        id = id,
+        data = this,
+        icon = R.drawable.ic_swipe,
+        name = name ?: "Swipe",
+        description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
                 R.string.item_swipe_details,
@@ -71,12 +67,13 @@ private fun Action.Swipe.toSwipeBrief(context: Context, inError: Boolean): Smart
         inError = inError,
     )
 
-private fun Action.Pause.toPauseBrief(context: Context, inError: Boolean): SmartActionBriefItem =
-    SmartActionBriefItem(
-        action = this,
-        actionTypeIcon = R.drawable.ic_wait,
-        actionName = name ?: "Wait",
-        actionDescription = when {
+private fun Action.Pause.toPauseBrief(context: Context, inError: Boolean): ItemBrief =
+    ItemBrief(
+        id = id,
+        data = this,
+        icon = R.drawable.ic_wait,
+        name = name ?: "Wait",
+        description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
                 R.string.item_pause_details,
@@ -86,12 +83,13 @@ private fun Action.Pause.toPauseBrief(context: Context, inError: Boolean): Smart
         inError = inError,
     )
 
-private fun Action.Intent.toIntentBrief(context: Context, inError: Boolean): SmartActionBriefItem =
-    SmartActionBriefItem(
-        action = this,
-        actionTypeIcon = R.drawable.ic_intent,
-        actionName = name ?: "Intent",
-        actionDescription = when {
+private fun Action.Intent.toIntentBrief(context: Context, inError: Boolean): ItemBrief =
+    ItemBrief(
+        id = id,
+        data = this,
+        icon = R.drawable.ic_intent,
+        name = name ?: "Intent",
+        description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> formatIntentDetails(this, context)
         },
@@ -99,24 +97,26 @@ private fun Action.Intent.toIntentBrief(context: Context, inError: Boolean): Sma
     )
 
 
-private fun Action.ToggleEvent.toToggleEventBrief(context: Context, inError: Boolean): SmartActionBriefItem =
-    SmartActionBriefItem(
-        action = this,
-        actionTypeIcon = R.drawable.ic_toggle_event,
-        actionName = name!!,
-        actionDescription = when {
+private fun Action.ToggleEvent.toToggleEventBrief(context: Context, inError: Boolean): ItemBrief =
+    ItemBrief(
+        id = id,
+        data = this,
+        icon = R.drawable.ic_toggle_event,
+        name = name!!,
+        description = when {
             inError -> context.getString(R.string.item_toggle_event_details_error)
             else -> formatToggleEventState(this, context)
         },
         inError = inError,
     )
 
-private fun Action.ChangeCounter.toChangeCounterBrief(context: Context, inError: Boolean): SmartActionBriefItem =
-    SmartActionBriefItem(
-        action = this,
-        actionTypeIcon = R.drawable.ic_change_counter,
-        actionName = name!!,
-        actionDescription = when {
+private fun Action.ChangeCounter.toChangeCounterBrief(context: Context, inError: Boolean): ItemBrief =
+    ItemBrief(
+        id = id,
+        data = this,
+        icon = R.drawable.ic_change_counter,
+        name = name!!,
+        description = when {
             inError -> context.getString(R.string.item_change_counter_details_error)
             else -> formatChangeCounter(this, context)
         },

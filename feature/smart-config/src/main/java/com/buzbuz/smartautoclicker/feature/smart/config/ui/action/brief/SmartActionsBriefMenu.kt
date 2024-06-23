@@ -22,15 +22,15 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.ListAdapter
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
-import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.ActionBriefMenu
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayGestureCaptureMenuBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayActionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
@@ -46,9 +46,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.To
 import kotlinx.coroutines.launch
 
 
-class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBriefMenu(
+class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBriefMenu(
     theme = R.style.ScenarioConfigTheme,
-    noActionsStringRes = R.string.quick_config_empty_actions,
+    noItemText = R.string.brief_empty_actions,
 ) {
 
     /** The view model for this dialog. */
@@ -57,8 +57,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         creator = { smartActionsBriefViewModel() }
     )
 
-    private lateinit var viewBinding: OverlayGestureCaptureMenuBinding
-    private lateinit var actionsBriefAdapter: ActionListAdapter
+    private lateinit var viewBinding: OverlayActionsBriefMenuBinding
 
     override fun onCreate() {
         super.onCreate()
@@ -66,22 +65,19 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isGestureCaptureStarted.collect(::updateRecordingState) }
-                launch { viewModel.actionBriefList.collect(::updateActionList) }
+                launch { viewModel.actionBriefList.collect(::updateItemList) }
                 launch { viewModel.actionVisualization.collect(::updateActionVisualisation) }
             }
         }
     }
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        viewBinding = OverlayGestureCaptureMenuBinding.inflate(layoutInflater)
+        viewBinding = OverlayActionsBriefMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }
 
-    override fun onCreateAdapter(): ListAdapter<*, *> {
-        actionsBriefAdapter = ActionListAdapter(displayMetrics) { clickedItem ->
-            showActionConfigDialog(clickedItem.action)
-        }
-        return actionsBriefAdapter
+    override fun onItemBriefClicked(index: Int, item: ItemBrief) {
+        showActionConfigDialog(item.data as Action)
     }
 
     override fun onMenuItemClicked(viewId: Int) {

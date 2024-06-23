@@ -231,6 +231,10 @@ internal class EditionState internal constructor(
         editor.currentEventEditor.value?.actionsEditor?.editedList?.value as List<T>?
 
     @Suppress("UNCHECKED_CAST")
+    override fun <T : Condition> getEditedEventConditions(): List<T>? =
+        editor.currentEventEditor.value?.conditionsEditor?.editedList?.value as List<T>?
+
+    @Suppress("UNCHECKED_CAST")
 
     override fun <T : Condition> getEditedCondition(): T? =
         editor.currentEventEditor.value?.conditionsEditor?.editedItem?.value as T?
