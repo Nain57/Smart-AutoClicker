@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemsBriefOverlayViewBinding
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -70,6 +71,10 @@ class ImageConditionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemB
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayImageConditionsBriefMenuBinding.inflate(layoutInflater)
         return viewBinding.root
+    }
+
+    override fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding) {
+        hideMoveButtons()
     }
 
     override fun onMenuItemClicked(viewId: Int) {

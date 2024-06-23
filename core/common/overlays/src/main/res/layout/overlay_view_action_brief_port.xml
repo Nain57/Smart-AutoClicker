@@ -74,7 +74,7 @@
             android:layout_height="@dimen/item_brief_height"
             android:layout_marginBottom="@dimen/margin_vertical_extra_large"
             android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-            app:layout_constraintBottom_toTopOf="@id/button_move_previous"
+            app:layout_constraintBottom_toTopOf="@id/card_action_index"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="gone">
@@ -97,23 +97,34 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_brief_height"
             android:layout_marginBottom="@dimen/margin_vertical_extra_large"
-            app:layout_constraintBottom_toTopOf="@id/button_move_previous"
+            app:layout_constraintBottom_toTopOf="@id/card_action_index"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             android:scrollbars="none"
             tools:itemCount="12"/>
 
+        <Space
+            android:id="@+id/space_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_move_left"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_move_previous"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
             android:layout_marginTop="@dimen/margin_vertical_default"
             android:layout_marginBottom="@dimen/margin_vertical_large"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/space_start"
             app:icon="@drawable/ic_move_left"/>
 
         <com.google.android.material.button.MaterialButton
@@ -168,12 +179,21 @@
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
             android:layout_marginTop="@dimen/margin_vertical_default"
             android:layout_marginBottom="@dimen/margin_vertical_large"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/space_end"
+            app:icon="@drawable/ic_move_right"/>
+
+        <Space
+            android:id="@+id/space_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:icon="@drawable/ic_move_right"/>
+            app:icon="@drawable/ic_move_left"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
