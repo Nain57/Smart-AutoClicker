@@ -36,8 +36,8 @@ import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewA
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.utils.PositionPagerSnapHelper
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionBriefView
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefView
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.GestureRecordView
 import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.toActionDescription
 
@@ -188,7 +188,7 @@ abstract class ActionBriefMenu(
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    protected fun startGestureCapture(onNewAction: (gesture: ActionDescription?, isFinished: Boolean) -> Unit) {
+    protected fun startGestureCapture(onNewAction: (gesture: ItemBriefDescription?, isFinished: Boolean) -> Unit) {
         actionBriefPanelAnimationController.hide()
         briefViewBinding.viewBrief.setDescription(null)
 
@@ -278,7 +278,7 @@ private class LinearLayoutManagerExt(context: Context, screenOrientation: Int) :
 
 class ActionBriefBinding private constructor(
     val root: View,
-    val viewBrief: ActionBriefView,
+    val viewBrief: ItemBriefView,
     val viewRecorder: GestureRecordView,
     val layoutActionList: View,
     val listActions: RecyclerView,

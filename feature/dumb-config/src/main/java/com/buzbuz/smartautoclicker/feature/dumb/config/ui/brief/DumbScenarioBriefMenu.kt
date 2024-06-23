@@ -188,7 +188,7 @@ class DumbScenarioBriefMenu(
                     details.actionCount,
                 )
             }
-            viewBrief.setDescription(details.actionDescription)
+            viewBrief.setDescription(details.itemBriefDescription)
         }
     }
 }

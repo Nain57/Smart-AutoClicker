@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
+package com.buzbuz.smartautoclicker.core.ui.views.itembrief
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -26,18 +26,17 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 
-internal abstract class ActionBriefRenderer(
+internal abstract class ItemBriefRenderer<Style>(
     protected val briefView: View,
-    protected val style: ActionBriefViewStyle,
-    private val viewInvalidator: () -> Unit,
+    protected val viewStyle: Style,
 ) {
-    abstract fun onNewDescription(description: ActionDescription, animate: Boolean)
+    abstract fun onNewDescription(description: ItemBriefDescription, animate: Boolean)
     open fun onSizeChanged(w: Int, h: Int) = Unit
     abstract fun onDraw(canvas: Canvas)
     abstract fun onStop()
 
     @CallSuper
-    protected open fun invalidate() { viewInvalidator() }
+    protected open fun invalidate() { briefView.invalidate() }
 
     protected fun createRadialGradientShader(position: PointF, radius: Float, @ColorInt color: Int): Shader =
         RadialGradient(

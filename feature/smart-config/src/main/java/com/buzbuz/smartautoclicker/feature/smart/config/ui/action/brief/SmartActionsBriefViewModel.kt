@@ -26,11 +26,11 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.DefaultDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.PauseDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
@@ -78,7 +78,7 @@ class SmartActionsBriefViewModel @Inject constructor(
             actionList[focusedIndex]
         }
 
-    val actionVisualization: Flow<ActionDescription?> =
+    val actionVisualization: Flow<ItemBriefDescription?> =
         combine(focusedAction, _isGestureCaptureStarted) { action, isCapturing ->
             action?.toActionDescription(context) to isCapturing
         }.filter { (_, isCapturing) -> !isCapturing }.map { it.first }
@@ -100,7 +100,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         _isGestureCaptureStarted.value = true
     }
 
-    fun endGestureCaptureState(context: Context, gesture: ActionDescription) {
+    fun endGestureCaptureState(context: Context, gesture: ItemBriefDescription) {
         val action = gesture.toAction(context) ?: return
         editionRepository.apply {
             startActionEdition(action)
@@ -177,7 +177,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         }
     }
 
-    private fun ActionDescription.toAction(context: Context): Action? =
+    private fun ItemBriefDescription.toAction(context: Context): Action? =
         when (this) {
             is ClickDescription -> editionRepository.editedItemsBuilder.createNewClick(context)
                 .copy(
@@ -199,7 +199,7 @@ class SmartActionsBriefViewModel @Inject constructor(
             else -> null
         }
 
-    private fun Action.toActionDescription(context: Context): ActionDescription = when (this) {
+    private fun Action.toActionDescription(context: Context): ItemBriefDescription = when (this) {
         is Action.Click -> ClickDescription(
             position = PointF((x ?: 0).toFloat(), (y ?: 0).toFloat()),
             pressDurationMs = pressDuration ?: 1,

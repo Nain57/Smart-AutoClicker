@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.ActionBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayGestureCaptureMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -167,7 +167,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ActionBr
         setMenuItemViewEnabled(viewBinding.btnRecord, !isReplaying)
     }
 
-    private fun updateActionVisualisation(visualization: ActionDescription?) {
+    private fun updateActionVisualisation(visualization: ItemBriefDescription?) {
         briefViewBinding.viewBrief.setDescription(visualization, true)
     }
 

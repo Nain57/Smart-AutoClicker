@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
+package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
@@ -22,17 +22,20 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.annotation.ColorInt
 
 import com.buzbuz.smartautoclicker.core.ui.utils.ExtendedValueAnimator
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefViewStyle
 
 import kotlin.math.max
 import kotlin.math.sqrt
 
 internal class SwipeBriefRenderer(
     briefView: View,
-    style: ActionBriefViewStyle,
-    viewInvalidator: () -> Unit,
-) : ActionBriefRenderer(briefView, style, viewInvalidator) {
+    viewStyle: SwipeBriefRendererStyle,
+) : ItemBriefRenderer<SwipeBriefRendererStyle>(briefView, viewStyle) {
 
     private val swipeProgressAnimator: ExtendedValueAnimator = ExtendedValueAnimator.ofFloat(0f, 1f).apply {
         startDelay = 250
@@ -46,8 +49,8 @@ internal class SwipeBriefRenderer(
     private val progressBorderPaint: Paint = Paint().apply {
         isAntiAlias = true
         this.style = Paint.Style.STROKE
-        color = style.backgroundColor
-        strokeWidth = style.innerRadius * 0.75f
+        color = viewStyle.backgroundColor
+        strokeWidth = viewStyle.innerRadiusPx * 0.75f
     }
     private val gradientBackgroundPaintFrom: Paint = Paint()
     private val gradientBackgroundPaintTo: Paint = Paint()
@@ -55,7 +58,7 @@ internal class SwipeBriefRenderer(
     private var animatedSwipeProgressPosition: PointF = PointF()
     private var positions: Pair<PointF?, PointF?> = Pair(null, null)
 
-    override fun onNewDescription(description: ActionDescription, animate: Boolean) {
+    override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is SwipeDescription) return
 
         if (swipeProgressAnimator.isStarted) swipeProgressAnimator.cancel()
@@ -66,16 +69,16 @@ internal class SwipeBriefRenderer(
         description.from?.let { from ->
             gradientBackgroundPaintFrom.shader = createRadialGradientShader(
                 position = from,
-                radius = style.outerRadius * 1.75f,
-                color = style.backgroundColor,
+                radius = viewStyle.outerRadiusPx * 1.75f,
+                color = viewStyle.backgroundColor,
             )
         }
 
         description.to?.let { to ->
             gradientBackgroundPaintTo.shader = createRadialGradientShader(
                 position = to,
-                radius = style.outerRadius * 1.75f,
-                color = style.backgroundColor,
+                radius = viewStyle.outerRadiusPx * 1.75f,
+                color = viewStyle.backgroundColor,
             )
         }
 
@@ -117,9 +120,9 @@ internal class SwipeBriefRenderer(
         from?.let {
             canvas.drawSelectorCircle(
                 from,
-                style.outerRadius,
-                style.outerFromPaint,
-                style.innerFromPaint,
+                viewStyle.outerRadiusPx,
+                viewStyle.outerFromPaint,
+                viewStyle.innerFromPaint,
                 gradientBackgroundPaintFrom,
             )
         }
@@ -127,26 +130,26 @@ internal class SwipeBriefRenderer(
         to?.let {
             canvas.drawSelectorCircle(
                 to,
-                style.outerRadius,
-                style.outerToPaint,
-                style.innerToPaint,
+                viewStyle.outerRadiusPx,
+                viewStyle.outerToPaint,
+                viewStyle.innerToPaint,
                 gradientBackgroundPaintTo,
             )
         }
 
         if (from != null && to != null) {
-            canvas.drawLine(from.x, from.y, to.x, to.y, style.linePaint)
+            canvas.drawLine(from.x, from.y, to.x, to.y, viewStyle.linePaint)
 
             canvas.drawCircle(
                 animatedSwipeProgressPosition.x,
                 animatedSwipeProgressPosition.y,
-                style.innerRadius * 2,
-                style.linePaint,
+                viewStyle.innerRadiusPx * 2,
+                viewStyle.linePaint,
             )
             canvas.drawCircle(
                 animatedSwipeProgressPosition.x,
                 animatedSwipeProgressPosition.y,
-                style.innerRadius * 2,
+                viewStyle.innerRadiusPx * 2,
                 progressBorderPaint,
             )
         }
@@ -161,7 +164,7 @@ internal class SwipeBriefRenderer(
     ) {
         drawCircle(position.x, position.y, outerRadius * 2f, backgroundPaint)
         drawCircle(position.x, position.y, outerRadius, outerPaint)
-        drawCircle(position.x, position.y, style.innerRadius, innerPaint)
+        drawCircle(position.x, position.y, viewStyle.innerRadiusPx, innerPaint)
     }
 }
 
@@ -169,6 +172,17 @@ data class SwipeDescription(
     val swipeDurationMs: Long = MINIMAL_ANIMATION_DURATION_MS,
     val from: PointF? = null,
     val to: PointF? = null,
-) : ActionDescription
+) : ItemBriefDescription
+
+internal data class SwipeBriefRendererStyle(
+    @ColorInt val backgroundColor: Int,
+    val linePaint: Paint,
+    val outerFromPaint: Paint,
+    val outerToPaint: Paint,
+    val innerFromPaint: Paint,
+    val innerToPaint: Paint,
+    val outerRadiusPx: Float,
+    val innerRadiusPx: Float,
+)
 
 private const val MINIMAL_ANIMATION_DURATION_MS = 250L

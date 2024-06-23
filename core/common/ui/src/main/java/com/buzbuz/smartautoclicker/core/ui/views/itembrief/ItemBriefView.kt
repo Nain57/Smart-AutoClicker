@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
+package com.buzbuz.smartautoclicker.core.ui.views.itembrief
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -25,27 +25,39 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 
-class ActionBriefView @JvmOverloads constructor(
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
+
+
+class ItemBriefView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : View(context, attrs, defStyleAttr) {
 
     /** Paint drawing the outer circle of the position 1. */
-    private val style: ActionBriefViewStyle
+    private val style: ItemBriefViewStyle
 
     init {
         if (attrs == null) throw IllegalArgumentException("AttributeSet is null")
-        style = context.getActionBriefStyle(attrs, defStyleAttr)
+        style = context.getItemBriefStyle(attrs, defStyleAttr)
     }
 
-    private var renderer: ActionBriefRenderer? = null
-    private var description: ActionDescription? = null
+    private var renderer: ItemBriefRenderer<*>? = null
+    private var description: ItemBriefDescription? = null
 
     /** Listener upon touch events */
     var onTouchListener: ((position: PointF) -> Unit)? = null
 
-    fun setDescription(newDescription: ActionDescription?, animate: Boolean = true) {
+    fun setDescription(newDescription: ItemBriefDescription?, animate: Boolean = true) {
         if (description == newDescription) return
 
         val oldDescription = description
@@ -56,10 +68,11 @@ class ActionBriefView @JvmOverloads constructor(
         renderer?.onStop()
         if (!keepRenderer) {
             renderer = when (description) {
-                is ClickDescription -> ClickBriefRenderer(this, style, ::invalidate)
-                is SwipeDescription -> SwipeBriefRenderer(this, style, ::invalidate)
-                is PauseDescription -> PauseBriefRenderer(this, style, ::invalidate)
-                is DefaultDescription -> DefaultBriefRenderer(this, style, ::invalidate)
+                is ClickDescription -> ClickBriefRenderer(this, style.clickStyle)
+                is SwipeDescription -> SwipeBriefRenderer(this, style.swipeStyle)
+                is PauseDescription -> PauseBriefRenderer(this, style.pauseStyle)
+                is ImageConditionDescription -> ImageConditionBriefRenderer(this, style.imageConditionStyle)
+                is DefaultDescription -> DefaultBriefRenderer(this, style.defaultStyle)
                 else -> null
             }
 
@@ -102,6 +115,6 @@ class ActionBriefView @JvmOverloads constructor(
         )
 }
 
-interface ActionDescription
+interface ItemBriefDescription
 
-private const val TAG = "ActionBriefView"
+private const val TAG = "ItemBriefView"
