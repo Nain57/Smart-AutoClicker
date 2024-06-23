@@ -26,9 +26,9 @@ import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayPosit
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 
 /**
  * [OverlayMenu] implementation for displaying the click area selection menu and its overlay view.
@@ -36,13 +36,13 @@ import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
  * This class will display the overlay menu for selecting the positions for an action. The overlay view
  * displayed between the menu and the activity shows those positions.
  *
- * @param actionDescription the description of the action positions to edit.
+ * @param itemBriefDescription the description of the action positions to edit.
  * @param onConfirm listener on the validation of the actions positions.
  * @param onDismiss listener on the dismiss of the position selection.
  */
 class PositionSelectorMenu(
-    private val actionDescription: ActionDescription,
-    private val onConfirm: (ActionDescription) -> Unit,
+    private val itemBriefDescription: ItemBriefDescription,
+    private val onConfirm: (ItemBriefDescription) -> Unit,
     private val onDismiss: (() -> Unit)? = null,
 ) : OverlayMenu() {
 
@@ -82,7 +82,7 @@ class PositionSelectorMenu(
 
     override fun onStart() {
         super.onStart()
-        setActionDescription(actionDescription)
+        setActionDescription(itemBriefDescription)
     }
 
     override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {
@@ -96,7 +96,7 @@ class PositionSelectorMenu(
         }
     }
 
-    private fun setActionDescription(description: ActionDescription) {
+    private fun setActionDescription(description: ItemBriefDescription) {
         when (description) {
             is ClickDescription -> setClickDescription(description)
             is SwipeDescription -> setSwipeDescription(description)
@@ -166,7 +166,7 @@ class PositionSelectorMenu(
         }
     }
 
-    private fun onPositionSelectionCompleted(description: ActionDescription) {
+    private fun onPositionSelectionCompleted(description: ItemBriefDescription) {
         back()
         onConfirm(description)
     }

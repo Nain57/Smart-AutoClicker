@@ -24,10 +24,10 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.PauseDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.toDumbActionDetails
@@ -127,6 +127,6 @@ private fun DumbScenario.toFocusedActionDetails(focusIndex: Int): FocusedActionD
 data class FocusedActionDetails(
     val actionIndex: Int = 0,
     val actionCount: Int = 0,
-    val actionDescription: ActionDescription? = null,
+    val itemBriefDescription: ItemBriefDescription? = null,
     val isEmpty: Boolean = false,
 )

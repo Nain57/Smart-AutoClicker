@@ -26,8 +26,8 @@ import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.click.DumbClickDialog
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionCopyDialog
@@ -134,7 +134,7 @@ private fun OverlayManager.onDumbClickCreationSelected(
     navigateTo(
         context = context,
         newOverlay = PositionSelectorMenu(
-            actionDescription = ClickDescription(),
+            itemBriefDescription = ClickDescription(),
             onConfirm = { description ->
                 (description as? ClickDescription)?.position?.let { position ->
                     startDumbClickEditionUiFlow(
@@ -184,7 +184,7 @@ private fun OverlayManager.onDumbSwipeCreationSelected(
     navigateTo(
         context = context,
         newOverlay = PositionSelectorMenu(
-            actionDescription = SwipeDescription(),
+            itemBriefDescription = SwipeDescription(),
             onConfirm = { description ->
                 (description as? SwipeDescription)?.let { swipeDesc ->
                     if (swipeDesc.from == null || swipeDesc.to == null) {

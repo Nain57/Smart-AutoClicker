@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="bottom">
 
-    <com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ActionBriefView
+    <com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefView
         android:id="@+id/view_dumb_brief"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

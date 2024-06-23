@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
+package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
@@ -22,17 +22,19 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.annotation.ColorInt
 
 import com.buzbuz.smartautoclicker.core.ui.utils.ExtendedValueAnimator
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
 
 internal class ClickBriefRenderer(
     briefView: View,
-    style: ActionBriefViewStyle,
-    viewInvalidator: () -> Unit,
-) : ActionBriefRenderer(briefView, style, viewInvalidator) {
+    viewStyle: ClickBriefRendererStyle,
+) : ItemBriefRenderer<ClickBriefRendererStyle>(briefView, viewStyle) {
 
     private val outerRadiusAnimator: ExtendedValueAnimator =
-        ExtendedValueAnimator.ofFloat(style.outerRadius, style.outerRadius * 0.75f).apply {
+        ExtendedValueAnimator.ofFloat(viewStyle.outerRadiusPx, viewStyle.outerRadiusPx * 0.75f).apply {
             startDelay = 250
             duration = 250
             interpolator = AccelerateDecelerateInterpolator()
@@ -47,22 +49,22 @@ internal class ClickBriefRenderer(
 
     private val gradientBackgroundPaint: Paint = Paint()
 
-    private var animatedOuterRadius: Float = style.outerRadius
+    private var animatedOuterRadius: Float = viewStyle.outerRadiusPx
     private var position: PointF? = null
 
-    override fun onNewDescription(description: ActionDescription, animate: Boolean) {
+    override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is ClickDescription) return
 
         if (outerRadiusAnimator.isStarted) outerRadiusAnimator.cancel()
 
         position = description.position
-        animatedOuterRadius = style.outerRadius
+        animatedOuterRadius = viewStyle.outerRadiusPx
 
         description.position?.let { clickPosition ->
             gradientBackgroundPaint.shader = createRadialGradientShader(
                 position = clickPosition,
-                radius = style.outerRadius * 1.75f,
-                color = style.backgroundColor,
+                radius = viewStyle.outerRadiusPx * 1.75f,
+                color = viewStyle.backgroundColor,
             )
 
             if (animate) {
@@ -75,15 +77,15 @@ internal class ClickBriefRenderer(
 
     override fun onStop() {
         outerRadiusAnimator.cancel()
-        animatedOuterRadius = style.outerRadius
+        animatedOuterRadius = viewStyle.outerRadiusPx
         position = null
     }
 
     override fun onDraw(canvas: Canvas) {
         position?.let { pos ->
             canvas.drawCircle(pos.x, pos.y, animatedOuterRadius * 2f, gradientBackgroundPaint)
-            canvas.drawCircle(pos.x, pos.y, animatedOuterRadius, style.outerFromPaint)
-            canvas.drawCircle(pos.x, pos.y, style.innerRadius, style.innerFromPaint)
+            canvas.drawCircle(pos.x, pos.y, animatedOuterRadius, viewStyle.outerPaint)
+            canvas.drawCircle(pos.x, pos.y, viewStyle.innerRadiusPx, viewStyle.innerPaint)
         }
     }
 }
@@ -91,6 +93,15 @@ internal class ClickBriefRenderer(
 data class ClickDescription(
     val pressDurationMs: Long = MINIMAL_ANIMATION_DURATION_MS,
     val position: PointF? = null,
-) : ActionDescription
+) : ItemBriefDescription
+
+
+internal data class ClickBriefRendererStyle(
+    @ColorInt val backgroundColor: Int,
+    val outerPaint: Paint,
+    val innerPaint: Paint,
+    val outerRadiusPx: Float,
+    val innerRadiusPx: Float,
+)
 
 private const val MINIMAL_ANIMATION_DURATION_MS = 1L

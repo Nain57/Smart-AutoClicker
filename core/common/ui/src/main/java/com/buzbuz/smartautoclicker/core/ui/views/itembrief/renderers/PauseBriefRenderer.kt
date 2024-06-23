@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.actionbrief
+package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
@@ -23,16 +23,18 @@ import android.graphics.PointF
 import android.graphics.RectF
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.annotation.ColorInt
 
 import com.buzbuz.smartautoclicker.core.ui.utils.ExtendedValueAnimator
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
 
 import kotlin.math.max
 
 internal class PauseBriefRenderer(
     briefView: View,
-    style: ActionBriefViewStyle,
-    viewInvalidator: () -> Unit,
-) : ActionBriefRenderer(briefView, style, viewInvalidator) {
+    viewStyle: PauseBriefRendererStyle,
+) : ItemBriefRenderer<PauseBriefRendererStyle>(briefView, viewStyle) {
 
     private val rotationAnimator: ExtendedValueAnimator =
         ExtendedValueAnimator.ofFloat(0f, 360f).apply {
@@ -53,7 +55,7 @@ internal class PauseBriefRenderer(
     private var baseHandPosition: RectF? = null
     private var animatedRotationAngleDegree: Float? = null
 
-    override fun onNewDescription(description: ActionDescription, animate: Boolean) {
+    override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is PauseDescription) return
 
         updateDisplayValues(briefView.width, briefView.height)
@@ -84,15 +86,15 @@ internal class PauseBriefRenderer(
 
         baseHandPosition = RectF(
             viewCenter.x - TIMER_HAND_HALF_WIDTH_PX,
-            viewCenter.y - (style.outerRadius - (style.thickness * 1.5f)),
+            viewCenter.y - (viewStyle.outerRadiusPx - (viewStyle.thicknessPx * 1.5f)),
             viewCenter.x + TIMER_HAND_HALF_WIDTH_PX,
             viewCenter.y + TIMER_HAND_ROTATION_CENTER_BOTTOM_OFFSET_PX,
         )
 
         gradientBackgroundPaint.shader = createRadialGradientShader(
             position = viewCenter,
-            radius = style.outerRadius * 1.75f,
-            color = style.backgroundColor,
+            radius = viewStyle.outerRadiusPx * 1.75f,
+            color = viewStyle.backgroundColor,
         )
     }
 
@@ -101,12 +103,12 @@ internal class PauseBriefRenderer(
         val handRotation = animatedRotationAngleDegree ?: return
 
         canvas.apply {
-            drawCircle(viewCenter.x, viewCenter.y, style.outerRadius * 2f, gradientBackgroundPaint)
-            drawCircle(viewCenter.x, viewCenter.y, style.outerRadius, style.outerFromPaint)
+            drawCircle(viewCenter.x, viewCenter.y, viewStyle.outerRadiusPx * 2f, gradientBackgroundPaint)
+            drawCircle(viewCenter.x, viewCenter.y, viewStyle.outerRadiusPx, viewStyle.outerPaint)
 
             save()
             rotate(handRotation, viewCenter.x, viewCenter.y)
-            drawRoundRect(handPosition, 4f, 4f, style.linePaint)
+            drawRoundRect(handPosition, 4f, 4f, viewStyle.linePaint)
             restore()
         }
     }
@@ -114,7 +116,16 @@ internal class PauseBriefRenderer(
 
 data class PauseDescription(
     val pauseDurationMs: Long = MINIMAL_ANIMATION_DURATION_MS,
-) : ActionDescription
+) : ItemBriefDescription
+
+internal data class PauseBriefRendererStyle(
+    @ColorInt val backgroundColor: Int,
+    val outerPaint: Paint,
+    val linePaint: Paint,
+    val thicknessPx: Float,
+    val outerRadiusPx: Float,
+    val innerRadiusPx: Float,
+)
 
 private const val MINIMAL_ANIMATION_DURATION_MS = 500L
 private const val TIMER_HAND_HALF_WIDTH_PX = 5f
