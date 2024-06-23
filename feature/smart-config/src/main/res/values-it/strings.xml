@@ -273,6 +273,8 @@
     <string name="content_desc_open_event_list">Apri la lista eventi</string>
     <string name="content_desc_application_icon">L\'icona dell\'applicazione da avviare.</string>
     <string name="field_application_selection_title">Seleziona un\'applicazione</string>
-    <string name="quick_config_empty_actions">No Actions. You nesd at least one Action to create a valid Event</string>
+
+    <string name="brief_empty_actions">Nessuna azione. È necessaria almeno un\'azione per creare un evento valido</string>
+    <string name="brief_empty_image_conditions">Nessuna condizione dello schermo. Per creare un evento valido è necessaria almeno una condizione</string>
 
 </resources>

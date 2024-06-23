@@ -22,9 +22,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.ListAdapter
 
-import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.ActionBriefMenu
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
@@ -41,9 +40,9 @@ import kotlinx.coroutines.launch
 
 class DumbScenarioBriefMenu(
     private val onConfigSaved: () -> Unit,
-) : ActionBriefMenu(
+) : ItemBriefMenu(
     theme = R.style.AppTheme,
-    noActionsStringRes = R.string.message_dumb_brief_empty_action_list,
+    noItemText = R.string.message_dumb_brief_empty_action_list,
 ) {
 
     /** The view model for this menu. */
@@ -54,8 +53,6 @@ class DumbScenarioBriefMenu(
 
     /** The view binding for the overlay menu. */
     private lateinit var menuViewBinding: OverlayDumbScenarioBriefMenuBinding
-    /** The adapter for the list of dumb actions. */
-    private lateinit var dumbActionsAdapter: DumbActionBriefAdapter
 
     private lateinit var dumbActionCreator: DumbActionCreator
     private lateinit var createCopyActionUiFlowListener: DumbActionUiFlowListener
@@ -67,7 +64,7 @@ class DumbScenarioBriefMenu(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canCopyAction.collect(::onCopyMenuButtonStateUpdated) }
-                launch { viewModel.visualizedActions.collect(::updateActionList) }
+                //launch { viewModel.visualizedActions.collect(::updateItemList) }
                 launch { viewModel.focusedActionDetails.collect(::onFocusedActionDetailsUpdated) }
             }
         }
@@ -93,11 +90,6 @@ class DumbScenarioBriefMenu(
 
         menuViewBinding = OverlayDumbScenarioBriefMenuBinding.inflate(layoutInflater)
         return menuViewBinding.root
-    }
-
-    override fun onCreateAdapter(): ListAdapter<DumbActionDetails, DumbActionBriefViewHolder> {
-        dumbActionsAdapter = DumbActionBriefAdapter(displayMetrics, ::onDumbActionCardClicked)
-        return dumbActionsAdapter
     }
 
     override fun onMoveItem(from: Int, to: Int) {

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
+package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -23,34 +23,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
+import com.buzbuz.smartautoclicker.core.common.overlays.databinding.ItemBriefLandBinding
+import com.buzbuz.smartautoclicker.core.common.overlays.databinding.ItemBriefPortBinding
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemActionBriefLandBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemActionBriefPortBinding
 
 
-class ActionListAdapter(
+internal class ItemBriefAdapter(
     private val displayMetrics: DisplayMetrics,
-    private val actionClickedListener: (SmartActionBriefItem) -> Unit,
-) : ListAdapter<SmartActionBriefItem, ActionBriefViewHolder>(ActionBriefDiffUtilCallback) {
+    private val actionClickedListener: (Int, ItemBrief) -> Unit,
+) : ListAdapter<ItemBrief, ItemBriefViewHolder>(ItemBriefDiffUtilCallback) {
 
     private var orientation: Int = displayMetrics.orientation
 
     override fun getItemViewType(position: Int): Int = orientation
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionBriefViewHolder =
-        ActionBriefViewHolder(ActionBriefItemBinding.inflate(LayoutInflater.from(parent.context), orientation, parent))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemBriefViewHolder =
+        ItemBriefViewHolder(ItemBriefBinding.inflate(LayoutInflater.from(parent.context), orientation, parent))
 
-    override fun onBindViewHolder(holder: ActionBriefViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemBriefViewHolder, position: Int) {
         holder.onBind(getItem(position), actionClickedListener)
     }
 
+    public override fun getItem(position: Int): ItemBrief = super.getItem(position)
+
     @SuppressLint("NotifyDataSetChanged") // Reload the whole list when the orientation is different
-    override fun submitList(list: List<SmartActionBriefItem>?) {
+    override fun submitList(list: List<ItemBrief>?) {
         if (orientation != displayMetrics.orientation) {
             orientation = displayMetrics.orientation
             notifyDataSetChanged()
@@ -61,35 +63,35 @@ class ActionListAdapter(
     }
 }
 
-object ActionBriefDiffUtilCallback: DiffUtil.ItemCallback<SmartActionBriefItem>() {
+object ItemBriefDiffUtilCallback: DiffUtil.ItemCallback<ItemBrief>() {
     override fun areItemsTheSame(
-        oldItem: SmartActionBriefItem,
-        newItem: SmartActionBriefItem,
-    ): Boolean = oldItem.action.id == newItem.action.id
+        oldItem: ItemBrief,
+        newItem: ItemBrief,
+    ): Boolean = oldItem.id == newItem.id
 
     override fun areContentsTheSame(
-        oldItem: SmartActionBriefItem,
-        newItem: SmartActionBriefItem,
+        oldItem: ItemBrief,
+        newItem: ItemBrief,
     ): Boolean = oldItem == newItem
 }
 
-class ActionBriefViewHolder(
-    private val viewBinding: ActionBriefItemBinding,
+internal class ItemBriefViewHolder(
+    private val viewBinding: ItemBriefBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(details: SmartActionBriefItem, actionClickedListener: (SmartActionBriefItem) -> Unit) {
+    fun onBind(item: ItemBrief, actionClickedListener: (Int, ItemBrief) -> Unit) {
         viewBinding.apply {
-            root.setOnClickListener { actionClickedListener(details) }
+            root.setOnClickListener { actionClickedListener(bindingAdapterPosition, item) }
 
             actionName.visibility = View.VISIBLE
-            actionTypeIcon.setImageResource(details.actionTypeIcon)
-            actionName.text = details.actionName
-            actionDescription.text = details.actionDescription
+            actionTypeIcon.setImageResource(item.icon)
+            actionName.text = item.name
+            actionDescription.text = item.description
         }
     }
 }
 
-class ActionBriefItemBinding private constructor(
+internal class ItemBriefBinding private constructor(
     val root: View,
     val actionTypeIcon: ImageView,
     val actionName: TextView,
@@ -99,22 +101,22 @@ class ActionBriefItemBinding private constructor(
     companion object {
         fun inflate(layoutInflater: LayoutInflater, orientation: Int, parent: ViewGroup) =
             if (orientation == Configuration.ORIENTATION_PORTRAIT)
-                ActionBriefItemBinding(ItemActionBriefPortBinding.inflate(layoutInflater, parent, false))
+                ItemBriefBinding(ItemBriefPortBinding.inflate(layoutInflater, parent, false))
             else
-                ActionBriefItemBinding(ItemActionBriefLandBinding.inflate(layoutInflater, parent, false))
+                ItemBriefBinding(ItemBriefLandBinding.inflate(layoutInflater, parent, false))
     }
 
-    constructor(binding: ItemActionBriefPortBinding) : this(
+    constructor(binding: ItemBriefPortBinding) : this(
         root = binding.root,
-        actionTypeIcon = binding.actionTypeIcon,
-        actionName = binding.actionName,
-        actionDescription = binding.actionDescription,
+        actionTypeIcon = binding.itemIcon,
+        actionName = binding.itemName,
+        actionDescription = binding.itemDescription,
     )
 
-    constructor(binding: ItemActionBriefLandBinding) : this(
+    constructor(binding: ItemBriefLandBinding) : this(
         root = binding.root,
-        actionTypeIcon = binding.actionTypeIcon,
-        actionName = binding.actionName,
-        actionDescription = binding.actionDescription,
+        actionTypeIcon = binding.itemIcon,
+        actionName = binding.itemName,
+        actionDescription = binding.itemDescription,
     )
 }

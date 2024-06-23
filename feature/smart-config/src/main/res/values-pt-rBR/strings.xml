@@ -147,6 +147,13 @@
     <string name="field_operator_desc_or">Apenas uma condição precisa ser atendida para acionar as ações</string>
     <string name="field_operator_desc_and">Todas as condições precisam ser atendidas para acionar as ações</string>
 
+
+    <!-- Brief overlays ============================================================================================ -->
+
+    <string name="brief_empty_actions">Sem ações. Você precisa de pelo menos uma ação para criar um evento válido</string>
+    <string name="brief_empty_image_conditions">Nenhuma condição de tela. Você precisa de pelo menos uma condição para criar um evento válido</string>
+
+
     <!-- Dialog Condition Image ==================================================================================== -->
 
     <string name="dialog_title_condition_config">Condição</string>

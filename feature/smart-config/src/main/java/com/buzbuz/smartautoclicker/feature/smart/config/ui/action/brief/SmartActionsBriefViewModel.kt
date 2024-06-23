@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
@@ -65,7 +66,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     private val _isGestureCaptureStarted: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isGestureCaptureStarted: StateFlow<Boolean> = _isGestureCaptureStarted
 
-    val actionBriefList: Flow<List<SmartActionBriefItem>> = editedActions.map { actions ->
+    val actionBriefList: Flow<List<ItemBrief>> = editedActions.map { actions ->
         val actionList = actions.value ?: emptyList()
         actionList.mapIndexed { index, action -> action.toActionBrief(context, !actions.itemValidity[index]) }
     }
