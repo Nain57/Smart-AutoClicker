@@ -65,7 +65,7 @@
             android:layout_marginStart="@dimen/overlay_brief_background_top_padding"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/list_actions"/>
+            app:layout_constraintStart_toEndOf="@id/card_action_index"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/empty_scenario_card"
@@ -111,9 +111,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_vertical_default"
-            app:layout_constraintStart_toStartOf="@id/button_move_previous"
+            app:layout_constraintStart_toStartOf="@id/button_delete"
             app:layout_constraintBottom_toTopOf="@id/button_move_previous"
-            app:layout_constraintEnd_toEndOf="@id/button_move_next">
+            app:layout_constraintEnd_toEndOf="@id/button_play_action">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_action_index"

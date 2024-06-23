@@ -160,6 +160,11 @@ abstract class ItemBriefMenu(
         updateBriefButtons()
     }
 
+    protected fun hideMoveButtons() {
+        briefViewBinding.buttonMovePrevious.visibility = View.GONE
+        briefViewBinding.buttonMoveNext.visibility = View.GONE
+    }
+
     protected fun getFocusedItemIndex(): Int =
         itemListSnapHelper.snapPosition
 
