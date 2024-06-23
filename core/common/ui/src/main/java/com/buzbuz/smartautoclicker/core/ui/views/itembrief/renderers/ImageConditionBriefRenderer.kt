@@ -19,25 +19,39 @@ package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.RectF
 import android.view.View
 import androidx.annotation.ColorInt
 
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
-
+import kotlin.math.max
+import kotlin.math.min
 
 internal class ImageConditionBriefRenderer(
     briefView: View,
     viewStyle: ImageConditionBriefRendererStyle,
 ) : ItemBriefRenderer<ImageConditionBriefRendererStyle>(briefView, viewStyle) {
 
-    private val detectionAreaPaint = Paint().apply {
+    private val selectorPaint = Paint().apply {
         isAntiAlias = true
-        this.style = Paint.Style.FILL
-        color = viewStyle.detectionAreaColor
+        this.style = Paint.Style.STROKE
+        strokeWidth = viewStyle.thicknessPx.toFloat()
+        color = viewStyle.selectorColor
     }
-    private val detectionAreaRectList: MutableList<Rect> = mutableListOf()
+    private val backgroundPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        color = viewStyle.backgroundColor
+    }
+
+    private var imagePosition: Rect? = null
+    private var detectionBorderRect: RectF? = null
+    private val backgroundPath = Path().apply {
+        fillType = Path.FillType.EVEN_ODD
+    }
 
     private var briefDescription: ImageConditionDescription? = null
 
@@ -54,44 +68,66 @@ internal class ImageConditionBriefRenderer(
     }
 
     override fun invalidate() {
-        updateDetectionArea()
+        imagePosition = null
+        detectionBorderRect = null
+        backgroundPath.reset()
+
+        val position = briefDescription?.conditionPosition
+        val detectionArea = briefDescription?.conditionDetectionArea
+        if (detectionArea == null || position == null) {
+            super.invalidate()
+            return
+        }
+
+        imagePosition =
+            if (detectionArea == position) position
+            else {
+                val offsetX = (detectionArea.width() - position.width()) / 2
+                val offsetY = (detectionArea.height() - position.height()) / 2
+                Rect(
+                    detectionArea.left + offsetX,
+                    detectionArea.top + offsetY,
+                    detectionArea.right - offsetX,
+                    detectionArea.bottom - offsetY,
+                )
+            }
+
+        backgroundPath.apply {
+            moveTo(0f, 0f)
+            lineTo(briefView.width.toFloat(), 0f)
+            lineTo(briefView.width.toFloat(), briefView.height.toFloat())
+            lineTo(0f, briefView.height.toFloat())
+            close()
+
+            moveTo(detectionArea.left.toFloat(), detectionArea.top.toFloat())
+            lineTo(detectionArea.right.toFloat(), detectionArea.top.toFloat())
+            lineTo(detectionArea.right.toFloat(), detectionArea.bottom.toFloat())
+            lineTo(detectionArea.left.toFloat(), detectionArea.bottom.toFloat())
+            close()
+        }
+
+        detectionBorderRect = RectF(
+            max(0, detectionArea.left - viewStyle.thicknessPx).toFloat(),
+            max(0, detectionArea.top - viewStyle.thicknessPx).toFloat(),
+            min(briefView.width, detectionArea.right + viewStyle.thicknessPx).toFloat(),
+            min(briefView.height, detectionArea.bottom + viewStyle.thicknessPx).toFloat(),
+        )
+
         super.invalidate()
-    }
-
-    private fun updateDetectionArea() = detectionAreaRectList.apply {
-        clear()
-        val area = briefDescription?.conditionDetectionArea ?: return@apply
-
-        // Top Left
-        add(Rect(area.left - viewStyle.thicknessPx, area.top - viewStyle.thicknessPx,
-            area.left + viewStyle.lengthPx, area.top))
-        add(Rect(area.left - viewStyle.thicknessPx, area.top - viewStyle.thicknessPx,
-            area.left, area.top + viewStyle.lengthPx))
-        // Top Right
-        add(Rect(area.right - viewStyle.lengthPx, area.top - viewStyle.thicknessPx,
-            area.right + viewStyle.thicknessPx, area.top))
-        add(Rect(area.right, area.top - viewStyle.thicknessPx,
-            area.right + viewStyle.thicknessPx, area.top + viewStyle.lengthPx))
-        // Bottom Left
-        add(Rect(area.left - viewStyle.thicknessPx, area.bottom,
-            area.left + viewStyle.lengthPx, area.bottom + viewStyle.thicknessPx))
-        add(Rect(area.left - viewStyle.thicknessPx, area.bottom - viewStyle.lengthPx,
-            area.left, area.bottom + viewStyle.thicknessPx))
-        // Bottom Right
-        add(Rect(area.right - viewStyle.lengthPx, area.bottom,
-            area.right + viewStyle.thicknessPx, area.bottom + viewStyle.thicknessPx))
-        add(Rect(area.right, area.bottom - viewStyle.lengthPx,
-            area.right + viewStyle.thicknessPx, area.bottom + viewStyle.thicknessPx))
     }
 
     override fun onDraw(canvas: Canvas) {
         briefDescription?.let { description ->
+            canvas.drawPath(backgroundPath, backgroundPaint)
+
             description.conditionBitmap?.let { bitmap ->
-                canvas.drawBitmap(bitmap, null, description.conditionPosition, null)
+                imagePosition?.let { position ->
+                    canvas.drawBitmap(bitmap, null, position, null)
+                }
             }
 
-            detectionAreaRectList.forEach { rect ->
-                canvas.drawRect(rect, detectionAreaPaint)
+            detectionBorderRect?.let { borderRect ->
+                canvas.drawRoundRect(borderRect, viewStyle.cornerRadiusPx, viewStyle.cornerRadiusPx, selectorPaint)
             }
         }
     }
@@ -106,7 +142,8 @@ data class ImageConditionDescription(
 ) : ItemBriefDescription
 
 internal data class ImageConditionBriefRendererStyle(
-    @ColorInt val detectionAreaColor: Int,
+    @ColorInt val backgroundColor: Int,
+    @ColorInt val selectorColor: Int,
     val thicknessPx: Int,
-    val lengthPx: Int,
+    val cornerRadiusPx: Float,
 )

@@ -75,7 +75,7 @@
         <attr name="colorOutlineSecondary"/>
         <attr name="colorBackground"/>
         <attr name="thickness"/>
-        <attr name="length"/>
+        <attr name="cornerRadius"/>
 
         <!-- The radius of the selector circle, in dp. -->
         <attr name="radius" format="dimension" />

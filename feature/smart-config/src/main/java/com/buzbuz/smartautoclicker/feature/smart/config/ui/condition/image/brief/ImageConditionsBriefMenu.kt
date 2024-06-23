@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 
 
 class ImageConditionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBriefMenu(
-    theme = R.style.ScenarioConfigTheme,
+    theme = R.style.AppTheme,
     noItemText = R.string.brief_empty_image_conditions,
 ) {
 

@@ -18,12 +18,18 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brie
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Point
+import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
+import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
+import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -35,9 +41,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListS
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -47,6 +56,7 @@ import javax.inject.Inject
 class ImageConditionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    private val displayMetrics: DisplayMetrics,
     private val repository: IRepository,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
@@ -55,22 +65,18 @@ class ImageConditionsBriefViewModel @Inject constructor(
         editionRepository.editionState.editedEventImageConditionsState
 
     private val currentFocusItemIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    private val focusedCondition: Flow<ImageCondition?> =
+    private val focusedCondition: Flow<Pair<ImageCondition, Bitmap?>?> =
         combine(currentFocusItemIndex, editedConditions) { focusedIndex, conditions ->
             val conditionList = conditions.value ?: return@combine null
             if (focusedIndex !in conditionList.indices) return@combine null
-            conditionList[focusedIndex]
-        }
 
-    private val focusedConditionBitmap: Flow<Bitmap?> = focusedCondition.map { condition ->
-        condition ?: return@map null
-        repository.getConditionBitmap(condition)
-    }.flowOn(ioDispatcher)
+            val condition = conditionList[focusedIndex]
+            condition to repository.getConditionBitmap(condition)
+        }.flowOn(ioDispatcher)
 
-    val conditionVisualization: Flow<ImageConditionDescription?> =
-        combine(focusedCondition, focusedConditionBitmap) { condition, bitmap ->
-            condition?.toItemDescription(bitmap)
-        }
+    val conditionVisualization: Flow<ImageConditionDescription?> = focusedCondition.map { focusedCondition ->
+        focusedCondition?.first?.toItemDescription(displayMetrics.screenSize, focusedCondition.second)
+    }
 
     val conditionBriefList: Flow<List<ItemBrief>> = editedConditions.map { conditions ->
         val conditionList = conditions.value ?: emptyList()
@@ -116,9 +122,15 @@ private fun ImageCondition.toItemBrief(context: Context, inError: Boolean): Item
         inError = inError,
     )
 
-private fun ImageCondition.toItemDescription(bitmap: Bitmap?): ImageConditionDescription =
+private fun ImageCondition.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
     ImageConditionDescription(
         conditionBitmap = bitmap,
         conditionPosition = area,
-        conditionDetectionArea = detectionArea,
+        conditionDetectionArea =
+            when (detectionType) {
+                EXACT -> area
+                IN_AREA -> detectionArea
+                WHOLE_SCREEN -> Rect(0, 0, screenArea.x, screenArea.y)
+                else -> null
+            },
     )

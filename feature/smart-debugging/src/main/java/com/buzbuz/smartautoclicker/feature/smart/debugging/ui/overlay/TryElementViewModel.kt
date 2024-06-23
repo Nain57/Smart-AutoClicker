@@ -105,6 +105,7 @@ class TryElementViewModel @Inject constructor(
         if (isPlaying.value) return
 
         viewModelScope.launch {
+            delay(500)
             triedElement.value?.let { element ->
 
                 when (element) {
