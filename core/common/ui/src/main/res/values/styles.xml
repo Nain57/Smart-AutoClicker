@@ -233,6 +233,7 @@
         <item name="colorInner">@color/overlayViewPrimary</item>
         <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
         <item name="colorOutlineSecondary">@color/overlayViewPrimary</item>
+        <item name="cornerRadius">2dp</item>
     </style>
 
     <!-- Style for the gesture record view. -->

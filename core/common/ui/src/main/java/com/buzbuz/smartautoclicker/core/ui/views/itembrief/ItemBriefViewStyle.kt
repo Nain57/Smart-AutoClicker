@@ -43,17 +43,15 @@ internal class ItemBriefViewStyle(
 internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): ItemBriefViewStyle =
     obtainStyledAttributes(attrs, R.styleable.ItemBriefView, R.attr.itemBriefStyle, defStyleAttr).use { ta ->
 
-        val length = ta.getDimensionPixelSize(R.styleable.ItemBriefView_length, 10).toFloat()
         val thickness = ta.getDimensionPixelSize(R.styleable.ItemBriefView_thickness, 4).toFloat()
         val outerRadius = ta.getDimensionPixelSize(R.styleable.ItemBriefView_radius, 30).toFloat()
-        val innerRadius = ta.getDimensionPixelSize(R.styleable.ItemBriefView_innerRadius, 4)
-            .toFloat()
+        val innerRadius = ta.getDimensionPixelSize(R.styleable.ItemBriefView_innerRadius, 4).toFloat()
+        val cornerRadius = ta.getDimensionPixelSize(R.styleable.ItemBriefView_cornerRadius, 2).toFloat()
 
         val innerColor = ta.getColor(R.styleable.ItemBriefView_colorInner, Color.WHITE)
         val backgroundColor = ta.getColor(R.styleable.ItemBriefView_colorBackground, Color.TRANSPARENT)
         val colorOutlinePrimary = ta.getColor(R.styleable.ItemBriefView_colorOutlinePrimary, Color.RED)
         val colorOutlineSecondary = ta.getColor(R.styleable.ItemBriefView_colorOutlineSecondary, Color.GREEN)
-
 
         ItemBriefViewStyle(
             clickStyle = ClickBriefRendererStyle(
@@ -82,9 +80,10 @@ internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): 
                 innerRadiusPx = innerRadius,
             ),
             imageConditionStyle = ImageConditionBriefRendererStyle(
-                detectionAreaColor = colorOutlinePrimary,
+                backgroundColor = backgroundColor,
+                selectorColor = colorOutlinePrimary,
                 thicknessPx = thickness.toInt(),
-                lengthPx = length.toInt(),
+                cornerRadiusPx = cornerRadius,
             ),
             defaultStyle = DefaultBriefRendererStyle(
                 backgroundColor = backgroundColor,
