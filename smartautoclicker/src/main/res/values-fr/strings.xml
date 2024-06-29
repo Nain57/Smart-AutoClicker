@@ -20,8 +20,11 @@
     <!-- Application wide texts. -->
     <string name="notification_title">Scénario : %1$s</string>
     <string name="notification_message">Appuyez pour changer le scénario</string>
+    <string name="notification_button_play_and_hide">Démarrer et cacher</string>
+    <string name="notification_button_pause_and_show">Pause et afficher</string>
     <string name="notification_button_toggle_menu">Afficher/Cacher</string>
     <string name="notification_button_stop">Stop</string>
+
     <string name="activity_title">Scénarios</string>
     <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
         que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée

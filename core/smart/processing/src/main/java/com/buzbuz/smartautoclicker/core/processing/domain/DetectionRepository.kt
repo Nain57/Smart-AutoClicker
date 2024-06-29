@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
+import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionProcessingTryListener
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventProcessingTryListener
@@ -102,6 +103,9 @@ class DetectionRepository @Inject constructor(
     }
 
     fun getScenarioId(): Identifier? = _scenarioId.value
+
+    fun isRunning(): Boolean =
+        detectorEngine.state.value == DetectorState.DETECTING
 
     fun startScreenRecord(
         context: Context,

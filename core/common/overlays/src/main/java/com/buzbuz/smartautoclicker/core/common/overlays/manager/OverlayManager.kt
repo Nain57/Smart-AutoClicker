@@ -20,12 +20,11 @@ import android.content.Context
 import android.graphics.Point
 import android.util.Log
 import android.view.KeyEvent
-
 import androidx.lifecycle.Lifecycle
+
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
-
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequest
@@ -71,6 +70,8 @@ class OverlayManager @Inject internal constructor(
     private var topOverlay: Overlay? = null
     /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
     private var navigateUpToRootCompletionListener: (() -> Unit)? = null
+
+    var onVisibilityChangedListener: (() -> Unit)? = null
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
     val backStackTop: Flow<Overlay?> = isNavigating
@@ -129,6 +130,7 @@ class OverlayManager @Inject internal constructor(
         Log.d(TAG, "Close all overlays (${overlayBackStack.size}, currently navigating: ${isNavigating.value}")
 
         overlayNavigationRequestStack.clear()
+        lifecyclesRegistry.clearStates()
         topOverlay?.destroy()
         repeat(overlayBackStack.size) {
             overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
@@ -158,6 +160,8 @@ class OverlayManager @Inject internal constructor(
         lifecyclesRegistry.saveStates(overlayBackStack.toList())
         // Hide from top to bottom of the stack
         overlayBackStack.forEachReversed { it.hide() }
+
+        onVisibilityChangedListener?.invoke()
     }
 
     /**
@@ -185,6 +189,8 @@ class OverlayManager @Inject internal constructor(
 
             } ?: Log.w(TAG, "State for overlay ${overlay.hashCode()} not found, can't restore state")
         }
+
+        onVisibilityChangedListener?.invoke()
     }
 
     /** @return true if the overlay stack has been hidden via [hideAll], false if not. */

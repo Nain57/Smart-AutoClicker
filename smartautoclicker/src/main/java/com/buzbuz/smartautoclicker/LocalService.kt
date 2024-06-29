@@ -23,15 +23,19 @@ import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
+import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
+import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +43,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class LocalService(
@@ -48,22 +55,44 @@ class LocalService(
     private val detectionRepository: DetectionRepository,
     private val bitmapManager: IBitmapManager,
     private val dumbEngine: DumbEngine,
-    val tileRepository: QSTileRepository,
+    private val tileRepository: QSTileRepository,
+    private val revenueRepository: IRevenueRepository,
+    private val debugRepository: DebuggingRepository,
     private val androidExecutor: AndroidExecutor,
     private val onStart: (isSmart: Boolean, name: String) -> Unit,
     private val onStop: () -> Unit,
+    onStateChanged: (isRunning: Boolean, isMenuHidden: Boolean) -> Unit,
 ) : SmartAutoClickerService.ILocalService {
 
     /** Scope for this LocalService. */
     private val serviceScope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     /** Coroutine job for the delayed start of engine & ui. */
     private var startJob: Job? = null
+    /** Coroutine job for the paywall result upon start from notification. */
+    private var paywallResultJob: Job? = null
+
+    /** State of this LocalService. */
+    private var state: LocalServiceState = LocalServiceState(isStarted = false, isSmartLoaded = false)
     /** True if the overlay is started, false if not. */
-    internal var isStarted: Boolean = false
+    internal val isStarted: Boolean
+        get() = state.isStarted
+
+    init {
+        combine(dumbEngine.isRunning, detectionRepository.detectionState) { dumbIsRunning, smartState ->
+            dumbIsRunning || smartState == DetectionState.DETECTING
+        }.onEach { onStateChanged(it, overlayManager.isStackHidden()) }.launchIn(serviceScope)
+
+        overlayManager.onVisibilityChangedListener = {
+            onStateChanged(
+                dumbEngine.isRunning.value || detectionRepository.isRunning(),
+                overlayManager.isStackHidden()
+            )
+        }
+    }
 
     override fun startDumbScenario(dumbScenario: DumbScenario) {
-        if (isStarted) return
-        isStarted = true
+        if (state.isStarted) return
+        state = LocalServiceState(isStarted = true, isSmartLoaded = false)
         onStart(false, dumbScenario.name)
 
         displayMetrics.startMonitoring(context)
@@ -96,7 +125,7 @@ class LocalService(
      */
     override fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
         if (isStarted) return
-        isStarted = true
+        state = LocalServiceState(isStarted = true, isSmartLoaded = true)
         onStart(true, scenario.name)
 
         displayMetrics.startMonitoring(context)
@@ -123,9 +152,63 @@ class LocalService(
         }
     }
 
+    override fun playAndHide() {
+        serviceScope.launch {
+            overlayManager.hideAll()
+
+            if (state.isSmartLoaded && !detectionRepository.isRunning()) {
+                if (revenueRepository.userBillingState.value == UserBillingState.AD_REQUESTED) startPaywall()
+                else startSmartScenario()
+            } else if (!state.isSmartLoaded && !dumbEngine.isRunning.value) {
+                dumbEngine.startDumbScenario()
+            }
+        }
+    }
+
+    private fun startPaywall() {
+        revenueRepository.startPaywallUiFlow(context)
+
+        paywallResultJob = combine(revenueRepository.isBillingFlowInProgress, revenueRepository.userBillingState) { inProgress, state ->
+            if (inProgress) return@combine
+
+            if (state != UserBillingState.AD_REQUESTED) startSmartScenario()
+            paywallResultJob?.cancel()
+            paywallResultJob = null
+        }.launchIn(serviceScope)
+    }
+
+    private fun startSmartScenario() {
+        serviceScope.launch {
+            detectionRepository.startDetection(
+                context,
+                debugRepository.getDebugDetectionListenerIfNeeded(context),
+                revenueRepository.consumeTrial(),
+            )
+        }
+    }
+
+    override fun pauseAndShow() {
+        serviceScope.launch {
+            when {
+                dumbEngine.isRunning.value -> dumbEngine.stopDumbScenario()
+                detectionRepository.isRunning() -> detectionRepository.stopDetection()
+            }
+
+            overlayManager.restoreVisibility()
+        }
+    }
+
+    override fun hide() {
+        overlayManager.hideAll()
+    }
+
+    override fun show() {
+        overlayManager.restoreVisibility()
+    }
+
     override fun stop() {
         if (!isStarted) return
-        isStarted = false
+        state = LocalServiceState(isStarted = false, isSmartLoaded = false)
 
         serviceScope.launch {
             startJob?.join()
@@ -149,14 +232,9 @@ class LocalService(
         event ?: return false
         return overlayManager.propagateKeyEvent(event)
     }
-
-    fun toggleOverlaysVisibility() {
-        overlayManager.apply {
-            if (isStackHidden()) {
-                restoreVisibility()
-            } else {
-                hideAll()
-            }
-        }
-    }
 }
+
+private data class LocalServiceState(
+    val isStarted: Boolean,
+    val isSmartLoaded: Boolean
+)
