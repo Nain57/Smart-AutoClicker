@@ -16,6 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
+import android.annotation.SuppressLint
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintSet
@@ -37,8 +40,15 @@ internal fun IncludeFieldEventChildrenBinding.setEmptyDescription(@StringRes des
     emptyDescription.setText(descRes)
 }
 
+@SuppressLint("ClickableViewAccessibility")
 internal fun IncludeFieldEventChildrenBinding.setOnClickListener(listener: (() -> Unit)?) {
-    listener?.let { root.setOnClickListener { it() } } ?: root.setOnClickListener(null)
+    if (listener != null) {
+        root.setOnClickListener { listener() }
+        list.setEmptySpaceClickListener(listener)
+    } else {
+        root.setOnClickListener(null)
+        list.setEmptySpaceClickListener(null)
+    }
 }
 
 internal fun <Item> IncludeFieldEventChildrenBinding.setAdapter(adapter: ListAdapter<Item, *>) {
@@ -85,6 +95,30 @@ private fun <Item> IncludeFieldEventChildrenBinding.toListState(items: List<Item
 private fun <Item> RecyclerView.getListAdapter(): ListAdapter<Item, *>? =
     adapter as? ListAdapter<Item, *>
 
+
+private fun RecyclerView.setEmptySpaceClickListener(listener: (() -> Unit)?) {
+    if (listener == null) {
+        setOnTouchListener(null)
+        setOnClickListener(null)
+        return
+    }
+
+    setOnClickListener { listener() }
+
+    val clickDetector = GestureDetector(
+        context,
+        object: GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapUp(e: MotionEvent): Boolean = true
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean = true
+        }
+    )
+    setOnTouchListener { v, event ->
+        if (clickDetector.onTouchEvent(event)) {
+            v.performClick()
+            true
+        } else false
+    }
+}
 
 private data class FieldTitles(
     @StringRes val titleRes: Int,

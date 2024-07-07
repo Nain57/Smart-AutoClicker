@@ -48,7 +48,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_large"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +60,7 @@
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_event_child_description"
+        tools:itemCount="3"
         tools:visibility="visible"/>
 
     <com.google.android.material.textview.MaterialTextView
