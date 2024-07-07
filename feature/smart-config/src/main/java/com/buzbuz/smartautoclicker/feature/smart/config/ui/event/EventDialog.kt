@@ -41,8 +41,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledStat
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChildrenIcons
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChildrenTexts
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError

@@ -15,10 +15,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <include layout="@layout/include_dialog_navigation_top_bar"
@@ -64,13 +64,14 @@
                         android:id="@+id/field_image_conditions_selector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
 
                     <include layout="@layout/include_field_event_children"
                         android:id="@+id/field_trigger_conditions_selector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="visible"/>
+                        android:visibility="gone"/>
 
                     <com.google.android.material.divider.MaterialDivider
                         style="@style/AppTheme.Widget.Divider.Horizontal"
