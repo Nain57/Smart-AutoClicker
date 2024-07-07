@@ -277,4 +277,5 @@
 
     <string name="brief_empty_actions">Aucune Action. Vous avez besoin d\'au moins une Action valide pour créer un évènement</string>
     <string name="brief_empty_image_conditions">Aucune condition d\'écran. Vous avez besoin d\'au moins une Condition valide pour créer un évènement</string>
+    <string name="field_condition_selector_desc">%1$d conditions</string>
 </resources>

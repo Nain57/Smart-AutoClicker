@@ -44,7 +44,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 
-class ImageConditionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBriefMenu(
+class ImageConditionsBriefMenu(
+    private val initialFocusedIndex: Int? = null,
+    private val onConfigComplete: () -> Unit,
+) : ItemBriefMenu(
     theme = R.style.AppTheme,
     noItemText = R.string.brief_empty_image_conditions,
 ) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2024 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/AppTheme.Widget.Card"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/dialog_item_condition_copy_condition_size"
-    android:layout_marginHorizontal="@dimen/margin_horizontal_small"
-    android:layout_marginVertical="@dimen/margin_vertical_default">
+    style="@style/AppTheme.Widget.CardOutlined"
+    android:layout_width="@dimen/card_view_width_horizontal_list"
+    android:layout_height="@dimen/card_view_height_horizontal_list"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+    android:layout_marginTop="@dimen/margin_vertical_small"
+    android:layout_marginBottom="@dimen/margin_vertical_small"
+    android:elevation="@dimen/elevation_level_2">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -32,70 +34,57 @@
         <ImageView
             android:id="@+id/condition_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginVertical="@dimen/margin_vertical_default"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-            android:contentDescription="@string/content_desc_image_condition"
-            android:scaleType="fitCenter"
+            android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            android:background="?attr/colorSurfaceVariant"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/content_desc_image_condition"
             tools:src="@drawable/ic_condition" />
 
-        <ImageView
-            android:id="@+id/background_bottom"
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/background_fade_bottom"
-            tools:ignore="contentDescription"/>
-
-        <ImageView
-            android:id="@+id/background_top"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/background_fade_top"
-            tools:ignore="contentDescription"/>
+            app:layout_constraintTop_toBottomOf="@id/condition_image"
+            app:layout_constraintBottom_toTopOf="@id/condition_name"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/condition_name"
-            style="@style/TextAppearance.Material3.BodyLarge"
-            android:layout_width="wrap_content"
+            style="@style/TextAppearance.Material3.BodySmall"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_small"
-            app:layout_constraintTop_toTopOf="@id/background_top"
-            app:layout_constraintBottom_toBottomOf="@id/background_top"
+            android:layout_marginVertical="@dimen/margin_vertical_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/condition_should_be_detected"
+            android:gravity="center_horizontal"
             android:singleLine="true"
             android:ellipsize="marquee"
-            android:textColor="@color/md_theme_light_onPrimary"
             tools:text="Condition name"/>
 
         <ImageView
             android:id="@+id/condition_should_be_detected"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            android:layout_marginStart="@dimen/margin_horizontal_large"
-            app:layout_constraintTop_toTopOf="@id/background_bottom"
-            app:layout_constraintBottom_toBottomOf="@id/background_bottom"
+            android:layout_height="16dp"
+            android:layout_marginVertical="@dimen/margin_vertical_mini"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/condition_detection_type"
             android:src="@drawable/ic_confirm"
             tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/condition_detection_type"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            app:layout_constraintTop_toTopOf="@id/background_bottom"
-            app:layout_constraintBottom_toBottomOf="@id/background_bottom"
+            android:layout_height="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/condition_should_be_detected"
+            app:layout_constraintTop_toTopOf="@id/condition_should_be_detected"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_detect_exact"
@@ -104,17 +93,17 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/condition_threshold"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_item_condition_copy_icons_height"
-            android:layout_marginEnd="@dimen/margin_horizontal_large"
-            app:layout_constraintTop_toTopOf="@id/background_bottom"
-            app:layout_constraintBottom_toBottomOf="@id/background_bottom"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/condition_should_be_detected"
+            app:layout_constraintTop_toTopOf="@id/condition_should_be_detected"
+            app:layout_constraintStart_toEndOf="@id/condition_detection_type"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
             android:textSize="@dimen/text_size_list_item_text_small"
             android:textColor="@color/overlayMenuButtons"
             android:singleLine="true"
             android:ellipsize="marquee"
-            tools:text="8 %"/>
+            tools:text="8 %"
+            tools:textColor="@android:color/black"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
