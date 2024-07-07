@@ -60,11 +60,9 @@ open class MultiChoiceDialog<T : DialogChoice>(
         viewBinding = DialogBaseMultiChoiceBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(dialogTitleText)
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        onCanceled?.invoke()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    onCanceled?.invoke()
+                    back()
                 }
             }
 

@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.view.ContextThemeWrapper
@@ -238,6 +239,10 @@ abstract class BaseOverlay internal constructor(
                 debounceUserInteractionJob = null
             }
         }
+    }
+
+    protected fun View.setDebouncedOnClickListener(listener: (view: View) -> Unit) {
+        setOnClickListener { view -> debounceUserInteraction { listener(view) } }
     }
 
     /**

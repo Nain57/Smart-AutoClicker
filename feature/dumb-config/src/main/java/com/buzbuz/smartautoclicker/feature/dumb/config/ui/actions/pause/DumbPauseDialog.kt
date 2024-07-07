@@ -69,14 +69,14 @@ class DumbPauseDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.item_title_dumb_pause)
 
-                buttonDismiss.setOnClickListener { onDismissButtonClicked()}
+                buttonDismiss.setDebouncedOnClickListener { onDismissButtonClicked()}
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -123,28 +123,22 @@ class DumbPauseDialog(
 
     private fun onSaveButtonClicked() {
         viewModel.getEditedDumbPause()?.let { editedDumbClick ->
-            debounceUserInteraction {
-                viewModel.saveLastConfig(context)
-                onConfirmClicked(editedDumbClick)
-                back()
-            }
+            viewModel.saveLastConfig(context)
+            onConfirmClicked(editedDumbClick)
+            back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         viewModel.getEditedDumbPause()?.let { editedAction ->
-            debounceUserInteraction {
-                onDeleteClicked(editedAction)
-                back()
-            }
+            onDeleteClicked(editedAction)
+            back()
         }
     }
 
     private fun onDismissButtonClicked() {
-        debounceUserInteraction {
-            onDismissClicked()
-            back()
-        }
+        onDismissClicked()
+        back()
     }
     private fun updateDumbPauseDuration(duration: String) {
         viewBinding.editPauseDurationLayout.setText(duration, InputType.TYPE_CLASS_NUMBER)

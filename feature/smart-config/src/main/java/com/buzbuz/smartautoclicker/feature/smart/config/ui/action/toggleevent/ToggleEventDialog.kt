@@ -72,19 +72,17 @@ class ToggleEventDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_toggle_event)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        listener.onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    listener.onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -144,17 +142,13 @@ class ToggleEventDialog(
     }
 
     private fun onSaveButtonClicked() {
-        debounceUserInteraction {
-            listener.onConfirmClicked()
-            back()
-        }
+        listener.onConfirmClicked()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            listener.onDeleteClicked()
-            back()
-        }
+        listener.onDeleteClicked()
+        back()
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {

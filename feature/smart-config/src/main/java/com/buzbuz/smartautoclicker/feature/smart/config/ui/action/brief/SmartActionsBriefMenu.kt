@@ -81,15 +81,13 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
     }
 
     override fun onMenuItemClicked(viewId: Int) {
-        debounceUserInteraction {
-            when (viewId) {
-                R.id.btn_save -> {
-                    onConfigComplete()
-                    back()
-                }
-                R.id.btn_record -> onRecordClicked()
-                R.id.btn_add_other -> showNewActionDialog()
+        when (viewId) {
+            R.id.btn_save -> {
+                onConfigComplete()
+                back()
             }
+            R.id.btn_record -> onRecordClicked()
+            R.id.btn_add_other -> showNewActionDialog()
         }
     }
 

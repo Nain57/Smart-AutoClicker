@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbScenarioBriefMenuBinding
@@ -113,42 +114,33 @@ class DumbScenarioBriefMenu(
     }
 
     private fun onBackClicked() {
-        debounceUserInteraction {
-            onConfigSaved()
-            back()
-        }
+        onConfigSaved()
+        back()
     }
 
     private fun onCreateDumbActionClicked() {
-        debounceUserInteraction {
-            hidePanel()
-            overlayManager.startDumbActionCreationUiFlow(
-                context = context,
-                creator = dumbActionCreator,
-                listener = createCopyActionUiFlowListener,
-            )
-        }
+        hidePanel()
+        overlayManager.startDumbActionCreationUiFlow(
+            context = context,
+            creator = dumbActionCreator,
+            listener = createCopyActionUiFlowListener,)
     }
 
     private fun onCopyDumbActionClicked() {
-        debounceUserInteraction {
-            hidePanel()
-            overlayManager.startDumbActionCopyUiFlow(
-                context = context,
-                creator = dumbActionCreator,
-                listener = createCopyActionUiFlowListener
-            )
-        }
+        hidePanel()
+        overlayManager.startDumbActionCopyUiFlow(
+            context = context,
+            creator = dumbActionCreator,
+            listener = createCopyActionUiFlowListener
+        )
     }
 
-    private fun onDumbActionCardClicked(dumbAction: DumbActionDetails) {
-        debounceUserInteraction {
-            overlayManager.startDumbActionEditionUiFlow(
-                context = context,
-                dumbAction = dumbAction.action,
-                listener = updateActionUiFlowListener,
-            )
-        }
+    override fun onItemBriefClicked(index: Int, item: ItemBrief) {
+        /*overlayManager.startDumbActionEditionUiFlow(
+            context = context,
+            dumbAction = item.data.action,
+            listener = updateActionUiFlowListener,
+        )*/
     }
 
     private fun onNewDumbActionCreated(action: DumbAction) {

@@ -58,9 +58,9 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     override fun onCreateView(): ViewGroup {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                buttonSave.setOnClickListener { handleButtonClick(DialogNavigationButton.SAVE) }
-                buttonDismiss.setOnClickListener { handleButtonClick(DialogNavigationButton.DISMISS) }
-                buttonDelete.setOnClickListener { handleButtonClick(DialogNavigationButton.DELETE) }
+                buttonSave.setDebouncedOnClickListener { handleButtonClick(DialogNavigationButton.SAVE) }
+                buttonDismiss.setDebouncedOnClickListener { handleButtonClick(DialogNavigationButton.DISMISS) }
+                buttonDelete.setDebouncedOnClickListener { handleButtonClick(DialogNavigationButton.DELETE) }
             }
         }
         topBarBinding = baseViewBinding.layoutTopBar
@@ -189,14 +189,12 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     }
 
     private fun handleButtonClick(buttonType: DialogNavigationButton) {
-        debounceUserInteraction {
-            // First notify the contents.
-            contentMap.values.forEach { contentInfo ->
-                contentInfo.onDialogButtonClicked(buttonType)
-            }
-
-            // Then, notify the dialog
-            onDialogButtonPressed(buttonType)
+        // First notify the contents.
+        contentMap.values.forEach { contentInfo ->
+            contentInfo.onDialogButtonClicked(buttonType)
         }
+
+        // Then, notify the dialog
+        onDialogButtonPressed(buttonType)
     }
 }

@@ -246,10 +246,10 @@ abstract class OverlayMenu(
                 R.id.btn_hide_overlay -> {
                     hideOverlayButton = (view as ImageButton)
                     setOverlayViewVisibility(true)
-                    view.setOnClickListener { onHideOverlayClicked() }
+                    view.setDebouncedOnClickListener { onHideOverlayClicked() }
                 }
-                else -> view.setOnClickListener { v ->
-                    if (resizeController.isAnimating) return@setOnClickListener
+                else -> view.setDebouncedOnClickListener { v ->
+                    if (resizeController.isAnimating) return@setDebouncedOnClickListener
                     onMenuItemClicked(v.id)
                 }
             }

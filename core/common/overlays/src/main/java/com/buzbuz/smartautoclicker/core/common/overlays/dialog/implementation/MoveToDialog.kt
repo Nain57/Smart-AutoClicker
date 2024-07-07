@@ -52,13 +52,11 @@ class MoveToDialog(
                 buttonDelete.visibility = View.GONE
                 buttonSave.visibility = View.VISIBLE
 
-                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
-                buttonSave.setOnClickListener {
-                    debounceUserInteraction {
-                        fieldMoveToIndex.textField.text?.getEditedValue()?.let { value ->
-                            onValueSelected(value)
-                            back()
-                        }
+                buttonDismiss.setDebouncedOnClickListener { back() }
+                buttonSave.setDebouncedOnClickListener {
+                    fieldMoveToIndex.textField.text?.getEditedValue()?.let { value ->
+                        onValueSelected(value)
+                        back()
                     }
                 }
             }

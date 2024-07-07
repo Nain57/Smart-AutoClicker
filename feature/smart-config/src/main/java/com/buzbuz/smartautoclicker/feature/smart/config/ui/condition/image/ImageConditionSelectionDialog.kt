@@ -68,7 +68,7 @@ class ImageConditionSelectionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_selection)
                 buttonSave.visibility = View.GONE
-                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
+                buttonDismiss.setDebouncedOnClickListener { back() }
             }
         }
 

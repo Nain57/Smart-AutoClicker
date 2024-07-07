@@ -84,14 +84,14 @@ class DumbSwipeDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.item_title_dumb_swipe)
 
-                buttonDismiss.setOnClickListener { onDismissButtonClicked()}
+                buttonDismiss.setDebouncedOnClickListener { onDismissButtonClicked()}
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -166,28 +166,22 @@ class DumbSwipeDialog(
 
     private fun onSaveButtonClicked() {
         viewModel.getEditedDumbSwipe()?.let { editedDumbSwipe ->
-            debounceUserInteraction {
-                viewModel.saveLastConfig(context)
-                onConfirmClicked(editedDumbSwipe)
-                back()
-            }
+            viewModel.saveLastConfig(context)
+            onConfirmClicked(editedDumbSwipe)
+            back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         viewModel.getEditedDumbSwipe()?.let { editedAction ->
-            debounceUserInteraction {
-                onDeleteClicked(editedAction)
-                back()
-            }
+            onDeleteClicked(editedAction)
+            back()
         }
     }
 
     private fun onDismissButtonClicked() {
-        debounceUserInteraction {
-            onDismissClicked()
-            back()
-        }
+        onDismissClicked()
+        back()
     }
 
     private fun updateDumbSwipePressDuration(duration: String) {

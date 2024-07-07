@@ -62,16 +62,12 @@ class EventTogglesDialog(
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
 
-                buttonSave.setOnClickListener {
-                    debounceUserInteraction {
-                        onConfirmClicked(viewModel.getEditedEventToggleList())
-                        back()
-                    }
+                buttonSave.setDebouncedOnClickListener {
+                    onConfirmClicked(viewModel.getEditedEventToggleList())
+                    back()
                 }
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    back()
                 }
             }
 

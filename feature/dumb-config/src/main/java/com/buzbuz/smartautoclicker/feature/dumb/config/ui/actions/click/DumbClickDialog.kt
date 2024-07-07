@@ -84,14 +84,14 @@ class DumbClickDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.item_title_dumb_click)
 
-                buttonDismiss.setOnClickListener { onDismissButtonClicked()}
+                buttonDismiss.setDebouncedOnClickListener { onDismissButtonClicked()}
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -167,28 +167,22 @@ class DumbClickDialog(
 
     private fun onSaveButtonClicked() {
         viewModel.getEditedDumbClick()?.let { editedDumbClick ->
-            debounceUserInteraction {
-                viewModel.saveLastConfig(context)
-                onConfirmClicked(editedDumbClick)
-                back()
-            }
+            viewModel.saveLastConfig(context)
+            onConfirmClicked(editedDumbClick)
+            back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         viewModel.getEditedDumbClick()?.let { editedAction ->
-            debounceUserInteraction {
-                onDeleteClicked(editedAction)
-                back()
-            }
+            onDeleteClicked(editedAction)
+            back()
         }
     }
 
     private fun onDismissButtonClicked() {
-        debounceUserInteraction {
-            onDismissClicked()
-            back()
-        }
+        onDismissClicked()
+        back()
     }
 
     private fun updateDumbClickPressDuration(duration: String) {
