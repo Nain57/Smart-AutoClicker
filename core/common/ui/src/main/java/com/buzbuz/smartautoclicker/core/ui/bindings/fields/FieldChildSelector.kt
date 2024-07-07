@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 
 import android.view.View
+
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_DISABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_ENABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setIcons

@@ -26,15 +26,15 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionDescriptionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTint
 
 import kotlinx.coroutines.Job
 
 /**
- * Bind the [ItemImageConditionBinding] to a condition.
+ * Bind the [ItemImageConditionDescriptionBinding] to a condition.
  */
-fun ItemImageConditionBinding.bind(
+fun ItemImageConditionDescriptionBinding.bind(
     condition: ImageCondition,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     conditionClickedListener: (ImageCondition) -> Unit

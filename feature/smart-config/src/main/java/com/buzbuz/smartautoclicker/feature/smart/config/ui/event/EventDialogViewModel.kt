@@ -16,25 +16,42 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
+import android.graphics.Bitmap
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 class EventDialogViewModel @Inject constructor(
+    private val repository: IRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
@@ -55,7 +72,9 @@ class EventDialogViewModel @Inject constructor(
         }
     }
 
-    /** Tells if the configured event is valid and can be saved. */
+    private val configuredEvent = editionRepository.editionState.editedEventState
+        .mapNotNull { it.value }
+
     val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState
         .map { it.canBeSaved }
 
@@ -64,12 +83,70 @@ class EventDialogViewModel @Inject constructor(
         .distinctUntilChanged()
         .debounce(1000)
 
-    fun getEditedEvent(): Event? =
-        editionRepository.editionState.getEditedEvent<Event>()
+    val eventName: Flow<String?> = configuredEvent
+        .filterNotNull()
+        .map { it.name }
+        .take(1)
 
-    /** Tells if this event have associated actions. */
+    val eventNameError: Flow<Boolean> = configuredEvent
+        .map { it.name.isEmpty() }
+
+    val configuredEventConditions: Flow<List<Condition>> = editionRepository.editionState.editedEventConditionsState
+        .mapNotNull { it.value }
+
+    val triggerConditionsDescription:  Flow<List<Int>> =
+        editionRepository.editionState.editedEventTriggerConditionsState.mapNotNull { conditionsListState ->
+            conditionsListState.value?.toTriggerConditionsIcons()
+        }
+
+    val conditionOperator: Flow<Int> = configuredEvent
+        .map { event -> event.conditionOperator }
+
+    val actionsDescriptions: Flow<List<Int>> = editionRepository.editionState.editedEventActionsState.mapNotNull { actionsState ->
+        actionsState.value?.toActionIcons()
+    }
+
+    val eventEnabledOnStart: Flow<Boolean> = configuredEvent
+        .map { event -> event.enabledOnStart }
+
+    val shouldShowTryCard: Flow<Boolean> = configuredEvent
+        .map { it is ImageEvent }
+
+    val canTryEvent: Flow<Boolean> = configuredEvent
+        .map { it.isComplete() }
+
+
+    fun isConfiguringScreenEvent(): Boolean =
+        editionRepository.editionState.getEditedEvent<Event>() is ImageEvent
+
+    fun getTryInfo(): Pair<Scenario, ImageEvent>? {
+        val scenario = editionRepository.editionState.getScenario() ?: return null
+        val event = editionRepository.editionState.getEditedEvent<ImageEvent>() ?: return null
+
+        return scenario to event
+    }
+
+    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
+        getImageConditionBitmap(repository, condition, onBitmapLoaded)
+
     fun isEventHaveRelatedActions(): Boolean =
         editionRepository.editionState.isEditedEventReferencedByAction()
+
+    fun setEventName(newName: String) {
+        updateEditedEvent { oldValue -> oldValue.copyBase(name = newName) }
+    }
+
+    fun setConditionOperator(@ConditionOperator operator: Int) {
+        updateEditedEvent { oldValue ->
+            oldValue.copyBase(conditionOperator = operator)
+        }
+    }
+
+    fun toggleEventState() {
+        updateEditedEvent { oldValue ->
+            oldValue.copyBase(enabledOnStart = !oldValue.enabledOnStart)
+        }
+    }
 
     fun monitorActionTabView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS, view)
@@ -87,6 +164,35 @@ class EventDialogViewModel @Inject constructor(
             detach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE)
             detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS)
             detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS)
+        }
+    }
+
+    private fun updateEditedEvent(closure: (oldValue: Event) -> Event?) {
+        editionRepository.editionState.getEditedEvent<Event>()?.let { oldValue ->
+            viewModelScope.launch {
+                closure(oldValue)?.let { newValue ->
+                    editionRepository.updateEditedEvent(newValue)
+                }
+            }
+        }
+    }
+
+    private fun List<TriggerCondition>.toTriggerConditionsIcons(): List<Int> = map { condition ->
+        when (condition) {
+            is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
+            is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
+            is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
+        }
+    }
+
+    private fun List<Action>.toActionIcons(): List<Int> = map { action ->
+        when (action) {
+            is Action.ChangeCounter -> R.drawable.ic_change_counter
+            is Action.Click -> R.drawable.ic_click
+            is Action.Intent -> R.drawable.ic_intent
+            is Action.Pause -> R.drawable.ic_wait
+            is Action.Swipe -> R.drawable.ic_swipe
+            is Action.ToggleEvent -> R.drawable.ic_toggle_event
         }
     }
 }

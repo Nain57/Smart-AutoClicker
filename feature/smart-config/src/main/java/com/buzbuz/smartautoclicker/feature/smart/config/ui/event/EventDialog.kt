@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
 import android.content.DialogInterface
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
@@ -25,25 +26,41 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
-import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialog
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.domain.model.AND
+import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.DualStateButtonTextConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChildrenIcons
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChildrenTexts
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogEventConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionsContent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.ConditionsContent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.config.EventConfigContent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.navigation.NavigationBarView
 
 import kotlinx.coroutines.launch
 
@@ -51,7 +68,7 @@ class EventDialog(
     private val onConfigComplete: () -> Unit,
     private val onDelete: () -> Unit,
     private val onDismiss: () -> Unit,
-): NavBarDialog(R.style.ScenarioConfigTheme) {
+) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this dialog. */
     private val viewModel: EventDialogViewModel by viewModels(
@@ -59,69 +76,180 @@ class EventDialog(
         creator = { eventDialogViewModel() },
     )
 
+    private lateinit var viewBinding: DialogEventConfigBinding
+
     override fun onCreateView(): ViewGroup {
-        return super.onCreateView().also {
-            topBarBinding.apply {
-                setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
-                setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
+        viewBinding = DialogEventConfigBinding.inflate(LayoutInflater.from(context)).apply {
+            setupNavBar()
+            setupEventProperties()
+            setupActionCard()
+            setupConditionsCard()
+        }
 
-                viewModel.getEditedEvent()?.let { event ->
-                    dialogTitle.setText(
-                        when (event) {
-                            is ImageEvent -> R.string.dialog_title_image_event
-                            is TriggerEvent -> R.string.dialog_title_trigger_event
-                        }
-                    )
-                }
+        return viewBinding.root
+    }
+
+    private fun DialogEventConfigBinding.setupNavBar() = layoutTopBar.apply {
+        setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+        setButtonVisibility(DialogNavigationButton.DELETE, View.VISIBLE)
+
+        dialogTitle.setText(
+            if (viewModel.isConfiguringScreenEvent()) R.string.dialog_title_image_event
+            else R.string.dialog_title_trigger_event
+        )
+
+        buttonDismiss.setOnClickListener {
+            debounceUserInteraction {
+                onDismiss()
+                back()
+            }
+        }
+        buttonSave.setOnClickListener {
+            debounceUserInteraction {
+                onConfigComplete()
+                back()
+            }
+        }
+
+        buttonDelete.setOnClickListener {
+            debounceUserInteraction {
+                onDeleteButtonClicked()
             }
         }
     }
 
-    override fun inflateMenu(navBarView: NavigationBarView) {
-        val menuId = when (viewModel.getEditedEvent()) {
-            is ImageEvent -> R.menu.menu_image_event_config
-            is TriggerEvent -> R.menu.menu_trigger_event_config
-            null -> {
-                finish()
-                return
+    private fun DialogEventConfigBinding.setupEventProperties() {
+        fieldIsEnabled.apply {
+            setTitle(context.resources.getString(R.string.field_event_state_title))
+            setupDescriptions(
+                listOf(
+                    context.getString(R.string.field_event_state_desc_disabled),
+                    context.getString(R.string.field_event_state_desc_enabled),
+                )
+            )
+            setOnClickListener(viewModel::toggleEventState)
+        }
+
+        fieldTestEvent.apply {
+            setTitle(
+                context.getString(
+                    R.string.item_title_try_element,
+                    context.getString(R.string.dialog_title_image_event),
+                )
+            )
+            setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
+        }
+    }
+
+    private fun DialogEventConfigBinding.setupConditionsCard() {
+        if (viewModel.isConfiguringScreenEvent()) {
+            fieldTriggerConditionsSelector.root.visibility = View.GONE
+            fieldImageConditionsSelector.apply {
+                root.visibility = View.VISIBLE
+                setTitle(
+                    titleRes = R.string.menu_item_title_conditions,
+                    emptyTitleRes = R.string.message_empty_screen_condition_list_title,
+                )
+                setEmptyDescription(R.string.message_empty_screen_condition_list_desc)
+
+                setAdapter(
+                    EventImageConditionsAdapter(
+                        itemClickedListener = ::showImageConditionsBriefMenu,
+                        bitmapProvider = viewModel::getConditionBitmap,
+                    ),
+                )
+
+                setOnClickListener { debounceUserInteraction { showImageConditionsBriefMenu() } }
+            }
+        } else {
+            fieldImageConditionsSelector.root.visibility = View.GONE
+            fieldTriggerConditionsSelector.apply {
+                root.visibility = View.VISIBLE
+                setTitle(
+                    titleRes = R.string.menu_item_title_conditions,
+                    emptyTitleRes = R.string.message_empty_trigger_condition_list_title,
+                )
+                setEmptyDescription(R.string.message_empty_trigger_condition_list_desc)
+
+                setAdapter(EventChildrenCardsAdapter { showTriggerConditionsDialog() },)
+                setOnClickListener { debounceUserInteraction { showTriggerConditionsDialog() } }
             }
         }
 
-        navBarView.inflateMenu(menuId)
+        fieldConditionsOperator.apply {
+            setTitle(context.getString(R.string.field_operator_title))
+            setupDescriptions(
+                listOf(
+                    context.getString(R.string.field_operator_desc_and),
+                    context.getString(R.string.field_operator_desc_or),
+                )
+            )
+            setButtonConfig(
+                DualStateButtonTextConfig(
+                    textLeft = context.getString(R.string.field_operator_button_and),
+                    textRight = context.getString(R.string.field_operator_button_or),
+                    selectionRequired = true,
+                    singleSelection = true,
+                )
+            )
+            setOnCheckedListener { checkedId ->
+                viewModel.setConditionOperator(if (checkedId == 0) AND else OR)
+            }
+        }
     }
 
-    override fun onCreateContent(navItemId: Int): NavBarDialogContent {
-        return when (navItemId) {
-            R.id.page_event -> EventConfigContent(context.applicationContext)
-            R.id.page_conditions -> ConditionsContent(context.applicationContext)
-            R.id.page_actions -> ActionsContent(context.applicationContext)
-            else -> throw IllegalArgumentException("Unknown menu id $navItemId")
+    private fun DialogEventConfigBinding.setupActionCard() {
+        fieldActionsSelector.apply {
+            setTitle(
+                titleRes = R.string.menu_item_title_actions,
+                emptyTitleRes = R.string.message_empty_action_list_title,
+            )
+            setEmptyDescription(R.string.message_empty_action_list_desc)
+
+            setAdapter(
+                EventChildrenCardsAdapter(
+                    itemClickedListener = ::showActionsBriefMenu,
+                ),
+            )
+
+            setOnClickListener { debounceUserInteraction { showActionsBriefMenu() } }
         }
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        super.onDialogCreated(dialog)
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch { viewModel.isEditingEvent.collect(::onEventEditingStateChanged) }
             }
         }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.navItemsValidity.collect(::updateContentsValidity) }
                 launch { viewModel.eventCanBeSaved.collect(::updateSaveButton) }
+                launch { viewModel.eventName.collect(viewBinding.fieldEventName::setText) }
+                launch { viewModel.eventNameError.collect(viewBinding.fieldEventName::setError) }
+                launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
+                launch { viewModel.eventEnabledOnStart.collect(::updateEnabledOnStart) }
+                launch { viewModel.shouldShowTryCard.collect(::updateTryFieldVisibility) }
+                launch { viewModel.canTryEvent.collect(::updateTryFieldEnabledState) }
+                launch { viewModel.actionsDescriptions.collect(viewBinding.fieldActionsSelector::setItems) }
+
+                if (viewModel.isConfiguringScreenEvent()) {
+                    launch { viewModel.configuredEventConditions.collect(::updateImageConditionsField) }
+                } else {
+                    launch { viewModel.triggerConditionsDescription.collect(viewBinding.fieldTriggerConditionsSelector::setItems) }
+                }
             }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.apply {
+        /*viewModel.apply {
             monitorActionTabView(navBarView.findViewById(R.id.page_actions))
             monitorConditionTabView(navBarView.findViewById(R.id.page_conditions))
             monitorSaveButtonView(topBarBinding.buttonSave)
-        }
+        }*/
     }
 
     override fun onStop() {
@@ -129,55 +257,58 @@ class EventDialog(
         viewModel.stopViewMonitoring()
     }
 
-    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
-        when (buttonType) {
-            DialogNavigationButton.SAVE -> onConfigComplete()
-            DialogNavigationButton.DELETE -> {
-                onDeleteButtonPressed()
-                return
-            }
-            DialogNavigationButton.DISMISS -> onDismiss()
-            else -> {}
-        }
-
-        back()
-    }
-
-    private fun updateContentsValidity(itemsValidity: Map<Int, Boolean>) {
-        itemsValidity.forEach { (itemId, isValid) ->
-            setMissingInputBadge(itemId, !isValid)
+    private fun onEventEditingStateChanged(isEditingScenario: Boolean) {
+        if (!isEditingScenario) {
+            Log.e(TAG, "Closing EventDialog because there is no event edited")
+            finish()
         }
     }
 
     private fun updateSaveButton(enabled: Boolean) {
-        topBarBinding.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
     }
 
-    /**
-     * Called when the delete button is pressed.
-     * It will display the relation warnings if needed, or delete the event immediately and close the dialog.
-     */
-    private fun onDeleteButtonPressed() {
+    @Suppress("UNCHECKED_CAST")
+    private fun updateImageConditionsField(conditions: List<Condition>) {
+        viewBinding.fieldImageConditionsSelector.setItems(conditions as List<ImageCondition>)
+    }
+
+    private fun updateConditionOperator(@ConditionOperator operator: Int) {
+        viewBinding.fieldConditionsOperator.apply {
+            val index = if (operator == AND) 0 else 1
+            setChecked(index)
+            setDescription(index)
+        }
+    }
+
+    private fun updateEnabledOnStart(enabledOnStart: Boolean) {
+        viewBinding.fieldIsEnabled.apply {
+            setChecked(enabledOnStart)
+            setDescription(if (enabledOnStart) 1 else 0)
+        }
+    }
+
+    private fun updateTryFieldVisibility(isEnabled: Boolean) {
+        viewBinding.fieldTestEvent.root.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        viewBinding.dividerTrySelector.visibility = if (isEnabled) View.VISIBLE else View.GONE
+    }
+
+    private fun updateTryFieldEnabledState(isEnabled: Boolean) {
+        viewBinding.fieldTestEvent.setEnabled(isEnabled)
+    }
+
+    private fun onDeleteButtonClicked() {
         if (viewModel.isEventHaveRelatedActions()) {
-            showAssociatedActionsWarning()
+            showMessageDialog(R.string.dialog_overlay_title_warning, R.string.warning_dialog_message_event_delete_associated_action) {
+                onDelete()
+                back()
+            }
         } else {
             onDelete()
             back()
         }
     }
 
-    /**
-     * Show the action relation warning dialog.
-     * Once confirmed, it will delete the event and close the dialog.
-     */
-    private fun showAssociatedActionsWarning() {
-        showMessageDialog(R.string.dialog_overlay_title_warning, R.string.warning_dialog_message_event_delete_associated_action) {
-            onDelete()
-            back()
-        }
-    }
-
-    /** Show a message dialog. */
     private fun showMessageDialog(@StringRes title: Int, @StringRes message: Int, onOkPressed: () -> Unit) {
         MaterialAlertDialogBuilder(context)
             .setTitle(title)
@@ -190,10 +321,47 @@ class EventDialog(
             .showAsOverlay()
     }
 
-    private fun onEventEditingStateChanged(isEditingScenario: Boolean) {
-        if (!isEditingScenario) {
-            Log.e(TAG, "Closing EventDialog because there is no event edited")
-            finish()
+    private fun showImageConditionsBriefMenu(initialFocusedIndex: Int? = null) {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = ImageConditionsBriefMenu(
+                initialFocusedIndex = initialFocusedIndex,
+                onConfigComplete = {
+
+                },
+            ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun showTriggerConditionsDialog() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = TriggerConditionListDialog(
+                onSaveClicked = {
+
+                },
+            )
+        )
+    }
+
+    private fun showActionsBriefMenu(initialFocusedIndex: Int? = null) {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = SmartActionsBriefMenu {
+
+            },
+            hideCurrent = true,
+        )
+    }
+
+    private fun showTryElementMenu() {
+        viewModel.getTryInfo()?.let { (scenario, imageEvent) ->
+            overlayManager.navigateTo(
+                context = context,
+                newOverlay = TryElementOverlayMenu(scenario, imageEvent),
+                hideCurrent = true,
+            )
         }
     }
 }

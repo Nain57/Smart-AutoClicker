@@ -341,5 +341,6 @@
     <string name="content_desc_image_condition">The image to be detected</string>
     <string name="content_desc_open_event_list">Open the event list</string>
     <string name="content_desc_application_icon">The icon of the application to start.</string>
+    <string name="field_condition_selector_desc">%1$d conditions</string>
 
 </resources>

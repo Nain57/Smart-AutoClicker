@@ -272,5 +272,6 @@
 
     <string name="brief_empty_actions">无操作。要创建有效的事件，至少需要一个 "操作"。</string>
     <string name="brief_empty_image_conditions">无屏幕条件。创建有效事件至少需要一个条件</string>
+    <string name="field_condition_selector_desc">%1$d conditions</string>
 
 </resources>
