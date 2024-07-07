@@ -53,7 +53,7 @@ class CounterNameSelectionDialog(
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.generic_counters)
-                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
+                buttonDismiss.setDebouncedOnClickListener { back() }
             }
 
             counterNameAdapter = CounterNameSelectionAdapter { selectedCounterName ->

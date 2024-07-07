@@ -62,7 +62,7 @@ class IntentActionsSelectionDialog (
 
         actionsAdapter = IntentActionsSelectionAdapter(
             onActionCheckClicked = viewModel::setActionSelectionState,
-            onActionHelpClicked = ::onActionHelpClicked,
+            onActionHelpClicked = { uri -> debounceUserInteraction { onActionHelpClicked(uri) } },
         )
 
         viewBinding = DialogConfigActionIntentActionsBinding.inflate(LayoutInflater.from(context)).apply {
@@ -99,24 +99,22 @@ class IntentActionsSelectionDialog (
     }
 
     private fun onActionHelpClicked(uri: Uri) {
-        debounceUserInteraction {
-            try {
-                context.startActivity(
-                    Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER)
-                        .apply {
-                        data = uri
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                )
+        try {
+            context.startActivity(
+                Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER)
+                    .apply {
+                    data = uri
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+            )
 
-                overlayManager.navigateTo(
-                    context = context,
-                    newOverlay = BackToPreviousOverlayMenu(),
-                    hideCurrent = true,
-                )
-            } catch (ex: ActivityNotFoundException) {
-                Log.e(LOG_TAG, "Can't open browser to show documentation.")
-            }
+            overlayManager.navigateTo(
+                context = context,
+                newOverlay = BackToPreviousOverlayMenu(),
+                hideCurrent = true,
+            )
+        } catch (ex: ActivityNotFoundException) {
+            Log.e(LOG_TAG, "Can't open browser to show documentation.")
         }
     }
 }

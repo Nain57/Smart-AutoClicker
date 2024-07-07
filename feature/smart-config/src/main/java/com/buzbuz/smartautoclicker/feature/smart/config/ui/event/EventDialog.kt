@@ -98,23 +98,17 @@ class EventDialog(
             else R.string.dialog_title_trigger_event
         )
 
-        buttonDismiss.setOnClickListener {
-            debounceUserInteraction {
-                onDismiss()
-                back()
-            }
+        buttonDismiss.setDebouncedOnClickListener {
+            onDismiss()
+            back()
         }
-        buttonSave.setOnClickListener {
-            debounceUserInteraction {
-                onConfigComplete()
-                back()
-            }
+        buttonSave.setDebouncedOnClickListener {
+            onConfigComplete()
+            back()
         }
 
-        buttonDelete.setOnClickListener {
-            debounceUserInteraction {
-                onDeleteButtonClicked()
-            }
+        buttonDelete.setDebouncedOnClickListener {
+            onDeleteButtonClicked()
         }
     }
 

@@ -67,22 +67,20 @@ class CounterReachedConditionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_counter_reached)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        listener.onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    listener.onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener {
+                    setDebouncedOnClickListener {
                         listener.onConfirmClicked()
                         back()
                     }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener {
+                    setDebouncedOnClickListener {
                         listener.onDeleteClicked()
                         back()
                     }

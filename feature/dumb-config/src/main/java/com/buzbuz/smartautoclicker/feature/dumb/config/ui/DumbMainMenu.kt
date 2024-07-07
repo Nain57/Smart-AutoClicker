@@ -153,13 +153,11 @@ class DumbMainMenu(
     }
 
     override fun onMenuItemClicked(viewId: Int) {
-        debounceUserInteraction {
-            when (viewId) {
-                R.id.btn_play -> onPlayPauseClicked()
-                R.id.btn_stop -> onStopClicked()
-                R.id.btn_show_actions -> onShowBriefClicked()
-                R.id.btn_action_list -> onDumbScenarioConfigClicked()
-            }
+        when (viewId) {
+            R.id.btn_play -> onPlayPauseClicked()
+            R.id.btn_stop -> onStopClicked()
+            R.id.btn_show_actions -> onShowBriefClicked()
+            R.id.btn_action_list -> onDumbScenarioConfigClicked()
         }
     }
 

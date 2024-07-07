@@ -54,7 +54,9 @@ class EventCopyDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewModel.setCopyListType(requestTriggerEvents)
-        eventCopyAdapter = EventCopyAdapter(::onEventClicked)
+        eventCopyAdapter = EventCopyAdapter { event ->
+            debounceUserInteraction { onEventClicked(event) }
+        }
 
         viewBinding.layoutLoadableList.list.apply {
             addItemDecoration(newDividerWithoutHeader(context))
@@ -73,12 +75,10 @@ class EventCopyDialog(
     }
 
     private fun onEventClicked(event: Event) {
-        debounceUserInteraction {
-            if (viewModel.eventCopyShouldWarnUser(event)) {
-                showToggleEventCopyWarning(event)
-            } else {
-                notifySelectionAndDestroy(event)
-            }
+        if (viewModel.eventCopyShouldWarnUser(event)) {
+            showToggleEventCopyWarning(event)
+        } else {
+            notifySelectionAndDestroy(event)
         }
     }
 

@@ -85,24 +85,20 @@ class ImageConditionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_config)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        listener.onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    listener.onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener {
-                        debounceUserInteraction {
-                            listener.onConfirmClicked()
-                            back()
-                        }
+                    setDebouncedOnClickListener {
+                        listener.onConfirmClicked()
+                        back()
                     }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { debounceUserInteraction { onDeleteClicked() } }
+                    setDebouncedOnClickListener { onDeleteClicked() }
                 }
             }
 
@@ -150,7 +146,7 @@ class ImageConditionDialog(
 
             fieldSelectArea.apply {
                 setTitle(context.getString(R.string.field_select_detection_area_title))
-                setOnClickListener { showDetectionAreaSelector() }
+                setOnClickListener { debounceUserInteraction { showDetectionAreaSelector() } }
             }
 
             fieldSliderThreshold.apply {
@@ -273,15 +269,13 @@ class ImageConditionDialog(
     }
 
     private fun showDetectionAreaSelector() {
-        debounceUserInteraction {
-            overlayManager.navigateTo(
-                context = context,
-                newOverlay = ImageConditionAreaSelectorMenu(
-                    onAreaSelected = viewModel::setDetectionArea,
-                ),
-                hideCurrent = true,
-            )
-        }
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = ImageConditionAreaSelectorMenu(
+                onAreaSelected = viewModel::setDetectionArea,
+            ),
+            hideCurrent = true,
+        )
     }
 
     private fun confirmDelete() {

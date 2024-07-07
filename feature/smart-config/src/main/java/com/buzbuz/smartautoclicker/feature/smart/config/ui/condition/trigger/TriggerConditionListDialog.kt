@@ -69,17 +69,15 @@ class TriggerConditionListDialog(
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
                 dialogTitle.setText(R.string.dialog_title_trigger_event)
 
-                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
-                buttonSave.setOnClickListener {
-                    debounceUserInteraction {
-                        onSaveClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener { back() }
+                buttonSave.setDebouncedOnClickListener {
+                    onSaveClicked()
+                    back()
                 }
             }
 
-            buttonNew.setOnClickListener { debounceUserInteraction { showTriggerConditionTypeSelectionDialog() } }
-            buttonCopy.setOnClickListener { debounceUserInteraction { showCopyDialog() } }
+            buttonNew.setDebouncedOnClickListener { showTriggerConditionTypeSelectionDialog() }
+            buttonCopy.setDebouncedOnClickListener { showCopyDialog() }
 
             layoutLoadableList.apply {
                 setEmptyText(

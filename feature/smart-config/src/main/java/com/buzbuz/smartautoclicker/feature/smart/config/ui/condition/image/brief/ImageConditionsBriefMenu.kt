@@ -81,15 +81,13 @@ class ImageConditionsBriefMenu(
     }
 
     override fun onMenuItemClicked(viewId: Int) {
-        debounceUserInteraction {
-            when (viewId) {
-                R.id.btn_save -> {
-                    onConfigComplete()
-                    back()
-                }
-                R.id.btn_add -> showNewCaptureOverlay()
-                R.id.btn_copy -> showImageConditionCopyDialog()
+        when (viewId) {
+            R.id.btn_save -> {
+                onConfigComplete()
+                back()
             }
+            R.id.btn_add -> showNewCaptureOverlay()
+            R.id.btn_copy -> showImageConditionCopyDialog()
         }
     }
 

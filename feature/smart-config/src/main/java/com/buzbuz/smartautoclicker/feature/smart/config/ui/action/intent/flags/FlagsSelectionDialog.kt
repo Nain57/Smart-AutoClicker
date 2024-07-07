@@ -60,7 +60,7 @@ class FlagsSelectionDialog (
     override fun onCreateView(): ViewGroup {
         flagsAdapter = FlagsSelectionAdapter(
             onFlagCheckClicked = viewModel::setFlagState,
-            onFlagHelpClicked = ::onFlagHelpClicked,
+            onFlagHelpClicked = { uri -> debounceUserInteraction { onFlagHelpClicked(uri) } },
         )
 
         viewBinding = DialogConfigActionIntentFlagsBinding.inflate(LayoutInflater.from(context)).apply {
@@ -69,11 +69,9 @@ class FlagsSelectionDialog (
 
                 setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        onConfigComplete(viewModel.getSelectedFlags())
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    onConfigComplete(viewModel.getSelectedFlags())
+                    back()
                 }
             }
 
@@ -97,23 +95,21 @@ class FlagsSelectionDialog (
     }
 
     private fun onFlagHelpClicked(uri: Uri) {
-        debounceUserInteraction {
-            try {
-                context.startActivity(
-                    Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER).apply {
-                        data = uri
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                )
+        try {
+            context.startActivity(
+                Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER).apply {
+                    data = uri
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+            )
 
-                overlayManager.navigateTo(
-                    context = context,
-                    newOverlay = BackToPreviousOverlayMenu(),
-                    hideCurrent = true,
-                )
-            } catch (ex: ActivityNotFoundException) {
-                Log.e(LOG_TAG, "Can't open browser to show documentation.")
-            }
+            overlayManager.navigateTo(
+                context = context,
+                newOverlay = BackToPreviousOverlayMenu(),
+                hideCurrent = true,
+            )
+        } catch (ex: ActivityNotFoundException) {
+            Log.e(LOG_TAG, "Can't open browser to show documentation.")
         }
     }
 }

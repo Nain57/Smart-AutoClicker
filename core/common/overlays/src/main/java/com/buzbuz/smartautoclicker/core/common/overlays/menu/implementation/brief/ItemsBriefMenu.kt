@@ -74,7 +74,9 @@ abstract class ItemBriefMenu(
             orientation = displayMetrics.orientation,
         )
 
-        briefAdapter = ItemBriefAdapter(displayMetrics, ::onItemBriefClicked)
+        briefAdapter = ItemBriefAdapter(displayMetrics) { index, brief ->
+            debounceUserInteraction { onItemBriefClicked(index, brief) }
+        }
 
         briefViewBinding.apply {
             briefPanelAnimationController.attachToView(
@@ -108,31 +110,25 @@ abstract class ItemBriefMenu(
             root.setOnClickListener {
                 briefPanelAnimationController.showOrResetTimer()
             }
-            buttonPlay.setOnClickListener {
+            buttonPlay.setDebouncedOnClickListener {
                 onPlayItem(itemListSnapHelper.snapPosition)
             }
-            buttonDelete.setOnClickListener {
+            buttonDelete.setDebouncedOnClickListener {
                 briefPanelAnimationController.showOrResetTimer()
                 onDeleteItem(itemListSnapHelper.snapPosition)
             }
 
-            buttonMovePrevious.setOnClickListener {
+            buttonMovePrevious.setDebouncedOnClickListener {
                 briefPanelAnimationController.showOrResetTimer()
-                debounceUserInteraction {
-                    onMoveItem(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition - 1)
-                }
+                onMoveItem(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition - 1)
             }
-            buttonMoveNext.setOnClickListener {
+            buttonMoveNext.setDebouncedOnClickListener {
                 briefPanelAnimationController.showOrResetTimer()
-                debounceUserInteraction {
-                    onMoveItem(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition + 1)
-                }
+                onMoveItem(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition + 1)
             }
 
-            textActionIndex.setOnClickListener {
-                debounceUserInteraction {
-                    onItemPositionCardClicked(getFocusedItemIndex(), briefAdapter.itemCount)
-                }
+            textActionIndex.setDebouncedOnClickListener {
+                onItemPositionCardClicked(getFocusedItemIndex(), briefAdapter.itemCount)
             }
         }
 
