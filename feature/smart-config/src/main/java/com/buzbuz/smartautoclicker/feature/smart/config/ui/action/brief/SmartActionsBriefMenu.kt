@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.Mo
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayActionsBriefMenuBinding
@@ -60,6 +61,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
 
     private lateinit var viewBinding: OverlayActionsBriefMenuBinding
 
+
     override fun onCreate() {
         super.onCreate()
 
@@ -86,10 +88,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_save -> {
-                onConfigComplete()
-                back()
-            }
+            R.id.btn_back -> onBackClicked()
             R.id.btn_record -> onRecordClicked()
             R.id.btn_add_other -> showNewActionDialog()
         }
@@ -119,12 +118,19 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
         showMoveToDialog(index, itemCount)
     }
 
-    private fun onRecordClicked() {
+    private fun onBackClicked() {
         if (isGestureCaptureStarted()) {
             viewModel.cancelGestureCaptureState()
             stopGestureCapture()
             return
         }
+
+        onConfigComplete()
+        back()
+    }
+
+    private fun onRecordClicked() {
+        if (isGestureCaptureStarted()) return
 
         viewModel.startGestureCaptureState()
         startGestureCapture { gesture, isFinished ->
@@ -142,13 +148,13 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
 
     private fun updateRecordingState(isRecording: Boolean) {
         if (isRecording) {
-            setMenuItemViewEnabled(viewBinding.btnSave, false)
+            setMenuItemViewEnabled(viewBinding.btnBack, true)
             setMenuItemViewEnabled(viewBinding.btnAddOther, false)
             setMenuItemViewEnabled(viewBinding.btnHideOverlay, false)
             setMenuItemViewEnabled(viewBinding.btnMove, true)
-            setMenuItemViewEnabled(viewBinding.btnRecord, true)
+            setMenuItemViewEnabled(viewBinding.btnRecord, false)
         } else {
-            setMenuItemViewEnabled(viewBinding.btnSave, true)
+            setMenuItemViewEnabled(viewBinding.btnBack, true)
             setMenuItemViewEnabled(viewBinding.btnAddOther, true)
             setMenuItemViewEnabled(viewBinding.btnHideOverlay, true)
             setMenuItemViewEnabled(viewBinding.btnMove, true)
@@ -158,7 +164,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
 
     private fun updateReplayingState(isReplaying: Boolean) {
         setOverlayViewVisibility(!isReplaying)
-        setMenuItemViewEnabled(viewBinding.btnSave, !isReplaying)
+        setMenuItemViewEnabled(viewBinding.btnBack, !isReplaying)
         setMenuItemViewEnabled(viewBinding.btnAddOther, !isReplaying)
         setMenuItemViewEnabled(viewBinding.btnHideOverlay, !isReplaying)
         setMenuItemViewEnabled(viewBinding.btnMove, !isReplaying)

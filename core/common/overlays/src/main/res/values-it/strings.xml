@@ -18,4 +18,5 @@
 <resources>
     <string name="dialog_move_to_title">Spostarsi a</string>
     <string name="dialog_move_to_position_label">Indice</string>
+    <string name="overlay_instructions_gesture_record">Registrazione del gesto…</string>
 </resources>

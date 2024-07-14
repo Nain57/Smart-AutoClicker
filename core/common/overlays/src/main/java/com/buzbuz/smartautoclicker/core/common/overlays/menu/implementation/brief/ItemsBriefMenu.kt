@@ -22,8 +22,6 @@ import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
@@ -31,14 +29,10 @@ import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewActionBriefLandBinding
-import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewActionBriefPortBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.utils.PositionPagerSnapHelper
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefView
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
-import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.GestureRecordView
 import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.toActionDescription
 
 abstract class ItemBriefMenu(
@@ -52,6 +46,8 @@ abstract class ItemBriefMenu(
 
     /** Controls the action brief panel in and out animations. */
     private lateinit var briefPanelAnimationController: AutoHideAnimationController
+    /** Controls the instructions in and out animations. */
+    private lateinit var instructionsAnimationController: AutoHideAnimationController
     /** Layout manager for the actions recycler view. */
     private lateinit var recyclerViewLayoutManager: LinearLayoutManagerExt
     /** The view binding for the position selector. */
@@ -70,6 +66,7 @@ abstract class ItemBriefMenu(
 
     override fun onCreateOverlayView(): View {
         briefPanelAnimationController = AutoHideAnimationController()
+        instructionsAnimationController = AutoHideAnimationController()
 
         briefViewBinding = ItemsBriefOverlayViewBinding.inflate(
             inflater = context.getSystemService(LayoutInflater::class.java),
@@ -87,6 +84,11 @@ abstract class ItemBriefMenu(
                     AutoHideAnimationController.ScreenSide.BOTTOM
                 else
                     AutoHideAnimationController.ScreenSide.LEFT
+            )
+
+            instructionsAnimationController.attachToView(
+                layoutInstructions,
+                AutoHideAnimationController.ScreenSide.TOP,
             )
 
             listActions.adapter = briefAdapter
@@ -146,6 +148,7 @@ abstract class ItemBriefMenu(
 
     override fun onDestroy() {
         briefPanelAnimationController.detachFromView()
+        instructionsAnimationController.detachFromView()
         super.onDestroy()
     }
 
@@ -200,11 +203,19 @@ abstract class ItemBriefMenu(
     @SuppressLint("ClickableViewAccessibility")
     protected fun startGestureCapture(onNewAction: (gesture: ItemBriefDescription?, isFinished: Boolean) -> Unit) {
         briefPanelAnimationController.hide()
+        instructionsAnimationController.showOrResetTimer()
+
         briefViewBinding.viewBrief.setDescription(null)
 
         briefViewBinding.viewRecorder.apply {
             visibility = View.VISIBLE
+
+            var isCaptureStarted = false
             gestureCaptureListener = { gesture, isFinished ->
+                if (gesture != null && !isCaptureStarted){
+                    isCaptureStarted = true
+                    instructionsAnimationController.hide()
+                }
                 briefViewBinding.viewBrief.setDescription(gesture?.toActionDescription(), isFinished)
 
                 if (isFinished) {
@@ -218,6 +229,7 @@ abstract class ItemBriefMenu(
     protected fun stopGestureCapture() {
         briefViewBinding.viewRecorder.clearAndHide()
         briefPanelAnimationController.showOrResetTimer()
+        instructionsAnimationController.hide()
     }
 
     protected fun isGestureCaptureStarted(): Boolean =
@@ -282,57 +294,3 @@ private class LinearLayoutManagerExt(context: Context, screenOrientation: Int) :
     }
 }
 
-class ItemsBriefOverlayViewBinding private constructor(
-    val root: View,
-    val viewBrief: ItemBriefView,
-    val viewRecorder: GestureRecordView,
-    val layoutActionList: View,
-    val listActions: RecyclerView,
-    val textActionIndex: TextView,
-    val buttonMovePrevious: Button,
-    val buttonMoveNext: Button,
-    val buttonDelete: Button,
-    val buttonPlay: Button,
-    val emptyScenarioCard: View,
-    val emptyScenarioText: TextView,
-) {
-
-    companion object {
-
-        fun inflate(inflater: LayoutInflater, orientation: Int) =
-            if (orientation == Configuration.ORIENTATION_PORTRAIT)
-                ItemsBriefOverlayViewBinding(OverlayViewActionBriefPortBinding.inflate(inflater))
-            else
-                ItemsBriefOverlayViewBinding(OverlayViewActionBriefLandBinding.inflate(inflater))
-    }
-
-    constructor(binding: OverlayViewActionBriefPortBinding) : this(
-        root = binding.root,
-        viewBrief = binding.viewBrief,
-        viewRecorder = binding.viewRecord,
-        layoutActionList = binding.layoutActionList,
-        listActions = binding.listActions,
-        textActionIndex = binding.textActionIndex,
-        buttonMovePrevious = binding.buttonMovePrevious,
-        buttonMoveNext = binding.buttonMoveNext,
-        buttonDelete = binding.buttonDelete,
-        buttonPlay = binding.buttonPlayAction,
-        emptyScenarioCard = binding.emptyScenarioCard,
-        emptyScenarioText = binding.textEmptyScenario,
-    )
-
-    constructor(binding: OverlayViewActionBriefLandBinding) : this(
-        root = binding.root,
-        viewBrief = binding.viewBrief,
-        viewRecorder = binding.viewRecord,
-        layoutActionList = binding.layoutActionList,
-        listActions = binding.listActions,
-        textActionIndex = binding.textActionIndex,
-        buttonMovePrevious = binding.buttonMovePrevious,
-        buttonMoveNext = binding.buttonMoveNext,
-        buttonDelete = binding.buttonDelete,
-        buttonPlay = binding.buttonPlayAction,
-        emptyScenarioCard = binding.emptyScenarioCard,
-        emptyScenarioText = binding.textEmptyScenario,
-    )
-}
