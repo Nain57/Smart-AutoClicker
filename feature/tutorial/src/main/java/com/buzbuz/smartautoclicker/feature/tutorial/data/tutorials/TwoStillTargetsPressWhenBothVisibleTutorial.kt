@@ -96,7 +96,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_3_step_8,
                 image = TutorialStepImage(
-                    imageResId = R.drawable.ic_screenshot,
+                    imageResId = R.drawable.ic_capture,
                     imageDescResId = R.string.message_tutorial_3_step_secondary_8,
                 ),
                 stepStartCondition = StepStartCondition.NextOverlay,

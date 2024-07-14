@@ -88,7 +88,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_1_step_7,
                 image = TutorialStepImage(
-                    imageResId = R.drawable.ic_screenshot,
+                    imageResId = R.drawable.ic_capture,
                     imageDescResId = R.string.message_tutorial_1_step_secondary_7,
                 ),
                 stepStartCondition = StepStartCondition.NextOverlay,
