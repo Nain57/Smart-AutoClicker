@@ -16,7 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy
 
+import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.recyclerview.widget.DiffUtil
@@ -27,7 +29,6 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemActionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyModel.ActionCopyItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 
 /**
  * Adapter displaying all actions in a list.
@@ -99,8 +100,20 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param actionClickedListener listener notified upon user click on this item.
      */
     fun onBind(item: ActionCopyItem.ActionItem, actionClickedListener: (ActionCopyItem.ActionItem) -> Unit) {
-        viewBinding.bind(item.actionDetails, false) {
-            actionClickedListener(item)
+        viewBinding.apply {
+            root.setOnClickListener { actionClickedListener.invoke(item) }
+
+            actionName.visibility = View.VISIBLE
+            actionTypeIcon.setImageResource(item.actionDetails.icon)
+            actionName.text = item.actionDetails.name
+            actionDetails.apply {
+                text = item.actionDetails.description
+
+                val typedValue = TypedValue()
+                val actionColorAttr = if (item.actionDetails.haveError) R.attr.colorError else R.attr.colorOnSurfaceVariant
+                root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
+                setTextColor(typedValue.data)
+            }
         }
     }
 }

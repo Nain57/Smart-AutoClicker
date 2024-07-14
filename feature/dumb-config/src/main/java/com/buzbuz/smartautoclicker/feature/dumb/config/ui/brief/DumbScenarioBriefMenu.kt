@@ -65,7 +65,7 @@ class DumbScenarioBriefMenu(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.canCopyAction.collect(::onCopyMenuButtonStateUpdated) }
-                //launch { viewModel.visualizedActions.collect(::updateItemList) }
+                launch { viewModel.visualizedActions.collect(::updateItemList) }
                 launch { viewModel.focusedActionDetails.collect(::onFocusedActionDetailsUpdated) }
             }
         }
@@ -92,6 +92,9 @@ class DumbScenarioBriefMenu(
         menuViewBinding = OverlayDumbScenarioBriefMenuBinding.inflate(layoutInflater)
         return menuViewBinding.root
     }
+
+    override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): DumbActionBriefViewHolder =
+        DumbActionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
 
     override fun onMoveItem(from: Int, to: Int) {
 
@@ -136,11 +139,11 @@ class DumbScenarioBriefMenu(
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        /*overlayManager.startDumbActionEditionUiFlow(
+        overlayManager.startDumbActionEditionUiFlow(
             context = context,
-            dumbAction = item.data.action,
+            dumbAction = (item.data as DumbActionDetails).action,
             listener = updateActionUiFlowListener,
-        )*/
+        )
     }
 
     private fun onNewDumbActionCreated(action: DumbAction) {

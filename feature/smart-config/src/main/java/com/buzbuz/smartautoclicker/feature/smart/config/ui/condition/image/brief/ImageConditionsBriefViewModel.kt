@@ -34,19 +34,17 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ImageConditionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.toImageConditionDetails
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -80,7 +78,9 @@ class ImageConditionsBriefViewModel @Inject constructor(
 
     val conditionBriefList: Flow<List<ItemBrief>> = editedConditions.map { conditions ->
         val conditionList = conditions.value ?: emptyList()
-        conditionList.mapIndexed { index, condition -> condition.toItemBrief(context, !conditions.itemValidity[index]) }
+        conditionList.mapIndexed { index, condition ->
+            ItemBrief(condition.id, condition.toImageConditionDetails(context, !conditions.itemValidity[index]))
+        }
     }
 
 
@@ -111,16 +111,6 @@ class ImageConditionsBriefViewModel @Inject constructor(
     fun removeEditedCondition() = editionRepository.deleteEditedCondition()
     fun dismissEditedCondition() = editionRepository.stopConditionEdition()
 }
-
-private fun ImageCondition.toItemBrief(context: Context, inError: Boolean): ItemBrief =
-    ItemBrief(
-        id = id,
-        data = this,
-        icon = R.drawable.ic_condition,
-        name = name,
-        description = "", //TODO
-        inError = inError,
-    )
 
 private fun ImageCondition.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
     ImageConditionDescription(

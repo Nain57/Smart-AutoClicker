@@ -31,6 +31,10 @@
     <string name="item_event_desc_disabled_children">Desabilitado</string>
 
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">Diferença: %1$d%%</string>
+
+    <string name="item_image_condition_visible">Visível</string>
+    <string name="item_image_condition_not_visible">Não visível</string>
 
     <string name="item_counter_reached_title">Quando o contador for alcançado</string>
     <string name="item_counter_reached_desc">Verifique o valor de um contador modificado por uma ação</string>
@@ -127,6 +131,7 @@
     <string name="dialog_title_action_type">Tipo de ação</string>
     <string name="dialog_title_trigger_condition_type">Tipo de condição de trigger</string>
 
+    <string name="field_condition_selector_desc">%1$d condições</string>
     <string name="message_empty_screen_condition_list_title">Sem condições de tela !</string>
     <string name="message_empty_screen_condition_list_desc">Uma condição de tela é uma parte da captura de tela que será procurada em cada frame exibido pela tela do seu telefone.\nVocê precisa ter pelo menos uma condição em seu evento.</string>
     <string name="message_empty_trigger_condition_list_title">Sem condições !</string>
@@ -336,6 +341,5 @@
     <string name="content_desc_image_condition">A imagem a ser detectada</string>
     <string name="content_desc_open_event_list">Abrir a lista de eventos</string>
     <string name="content_desc_application_icon">O ícone da aplicação a ser iniciada.</string>
-    <string name="field_condition_selector_desc">%1$d conditions</string>
 
 </resources>

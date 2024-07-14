@@ -65,7 +65,6 @@ fun ItemImageConditionDescriptionBinding.bind(
         setIconTint(R.color.overlayMenuButtons)
     }
 
-
     conditionThreshold.text = root.context.getString(
         R.string.item_image_condition_desc_threshold,
         condition.threshold
