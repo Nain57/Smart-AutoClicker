@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2024 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="false"
-    tools:background="@android:color/black">
+    android:animateLayoutChanges="false">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/menu_background"
@@ -35,12 +34,12 @@
             <ImageButton
                 android:id="@+id/btn_save"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                android:src="@drawable/ic_menu_save" />
+                android:src="@drawable/ic_back" />
 
             <ImageButton
                 android:id="@+id/btn_record"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                android:src="@drawable/ic_record" />
+                android:src="@drawable/ic_capture" />
 
             <ImageButton
                 android:id="@+id/btn_add_other"

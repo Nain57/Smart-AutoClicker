@@ -78,7 +78,7 @@ class CaptureMenu(
             field = value
             when (value) {
                 SELECTION -> {
-                    viewBinding.btnConfirm.setImageResource(R.drawable.ic_screenshot)
+                    viewBinding.btnConfirm.setImageResource(R.drawable.ic_capture)
                     setMenuVisibility(View.VISIBLE)
                     setOverlayViewVisibility(false)
                     selectorView.hide = true
