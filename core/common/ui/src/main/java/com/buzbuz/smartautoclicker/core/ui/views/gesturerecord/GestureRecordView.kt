@@ -41,11 +41,12 @@ class GestureRecordView @JvmOverloads constructor(
 
     private val recordPaint = Paint().apply {
         isAntiAlias = true
-        style = Paint.Style.FILL
+        style = Paint.Style.STROKE
         color = viewStyle.color
+        strokeWidth = viewStyle.thicknessPx.toFloat()
     }
 
-    private val drawingRectList: MutableList<Rect> = mutableListOf()
+    private var viewBorderRect: Rect? = null
 
     private val gestureRecorder = GestureRecorder { gesture, isFinished ->
         gestureCaptureListener?.invoke(gesture, isFinished)
@@ -60,30 +61,7 @@ class GestureRecordView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        invalidate()
-    }
-
-    override fun invalidate() {
-        drawingRectList.apply {
-            clear()
-
-            // Top Left
-            add(Rect(0, 0, viewStyle.lengthPx, viewStyle.thicknessPx))
-            add(Rect(0, 0, viewStyle.thicknessPx, viewStyle.lengthPx))
-
-            // Top Right
-            add(Rect(width - viewStyle.lengthPx, 0, width, viewStyle.thicknessPx))
-            add(Rect(width - viewStyle.thicknessPx, 0, width, viewStyle.lengthPx))
-
-            // Bottom Left
-            add(Rect(0, height - viewStyle.thicknessPx, viewStyle.lengthPx, height))
-            add(Rect(0, height - viewStyle.lengthPx, viewStyle.thicknessPx, height))
-
-            // Bottom Right
-            add(Rect(width - viewStyle.lengthPx, height - viewStyle.thicknessPx, width, height))
-            add(Rect(width - viewStyle.thicknessPx, height - viewStyle.lengthPx, width, height))
-        }
-        super.invalidate()
+        viewBorderRect = Rect(0, 0, width, height)
     }
 
     @SuppressLint("ClickableViewAccessibility") // You can't click on this view
@@ -95,8 +73,8 @@ class GestureRecordView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        drawingRectList.forEach { rect ->
-            canvas.drawRect(rect, recordPaint)
+        viewBorderRect?.let { borderRect ->
+            canvas.drawRect(borderRect, recordPaint)
         }
     }
 }

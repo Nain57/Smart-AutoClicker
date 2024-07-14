@@ -39,7 +39,7 @@
         android:layout_gravity="bottom">
 
         <View
-            android:id="@+id/background_instructions"
+            android:id="@+id/background_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"

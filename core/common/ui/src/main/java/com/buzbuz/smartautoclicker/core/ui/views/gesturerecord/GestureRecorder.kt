@@ -94,4 +94,4 @@ internal class GestureRecorder(
     }
 }
 
-private const val SWIPE_MIN_DISTANCE_PX = 20f
+private const val SWIPE_MIN_DISTANCE_PX = 40f

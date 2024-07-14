@@ -32,7 +32,7 @@
             style="@style/AppTheme.Overlay.FloatingMenu.LayoutButtons">
 
             <ImageButton
-                android:id="@+id/btn_save"
+                android:id="@+id/btn_back"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                 android:src="@drawable/ic_back" />
 
